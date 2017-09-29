@@ -90,6 +90,7 @@ class A10ClientBase(object):
         # Stores the params that are sent to the module
         self.params = kwargs
         # TODO(ht) - Does this have to be "api" ?
+	# ANSWER(md) - it works. We know what it is?
         self._api = client or Client(kwargs['host'],
                                      kwargs['version'],
                                      kwargs['username'],

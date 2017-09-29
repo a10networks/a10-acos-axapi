@@ -87,7 +87,9 @@ def main():
         supports_check_mode=False,
     )
 
-    host = module.params['host']
+    # Get this from host data
+    host = {{ ansible_host }}
+    # module.params['host']
     username = module.params['username']
     password = module.params['password']
     partition = module.params['partition']
