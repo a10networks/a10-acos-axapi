@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+    - a10_server:
+      host: 10.48.6.22
+      username: admin
+      password: a10
+      partition: shared
+      server: test
+      server_ip: 1.1.1.100
+      server_ports:
+        - port_num: 8080
+          protocol: tcp
+        - port_num: 8443
+          protocol: tcp

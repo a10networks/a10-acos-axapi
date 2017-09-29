@@ -1,0 +1,5 @@
+# Test requirements
+unittest2
+mock
+nose
+pytest
