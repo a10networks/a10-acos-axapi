@@ -1,9 +1,0 @@
-DEBUG:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): 10.48.6.222
-DEBUG:requests.packages.urllib3.connectionpool:https://10.48.6.222:443 "POST /axapi/v3/auth HTTP/1.1" 200 176
-DEBUG:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): 10.48.6.222
-DEBUG:requests.packages.urllib3.connectionpool:https://10.48.6.222:443 "GET /axapi/v3/slb/service-group/sg-81-tcp HTTP/1.1" 200 626
-DEBUG:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): 10.48.6.222
-DEBUG:requests.packages.urllib3.connectionpool:https://10.48.6.222:443 "GET /axapi/v3/slb/service-group/sg-81-tcp/member/foo1.mydomain.com+8081/ HTTP/1.1" 404 174
-DEBUG:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): 10.48.6.222
-DEBUG:requests.packages.urllib3.connectionpool:https://10.48.6.222:443 "POST /axapi/v3/slb/service-group/sg-81-tcp/member/ HTTP/1.1" 200 210
-DEBUG:root:Associated member server
