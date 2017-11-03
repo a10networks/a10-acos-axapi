@@ -2,14 +2,10 @@
 # acos-client
 # Pulled from git branch until we can work out the abstraction mess
 -e git+https://github.com/a10networks/acos-client@devops#egg=acos-client
-paramiko
-PyYAML
-jinja2
-httplib2
-passlib
+# paramiko
+# PyYAML
+# jinja2
+# httplib2
+# passlib
 six
 ansible
-# These are needed for various optional features
-#python-memcached
-#redis
-
