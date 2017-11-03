@@ -104,3 +104,6 @@ ENV/
 # vi swap files
 *.swp
 .debug
+
+# pip src directory
+src/
