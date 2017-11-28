@@ -1,5 +1,0 @@
-vars:
-  api_version: 3.0
-  port: 443
-  username: "admin"
-  password: "a10"
