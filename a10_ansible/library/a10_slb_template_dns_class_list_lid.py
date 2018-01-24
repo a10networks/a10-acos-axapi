@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_lid
+module: a10_slb_template_dns_class_list_lid
 description:
-    - 
+    - Limit ID
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -65,7 +65,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action_value","conn_rate_limit","dns","lidnum","lockout","log","log_interval","over_limit_action","per","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["action_value","conn_rate_limit","dns","lidnum","lockout","log","log_interval","over_limit_action","per","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -84,31 +84,31 @@ def get_argspec():
     rv.update(dict(
         
         action_value=dict(
-            type='enum' , choices=['dns-cache-disable', 'dns-cache-enable', 'forward']
+            type='str' , choices=['dns-cache-disable', 'dns-cache-enable', 'forward']
         ),
         conn_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         dns=dict(
             type='str' 
         ),
         lidnum=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         lockout=dict(
-            type='str' 
+            type='int' 
         ),
         log=dict(
-            type='str' 
+            type='bool' 
         ),
         log_interval=dict(
-            type='str' 
+            type='int' 
         ),
         over_limit_action=dict(
-            type='str' 
+            type='bool' 
         ),
         per=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -152,6 +152,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -253,8 +255,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

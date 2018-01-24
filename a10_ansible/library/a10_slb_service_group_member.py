@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_member
+module: a10_slb_service_group_member
 description:
-    - 
+    - Service Group Member
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -69,7 +69,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","port","sampling_enable","server_ipv6_addr","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","port","sampling_enable","server_ipv6_addr","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -94,13 +94,13 @@ def get_argspec():
             type='str' 
         ),
         member_priority=dict(
-            type='str' 
+            type='int' 
         ),
         member_state=dict(
-            type='enum' , choices=['enable', 'disable', 'disable-with-health-check']
+            type='str' , choices=['enable', 'disable', 'disable-with-health-check']
         ),
         member_stats_data_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         member_template=dict(
             type='str' 
@@ -109,10 +109,10 @@ def get_argspec():
             type='str' , required=True
         ),
         port=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         server_ipv6_addr=dict(
             type='str' 
@@ -161,6 +161,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -262,8 +264,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

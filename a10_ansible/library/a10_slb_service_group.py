@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_service-group
+module: a10_slb_service-group
 description:
-    - 
+    - Service Group
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -218,7 +218,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats_data_action","strict_select","template_policy","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats_data_action","strict_select","template_policy","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -237,118 +237,118 @@ def get_argspec():
     rv.update(dict(
         
         backup_server_event_log=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_duration=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_grace_period=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_log=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate_revert_duration=dict(
-            type='str' 
+            type='int' 
         ),
         conn_revert_rate=dict(
-            type='str' 
+            type='int' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         health_check=dict(
             type='str' 
         ),
         health_check_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         l4_session_revert_duration=dict(
-            type='str' 
+            type='int' 
         ),
         l4_session_usage=dict(
-            type='str' 
+            type='int' 
         ),
         l4_session_usage_duration=dict(
-            type='str' 
+            type='int' 
         ),
         l4_session_usage_grace_period=dict(
-            type='str' 
+            type='int' 
         ),
         l4_session_usage_log=dict(
-            type='str' 
+            type='bool' 
         ),
         l4_session_usage_revert_rate=dict(
-            type='str' 
+            type='int' 
         ),
         lb_method=dict(
-            type='enum' , choices=['dst-ip-hash', 'dst-ip-only-hash', 'fastest-response', 'least-request', 'src-ip-hash', 'src-ip-only-hash', 'weighted-rr', 'round-robin', 'round-robin-strict', 'odd-even-hash']
+            type='str' , choices=['dst-ip-hash', 'dst-ip-only-hash', 'fastest-response', 'least-request', 'src-ip-hash', 'src-ip-only-hash', 'weighted-rr', 'round-robin', 'round-robin-strict', 'odd-even-hash']
         ),
         lc_method=dict(
-            type='enum' , choices=['least-connection', 'service-least-connection', 'weighted-least-connection', 'service-weighted-least-connection']
+            type='str' , choices=['least-connection', 'service-least-connection', 'weighted-least-connection', 'service-weighted-least-connection']
         ),
         member_list=dict(
-            type='str' 
+            type='list' 
         ),
         min_active_member=dict(
-            type='str' 
+            type='int' 
         ),
         min_active_member_action=dict(
-            type='enum' , choices=['dynamic-priority', 'skip-pri-set']
+            type='str' , choices=['dynamic-priority', 'skip-pri-set']
         ),
         name=dict(
             type='str' , required=True
         ),
         priorities=dict(
-            type='str' 
+            type='list' 
         ),
         priority_affinity=dict(
-            type='str' 
+            type='bool' 
         ),
         protocol=dict(
-            type='enum' , choices=['tcp', 'udp']
+            type='str' , choices=['tcp', 'udp']
         ),
         pseudo_round_robin=dict(
-            type='str' 
+            type='bool' 
         ),
         report_delay=dict(
-            type='str' 
+            type='int' 
         ),
         reset=dict(
             type='str' 
         ),
         reset_on_server_selection_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_priority_affinity=dict(
-            type='str' 
+            type='bool' 
         ),
         rpt_ext_server=dict(
-            type='str' 
+            type='bool' 
         ),
         sample_rsp_time=dict(
-            type='str' 
+            type='bool' 
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         stateless_auto_switch=dict(
-            type='str' 
+            type='bool' 
         ),
         stateless_lb_method=dict(
-            type='enum' , choices=['stateless-dst-ip-hash', 'stateless-per-pkt-round-robin', 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash', 'stateless-src-ip-hash', 'stateless-src-ip-only-hash']
+            type='str' , choices=['stateless-dst-ip-hash', 'stateless-per-pkt-round-robin', 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash', 'stateless-src-ip-hash', 'stateless-src-ip-only-hash']
         ),
         stateless_lb_method2=dict(
-            type='enum' , choices=['stateless-dst-ip-hash', 'stateless-per-pkt-round-robin', 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash', 'stateless-src-ip-hash', 'stateless-src-ip-only-hash']
+            type='str' , choices=['stateless-dst-ip-hash', 'stateless-per-pkt-round-robin', 'stateless-src-dst-ip-hash', 'stateless-src-dst-ip-only-hash', 'stateless-src-ip-hash', 'stateless-src-ip-only-hash']
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         strict_select=dict(
-            type='str' 
+            type='bool' 
         ),
         template_policy=dict(
             type='str' 
@@ -360,25 +360,25 @@ def get_argspec():
             type='str' 
         ),
         top_fastest=dict(
-            type='str' 
+            type='bool' 
         ),
         top_slowest=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_replication_mirror=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_replication_mirror_da_repl=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_replication_mirror_ip_repl=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_replication_mirror_sa_da_repl=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_replication_mirror_sa_repl=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -422,12 +422,14 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
+    requires_one_of = sorted(['lb_method','stateless-lb-method','lc_method',])
     present_keys = sorted([x for x in requires_one_of if params.get(x)])
     
     errors = []
@@ -523,8 +525,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

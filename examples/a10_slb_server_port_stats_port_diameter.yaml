@@ -1,0 +1,33 @@
+
+
+- name: Create a10_slb_server_port_stats_port_diameter example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_server_port_stats_port_diameter instance
+    a10_slb_server_port_stats_port_diameter:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+
+- name: Update a10_slb_server_port_stats_port_diameter example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_server_port_stats_port_diameter instance
+    a10_slb_server_port_stats_port_diameter:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+
+- name: Delete a10_slb_server_port_stats_port_diameter example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_server_port_stats_port_diameter instance
+    a10_slb_server_port_stats_port_diameter:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent

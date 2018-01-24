@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_cache
+module: a10_slb_template_cache
 description:
-    - 
+    - RAM caching template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -91,7 +91,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"accept_reload_req","age","default_policy_nocache","disable_insert_age","disable_insert_via","local_uri_policy","logging","max_cache_size","max_content_size","min_content_size","name","remove_cookies","replacement_policy","sampling_enable","uri_policy","user_tag","uuid","verify_host",}
+AVAILABLE_PROPERTIES = ["accept_reload_req","age","default_policy_nocache","disable_insert_age","disable_insert_via","local_uri_policy","logging","max_cache_size","max_content_size","min_content_size","name","remove_cookies","replacement_policy","sampling_enable","uri_policy","user_tag","uuid","verify_host",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -110,49 +110,49 @@ def get_argspec():
     rv.update(dict(
         
         accept_reload_req=dict(
-            type='str' 
+            type='bool' 
         ),
         age=dict(
-            type='str' 
+            type='int' 
         ),
         default_policy_nocache=dict(
-            type='str' 
+            type='bool' 
         ),
         disable_insert_age=dict(
-            type='str' 
+            type='bool' 
         ),
         disable_insert_via=dict(
-            type='str' 
+            type='bool' 
         ),
         local_uri_policy=dict(
-            type='str' 
+            type='list' 
         ),
         logging=dict(
             type='str' 
         ),
         max_cache_size=dict(
-            type='str' 
+            type='int' 
         ),
         max_content_size=dict(
-            type='str' 
+            type='int' 
         ),
         min_content_size=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         remove_cookies=dict(
-            type='str' 
+            type='bool' 
         ),
         replacement_policy=dict(
-            type='enum' , choices=['LFU']
+            type='str' , choices=['LFU']
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         uri_policy=dict(
-            type='str' 
+            type='list' 
         ),
         user_tag=dict(
             type='str' 
@@ -161,7 +161,7 @@ def get_argspec():
             type='str' 
         ),
         verify_host=dict(
-            type='str' 
+            type='bool' 
         ), 
     ))
     return rv
@@ -199,6 +199,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -300,8 +302,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

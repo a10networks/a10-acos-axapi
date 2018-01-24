@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_ethernet
+module: a10_interface_ethernet
 description:
-    - 
+    - Ethernet interface
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -150,7 +150,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"access_list","action","auto_neg_enable","bfd","cpu_process","cpu_process_dir","ddos","duplexity","fec_forced_off","fec_forced_on","flow_control","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lldp","load_interval","lw_4o6","map","media_type_copper","monitor_list","mtu","name","nptv6","remove_vlan_tag","sampling_enable","speed","speed_forced_40g","traffic_distribution_mode","trap_source","trunk_group_list","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["access_list","action","auto_neg_enable","bfd","cpu_process","cpu_process_dir","ddos","duplexity","fec_forced_off","fec_forced_on","flow_control","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lldp","load_interval","lw_4o6","map","media_type_copper","monitor_list","mtu","name","nptv6","remove_vlan_tag","sampling_enable","speed","speed_forced_40g","traffic_distribution_mode","trap_source","trunk_group_list","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -172,34 +172,34 @@ def get_argspec():
             type='str' 
         ),
         action=dict(
-            type='enum' , choices=['enable', 'disable']
+            type='str' , choices=['enable', 'disable']
         ),
         auto_neg_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         bfd=dict(
             type='str' 
         ),
         cpu_process=dict(
-            type='str' 
+            type='bool' 
         ),
         cpu_process_dir=dict(
-            type='enum' , choices=['primary', 'blade', 'hash-dip', 'hash-sip', 'hash-dmac', 'hash-smac']
+            type='str' , choices=['primary', 'blade', 'hash-dip', 'hash-sip', 'hash-dmac', 'hash-smac']
         ),
         ddos=dict(
             type='str' 
         ),
         duplexity=dict(
-            type='enum' , choices=['Full', 'Half', 'auto']
+            type='str' , choices=['Full', 'Half', 'auto']
         ),
         fec_forced_off=dict(
-            type='str' 
+            type='bool' 
         ),
         fec_forced_on=dict(
-            type='str' 
+            type='bool' 
         ),
         flow_control=dict(
-            type='str' 
+            type='bool' 
         ),
         icmp_rate_limit=dict(
             type='str' 
@@ -220,13 +220,13 @@ def get_argspec():
             type='str' 
         ),
         l3_vlan_fwd_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         lldp=dict(
             type='str' 
         ),
         load_interval=dict(
-            type='str' 
+            type='int' 
         ),
         lw_4o6=dict(
             type='str' 
@@ -235,13 +235,13 @@ def get_argspec():
             type='str' 
         ),
         media_type_copper=dict(
-            type='str' 
+            type='bool' 
         ),
         monitor_list=dict(
-            type='str' 
+            type='list' 
         ),
         mtu=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' 
@@ -250,25 +250,25 @@ def get_argspec():
             type='str' 
         ),
         remove_vlan_tag=dict(
-            type='str' 
+            type='bool' 
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         speed=dict(
-            type='enum' , choices=['10', '100', '1000', 'auto']
+            type='str' , choices=['10', '100', '1000', 'auto']
         ),
         speed_forced_40g=dict(
-            type='str' 
+            type='bool' 
         ),
         traffic_distribution_mode=dict(
-            type='enum' , choices=['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
+            type='str' , choices=['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
         ),
         trap_source=dict(
-            type='str' 
+            type='bool' 
         ),
         trunk_group_list=dict(
-            type='str' 
+            type='list' 
         ),
         user_tag=dict(
             type='str' 
@@ -312,6 +312,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -413,8 +415,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

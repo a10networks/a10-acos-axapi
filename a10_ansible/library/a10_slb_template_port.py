@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_port
+module: a10_slb_template_port
 description:
-    - 
+    - Port template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -190,7 +190,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"add","bw_rate_limit","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","decrement","del_session_on_server_down","dest_nat","down_grace_period","down_timer","dscp","dynamic_member_priority","every","extended_stats","health_check","health_check_disable","inband_health_check","initial_slow_start","name","no_ssl","rate_interval","reassign","request_rate_interval","request_rate_limit","request_rate_no_logging","resel_on_reset","reset","resume","retry","slow_start","source_nat","stats_data_action","sub_group","till","times","user_tag","uuid","weight",}
+AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","decrement","del_session_on_server_down","dest_nat","down_grace_period","down_timer","dscp","dynamic_member_priority","every","extended_stats","health_check","health_check_disable","inband_health_check","initial_slow_start","name","no_ssl","rate_interval","reassign","request_rate_interval","request_rate_limit","request_rate_no_logging","resel_on_reset","reset","resume","retry","slow_start","source_nat","stats_data_action","sub_group","till","times","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -209,121 +209,121 @@ def get_argspec():
     rv.update(dict(
         
         add=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit_duration=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         bw_rate_limit_resume=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         decrement=dict(
-            type='str' 
+            type='int' 
         ),
         del_session_on_server_down=dict(
-            type='str' 
+            type='bool' 
         ),
         dest_nat=dict(
-            type='str' 
+            type='bool' 
         ),
         down_grace_period=dict(
-            type='str' 
+            type='int' 
         ),
         down_timer=dict(
-            type='str' 
+            type='int' 
         ),
         dscp=dict(
-            type='str' 
+            type='int' 
         ),
         dynamic_member_priority=dict(
-            type='str' 
+            type='int' 
         ),
         every=dict(
-            type='str' 
+            type='int' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         health_check=dict(
             type='str' 
         ),
         health_check_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         inband_health_check=dict(
-            type='str' 
+            type='bool' 
         ),
         initial_slow_start=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         no_ssl=dict(
-            type='str' 
+            type='bool' 
         ),
         rate_interval=dict(
-            type='enum' , choices=['100ms', 'second']
+            type='str' , choices=['100ms', 'second']
         ),
         reassign=dict(
-            type='str' 
+            type='int' 
         ),
         request_rate_interval=dict(
-            type='enum' , choices=['100ms', 'second']
+            type='str' , choices=['100ms', 'second']
         ),
         request_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         request_rate_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         resel_on_reset=dict(
-            type='str' 
+            type='bool' 
         ),
         reset=dict(
-            type='str' 
+            type='bool' 
         ),
         resume=dict(
-            type='str' 
+            type='int' 
         ),
         retry=dict(
-            type='str' 
+            type='int' 
         ),
         slow_start=dict(
-            type='str' 
+            type='bool' 
         ),
         source_nat=dict(
             type='str' 
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         sub_group=dict(
-            type='str' 
+            type='int' 
         ),
         till=dict(
-            type='str' 
+            type='int' 
         ),
         times=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -332,7 +332,7 @@ def get_argspec():
             type='str' 
         ),
         weight=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -370,6 +370,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -471,8 +473,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

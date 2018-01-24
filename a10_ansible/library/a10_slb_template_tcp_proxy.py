@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_tcp-proxy
+module: a10_slb_template_tcp-proxy
 description:
-    - 
+    - TCP Proxy
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -170,7 +170,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"ack_aggressiveness","alive_if_active","backend_wscale","del_session_on_server_down","disable","disable_sack","disable_tcp_timestamps","disable_window_scale","down","dynamic_buffer_allocation","fin_timeout","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","init_cwnd","initial_window_size","insert_client_ip","invalid_rate_limit","keepalive_interval","keepalive_probes","mss","nagle","name","qos","receive_buffer","reno","reset_fwd","reset_rev","retransmit_retries","server_down_action","syn_retries","timewait","transmit_buffer","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["ack_aggressiveness","alive_if_active","backend_wscale","del_session_on_server_down","disable","disable_sack","disable_tcp_timestamps","disable_window_scale","down","dynamic_buffer_allocation","fin_timeout","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","init_cwnd","initial_window_size","insert_client_ip","invalid_rate_limit","keepalive_interval","keepalive_probes","mss","nagle","name","qos","receive_buffer","reno","reset_fwd","reset_rev","retransmit_retries","server_down_action","syn_retries","timewait","transmit_buffer","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -189,109 +189,109 @@ def get_argspec():
     rv.update(dict(
         
         ack_aggressiveness=dict(
-            type='enum' , choices=['low', 'medium', 'high']
+            type='str' , choices=['low', 'medium', 'high']
         ),
         alive_if_active=dict(
-            type='str' 
+            type='bool' 
         ),
         backend_wscale=dict(
-            type='str' 
+            type='int' 
         ),
         del_session_on_server_down=dict(
-            type='str' 
+            type='bool' 
         ),
         disable=dict(
-            type='str' 
+            type='bool' 
         ),
         disable_sack=dict(
-            type='str' 
+            type='bool' 
         ),
         disable_tcp_timestamps=dict(
-            type='str' 
+            type='bool' 
         ),
         disable_window_scale=dict(
-            type='str' 
+            type='bool' 
         ),
         down=dict(
-            type='str' 
+            type='bool' 
         ),
         dynamic_buffer_allocation=dict(
-            type='str' 
+            type='bool' 
         ),
         fin_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         force_delete_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         force_delete_timeout_100ms=dict(
-            type='str' 
+            type='int' 
         ),
         half_close_idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         half_open_idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         init_cwnd=dict(
-            type='str' 
+            type='int' 
         ),
         initial_window_size=dict(
-            type='str' 
+            type='int' 
         ),
         insert_client_ip=dict(
-            type='str' 
+            type='bool' 
         ),
         invalid_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         keepalive_interval=dict(
-            type='str' 
+            type='int' 
         ),
         keepalive_probes=dict(
-            type='str' 
+            type='int' 
         ),
         mss=dict(
-            type='str' 
+            type='int' 
         ),
         nagle=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' , required=True
         ),
         qos=dict(
-            type='str' 
+            type='int' 
         ),
         receive_buffer=dict(
-            type='str' 
+            type='int' 
         ),
         reno=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_fwd=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_rev=dict(
-            type='str' 
+            type='bool' 
         ),
         retransmit_retries=dict(
-            type='str' 
+            type='int' 
         ),
         server_down_action=dict(
-            type='enum' , choices=['FIN', 'RST']
+            type='str' , choices=['FIN', 'RST']
         ),
         syn_retries=dict(
-            type='str' 
+            type='int' 
         ),
         timewait=dict(
-            type='str' 
+            type='int' 
         ),
         transmit_buffer=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -335,6 +335,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -436,8 +438,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

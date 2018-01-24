@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_connection-reuse
+module: a10_slb_template_connection-reuse
 description:
-    - 
+    - Connection Reuse
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -54,7 +54,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"keep_alive_conn","limit_per_server","name","num_conn_per_port","preopen","timeout","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["keep_alive_conn","limit_per_server","name","num_conn_per_port","preopen","timeout","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -73,22 +73,22 @@ def get_argspec():
     rv.update(dict(
         
         keep_alive_conn=dict(
-            type='str' 
+            type='bool' 
         ),
         limit_per_server=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         num_conn_per_port=dict(
-            type='str' 
+            type='int' 
         ),
         preopen=dict(
-            type='str' 
+            type='bool' 
         ),
         timeout=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -132,6 +132,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -233,8 +235,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

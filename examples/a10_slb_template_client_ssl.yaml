@@ -1,0 +1,87 @@
+
+
+- name: Create a10_slb_template_client_ssl example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_client_ssl instance
+    a10_slb_template_client_ssl:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_client-ssl
+      ocspst_srvr_hours: 1
+      ocspst_srvr_timeout: 1
+      ocspst_sg_hours: 1
+      ocspst_sg_timeout: 1
+      client_certificate: Ignore
+      forward_proxy_verify_cert_fail_action: True
+      verify_cert_fail_action: drop
+      forward_proxy_cert_revoke_action: True
+      cert_revoke_action: bypass
+      forward_proxy_cert_unknown_action: True
+      cert_unknown_action: bypass
+      forward_proxy_ssl_version: 31
+      forward_proxy_cert_cache_timeout: 0
+      forward_proxy_cert_cache_limit: 0
+      forward_proxy_cert_not_ready_action: bypass
+      version: 30
+      dgversion: 30
+
+- name: Update a10_slb_template_client_ssl example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_client_ssl instance
+    a10_slb_template_client_ssl:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_client-ssl
+      ocspst_srvr_hours: 1
+      ocspst_srvr_timeout: 1
+      ocspst_sg_hours: 1
+      ocspst_sg_timeout: 1
+      client_certificate: Ignore
+      forward_proxy_verify_cert_fail_action: True
+      verify_cert_fail_action: drop
+      forward_proxy_cert_revoke_action: True
+      cert_revoke_action: bypass
+      forward_proxy_cert_unknown_action: True
+      cert_unknown_action: bypass
+      forward_proxy_ssl_version: 31
+      forward_proxy_cert_cache_timeout: 0
+      forward_proxy_cert_cache_limit: 0
+      forward_proxy_cert_not_ready_action: bypass
+      version: 30
+      dgversion: 30
+
+- name: Delete a10_slb_template_client_ssl example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_client_ssl instance
+    a10_slb_template_client_ssl:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_client-ssl
+      ocspst_srvr_hours: 1
+      ocspst_srvr_timeout: 1
+      ocspst_sg_hours: 1
+      ocspst_sg_timeout: 1
+      client_certificate: Ignore
+      forward_proxy_verify_cert_fail_action: True
+      verify_cert_fail_action: drop
+      forward_proxy_cert_revoke_action: True
+      cert_revoke_action: bypass
+      forward_proxy_cert_unknown_action: True
+      cert_unknown_action: bypass
+      forward_proxy_ssl_version: 31
+      forward_proxy_cert_cache_timeout: 0
+      forward_proxy_cert_cache_limit: 0
+      forward_proxy_cert_not_ready_action: bypass
+      version: 30
+      dgversion: 30

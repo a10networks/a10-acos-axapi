@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_dns
+module: a10_slb_template_dns
 description:
-    - 
+    - DNS template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -85,7 +85,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"class_list","default_policy","disable_dns_template","dnssec_service_group","drop","enable_cache_sharing","forward","max_cache_entry_size","max_cache_size","max_query_length","name","period","query_id_switch","redirect_to_tcp_port","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["class_list","default_policy","disable_dns_template","dnssec_service_group","drop","enable_cache_sharing","forward","max_cache_entry_size","max_cache_size","max_query_length","name","period","query_id_switch","redirect_to_tcp_port","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -107,43 +107,43 @@ def get_argspec():
             type='str' 
         ),
         default_policy=dict(
-            type='enum' , choices=['nocache', 'cache']
+            type='str' , choices=['nocache', 'cache']
         ),
         disable_dns_template=dict(
-            type='str' 
+            type='bool' 
         ),
         dnssec_service_group=dict(
             type='str' 
         ),
         drop=dict(
-            type='str' 
+            type='bool' 
         ),
         enable_cache_sharing=dict(
-            type='str' 
+            type='bool' 
         ),
         forward=dict(
             type='str' 
         ),
         max_cache_entry_size=dict(
-            type='str' 
+            type='int' 
         ),
         max_cache_size=dict(
-            type='str' 
+            type='int' 
         ),
         max_query_length=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         period=dict(
-            type='str' 
+            type='int' 
         ),
         query_id_switch=dict(
-            type='str' 
+            type='bool' 
         ),
         redirect_to_tcp_port=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -187,6 +187,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -288,8 +290,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

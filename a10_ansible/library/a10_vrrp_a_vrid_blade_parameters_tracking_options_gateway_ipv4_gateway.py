@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_ipv4-gateway
+module: a10_vrrp-a_vrid_blade_parameters_tracking_options_gateway_ipv4-gateway
 description:
-    - 
+    - IPv4 Gateway
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -34,7 +34,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"ip_address","priority_cost","uuid",}
+AVAILABLE_PROPERTIES = ["ip_address","priority_cost","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -56,7 +56,7 @@ def get_argspec():
             type='str' , required=True
         ),
         priority_cost=dict(
-            type='str' 
+            type='int' 
         ),
         uuid=dict(
             type='str' 
@@ -97,6 +97,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -198,8 +200,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

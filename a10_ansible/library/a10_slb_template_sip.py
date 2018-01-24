@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_sip
+module: a10_slb_template_sip
 description:
-    - 
+    - SIP Template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -137,7 +137,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"acl_id","acl_name_value","alg_dest_nat","alg_source_nat","call_id_persist_disable","client_keep_alive","client_request_header","client_response_header","dialog_aware","drop_when_client_fail","drop_when_server_fail","exclude_translation","failed_client_selection","failed_client_selection_message","failed_server_selection","failed_server_selection_message","insert_client_ip","interval","keep_server_ip_if_match_acl","name","pstn_gw","server_keep_alive","server_request_header","server_response_header","server_selection_per_request","service_group","smp_call_id_rtp_session","timeout","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["acl_id","acl_name_value","alg_dest_nat","alg_source_nat","call_id_persist_disable","client_keep_alive","client_request_header","client_response_header","dialog_aware","drop_when_client_fail","drop_when_server_fail","exclude_translation","failed_client_selection","failed_client_selection_message","failed_server_selection","failed_server_selection_message","insert_client_ip","interval","keep_server_ip_if_match_acl","name","pstn_gw","server_keep_alive","server_request_header","server_response_header","server_selection_per_request","service_group","smp_call_id_rtp_session","timeout","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -156,61 +156,61 @@ def get_argspec():
     rv.update(dict(
         
         acl_id=dict(
-            type='str' 
+            type='int' 
         ),
         acl_name_value=dict(
             type='str' 
         ),
         alg_dest_nat=dict(
-            type='str' 
+            type='bool' 
         ),
         alg_source_nat=dict(
-            type='str' 
+            type='bool' 
         ),
         call_id_persist_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         client_keep_alive=dict(
-            type='str' 
+            type='bool' 
         ),
         client_request_header=dict(
-            type='str' 
+            type='list' 
         ),
         client_response_header=dict(
-            type='str' 
+            type='list' 
         ),
         dialog_aware=dict(
-            type='str' 
+            type='bool' 
         ),
         drop_when_client_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         drop_when_server_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         exclude_translation=dict(
-            type='str' 
+            type='list' 
         ),
         failed_client_selection=dict(
-            type='str' 
+            type='bool' 
         ),
         failed_client_selection_message=dict(
             type='str' 
         ),
         failed_server_selection=dict(
-            type='str' 
+            type='bool' 
         ),
         failed_server_selection_message=dict(
             type='str' 
         ),
         insert_client_ip=dict(
-            type='str' 
+            type='bool' 
         ),
         interval=dict(
-            type='str' 
+            type='int' 
         ),
         keep_server_ip_if_match_acl=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' , required=True
@@ -219,25 +219,25 @@ def get_argspec():
             type='str' 
         ),
         server_keep_alive=dict(
-            type='str' 
+            type='bool' 
         ),
         server_request_header=dict(
-            type='str' 
+            type='list' 
         ),
         server_response_header=dict(
-            type='str' 
+            type='list' 
         ),
         server_selection_per_request=dict(
-            type='str' 
+            type='bool' 
         ),
         service_group=dict(
             type='str' 
         ),
         smp_call_id_rtp_session=dict(
-            type='str' 
+            type='bool' 
         ),
         timeout=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -281,6 +281,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -382,8 +384,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

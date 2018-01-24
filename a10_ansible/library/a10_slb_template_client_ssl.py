@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_client-ssl
+module: a10_slb_template_client-ssl
 description:
-    - 
+    - Client SSL Template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -493,7 +493,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","ca_certs","cache_persistence_list_name","case_insensitive","cert","cert_revoke_action","cert_unknown_action","chain_cert","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_class_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_list_name","key","key_encrypted","key_passphrase","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","template_cipher","template_hsm","user_tag","uuid","verify_cert_fail_action","version","web_category",}
+AVAILABLE_PROPERTIES = ["alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","ca_certs","cache_persistence_list_name","case_insensitive","cert","cert_revoke_action","cert_unknown_action","chain_cert","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_class_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_list_name","key","key_encrypted","key_passphrase","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","template_cipher","template_hsm","user_tag","uuid","verify_cert_fail_action","version","web_category",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -512,13 +512,13 @@ def get_argspec():
     rv.update(dict(
         
         alert_type=dict(
-            type='enum' , choices=['fatal']
+            type='str' , choices=['fatal']
         ),
         auth_sg=dict(
             type='str' 
         ),
         auth_sg_dn=dict(
-            type='str' 
+            type='bool' 
         ),
         auth_sg_filter=dict(
             type='str' 
@@ -533,91 +533,91 @@ def get_argspec():
             type='str' 
         ),
         authorization=dict(
-            type='str' 
+            type='bool' 
         ),
         ca_certs=dict(
-            type='str' 
+            type='list' 
         ),
         cache_persistence_list_name=dict(
             type='str' 
         ),
         case_insensitive=dict(
-            type='str' 
+            type='bool' 
         ),
         cert=dict(
             type='str' 
         ),
         cert_revoke_action=dict(
-            type='enum' , choices=['bypass', 'continue', 'drop']
+            type='str' , choices=['bypass', 'continue', 'drop']
         ),
         cert_unknown_action=dict(
-            type='enum' , choices=['bypass', 'continue', 'drop']
+            type='str' , choices=['bypass', 'continue', 'drop']
         ),
         chain_cert=dict(
             type='str' 
         ),
         cipher_without_prio_list=dict(
-            type='str' 
+            type='list' 
         ),
         class_list_name=dict(
             type='str' 
         ),
         client_auth_case_insensitive=dict(
-            type='str' 
+            type='bool' 
         ),
         client_auth_class_list=dict(
             type='str' 
         ),
         client_auth_contains_list=dict(
-            type='str' 
+            type='list' 
         ),
         client_auth_ends_with_list=dict(
-            type='str' 
+            type='list' 
         ),
         client_auth_equals_list=dict(
-            type='str' 
+            type='list' 
         ),
         client_auth_starts_with_list=dict(
-            type='str' 
+            type='list' 
         ),
         client_certificate=dict(
-            type='enum' , choices=['Ignore', 'Require', 'Request']
+            type='str' , choices=['Ignore', 'Require', 'Request']
         ),
         close_notify=dict(
-            type='str' 
+            type='bool' 
         ),
         contains_list=dict(
-            type='str' 
+            type='list' 
         ),
         crl_certs=dict(
-            type='str' 
+            type='list' 
         ),
         dgversion=dict(
-            type='str' 
+            type='int' 
         ),
         dh_type=dict(
-            type='enum' , choices=['1024', '1024-dsa', '2048']
+            type='str' , choices=['1024', '1024-dsa', '2048']
         ),
         disable_sslv3=dict(
-            type='str' 
+            type='bool' 
         ),
         ec_list=dict(
-            type='str' 
+            type='list' 
         ),
         enable_tls_alert_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         ends_with_list=dict(
-            type='str' 
+            type='list' 
         ),
         equals_list=dict(
-            type='str' 
+            type='list' 
         ),
         exception_class_list=dict(
             type='str' 
         ),
         expire_hours=dict(
-            type='str' 
+            type='int' 
         ),
         forward_encrypted=dict(
             type='str' 
@@ -626,7 +626,7 @@ def get_argspec():
             type='str' 
         ),
         forward_proxy_alt_sign=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_ca_cert=dict(
             type='str' 
@@ -635,55 +635,55 @@ def get_argspec():
             type='str' 
         ),
         forward_proxy_cert_cache_limit=dict(
-            type='str' 
+            type='int' 
         ),
         forward_proxy_cert_cache_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         forward_proxy_cert_expiry=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_cert_not_ready_action=dict(
-            type='enum' , choices=['bypass', 'reset']
+            type='str' , choices=['bypass', 'reset']
         ),
         forward_proxy_cert_revoke_action=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_cert_unknown_action=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_crl_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_decrypted_dscp=dict(
-            type='str' 
+            type='int' 
         ),
         forward_proxy_decrypted_dscp_bypass=dict(
-            type='str' 
+            type='int' 
         ),
         forward_proxy_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_failsafe_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_log_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_ocsp_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_selfsign_redir=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_proxy_ssl_version=dict(
-            type='str' 
+            type='int' 
         ),
         forward_proxy_trusted_ca_lists=dict(
-            type='str' 
+            type='list' 
         ),
         forward_proxy_verify_cert_fail_action=dict(
-            type='str' 
+            type='bool' 
         ),
         fp_alt_cert=dict(
             type='str' 
@@ -707,22 +707,22 @@ def get_argspec():
             type='str' 
         ),
         fp_cert_fetch_autonat=dict(
-            type='enum' , choices=['auto']
+            type='str' , choices=['auto']
         ),
         fp_cert_fetch_autonat_precedence=dict(
-            type='str' 
+            type='bool' 
         ),
         fp_cert_fetch_natpool_name=dict(
             type='str' 
         ),
         fp_cert_fetch_natpool_precedence=dict(
-            type='str' 
+            type='bool' 
         ),
         handshake_logging_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         hsm_type=dict(
-            type='enum' , choices=['thales-embed', 'thales-hwcrhk']
+            type='str' , choices=['thales-embed', 'thales-hwcrhk']
         ),
         inspect_list_name=dict(
             type='str' 
@@ -737,16 +737,16 @@ def get_argspec():
             type='str' 
         ),
         ldap_base_dn_from_cert=dict(
-            type='str' 
+            type='bool' 
         ),
         ldap_search_filter=dict(
             type='str' 
         ),
         local_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         multi_class_list=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True
@@ -755,106 +755,106 @@ def get_argspec():
             type='str' 
         ),
         notafter=dict(
-            type='str' 
+            type='bool' 
         ),
         notafterday=dict(
-            type='str' 
+            type='int' 
         ),
         notaftermonth=dict(
-            type='str' 
+            type='int' 
         ),
         notafteryear=dict(
-            type='str' 
+            type='int' 
         ),
         notbefore=dict(
-            type='str' 
+            type='bool' 
         ),
         notbeforeday=dict(
-            type='str' 
+            type='int' 
         ),
         notbeforemonth=dict(
-            type='str' 
+            type='int' 
         ),
         notbeforeyear=dict(
-            type='str' 
+            type='int' 
         ),
         ocsp_stapling=dict(
-            type='str' 
+            type='bool' 
         ),
         ocspst_ca_cert=dict(
             type='str' 
         ),
         ocspst_ocsp=dict(
-            type='str' 
+            type='bool' 
         ),
         ocspst_sg=dict(
             type='str' 
         ),
         ocspst_sg_days=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_sg_hours=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_sg_minutes=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_sg_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_srvr=dict(
             type='str' 
         ),
         ocspst_srvr_days=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_srvr_hours=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_srvr_minutes=dict(
-            type='str' 
+            type='int' 
         ),
         ocspst_srvr_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         renegotiation_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         req_ca_lists=dict(
-            type='str' 
+            type='list' 
         ),
         server_name_auto_map=dict(
-            type='str' 
+            type='bool' 
         ),
         server_name_list=dict(
-            type='str' 
+            type='list' 
         ),
         session_cache_size=dict(
-            type='str' 
+            type='int' 
         ),
         session_cache_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         session_ticket_lifetime=dict(
-            type='str' 
+            type='int' 
         ),
         sni_enable_log=dict(
-            type='str' 
+            type='bool' 
         ),
         ssl_false_start_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         ssli_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         sslilogging=dict(
-            type='enum' , choices=['disable', 'all']
+            type='str' , choices=['disable', 'all']
         ),
         sslv2_bypass_service_group=dict(
             type='str' 
         ),
         starts_with_list=dict(
-            type='str' 
+            type='list' 
         ),
         template_cipher=dict(
             type='str' 
@@ -869,10 +869,10 @@ def get_argspec():
             type='str' 
         ),
         verify_cert_fail_action=dict(
-            type='enum' , choices=['bypass', 'continue', 'drop']
+            type='str' , choices=['bypass', 'continue', 'drop']
         ),
         version=dict(
-            type='str' 
+            type='int' 
         ),
         web_category=dict(
             type='str' 
@@ -913,6 +913,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -1014,8 +1016,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

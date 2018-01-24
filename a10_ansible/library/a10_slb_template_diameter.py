@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_diameter
+module: a10_slb_template_diameter
 description:
-    - 
+    - diameter template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -107,7 +107,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"avp_code","avp_list","avp_string","customize_cea","dwr_time","dwr_up_retry","forward_to_latest_server","forward_unknown_session_id","idle_timeout","load_balance_on_session_id","message_code_list","multiple_origin_host","name","origin_host","origin_realm","product_name","service_group_name","session_age","terminate_on_cca_t","user_tag","uuid","vendor_id",}
+AVAILABLE_PROPERTIES = ["avp_code","avp_list","avp_string","customize_cea","dwr_time","dwr_up_retry","forward_to_latest_server","forward_unknown_session_id","idle_timeout","load_balance_on_session_id","message_code_list","multiple_origin_host","name","origin_host","origin_realm","product_name","service_group_name","session_age","terminate_on_cca_t","user_tag","uuid","vendor_id",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -126,40 +126,40 @@ def get_argspec():
     rv.update(dict(
         
         avp_code=dict(
-            type='str' 
+            type='int' 
         ),
         avp_list=dict(
-            type='str' 
+            type='list' 
         ),
         avp_string=dict(
             type='str' 
         ),
         customize_cea=dict(
-            type='str' 
+            type='bool' 
         ),
         dwr_time=dict(
-            type='str' 
+            type='int' 
         ),
         dwr_up_retry=dict(
-            type='str' 
+            type='int' 
         ),
         forward_to_latest_server=dict(
-            type='str' 
+            type='bool' 
         ),
         forward_unknown_session_id=dict(
-            type='str' 
+            type='bool' 
         ),
         idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         load_balance_on_session_id=dict(
-            type='str' 
+            type='bool' 
         ),
         message_code_list=dict(
-            type='str' 
+            type='list' 
         ),
         multiple_origin_host=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' , required=True
@@ -177,10 +177,10 @@ def get_argspec():
             type='str' 
         ),
         session_age=dict(
-            type='str' 
+            type='int' 
         ),
         terminate_on_cca_t=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -189,7 +189,7 @@ def get_argspec():
             type='str' 
         ),
         vendor_id=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -227,6 +227,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -328,8 +330,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

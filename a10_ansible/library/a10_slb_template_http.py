@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_http
+module: a10_slb_template_http
 description:
-    - 
+    - HTTP
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -226,7 +226,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"100_cont_wait_for_req_complete","bypass_sg","client_ip_hdr_replace","client_port_hdr_replace","compression_auto_disable_on_high_cpu","compression_content_type","compression_enable","compression_exclude_content_type","compression_exclude_uri","compression_keep_accept_encoding","compression_keep_accept_encoding_enable","compression_level","compression_minimum_content_length","cookie_format","failover_url","host_switching","insert_client_ip","insert_client_ip_header_name","insert_client_port","insert_client_port_header_name","keep_client_alive","log_retry","name","non_http_bypass","persist_on_401","rd_port","rd_resp_code","rd_secure","rd_simple_loc","redirect","redirect_rewrite","req_hdr_wait_time","req_hdr_wait_time_val","request_header_erase_list","request_header_insert_list","request_line_case_insensitive","response_content_replace_list","response_header_erase_list","response_header_insert_list","retry_on_5xx","retry_on_5xx_per_req","retry_on_5xx_per_req_val","retry_on_5xx_val","strict_transaction_switch","template","term_11client_hdr_conn_close","url_hash_first","url_hash_last","url_hash_offset","url_hash_persist","url_switching","use_server_status","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["100_cont_wait_for_req_complete","bypass_sg","client_ip_hdr_replace","client_port_hdr_replace","compression_auto_disable_on_high_cpu","compression_content_type","compression_enable","compression_exclude_content_type","compression_exclude_uri","compression_keep_accept_encoding","compression_keep_accept_encoding_enable","compression_level","compression_minimum_content_length","cookie_format","failover_url","host_switching","insert_client_ip","insert_client_ip_header_name","insert_client_port","insert_client_port_header_name","keep_client_alive","log_retry","name","non_http_bypass","persist_on_401","rd_port","rd_resp_code","rd_secure","rd_simple_loc","redirect","redirect_rewrite","req_hdr_wait_time","req_hdr_wait_time_val","request_header_erase_list","request_header_insert_list","request_line_case_insensitive","response_content_replace_list","response_header_erase_list","response_header_insert_list","retry_on_5xx","retry_on_5xx_per_req","retry_on_5xx_per_req_val","retry_on_5xx_val","strict_transaction_switch","template","term_11client_hdr_conn_close","url_hash_first","url_hash_last","url_hash_offset","url_hash_persist","url_switching","use_server_status","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -245,160 +245,160 @@ def get_argspec():
     rv.update(dict(
         
         100_cont_wait_for_req_complete=dict(
-            type='str' 
+            type='bool' 
         ),
         bypass_sg=dict(
             type='str' 
         ),
         client_ip_hdr_replace=dict(
-            type='str' 
+            type='bool' 
         ),
         client_port_hdr_replace=dict(
-            type='str' 
+            type='bool' 
         ),
         compression_auto_disable_on_high_cpu=dict(
-            type='str' 
+            type='int' 
         ),
         compression_content_type=dict(
-            type='str' 
+            type='list' 
         ),
         compression_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         compression_exclude_content_type=dict(
-            type='str' 
+            type='list' 
         ),
         compression_exclude_uri=dict(
-            type='str' 
+            type='list' 
         ),
         compression_keep_accept_encoding=dict(
-            type='str' 
+            type='bool' 
         ),
         compression_keep_accept_encoding_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         compression_level=dict(
-            type='str' 
+            type='int' 
         ),
         compression_minimum_content_length=dict(
-            type='str' 
+            type='int' 
         ),
         cookie_format=dict(
-            type='enum' , choices=['rfc6265']
+            type='str' , choices=['rfc6265']
         ),
         failover_url=dict(
             type='str' 
         ),
         host_switching=dict(
-            type='str' 
+            type='list' 
         ),
         insert_client_ip=dict(
-            type='str' 
+            type='bool' 
         ),
         insert_client_ip_header_name=dict(
             type='str' 
         ),
         insert_client_port=dict(
-            type='str' 
+            type='bool' 
         ),
         insert_client_port_header_name=dict(
             type='str' 
         ),
         keep_client_alive=dict(
-            type='str' 
+            type='bool' 
         ),
         log_retry=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' , required=True
         ),
         non_http_bypass=dict(
-            type='str' 
+            type='bool' 
         ),
         persist_on_401=dict(
-            type='str' 
+            type='bool' 
         ),
         rd_port=dict(
-            type='str' 
+            type='int' 
         ),
         rd_resp_code=dict(
-            type='enum' , choices=['301', '302', '303', '307']
+            type='str' , choices=['301', '302', '303', '307']
         ),
         rd_secure=dict(
-            type='str' 
+            type='bool' 
         ),
         rd_simple_loc=dict(
             type='str' 
         ),
         redirect=dict(
-            type='str' 
+            type='bool' 
         ),
         redirect_rewrite=dict(
             type='str' 
         ),
         req_hdr_wait_time=dict(
-            type='str' 
+            type='bool' 
         ),
         req_hdr_wait_time_val=dict(
-            type='str' 
+            type='int' 
         ),
         request_header_erase_list=dict(
-            type='str' 
+            type='list' 
         ),
         request_header_insert_list=dict(
-            type='str' 
+            type='list' 
         ),
         request_line_case_insensitive=dict(
-            type='str' 
+            type='bool' 
         ),
         response_content_replace_list=dict(
-            type='str' 
+            type='list' 
         ),
         response_header_erase_list=dict(
-            type='str' 
+            type='list' 
         ),
         response_header_insert_list=dict(
-            type='str' 
+            type='list' 
         ),
         retry_on_5xx=dict(
-            type='str' 
+            type='bool' 
         ),
         retry_on_5xx_per_req=dict(
-            type='str' 
+            type='bool' 
         ),
         retry_on_5xx_per_req_val=dict(
-            type='str' 
+            type='int' 
         ),
         retry_on_5xx_val=dict(
-            type='str' 
+            type='int' 
         ),
         strict_transaction_switch=dict(
-            type='str' 
+            type='bool' 
         ),
         template=dict(
             type='str' 
         ),
         term_11client_hdr_conn_close=dict(
-            type='str' 
+            type='bool' 
         ),
         url_hash_first=dict(
-            type='str' 
+            type='int' 
         ),
         url_hash_last=dict(
-            type='str' 
+            type='int' 
         ),
         url_hash_offset=dict(
-            type='str' 
+            type='int' 
         ),
         url_hash_persist=dict(
-            type='str' 
+            type='bool' 
         ),
         url_switching=dict(
-            type='str' 
+            type='list' 
         ),
         use_server_status=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -442,6 +442,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -543,8 +545,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

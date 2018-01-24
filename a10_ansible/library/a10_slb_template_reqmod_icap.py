@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_reqmod-icap
+module: a10_slb_template_reqmod-icap
 description:
-    - 
+    - REQMOD ICAP template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -85,7 +85,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action","allowed_http_methods","bypass_ip_cfg","fail_close","include_protocol_in_uri","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","source_ip","tcp_proxy","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["action","allowed_http_methods","bypass_ip_cfg","fail_close","include_protocol_in_uri","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","source_ip","tcp_proxy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -104,31 +104,31 @@ def get_argspec():
     rv.update(dict(
         
         action=dict(
-            type='enum' , choices=['continue', 'drop', 'reset']
+            type='str' , choices=['continue', 'drop', 'reset']
         ),
         allowed_http_methods=dict(
             type='str' 
         ),
         bypass_ip_cfg=dict(
-            type='str' 
+            type='list' 
         ),
         fail_close=dict(
-            type='str' 
+            type='bool' 
         ),
         include_protocol_in_uri=dict(
-            type='str' 
+            type='bool' 
         ),
         logging=dict(
             type='str' 
         ),
         min_payload_size=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         preview=dict(
-            type='str' 
+            type='int' 
         ),
         server_ssl=dict(
             type='str' 
@@ -187,6 +187,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -288,8 +290,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

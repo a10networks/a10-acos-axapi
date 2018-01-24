@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_smtp
+module: a10_slb_template_smtp
 description:
-    - 
+    - SMTP
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -56,7 +56,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"client_domain_switching","client_starttls_type","command_disable","name","server_domain","server_starttls_type","service_ready_msg","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["client_domain_switching","client_starttls_type","command_disable","name","server_domain","server_starttls_type","service_ready_msg","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -75,13 +75,13 @@ def get_argspec():
     rv.update(dict(
         
         client_domain_switching=dict(
-            type='str' 
+            type='list' 
         ),
         client_starttls_type=dict(
-            type='enum' , choices=['optional', 'enforced']
+            type='str' , choices=['optional', 'enforced']
         ),
         command_disable=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True
@@ -90,7 +90,7 @@ def get_argspec():
             type='str' 
         ),
         server_starttls_type=dict(
-            type='enum' , choices=['optional', 'enforced']
+            type='str' , choices=['optional', 'enforced']
         ),
         service_ready_msg=dict(
             type='str' 
@@ -137,6 +137,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -238,8 +240,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

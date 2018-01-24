@@ -1,0 +1,39 @@
+
+
+- name: Create a10_slb_template_imap_pop3 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_imap_pop3 instance
+    a10_slb_template_imap_pop3:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_imap-pop3
+      starttls: disabled
+
+- name: Update a10_slb_template_imap_pop3 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_imap_pop3 instance
+    a10_slb_template_imap_pop3:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_imap-pop3
+      starttls: disabled
+
+- name: Delete a10_slb_template_imap_pop3 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_imap_pop3 instance
+    a10_slb_template_imap_pop3:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_imap-pop3
+      starttls: disabled

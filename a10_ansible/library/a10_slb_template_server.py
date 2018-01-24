@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_server
+module: a10_slb_template_server
 description:
-    - 
+    - Server template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -146,7 +146,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"add","bw_rate_limit","bw_rate_limit_acct","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","dns_query_interval","dynamic_server_prefix","every","extended_stats","health_check","health_check_disable","initial_slow_start","log_selection_failure","max_dynamic_server","min_ttl_ratio","name","rate_interval","resume","slow_start","spoofing_cache","stats_data_action","till","times","user_tag","uuid","weight",}
+AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_acct","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","dns_query_interval","dynamic_server_prefix","every","extended_stats","health_check","health_check_disable","initial_slow_start","log_selection_failure","max_dynamic_server","min_ttl_ratio","name","rate_interval","resume","slow_start","spoofing_cache","stats_data_action","till","times","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -165,88 +165,88 @@ def get_argspec():
     rv.update(dict(
         
         add=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit_acct=dict(
-            type='enum' , choices=['to-server-only', 'from-server-only', 'all']
+            type='str' , choices=['to-server-only', 'from-server-only', 'all']
         ),
         bw_rate_limit_duration=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         bw_rate_limit_resume=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         dns_query_interval=dict(
-            type='str' 
+            type='int' 
         ),
         dynamic_server_prefix=dict(
             type='str' 
         ),
         every=dict(
-            type='str' 
+            type='int' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         health_check=dict(
             type='str' 
         ),
         health_check_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         initial_slow_start=dict(
-            type='str' 
+            type='int' 
         ),
         log_selection_failure=dict(
-            type='str' 
+            type='bool' 
         ),
         max_dynamic_server=dict(
-            type='str' 
+            type='int' 
         ),
         min_ttl_ratio=dict(
-            type='str' 
+            type='int' 
         ),
         name=dict(
             type='str' , required=True
         ),
         rate_interval=dict(
-            type='enum' , choices=['100ms', 'second']
+            type='str' , choices=['100ms', 'second']
         ),
         resume=dict(
-            type='str' 
+            type='int' 
         ),
         slow_start=dict(
-            type='str' 
+            type='bool' 
         ),
         spoofing_cache=dict(
-            type='str' 
+            type='bool' 
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         till=dict(
-            type='str' 
+            type='int' 
         ),
         times=dict(
-            type='str' 
+            type='int' 
         ),
         user_tag=dict(
             type='str' 
@@ -255,7 +255,7 @@ def get_argspec():
             type='str' 
         ),
         weight=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -293,6 +293,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -394,8 +396,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_trunk-group
+module: a10_interface_ethernet_trunk-group
 description:
-    - 
+    - Trunk Group Settings
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -57,7 +57,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"admin_key","mode","port_priority","timeout","trunk_number","type","udld_timeout_cfg","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["admin_key","mode","port_priority","timeout","trunk_number","type","udld_timeout_cfg","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -76,22 +76,22 @@ def get_argspec():
     rv.update(dict(
         
         admin_key=dict(
-            type='str' 
+            type='int' 
         ),
         mode=dict(
-            type='enum' , choices=['active', 'passive']
+            type='str' , choices=['active', 'passive']
         ),
         port_priority=dict(
-            type='str' 
+            type='int' 
         ),
         timeout=dict(
-            type='enum' , choices=['long', 'short']
+            type='str' , choices=['long', 'short']
         ),
         trunk_number=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         type=dict(
-            type='enum' , choices=['static', 'lacp', 'lacp-udld']
+            type='str' , choices=['static', 'lacp', 'lacp-udld']
         ),
         udld_timeout_cfg=dict(
             type='str' 
@@ -138,6 +138,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -239,8 +241,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

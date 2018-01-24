@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_virtual-server
+module: a10_slb_virtual-server
 description:
-    - 
+    - Create a Virtual Server
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -124,7 +124,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"acl_id","acl_name","arp_disable","description","disable_vip_adv","enable_disable_action","ethernet","extended_stats","ip_address","ipv6_acl","ipv6_address","migrate_vip","name","netmask","port_list","redistribute_route_map","redistribution_flagged","stats_data_action","template_logging","template_policy","template_scaleout","template_virtual_server","use_if_ip","user_tag","uuid","vrid",}
+AVAILABLE_PROPERTIES = ["acl_id","acl_name","arp_disable","description","disable_vip_adv","enable_disable_action","ethernet","extended_stats","ip_address","ipv6_acl","ipv6_address","migrate_vip","name","netmask","port_list","redistribute_route_map","redistribution_flagged","stats_data_action","template_logging","template_policy","template_scaleout","template_virtual_server","use_if_ip","user_tag","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -143,28 +143,28 @@ def get_argspec():
     rv.update(dict(
         
         acl_id=dict(
-            type='str' 
+            type='int' 
         ),
         acl_name=dict(
             type='str' 
         ),
         arp_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         description=dict(
             type='str' 
         ),
         disable_vip_adv=dict(
-            type='str' 
+            type='bool' 
         ),
         enable_disable_action=dict(
-            type='enum' , choices=['enable', 'disable', 'disable-when-all-ports-down', 'disable-when-any-port-down']
+            type='str' , choices=['enable', 'disable', 'disable-when-all-ports-down', 'disable-when-any-port-down']
         ),
         ethernet=dict(
             type='str' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         ip_address=dict(
             type='str' 
@@ -185,16 +185,16 @@ def get_argspec():
             type='str' 
         ),
         port_list=dict(
-            type='str' 
+            type='list' 
         ),
         redistribute_route_map=dict(
             type='str' 
         ),
         redistribution_flagged=dict(
-            type='str' 
+            type='bool' 
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         template_logging=dict(
             type='str' 
@@ -209,7 +209,7 @@ def get_argspec():
             type='str' 
         ),
         use_if_ip=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -218,7 +218,7 @@ def get_argspec():
             type='str' 
         ),
         vrid=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -256,12 +256,14 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
+    requires_one_of = sorted(['ip_address','ipv6_address',])
     present_keys = sorted([x for x in requires_one_of if params.get(x)])
     
     errors = []
@@ -357,8 +359,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

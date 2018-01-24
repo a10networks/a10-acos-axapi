@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_port
+module: a10_slb_virtual-server_port
 description:
-    - 
+    - Virtual Port
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -405,7 +405,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"acl_id_list","acl_name_list","action","aflex_scripts","alt_protocol1","alt_protocol2","alternate_port","alternate_port_number","auth_cfg","auto","clientip_sticky_nat","conn_limit","def_selection_if_pref_failed","enable_playerid_check","eth_fwd","eth_rev","expand","extended_stats","force_routing_mode","gslb_enable","ha_conn_mirror","ipinip","l7_hardware_assist","message_switching","name","no_auto_up_on_aflex","no_dest_nat","no_logging","on_syn","persist_type","pool","port_number","port_translation","precedence","protocol","range","rate","redirect_to_https","req_fail","reset","reset_on_server_selection_fail","rtp_sip_call_id_match","sampling_enable","scaleout_bucket_count","scaleout_device_group","secs","serv_sel_fail","service_group","skip_rev_hash","snat_on_vip","stats_data_action","syn_cookie","template_cache","template_client_ssl","template_connection_reuse","template_dblb","template_diameter","template_dns","template_dynamic_service","template_external_service","template_file_inspection","template_fix","template_ftp","template_http","template_http_policy","template_imap_pop3","template_persist_cookie","template_persist_destination_ip","template_persist_source_ip","template_persist_ssl_sid","template_policy","template_reqmod_icap","template_respmod_icap","template_scaleout","template_server_ssl","template_sip","template_smpp","template_smtp","template_ssli","template_tcp","template_tcp_proxy","template_tcp_proxy_client","template_tcp_proxy_server","template_udp","template_virtual_port","trunk_fwd","trunk_rev","use_alternate_port","use_cgnv6","use_default_if_no_server","use_rcv_hop_for_resp","user_tag","uuid","view","waf_template","when_down","when_down_protocol2",}
+AVAILABLE_PROPERTIES = ["acl_id_list","acl_name_list","action","aflex_scripts","alt_protocol1","alt_protocol2","alternate_port","alternate_port_number","auth_cfg","auto","clientip_sticky_nat","conn_limit","def_selection_if_pref_failed","enable_playerid_check","eth_fwd","eth_rev","expand","extended_stats","force_routing_mode","gslb_enable","ha_conn_mirror","ipinip","l7_hardware_assist","message_switching","name","no_auto_up_on_aflex","no_dest_nat","no_logging","on_syn","persist_type","pool","port_number","port_translation","precedence","protocol","range","rate","redirect_to_https","req_fail","reset","reset_on_server_selection_fail","rtp_sip_call_id_match","sampling_enable","scaleout_bucket_count","scaleout_device_group","secs","serv_sel_fail","service_group","skip_rev_hash","snat_on_vip","stats_data_action","syn_cookie","template_cache","template_client_ssl","template_connection_reuse","template_dblb","template_diameter","template_dns","template_dynamic_service","template_external_service","template_file_inspection","template_fix","template_ftp","template_http","template_http_policy","template_imap_pop3","template_persist_cookie","template_persist_destination_ip","template_persist_source_ip","template_persist_ssl_sid","template_policy","template_reqmod_icap","template_respmod_icap","template_scaleout","template_server_ssl","template_sip","template_smpp","template_smtp","template_ssli","template_tcp","template_tcp_proxy","template_tcp_proxy_client","template_tcp_proxy_server","template_udp","template_virtual_port","trunk_fwd","trunk_rev","use_alternate_port","use_cgnv6","use_default_if_no_server","use_rcv_hop_for_resp","user_tag","uuid","view","waf_template","when_down","when_down_protocol2",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -424,46 +424,46 @@ def get_argspec():
     rv.update(dict(
         
         acl_id_list=dict(
-            type='str' 
+            type='list' 
         ),
         acl_name_list=dict(
-            type='str' 
+            type='list' 
         ),
         action=dict(
-            type='enum' , choices=['enable', 'disable']
+            type='str' , choices=['enable', 'disable']
         ),
         aflex_scripts=dict(
-            type='str' 
+            type='list' 
         ),
         alt_protocol1=dict(
-            type='enum' , choices=['http']
+            type='str' , choices=['http']
         ),
         alt_protocol2=dict(
-            type='enum' , choices=['tcp']
+            type='str' , choices=['tcp']
         ),
         alternate_port=dict(
-            type='str' 
+            type='bool' 
         ),
         alternate_port_number=dict(
-            type='str' 
+            type='int' 
         ),
         auth_cfg=dict(
             type='str' 
         ),
         auto=dict(
-            type='str' 
+            type='bool' 
         ),
         clientip_sticky_nat=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         def_selection_if_pref_failed=dict(
-            type='enum' , choices=['def-selection-if-pref-failed', 'def-selection-if-pref-failed-disable']
+            type='str' , choices=['def-selection-if-pref-failed', 'def-selection-if-pref-failed-disable']
         ),
         enable_playerid_check=dict(
-            type='str' 
+            type='bool' 
         ),
         eth_fwd=dict(
             type='str' 
@@ -472,112 +472,112 @@ def get_argspec():
             type='str' 
         ),
         expand=dict(
-            type='str' 
+            type='bool' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         force_routing_mode=dict(
-            type='str' 
+            type='bool' 
         ),
         gslb_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         ha_conn_mirror=dict(
-            type='str' 
+            type='bool' 
         ),
         ipinip=dict(
-            type='str' 
+            type='bool' 
         ),
         l7_hardware_assist=dict(
-            type='str' 
+            type='bool' 
         ),
         message_switching=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' 
         ),
         no_auto_up_on_aflex=dict(
-            type='str' 
+            type='bool' 
         ),
         no_dest_nat=dict(
-            type='str' 
+            type='bool' 
         ),
         no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         on_syn=dict(
-            type='str' 
+            type='bool' 
         ),
         persist_type=dict(
-            type='enum' , choices=['src-dst-ip-swap-persist', 'use-src-ip-for-dst-persist', 'use-dst-ip-for-src-persist']
+            type='str' , choices=['src-dst-ip-swap-persist', 'use-src-ip-for-dst-persist', 'use-dst-ip-for-src-persist']
         ),
         pool=dict(
             type='str' 
         ),
         port_number=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         port_translation=dict(
-            type='str' 
+            type='bool' 
         ),
         precedence=dict(
-            type='str' 
+            type='bool' 
         ),
         protocol=dict(
-            type='enum' , required=True, choices=['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'tcp-proxy', 'tftp', 'fast-fix']
+            type='str' , required=True, choices=['tcp', 'udp', 'others', 'diameter', 'dns-tcp', 'dns-udp', 'fast-http', 'fix', 'ftp', 'ftp-proxy', 'http', 'https', 'http2', 'http2s', 'imap', 'mlb', 'mms', 'mysql', 'mssql', 'pop3', 'radius', 'rtsp', 'sip', 'sip-tcp', 'sips', 'smpp-tcp', 'spdy', 'spdys', 'smtp', 'ssl-proxy', 'ssli', 'tcp-proxy', 'tftp', 'fast-fix']
         ),
         range=dict(
-            type='str' 
+            type='int' 
         ),
         rate=dict(
-            type='str' 
+            type='int' 
         ),
         redirect_to_https=dict(
-            type='str' 
+            type='bool' 
         ),
         req_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         reset=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_on_server_selection_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         rtp_sip_call_id_match=dict(
-            type='str' 
+            type='bool' 
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         scaleout_bucket_count=dict(
-            type='str' 
+            type='int' 
         ),
         scaleout_device_group=dict(
-            type='str' 
+            type='int' 
         ),
         secs=dict(
-            type='str' 
+            type='int' 
         ),
         serv_sel_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         service_group=dict(
             type='str' 
         ),
         skip_rev_hash=dict(
-            type='str' 
+            type='bool' 
         ),
         snat_on_vip=dict(
-            type='str' 
+            type='bool' 
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         syn_cookie=dict(
-            type='str' 
+            type='bool' 
         ),
         template_cache=dict(
             type='str' 
@@ -685,16 +685,16 @@ def get_argspec():
             type='str' 
         ),
         use_alternate_port=dict(
-            type='str' 
+            type='bool' 
         ),
         use_cgnv6=dict(
-            type='str' 
+            type='bool' 
         ),
         use_default_if_no_server=dict(
-            type='str' 
+            type='bool' 
         ),
         use_rcv_hop_for_resp=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -703,16 +703,16 @@ def get_argspec():
             type='str' 
         ),
         view=dict(
-            type='str' 
+            type='int' 
         ),
         waf_template=dict(
             type='str' 
         ),
         when_down=dict(
-            type='str' 
+            type='bool' 
         ),
         when_down_protocol2=dict(
-            type='str' 
+            type='bool' 
         ), 
     ))
     return rv
@@ -752,6 +752,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -853,8 +855,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

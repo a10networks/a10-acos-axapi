@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_server-ssl
+module: a10_slb_template_server-ssl
 description:
-    - 
+    - Server Side SSL Template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -133,7 +133,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"alert_type","ca_certs","cert","cipher_template","cipher_without_prio_list","close_notify","crl_certs","dgversion","dh_type","ec_list","enable_tls_alert_logging","encrypted","forward_proxy_enable","handshake_logging_enable","key","name","ocsp_stapling","passphrase","renegotiation_disable","server_certificate_error","session_cache_size","session_cache_timeout","session_ticket_enable","ssli_logging","sslilogging","use_client_sni","user_tag","uuid","version",}
+AVAILABLE_PROPERTIES = ["alert_type","ca_certs","cert","cipher_template","cipher_without_prio_list","close_notify","crl_certs","dgversion","dh_type","ec_list","enable_tls_alert_logging","encrypted","forward_proxy_enable","handshake_logging_enable","key","name","ocsp_stapling","passphrase","renegotiation_disable","server_certificate_error","session_cache_size","session_cache_timeout","session_ticket_enable","ssli_logging","sslilogging","use_client_sni","user_tag","uuid","version",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -152,10 +152,10 @@ def get_argspec():
     rv.update(dict(
         
         alert_type=dict(
-            type='enum' , choices=['fatal']
+            type='str' , choices=['fatal']
         ),
         ca_certs=dict(
-            type='str' 
+            type='list' 
         ),
         cert=dict(
             type='str' 
@@ -164,34 +164,34 @@ def get_argspec():
             type='str' 
         ),
         cipher_without_prio_list=dict(
-            type='str' 
+            type='list' 
         ),
         close_notify=dict(
-            type='str' 
+            type='bool' 
         ),
         crl_certs=dict(
-            type='str' 
+            type='list' 
         ),
         dgversion=dict(
-            type='str' 
+            type='int' 
         ),
         dh_type=dict(
-            type='enum' , choices=['1024', '1024-dsa', '2048']
+            type='str' , choices=['1024', '1024-dsa', '2048']
         ),
         ec_list=dict(
-            type='str' 
+            type='list' 
         ),
         enable_tls_alert_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         encrypted=dict(
             type='str' 
         ),
         forward_proxy_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         handshake_logging_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         key=dict(
             type='str' 
@@ -200,34 +200,34 @@ def get_argspec():
             type='str' , required=True
         ),
         ocsp_stapling=dict(
-            type='str' 
+            type='bool' 
         ),
         passphrase=dict(
             type='str' 
         ),
         renegotiation_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         server_certificate_error=dict(
-            type='str' 
+            type='list' 
         ),
         session_cache_size=dict(
-            type='str' 
+            type='int' 
         ),
         session_cache_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         session_ticket_enable=dict(
-            type='str' 
+            type='bool' 
         ),
         ssli_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         sslilogging=dict(
-            type='enum' , choices=['disable', 'all']
+            type='str' , choices=['disable', 'all']
         ),
         use_client_sni=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -236,7 +236,7 @@ def get_argspec():
             type='str' 
         ),
         version=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -274,6 +274,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -375,8 +377,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

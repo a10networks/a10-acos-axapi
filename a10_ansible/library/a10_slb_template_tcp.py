@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_tcp
+module: a10_slb_template_tcp
 description:
-    - 
+    - L4 TCP switch config
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -98,7 +98,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_fwd","reset_rev","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_fwd","reset_rev","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -117,55 +117,55 @@ def get_argspec():
     rv.update(dict(
         
         alive_if_active=dict(
-            type='str' 
+            type='bool' 
         ),
         del_session_on_server_down=dict(
-            type='str' 
+            type='bool' 
         ),
         disable=dict(
-            type='str' 
+            type='bool' 
         ),
         down=dict(
-            type='str' 
+            type='bool' 
         ),
         force_delete_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         force_delete_timeout_100ms=dict(
-            type='str' 
+            type='int' 
         ),
         half_close_idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         half_open_idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         idle_timeout=dict(
-            type='str' 
+            type='int' 
         ),
         initial_window_size=dict(
-            type='str' 
+            type='int' 
         ),
         insert_client_ip=dict(
-            type='str' 
+            type='bool' 
         ),
         lan_fast_ack=dict(
-            type='str' 
+            type='bool' 
         ),
         logging=dict(
-            type='enum' , choices=['init', 'term', 'both']
+            type='str' , choices=['init', 'term', 'both']
         ),
         name=dict(
             type='str' , required=True
         ),
         qos=dict(
-            type='str' 
+            type='int' 
         ),
         reset_fwd=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_rev=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -209,6 +209,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -310,8 +312,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

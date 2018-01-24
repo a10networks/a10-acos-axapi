@@ -1,0 +1,48 @@
+
+
+- name: Create a10_slb_template_virtual_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_virtual_server instance
+    a10_slb_template_virtual_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      tcp_stack_tfo_cookie_time_limit: 1
+      tcp_stack_tfo_backoff_time: 1
+
+- name: Update a10_slb_template_virtual_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_virtual_server instance
+    a10_slb_template_virtual_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      tcp_stack_tfo_cookie_time_limit: 1
+      tcp_stack_tfo_backoff_time: 1
+
+- name: Delete a10_slb_template_virtual_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_virtual_server instance
+    a10_slb_template_virtual_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      tcp_stack_tfo_cookie_time_limit: 1
+      tcp_stack_tfo_backoff_time: 1

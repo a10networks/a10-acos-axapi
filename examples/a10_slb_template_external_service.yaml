@@ -1,0 +1,48 @@
+
+
+- name: Create a10_slb_template_external_service example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_external_service instance
+    a10_slb_template_external_service:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_external-service
+      failure_action: continue
+      timeout: 1
+      action: continue
+      type: url-filter
+
+- name: Update a10_slb_template_external_service example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_external_service instance
+    a10_slb_template_external_service:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_external-service
+      failure_action: continue
+      timeout: 1
+      action: continue
+      type: url-filter
+
+- name: Delete a10_slb_template_external_service example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_external_service instance
+    a10_slb_template_external_service:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_external-service
+      failure_action: continue
+      timeout: 1
+      action: continue
+      type: url-filter

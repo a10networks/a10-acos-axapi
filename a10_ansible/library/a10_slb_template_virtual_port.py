@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_virtual-port
+module: a10_slb_template_virtual-port
 description:
-    - 
+    - Virtual port template
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -130,7 +130,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"aflow","allow_syn_otherflags","allow_vip_to_rport_mapping","conn_limit","conn_limit_no_logging","conn_limit_reset","conn_rate_limit","conn_rate_limit_no_logging","conn_rate_limit_reset","drop_unknown_conn","dscp","ignore_tcp_msl","log_options","name","non_syn_initiation","pkt_rate_interval","pkt_rate_limit_reset","pkt_rate_type","rate","rate_interval","reset_l7_on_failover","reset_unknown_conn","snat_msl","snat_port_preserve","user_tag","uuid","when_rr_enable",}
+AVAILABLE_PROPERTIES = ["aflow","allow_syn_otherflags","allow_vip_to_rport_mapping","conn_limit","conn_limit_no_logging","conn_limit_reset","conn_rate_limit","conn_rate_limit_no_logging","conn_rate_limit_reset","drop_unknown_conn","dscp","ignore_tcp_msl","log_options","name","non_syn_initiation","pkt_rate_interval","pkt_rate_limit_reset","pkt_rate_type","rate","rate_interval","reset_l7_on_failover","reset_unknown_conn","snat_msl","snat_port_preserve","user_tag","uuid","when_rr_enable",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -149,76 +149,76 @@ def get_argspec():
     rv.update(dict(
         
         aflow=dict(
-            type='str' 
+            type='bool' 
         ),
         allow_syn_otherflags=dict(
-            type='str' 
+            type='bool' 
         ),
         allow_vip_to_rport_mapping=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_limit_reset=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_limit_no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         conn_rate_limit_reset=dict(
-            type='str' 
+            type='bool' 
         ),
         drop_unknown_conn=dict(
-            type='str' 
+            type='bool' 
         ),
         dscp=dict(
-            type='str' 
+            type='int' 
         ),
         ignore_tcp_msl=dict(
-            type='str' 
+            type='bool' 
         ),
         log_options=dict(
-            type='enum' , choices=['no-logging', 'no-repeat-logging']
+            type='str' , choices=['no-logging', 'no-repeat-logging']
         ),
         name=dict(
             type='str' , required=True
         ),
         non_syn_initiation=dict(
-            type='str' 
+            type='bool' 
         ),
         pkt_rate_interval=dict(
-            type='enum' , choices=['100ms', 'second']
+            type='str' , choices=['100ms', 'second']
         ),
         pkt_rate_limit_reset=dict(
-            type='str' 
+            type='int' 
         ),
         pkt_rate_type=dict(
-            type='enum' , choices=['src-ip-port', 'src-port']
+            type='str' , choices=['src-ip-port', 'src-port']
         ),
         rate=dict(
-            type='str' 
+            type='int' 
         ),
         rate_interval=dict(
-            type='enum' , choices=['100ms', 'second']
+            type='str' , choices=['100ms', 'second']
         ),
         reset_l7_on_failover=dict(
-            type='str' 
+            type='bool' 
         ),
         reset_unknown_conn=dict(
-            type='str' 
+            type='bool' 
         ),
         snat_msl=dict(
-            type='str' 
+            type='int' 
         ),
         snat_port_preserve=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -227,7 +227,7 @@ def get_argspec():
             type='str' 
         ),
         when_rr_enable=dict(
-            type='str' 
+            type='bool' 
         ), 
     ))
     return rv
@@ -265,6 +265,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -366,8 +368,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

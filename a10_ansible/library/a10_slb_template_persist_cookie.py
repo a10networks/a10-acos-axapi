@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_cookie
+module: a10_slb_template_persist_cookie
 description:
-    - 
+    - Cookie persistence
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -102,7 +102,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"cookie_name","domain","dont_honor_conn_rules","encrypt_level","encrypted","expire","httponly","insert_always","match_type","name","pass_phrase","pass_thru","path","scan_all_members","secure","server","server_service_group","service_group","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["cookie_name","domain","dont_honor_conn_rules","encrypt_level","encrypted","expire","httponly","insert_always","match_type","name","pass_phrase","pass_thru","path","scan_all_members","secure","server","server_service_group","service_group","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -127,25 +127,25 @@ def get_argspec():
             type='str' 
         ),
         dont_honor_conn_rules=dict(
-            type='str' 
+            type='bool' 
         ),
         encrypt_level=dict(
-            type='str' 
+            type='int' 
         ),
         encrypted=dict(
             type='str' 
         ),
         expire=dict(
-            type='str' 
+            type='int' 
         ),
         httponly=dict(
-            type='str' 
+            type='bool' 
         ),
         insert_always=dict(
-            type='str' 
+            type='bool' 
         ),
         match_type=dict(
-            type='str' 
+            type='bool' 
         ),
         name=dict(
             type='str' , required=True
@@ -154,25 +154,25 @@ def get_argspec():
             type='str' 
         ),
         pass_thru=dict(
-            type='str' 
+            type='bool' 
         ),
         path=dict(
             type='str' 
         ),
         scan_all_members=dict(
-            type='str' 
+            type='bool' 
         ),
         secure=dict(
-            type='str' 
+            type='bool' 
         ),
         server=dict(
-            type='str' 
+            type='bool' 
         ),
         server_service_group=dict(
-            type='str' 
+            type='bool' 
         ),
         service_group=dict(
-            type='str' 
+            type='bool' 
         ),
         user_tag=dict(
             type='str' 
@@ -216,6 +216,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -317,8 +319,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

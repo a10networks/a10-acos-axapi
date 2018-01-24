@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_port
+module: a10_slb_server_port
 description:
-    - 
+    - Real Server Port
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -107,7 +107,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","sampling_enable","stats_data_action","template_port","template_server_ssl","user_tag","uuid","weight",}
+AVAILABLE_PROPERTIES = ["action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","sampling_enable","stats_data_action","template_port","template_server_ssl","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -126,55 +126,55 @@ def get_argspec():
     rv.update(dict(
         
         action=dict(
-            type='enum' , choices=['enable', 'disable', 'disable-with-health-check']
+            type='str' , choices=['enable', 'disable', 'disable-with-health-check']
         ),
         alternate_port=dict(
-            type='str' 
+            type='list' 
         ),
         auth_cfg=dict(
             type='str' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_resume=dict(
-            type='str' 
+            type='int' 
         ),
         extended_stats=dict(
-            type='str' 
+            type='bool' 
         ),
         follow_port_protocol=dict(
-            type='enum' , choices=['tcp', 'udp']
+            type='str' , choices=['tcp', 'udp']
         ),
         health_check=dict(
             type='str' 
         ),
         health_check_disable=dict(
-            type='str' 
+            type='bool' 
         ),
         health_check_follow_port=dict(
-            type='str' 
+            type='int' 
         ),
         no_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         no_ssl=dict(
-            type='str' 
+            type='bool' 
         ),
         port_number=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         protocol=dict(
-            type='enum' , required=True, choices=['tcp', 'udp']
+            type='str' , required=True, choices=['tcp', 'udp']
         ),
         range=dict(
-            type='str' 
+            type='int' 
         ),
         sampling_enable=dict(
-            type='str' 
+            type='list' 
         ),
         stats_data_action=dict(
-            type='enum' , choices=['stats-data-enable', 'stats-data-disable']
+            type='str' , choices=['stats-data-enable', 'stats-data-disable']
         ),
         template_port=dict(
             type='str' 
@@ -189,7 +189,7 @@ def get_argspec():
             type='str' 
         ),
         weight=dict(
-            type='str' 
+            type='int' 
         ), 
     ))
     return rv
@@ -229,6 +229,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -330,8 +332,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

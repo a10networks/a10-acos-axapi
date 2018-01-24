@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_ospf-ip
+module: a10_interface_tunnel_ip_ospf_ospf-ip
 description:
-    - 
+    - IP address configuration for Open Shortest Path First for IPv4 (OSPF)
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -81,7 +81,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"authentication","authentication_key","cost","database_filter","dead_interval","hello_interval","ip_addr","message_digest_cfg","mtu_ignore","out","priority","retransmit_interval","transmit_delay","uuid","value",}
+AVAILABLE_PROPERTIES = ["authentication","authentication_key","cost","database_filter","dead_interval","hello_interval","ip_addr","message_digest_cfg","mtu_ignore","out","priority","retransmit_interval","transmit_delay","uuid","value",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -100,49 +100,49 @@ def get_argspec():
     rv.update(dict(
         
         authentication=dict(
-            type='str' 
+            type='bool' 
         ),
         authentication_key=dict(
             type='str' 
         ),
         cost=dict(
-            type='str' 
+            type='int' 
         ),
         database_filter=dict(
-            type='enum' , choices=['all']
+            type='str' , choices=['all']
         ),
         dead_interval=dict(
-            type='str' 
+            type='int' 
         ),
         hello_interval=dict(
-            type='str' 
+            type='int' 
         ),
         ip_addr=dict(
             type='str' , required=True
         ),
         message_digest_cfg=dict(
-            type='str' 
+            type='list' 
         ),
         mtu_ignore=dict(
-            type='str' 
+            type='bool' 
         ),
         out=dict(
-            type='str' 
+            type='bool' 
         ),
         priority=dict(
-            type='str' 
+            type='int' 
         ),
         retransmit_interval=dict(
-            type='str' 
+            type='int' 
         ),
         transmit_delay=dict(
-            type='str' 
+            type='int' 
         ),
         uuid=dict(
             type='str' 
         ),
         value=dict(
-            type='enum' , choices=['message-digest', 'null']
+            type='str' , choices=['message-digest', 'null']
         ), 
     ))
     return rv
@@ -180,6 +180,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -281,8 +283,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

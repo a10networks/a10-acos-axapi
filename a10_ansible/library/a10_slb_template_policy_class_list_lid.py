@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_lid
+module: a10_slb_template_policy_class_list_lid
 description:
-    - 
+    - Limit ID
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -124,7 +124,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action_value","bw_per","bw_rate_limit","conn_limit","conn_per","conn_rate_limit","direct_action","direct_action_interval","direct_action_value","direct_fail","direct_logging_drp_rst","direct_pbslb_interval","direct_pbslb_logging","direct_service_group","dns64","interval","lidnum","lockout","log","over_limit_action","request_limit","request_per","request_rate_limit","response_code_rate_limit","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["action_value","bw_per","bw_rate_limit","conn_limit","conn_per","conn_rate_limit","direct_action","direct_action_interval","direct_action_value","direct_fail","direct_logging_drp_rst","direct_pbslb_interval","direct_pbslb_logging","direct_service_group","dns64","interval","lidnum","lockout","log","over_limit_action","request_limit","request_per","request_rate_limit","response_code_rate_limit","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -143,43 +143,43 @@ def get_argspec():
     rv.update(dict(
         
         action_value=dict(
-            type='enum' , choices=['forward', 'reset']
+            type='str' , choices=['forward', 'reset']
         ),
         bw_per=dict(
-            type='str' 
+            type='int' 
         ),
         bw_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_limit=dict(
-            type='str' 
+            type='int' 
         ),
         conn_per=dict(
-            type='str' 
+            type='int' 
         ),
         conn_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         direct_action=dict(
-            type='str' 
+            type='bool' 
         ),
         direct_action_interval=dict(
-            type='str' 
+            type='int' 
         ),
         direct_action_value=dict(
-            type='enum' , choices=['drop', 'reset']
+            type='str' , choices=['drop', 'reset']
         ),
         direct_fail=dict(
-            type='str' 
+            type='bool' 
         ),
         direct_logging_drp_rst=dict(
-            type='str' 
+            type='bool' 
         ),
         direct_pbslb_interval=dict(
-            type='str' 
+            type='int' 
         ),
         direct_pbslb_logging=dict(
-            type='str' 
+            type='bool' 
         ),
         direct_service_group=dict(
             type='str' 
@@ -188,31 +188,31 @@ def get_argspec():
             type='str' 
         ),
         interval=dict(
-            type='str' 
+            type='int' 
         ),
         lidnum=dict(
-            type='str' , required=True
+            type='int' , required=True
         ),
         lockout=dict(
-            type='str' 
+            type='int' 
         ),
         log=dict(
-            type='str' 
+            type='bool' 
         ),
         over_limit_action=dict(
-            type='str' 
+            type='bool' 
         ),
         request_limit=dict(
-            type='str' 
+            type='int' 
         ),
         request_per=dict(
-            type='str' 
+            type='int' 
         ),
         request_rate_limit=dict(
-            type='str' 
+            type='int' 
         ),
         response_code_rate_limit=dict(
-            type='str' 
+            type='list' 
         ),
         user_tag=dict(
             type='str' 
@@ -256,6 +256,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -357,8 +359,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"

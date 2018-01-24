@@ -4,9 +4,9 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_src-ip
+module: a10_slb_common_conn_rate_limit_src-ip
 description:
-    - 
+    - Set connection limit based on source IP address
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -54,7 +54,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"exceed_action","limit","limit_period","lock_out","log","protocol","shared","uuid",}
+AVAILABLE_PROPERTIES = ["exceed_action","limit","limit_period","lock_out","log","protocol","shared","uuid",]
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -73,25 +73,25 @@ def get_argspec():
     rv.update(dict(
         
         exceed_action=dict(
-            type='str' 
+            type='bool' 
         ),
         limit=dict(
-            type='str' 
+            type='int' 
         ),
         limit_period=dict(
-            type='enum' , choices=['100', '1000']
+            type='str' , choices=['100', '1000']
         ),
         lock_out=dict(
-            type='str' 
+            type='int' 
         ),
         log=dict(
-            type='str' 
+            type='bool' 
         ),
         protocol=dict(
-            type='enum' , required=True, choices=['tcp', 'udp']
+            type='str' , required=True, choices=['tcp', 'udp']
         ),
         shared=dict(
-            type='str' 
+            type='bool' 
         ),
         uuid=dict(
             type='str' 
@@ -132,6 +132,8 @@ def build_json(title, module):
         if v:
             rx = x.replace("_", "-")
             rv[rx] = module.params[x]
+        # else:
+        #     del module.params[x]
 
     return build_envelope(title, rv)
 
@@ -233,8 +235,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
