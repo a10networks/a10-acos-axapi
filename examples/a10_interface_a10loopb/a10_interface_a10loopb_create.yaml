@@ -1,0 +1,10 @@
+
+- name: Create a10_interface_a10loopb example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_interface_a10loopb instance
+    a10_interface_a10loopb:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
