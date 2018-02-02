@@ -1,0 +1,15 @@
+
+- name: Update a10_health_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_health_monitor instance
+    a10_health_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_monitor
+      retry: 1
+      up_retry: 1
+      method: {'tcp': {'method-tcp': 1, 'tcp-port': 80, 'port-send': "b'***'", 'port-resp': {'port-contains': "b'---'"}}}
