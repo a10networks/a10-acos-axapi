@@ -7,7 +7,11 @@ This code is generated through automated processes. See https://github.com/a10ne
 # Installation
 `pip install -e git+https://github.com/a10networks/a10-ansible.git`
 
-This will install the Python a10-ansible module. To make the modules available to Ansible, set ANSIBLE_PATH to <a10-ansible module path>/a10_ansible/library
+This will install the Python a10-ansible module. To make the modules available to Ansible, set `ANSIBLE_PATH` to `<a10-ansible module path>/a10_ansible/library`
 
 # Examples
-Examples can be found documented inline in the module as well as in the `examples` directory in the root of the a10-ansible module directory.
+Individual operation (Create/Update/Delete) examples can be found in the `examples` directory in the root of the a10-ansible module directory.
+Playbooks detailing more typical use cases can be found in `examples/_functional`
+
+# Questions / Issues
+For bugs/issues, please create an issue in the a10-ansible repository. Please include any example playbooks that demonstrate the issue and detailed output of `ansible-playbook` where possible.
