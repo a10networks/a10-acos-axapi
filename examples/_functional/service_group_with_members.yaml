@@ -1,0 +1,20 @@
+
+- name: Create a10_slb_service_group example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_service_group instance
+    a10_slb_service_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      protocol: tcp
+      stats_data_action: stats-data-enable
+      lb_method: round-robin
+      name: sg1
+      member_list:
+      -
+        name: member1
+        port: 80
+        host: 10.20.0.1
+        member_state: disable 
