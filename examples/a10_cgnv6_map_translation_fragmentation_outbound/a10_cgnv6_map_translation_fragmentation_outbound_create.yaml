@@ -1,0 +1,10 @@
+
+- name: Create a10_cgnv6_map_translation_fragmentation_outbound example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_map_translation_fragmentation_outbound instance
+    a10_cgnv6_map_translation_fragmentation_outbound:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

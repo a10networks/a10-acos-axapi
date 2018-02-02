@@ -1,0 +1,13 @@
+
+- name: Update a10_cgnv6_lsn_stun_timeout_udp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_cgnv6_lsn_stun_timeout_udp instance
+    a10_cgnv6_lsn_stun_timeout_udp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      port_start: 1
+      port_end: 1

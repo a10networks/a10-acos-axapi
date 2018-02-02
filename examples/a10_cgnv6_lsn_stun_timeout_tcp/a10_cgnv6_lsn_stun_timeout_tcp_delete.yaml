@@ -1,0 +1,16 @@
+- name: Delete a10_cgnv6_lsn_stun_timeout_tcp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_lsn_stun_timeout_tcp instance
+    a10_cgnv6_lsn_stun_timeout_tcp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      port_start: 1
+
+      port_end: 1
+
+
+

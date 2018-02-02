@@ -1,0 +1,11 @@
+
+- name: Create a10_cgnv6_template_policy example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_template_policy instance
+    a10_cgnv6_template_policy:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_policy

@@ -1,0 +1,13 @@
+- name: Delete a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address_port_range example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address_port_range instance
+    a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address_port_range:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+

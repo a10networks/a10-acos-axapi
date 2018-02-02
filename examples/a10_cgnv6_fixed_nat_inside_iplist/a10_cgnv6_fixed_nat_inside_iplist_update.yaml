@@ -1,0 +1,13 @@
+
+- name: Update a10_cgnv6_fixed_nat_inside_iplist example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_cgnv6_fixed_nat_inside_iplist instance
+    a10_cgnv6_fixed_nat_inside_iplist:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      inside_ip_list: NO_EXAMPLE
+      partition: NO_EXAMPLE

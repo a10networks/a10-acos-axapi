@@ -1,0 +1,13 @@
+- name: Delete a10_cgnv6_sctp_permit_payload_protocol_protocol_id example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_sctp_permit_payload_protocol_protocol_id instance
+    a10_cgnv6_sctp_permit_payload_protocol_protocol_id:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      id: 1
+
+

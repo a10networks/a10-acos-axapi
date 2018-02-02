@@ -1,0 +1,10 @@
+
+- name: Create a10_cgnv6_lsn_port_overloading_port_overloading_status example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_lsn_port_overloading_port_overloading_status instance
+    a10_cgnv6_lsn_port_overloading_port_overloading_status:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

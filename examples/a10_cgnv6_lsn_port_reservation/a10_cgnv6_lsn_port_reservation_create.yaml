@@ -1,0 +1,16 @@
+
+- name: Create a10_cgnv6_lsn_port_reservation example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_lsn_port_reservation instance
+    a10_cgnv6_lsn_port_reservation:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      inside: 10.0.0.1
+      inside_port_start: 1
+      inside_port_end: 1
+      nat: 10.0.0.1
+      nat_port_start: 1
+      nat_port_end: 1
