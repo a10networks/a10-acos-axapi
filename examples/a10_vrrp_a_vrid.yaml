@@ -1,0 +1,36 @@
+
+
+- name: Create a10_vrrp_a_vrid example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_vrrp_a_vrid instance
+    a10_vrrp_a_vrid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      vrid_val: 0
+
+- name: Update a10_vrrp_a_vrid example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_vrrp_a_vrid instance
+    a10_vrrp_a_vrid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      vrid_val: 0
+
+- name: Delete a10_vrrp_a_vrid example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_vrid instance
+    a10_vrrp_a_vrid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      vrid_val: 0

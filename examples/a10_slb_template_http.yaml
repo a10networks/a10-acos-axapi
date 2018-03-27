@@ -1,0 +1,51 @@
+
+
+- name: Create a10_slb_template_http example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_http instance
+    a10_slb_template_http:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_http
+      compression_level: 1
+      compression_minimum_content_length: 1
+      retry_on_5xx_val: 1
+      retry_on_5xx_per_req_val: 1
+      req_hdr_wait_time_val: 1
+
+- name: Update a10_slb_template_http example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_http instance
+    a10_slb_template_http:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_http
+      compression_level: 1
+      compression_minimum_content_length: 1
+      retry_on_5xx_val: 1
+      retry_on_5xx_per_req_val: 1
+      req_hdr_wait_time_val: 1
+
+- name: Delete a10_slb_template_http example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_http instance
+    a10_slb_template_http:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_http
+      compression_level: 1
+      compression_minimum_content_length: 1
+      retry_on_5xx_val: 1
+      retry_on_5xx_per_req_val: 1
+      req_hdr_wait_time_val: 1

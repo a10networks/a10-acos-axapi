@@ -1,0 +1,36 @@
+
+
+- name: Create a10_network_lldp_management_address_ipv6_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_network_lldp_management_address_ipv6_addr instance
+    a10_network_lldp_management_address_ipv6_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      ipv6: NO_EXAMPLE
+
+- name: Update a10_network_lldp_management_address_ipv6_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_network_lldp_management_address_ipv6_addr instance
+    a10_network_lldp_management_address_ipv6_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      ipv6: NO_EXAMPLE
+
+- name: Delete a10_network_lldp_management_address_ipv6_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_network_lldp_management_address_ipv6_addr instance
+    a10_network_lldp_management_address_ipv6_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      ipv6: NO_EXAMPLE
