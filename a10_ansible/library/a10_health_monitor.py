@@ -129,7 +129,7 @@ def get_argspec():
             type='str' 
         ),
         method=dict(
-            type='str' 
+            type='dict' 
         ),
         name=dict(
             type='str' , required=True

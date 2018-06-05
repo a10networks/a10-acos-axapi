@@ -114,7 +114,7 @@ ANSIBLE_METADATA = """
 AVAILABLE_PROPERTIES = ["action","alternate_server","conn_limit","conn_resume","extended_stats","external_ip","fqdn_name","health_check","health_check_disable","host","ipv6","name","no_logging","port_list","sampling_enable","server_ipv6_addr","slow_start","spoofing_cache","stats_data_action","template_server","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
+from a10_ansible.axapi_http import client_factory, session_factory
 from a10_ansible import errors as a10_ex
 
 def get_default_argspec():
@@ -241,7 +241,7 @@ def build_json(title, module):
 
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted(['host','fqdn_host',])
+    requires_one_of = sorted(['host','fqdn_host','server_ipv6_addr'])
     present_keys = sorted([x for x in requires_one_of if params.get(x)])
     
     errors = []
@@ -266,8 +266,7 @@ def validate(params):
 
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return module.client.get(existing_url(module))
     except a10_ex.NotFound:
         return False
 
@@ -297,23 +296,27 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("server", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            # Only return a changed result if existing config and post result differ
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
@@ -349,11 +352,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():
