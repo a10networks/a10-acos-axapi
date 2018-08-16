@@ -1,0 +1,12 @@
+
+- name: Create a10_snmp_server_host_host_name example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_snmp_server_host_host_name instance
+    a10_snmp_server_host_host_name:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      hostname: NO_EXAMPLE
+      version: v1

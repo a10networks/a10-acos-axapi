@@ -1,0 +1,11 @@
+
+- name: Update a10_fw_session_aging_udp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_fw_session_aging_udp instance
+    a10_fw_session_aging_udp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

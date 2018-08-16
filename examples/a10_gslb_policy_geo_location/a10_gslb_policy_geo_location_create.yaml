@@ -1,0 +1,11 @@
+
+- name: Create a10_gslb_policy_geo_location example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_gslb_policy_geo_location instance
+    a10_gslb_policy_geo_location:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_geo-location

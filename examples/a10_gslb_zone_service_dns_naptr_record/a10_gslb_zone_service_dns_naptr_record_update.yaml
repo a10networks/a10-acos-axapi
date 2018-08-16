@@ -1,0 +1,14 @@
+
+- name: Update a10_gslb_zone_service_dns_naptr_record example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_gslb_zone_service_dns_naptr_record instance
+    a10_gslb_zone_service_dns_naptr_record:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      naptr_target: NO_EXAMPLE
+      service_proto: NO_EXAMPLE
+      flag: NO_EXAMPLE

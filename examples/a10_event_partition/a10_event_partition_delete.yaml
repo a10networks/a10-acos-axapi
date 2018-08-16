@@ -1,0 +1,16 @@
+- name: Delete a10_event_partition example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_event_partition instance
+    a10_event_partition:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      vnp_events: part-create
+
+
+
+
+

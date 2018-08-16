@@ -1,106 +1,154 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_instance
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_aam_authentication_server_radius_instance
+description:
+    - None
+short_description: Configures A10 aam.authentication.server.radius.instance
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Specify RADIUS authentication server name
-    
-    host:
-        
-    
-    secret:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Specify the RADIUS server's secret
-    
-    secret-string:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - The RADIUS server's secret
-    
-    encrypted:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)
-    
-    port:
+        - Password for AXAPI authentication
+        required: True
+    auth_type:
         description:
-            - Specify the RADIUS server's authentication port, default is 1812
-    
-    port-hm:
+        - "None"
+        required: False
+    health_check_string:
         description:
-            - Check port's health status
-    
-    port-hm-disable:
-        description:
-            - Disable configured port health check configuration
-    
-    interval:
-        description:
-            - Specify the interval time for resend the request (second), default is 3 seconds (The interval time(second), default is 3 seconds)
-    
+        - "None"
+        required: False
     retry:
         description:
-            - Specify the retry number for resend the request, default is 5 (The retry number, default is 5)
-    
-    health-check:
+        - "None"
+        required: False
+    port_hm:
         description:
-            - Check server's health status
-    
-    health-check-string:
+        - "None"
+        required: False
+    name:
         description:
-            - Health monitor name
-    
-    health-check-disable:
+        - "None"
+        required: True
+    port_hm_disable:
         description:
-            - Disable configured health check configuration
-    
-    accounting-port:
+        - "None"
+        required: False
+    encrypted:
         description:
-            - Specify the RADIUS server's accounting port, default is 1813
-    
-    acct-port-hm:
+        - "None"
+        required: False
+    interval:
         description:
-            - Specify accounting port health check method
-    
-    acct-port-hm-disable:
+        - "None"
+        required: False
+    accounting_port:
         description:
-            - Disable configured accounting port health check configuration
-    
-    auth-type:
+        - "None"
+        required: False
+    port:
         description:
-            - 'pap': PAP authentication. Default; 'mschapv2': MS-CHAPv2 authentication; 'mschapv2-pap': Use MS-CHAPv2 first. If server doesn't support it, try PAP; choices:['pap', 'mschapv2', 'mschapv2-pap']
-    
+        - "None"
+        required: False
+    health_check:
+        description:
+        - "None"
+        required: False
+    acct_port_hm_disable:
+        description:
+        - "None"
+        required: False
+    secret:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    host:
+        description:
+        - "Field host"
+        required: False
+        suboptions:
+            hostipv6:
+                description:
+                - "None"
+            hostip:
+                description:
+                - "None"
+    health_check_disable:
+        description:
+        - "None"
+        required: False
+    secret_string:
+        description:
+        - "None"
+        required: False
+    acct_port_hm:
+        description:
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    sampling-enable:
-        
-    
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"accounting_port","acct_port_hm","acct_port_hm_disable","auth_type","encrypted","health_check","health_check_disable","health_check_string","host","interval","name","port","port_hm","port_hm_disable","retry","sampling_enable","secret","secret_string","uuid",}
+AVAILABLE_PROPERTIES = ["accounting_port","acct_port_hm","acct_port_hm_disable","auth_type","encrypted","health_check","health_check_disable","health_check_string","host","interval","name","port","port_hm","port_hm_disable","retry","sampling_enable","secret","secret_string","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -113,65 +161,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        accounting_port=dict(
-            type='str' 
-        ),
-        acct_port_hm=dict(
-            type='str' 
-        ),
-        acct_port_hm_disable=dict(
-            type='str' 
-        ),
-        auth_type=dict(
-            type='enum' , choices=['pap', 'mschapv2', 'mschapv2-pap']
-        ),
-        encrypted=dict(
-            type='str' 
-        ),
-        health_check=dict(
-            type='str' 
-        ),
-        health_check_disable=dict(
-            type='str' 
-        ),
-        health_check_string=dict(
-            type='str' 
-        ),
-        host=dict(
-            type='str' 
-        ),
-        interval=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        port=dict(
-            type='str' 
-        ),
-        port_hm=dict(
-            type='str' 
-        ),
-        port_hm_disable=dict(
-            type='str' 
-        ),
-        retry=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='str' 
-        ),
-        secret=dict(
-            type='str' 
-        ),
-        secret_string=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        auth_type=dict(type='str',choices=['pap','mschapv2','mschapv2-pap']),
+        health_check_string=dict(type='str',),
+        retry=dict(type='int',),
+        port_hm=dict(type='str',),
+        name=dict(type='str',required=True,),
+        port_hm_disable=dict(type='bool',),
+        encrypted=dict(type='str',),
+        interval=dict(type='int',),
+        accounting_port=dict(type='int',),
+        port=dict(type='int',),
+        health_check=dict(type='bool',),
+        acct_port_hm_disable=dict(type='bool',),
+        secret=dict(type='bool',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),
+        host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),
+        health_check_disable=dict(type='bool',),
+        secret_string=dict(type='str',),
+        acct_port_hm=dict(type='str',),
+        uuid=dict(type='str',)
     ))
+
     return rv
 
 def new_url(module):
@@ -179,7 +189,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/server/radius/instance/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -189,7 +198,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/server/radius/instance/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -200,13 +208,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -235,10 +271,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -268,28 +306,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("instance", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -308,8 +347,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -317,11 +359,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

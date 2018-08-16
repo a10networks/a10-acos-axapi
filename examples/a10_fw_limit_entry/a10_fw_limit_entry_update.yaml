@@ -1,0 +1,11 @@
+
+- name: Update a10_fw_limit_entry example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_fw_limit_entry instance
+    a10_fw_limit_entry:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

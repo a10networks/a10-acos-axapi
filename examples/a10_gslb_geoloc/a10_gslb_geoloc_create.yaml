@@ -1,0 +1,10 @@
+
+- name: Create a10_gslb_geoloc example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_gslb_geoloc instance
+    a10_gslb_geoloc:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

@@ -1,0 +1,10 @@
+
+- name: Create a10_cgnv6_resource_usage_stateless_entries example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_resource_usage_stateless_entries instance
+    a10_cgnv6_resource_usage_stateless_entries:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

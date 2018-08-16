@@ -1,95 +1,141 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_slb-dev
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_gslb_site_slb_dev
+description:
+    - None
+short_description: Configures A10 gslb.site.slb-dev
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    device-name:
+    state:
         description:
-            - Specify SLB device name
-    
-    ip-address:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - IP address
-    
-    admin-preference:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Specify administrative preference (Specify admin-preference value,default is 100)
-    
-    client-ip:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Specify client IP address
-    
-    rdt-value:
+        - Password for AXAPI authentication
+        required: True
+    health_check_action:
         description:
-            - Specify Round-delay-time
-    
-    auto-detect:
+        - "None"
+        required: False
+    client_ip:
         description:
-            - 'ip': Service IP only; 'port': Service Port only; 'ip-and-port': Both service IP and service port; 'disabled': disable auto-detect; choices:['ip', 'port', 'ip-and-port', 'disabled']
-    
-    auto-map:
-        description:
-            - Enable DNS Auto Mapping
-    
-    max-client:
-        description:
-            - Specify maximum number of clients, default is 32768
-    
-    proto-aging-time:
-        description:
-            - Specify GSLB Protocol aging time, default is 60
-    
-    proto-aging-fast:
-        description:
-            - Fast GSLB Protocol aging
-    
-    health-check-action:
-        description:
-            - 'health-check': Enable health Check; 'health-check-disable': Disable health check; choices:['health-check', 'health-check-disable']
-    
-    gateway-ip-addr:
-        description:
-            - IP address
-    
-    proto-compatible:
-        description:
-            - Run GSLB Protocol in compatible mode
-    
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    device_name:
         description:
-            - Customized tag
-    
-    vip-server:
-        
-    
+        - "None"
+        required: True
+    proto_compatible:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    auto_map:
+        description:
+        - "None"
+        required: False
+    proto_aging_time:
+        description:
+        - "None"
+        required: False
+    rdt_value:
+        description:
+        - "None"
+        required: False
+    gateway_ip_addr:
+        description:
+        - "None"
+        required: False
+    vip_server:
+        description:
+        - "Field vip_server"
+        required: False
+        suboptions:
+            vip_server_v4_list:
+                description:
+                - "Field vip_server_v4_list"
+            vip_server_v6_list:
+                description:
+                - "Field vip_server_v6_list"
+            vip_server_name_list:
+                description:
+                - "Field vip_server_name_list"
+    ip_address:
+        description:
+        - "None"
+        required: False
+    proto_aging_fast:
+        description:
+        - "None"
+        required: False
+    auto_detect:
+        description:
+        - "None"
+        required: False
+    max_client:
+        description:
+        - "None"
+        required: False
+    admin_preference:
+        description:
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"admin_preference","auto_detect","auto_map","client_ip","device_name","gateway_ip_addr","health_check_action","ip_address","max_client","proto_aging_fast","proto_aging_time","proto_compatible","rdt_value","user_tag","uuid","vip_server",}
+AVAILABLE_PROPERTIES = ["admin_preference","auto_detect","auto_map","client_ip","device_name","gateway_ip_addr","health_check_action","ip_address","max_client","proto_aging_fast","proto_aging_time","proto_compatible","rdt_value","user_tag","uuid","vip_server",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -102,56 +148,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        admin_preference=dict(
-            type='str' 
-        ),
-        auto_detect=dict(
-            type='enum' , choices=['ip', 'port', 'ip-and-port', 'disabled']
-        ),
-        auto_map=dict(
-            type='str' 
-        ),
-        client_ip=dict(
-            type='str' 
-        ),
-        device_name=dict(
-            type='str' , required=True
-        ),
-        gateway_ip_addr=dict(
-            type='str' 
-        ),
-        health_check_action=dict(
-            type='enum' , choices=['health-check', 'health-check-disable']
-        ),
-        ip_address=dict(
-            type='str' 
-        ),
-        max_client=dict(
-            type='str' 
-        ),
-        proto_aging_fast=dict(
-            type='str' 
-        ),
-        proto_aging_time=dict(
-            type='str' 
-        ),
-        proto_compatible=dict(
-            type='str' 
-        ),
-        rdt_value=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ),
-        vip_server=dict(
-            type='str' 
-        ), 
+        health_check_action=dict(type='str',choices=['health-check','health-check-disable']),
+        client_ip=dict(type='str',),
+        uuid=dict(type='str',),
+        device_name=dict(type='str',required=True,),
+        proto_compatible=dict(type='bool',),
+        user_tag=dict(type='str',),
+        auto_map=dict(type='bool',),
+        proto_aging_time=dict(type='int',),
+        rdt_value=dict(type='int',),
+        gateway_ip_addr=dict(type='str',),
+        vip_server=dict(type='dict',vip_server_v4_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),ipv4=dict(type='str',required=True,),uuid=dict(type='str',)),vip_server_v6_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),uuid=dict(type='str',),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),vip_name=dict(type='str',required=True,),uuid=dict(type='str',))),
+        ip_address=dict(type='str',),
+        proto_aging_fast=dict(type='bool',),
+        auto_detect=dict(type='str',choices=['ip','port','ip-and-port','disabled']),
+        max_client=dict(type='int',),
+        admin_preference=dict(type='int',)
     ))
+
     return rv
 
 def new_url(module):
@@ -159,7 +173,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/site/{site-name}/slb-dev/{device-name}"
     f_dict = {}
-    
     f_dict["device-name"] = ""
 
     return url_base.format(**f_dict)
@@ -169,7 +182,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/site/{site-name}/slb-dev/{device-name}"
     f_dict = {}
-    
     f_dict["device-name"] = module.params["device-name"]
 
     return url_base.format(**f_dict)
@@ -180,13 +192,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -215,10 +255,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -248,28 +290,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("slb-dev", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -288,8 +331,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -297,11 +343,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

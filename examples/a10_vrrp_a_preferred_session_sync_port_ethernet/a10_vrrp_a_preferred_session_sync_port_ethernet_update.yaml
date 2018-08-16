@@ -1,0 +1,12 @@
+
+- name: Update a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_vrrp_a_preferred_session_sync_port_ethernet instance
+    a10_vrrp_a_preferred_session_sync_port_ethernet:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      pre_eth: 5

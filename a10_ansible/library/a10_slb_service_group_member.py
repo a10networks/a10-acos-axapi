@@ -1,79 +1,119 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = """
 module: a10_slb_service_group_member
 description:
-    - Service Group Member
+    - None
+short_description: Configures A10 slb.service.group.member
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
+    state:
+        description:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
+        description:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
+        description:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
+    member_stats_data_disable:
+        description:
+        - "None"
+        required: False
+    member_priority:
+        description:
+        - "None"
+        required: False
     name:
         description:
-            - Member name
-    
-    port:
+        - "None"
+        required: True
+    fqdn_name:
         description:
-            - Port number
-    
-    fqdn-name:
+        - "None"
+        required: False
+    sampling_enable:
         description:
-            - Server hostname - Not applicable if real server is already defined
-    
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    member_template:
+        description:
+        - "None"
+        required: False
     host:
         description:
-            - IP Address - Not applicable if real server is already defined
-    
-    server-ipv6-addr:
+        - "None"
+        required: False
+    user_tag:
         description:
-            - IPV6 Address - Not applicable if real server is already defined
-    
-    member-state:
+        - "None"
+        required: False
+    member_state:
         description:
-            - 'enable': Enable member service port; 'disable': Disable member service port; 'disable-with-health-check': disable member service port, but health check work; choices:['enable', 'disable', 'disable-with-health-check']
-    
-    member-stats-data-disable:
+        - "None"
+        required: False
+    server_ipv6_addr:
         description:
-            - Disable statistical data collection
-    
-    member-template:
+        - "None"
+        required: False
+    port:
         description:
-            - Real server port template (Real server port template name)
-    
-    member-priority:
-        description:
-            - Priority of Port in the Group (Priority of Port in the Group, default is 1)
-    
+        - "None"
+        required: True
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
-        description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","port","sampling_enable","server_ipv6_addr","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -86,44 +126,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        fqdn_name=dict(
-            type='str' 
-        ),
-        host=dict(
-            type='str' 
-        ),
-        member_priority=dict(
-            type='int' 
-        ),
-        member_state=dict(
-            type='str' , choices=['enable', 'disable', 'disable-with-health-check']
-        ),
-        member_stats_data_disable=dict(
-            type='bool' 
-        ),
-        member_template=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        port=dict(
-            type='int' , required=True
-        ),
-        sampling_enable=dict(
-            type='list' 
-        ),
-        server_ipv6_addr=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        member_stats_data_disable=dict(type='bool',),
+        member_priority=dict(type='int',),
+        name=dict(type='str',required=True,),
+        fqdn_name=dict(type='str',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),
+        member_template=dict(type='str',),
+        host=dict(type='str',),
+        user_tag=dict(type='str',),
+        member_state=dict(type='str',choices=['enable','disable','disable-with-health-check']),
+        server_ipv6_addr=dict(type='str',),
+        port=dict(type='int',required=True,),
+        uuid=dict(type='str',)
     ))
+
     return rv
 
 def new_url(module):
@@ -131,7 +147,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/service-group/{name}/member/{name}+{port}"
     f_dict = {}
-    
     f_dict["name"] = ""
     f_dict["port"] = ""
 
@@ -142,7 +157,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/slb/service-group/{name}/member/{name}+{port}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
     f_dict["port"] = module.params["port"]
 
@@ -154,15 +168,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -191,10 +231,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -224,28 +266,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("member", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -276,11 +319,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

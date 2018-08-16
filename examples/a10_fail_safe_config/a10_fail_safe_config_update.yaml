@@ -1,0 +1,11 @@
+
+- name: Update a10_fail_safe_config example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_fail_safe_config instance
+    a10_fail_safe_config:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

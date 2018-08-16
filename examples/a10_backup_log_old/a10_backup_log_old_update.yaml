@@ -1,0 +1,11 @@
+
+- name: Update a10_backup_log_old example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_backup_log_old instance
+    a10_backup_log_old:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

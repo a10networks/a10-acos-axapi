@@ -1,0 +1,10 @@
+
+- name: Create a10_file_wsdl example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_file_wsdl instance
+    a10_file_wsdl:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

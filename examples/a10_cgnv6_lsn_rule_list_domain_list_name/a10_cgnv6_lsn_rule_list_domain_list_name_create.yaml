@@ -1,0 +1,11 @@
+
+- name: Create a10_cgnv6_lsn_rule_list_domain_list_name example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_lsn_rule_list_domain_list_name instance
+    a10_cgnv6_lsn_rule_list_domain_list_name:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name_domain_list: NO_EXAMPLE

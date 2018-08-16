@@ -1,0 +1,11 @@
+
+- name: Update a10_debug_polltech_enable example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_debug_polltech_enable instance
+    a10_debug_polltech_enable:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

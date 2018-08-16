@@ -1,0 +1,22 @@
+- name: Delete a10_sys_ut_template_l3_ip example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_sys_ut_template_l3_ip instance
+    a10_sys_ut_template_l3_ip:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+      src_dst: dest
+
+
+
+
+
+
+
+
+

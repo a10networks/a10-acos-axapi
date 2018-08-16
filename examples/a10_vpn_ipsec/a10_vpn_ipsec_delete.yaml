@@ -1,0 +1,27 @@
+- name: Delete a10_vpn_ipsec example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vpn_ipsec instance
+    a10_vpn_ipsec:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+      name: my_ipsec
+
+
+
+
+
+
+
+
+
+
+
+
+

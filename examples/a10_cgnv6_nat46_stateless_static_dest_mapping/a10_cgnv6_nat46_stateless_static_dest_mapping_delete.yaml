@@ -1,0 +1,19 @@
+- name: Delete a10_cgnv6_nat46_stateless_static_dest_mapping example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_nat46_stateless_static_dest_mapping instance
+    a10_cgnv6_nat46_stateless_static_dest_mapping:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      v6_address: NO_EXAMPLE
+
+
+
+
+      v4_address: 10.0.0.1
+
+

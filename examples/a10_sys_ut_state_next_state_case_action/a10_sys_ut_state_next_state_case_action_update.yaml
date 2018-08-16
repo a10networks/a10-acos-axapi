@@ -1,0 +1,12 @@
+
+- name: Update a10_sys_ut_state_next_state_case_action example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_sys_ut_state_next_state_case_action instance
+    a10_sys_ut_state_next_state_case_action:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      direction: send

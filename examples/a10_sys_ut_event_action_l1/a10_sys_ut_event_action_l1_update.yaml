@@ -1,0 +1,11 @@
+
+- name: Update a10_sys_ut_event_action_l1 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_sys_ut_event_action_l1 instance
+    a10_sys_ut_event_action_l1:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

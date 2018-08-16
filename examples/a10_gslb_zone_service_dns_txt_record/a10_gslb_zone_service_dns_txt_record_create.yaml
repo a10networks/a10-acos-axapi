@@ -1,0 +1,11 @@
+
+- name: Create a10_gslb_zone_service_dns_txt_record example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_gslb_zone_service_dns_txt_record instance
+    a10_gslb_zone_service_dns_txt_record:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      record_name: NO_EXAMPLE

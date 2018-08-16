@@ -1,0 +1,10 @@
+
+- name: Create a10_fw_tcp_window_check example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_fw_tcp_window_check instance
+    a10_fw_tcp_window_check:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

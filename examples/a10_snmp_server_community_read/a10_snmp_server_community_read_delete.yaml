@@ -1,0 +1,16 @@
+- name: Delete a10_snmp_server_community_read example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_snmp_server_community_read instance
+    a10_snmp_server_community_read:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+      user: NO_EXAMPLE
+

@@ -1,0 +1,11 @@
+
+- name: Create a10_sys_ut_state_next_state example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_sys_ut_state_next_state instance
+    a10_sys_ut_state_next_state:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_next-state

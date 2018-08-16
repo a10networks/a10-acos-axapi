@@ -1,0 +1,16 @@
+- name: Delete a10_aam_authentication_relay_http_basic_instance example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_aam_authentication_relay_http_basic_instance instance
+    a10_aam_authentication_relay_http_basic_instance:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+      name: my_instance
+

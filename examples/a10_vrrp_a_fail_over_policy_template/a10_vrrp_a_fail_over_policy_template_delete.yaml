@@ -1,0 +1,20 @@
+- name: Delete a10_vrrp_a_fail_over_policy_template example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_fail_over_policy_template instance
+    a10_vrrp_a_fail_over_policy_template:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      name: my_fail-over-policy-template
+
+
+
+
+
+
+
+

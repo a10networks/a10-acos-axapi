@@ -1,67 +1,154 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_domain
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_cgnv6_map_translation_domain
+description:
+    - None
+short_description: Configures A10 cgnv6.map.translation.domain
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - MAP-T domain name
-    
-    description:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - MAP-T domain description
-    
-    mtu:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Domain MTU
-    
-    tcp:
-        
-    
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
+    default_mapping_rule:
+        description:
+        - "Field default_mapping_rule"
+        required: False
+        suboptions:
+            rule_ipv6_prefix:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    name:
         description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
-    health-check-gateway:
-        
-    
-    default-mapping-rule:
-        
-    
-    basic-mapping-rule:
-        
-    
+        - "None"
+        required: True
+    user_tag:
+        description:
+        - "None"
+        required: False
+    mtu:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    tcp:
+        description:
+        - "Field tcp"
+        required: False
+        suboptions:
+            mss_clamp:
+                description:
+                - "Field mss_clamp"
+    health_check_gateway:
+        description:
+        - "Field health_check_gateway"
+        required: False
+        suboptions:
+            ipv6_address_list:
+                description:
+                - "Field ipv6_address_list"
+            address_list:
+                description:
+                - "Field address_list"
+            withdraw_route:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+    basic_mapping_rule:
+        description:
+        - "Field basic_mapping_rule"
+        required: False
+        suboptions:
+            rule_ipv4_address_port_settings:
+                description:
+                - "None"
+            port_start:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+            share_ratio:
+                description:
+                - "None"
+            prefix_rule_list:
+                description:
+                - "Field prefix_rule_list"
+            ea_length:
+                description:
+                - "None"
+    description:
+        description:
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"basic_mapping_rule","default_mapping_rule","description","health_check_gateway","mtu","name","sampling_enable","tcp","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["basic_mapping_rule","default_mapping_rule","description","health_check_gateway","mtu","name","sampling_enable","tcp","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -74,38 +161,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        basic_mapping_rule=dict(
-            type='str' 
-        ),
-        default_mapping_rule=dict(
-            type='str' 
-        ),
-        description=dict(
-            type='str' 
-        ),
-        health_check_gateway=dict(
-            type='str' 
-        ),
-        mtu=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        sampling_enable=dict(
-            type='str' 
-        ),
-        tcp=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        default_mapping_rule=dict(type='dict',rule_ipv6_prefix=dict(type='str',),uuid=dict(type='str',)),
+        uuid=dict(type='str',),
+        name=dict(type='str',required=True,),
+        user_tag=dict(type='str',),
+        mtu=dict(type='int',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','inbound_packet_received','inbound_frag_packet_received','inbound_addr_port_validation_failed','inbound_rev_lookup_failed','inbound_dest_unreachable','outbound_packet_received','outbound_frag_packet_received','outbound_addr_validation_failed','outbound_rev_lookup_failed','outbound_dest_unreachable','packet_mtu_exceeded','frag_icmp_sent','interface_not_configured','bmr_prefixrules_configured','helper_count','active_dhcpv6_leases'])),
+        tcp=dict(type='dict',mss_clamp=dict(type='dict',mss_subtract=dict(type='int',),mss_value=dict(type='int',),mss_clamp_type=dict(type='str',choices=['fixed','none','subtract']),min=dict(type='int',))),
+        health_check_gateway=dict(type='dict',ipv6_address_list=dict(type='list',ipv6_gateway=dict(type='str',)),address_list=dict(type='list',ipv4_gateway=dict(type='str',)),withdraw_route=dict(type='str',choices=['all-link-failure','any-link-failure']),uuid=dict(type='str',)),
+        basic_mapping_rule=dict(type='dict',rule_ipv4_address_port_settings=dict(type='str',choices=['prefix-addr','single-addr','shared-addr']),port_start=dict(type='int',),uuid=dict(type='str',),share_ratio=dict(type='int',),prefix_rule_list=dict(type='list',name=dict(type='str',required=True,),ipv4_netmask=dict(type='str',),rule_ipv4_prefix=dict(type='str',),user_tag=dict(type='str',),rule_ipv6_prefix=dict(type='str',),uuid=dict(type='str',)),ea_length=dict(type='int',)),
+        description=dict(type='str',)
     ))
+
     return rv
 
 def new_url(module):
@@ -113,7 +180,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/map/translation/domain/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -123,7 +189,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/map/translation/domain/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -134,13 +199,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -169,10 +262,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -202,28 +297,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("domain", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -242,8 +338,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -251,11 +350,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

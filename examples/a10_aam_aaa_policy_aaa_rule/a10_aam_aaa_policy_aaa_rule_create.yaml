@@ -1,0 +1,11 @@
+
+- name: Create a10_aam_aaa_policy_aaa_rule example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_aam_aaa_policy_aaa_rule instance
+    a10_aam_aaa_policy_aaa_rule:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      index: 1

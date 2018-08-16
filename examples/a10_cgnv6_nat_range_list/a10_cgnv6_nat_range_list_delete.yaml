@@ -1,0 +1,21 @@
+- name: Delete a10_cgnv6_nat_range_list example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_nat_range_list instance
+    a10_cgnv6_nat_range_list:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+      partition: NO_EXAMPLE
+
+      name: my_range-list
+
+
+
+
+
+

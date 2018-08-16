@@ -1,0 +1,11 @@
+
+- name: Update a10_vrrp_a_force_self_standby_persistent example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_vrrp_a_force_self_standby_persistent instance
+    a10_vrrp_a_force_self_standby_persistent:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

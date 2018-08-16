@@ -1,0 +1,11 @@
+
+- name: Update a10_vrrp_a_state example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_vrrp_a_state instance
+    a10_vrrp_a_state:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

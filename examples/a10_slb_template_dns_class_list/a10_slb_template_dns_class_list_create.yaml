@@ -1,0 +1,11 @@
+
+- name: Create a10_slb_template_dns_class_list example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_dns_class_list instance
+    a10_slb_template_dns_class_list:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_class-list

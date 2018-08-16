@@ -1,0 +1,28 @@
+- name: Delete a10_snmp_server_enable_traps_system example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_snmp_server_enable_traps_system instance
+    a10_snmp_server_enable_traps_system:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

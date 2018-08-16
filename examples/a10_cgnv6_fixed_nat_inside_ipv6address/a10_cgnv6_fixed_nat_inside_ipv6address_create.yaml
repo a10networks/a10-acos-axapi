@@ -1,0 +1,14 @@
+
+- name: Create a10_cgnv6_fixed_nat_inside_ipv6address example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_fixed_nat_inside_ipv6address instance
+    a10_cgnv6_fixed_nat_inside_ipv6address:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      partition: NO_EXAMPLE
+      inside_netmask: 64
+      inside_start_address: NO_EXAMPLE
+      inside_end_address: NO_EXAMPLE

@@ -1,0 +1,11 @@
+
+- name: Create a10_snmp_server_community_read_oid example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_snmp_server_community_read_oid instance
+    a10_snmp_server_community_read_oid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      oid_val: NO_EXAMPLE

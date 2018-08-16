@@ -1,87 +1,127 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = """
 module: a10_slb_template_policy_forward_policy_action
 description:
-    - action list
+    - None
+short_description: Configures A10 slb.template.policy.forward.policy.action
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Action policy name
-    
-    action1:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - 'forward-to-internet': Forward request to Internet; 'forward-to-service-group': Forward request to service group; 'forward-to-proxy': Forward request to HTTP proxy server; 'drop': Drop request; choices:['forward-to-internet', 'forward-to-service-group', 'forward-to-proxy', 'drop']
-    
-    fake-sg:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - service group to forward the packets to Internet
-    
-    real-sg:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - service group to forward the packets
-    
-    forward-snat:
-        description:
-            - Source NAT pool or pool group
-    
-    fall-back:
-        description:
-            - Fallback service group for Internet
-    
-    fall-back-snat:
-        description:
-            - Source NAT pool or pool group for fallback server
-    
+        - Password for AXAPI authentication
+        required: True
     log:
         description:
-            - enable logging
-    
-    drop-message:
+        - "None"
+        required: False
+    forward_snat:
         description:
-            - drop-message sent to the client as webpage(html tags are included and quotation marks are required for white spaces)
-    
-    drop-redirect-url:
-        description:
-            - Specify URL to which client request is redirected upon being dropped
-    
-    http-status-code:
-        description:
-            - '301': Moved permanently; '302': Found; choices:['301', '302']
-    
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    http_status_code:
         description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
+        - "None"
+        required: False
+    action1:
+        description:
+        - "None"
+        required: False
+    fake_sg:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    real_sg:
+        description:
+        - "None"
+        required: False
+    drop_message:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    fall_back:
+        description:
+        - "None"
+        required: False
+    fall_back_snat:
+        description:
+        - "None"
+        required: False
+    drop_redirect_url:
+        description:
+        - "None"
+        required: False
+    name:
+        description:
+        - "None"
+        required: True
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -94,50 +134,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        action1=dict(
-            type='str' , choices=['forward-to-internet', 'forward-to-service-group', 'forward-to-proxy', 'drop']
-        ),
-        drop_message=dict(
-            type='str' 
-        ),
-        drop_redirect_url=dict(
-            type='str' 
-        ),
-        fake_sg=dict(
-            type='str' 
-        ),
-        fall_back=dict(
-            type='str' 
-        ),
-        fall_back_snat=dict(
-            type='str' 
-        ),
-        forward_snat=dict(
-            type='str' 
-        ),
-        http_status_code=dict(
-            type='str' , choices=['301', '302']
-        ),
-        log=dict(
-            type='bool' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        real_sg=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='list' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        log=dict(type='bool',),
+        forward_snat=dict(type='str',),
+        uuid=dict(type='str',),
+        http_status_code=dict(type='str',choices=['301','302']),
+        action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),
+        fake_sg=dict(type='str',),
+        user_tag=dict(type='str',),
+        real_sg=dict(type='str',),
+        drop_message=dict(type='str',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
+        fall_back=dict(type='str',),
+        fall_back_snat=dict(type='str',),
+        drop_redirect_url=dict(type='str',),
+        name=dict(type='str',required=True,)
     ))
+
     return rv
 
 def new_url(module):
@@ -145,7 +157,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/policy/{name}/forward-policy/action/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -155,7 +166,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/policy/{name}/forward-policy/action/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -166,15 +176,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -203,10 +239,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -236,28 +274,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("action", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -288,11 +327,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

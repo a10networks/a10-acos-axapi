@@ -1,0 +1,11 @@
+
+- name: Create a10_aam_authorization_policy_attribute example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_aam_authorization_policy_attribute instance
+    a10_aam_authorization_policy_attribute:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      attr_num: 1

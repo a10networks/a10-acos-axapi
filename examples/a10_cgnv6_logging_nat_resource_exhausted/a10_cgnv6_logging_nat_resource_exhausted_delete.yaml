@@ -1,0 +1,12 @@
+- name: Delete a10_cgnv6_logging_nat_resource_exhausted example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_logging_nat_resource_exhausted instance
+    a10_cgnv6_logging_nat_resource_exhausted:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+

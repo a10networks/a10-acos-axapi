@@ -1,68 +1,103 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_port-reservation
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_cgnv6_ds_lite_port_reservation
+description:
+    - None
+short_description: Configures A10 cgnv6.ds.lite.port-reservation
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    inside:
+    state:
         description:
-            - Inside User Address and Port Range (DS-Lite Inside User's Tunnel Source IPv6 Address)
-    
-    tunnel-dest-address:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - DS-Lite Inside User's Tunnel Destination IPv6 Address
-    
-    inside-addr:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Inside User IP address
-    
-    inside-start-port:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Inside Start Port
-    
-    inside-end-port:
+        - Password for AXAPI authentication
+        required: True
+    nat_end_port:
         description:
-            - Inside End Port
-    
-    nat:
-        description:
-            - NAT Port Range (NAT IP address)
-    
-    nat-start-port:
-        description:
-            - NAT Start Port
-    
-    nat-end-port:
-        description:
-            - NAT End Port
-    
+        - "None"
+        required: True
     uuid:
         description:
-            - uuid of the object
-    
+        - "None"
+        required: False
+    inside:
+        description:
+        - "None"
+        required: True
+    tunnel_dest_address:
+        description:
+        - "None"
+        required: True
+    inside_start_port:
+        description:
+        - "None"
+        required: True
+    nat:
+        description:
+        - "None"
+        required: True
+    inside_end_port:
+        description:
+        - "None"
+        required: True
+    nat_start_port:
+        description:
+        - "None"
+        required: True
+    inside_addr:
+        description:
+        - "None"
+        required: True
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"inside","inside_addr","inside_end_port","inside_start_port","nat","nat_end_port","nat_start_port","tunnel_dest_address","uuid",}
+AVAILABLE_PROPERTIES = ["inside","inside_addr","inside_end_port","inside_start_port","nat","nat_end_port","nat_start_port","tunnel_dest_address","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -75,35 +110,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        inside=dict(
-            type='str' , required=True
-        ),
-        inside_addr=dict(
-            type='str' , required=True
-        ),
-        inside_end_port=dict(
-            type='str' , required=True
-        ),
-        inside_start_port=dict(
-            type='str' , required=True
-        ),
-        nat=dict(
-            type='str' , required=True
-        ),
-        nat_end_port=dict(
-            type='str' , required=True
-        ),
-        nat_start_port=dict(
-            type='str' , required=True
-        ),
-        tunnel_dest_address=dict(
-            type='str' , required=True
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        nat_end_port=dict(type='int',required=True,),
+        uuid=dict(type='str',),
+        inside=dict(type='str',required=True,),
+        tunnel_dest_address=dict(type='str',required=True,),
+        inside_start_port=dict(type='int',required=True,),
+        nat=dict(type='str',required=True,),
+        inside_end_port=dict(type='int',required=True,),
+        nat_start_port=dict(type='int',required=True,),
+        inside_addr=dict(type='str',required=True,)
     ))
+
     return rv
 
 def new_url(module):
@@ -111,7 +128,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
     f_dict = {}
-    
     f_dict["inside"] = ""
     f_dict["tunnel-dest-address"] = ""
     f_dict["inside-addr"] = ""
@@ -128,7 +144,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
     f_dict = {}
-    
     f_dict["inside"] = module.params["inside"]
     f_dict["tunnel-dest-address"] = module.params["tunnel-dest-address"]
     f_dict["inside-addr"] = module.params["inside-addr"]
@@ -146,13 +161,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -181,10 +224,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -214,28 +259,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("port-reservation", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -254,8 +300,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -263,11 +312,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

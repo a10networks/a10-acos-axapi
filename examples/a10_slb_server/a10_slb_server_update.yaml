@@ -1,0 +1,13 @@
+
+- name: Update a10_slb_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_server instance
+    a10_slb_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      host: 10.10.42.1
+      name: server1

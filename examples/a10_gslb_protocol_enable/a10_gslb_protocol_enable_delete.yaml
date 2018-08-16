@@ -1,0 +1,13 @@
+- name: Delete a10_gslb_protocol_enable example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_protocol_enable instance
+    a10_gslb_protocol_enable:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      type: controller
+
+

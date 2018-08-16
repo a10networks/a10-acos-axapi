@@ -1,0 +1,14 @@
+- name: Delete a10_vrrp_a_restart_port_list_vrid example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_restart_port_list_vrid instance
+    a10_vrrp_a_restart_port_list_vrid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+

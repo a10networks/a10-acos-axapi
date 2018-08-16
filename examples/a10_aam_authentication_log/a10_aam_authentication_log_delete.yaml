@@ -1,0 +1,13 @@
+- name: Delete a10_aam_authentication_log example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_aam_authentication_log instance
+    a10_aam_authentication_log:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+

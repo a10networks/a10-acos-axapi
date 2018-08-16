@@ -1,0 +1,11 @@
+
+- name: Update a10_debug_diameter example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_debug_diameter instance
+    a10_debug_diameter:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

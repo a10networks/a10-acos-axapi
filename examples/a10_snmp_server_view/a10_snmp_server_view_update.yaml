@@ -1,0 +1,13 @@
+
+- name: Update a10_snmp_server_view example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_snmp_server_view instance
+    a10_snmp_server_view:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      oid: NO_EXAMPLE
+      viewname: NO_EXAMPLE

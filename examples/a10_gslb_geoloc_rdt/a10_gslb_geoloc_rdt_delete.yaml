@@ -1,0 +1,11 @@
+- name: Delete a10_gslb_geoloc_rdt example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_geoloc_rdt instance
+    a10_gslb_geoloc_rdt:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+

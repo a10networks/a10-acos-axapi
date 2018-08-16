@@ -1,0 +1,20 @@
+- name: Delete a10_sys_ut_template example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_sys_ut_template instance
+    a10_sys_ut_template:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      name: my_template
+
+
+
+
+
+
+
+

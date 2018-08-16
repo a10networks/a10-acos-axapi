@@ -1,0 +1,19 @@
+- name: Delete a10_enable_management_service_https_acl_v6 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_enable_management_service_https_acl_v6 instance
+    a10_enable_management_service_https_acl_v6:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+      acl_name: NO_EXAMPLE
+
+
+
+
+

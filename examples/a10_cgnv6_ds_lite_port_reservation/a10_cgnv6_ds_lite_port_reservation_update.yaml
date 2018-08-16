@@ -1,0 +1,19 @@
+
+- name: Update a10_cgnv6_ds_lite_port_reservation example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_cgnv6_ds_lite_port_reservation instance
+    a10_cgnv6_ds_lite_port_reservation:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      nat_end_port: 1
+      inside: NO_EXAMPLE
+      tunnel_dest_address: NO_EXAMPLE
+      inside_start_port: 1
+      nat: 10.0.0.1
+      inside_end_port: 1
+      nat_start_port: 1
+      inside_addr: 10.0.0.1

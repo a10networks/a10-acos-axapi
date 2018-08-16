@@ -1,0 +1,12 @@
+
+- name: Update a10_vrrp_a_vrid_lead example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_vrrp_a_vrid_lead instance
+    a10_vrrp_a_vrid_lead:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      vrid_lead_str: NO_EXAMPLE

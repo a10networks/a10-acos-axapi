@@ -1,0 +1,30 @@
+- name: Delete a10_gslb_template_snmp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_template_snmp instance
+    a10_gslb_template_snmp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      snmp_name: NO_EXAMPLE
+

@@ -1,74 +1,179 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_dns
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_cgnv6_template_dns
+description:
+    - None
+short_description: Configures A10 cgnv6.template.dns
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
+    state:
+        description:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
+        description:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
+        description:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
     name:
         description:
-            - DNS Template Name
-    
-    default-policy:
+        - "None"
+        required: True
+    class_list:
         description:
-            - 'nocache': Cache disable; 'cache': Cache enable; choices:['nocache', 'cache']
-    
-    disable-dns-template:
+        - "Field class_list"
+        required: False
+        suboptions:
+            lid_list:
+                description:
+                - "Field lid_list"
+            name:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+    dns64:
         description:
-            - Disable DNS template
-    
-    period:
-        description:
-            - Period in minutes
-    
+        - "Field dns64"
+        required: False
+        suboptions:
+            deep_check_rr_disable:
+                description:
+                - "None"
+            answer_only_disable:
+                description:
+                - "None"
+            enable:
+                description:
+                - "None"
+            single_response_disable:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+            max_qr_length:
+                description:
+                - "None"
+            ignore_rcode3_disable:
+                description:
+                - "None"
+            auth_data:
+                description:
+                - "None"
+            change_query:
+                description:
+                - "None"
+            drop_cname_disable:
+                description:
+                - "None"
+            cache:
+                description:
+                - "None"
+            passive_query_disable:
+                description:
+                - "None"
+            retry:
+                description:
+                - "None"
+            parallel_query:
+                description:
+                - "None"
+            timeout:
+                description:
+                - "None"
+            ttl:
+                description:
+                - "None"
+            trans_ptr_query:
+                description:
+                - "None"
+            trans_ptr:
+                description:
+                - "None"
+            compress_disable:
+                description:
+                - "None"
     drop:
         description:
-            - Drop the malformed query
-    
+        - "None"
+        required: False
+    period:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    default_policy:
+        description:
+        - "None"
+        required: False
+    disable_dns_template:
+        description:
+        - "None"
+        required: False
     forward:
         description:
-            - Forward to service group (Service group name)
-    
-    max-cache-size:
+        - "None"
+        required: False
+    max_cache_size:
         description:
-            - Define maximum cache size (Maximum cache entry per VIP)
-    
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
-        description:
-            - Customized tag
-    
-    class-list:
-        
-    
-    dns64:
-        
-    
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"class_list","default_policy","disable_dns_template","dns64","drop","forward","max_cache_size","name","period","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["class_list","default_policy","disable_dns_template","dns64","drop","forward","max_cache_size","name","period","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -81,41 +186,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        class_list=dict(
-            type='str' 
-        ),
-        default_policy=dict(
-            type='enum' , choices=['nocache', 'cache']
-        ),
-        disable_dns_template=dict(
-            type='str' 
-        ),
-        dns64=dict(
-            type='str' 
-        ),
-        drop=dict(
-            type='str' 
-        ),
-        forward=dict(
-            type='str' 
-        ),
-        max_cache_size=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        period=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        name=dict(type='str',required=True,),
+        class_list=dict(type='dict',lid_list=dict(type='list',action_value=dict(type='str',choices=['dns-cache-disable','dns-cache-enable','forward']),log=dict(type='bool',),lidnum=dict(type='int',required=True,),over_limit_action=dict(type='bool',),per=dict(type='int',),lockout=dict(type='int',),user_tag=dict(type='str',),dns=dict(type='dict',cache_action=dict(type='str',choices=['cache-disable','cache-enable']),weight=dict(type='int',),ttl=dict(type='int',)),conn_rate_limit=dict(type='int',),log_interval=dict(type='int',),uuid=dict(type='str',)),name=dict(type='str',),uuid=dict(type='str',)),
+        dns64=dict(type='dict',deep_check_rr_disable=dict(type='bool',),answer_only_disable=dict(type='bool',),enable=dict(type='bool',),single_response_disable=dict(type='bool',),uuid=dict(type='str',),max_qr_length=dict(type='int',),ignore_rcode3_disable=dict(type='bool',),auth_data=dict(type='bool',),change_query=dict(type='bool',),drop_cname_disable=dict(type='bool',),cache=dict(type='bool',),passive_query_disable=dict(type='bool',),retry=dict(type='int',),parallel_query=dict(type='bool',),timeout=dict(type='int',),ttl=dict(type='int',),trans_ptr_query=dict(type='bool',),trans_ptr=dict(type='bool',),compress_disable=dict(type='bool',)),
+        drop=dict(type='bool',),
+        period=dict(type='int',),
+        user_tag=dict(type='str',),
+        default_policy=dict(type='str',choices=['nocache','cache']),
+        disable_dns_template=dict(type='bool',),
+        forward=dict(type='str',),
+        max_cache_size=dict(type='int',),
+        uuid=dict(type='str',)
     ))
+
     return rv
 
 def new_url(module):
@@ -123,7 +206,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/template/dns/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -133,7 +215,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/template/dns/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -144,13 +225,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -179,10 +288,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -212,28 +323,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("dns", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -252,8 +364,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -261,11 +376,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

@@ -1,0 +1,12 @@
+
+- name: Update a10_gslb_service_group example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_gslb_service_group instance
+    a10_gslb_service_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      service_group_name: NO_EXAMPLE
