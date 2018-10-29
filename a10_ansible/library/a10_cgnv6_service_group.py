@@ -20,15 +20,15 @@ options:
         description:
             - 'tcp': TCP LB service; 'udp': UDP LB service; choices:['tcp', 'udp']
     
-    health-check:
+    health_check:
         description:
             - Health Check (Monitor Name)
     
-    shared-partition:
+    shared_partition:
         description:
             - Share with a single partition (Partition Name)
     
-    shared-group:
+    shared_group:
         description:
             - Share with a partition group (Partition Group Name)
     
@@ -36,20 +36,34 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    sampling-enable:
+    sampling_enable:
         
     
-    member-list:
+    member_list:
         
     
 
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_service_group
+  a10_cgnv6_service_group:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SG-ANSIBLE"
+      protocol: "udp"
+      member_list: [
+          {
+            "name":"SERVER-ANSIBLE",
+            "port":514
+          }
+        ]
+
 """
 
 ANSIBLE_METADATA = """
@@ -78,13 +92,13 @@ def get_argspec():
             type='str' 
         ),
         member_list=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True
         ),
         protocol=dict(
-            type='enum' , choices=['tcp', 'udp']
+            type='str' , choices=['tcp', 'udp']
         ),
         sampling_enable=dict(
             type='str' 

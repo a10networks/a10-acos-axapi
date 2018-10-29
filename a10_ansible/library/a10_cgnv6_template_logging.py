@@ -23,26 +23,26 @@ options:
     log:
         
     
-    include-destination:
+    include_destination:
         description:
             - Include the destination IP and port in logs
     
-    include-inside-user-mac:
+    include_inside_user_mac:
         description:
             - Include the inside user MAC address in logs
     
-    include-partition-name:
+    include_partition_name:
         description:
             - Include partition name in logging events
     
-    include-session-byte-count:
+    include_session_byte_count:
         description:
             - include byte count in session deletion logs
     
-    include-radius-attribute:
+    include_radius_attribute:
         
     
-    include-http:
+    include_http:
         
     
     rule:
@@ -59,14 +59,14 @@ options:
         description:
             - 'binary': Binary logging format; 'compact': Compact ASCII logging format (Hex format with compact representation); 'custom': Arbitrary custom logging format; 'default': Default A10 logging format (ASCII); 'rfc5424': RFC5424 compliant logging format; 'cef': Common Event Format for logging; choices:['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
     
-    batched-logging-disable:
+    batched_logging_disable:
         description:
             - Disable multiple logs per packet
     
-    log-receiver:
+    log_receiver:
         
     
-    service-group:
+    service_group:
         description:
             - Set NAT logging service-group
     
@@ -74,10 +74,10 @@ options:
         description:
             - Service group is in shared patition
     
-    source-port:
+    source_port:
         
     
-    rfc-custom:
+    rfc_custom:
         
     
     custom:
@@ -87,20 +87,48 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    source-address:
+    source_address:
         
     
-    disable-log-by-destination:
+    disable_log_by_destination:
         
     
 
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_template_logging
+  a10_cgnv6_template_logging:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "FIXED-LOG-ANSIBLE"
+      format: "compact"
+      service_group: "SG-ANSIBLE"
+      facility: "local5"
+      include_destination: 1
+      batched_logging_disable: 1
+      log: {
+        "fixed-nat": {
+          "fixed-nat-port-mappings":"both",
+          "fixed-nat-sessions":1
+        },
+        "sessions":1
+      }
+      disable_log_by_destination: {
+        "udp-list": [
+          {
+            "udp-port-start":53,
+            "udp-port-end":53
+          }
+        ],
+        "icmp":1
+      }
+
 """
 
 ANSIBLE_METADATA = """
@@ -132,13 +160,13 @@ def get_argspec():
             type='str' 
         ),
         disable_log_by_destination=dict(
-            type='str' 
+            type='dict' 
         ),
         facility=dict(
-            type='enum' , choices=['kernel', 'user', 'mail', 'daemon', 'security-authorization', 'syslog', 'line-printer', 'news', 'uucp', 'cron', 'security-authorization-private', 'ftp', 'ntp', 'audit', 'alert', 'clock', 'local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']
+            type='str', choices=['kernel', 'user', 'mail', 'daemon', 'security-authorization', 'syslog', 'line-printer', 'news', 'uucp', 'cron', 'security-authorization-private', 'ftp', 'ntp', 'audit', 'alert', 'clock', 'local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']
         ),
         format=dict(
-            type='enum' , choices=['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
+            type='str', choices=['binary', 'compact', 'custom', 'default', 'rfc5424', 'cef']
         ),
         include_destination=dict(
             type='str' 
@@ -159,7 +187,7 @@ def get_argspec():
             type='str' 
         ),
         log=dict(
-            type='str' 
+            type='dict' 
         ),
         log_receiver=dict(
             type='str' 
@@ -203,7 +231,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/template/logging/{name}"
+    url_base = "/axapi/v3/cgnv6/template/logging/"
     f_dict = {}
     
     f_dict["name"] = ""

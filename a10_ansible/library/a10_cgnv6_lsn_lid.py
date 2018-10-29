@@ -12,11 +12,11 @@ version_added: 1.8
 
 options:
     
-    lid-number:
+    lid_number:
         description:
             - LSN Lid
     
-    drop-on-nat-pool-mismatch:
+    drop_on_nat_pool_mismatch:
         description:
             - Drop traffic from users if their current NAT pool does not match the lid's (default: off)
     
@@ -24,7 +24,7 @@ options:
         description:
             - LSN Lid Name
     
-    respond-to-user-mac:
+    respond_to_user_mac:
         description:
             - Use the user's source MAC for the next hop rather than the routing table (default: off)
     
@@ -32,33 +32,33 @@ options:
         description:
             - 'none': Apply source NAT if configured (default); 'drop': Drop packets that match this LSN lid; 'pass-through': Layer-3 route packets that match this LSN lid and do not apply source NAT; choices:['none', 'drop', 'pass-through']
     
-    user-quota-prefix-length:
+    user_quota_prefix_length:
         description:
             - NAT64/DS-Lite user quota prefix length (Prefix Length (Default: Uses the global NAT64/DS-Lite configured value))
     
-    ds-lite:
+    ds_lite:
         
     
-    lsn-rule-list:
+    lsn_rule_list:
         
     
-    source-nat-pool:
+    source_nat_pool:
         
     
-    extended-user-quota:
+    extended_user_quota:
         
     
-    conn-rate-limit:
+    conn_rate_limit:
         
     
-    user-quota:
+    user_quota:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
@@ -66,6 +66,25 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_lsn_lid instance
+  a10_cgnv6_lsn_lid:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      lid_number: 2
+      state: present
+      source_nat_pool:
+            "pool-name":
+               "POOL3"
+      user_quota: {
+          "quota-udp": {
+            "udp-quota":200
+          },
+          "quota-tcp": {
+            "tcp-quota":100,
+            "tcp-reserve":10
+          }
+          }
 """
 
 ANSIBLE_METADATA = """
@@ -112,16 +131,16 @@ def get_argspec():
             type='str' 
         ),
         override=dict(
-            type='enum' , choices=['none', 'drop', 'pass-through']
+            type='str' , choices=['none', 'drop', 'pass-through']
         ),
         respond_to_user_mac=dict(
             type='str' 
         ),
         source_nat_pool=dict(
-            type='str' 
+            type='dict' 
         ),
         user_quota=dict(
-            type='str' 
+            type='dict' 
         ),
         user_quota_prefix_length=dict(
             type='str' 
@@ -138,20 +157,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lsn-lid/{lid-number}"
+    url_base = "/axapi/v3/cgnv6/lsn-lid/"
     f_dict = {}
     
-    f_dict["lid-number"] = ""
+    f_dict["lid_number"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/lsn-lid/{lid-number}"
+    url_base = "/axapi/v3/cgnv6/lsn-lid/{lid_number}"
     f_dict = {}
     
-    f_dict["lid-number"] = module.params["lid-number"]
+    f_dict["lid_number"] = module.params["lid_number"]
 
     return url_base.format(**f_dict)
 
@@ -167,6 +186,7 @@ def build_json(title, module):
         v = module.params.get(x)
         if v:
             rx = x.replace("_", "-")
+            rx = rx.replace("\"", "")
             rv[rx] = module.params[x]
 
     return build_envelope(title, rv)

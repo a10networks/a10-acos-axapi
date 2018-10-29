@@ -12,7 +12,7 @@ version_added: 1.8
 
 options:
     
-    inside-ip-list:
+    inside_ip_list:
         description:
             - Name of IP List used to specify Inside Users
     
@@ -20,19 +20,19 @@ options:
         description:
             - Inside User Partition (Partition Name)
     
-    nat-ip-list:
+    nat_ip_list:
         description:
             - Name of IP List used to specify NAT addresses
     
-    nat-start-address:
+    nat_start_address:
         description:
             - Start NAT Address
     
-    nat-end-address:
+    nat_end_address:
         description:
             - IPv4 End NAT Address
     
-    nat-netmask:
+    nat_netmask:
         description:
             - NAT Addresses IP Netmask
     
@@ -40,11 +40,11 @@ options:
         description:
             - VRRP-A vrid (Specify ha VRRP-A vrid)
     
-    dest-rule-list:
+    dest_rule_list:
         description:
             - Bind destination based Rule-List (Fixed NAT Rule-List Name)
     
-    dynamic-pool-size:
+    dynamic_pool_size:
         description:
             - Configure size of Dynamic pool (Default: 0)
     
@@ -55,19 +55,19 @@ options:
     offset:
         
     
-    ports-per-user:
+    ports_per_user:
         description:
             - Configure Ports per Inside User (ports-per-user)
     
-    respond-to-user-mac:
+    respond_to_user_mac:
         description:
             - Use the user's source MAC for the next hop rather than the routing table (Default: off)
     
-    session-quota:
+    session_quota:
         description:
             - Configure per user quota on sessions
     
-    usable-nat-ports:
+    usable_nat_ports:
         
     
     uuid:
@@ -78,6 +78,18 @@ options:
 """
 
 EXAMPLES = """
+- name: Create fixed-nat with  ip-lsit
+  a10_cgnv6_fixed_nat_inside_iplist.py:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        inside_ip_list: "NAT44-INSIDE1"
+        nat_ip_list: "NAT44-OUTSIDE1"
+        ports_per_user: 256
+        session_quota: 6000
+        method: use-all-nat-ips
+
 """
 
 ANSIBLE_METADATA = """
@@ -112,7 +124,7 @@ def get_argspec():
             type='str' , required=True
         ),
         method=dict(
-            type='enum' , choices=['use-all-nat-ips', 'use-least-nat-ips']
+            type='str' , choices=['use-all-nat-ips', 'use-least-nat-ips']
         ),
         nat_end_address=dict(
             type='str' 
@@ -130,7 +142,7 @@ def get_argspec():
             type='str' 
         ),
         partition=dict(
-            type='str' , required=True
+            type='str' 
         ),
         ports_per_user=dict(
             type='str' 
@@ -156,22 +168,22 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/{inside-ip-list}+{partition}"
+    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/"
     f_dict = {}
     
-    f_dict["inside-ip-list"] = ""
-    f_dict["partition"] = ""
+    f_dict["inside_ip_list"] = ""
+#    f_dict["partition"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/{inside-ip-list}+{partition}"
+    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/iplist/{inside_ip_list}"
     f_dict = {}
     
-    f_dict["inside-ip-list"] = module.params["inside-ip-list"]
-    f_dict["partition"] = module.params["partition"]
+    f_dict["inside_ip_list"] = module.params["inside_ip_list"]
+#    f_dict["partition"] = module.params["partition"]
 
     return url_base.format(**f_dict)
 
@@ -252,7 +264,9 @@ def delete(module, result):
 def update(module, result):
     payload = build_json("iplist", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        delete(module, result)
+        post_result = module.client.post(new_url(module), payload)
+        #post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
         result["changed"] = True
     except a10_ex.ACOSException as ex:

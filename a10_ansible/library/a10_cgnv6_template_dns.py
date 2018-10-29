@@ -16,11 +16,11 @@ options:
         description:
             - DNS Template Name
     
-    default-policy:
+    default_policy:
         description:
             - 'nocache': Cache disable; 'cache': Cache enable; choices:['nocache', 'cache']
     
-    disable-dns-template:
+    disable_dns_template:
         description:
             - Disable DNS template
     
@@ -36,7 +36,7 @@ options:
         description:
             - Forward to service group (Service group name)
     
-    max-cache-size:
+    max_cache_size:
         description:
             - Define maximum cache size (Maximum cache entry per VIP)
     
@@ -44,11 +44,11 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    class-list:
+    class_list:
         
     
     dns64:
@@ -58,6 +58,17 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_template_dns
+  a10_cgnv6_template_dns.py:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "TEMPLATE-DNS64"
+      dns64: {
+        "enable":1,
+        "change-query":1,
+        }
+
 """
 
 ANSIBLE_METADATA = """
@@ -92,7 +103,7 @@ def get_argspec():
             type='str' 
         ),
         dns64=dict(
-            type='str' 
+            type='dict' 
         ),
         drop=dict(
             type='str' 

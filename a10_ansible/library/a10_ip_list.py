@@ -16,20 +16,20 @@ options:
         description:
             - Specify name of the ip list
     
-    ipv4-config:
+    ipv4_config:
         
     
-    ipv6-config:
+    ipv6_config:
         
     
-    ipv6-prefix-config:
+    ipv6_prefix_config:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
@@ -37,6 +37,38 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a ip-lsit
+  a10_ip_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-INSIDE1"
+        ipv4_config: [
+        {
+          "ipv4-start-addr":"10.0.0.0",
+          "ipv4-end-addr":"10.0.0.255"
+        }
+      ]
+
+- debug: msg="STOP a10_ip_list.py"
+
+- debug: msg="START a10_ip_list.py"
+- name: Create a ip-lsit
+  a10_ip_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-OUTSIDE1"
+        ipv4_config: [
+        {
+          "ipv4-start-addr":"100.100.0.0",
+          "ipv4-end-addr":"100.100.0.16"
+        }
+      ]
+
+
 """
 
 ANSIBLE_METADATA = """
@@ -62,10 +94,10 @@ def get_argspec():
     rv.update(dict(
         
         ipv4_config=dict(
-            type='str' 
+            type='list' 
         ),
         ipv6_config=dict(
-            type='str' 
+            type='list' 
         ),
         ipv6_prefix_config=dict(
             type='str' 
@@ -85,7 +117,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ip-list/{name}"
+    url_base = "/axapi/v3/ip-list/"
     f_dict = {}
     
     f_dict["name"] = ""
@@ -105,10 +137,10 @@ def existing_url(module):
 
 def build_envelope(title, data):
     return {
-        title: data
+        title: [data]
     }
 
-def build_json(title, module):
+def build_json_create(title, module):
     rv = {}
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
@@ -117,6 +149,18 @@ def build_json(title, module):
             rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
+def build_json_change(title, module):
+    rv = {}
+    for x in AVAILABLE_PROPERTIES:
+        v = module.params.get(x)
+        if v:
+            rx = x.replace("_", "-")
+            rv[rx] = module.params[x]
+
+    return {
+        title: rv
+    }
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -151,7 +195,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("ip-list", module)
+    payload = build_json_create("ip-list-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         result.update(**post_result)
@@ -177,9 +221,12 @@ def delete(module, result):
     return result
 
 def update(module, result):
-    payload = build_json("ip-list", module)
+    #payload = build_json_change("ip-list-list", module)
+    payload = build_json_create("ip-list-list", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        delete(module, result)
+        post_result = module.client.post(new_url(module), payload)
+        #post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
         result["changed"] = True
     except a10_ex.ACOSException as ex:

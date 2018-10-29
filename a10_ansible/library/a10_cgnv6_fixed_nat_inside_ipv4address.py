@@ -12,15 +12,15 @@ version_added: 1.8
 
 options:
     
-    inside-start-address:
+    inside_start_address:
         description:
             - IPv4 Inside User Start Address
     
-    inside-end-address:
+    inside_end_address:
         description:
             - IPv4 Inside User End Address
     
-    inside-netmask:
+    inside_netmask:
         description:
             - IPv4 Netmask
     
@@ -28,19 +28,15 @@ options:
         description:
             - Inside User Partition (Partition Name)
     
-    nat-ip-list:
-        description:
-            - Name of IP List used to specify NAT addresses
-    
-    nat-start-address:
+    nat_start_address:
         description:
             - Start NAT Address
     
-    nat-end-address:
+    nat_end_address:
         description:
             - IPv4 End NAT Address
     
-    nat-netmask:
+    nat_netmask:
         description:
             - NAT Addresses IP Netmask
     
@@ -48,11 +44,11 @@ options:
         description:
             - VRRP-A vrid (Specify ha VRRP-A vrid)
     
-    dest-rule-list:
+    dest_rule_list:
         description:
             - Bind destination based Rule-List (Fixed NAT Rule-List Name)
     
-    dynamic-pool-size:
+    dynamic_pool_size:
         description:
             - Configure size of Dynamic pool (Default: 0)
     
@@ -63,19 +59,19 @@ options:
     offset:
         
     
-    ports-per-user:
+    ports_per_user:
         description:
             - Configure Ports per Inside User (ports-per-user)
     
-    respond-to-user-mac:
+    respond_to_user_mac:
         description:
             - Use the user's source MAC for the next hop rather than the routing table (Default: off)
     
-    session-quota:
+    session_quota:
         description:
             - Configure per user quota on sessions
     
-    usable-nat-ports:
+    usable_nat_ports:
         
     
     uuid:
@@ -86,13 +82,29 @@ options:
 """
 
 EXAMPLES = """
+- name: Create fixed-nat with  ipv4
+  a10_cgnv6_fixed_nat_inside_ipv4address:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        inside_start_address: "20.1.0.0"
+        inside_end_address: "20.1.0.255"
+        inside_netmask: "255.255.255.0"
+        nat_start_address: "200.1.1.1"
+        nat_end_address: "200.1.1.64"
+        nat_netmask: "255.255.255.128"
+        ports_per_user: 256
+        session_quota: 6000
+        method: use-all-nat-ips
+
 """
 
 ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"dest_rule_list","dynamic_pool_size","inside_end_address","inside_netmask","inside_start_address","method","nat_end_address","nat_ip_list","nat_netmask","nat_start_address","offset","partition","ports_per_user","respond_to_user_mac","session_quota","usable_nat_ports","uuid","vrid",}
+AVAILABLE_PROPERTIES = {"dest_rule_list","dynamic_pool_size","inside_end_address","inside_netmask","inside_start_address","method","nat_end_address","nat_netmask","nat_start_address","offset","partition","ports_per_user","respond_to_user_mac","session_quota","usable_nat_ports","uuid","vrid",}
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -126,12 +138,9 @@ def get_argspec():
             type='str' , required=True
         ),
         method=dict(
-            type='enum' , choices=['use-all-nat-ips', 'use-least-nat-ips']
+            type='str' , choices=['use-all-nat-ips', 'use-least-nat-ips']
         ),
         nat_end_address=dict(
-            type='str' 
-        ),
-        nat_ip_list=dict(
             type='str' 
         ),
         nat_netmask=dict(
@@ -144,7 +153,7 @@ def get_argspec():
             type='str' 
         ),
         partition=dict(
-            type='str' , required=True
+            type='str' 
         ),
         ports_per_user=dict(
             type='str' 
@@ -170,12 +179,12 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/ipv4address/{inside-start-address}+{inside-end-address}+{inside-netmask}+{partition}"
+    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/ipv4address/"
     f_dict = {}
     
-    f_dict["inside-start-address"] = ""
-    f_dict["inside-end-address"] = ""
-    f_dict["inside-netmask"] = ""
+    f_dict["inside_start_address"] = ""
+    f_dict["inside_end_address"] = ""
+    f_dict["inside_netmask"] = ""
     f_dict["partition"] = ""
 
     return url_base.format(**f_dict)
@@ -183,12 +192,12 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/ipv4address/{inside-start-address}+{inside-end-address}+{inside-netmask}+{partition}"
+    url_base = "/axapi/v3/cgnv6/fixed-nat/inside/ipv4address/{inside_start_address}+{inside_end_address}+{inside_netmask}"
     f_dict = {}
     
-    f_dict["inside-start-address"] = module.params["inside-start-address"]
-    f_dict["inside-end-address"] = module.params["inside-end-address"]
-    f_dict["inside-netmask"] = module.params["inside-netmask"]
+    f_dict["inside_start_address"] = module.params["inside_start_address"]
+    f_dict["inside_end_address"] = module.params["inside_end_address"]
+    f_dict["inside_netmask"] = module.params["inside_netmask"]
     f_dict["partition"] = module.params["partition"]
 
     return url_base.format(**f_dict)
@@ -270,7 +279,9 @@ def delete(module, result):
 def update(module, result):
     payload = build_json("ipv4address", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        delete(module, result)
+        post_result = module.client.post(new_url(module), payload)
+        #post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
         result["changed"] = True
     except a10_ex.ACOSException as ex:

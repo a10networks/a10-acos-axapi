@@ -4,7 +4,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_rib
+module: a10_cgnv6_template_default_logging
 description:
     - 
 author: A10 Networks 2018 
@@ -12,25 +12,9 @@ version_added: 1.8
 
 options:
     
-    ip_dest_addr:
+    logging
         description:
-            - Destination prefix
-    
-    ip_mask:
-        description:
-            - Destination prefix mask
-    
-    ip_nexthop_ipv4:
-        
-    
-    ip_nexthop_lif:
-        
-    
-    ip_nexthop_tunnel:
-        
-    
-    ip_nexthop_partition:
-        
+            - default-template logging  name
     
     uuid:
         description:
@@ -40,20 +24,12 @@ options:
 """
 
 EXAMPLES = """
-- name: Create  routing
-  a10_ip_route_rib:
-        a10_host: "{{ inventory_hostname }}"
-        a10_username: admin
-        a10_password: a10
-        state: present
-        ip_dest_addr: 192.168.1.0
-        ip_mask: 255.255.255.0
-        ip_nexthop_ipv4: [
-                {
-                "ip-next-hop":"10.0.0.102",
-                "distance-nexthop-ip":103
-                }
-        ]
+- name: Create a10_cgnv6_template_default_logging
+  a10_cgnv6_template_default_logging:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      logging: { "default-template":"FIXED-LOG-ANSIBLE" }
 
 """
 
@@ -61,7 +37,7 @@ ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"ip_dest_addr","ip_mask","ip_nexthop_ipv4","ip_nexthop_lif","ip_nexthop_partition","ip_nexthop_tunnel","uuid",}
+AVAILABLE_PROPERTIES = {"logging","uuid",}
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -79,23 +55,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         
-        ip_dest_addr=dict(
-            type='str' , required=True
-        ),
-        ip_mask=dict(
-            type='str' , required=True
-        ),
-        ip_nexthop_ipv4=dict(
-            type='list' 
-        ),
-        ip_nexthop_lif=dict(
-            type='str' 
-        ),
-        ip_nexthop_partition=dict(
-            type='str' 
-        ),
-        ip_nexthop_tunnel=dict(
-            type='str' 
+        logging=dict(
+            type='dict' , required=True
         ),
         uuid=dict(
             type='str' 
@@ -106,45 +67,28 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ip/route/rib/"
+    url_base = "/axapi/v3/cgnv6/lsn/global"
     f_dict = {}
     
-    f_dict["ip_dest_addr"] = ""
-    f_dict["ip_mask"] = ""
-    f_dict["ip_nexthop_ipv4"] = ""
+    f_dict["logging"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ip/route/rib/{ip_dest_addr}+{ip_mask}"
+    url_base = "/axapi/v3/cgnv6/lsn/global"
     f_dict = {}
     
-    f_dict["ip_dest_addr"] = module.params["ip_dest_addr"]
-    f_dict["ip_mask"] = module.params["ip_mask"]
-    f_dict["ip_nexthop_ipv4"] = module.params["ip_nexthop_ipv4"]
+    f_dict["logging"] = module.params["logging"]
 
     return url_base.format(**f_dict)
 
 
 def build_envelope(title, data):
     return {
-        title: [data]
+        title: data
     }
-
-def build_json_update(title, module):
-    rv = {}
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-
-    return {
-        title: rv
-    }
-
 
 def build_json(title, module):
     rv = {}
@@ -189,7 +133,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("rib-list", module)
+    payload = build_json("global", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         result.update(**post_result)
@@ -215,7 +159,7 @@ def delete(module, result):
     return result
 
 def update(module, result):
-    payload = build_json_update("rib", module)
+    payload = build_json("global", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)

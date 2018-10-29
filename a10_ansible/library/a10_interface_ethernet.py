@@ -20,34 +20,34 @@ options:
         description:
             - Name for the interface
     
-    l3-vlan-fwd-disable:
+    l3_vlan_fwd_disable:
         
     
-    load-interval:
+    load_interval:
         description:
-            - Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)
+            _ Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)
     
-    media-type-copper:
+    media_type_copper:
         description:
             - Set the media type to copper
     
-    auto-neg-enable:
+    auto_neg_enable:
         description:
             - enable auto-negotiation
     
-    fec-forced-on:
+    fec_forced_on:
         description:
             - turn on the FEC
     
-    fec-forced-off:
+    fec_forced_off:
         description:
             - turn off the FEC
     
-    speed-forced-40g:
+    speed_forced_40g:
         description:
             - force the speed to be 40G on 100G link
     
-    remove-vlan-tag:
+    remove_vlan_tag:
         description:
             - Remove the vlan tag for egressing packets
     
@@ -55,7 +55,7 @@ options:
         description:
             - Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))
     
-    trap-source:
+    trap_source:
         description:
             - The trap source
     
@@ -67,7 +67,7 @@ options:
         description:
             - '10': 10; '100': 100; '1000': 1000; 'auto': auto; choices:['10', '100', '1000', 'auto']
     
-    flow-control:
+    flow_control:
         description:
             - Enable 802.3x flow control on full duplex port
     
@@ -75,39 +75,39 @@ options:
         description:
             - 'enable': Enable; 'disable': Disable; choices:['enable', 'disable']
     
-    icmp-rate-limit:
+    icmp_rate_limit:
         
     
-    icmpv6-rate-limit:
+    icmpv6_rate_limit:
         
     
-    monitor-list:
+    monitor_list:
         
     
-    cpu-process:
+    cpu_process:
         description:
             - All Packets to this port are processed by CPU
     
-    cpu-process-dir:
+    cpu_process_dir:
         description:
             - 'primary': Primary board; 'blade': blade board; 'hash-dip': Hash based on the Destination IP; 'hash-sip': Hash based on the Source IP; 'hash-dmac': Hash based on the Destination MAC; 'hash-smac': Hash based on the Source MAC; choices:['primary', 'blade', 'hash-dip', 'hash-sip', 'hash-dmac', 'hash-smac']
     
-    traffic-distribution-mode:
+    traffic_distribution_mode:
         description:
             - 'sip': sip; 'dip': dip; 'primary': primary; 'blade': blade; 'l4-src-port': l4-src-port; 'l4-dst-port': l4-dst-port; choices:['sip', 'dip', 'primary', 'blade', 'l4-src-port', 'l4-dst-port']
     
-    access-list:
+    access_list:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    sampling-enable:
+    sampling_enable:
         
     
     lldp:
@@ -128,10 +128,10 @@ options:
     map:
         
     
-    lw-4o6:
+    lw_4o6:
         
     
-    trunk-group-list:
+    trunk_group_list:
         
     
     bfd:
@@ -144,6 +144,40 @@ options:
 """
 
 EXAMPLES = """
+- name: Create an interface configuration
+  a10_interface_ethernet:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ifnum: 1
+        ipv6: {
+             "inside":1,
+             "outside":0,
+             "address-list": [
+            {
+              "ipv6-addr":"2002:200:200::11/64"
+            } ]
+        }
+- name: Create an interface configuration
+  a10_interface_ethernet:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "Outside Created by Ansible"
+        ifnum: 2
+        ip: {
+            "inside":0,
+            "outside":1,
+            "address-list": [
+            {
+              "ipv4-address":"100.200.100.1",
+              "ipv4-netmask":"255.255.255.0"
+            } ]
+
+            }
+
 """
 
 ANSIBLE_METADATA = """
@@ -211,10 +245,10 @@ def get_argspec():
             type='str' , required=True
         ),
         ip=dict(
-            type='str' 
+            type='dict' 
         ),
         ipv6=dict(
-            type='str' 
+            type='dict' 
         ),
         isis=dict(
             type='str' 

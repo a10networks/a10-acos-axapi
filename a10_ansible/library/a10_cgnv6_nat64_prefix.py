@@ -12,7 +12,7 @@ version_added: 1.8
 
 options:
     
-    prefix-val:
+    prefix_val:
         description:
             - NAT64 Prefix
     
@@ -20,7 +20,7 @@ options:
         description:
             - VRRP-A vrid (Specify ha VRRP-A vrid)
     
-    class-list:
+    class_list:
         description:
             - Class-list to match for NAT64
     
@@ -32,6 +32,14 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a  NAT64 prefix
+  a10_cgnv6_nat64_prefix:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        prefix_val: 64:db8::/96
+
 """
 
 ANSIBLE_METADATA = """
@@ -74,20 +82,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/nat64/prefix/{prefix-val}"
+    url_base = "/axapi/v3/cgnv6/nat64/prefix/"
     f_dict = {}
     
-    f_dict["prefix-val"] = ""
+    f_dict["prefix_val"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/nat64/prefix/{prefix-val}"
+    url_base = "/axapi/v3/cgnv6/nat64/prefix/{prefixencoded}"
     f_dict = {}
     
-    f_dict["prefix-val"] = module.params["prefix-val"]
+    f_dict["prefixencoded"] = module.params["prefix_val"].replace(':','%3A').replace('/','%2F')
 
     return url_base.format(**f_dict)
 

@@ -12,15 +12,15 @@ version_added: 1.8
 
 options:
     
-    pool-name:
+    pool_name:
         description:
             - Specify pool name or pool group
     
-    start-address:
+    start_address:
         description:
             - Configure start IP address of NAT pool
     
-    end-address:
+    end_address:
         description:
             - Configure end IP address of NAT pool
     
@@ -28,14 +28,14 @@ options:
         description:
             - Configure mask for pool
     
-    exclude-ip:
+    exclude_ip:
         
     
     vrid:
         description:
             - Configure VRRP-A vrid (Specify ha VRRP-A vrid)
     
-    max-users-per-ip:
+    max_users_per_ip:
         description:
             - Number of users that can be assigned to a NAT IP
     
@@ -55,31 +55,31 @@ options:
         description:
             - Share with all partitions
     
-    port-batch-v2-size:
+    port_batch_v2_size:
         description:
             - '64': Allocate 64 ports at a time; '128': Allocate 128 ports at a time; '256': Allocate 256 ports at a time; '512': Allocate 512 ports at a time; '1024': Allocate 1024 ports at a time; '2048': Allocate 2048 ports at a time; '4096': Allocate 4096 ports at a time; choices:['64', '128', '256', '512', '1024', '2048', '4096']
     
-    simultaneous-batch-allocation:
+    simultaneous_batch_allocation:
         description:
             - Allocate same TCP and UDP batches at once
     
-    per-batch-port-usage-warning-threshold:
+    per_batch_port_usage_warning_threshold:
         description:
             - Configure warning log threshold for per batch port usage (default: disabled) (Number of ports)
     
-    tcp-time-wait-interval:
+    tcp_time_wait_interval:
         description:
             - Minutes before TCP NAT ports can be reused
     
-    usable-nat-ports:
+    usable_nat_ports:
         description:
             - Configure usable NAT ports
     
-    usable-nat-ports-start:
+    usable_nat_ports_start:
         description:
             - Start Port of Usable NAT Ports (needs to be even)
     
-    usable-nat-ports-end:
+    usable_nat_ports_end:
         description:
             - End Port of Usable NAT Ports
     
@@ -91,6 +91,16 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_nat_pool
+  a10_cgnv6_nat_pool:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      pool_name: "POOL3"
+      start_address: "172.21.21.1"
+      end_address: "172.21.21.254"
+      netmask: "/24"
+
 """
 
 ANSIBLE_METADATA = """
@@ -143,7 +153,7 @@ def get_argspec():
             type='str' , required=True
         ),
         port_batch_v2_size=dict(
-            type='enum' , choices=['64', '128', '256', '512', '1024', '2048', '4096']
+            type='str' , choices=['64', '128', '256', '512', '1024', '2048', '4096']
         ),
         shared=dict(
             type='str' 
@@ -178,20 +188,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/nat/pool/{pool-name}"
+    url_base = "/axapi/v3/cgnv6/nat/pool/"
     f_dict = {}
     
-    f_dict["pool-name"] = ""
+    f_dict["pool_name"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/nat/pool/{pool-name}"
+    url_base = "/axapi/v3/cgnv6/nat/pool/{pool_name}"
     f_dict = {}
     
-    f_dict["pool-name"] = module.params["pool-name"]
+    f_dict["pool_name"] = module.params["pool_name"]
 
     return url_base.format(**f_dict)
 

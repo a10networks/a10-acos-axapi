@@ -12,14 +12,14 @@ version_added: 1.8
 
 options:
     
-    ipv6-address:
+    ipv6_address:
         description:
             - IPV6 address
     
-    ipv6-nexthop-ipv6:
+    ipv6_nexthop_ipv6:
         
     
-    ipv6-nexthop-tunnel:
+    ipv6_nexthop_tunnel:
         
     
     uuid:
@@ -30,6 +30,20 @@ options:
 """
 
 EXAMPLES = """
+- name: Create  ipv6 routing
+  a10_ipv6_route_rib:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ipv6_address: 2003:2002::/48
+        ipv6_nexthop_ipv6: [
+                {
+                "ipv6-nexthop":"2001:2001::02",
+                "distance":103
+                }
+        ]
+
 """
 
 ANSIBLE_METADATA = """
@@ -58,7 +72,7 @@ def get_argspec():
             type='str' , required=True
         ),
         ipv6_nexthop_ipv6=dict(
-            type='str' 
+            type='list' 
         ),
         ipv6_nexthop_tunnel=dict(
             type='str' 
@@ -72,28 +86,44 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ipv6/route/rib/{ipv6-address}"
+    url_base = "/axapi/v3/ipv6/route/rib"
     f_dict = {}
     
-    f_dict["ipv6-address"] = ""
+    f_dict["ipv6_address"] = ""
+    f_dict["ipv6_nexthop_ipv6"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ipv6/route/rib/{ipv6-address}"
+    url_base = "/axapi/v3/ipv6/route/rib/{ipv6encoded}"
     f_dict = {}
     
-    f_dict["ipv6-address"] = module.params["ipv6-address"]
+    f_dict["ipv6_address"] = module.params["ipv6_address"]
+    f_dict["ipv6encoded"] = module.params["ipv6_address"].replace(':','%3A').replace('/','%2F')
+    f_dict["ipv6_nexthop_ipv6"] = module.params["ipv6_nexthop_ipv6"]
 
     return url_base.format(**f_dict)
 
 
 def build_envelope(title, data):
     return {
-        title: data
+        title: [data]
     }
+
+def build_json_update(title, module):
+    rv = {}
+    for x in AVAILABLE_PROPERTIES:
+        v = module.params.get(x)
+        if v:
+            rx = x.replace("_", "-")
+            rv[rx] = module.params[x]
+
+    return {
+        title: rv
+    }
+
 
 def build_json(title, module):
     rv = {}
@@ -138,7 +168,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("rib", module)
+    payload = build_json("rib-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         result.update(**post_result)
@@ -164,7 +194,7 @@ def delete(module, result):
     return result
 
 def update(module, result):
-    payload = build_json("rib", module)
+    payload = build_json_update("rib", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)

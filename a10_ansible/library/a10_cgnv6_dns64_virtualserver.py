@@ -16,11 +16,11 @@ options:
         description:
             - CGNV6 Virtual Server Name
     
-    ipv6-address:
+    ipv6_address:
         description:
             - IPV6 address
     
-    ip-address:
+    ip_address:
         description:
             - IP Address
     
@@ -28,7 +28,7 @@ options:
         description:
             - IP subnet mask
     
-    use-if-ip:
+    use_if_ip:
         description:
             - Use Interface IP
     
@@ -36,7 +36,7 @@ options:
         description:
             - Ethernet interface
     
-    enable-disable-action:
+    enable_disable_action:
         description:
             - 'enable': Enable Virtual Server (default); 'disable': Disable Virtual Server; choices:['enable', 'disable']
     
@@ -44,7 +44,7 @@ options:
         description:
             - Policy template
     
-    template-policy:
+    template_policy:
         description:
             - Policy template name
     
@@ -56,17 +56,34 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    port-list:
+    port_list:
         
     
 
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_dns64_virtualserver
+  a10_cgnv6_dns64_virtualserver:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "VIP-DNS64"
+      ipv6_address: "2003::53"
+      port_list:         [
+          {
+          "port-number":53,
+          "protocol":"dns-udp",
+          "auto":1,
+          "template-dns":"TEMPLATE-DNS64",
+          "service-group":"SG-DNS64"
+          }
+        ]
+
 """
 
 ANSIBLE_METADATA = """
@@ -92,7 +109,7 @@ def get_argspec():
     rv.update(dict(
         
         enable_disable_action=dict(
-            type='enum' , choices=['enable', 'disable']
+            type='str' , choices=['enable', 'disable']
         ),
         ethernet=dict(
             type='str' 
@@ -113,7 +130,7 @@ def get_argspec():
             type='str' 
         ),
         port_list=dict(
-            type='str' 
+            type='list' 
         ),
         template_policy=dict(
             type='str' 
@@ -136,7 +153,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{name}"
+    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/"
     f_dict = {}
     
     f_dict["name"] = ""

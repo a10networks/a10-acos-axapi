@@ -16,7 +16,7 @@ options:
         description:
             - Server Name
     
-    server-ipv6-addr:
+    server_ipv6_addr:
         description:
             - IPV6 address
     
@@ -24,7 +24,7 @@ options:
         description:
             - IP Address
     
-    fqdn-name:
+    fqdn_name:
         description:
             - Server hostname
     
@@ -32,11 +32,11 @@ options:
         description:
             - 'enable': Enable this Real Server; 'disable': Disable this Real Server; choices:['enable', 'disable']
     
-    health-check:
+    health_check:
         description:
             - Health Check Monitor (Health monitor name)
     
-    health-check-disable:
+    health_check_disable:
         description:
             - Disable configured health check configuration
     
@@ -44,20 +44,36 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    sampling-enable:
+    sampling_enable:
         
     
-    port-list:
+    port_list:
         
     
 
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_server
+  a10_cgnv6_server:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SERVER-ANSIBLE"
+      host: "20.17.53.199"
+      port_list: [
+        {
+          "port-number":514,
+          "protocol":"udp",
+          "health-check-disable":1,
+        }
+      ]
+      health_check_disable: 1
+
 """
 
 ANSIBLE_METADATA = """
@@ -83,7 +99,7 @@ def get_argspec():
     rv.update(dict(
         
         action=dict(
-            type='enum' , choices=['enable', 'disable']
+            type='str' , choices=['enable', 'disable']
         ),
         fqdn_name=dict(
             type='str' 
@@ -101,7 +117,7 @@ def get_argspec():
             type='str' , required=True
         ),
         port_list=dict(
-            type='str' 
+            type='list' 
         ),
         sampling_enable=dict(
             type='str' 

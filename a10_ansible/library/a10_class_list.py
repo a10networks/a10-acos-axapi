@@ -24,26 +24,26 @@ options:
         description:
             - Create/Edit a class-list stored as a file
     
-    ipv4-list:
+    ipv4_list:
         
     
-    ipv6-list:
+    ipv6_list:
         
     
     dns:
         
     
-    str-list:
+    str_list:
         
     
-    ac-list:
+    ac_list:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
@@ -51,6 +51,42 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a class-lsit
+  a10_class_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-ANSIBLE"
+        ipv4_list: [
+                {
+                    "lsn-lid": 1,
+                    "ipv4addr": "11.0.0.0/24"
+                },
+                {
+                    "lsn-lid": 1,
+                    "ipv4addr": "21.17.53.82/32"
+                }
+        ]
+- name: Create a class-lsit
+  a10_class_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT64-ANSIBLE"
+        ipv6_list: [
+                {
+                    "v6-lsn-lid": 1,
+                    "ipv6-addr": "2001:1000:2000::/64"
+                },
+                {
+                    "v6-lsn-lid": 1,
+                    "ipv6-addr": "2001:2000:2000::/48"
+                }
+        ]
+
+
 """
 
 ANSIBLE_METADATA = """
@@ -85,19 +121,19 @@ def get_argspec():
             type='str' 
         ),
         ipv4_list=dict(
-            type='str' 
+            type='list' 
         ),
         ipv6_list=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True
         ),
         str_list=dict(
-            type='str' 
+            type='dict' 
         ),
         type=dict(
-            type='enum' , choices=['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
+            type='str' , choices=['ac', 'dns', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
         ),
         user_tag=dict(
             type='str' 
@@ -111,7 +147,8 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/class-list/{name}"
+    #url_base = "/axapi/v3/class-list/{name}"
+    url_base = "/axapi/v3/class-list/"
     f_dict = {}
     
     f_dict["name"] = ""
