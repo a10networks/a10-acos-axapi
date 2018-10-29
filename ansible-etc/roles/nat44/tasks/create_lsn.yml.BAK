@@ -1,0 +1,18 @@
+---
+- debug: msg="Start START a10_cgnv6_lsn_lid"
+- name: Create a10_cgnv6_lsn_lid instance
+  a10_cgnv6_lsn_lid:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      lid_number: 2
+      state: present
+      source_nat_pool:
+            pool_name: "{{ NAT_POOL_NAME }}"
+      user_quota:
+            icmp: 100
+            quota_udp: 100
+            quota_tcp: 100
+            session: 1000
+
+- debug: msg="Stop START a10_cgnv6_lsn_lid"

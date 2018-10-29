@@ -1,0 +1,32 @@
+---
+# Configure class-list
+- debug: msg="START a10_class_list.py"
+- name: Create a class-lsit
+  a10_class_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-ANSIBLE"
+        ipv4_list: [
+                {
+                    "lsn-lid": 1,
+                    "ipv4addr": "11.0.0.0/24"
+                },
+                {
+                    "lsn-lid": 1,
+                    "ipv4addr": "21.17.53.82/32"
+                }
+        ]
+- debug: msg="STOP a10_class_list.py"
+- name: Create a  source class-lsit
+  a10_cgnv6_lsn_inside_source_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        class_list: "NAT44-ANSIBLE"
+          
+
+
+

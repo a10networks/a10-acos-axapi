@@ -1,0 +1,8 @@
+---
+axapi:
+  host: "{{ inventory_hostname }}"
+  username: "{{ a10_user | default('admin') }}"
+  password: "{{ a10_pass | default('a10') }}"
+  transport: axapi
+  use_ssl: no
+

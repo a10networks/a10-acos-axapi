@@ -1,0 +1,21 @@
+---
+# Configure routing
+- debug: msg="START a10_routes.yaml"
+- name: Create  routing
+  a10_routes:
+        host: "{{ inventory_hostname }}"
+        username: admin
+        password: a10
+        validate_certs: false
+        state: present
+        ip_routes:
+          - destination_ip: 192.168.0.0
+            destination_mask: 255.255.255.0
+            nexthop: 10.0.0.101
+            distance: 101
+          - destination_ip: 172.16.0.0
+            destination_mask: 255.255.0.0
+            nexthop: 20.0.0.102
+            distance: 102
+- debug: msg="STOP a10_routes.yaml"
+

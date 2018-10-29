@@ -1,0 +1,36 @@
+---
+# Configure routing
+- debug: msg="START a10_ip_route_rib"
+- name: Create  routing
+  a10_ip_route_rib:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ip_dest_addr: 192.168.1.0
+        ip_mask: 255.255.255.0
+        ip_nexthop_ipv4: [
+                {
+                "ip-next-hop":"10.0.0.102",
+                "distance-nexthop-ip":103
+                }
+        ]
+
+
+- debug: msg="START a10_ipv6_route_rib"
+- name: Create  ipv6 routing
+  a10_ipv6_route_rib:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ipv6_address: 2003:2002::/48
+        ipv6_nexthop_ipv6: [
+                {
+                "ipv6-nexthop":"2001:2001::02",
+                "distance":103
+                }
+        ]
+
+- debug: msg="STOP a10_ipv6_route_rib.yaml"
+

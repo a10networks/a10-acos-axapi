@@ -1,0 +1,35 @@
+---
+# Configure class-list
+- debug: msg="START a10_ip_list.py"
+- name: Create a ip-lsit
+  a10_ip_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-INSIDE1"
+        ipv4_config: [
+        {
+          "ipv4-start-addr":"10.0.0.0",
+          "ipv4-end-addr":"10.0.0.255"
+        }
+      ]
+
+- debug: msg="STOP a10_ip_list.py"
+
+- debug: msg="START a10_ip_list.py"
+- name: Create a ip-lsit
+  a10_ip_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT44-OUTSIDE1"
+        ipv4_config: [
+        {
+          "ipv4-start-addr":"100.100.0.0",
+          "ipv4-end-addr":"100.100.0.16"
+        }
+      ]
+
+- debug: msg="STOP a10_ip_list.py"

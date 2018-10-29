@@ -1,0 +1,19 @@
+---
+# Configure interface 
+- debug: msg="START a10_interface.yaml"
+- name: Create an interface configuration
+  a10_interface_ethernet:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ifnum: 1
+        ipv6: {
+             "inside":1,
+             "outside":0,
+             "address-list": [
+            {
+              "ipv6-addr":"2002:200:200::11/64"
+            } ]
+        }
+- debug: msg="STOP a10_interface.yaml"

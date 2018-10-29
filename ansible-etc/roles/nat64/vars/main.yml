@@ -1,0 +1,7 @@
+---
+# vars file for /etc/ansible/roles/nat44
+NAT3_POOL_NAME: "POOL3"
+NAT3_START_ADDRESS: "100.100.200.1"
+NAT3_END_ADDRESS: "100.100.200.2"
+NAT3_POOL__MASK: "/24"
+

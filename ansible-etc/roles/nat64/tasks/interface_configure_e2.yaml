@@ -1,0 +1,16 @@
+---
+# Configure interface 
+- debug: msg="START a10_interface.yaml"
+- name: Create an interface configuration
+  a10_interface_ethernet:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        ifnum: 2
+        ip: { 
+            "inside":0,
+            "outside":1,
+            "name": "Outside Created by Ansible"
+            }
+- debug: msg="STOP a10_interface.yaml"

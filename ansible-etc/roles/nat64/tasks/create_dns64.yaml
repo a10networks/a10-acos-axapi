@@ -1,0 +1,70 @@
+---
+- debug: msg="START a10_cgnv6_server"
+- name: Create a10_cgnv6_server
+  a10_cgnv6_server:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SERVER-DNS64"
+      host: "8.8.4.4"
+      port_list: [
+        {
+          "port-number":80,
+          "protocol":"udp",
+          "health-check-disable":1,
+        }
+      ]
+      health_check_disable: 1
+- debug: msg="STOP a10_cgnv6_server"
+
+- debug: msg="START a10_cgnv6_service_group"
+- name: Create a10_cgnv6_service_group
+  a10_cgnv6_service_group:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SG-DNS64"
+      protocol: "udp"
+      member_list: [
+          {
+            "name":"SERVER-DNS64",
+            "port":53
+          }
+        ]
+- debug: msg="STOP a10_cgnv6_service_group"
+
+- debug: msg="START a10_cgnv6_template_dns"
+- name: Create a10_cgnv6_template_dns
+  a10_cgnv6_template_dns.py:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "TEMPLATE-DNS64"
+      dns64: {
+        "enable":1,
+        "change-query":1,
+        }
+
+- debug: msg="STOP a10_cgnv6_template_dns"
+
+- debug: msg="START a10_cgnv6_dns64_virtualserver"
+- name: Create a10_cgnv6_dns64_virtualserver
+  a10_cgnv6_dns64_virtualserver:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "VIP-DNS64"
+      ipv6_address: "2003::53"
+      port_list:         [
+          {
+          "port-number":53,
+          "protocol":"dns-udp",
+          "auto":1,
+          "template-dns":"TEMPLATE-DNS64",
+          "service-group":"SG-DNS64"
+          }
+        ]
+
+- debug: msg="STOP a10_cgnv6_dns64_virtualserver"
+
+

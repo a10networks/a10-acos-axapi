@@ -1,0 +1,76 @@
+---
+- debug: msg="START a10_cgnv6_server"
+- name: Create a10_cgnv6_server
+  a10_cgnv6_server:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SERVER-ANSIBLE"
+      host: "20.17.53.199"
+      port_list: [
+        {
+          "port-number":514,
+          "protocol":"udp",
+          "health-check-disable":1,
+        }
+      ]
+      health_check_disable: 1
+- debug: msg="STOP a10_cgnv6_server"
+
+- debug: msg="START a10_cgnv6_service_group"
+- name: Create a10_cgnv6_service_group
+  a10_cgnv6_service_group:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "SG-ANSIBLE"
+      protocol: "udp"
+      member_list: [
+          {
+            "name":"SERVER-ANSIBLE",
+            "port":514
+          }
+        ]
+- debug: msg="STOP a10_cgnv6_service_group"
+
+- debug: msg="START a10_cgnv6_template_logging"
+- name: Create a10_cgnv6_template_logging
+  a10_cgnv6_template_logging:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      name: "FIXED-LOG-ANSIBLE"
+      format: "compact"
+      service_group: "SG-ANSIBLE"
+      facility: "local5"
+      include_destination: 1
+      batched_logging_disable: 1
+      log: {
+        "fixed-nat": {
+          "fixed-nat-port-mappings":"both",
+          "fixed-nat-sessions":1
+        },
+        "sessions":1
+      }
+      disable_log_by_destination: {
+        "udp-list": [
+          {
+            "udp-port-start":53,
+            "udp-port-end":53
+          }
+        ],
+        "icmp":1
+      }
+
+
+- debug: msg="STOP a10_cgnv6_template_logging"
+
+- debug: msg="START a10_cgnv6_template_default_logging"
+- name: Create a10_cgnv6_template_default_logging
+  a10_cgnv6_template_default_logging:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      logging: { "default-template":"FIXED-LOG-ANSIBLE" }
+- debug: msg="STOP a10_cgnv6_template_default_logging"
+

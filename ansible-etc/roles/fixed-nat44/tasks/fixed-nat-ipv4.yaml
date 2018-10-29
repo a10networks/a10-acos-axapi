@@ -1,0 +1,21 @@
+---
+# Configure class-list
+- debug: msg="START a10_cgnv6_fixed_nat_inside_ipv4address"
+- name: Create fixed-nat with  ipv4
+  a10_cgnv6_fixed_nat_inside_ipv4address:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        inside_start_address: "20.1.0.0"
+        inside_end_address: "20.1.0.255"
+        inside_netmask: "255.255.255.0"
+        nat_start_address: "200.1.1.1"
+        nat_end_address: "200.1.1.64"
+        nat_netmask: "255.255.255.128"
+        ports_per_user: 256
+        session_quota: 6000
+        method: use-all-nat-ips
+
+- debug: msg="STOP a10_cgnv6_fixed_nat_inside_ipv4address"
+

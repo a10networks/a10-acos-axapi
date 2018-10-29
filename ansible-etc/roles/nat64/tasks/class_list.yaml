@@ -1,0 +1,47 @@
+---
+# Configure class-list
+- debug: msg="START a10_class_list.py"
+- name: Create a class-lsit
+  a10_class_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        name: "NAT64-ANSIBLE"
+        ipv6_list: [
+                {
+                    "v6-lsn-lid": 1,
+                    "ipv6-addr": "2001:1000:2000::/64"
+                },
+                {
+                    "v6-lsn-lid": 1,
+                    "ipv6-addr": "2001:2000:2000::/48"
+                }
+        ]
+- debug: msg="STOP a10_class_list.py"
+- debug: msg="START a10_cgnv6_nat64_inside_source_list"
+- name: Create a  source inside class-lsit
+  a10_cgnv6_nat64_inside_source_list:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        inside: {
+           "source": {
+              "class-list":"NAT64-ANSIBLE"
+           }
+        }
+
+- debug: msg="STOP a10_cgnv6_nat64_inside_source_list"
+
+- debug: msg="START a10_cgnv6_nat64_prefix"
+- name: Create a  NAT64 prefix
+  a10_cgnv6_nat64_prefix:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        prefix_val: 64:db8::/96
+
+- debug: msg="STOP a10_cgnv6_nat64_prefix"
+

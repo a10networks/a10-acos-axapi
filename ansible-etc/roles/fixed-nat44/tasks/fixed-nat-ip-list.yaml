@@ -1,0 +1,17 @@
+---
+# Configure class-list
+- debug: msg="START a10_cgnv6_fixed_nat_inside_iplist.py"
+- name: Create fixed-nat with  ip-lsit
+  a10_cgnv6_fixed_nat_inside_iplist.py:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: admin
+        a10_password: a10
+        state: present
+        inside_ip_list: "NAT44-INSIDE1"
+        nat_ip_list: "NAT44-OUTSIDE1"
+        ports_per_user: 256
+        session_quota: 6000
+        method: use-all-nat-ips
+
+- debug: msg="STOP a10_cgnv6_fixed_nat_inside_iplist.py"
+

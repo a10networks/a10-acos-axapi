@@ -1,0 +1,12 @@
+---
+- debug: msg="START a10_cgnv6_nat_pool"
+- name: Create a10_cgnv6_nat_pool
+  a10_cgnv6_nat_pool:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: admin
+      a10_password: a10
+      pool_name: "{{ NAT3_POOL_NAME }}"
+      start_address: "{{ NAT3_START_ADDRESS }}"
+      end_address: "{{ NAT3_END_ADDRESS }}"
+      netmask: "{{ NAT3_POOL__MASK }}"
+- debug: msg="STOP a10_cgnv6_nat_pool"
