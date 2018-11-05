@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_virtual_port
 description:
-    - None
+    - Virtual port template
 short_description: Configures A10 slb.template.virtual-port
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,118 +37,117 @@ options:
         required: True
     reset_unknown_conn:
         description:
-        - "None"
+        - "Send reset back if receives TCP packet without SYN or RST flag and it does not belong to any existing connections"
         required: False
     ignore_tcp_msl:
         description:
-        - "None"
+        - "reclaim TCP resource immediately without MSL"
         required: False
     rate:
         description:
-        - "None"
+        - "Source IP and port rate limit (Packet rate limit)"
         required: False
     snat_msl:
         description:
-        - "None"
+        - "Source NAT MSL (Source NAT MSL value)"
         required: False
     allow_syn_otherflags:
         description:
-        - "None"
+        - "Allow initial SYN packet with other flags"
         required: False
     aflow:
         description:
-        - "None"
+        - "Use aFlow to eliminate the traffic surge"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection limit"
         required: False
     drop_unknown_conn:
         description:
-        - "None"
+        - "Drop conection if receives TCP packet without SYN or RST flag and it does not belong to any existing connections"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     reset_l7_on_failover:
         description:
-        - "None"
+        - "Send reset to L7 client and server connection upon a failover"
         required: False
     pkt_rate_type:
         description:
-        - "None"
+        - "'src-ip-port'= Source IP and port rate limit; 'src-port'= Source port rate limit; "
         required: False
     rate_interval:
         description:
-        - "None"
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
         required: False
     snat_port_preserve:
         description:
-        - "None"
+        - "Source NAT Port Preservation"
         required: False
     conn_rate_limit_reset:
         description:
-        - "None"
+        - "Send client reset when connection rate over limit"
         required: False
     when_rr_enable:
         description:
-        - "None"
+        - "Only do rate limit if CPU RR triggered"
         required: False
     non_syn_initiation:
         description:
-        - "None"
+        - "Allow initial TCP packet to be non-SYN"
         required: False
     conn_limit_reset:
         description:
-        - "None"
+        - "Send client reset when connection over limit"
         required: False
     dscp:
         description:
-        - "None"
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
         required: False
     pkt_rate_limit_reset:
         description:
-        - "None"
+        - "send client-side reset (reset after packet limit)"
         required: False
     conn_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     conn_rate_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     log_options:
         description:
-        - "None"
+        - "'no-logging'= Do not log over limit event; 'no-repeat-logging'= log once for over limit event. Default is log once per minute; "
         required: False
     name:
         description:
-        - "None"
+        - "Virtual port template name"
         required: True
     allow_vip_to_rport_mapping:
         description:
-        - "None"
+        - "Allow mapping of VIP to real port"
         required: False
     pkt_rate_interval:
         description:
-        - "None"
+        - "'100ms'= Source IP and port rate limit per 100ms; 'second'= Source IP and port rate limit per second (default); "
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     conn_rate_limit:
         description:
-        - "None"
+        - "Connection rate limit"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -213,6 +212,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -222,13 +222,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/virtual-port/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -237,8 +239,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -255,6 +259,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -274,6 +279,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

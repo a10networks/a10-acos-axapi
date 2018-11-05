@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_service_group
 description:
-    - None
+    - Service Group
 short_description: Configures A10 slb.service-group
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     conn_rate:
         description:
-        - "None"
+        - "Dynamically enable stateless method by conn-rate (Rate to trigger stateless method(conn/sec))"
         required: False
     reset_on_server_selection_fail:
         description:
-        - "None"
+        - "Send reset to client if server selection fails"
         required: False
     health_check_disable:
         description:
-        - "None"
+        - "Disable health check"
         required: False
     protocol:
         description:
-        - "None"
+        - "'tcp'= TCP LB service; 'udp'= UDP LB service; "
         required: False
     traffic_replication_mirror_ip_repl:
         description:
-        - "None"
+        - "Replaces IP with server-IP"
         required: False
     reset_priority_affinity:
         description:
-        - "None"
+        - "Reset"
         required: False
     priorities:
         description:
@@ -66,13 +66,13 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "Priority option. Define different action for each priority node. (Priority in the Group)"
             priority_action:
                 description:
-                - "None"
+                - "'drop'= Drop request when all priority nodes fail; 'drop-if-exceed-limit'= Drop request when connection over limit; 'proceed'= Proceed to next priority when all priority nodes fail(default); 'reset'= Send client reset when all priority nodes fail; 'reset-if-exceed-limit'= Send client reset when connection over limit; "
     min_active_member:
         description:
-        - "None"
+        - "Minimum Active Member Per Priority (Minimum Active Member before Action)"
         required: False
     member_list:
         description:
@@ -81,131 +81,131 @@ options:
         suboptions:
             member_stats_data_disable:
                 description:
-                - "None"
+                - "Disable statistical data collection"
             member_priority:
                 description:
-                - "None"
+                - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
             name:
                 description:
-                - "None"
+                - "Member name"
             fqdn_name:
                 description:
-                - "None"
+                - "Server hostname - Not applicable if real server is already defined"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             member_template:
                 description:
-                - "None"
+                - "Real server port template (Real server port template name)"
             host:
                 description:
-                - "None"
+                - "IP Address - Not applicable if real server is already defined"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             member_state:
                 description:
-                - "None"
+                - "'enable'= Enable member service port; 'disable'= Disable member service port; 'disable-with-health-check'= disable member service port, but health check work; "
             server_ipv6_addr:
                 description:
-                - "None"
+                - "IPV6 Address - Not applicable if real server is already defined"
             port:
                 description:
-                - "None"
+                - "Port number"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for service group; 'stats-data-disable'= Disable statistical data collection for service group; "
         required: False
     traffic_replication_mirror_da_repl:
         description:
-        - "None"
+        - "Replace Destination MAC"
         required: False
     rpt_ext_server:
         description:
-        - "None"
+        - "Report top 10 fastest/slowest servers"
         required: False
     template_port:
         description:
-        - "None"
+        - "Port template (Port template name)"
         required: False
     conn_rate_grace_period:
         description:
-        - "None"
+        - "Define the grace period during transition (Define the grace period during transition(seconds))"
         required: False
     l4_session_usage_duration:
         description:
-        - "None"
+        - "Period that trigger condition consistently happens(seconds)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     backup_server_event_log:
         description:
-        - "None"
+        - "Send log info on back up server events"
         required: False
     lc_method:
         description:
-        - "None"
+        - "'least-connection'= Least connection on server level; 'service-least-connection'= Least connection on service port level; 'weighted-least-connection'= Weighted least connection on server level; 'service-weighted-least-connection'= Weighted least connection on service port level; "
         required: False
     pseudo_round_robin:
         description:
-        - "None"
+        - "PRR, select the oldest node for sub-select"
         required: False
     l4_session_usage_revert_rate:
         description:
-        - "None"
+        - "Usage to revert to statelful method"
         required: False
     template_server:
         description:
-        - "None"
+        - "Server template (Server template name)"
         required: False
     traffic_replication_mirror:
         description:
-        - "None"
+        - "Mirror Bi-directional Packet"
         required: False
     l4_session_revert_duration:
         description:
-        - "None"
+        - "Period that revert condition consistently happens(seconds)"
         required: False
     traffic_replication_mirror_sa_da_repl:
         description:
-        - "None"
+        - "Replace Source MAC and Destination MAC"
         required: False
     lb_method:
         description:
-        - "None"
+        - "'dst-ip-hash'= Load-balancing based on only Dst IP and Port hash; 'dst-ip-only-hash'= Load-balancing based on only Dst IP hash; 'fastest-response'= Fastest response time on service port level; 'least-request'= Least request on service port level; 'src-ip-hash'= Load-balancing based on only Src IP and Port hash; 'src-ip-only-hash'= Load-balancing based on only Src IP hash; 'weighted-rr'= Weighted round robin on server level; 'round-robin'= Round robin on server level; 'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'= odd/even hash based of client src-ip; "
         required: False
     stateless_auto_switch:
         description:
-        - "None"
+        - "Enable auto stateless method"
         required: False
     min_active_member_action:
         description:
-        - "None"
+        - "'dynamic-priority'= dynamic change member priority to met the min-active-member requirement; 'skip-pri-set'= Skip Current Priority Set If Min not met; "
         required: False
     l4_session_usage:
         description:
-        - "None"
+        - "Dynamically enable stateless method by session usage (Usage to trigger stateless method)"
         required: False
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on service group"
         required: False
     conn_rate_revert_duration:
         description:
-        - "None"
+        - "Period that revert condition consistently happens(seconds)"
         required: False
     strict_select:
         description:
-        - "None"
+        - "strict selection"
         required: False
     name:
         description:
-        - "None"
+        - "SLB Service Name"
         required: True
     reset:
         description:
@@ -214,46 +214,46 @@ options:
         suboptions:
             auto_switch:
                 description:
-                - "None"
+                - "Reset auto stateless state"
     traffic_replication_mirror_sa_repl:
         description:
-        - "None"
+        - "Replace Source MAC"
         required: False
     report_delay:
         description:
-        - "None"
+        - "Reporting frequency (in minutes)"
         required: False
     conn_rate_log:
         description:
-        - "None"
+        - "Send log if transition happens"
         required: False
     l4_session_usage_log:
         description:
-        - "None"
+        - "Send log if transition happens"
         required: False
     conn_rate_duration:
         description:
-        - "None"
+        - "Period that trigger condition consistently happens(seconds)"
         required: False
     stateless_lb_method:
         description:
-        - "None"
+        - "'stateless-dst-ip-hash'= Stateless load-balancing based on Dst IP and Dst port hash; 'stateless-per-pkt-round-robin'= Stateless load-balancing using per-packet round-robin; 'stateless-src-dst-ip-hash'= Stateless load-balancing based on IP and port hash for both Src and Dst; 'stateless-src-dst-ip-only-hash'= Stateless load-balancing based on only IP hash for both Src and Dst; 'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src IP hash; "
         required: False
     template_policy:
         description:
-        - "None"
+        - "Policy template (Policy template name)"
         required: False
     stateless_lb_method2:
         description:
-        - "None"
+        - "'stateless-dst-ip-hash'= Stateless load-balancing based on Dst IP and Dst port hash; 'stateless-per-pkt-round-robin'= Stateless load-balancing using per-packet round-robin; 'stateless-src-dst-ip-hash'= Stateless load-balancing based on IP and port hash for both Src and Dst; 'stateless-src-dst-ip-only-hash'= Stateless load-balancing based on only IP hash for both Src and Dst; 'stateless-src-ip-hash'= Stateless load-balancing based on Src IP and Src port hash; 'stateless-src-ip-only-hash'= Stateless load-balancing based on only Src IP hash; "
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     sample_rsp_time:
         description:
-        - "None"
+        - "sample server response time"
         required: False
     sampling_enable:
         description:
@@ -262,37 +262,36 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'server_selection_fail_drop'= Drops due to Service selection failure; 'server_selection_fail_reset'= Resets sent out for Service selection failure; 'service_peak_conn'= Peak connection count for the Service Group; 'service_healthy_host'= Service Group healthy host count; 'service_unhealthy_host'= Service Group unhealthy host count; 'service_req_count'= Service Group request count; 'service_resp_count'= Service Group response count; 'service_resp_2xx'= Service Group response 2xx count; 'service_resp_3xx'= Service Group response 3xx count; 'service_resp_4xx'= Service Group response 4xx count; 'service_resp_5xx'= Service Group response 5xx count; "
     top_fastest:
         description:
-        - "None"
+        - "Report top 10 fastest servers"
         required: False
     conn_revert_rate:
         description:
-        - "None"
+        - "Rate to revert to statelful method (conn/sec)"
         required: False
     l4_session_usage_grace_period:
         description:
-        - "None"
+        - "Define the grace period during transition (Define the grace period during transition(seconds))"
         required: False
     priority_affinity:
         description:
-        - "None"
+        - "Priority affinity. Persist to the same priority if possible."
         required: False
     top_slowest:
         description:
-        - "None"
+        - "Report top 10 slowest servers"
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check (Monitor Name)"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -380,6 +379,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -389,13 +389,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/service-group/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -404,8 +406,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -422,6 +426,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -441,6 +446,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

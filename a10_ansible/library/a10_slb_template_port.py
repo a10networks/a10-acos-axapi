@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_port
 description:
-    - None
+    - Port template
 short_description: Configures A10 slb.template.port
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,178 +37,177 @@ options:
         required: True
     health_check_disable:
         description:
-        - "None"
+        - "Disable configured health check configuration"
         required: False
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for real server port; 'stats-data-disable'= Disable statistical data collection for real server port; "
         required: False
     resel_on_reset:
         description:
-        - "None"
+        - "When receiving reset from server, do the server/port reselection (default is 0, don't do reselection)"
         required: False
     dest_nat:
         description:
-        - "None"
+        - "Destination NAT"
         required: False
     request_rate_limit:
         description:
-        - "None"
+        - "Request rate limit"
         required: False
     dynamic_member_priority:
         description:
-        - "None"
+        - "Set dynamic member's priority (Initial priority (default is 16))"
         required: False
     bw_rate_limit:
         description:
-        - "None"
+        - "Configure bandwidth rate limit on real server port (Bandwidth rate limit in Kbps)"
         required: False
     slow_start:
         description:
-        - "None"
+        - "Slowly ramp up the connection number after port is up"
         required: False
     decrement:
         description:
-        - "None"
+        - "Decrease after every round of DNS query (default is 0)"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection limit"
         required: False
     retry:
         description:
-        - "None"
+        - "Maximum retry times before reassign this connection to another server/port (default is 2) (The maximum retry number)"
         required: False
     weight:
         description:
-        - "None"
+        - "Weight (port weight)"
         required: False
     inband_health_check:
         description:
-        - "None"
+        - "Use inband traffic to detect port's health status"
         required: False
     resume:
         description:
-        - "None"
+        - "Resume accepting new connection after connection number drops below threshold (Connection resume threshold)"
         required: False
     rate_interval:
         description:
-        - "None"
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
         required: False
     no_ssl:
         description:
-        - "None"
+        - "No SSL"
         required: False
     till:
         description:
-        - "None"
+        - "Slow start ends when slow start connection limit reaches a number (default 4096) (Slow start ends when connection limit reaches this number)"
         required: False
     add:
         description:
-        - "None"
+        - "Slow start connection limit add by a number every interval (Add by this number every interval)"
         required: False
     sub_group:
         description:
-        - "None"
+        - "Divide service group members into different sub groups (Sub group ID (default is 0))"
         required: False
     bw_rate_limit_no_logging:
         description:
-        - "None"
+        - "Do not log bandwidth rate limit related state transitions"
         required: False
     down_grace_period:
         description:
-        - "None"
+        - "Port down grace period (Down grace period in seconds)"
         required: False
     initial_slow_start:
         description:
-        - "None"
+        - "Initial slow start connection limit (default 128)"
         required: False
     dscp:
         description:
-        - "None"
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
         required: False
     request_rate_interval:
         description:
-        - "None"
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
         required: False
     every:
         description:
-        - "None"
+        - "Slow start connection limit increment interval (default 10)"
         required: False
     conn_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on real server port"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     reset:
         description:
-        - "None"
+        - "Send client reset when connection rate over limit"
         required: False
     del_session_on_server_down:
         description:
-        - "None"
+        - "Delete session if the server/port goes down (either disabled/hm down)"
         required: False
     conn_rate_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     name:
         description:
-        - "None"
+        - "Port template name"
         required: True
     bw_rate_limit_duration:
         description:
-        - "None"
+        - "Duration in seconds the observed rate needs to honor"
         required: False
     bw_rate_limit_resume:
         description:
-        - "None"
+        - "Resume server selection after bandwidth drops below this threshold (in Kbps) (Bandwidth rate limit resume threshold (in Kbps))"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     times:
         description:
-        - "None"
+        - "Slow start connection limit multiply by a number every interval (default 2) (Multiply by this number every interval)"
         required: False
     request_rate_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     down_timer:
         description:
-        - "None"
+        - "The timer to bring the marked down server/port to up (default is 0, never bring up) (The timer to bring up server (in second, default is 0))"
         required: False
     conn_rate_limit:
         description:
-        - "None"
+        - "Connection rate limit"
         required: False
     source_nat:
         description:
-        - "None"
+        - "Source NAT (IP NAT Pool or pool group name)"
         required: False
     reassign:
         description:
-        - "None"
+        - "Maximum reassign times before declear the server/port down (default is 25) (The maximum reassign number)"
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check Monitor (Health monitor name)"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -288,6 +287,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -297,13 +297,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/port/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -312,8 +314,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -330,6 +334,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -349,6 +354,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

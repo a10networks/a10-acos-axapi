@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_persist_source_ip
 description:
-    - None
+    - Source IP persistence
 short_description: Configures A10 slb.template.persist.source-ip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,74 +37,73 @@ options:
         required: True
     netmask6:
         description:
-        - "None"
+        - "IPV6 subnet mask"
         required: False
     incl_dst_ip:
         description:
-        - "None"
+        - "Include destination IP on the persist"
         required: False
     hash_persist:
         description:
-        - "None"
+        - "Use hash value of source IP address"
         required: False
     name:
         description:
-        - "None"
+        - "Source IP persistence template name"
         required: True
     enforce_higher_priority:
         description:
-        - "None"
+        - "Enforce to use high priority node if available"
         required: False
     dont_honor_conn_rules:
         description:
-        - "None"
+        - "Do not observe connection rate rules"
         required: False
     primary_port:
         description:
-        - "None"
+        - "Primary port to create the persist session"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     server:
         description:
-        - "None"
+        - "Persist to the same server, default is port"
         required: False
     service_group:
         description:
-        - "None"
+        - "Persist within the same service group"
         required: False
     timeout:
         description:
-        - "None"
+        - "Persistence timeout (in minutes)"
         required: False
     scan_all_members:
         description:
-        - "None"
+        - "Persist with SCAN of all members"
         required: False
     netmask:
         description:
-        - "None"
+        - "IP subnet mask"
         required: False
     incl_sport:
         description:
-        - "None"
+        - "Include source port on the persist"
         required: False
     match_type:
         description:
-        - "None"
+        - "Persistence type"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -158,6 +157,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -167,13 +167,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/persist/source-ip/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -182,8 +184,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -200,6 +204,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -219,6 +224,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

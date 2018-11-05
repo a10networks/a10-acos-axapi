@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_server_port
 description:
-    - None
+    - Real Server Port
 short_description: Configures A10 slb.server.port
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,35 +37,35 @@ options:
         required: True
     health_check_disable:
         description:
-        - "None"
+        - "Disable health check"
         required: False
     protocol:
         description:
-        - "None"
+        - "'tcp'= TCP Port; 'udp'= UDP Port; "
         required: True
     weight:
         description:
-        - "None"
+        - "Port Weight (Connection Weight)"
         required: False
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for real server port; 'stats-data-disable'= Disable statistical data collection for real server port; "
         required: False
     health_check_follow_port:
         description:
-        - "None"
+        - "Specify which port to follow for health status (Port Number)"
         required: False
     template_port:
         description:
-        - "None"
+        - "Port template (Port template name)"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection Limit"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     sampling_enable:
         description:
@@ -74,18 +74,18 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr_req'= Current requests; 'total_req'= Total Requests; 'total_req_succ'= Total requests succ; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total connections; 'last_total_conn'= Last total connections; 'peak_conn'= Peak connections; 'es_resp_200'= Response status 200; 'es_resp_300'= Response status 300; 'es_resp_400'= Response status 400; 'es_resp_500'= Response status 500; 'es_resp_other'= Response status other; 'es_req_count'= Total proxy requests; 'es_resp_count'= Total proxy response; 'es_resp_invalid_http'= Total non-http response; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_good_status_code'= Total reverse packets with good status code inspected; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'resp-count'= Total Response Count; 'resp-1xx'= Response status 1xx; 'resp-2xx'= Response status 2xx; 'resp-3xx'= Response status 3xx; 'resp-4xx'= Response status 4xx; 'resp-5xx'= Response status 5xx; 'resp-other'= Response status Other; 'resp-latency'= Time to First Response Byte; 'curr_pconn'= Current persistent connections; "
     no_ssl:
         description:
-        - "None"
+        - "No SSL"
         required: False
     follow_port_protocol:
         description:
-        - "None"
+        - "'tcp'= TCP Port; 'udp'= UDP Port; "
         required: False
     template_server_ssl:
         description:
-        - "None"
+        - "Server side SSL template (Server side SSL Name)"
         required: False
     alternate_port:
         description:
@@ -94,32 +94,32 @@ options:
         suboptions:
             alternate_name:
                 description:
-                - "None"
+                - "Alternate Name"
             alternate:
                 description:
-                - "None"
+                - "Alternate Server Number"
             alternate_server_port:
                 description:
-                - "None"
+                - "Port (Alternate Server Port Value)"
     port_number:
         description:
-        - "None"
+        - "Port Number"
         required: True
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on real server port"
         required: False
     conn_resume:
         description:
-        - "None"
+        - "Connection Resume"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     range:
         description:
-        - "None"
+        - "Port range (Port range value - used for vip-to-rport-mapping and vport-rport range mapping)"
         required: False
     auth_cfg:
         description:
@@ -128,25 +128,24 @@ options:
         suboptions:
             service_principal_name:
                 description:
-                - "None"
+                - "Service Principal Name (Kerberos principal name)"
     action:
         description:
-        - "None"
+        - "'enable'= enable; 'disable'= disable; 'disable-with-health-check'= disable port, but health check work; "
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check (Monitor Name)"
         required: False
     no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -206,6 +205,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -216,14 +216,16 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/server/{name}/port/{port-number}+{protocol}"
-    f_dict = {}
-    f_dict["port-number"] = module.params["port-number"]
-    f_dict["protocol"] = module.params["protocol"]
 
+    f_dict = {}
+    f_dict["port-number"] = module.params["port_number"]
+    f_dict["protocol"] = module.params["protocol"]
+    
     return url_base.format(**f_dict)
 
 
@@ -232,8 +234,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -250,6 +254,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -269,6 +274,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

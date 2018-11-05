@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_virtual_server
 description:
-    - None
+    - Virtual server template
 short_description: Configures A10 slb.template.virtual-server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,90 +37,89 @@ options:
         required: True
     conn_limit:
         description:
-        - "None"
+        - "Connection limit"
         required: False
     conn_rate_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     name:
         description:
-        - "None"
+        - "Virtual server template name"
         required: True
     icmp_lockup_period:
         description:
-        - "None"
+        - "Lockup period (second)"
         required: False
     conn_limit_reset:
         description:
-        - "None"
+        - "Send client reset when connection over limit"
         required: False
     rate_interval:
         description:
-        - "None"
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     icmpv6_rate_limit:
         description:
-        - "None"
+        - "ICMPv6 rate limit (Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit)"
         required: False
     subnet_gratuitous_arp:
         description:
-        - "None"
+        - "Send gratuitous ARP for every IP in the subnet virtual server"
         required: False
     icmpv6_lockup:
         description:
-        - "None"
+        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate limit. If exceeds this limit, drop all ICMP packet for a time period)"
         required: False
     conn_rate_limit_reset:
         description:
-        - "None"
+        - "Send client reset when connection rate over limit"
         required: False
     tcp_stack_tfo_backoff_time:
         description:
-        - "None"
+        - "The time tcp stack will wait before allowing new fast-open requests after security condition, default 600 seconds (number)"
         required: False
     tcp_stack_tfo_cookie_time_limit:
         description:
-        - "None"
+        - "The time limit (in seconds) that a layer 7 tcp fast-open cookie is valid, default is 60 seconds (number)"
         required: False
     conn_limit_no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     icmpv6_lockup_period:
         description:
-        - "None"
+        - "Lockup period (second)"
         required: False
     conn_rate_limit:
         description:
-        - "None"
+        - "Connection rate limit"
         required: False
     tcp_stack_tfo_active_conn_limit:
         description:
-        - "None"
+        - "The allowed active layer 7 tcp fast-open connection limit, default is zero (number)"
         required: False
     icmp_lockup:
         description:
-        - "None"
+        - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate limit. If exceeds this limit, drop all ICMP packet for a time period)"
         required: False
     icmp_rate_limit:
         description:
-        - "None"
+        - "ICMP rate limit (Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -178,6 +177,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -187,13 +187,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/virtual-server/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -202,8 +204,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -220,6 +224,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -239,6 +244,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

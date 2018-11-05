@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_server_ssl
 description:
-    - None
+    - Server Side SSL Template
 short_description: Configures A10 slb.template.server-ssl
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     session_cache_timeout:
         description:
-        - "None"
+        - "Session Cache Timeout (Timeout value, in seconds. Default no timeout.)"
         required: False
     cipher_template:
         description:
-        - "None"
+        - "Cipher Template Name"
         required: False
     sslilogging:
         description:
-        - "None"
+        - "'disable'= Disable all logging; 'all'= enable all logging(error, info); "
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     passphrase:
         description:
-        - "None"
+        - "Password Phrase"
         required: False
     ocsp_stapling:
         description:
-        - "None"
+        - "Enable ocsp-stapling support"
         required: False
     crl_certs:
         description:
@@ -66,22 +66,22 @@ options:
         suboptions:
             crl:
                 description:
-                - "None"
+                - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     template_cipher_shared:
         description:
-        - "None"
+        - "Cipher Template Name"
         required: False
     dgversion:
         description:
-        - "None"
+        - "Lower TLS/SSL version can be downgraded"
         required: False
     version:
         description:
-        - "None"
+        - "TLS/SSL version, default is the highest number supported (TLS/SSL version= 30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
         required: False
     ec_list:
         description:
@@ -90,34 +90,34 @@ options:
         suboptions:
             ec:
                 description:
-                - "None"
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; "
     encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     ssli_logging:
         description:
-        - "None"
+        - "SSLi logging level, default is error logging only"
         required: False
     session_cache_size:
         description:
-        - "None"
+        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse disabled))"
         required: False
     dh_type:
         description:
-        - "None"
+        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048; "
         required: False
     use_client_sni:
         description:
-        - "None"
+        - "use client SNI"
         required: False
     forward_proxy_enable:
         description:
-        - "None"
+        - "Enable SSL forward proxy"
         required: False
     key:
         description:
-        - "None"
+        - "Client private-key (Key Name)"
         required: False
     cipher_without_prio_list:
         description:
@@ -126,7 +126,7 @@ options:
         suboptions:
             cipher_wo_prio:
                 description:
-                - "None"
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; "
     ca_certs:
         description:
         - "Field ca_certs"
@@ -134,44 +134,44 @@ options:
         suboptions:
             ca_cert:
                 description:
-                - "None"
+                - "Specify CA certificate"
             server_ocsp_srvr:
                 description:
-                - "None"
+                - "Specify authentication server"
             server_ocsp_sg:
                 description:
-                - "None"
+                - "Specify service-group (Service group name)"
     name:
         description:
-        - "None"
+        - "Server SSL Template Name"
         required: True
     shared_partition_cipher_template:
         description:
-        - "None"
+        - "Reference a cipher template from shared partition"
         required: False
     enable_tls_alert_logging:
         description:
-        - "None"
+        - "Enable TLS alert logging"
         required: False
     session_ticket_enable:
         description:
-        - "None"
+        - "Enable server side session ticket support"
         required: False
     alert_type:
         description:
-        - "None"
+        - "'fatal'= Log fatal alerts; "
         required: False
     cert:
         description:
-        - "None"
+        - "Specify Client certificate (Certificate Name)"
         required: False
     handshake_logging_enable:
         description:
-        - "None"
+        - "Enable SSL handshake logging"
         required: False
     renegotiation_disable:
         description:
-        - "None"
+        - "Disable SSL renegotiation"
         required: False
     server_certificate_error:
         description:
@@ -180,17 +180,16 @@ options:
         suboptions:
             error_type:
                 description:
-                - "None"
+                - "'email'= Notify the error via email; 'ignore'= Ignore the error, which mean the connection can continue; 'logging'= Log the error; 'trap'= Notify the error by SNMP trap; "
     close_notify:
         description:
-        - "None"
+        - "Send close notification when terminate connection"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -259,6 +258,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -268,13 +268,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/server-ssl/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -283,8 +285,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -301,6 +305,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -320,6 +325,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

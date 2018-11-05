@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_policy_class_list_lid
 description:
-    - None
+    - Limit ID
 short_description: Configures A10 slb.template.policy.class-list.lid
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,47 +37,47 @@ options:
         required: True
     request_rate_limit:
         description:
-        - "None"
+        - "Request rate limit (Specify request rate limit)"
         required: False
     action_value:
         description:
-        - "None"
+        - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the connection when it exceeds limit; "
         required: False
     request_per:
         description:
-        - "None"
+        - "Per (Specify interval in number of 100ms)"
         required: False
     bw_rate_limit:
         description:
-        - "None"
+        - "Specify bandwidth rate limit (Bandwidth rate limit in bytes)"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection limit"
         required: False
     log:
         description:
-        - "None"
+        - "Log a message"
         required: False
     direct_action_value:
         description:
-        - "None"
+        - "'drop'= drop the packet; 'reset'= Send reset back; "
         required: False
     conn_per:
         description:
-        - "None"
+        - "Per (Specify interval in number of 100ms)"
         required: False
     direct_fail:
         description:
-        - "None"
+        - "Only log unsuccessful connections"
         required: False
     conn_rate_limit:
         description:
-        - "None"
+        - "Specify connection rate limit"
         required: False
     direct_pbslb_logging:
         description:
-        - "None"
+        - "Configure PBSLB logging"
         required: False
     dns64:
         description:
@@ -86,20 +86,20 @@ options:
         suboptions:
             prefix:
                 description:
-                - "None"
+                - "IPv6 prefix"
             exclusive_answer:
                 description:
-                - "None"
+                - "Exclusive Answer in DNS Response"
             disable:
                 description:
-                - "None"
+                - "Disable"
     lidnum:
         description:
-        - "None"
+        - "Specify a limit ID"
         required: True
     over_limit_action:
         description:
-        - "None"
+        - "Set action when exceeds limit"
         required: False
     response_code_rate_limit:
         description:
@@ -108,66 +108,65 @@ options:
         suboptions:
             threshold:
                 description:
-                - "None"
+                - "the times of getting the response code"
             code_range_end:
                 description:
-                - "None"
+                - "server response code range end"
             code_range_start:
                 description:
-                - "None"
+                - "server response code range start"
             period:
                 description:
-                - "None"
+                - "seconds"
     direct_service_group:
         description:
-        - "None"
+        - "Specify a service group (Specify the service group name)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     request_limit:
         description:
-        - "None"
+        - "Request limit (Specify request limit)"
         required: False
     direct_action_interval:
         description:
-        - "None"
+        - "Specify logging interval in minute (default is 3)"
         required: False
     bw_per:
         description:
-        - "None"
+        - "Per (Specify interval in number of 100ms)"
         required: False
     interval:
         description:
-        - "None"
+        - "Specify log interval in minutes, by default system will log every over limit instance"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     direct_action:
         description:
-        - "None"
+        - "Set action when match the lid"
         required: False
     lockout:
         description:
-        - "None"
+        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
         required: False
     direct_logging_drp_rst:
         description:
-        - "None"
+        - "Configure PBSLB logging"
         required: False
     direct_pbslb_interval:
         description:
-        - "None"
+        - "Specify logging interval in minutes(default is 3)"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -231,6 +230,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -240,13 +240,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/policy/{name}/class-list/lid/{lidnum}"
+
     f_dict = {}
     f_dict["lidnum"] = module.params["lidnum"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -255,8 +257,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -273,6 +277,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -292,6 +297,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

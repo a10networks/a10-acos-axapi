@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_virtual_server_port
 description:
-    - None
+    - Virtual Port
 short_description: Configures A10 slb.virtual-server.port
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,25 +35,28 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    virtual_server:
+        description:
+        - SLB Virtual Server to Create Port On 
     ha_conn_mirror:
         description:
-        - "None"
+        - "Enable for HA Conn sync"
         required: False
     protocol:
         description:
-        - "None"
+        - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP; 'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port; 'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'= [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port; 'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP; 'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port; 'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; "
         required: True
     precedence:
         description:
-        - "None"
+        - "Set auto NAT pool as higher precedence for source NAT"
         required: False
     port_translation:
         description:
-        - "None"
+        - "Enable port translation under no-dest-nat"
         required: False
     template_reqmod_icap:
         description:
-        - "None"
+        - "ICAP reqmod template (reqmod-icap template name)"
         required: False
     acl_name_list:
         description:
@@ -62,80 +65,80 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "Apply an access list name (Named Access List)"
             acl_name_src_nat_pool:
                 description:
-                - "None"
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
             acl_name_seq_num:
                 description:
-                - "None"
+                - "Specify ACL precedence (sequence-number)"
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for virtual port; 'stats-data-disable'= Disable statistical data collection for virtual port; "
         required: False
     template_connection_reuse:
         description:
-        - "None"
+        - "Connection Reuse Template (Connection Reuse Template Name)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     template_tcp_shared:
         description:
-        - "None"
+        - "TCP Template Name"
         required: False
     template_tcp:
         description:
-        - "None"
+        - "TCP Template Name"
         required: False
     template_persist_destination_ip:
         description:
-        - "None"
+        - "Destination IP persistence (Destination IP persistence template name)"
         required: False
     when_down:
         description:
-        - "None"
+        - "Use alternate virtual port when down"
         required: False
     template_client_ssl_shared:
         description:
-        - "None"
+        - "Client SSL Template Name"
         required: False
     persist_type:
         description:
-        - "None"
+        - "'src-dst-ip-swap-persist'= Create persist session after source IP and destination IP swap; 'use-src-ip-for-dst-persist'= Use the source IP to create a destination persist session; 'use-dst-ip-for-src-persist'= Use the destination IP to create source IP persist session; "
         required: False
     use_rcv_hop_for_resp:
         description:
-        - "None"
+        - "Use receive hop for response to client(For packets on default-vlan, also config 'vlan-global enable-def-vlan-l2-forwarding'.)"
         required: False
     scaleout_bucket_count:
         description:
-        - "None"
+        - "Number of traffic buckets"
         required: False
     req_fail:
         description:
-        - "None"
+        - "Use alternate virtual port when L7 request fail"
         required: False
     no_dest_nat:
         description:
-        - "None"
+        - "Disable destination NAT, this option only supports in wildcard VIP or when a connection is operated in SSLi + EP mode"
         required: False
     name:
         description:
-        - "None"
+        - "SLB Virtual Service Name"
         required: False
     template_policy:
         description:
-        - "None"
+        - "Policy Template (Policy template name)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     template_diameter:
         description:
-        - "None"
+        - "Diameter Template (diameter template name)"
         required: False
     sampling_enable:
         description:
@@ -144,246 +147,246 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr_conn'= Current established connections; 'total_l4_conn'= Total L4 connections established; 'total_l7_conn'= Total L7 connections established; 'total_tcp_conn'= Total TCP connections established; 'total_conn'= Total connections established; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_dns_pkts'= Total DNS packets processed; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'loc_permit'= Geo-location Permit count; 'loc_deny'= Geo-location Deny count; 'loc_conn'= Geo-location Connection count; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'backend-time-to-first-byte'= Backend Time from Request to Response First Byte; 'backend-time-to-last-byte'= Backend Time from Request to Response Last Byte; 'in-latency'= Request Latency at Thunder; 'out-latency'= Response Latency at Thunder; 'total_fwd_bytes_out'= Bytes processed in forward direction (outbound); 'total_fwd_pkts_out'= Packets processed in forward direction (outbound); 'total_rev_bytes_out'= Bytes processed in reverse direction (outbound); 'total_rev_pkts_out'= Packets processed in reverse direction (outbound); "
     template_ssli:
         description:
-        - "None"
+        - "SSLi template (SSLi Template Name)"
         required: False
     template_smpp:
         description:
-        - "None"
+        - "SMPP template"
         required: False
     no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
     reset_on_server_selection_fail:
         description:
-        - "None"
+        - "Send client reset when server selection fails"
         required: False
     waf_template:
         description:
-        - "None"
+        - "WAF template (WAF Template Name)"
         required: False
     ipinip:
         description:
-        - "None"
+        - "Enable IP in IP"
         required: False
     no_auto_up_on_aflex:
         description:
-        - "None"
+        - "Don't automatically mark vport up when aFleX is bound"
         required: False
     rate:
         description:
-        - "None"
+        - "Specify the log message rate"
         required: False
     gslb_enable:
         description:
-        - "None"
+        - "Enable Global Server Load Balancing"
         required: False
     template_persist_ssl_sid:
         description:
-        - "None"
+        - "SSL session ID persistence (Source IP Persistence Config name)"
         required: False
     template_dns:
         description:
-        - "None"
+        - "DNS template (DNS template name)"
         required: False
     template_sip:
         description:
-        - "None"
+        - "SIP template"
         required: False
     template_dblb:
         description:
-        - "None"
+        - "DBLB Template (DBLB template name)"
         required: False
     shared_partition_server_ssl_template:
         description:
-        - "None"
+        - "Reference a SSL Server template from shared partition"
         required: False
     template_client_ssl:
         description:
-        - "None"
+        - "Client SSL Template Name"
         required: False
     enable_playerid_check:
         description:
-        - "None"
+        - "Enable playerid checks on UDP packets once the AX is in active mode"
         required: False
     service_group:
         description:
-        - "None"
+        - "Bind a Service Group to this Virtual Server (Service Group Name)"
         required: False
     template_fix:
         description:
-        - "None"
+        - "FIX template (FIX Template Name)"
         required: False
     shared_partition_udp:
         description:
-        - "None"
+        - "Reference a UDP template from shared partition"
         required: False
     syn_cookie:
         description:
-        - "None"
+        - "Enable syn-cookie"
         required: False
     alternate_port:
         description:
-        - "None"
+        - "Alternate Virtual Port"
         required: False
     template_cache:
         description:
-        - "None"
+        - "RAM caching template (Cache Template Name)"
         required: False
     rtp_sip_call_id_match:
         description:
-        - "None"
+        - "rtp traffic try to match the real server of sip smp call-id session"
         required: False
     template_scaleout:
         description:
-        - "None"
+        - "Scaleout template (Scaleout template name)"
         required: False
     template_ftp:
         description:
-        - "None"
+        - "FTP port template (Ftp template name)"
         required: False
     serv_sel_fail:
         description:
-        - "None"
+        - "Use alternate virtual port when server selection failure"
         required: False
     range:
         description:
-        - "None"
+        - "Virtual Port range (Virtual Port range value)"
         required: False
     action:
         description:
-        - "None"
+        - "'enable'= Enable; 'disable'= Disable; "
         required: False
     shared_partition_client_ssl_template:
         description:
-        - "None"
+        - "Reference a Client SSL template from shared partition"
         required: False
     view:
         description:
-        - "None"
+        - "Specify a GSLB View (ID)"
         required: False
     template_persist_source_ip:
         description:
-        - "None"
+        - "Source IP persistence (Source IP persistence template name)"
         required: False
     template_dynamic_service:
         description:
-        - "None"
+        - "Dynamic Service Template (dynamic-service template name)"
         required: False
     use_cgnv6:
         description:
-        - "None"
+        - "Follow CGNv6 source NAT configuration"
         required: False
     template_persist_cookie:
         description:
-        - "None"
+        - "Cookie persistence (Cookie persistence template name)"
         required: False
     template_virtual_port:
         description:
-        - "None"
+        - "Virtual port template (Virtual port template name)"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection Limit"
         required: False
     trunk_fwd:
         description:
-        - "None"
+        - "Trunk interface number"
         required: False
     template_udp_shared:
         description:
-        - "None"
+        - "UDP Template Name"
         required: False
     pool:
         description:
-        - "None"
+        - "Specify NAT pool or pool group"
         required: False
     snat_on_vip:
         description:
-        - "None"
+        - "Enable source NAT traffic against VIP"
         required: False
     shared_partition_tcp:
         description:
-        - "None"
+        - "Reference a tcp template from shared partition"
         required: False
     template_tcp_proxy_server:
         description:
-        - "None"
+        - "TCP Proxy Config Server (TCP Proxy Config name)"
         required: False
     shared_partition_http_template:
         description:
-        - "None"
+        - "Reference a HTTP template from shared partition"
         required: False
     template_external_service:
         description:
-        - "None"
+        - "External service template (external-service template name)"
         required: False
     template_udp:
         description:
-        - "None"
+        - "L4 UDP Template"
         required: False
     force_routing_mode:
         description:
-        - "None"
+        - "Force routing mode"
         required: False
     template_file_inspection:
         description:
-        - "None"
+        - "File Inspection service template (file-inspection template name)"
         required: False
     when_down_protocol2:
         description:
-        - "None"
+        - "Use alternate virtual port when down"
         required: False
     def_selection_if_pref_failed:
         description:
-        - "None"
+        - "'def-selection-if-pref-failed'= Use default server selection method if prefer method failed; 'def-selection-if-pref-failed-disable'= Stop using default server selection method if prefer method failed; "
         required: False
     template_smtp:
         description:
-        - "None"
+        - "SMTP Template (SMTP Config Name)"
         required: False
     redirect_to_https:
         description:
-        - "None"
+        - "Redirect HTTP to HTTPS"
         required: False
     alt_protocol2:
         description:
-        - "None"
+        - "'tcp'= TCP LB service; "
         required: False
     alt_protocol1:
         description:
-        - "None"
+        - "'http'= HTTP Port; "
         required: False
     message_switching:
         description:
-        - "None"
+        - "Message switching"
         required: False
     template_imap_pop3:
         description:
-        - "None"
+        - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
         required: False
     scaleout_device_group:
         description:
-        - "None"
+        - "Device group id"
         required: False
     l7_hardware_assist:
         description:
-        - "None"
+        - "FPGA assist L7 packet parsing"
         required: False
     template_http_policy:
         description:
-        - "None"
+        - "http-policy template (http-policy template name)"
         required: False
     reset:
         description:
-        - "None"
+        - "Send client reset when connection number over limit"
         required: False
     use_alternate_port:
         description:
-        - "None"
+        - "Use alternate virtual port"
         required: False
     acl_id_list:
         description:
@@ -392,36 +395,36 @@ options:
         suboptions:
             acl_id_seq_num:
                 description:
-                - "None"
+                - "Specify ACL precedence (sequence-number)"
             acl_id:
                 description:
-                - "None"
+                - "ACL id VPORT"
             acl_id_src_nat_pool:
                 description:
-                - "None"
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
     trunk_rev:
         description:
-        - "None"
+        - "Trunk interface number"
         required: False
     eth_fwd:
         description:
-        - "None"
+        - "Ethernet interface number"
         required: False
     template_respmod_icap:
         description:
-        - "None"
+        - "ICAP respmod service template (respmod-icap template name)"
         required: False
     template_server_ssl_shared:
         description:
-        - "None"
+        - "Server SSL Template Name"
         required: False
     use_default_if_no_server:
         description:
-        - "None"
+        - "Use default forwarding if server selection failed"
         required: False
     auto:
         description:
-        - "None"
+        - "Configure auto NAT for the vport"
         required: False
     aflex_scripts:
         description:
@@ -430,58 +433,58 @@ options:
         suboptions:
             aflex:
                 description:
-                - "None"
+                - "Bind aFleX Script to the Virtual Port (aFleX Script Name)"
     template_http_shared:
         description:
-        - "None"
+        - "HTTP Template Name"
         required: False
     template_server_ssl:
         description:
-        - "None"
+        - "Server Side SSL Template Name"
         required: False
     alternate_port_number:
         description:
-        - "None"
+        - "Virtual Port"
         required: False
     port_number:
         description:
-        - "None"
+        - "Port"
         required: True
     template_tcp_proxy_client:
         description:
-        - "None"
+        - "TCP Proxy Config Client (TCP Proxy Config name)"
         required: False
     template_tcp_proxy:
         description:
-        - "None"
+        - "TCP Proxy Template Name"
         required: False
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on virtual port"
         required: False
     template_http:
         description:
-        - "None"
+        - "HTTP Template Name"
         required: False
     expand:
         description:
-        - "None"
+        - "expand syn-cookie with timestamp and wscale"
         required: False
     skip_rev_hash:
         description:
-        - "None"
+        - "Skip rev tuple hash insertion"
         required: False
     on_syn:
         description:
-        - "None"
+        - "Enable for HA Conn sync for l4 tcp sessions on SYN"
         required: False
     clientip_sticky_nat:
         description:
-        - "None"
+        - "Prefer to use same source NAT address for a client"
         required: False
     secs:
         description:
-        - "None"
+        - "Specify the interval in seconds"
         required: False
     auth_cfg:
         description:
@@ -490,17 +493,16 @@ options:
         suboptions:
             aaa_policy:
                 description:
-                - "None"
+                - "Specify AAA policy name to bind to the virtual port"
     eth_rev:
         description:
-        - "None"
+        - "Ethernet interface number"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -534,6 +536,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        virtual_server=dict(type='str', required=True),
         ha_conn_mirror=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp','others','diameter','dns-tcp','dns-udp','fast-http','fix','ftp','ftp-proxy','http','https','http2','http2s','imap','mlb','mms','mysql','mssql','pop3','radius','rtsp','sip','sip-tcp','sips','smpp-tcp','spdy','spdys','smtp','ssl-proxy','ssli','tcp-proxy','tftp','fast-fix']),
         precedence=dict(type='bool',),
@@ -645,6 +648,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -652,17 +656,22 @@ def new_url(module):
     f_dict = {}
     f_dict["port-number"] = ""
     f_dict["protocol"] = ""
+    # Override with the specified hint key
+    f_dict["name"] = module.params["virtual_server"]
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/virtual-server/{name}/port/{port-number}+{protocol}"
-    f_dict = {}
-    f_dict["port-number"] = module.params["port-number"]
-    f_dict["protocol"] = module.params["protocol"]
 
+    f_dict = {}
+    f_dict["port-number"] = module.params["port_number"]
+    f_dict["protocol"] = module.params["protocol"]
+    f_dict["name"] = module.params["virtual_server"]
+    
     return url_base.format(**f_dict)
 
 
@@ -671,8 +680,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -689,6 +700,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -708,6 +720,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

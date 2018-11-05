@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_policy
 description:
-    - None
+    - Policy config
 short_description: Configures A10 slb.template.policy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -45,30 +45,30 @@ options:
                 - "Field filtering"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             local_logging:
                 description:
-                - "None"
+                - "Enable local logging"
             action_list:
                 description:
                 - "Field action_list"
             no_client_conn_reuse:
                 description:
-                - "None"
+                - "Inspects only first request of a connection"
             source_list:
                 description:
                 - "Field source_list"
     use_destination_ip:
         description:
-        - "None"
+        - "Use destination IP to match the policy"
         required: False
     name:
         description:
-        - "None"
+        - "Policy template name"
         required: True
     over_limit:
         description:
-        - "None"
+        - "Specify operation in case over limit"
         required: False
     class_list:
         description:
@@ -77,45 +77,45 @@ options:
         suboptions:
             header_name:
                 description:
-                - "None"
+                - "Specify L7 header name"
             lid_list:
                 description:
                 - "Field lid_list"
             name:
                 description:
-                - "None"
+                - "Class list name or geo-location-class-list name"
             client_ip_l3_dest:
                 description:
-                - "None"
+                - "Use destination IP as client IP address"
             client_ip_l7_header:
                 description:
-                - "None"
+                - "Use extract client IP address from L7 header"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     interval:
         description:
-        - "None"
+        - "Log interval (minute)"
         required: False
     share:
         description:
-        - "None"
+        - "Share counters between virtual ports and virtual servers"
         required: False
     full_domain_tree:
         description:
-        - "None"
+        - "Share counters between geo-location and sub regions"
         required: False
     over_limit_logging:
         description:
-        - "None"
+        - "Log a message"
         required: False
     bw_list_name:
         description:
-        - "None"
+        - "Specify a blacklist/whitelist name"
         required: False
     timeout:
         description:
-        - "None"
+        - "Define timeout value of PBSLB dynamic entry (Timeout value (minute, default is 5))"
         required: False
     sampling_enable:
         description:
@@ -124,10 +124,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'fwd-policy-dns-unresolved'= Forward-policy unresolved DNS queries; 'fwd-policy-dns-outstanding'= Forward-policy current DNS outstanding requests; 'fwd-policy-snat-fail'= Forward-policy source-nat translation failure; 'fwd-policy-hits'= Number of forward-policy requests for this policy template; 'fwd-policy-forward-to-internet'= Number of forward-policy requests forwarded to internet; 'fwd-policy-forward-to-service-group'= Number of forward-policy requests forwarded to service group; 'fwd-policy-forward-to-proxy'= Number of forward-policy requests forwarded to proxy; 'fwd-policy-policy-drop'= Number of forward-policy requests dropped; 'fwd-policy-source-match-not-found'= Forward-policy requests without matching source rule; 'exp-client-hello-not-found'= Expected Client HELLO requests not found; "
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     bw_list_id:
         description:
@@ -136,50 +136,49 @@ options:
         suboptions:
             pbslb_interval:
                 description:
-                - "None"
+                - "Specify logging interval in minutes"
             action_interval:
                 description:
-                - "None"
+                - "Specify logging interval in minute (default is 3)"
             service_group:
                 description:
-                - "None"
+                - "Specify a service group (Specify the service group name)"
             logging_drp_rst:
                 description:
-                - "None"
+                - "Configure PBSLB logging"
             fail:
                 description:
-                - "None"
+                - "Only log unsuccessful connections"
             pbslb_logging:
                 description:
-                - "None"
+                - "Configure PBSLB logging"
             id:
                 description:
-                - "None"
+                - "Specify id that maps to service group (The id number)"
             bw_list_action:
                 description:
-                - "None"
+                - "'drop'= drop the packet; 'reset'= Send reset back; "
     over_limit_lockup:
         description:
-        - "None"
+        - "Don't accept any new connection for certain time (Lockup duration (minute))"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     over_limit_reset:
         description:
-        - "None"
+        - "Reset the connection when it exceeds limit"
         required: False
     overlap:
         description:
-        - "None"
+        - "Use overlap mode for geo-location to do longest match"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -235,6 +234,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -244,13 +244,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -259,8 +261,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -277,6 +281,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -296,6 +301,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

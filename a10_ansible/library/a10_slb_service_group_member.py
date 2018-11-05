@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_service_group_member
 description:
-    - None
+    - Service Group Member
 short_description: Configures A10 slb.service.group.member
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,21 +35,24 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    service_group:
+        description:
+        - SLB Service Group to associate member with 
     member_stats_data_disable:
         description:
-        - "None"
+        - "Disable statistical data collection"
         required: False
     member_priority:
         description:
-        - "None"
+        - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
         required: False
     name:
         description:
-        - "None"
+        - "Member name"
         required: True
     fqdn_name:
         description:
-        - "None"
+        - "Server hostname - Not applicable if real server is already defined"
         required: False
     sampling_enable:
         description:
@@ -58,41 +61,40 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total established connections; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_status_code_2xx'= Total reverse packets inspected status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse packets inspected status code non 5xx; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total requests successful; 'peak_conn'= peak_conn; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; "
     member_template:
         description:
-        - "None"
+        - "Real server port template (Real server port template name)"
         required: False
     host:
         description:
-        - "None"
+        - "IP Address - Not applicable if real server is already defined"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     member_state:
         description:
-        - "None"
+        - "'enable'= Enable member service port; 'disable'= Disable member service port; 'disable-with-health-check'= disable member service port, but health check work; "
         required: False
     server_ipv6_addr:
         description:
-        - "None"
+        - "IPV6 Address - Not applicable if real server is already defined"
         required: False
     port:
         description:
-        - "None"
+        - "Port number"
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -126,6 +128,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        service_group=dict(type='str', required=True),
         member_stats_data_disable=dict(type='bool',),
         member_priority=dict(type='int',),
         name=dict(type='str',required=True,),
@@ -142,24 +145,30 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/service-group/{name}/member/{name}+{port}"
+    url_base = "/axapi/v3/slb/service-group/{service_group}/member"
     f_dict = {}
     f_dict["name"] = ""
     f_dict["port"] = ""
+    # Override with the specified hint key
+    f_dict["service_group"] = module.params["service_group"]
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/service-group/{name}/member/{name}+{port}"
+    url_base = "/axapi/v3/slb/service-group/service_group/member/{name}+{port}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
     f_dict["port"] = module.params["port"]
-
+    f_dict["service_group"] = module.params["service_group"]
+    
     return url_base.format(**f_dict)
 
 
@@ -168,8 +177,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -186,6 +197,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -206,9 +218,10 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted([])
+    requires_one_of = sorted(['host','fqdn_host','server_ipv6_addr'])
     present_keys = sorted([x for x in requires_one_of if params.get(x)])
     
     errors = []

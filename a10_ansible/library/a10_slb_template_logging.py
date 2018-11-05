@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_logging
 description:
-    - None
+    - Logging template
 short_description: Configures A10 slb.template.logging
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,62 +37,61 @@ options:
         required: True
     name:
         description:
-        - "None"
+        - "Logging Template Name"
         required: True
     format:
         description:
-        - "None"
+        - "Specfiy a format string for web logging (format string(less than 250 characters) for web logging)"
         required: False
     auto:
         description:
-        - "None"
+        - "'auto'= Configure auto NAT for logging, default is auto enabled; "
         required: False
     keep_end:
         description:
-        - "None"
+        - "Number of unmasked characters at the end (default= 0)"
         required: False
     local_logging:
         description:
-        - "None"
+        - "1 to enable local logging (1 to enable local logging, default 0)"
         required: False
     mask:
         description:
-        - "None"
+        - "Character to mask the matched pattern (default= X)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     keep_start:
         description:
-        - "None"
+        - "Number of unmasked characters at the beginning (default= 0)"
         required: False
     service_group:
         description:
-        - "None"
+        - "Bind a Service Group to the logging template (Service Group Name)"
         required: False
     pcre_mask:
         description:
-        - "None"
+        - "Mask matched PCRE pattern in the log"
         required: False
     tcp_proxy:
         description:
-        - "None"
+        - "TCP proxy template (TCP Proxy Config name)"
         required: False
     pool:
         description:
-        - "None"
+        - "Specify NAT pool or pool group"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -143,6 +142,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -152,13 +152,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/logging/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -167,8 +169,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -185,6 +189,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -204,6 +209,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

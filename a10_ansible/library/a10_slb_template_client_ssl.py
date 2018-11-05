@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_client_ssl
 description:
-    - None
+    - Client SSL Template
 short_description: Configures A10 slb.template.client-ssl
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,19 +37,19 @@ options:
         required: True
     verify_cert_fail_action:
         description:
-        - "None"
+        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'= close the connection; "
         required: False
     forward_proxy_cert_revoke_action:
         description:
-        - "None"
+        - "Action taken if a certificate is irreversibly revoked, bypass SSLi processing by default"
         required: False
     ocspst_sg_hours:
         description:
-        - "None"
+        - "Specify update period, in hours"
         required: False
     fp_cert_fetch_autonat:
         description:
-        - "None"
+        - "'auto'= Configure auto NAT for server certificate fetching; "
         required: False
     equals_list:
         description:
@@ -58,10 +58,10 @@ options:
         suboptions:
             equals:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string equals another string"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     forward_proxy_trusted_ca_lists:
         description:
@@ -70,22 +70,22 @@ options:
         suboptions:
             forward_proxy_trusted_ca:
                 description:
-                - "None"
+                - "Forward proxy trusted CA file (CA file name)"
     template_cipher_shared:
         description:
-        - "None"
+        - "Cipher Template Name"
         required: False
     forward_proxy_ca_cert:
         description:
-        - "None"
+        - "CA Certificate for forward proxy (SSL forward proxy CA Certificate Name)"
         required: False
     ssl_false_start_disable:
         description:
-        - "None"
+        - "disable SSL False Start"
         required: False
     dgversion:
         description:
-        - "None"
+        - "Lower TLS/SSL version can be downgraded"
         required: False
     ec_list:
         description:
@@ -94,26 +94,26 @@ options:
         suboptions:
             ec:
                 description:
-                - "None"
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; "
     key_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     notafteryear:
         description:
-        - "None"
+        - "Year"
         required: False
     forward_proxy_alt_sign:
         description:
-        - "None"
+        - "Forward proxy alternate signing cert and key"
         required: False
     template_hsm:
         description:
-        - "None"
+        - "HSM Template (HSM Template Name)"
         required: False
     forward_passphrase:
         description:
-        - "None"
+        - "Password Phrase"
         required: False
     contains_list:
         description:
@@ -122,14 +122,14 @@ options:
         suboptions:
             contains:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string contains another string"
     forward_proxy_ca_key:
         description:
-        - "None"
+        - "CA Private Key for forward proxy (SSL forward proxy CA Key Name)"
         required: False
     notbefore:
         description:
-        - "None"
+        - "notBefore date"
         required: False
     ends_with_list:
         description:
@@ -138,26 +138,26 @@ options:
         suboptions:
             ends_with:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string ends with another string"
     notafter:
         description:
-        - "None"
+        - "notAfter date"
         required: False
     class_list_name:
         description:
-        - "None"
+        - "Class List Name"
         required: False
     ocspst_ocsp:
         description:
-        - "None"
+        - "Specify OCSP Authentication"
         required: False
     notbeforeday:
         description:
-        - "None"
+        - "Day"
         required: False
     forward_proxy_ssl_version:
         description:
-        - "None"
+        - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
         required: False
     ca_certs:
         description:
@@ -166,19 +166,19 @@ options:
         suboptions:
             ca_cert:
                 description:
-                - "None"
+                - "CA Certificate (CA Certificate Name)"
             client_ocsp:
                 description:
-                - "None"
+                - "Specify ocsp authentication server(s) for client certificate verification"
             client_ocsp_sg:
                 description:
-                - "None"
+                - "Specify service-group (Service group name)"
             client_ocsp_srvr:
                 description:
-                - "None"
+                - "Specify authentication server"
     forward_proxy_crl_disable:
         description:
-        - "None"
+        - "Disable Certificate Revocation List checking for forward proxy"
         required: False
     client_auth_contains_list:
         description:
@@ -187,14 +187,14 @@ options:
         suboptions:
             client_auth_contains:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string contains another string"
     name:
         description:
-        - "None"
+        - "Client SSL Template Name"
         required: True
     fp_cert_ext_aia_ocsp:
         description:
-        - "None"
+        - "OCSP (Authority Information Access URI)"
         required: False
     req_ca_lists:
         description:
@@ -203,30 +203,30 @@ options:
         suboptions:
             client_certificate_Request_CA:
                 description:
-                - "None"
+                - "Send CA lists in certificate request (CA Certificate Name)"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     cert_unknown_action:
         description:
-        - "None"
+        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'= close the connection; "
         required: False
     renegotiation_disable:
         description:
-        - "None"
+        - "Disable SSL renegotiation"
         required: False
     fp_alt_key:
         description:
-        - "None"
+        - "CA Private Key for forward proxy alternate signing (Key name)"
         required: False
     server_name_auto_map:
         description:
-        - "None"
+        - "Enable automatic mapping of server name indication in Client hello extension"
         required: False
     disable_sslv3:
         description:
-        - "None"
+        - "Reject Client requests for SSL version 3"
         required: False
     client_auth_equals_list:
         description:
@@ -235,14 +235,14 @@ options:
         suboptions:
             client_auth_equals:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string equals another string"
     fp_alt_passphrase:
         description:
-        - "None"
+        - "Password Phrase"
         required: False
     forward_proxy_cert_cache_timeout:
         description:
-        - "None"
+        - "Certificate cache timeout, default is 1 hour (seconds, set to 0 for never timeout)"
         required: False
     crl_certs:
         description:
@@ -251,30 +251,30 @@ options:
         suboptions:
             crl:
                 description:
-                - "None"
+                - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
     notafterday:
         description:
-        - "None"
+        - "Day"
         required: False
     ocspst_srvr_hours:
         description:
-        - "None"
+        - "Specify update period, in hours"
         required: False
     local_logging:
         description:
-        - "None"
+        - "Enable local logging"
         required: False
     fp_cert_fetch_autonat_precedence:
         description:
-        - "None"
+        - "Set this NAT pool as higher precedence than other source NAT like configued under template policy"
         required: False
     cert_revoke_action:
         description:
-        - "None"
+        - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'= close the connection; "
         required: False
     version:
         description:
-        - "None"
+        - "TLS/SSL version, default is the highest number supported (TLS/SSL version= 30-SSLv3.0, 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
         required: False
     multi_class_list:
         description:
@@ -283,70 +283,70 @@ options:
         suboptions:
             multi_clist_name:
                 description:
-                - "None"
+                - "Class List Name"
     session_ticket_lifetime:
         description:
-        - "None"
+        - "Session ticket lifetime in seconds from stateless session resumption (Lifetime value in seconds. Default value 0 (Session ticket lifetime limit disabled))"
         required: False
     ssli_logging:
         description:
-        - "None"
+        - "SSLi logging level, default is error logging only"
         required: False
     session_cache_size:
         description:
-        - "None"
+        - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse disabled))"
         required: False
     non_ssl_bypass_service_group:
         description:
-        - "None"
+        - "Service Group for Bypass non-ssl traffic (Service Group Name)"
         required: False
     forward_proxy_failsafe_disable:
         description:
-        - "None"
+        - "Disable Failsafe for SSL forward proxy"
         required: False
     session_cache_timeout:
         description:
-        - "None"
+        - "Session Cache Timeout (Timeout value, in seconds. Default value 0 (Session cache timeout disabled))"
         required: False
     sslv2_bypass_service_group:
         description:
-        - "None"
+        - "Service Group for Bypass SSLV2 (Service Group Name)"
         required: False
     forward_proxy_decrypted_dscp:
         description:
-        - "None"
+        - "Apply a DSCP to decrypted and bypassed traffic (DSCP to apply to decrypted traffic)"
         required: False
     auth_sg:
         description:
-        - "None"
+        - "Specify authorization LDAP service group"
         required: False
     ocspst_ca_cert:
         description:
-        - "None"
+        - "CA certificate"
         required: False
     forward_proxy_selfsign_redir:
         description:
-        - "None"
+        - "Redirect connections to pages with self signed certs to a warning page"
         required: False
     auth_sg_dn:
         description:
-        - "None"
+        - "Use Subject DN as LDAP search base DN"
         required: False
     hsm_type:
         description:
-        - "None"
+        - "'thales-embed'= Thales embed key; 'thales-hwcrhk'= Thales hwcrhk Key; "
         required: False
     forward_proxy_log_disable:
         description:
-        - "None"
+        - "Disable SSL forward proxy logging"
         required: False
     fp_alt_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     cert:
         description:
-        - "None"
+        - "Server Certificate (Certificate Name)"
         required: False
     web_category:
         description:
@@ -355,335 +355,335 @@ options:
         suboptions:
             philosophy_and_politics:
                 description:
-                - "None"
+                - "Category Philosophy and Political Advocacy"
             stock_advice_and_tools:
                 description:
-                - "None"
+                - "Category Stock Advice and Tools"
             news_and_media:
                 description:
-                - "None"
+                - "Category News and Media"
             business_and_economy:
                 description:
-                - "None"
+                - "Category Business and Economy"
             peer_to_peer:
                 description:
-                - "None"
+                - "Category Peer to Peer"
             phishing_and_other_fraud:
                 description:
-                - "None"
+                - "Category Phishing and Other Frauds"
             nudity:
                 description:
-                - "None"
+                - "Category Nudity"
             weapons:
                 description:
-                - "None"
+                - "Category Weapons"
             health_and_medicine:
                 description:
-                - "None"
+                - "Category Health and Medicine"
             marijuana:
                 description:
-                - "None"
+                - "Category Marijuana"
             home_and_garden:
                 description:
-                - "None"
+                - "Category Home and Garden"
             cult_and_occult:
                 description:
-                - "None"
+                - "Category Cult and Occult"
             society:
                 description:
-                - "None"
+                - "Category Society"
             personal_storage:
                 description:
-                - "None"
+                - "Category Personal Storage"
             computer_and_internet_security:
                 description:
-                - "None"
+                - "Category Computer and Internet Security"
             food_and_dining:
                 description:
-                - "None"
+                - "Category Food and Dining"
             motor_vehicles:
                 description:
-                - "None"
+                - "Category Motor Vehicles"
             swimsuits_and_intimate_apparel:
                 description:
-                - "None"
+                - "Category Swimsuits and Intimate Apparel"
             dead_sites:
                 description:
-                - "None"
+                - "Category Dead Sites (db Ops only)"
             translation:
                 description:
-                - "None"
+                - "Category Translation"
             proxy_avoid_and_anonymizers:
                 description:
-                - "None"
+                - "Category Proxy Avoid and Anonymizers"
             financial_services:
                 description:
-                - "None"
+                - "Category Financial Services"
             gross:
                 description:
-                - "None"
+                - "Category Gross"
             cheating:
                 description:
-                - "None"
+                - "Category Cheating"
             entertainment_and_arts:
                 description:
-                - "None"
+                - "Category Entertainment and Arts"
             sex_education:
                 description:
-                - "None"
+                - "Category Sex Education"
             illegal:
                 description:
-                - "None"
+                - "Category Illegal"
             travel:
                 description:
-                - "None"
+                - "Category Travel"
             cdns:
                 description:
-                - "None"
+                - "Category CDNs"
             local_information:
                 description:
-                - "None"
+                - "Category Local Information"
             legal:
                 description:
-                - "None"
+                - "Category Legal"
             sports:
                 description:
-                - "None"
+                - "Category Sports"
             bot_nets:
                 description:
-                - "None"
+                - "Category Bot Nets"
             religion:
                 description:
-                - "None"
+                - "Category Religion"
             private_ip_addresses:
                 description:
-                - "None"
+                - "Category Private IP Addresses"
             music:
                 description:
-                - "None"
+                - "Category Music"
             hate_and_racism:
                 description:
-                - "None"
+                - "Category Hate and Racism"
             open_http_proxies:
                 description:
-                - "None"
+                - "Category Open HTTP Proxies"
             internet_communications:
                 description:
-                - "None"
+                - "Category Internet Communications"
             shareware_and_freeware:
                 description:
-                - "None"
+                - "Category Shareware and Freeware"
             dating:
                 description:
-                - "None"
+                - "Category Dating"
             spyware_and_adware:
                 description:
-                - "None"
+                - "Category Spyware and Adware"
             uncategorized:
                 description:
-                - "None"
+                - "Uncategorized URLs"
             questionable:
                 description:
-                - "None"
+                - "Category Questionable"
             reference_and_research:
                 description:
-                - "None"
+                - "Category Reference and Research"
             web_advertisements:
                 description:
-                - "None"
+                - "Category Web Advertisements"
             streaming_media:
                 description:
-                - "None"
+                - "Category Streaming Media"
             social_network:
                 description:
-                - "None"
+                - "Category Social Network"
             government:
                 description:
-                - "None"
+                - "Category Government"
             drugs:
                 description:
-                - "None"
+                - "Category Abused Drugs"
             web_hosting_sites:
                 description:
-                - "None"
+                - "Category Web Hosting Sites"
             malware_sites:
                 description:
-                - "None"
+                - "Category Malware Sites"
             pay_to_surf:
                 description:
-                - "None"
+                - "Category Pay to Surf"
             spam_urls:
                 description:
-                - "None"
+                - "Category SPAM URLs"
             kids:
                 description:
-                - "None"
+                - "Category Kids"
             gambling:
                 description:
-                - "None"
+                - "Category Gambling"
             online_greeting_cards:
                 description:
-                - "None"
+                - "Category Online Greeting cards"
             confirmed_spam_sources:
                 description:
-                - "None"
+                - "Category Confirmed SPAM Sources"
             image_and_video_search:
                 description:
-                - "None"
+                - "Category Image and Video Search"
             educational_institutions:
                 description:
-                - "None"
+                - "Category Educational Institutions"
             keyloggers_and_monitoring:
                 description:
-                - "None"
+                - "Category Keyloggers and Monitoring"
             hunting_and_fishing:
                 description:
-                - "None"
+                - "Category Hunting and Fishing"
             search_engines:
                 description:
-                - "None"
+                - "Category Search Engines"
             fashion_and_beauty:
                 description:
-                - "None"
+                - "Category Fashion and Beauty"
             dynamic_comment:
                 description:
-                - "None"
+                - "Category Dynamic Comment"
             computer_and_internet_info:
                 description:
-                - "None"
+                - "Category Computer and Internet Info"
             real_estate:
                 description:
-                - "None"
+                - "Category Real Estate"
             internet_portals:
                 description:
-                - "None"
+                - "Category Internet Portals"
             shopping:
                 description:
-                - "None"
+                - "Category Shopping"
             violence:
                 description:
-                - "None"
+                - "Category Violence"
             abortion:
                 description:
-                - "None"
+                - "Category Abortion"
             training_and_tools:
                 description:
-                - "None"
+                - "Category Training and Tools"
             web_based_email:
                 description:
-                - "None"
+                - "Category Web based email"
             personal_sites_and_blogs:
                 description:
-                - "None"
+                - "Category Personal sites and Blogs"
             unconfirmed_spam_sources:
                 description:
-                - "None"
+                - "Category Unconfirmed SPAM Sources"
             games:
                 description:
-                - "None"
+                - "Category Games"
             parked_domains:
                 description:
-                - "None"
+                - "Category Parked Domains"
             auctions:
                 description:
-                - "None"
+                - "Category Auctions"
             job_search:
                 description:
-                - "None"
+                - "Category Job Search"
             recreation_and_hobbies:
                 description:
-                - "None"
+                - "Category Recreation and Hobbies"
             hacking:
                 description:
-                - "None"
+                - "Category Hacking"
             alcohol_and_tobacco:
                 description:
-                - "None"
+                - "Category Alcohol and Tobacco"
             adult_and_pornography:
                 description:
-                - "None"
+                - "Category Adult and Pornography"
             military:
                 description:
-                - "None"
+                - "Category Military"
     template_cipher:
         description:
-        - "None"
+        - "Cipher Template Name"
         required: False
     notbeforemonth:
         description:
-        - "None"
+        - "Month"
         required: False
     chain_cert:
         description:
-        - "None"
+        - "Chain Certificate (Chain Certificate Name)"
         required: False
     forward_proxy_cert_unknown_action:
         description:
-        - "None"
+        - "Action taken if a certificate revocation status is unknown, bypass SSLi processing by default"
         required: False
     key:
         description:
-        - "None"
+        - "Server Private Key (Key Name)"
         required: False
     ocspst_sg:
         description:
-        - "None"
+        - "Specify authentication service group"
         required: False
     fp_cert_ext_aia_ca_issuers:
         description:
-        - "None"
+        - "CA Issuers (Authority Information Access URI)"
         required: False
     authen_name:
         description:
-        - "None"
+        - "Specify authorization LDAP server name"
         required: False
     expire_hours:
         description:
-        - "None"
+        - "Certificate lifetime in hours"
         required: False
     client_auth_case_insensitive:
         description:
-        - "None"
+        - "Case insensitive forward proxy client auth bypass"
         required: False
     ocsp_stapling:
         description:
-        - "None"
+        - "Config OCSP stapling support"
         required: False
     notbeforeyear:
         description:
-        - "None"
+        - "Year"
         required: False
     forward_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     sni_enable_log:
         description:
-        - "None"
+        - "Enable logging of sni-auto-map failures. Disable by default"
         required: False
     notaftermonth:
         description:
-        - "None"
+        - "Month"
         required: False
     cache_persistence_list_name:
         description:
-        - "None"
+        - "Class List Name"
         required: False
     ocspst_sg_timeout:
         description:
-        - "None"
+        - "Specify retry timeout (Default is 30 mins)"
         required: False
     key_passphrase:
         description:
-        - "None"
+        - "Password Phrase"
         required: False
     ocspst_srvr:
         description:
-        - "None"
+        - "Specify OCSP authentication server"
         required: False
     ocspst_srvr_minutes:
         description:
-        - "None"
+        - "Specify update period, in minutes"
         required: False
     client_auth_starts_with_list:
         description:
@@ -692,34 +692,34 @@ options:
         suboptions:
             client_auth_starts_with:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string starts with another string"
     authorization:
         description:
-        - "None"
+        - "Specify LDAP server for client SSL authorizaiton"
         required: False
     forward_proxy_verify_cert_fail_action:
         description:
-        - "None"
+        - "Action taken if certificate verification fails, close the connection by default"
         required: False
     ocspst_srvr_days:
         description:
-        - "None"
+        - "Specify update period, in days"
         required: False
     client_auth_class_list:
         description:
-        - "None"
+        - "Forward proxy client auth bypass if SNI string matches class-list (Class List Name)"
         required: False
     forward_proxy_decrypted_dscp_bypass:
         description:
-        - "None"
+        - "DSCP to apply to bypassed traffic"
         required: False
     alert_type:
         description:
-        - "None"
+        - "'fatal'= Log fatal alerts; "
         required: False
     forward_proxy_cert_not_ready_action:
         description:
-        - "None"
+        - "'bypass'= bypass the connection; 'reset'= reset the connection; "
         required: False
     server_name_list:
         description:
@@ -728,49 +728,49 @@ options:
         suboptions:
             server_passphrase_regex:
                 description:
-                - "None"
+                - "help Password Phrase"
             server_cert_regex:
                 description:
-                - "None"
+                - "Server Certificate associated to SNI regex (Server Certificate Name)"
             server_name:
                 description:
-                - "None"
+                - "Server name indication in Client hello extension (Server name String)"
             server_key:
                 description:
-                - "None"
+                - "Server Private Key associated to SNI (Server Private Key Name)"
             server_encrypted_regex:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
             server_name_regex:
                 description:
-                - "None"
+                - "Server name indication in Client hello extension with regular expression (Server name String with regex)"
             server_key_regex:
                 description:
-                - "None"
+                - "Server Private Key associated to SNI regex (Server Private Key Name)"
             server_passphrase:
                 description:
-                - "None"
+                - "help Password Phrase"
             server_encrypted:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
             server_cert:
                 description:
-                - "None"
+                - "Server Certificate associated to SNI (Server Certificate Name)"
     shared_partition_cipher_template:
         description:
-        - "None"
+        - "Reference a cipher template from shared partition"
         required: False
     fp_cert_fetch_natpool_precedence:
         description:
-        - "None"
+        - "Set this NAT pool as higher precedence than other source NAT like configued under template policy"
         required: False
     forward_proxy_cert_cache_limit:
         description:
-        - "None"
+        - "Certificate cache size limit, default is 524288 (set to 0 for unlimited size)"
         required: False
     handshake_logging_enable:
         description:
-        - "None"
+        - "Enable SSL handshake logging"
         required: False
     client_auth_ends_with_list:
         description:
@@ -779,90 +779,90 @@ options:
         suboptions:
             client_auth_ends_with:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string ends with another string"
     close_notify:
         description:
-        - "None"
+        - "Send close notification when terminate connection"
         required: False
     forward_proxy_ocsp_disable:
         description:
-        - "None"
+        - "Disable ocsp-stapling for forward proxy"
         required: False
     sslilogging:
         description:
-        - "None"
+        - "'disable'= Disable all logging; 'all'= enable all logging(error, info); "
         required: False
     auth_username:
         description:
-        - "None"
+        - "Specify the Username Field in the Client Certificate(If multi-fields are specificed, prior one has higher priority)"
         required: False
     fp_cert_ext_crldp:
         description:
-        - "None"
+        - "CRL Distribution Point (CRL Distribution Point URI)"
         required: False
     ocspst_sg_days:
         description:
-        - "None"
+        - "Specify update period, in days"
         required: False
     inspect_list_name:
         description:
-        - "None"
+        - "Class List Name"
         required: False
     auth_username_attribute:
         description:
-        - "None"
+        - "Specify attribute name of username for client SSL authorization"
         required: False
     fp_cert_fetch_natpool_name:
         description:
-        - "None"
+        - "Specify NAT pool or pool group"
         required: False
     ldap_base_dn_from_cert:
         description:
-        - "None"
+        - "Use Subject DN as LDAP search base DN"
         required: False
     client_certificate:
         description:
-        - "None"
+        - "'Ignore'= Don't request client certificate; 'Require'= Require client certificate; 'Request'= Request client certificate; "
         required: False
     forward_proxy_cert_expiry:
         description:
-        - "None"
+        - "Adjust certificate expiry relative to the time when it is created on the device"
         required: False
     forward_proxy_enable:
         description:
-        - "None"
+        - "Enable SSL forward proxy"
         required: False
     ldap_search_filter:
         description:
-        - "None"
+        - "Specify LDAP search filter"
         required: False
     auth_sg_filter:
         description:
-        - "None"
+        - "Specify LDAP search filter"
         required: False
     ocspst_srvr_timeout:
         description:
-        - "None"
+        - "Specify retry timeout (Default is 30 mins)"
         required: False
     enable_tls_alert_logging:
         description:
-        - "None"
+        - "Enable TLS alert logging"
         required: False
     exception_class_list:
         description:
-        - "None"
+        - "Exceptions to forward-proxy-bypass"
         required: False
     dh_type:
         description:
-        - "None"
+        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048; "
         required: False
     fp_alt_cert:
         description:
-        - "None"
+        - "CA Certificate for forward proxy alternate signing (Certificate name)"
         required: False
     case_insensitive:
         description:
-        - "None"
+        - "Case insensitive forward proxy bypass"
         required: False
     cipher_without_prio_list:
         description:
@@ -871,10 +871,10 @@ options:
         suboptions:
             cipher_wo_prio:
                 description:
-                - "None"
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; "
     ocspst_sg_minutes:
         description:
-        - "None"
+        - "Specify update period, in minutes"
         required: False
     starts_with_list:
         description:
@@ -883,13 +883,11 @@ options:
         suboptions:
             starts_with:
                 description:
-                - "None"
+                - "Forward proxy bypass if SNI string starts with another string"
+'''
 
-
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -1051,6 +1049,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -1060,13 +1059,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/client-ssl/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -1075,8 +1076,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -1093,6 +1096,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -1112,6 +1116,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

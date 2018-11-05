@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_policy_forward_policy_action
 description:
-    - None
+    - action list
 short_description: Configures A10 slb.template.policy.forward.policy.action
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,39 +37,39 @@ options:
         required: True
     log:
         description:
-        - "None"
+        - "enable logging"
         required: False
     forward_snat:
         description:
-        - "None"
+        - "Source NAT pool or pool group"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     http_status_code:
         description:
-        - "None"
+        - "'301'= Moved permanently; '302'= Found; "
         required: False
     action1:
         description:
-        - "None"
+        - "'forward-to-internet'= Forward request to Internet; 'forward-to-service-group'= Forward request to service group; 'forward-to-proxy'= Forward request to HTTP proxy server; 'drop'= Drop request; "
         required: False
     fake_sg:
         description:
-        - "None"
+        - "service group to forward the packets to Internet"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     real_sg:
         description:
-        - "None"
+        - "service group to forward the packets"
         required: False
     drop_message:
         description:
-        - "None"
+        - "drop-message sent to the client as webpage(html tags are included and quotation marks are required for white spaces)"
         required: False
     sampling_enable:
         description:
@@ -78,29 +78,28 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'hits'= Number of requests matching this destination rule; "
     fall_back:
         description:
-        - "None"
+        - "Fallback service group for Internet"
         required: False
     fall_back_snat:
         description:
-        - "None"
+        - "Source NAT pool or pool group for fallback server"
         required: False
     drop_redirect_url:
         description:
-        - "None"
+        - "Specify URL to which client request is redirected upon being dropped"
         required: False
     name:
         description:
-        - "None"
+        - "Action policy name"
         required: True
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -152,6 +151,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -161,13 +161,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/policy/{name}/forward-policy/action/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -176,8 +178,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -194,6 +198,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -213,6 +218,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

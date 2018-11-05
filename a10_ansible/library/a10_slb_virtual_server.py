@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_virtual_server
 description:
-    - None
+    - Create a Virtual Server
 short_description: Configures A10 slb.virtual-server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,396 +42,396 @@ options:
         suboptions:
             ha_conn_mirror:
                 description:
-                - "None"
+                - "Enable for HA Conn sync"
             protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP; 'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port; 'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'= [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port; 'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP; 'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port; 'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; "
             precedence:
                 description:
-                - "None"
+                - "Set auto NAT pool as higher precedence for source NAT"
             port_translation:
                 description:
-                - "None"
+                - "Enable port translation under no-dest-nat"
             template_reqmod_icap:
                 description:
-                - "None"
+                - "ICAP reqmod template (reqmod-icap template name)"
             acl_name_list:
                 description:
                 - "Field acl_name_list"
             stats_data_action:
                 description:
-                - "None"
+                - "'stats-data-enable'= Enable statistical data collection for virtual port; 'stats-data-disable'= Disable statistical data collection for virtual port; "
             template_connection_reuse:
                 description:
-                - "None"
+                - "Connection Reuse Template (Connection Reuse Template Name)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             template_tcp_shared:
                 description:
-                - "None"
+                - "TCP Template Name"
             template_tcp:
                 description:
-                - "None"
+                - "TCP Template Name"
             template_persist_destination_ip:
                 description:
-                - "None"
+                - "Destination IP persistence (Destination IP persistence template name)"
             when_down:
                 description:
-                - "None"
+                - "Use alternate virtual port when down"
             template_client_ssl_shared:
                 description:
-                - "None"
+                - "Client SSL Template Name"
             persist_type:
                 description:
-                - "None"
+                - "'src-dst-ip-swap-persist'= Create persist session after source IP and destination IP swap; 'use-src-ip-for-dst-persist'= Use the source IP to create a destination persist session; 'use-dst-ip-for-src-persist'= Use the destination IP to create source IP persist session; "
             use_rcv_hop_for_resp:
                 description:
-                - "None"
+                - "Use receive hop for response to client(For packets on default-vlan, also config 'vlan-global enable-def-vlan-l2-forwarding'.)"
             scaleout_bucket_count:
                 description:
-                - "None"
+                - "Number of traffic buckets"
             req_fail:
                 description:
-                - "None"
+                - "Use alternate virtual port when L7 request fail"
             no_dest_nat:
                 description:
-                - "None"
+                - "Disable destination NAT, this option only supports in wildcard VIP or when a connection is operated in SSLi + EP mode"
             name:
                 description:
-                - "None"
+                - "SLB Virtual Service Name"
             template_policy:
                 description:
-                - "None"
+                - "Policy Template (Policy template name)"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             template_diameter:
                 description:
-                - "None"
+                - "Diameter Template (diameter template name)"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             template_ssli:
                 description:
-                - "None"
+                - "SSLi template (SSLi Template Name)"
             template_smpp:
                 description:
-                - "None"
+                - "SMPP template"
             no_logging:
                 description:
-                - "None"
+                - "Do not log connection over limit event"
             reset_on_server_selection_fail:
                 description:
-                - "None"
+                - "Send client reset when server selection fails"
             waf_template:
                 description:
-                - "None"
+                - "WAF template (WAF Template Name)"
             ipinip:
                 description:
-                - "None"
+                - "Enable IP in IP"
             no_auto_up_on_aflex:
                 description:
-                - "None"
+                - "Don't automatically mark vport up when aFleX is bound"
             rate:
                 description:
-                - "None"
+                - "Specify the log message rate"
             gslb_enable:
                 description:
-                - "None"
+                - "Enable Global Server Load Balancing"
             template_persist_ssl_sid:
                 description:
-                - "None"
+                - "SSL session ID persistence (Source IP Persistence Config name)"
             template_dns:
                 description:
-                - "None"
+                - "DNS template (DNS template name)"
             template_sip:
                 description:
-                - "None"
+                - "SIP template"
             template_dblb:
                 description:
-                - "None"
+                - "DBLB Template (DBLB template name)"
             shared_partition_server_ssl_template:
                 description:
-                - "None"
+                - "Reference a SSL Server template from shared partition"
             template_client_ssl:
                 description:
-                - "None"
+                - "Client SSL Template Name"
             enable_playerid_check:
                 description:
-                - "None"
+                - "Enable playerid checks on UDP packets once the AX is in active mode"
             service_group:
                 description:
-                - "None"
+                - "Bind a Service Group to this Virtual Server (Service Group Name)"
             template_fix:
                 description:
-                - "None"
+                - "FIX template (FIX Template Name)"
             shared_partition_udp:
                 description:
-                - "None"
+                - "Reference a UDP template from shared partition"
             syn_cookie:
                 description:
-                - "None"
+                - "Enable syn-cookie"
             alternate_port:
                 description:
-                - "None"
+                - "Alternate Virtual Port"
             template_cache:
                 description:
-                - "None"
+                - "RAM caching template (Cache Template Name)"
             rtp_sip_call_id_match:
                 description:
-                - "None"
+                - "rtp traffic try to match the real server of sip smp call-id session"
             template_scaleout:
                 description:
-                - "None"
+                - "Scaleout template (Scaleout template name)"
             template_ftp:
                 description:
-                - "None"
+                - "FTP port template (Ftp template name)"
             serv_sel_fail:
                 description:
-                - "None"
+                - "Use alternate virtual port when server selection failure"
             range:
                 description:
-                - "None"
+                - "Virtual Port range (Virtual Port range value)"
             action:
                 description:
-                - "None"
+                - "'enable'= Enable; 'disable'= Disable; "
             shared_partition_client_ssl_template:
                 description:
-                - "None"
+                - "Reference a Client SSL template from shared partition"
             view:
                 description:
-                - "None"
+                - "Specify a GSLB View (ID)"
             template_persist_source_ip:
                 description:
-                - "None"
+                - "Source IP persistence (Source IP persistence template name)"
             template_dynamic_service:
                 description:
-                - "None"
+                - "Dynamic Service Template (dynamic-service template name)"
             use_cgnv6:
                 description:
-                - "None"
+                - "Follow CGNv6 source NAT configuration"
             template_persist_cookie:
                 description:
-                - "None"
+                - "Cookie persistence (Cookie persistence template name)"
             template_virtual_port:
                 description:
-                - "None"
+                - "Virtual port template (Virtual port template name)"
             conn_limit:
                 description:
-                - "None"
+                - "Connection Limit"
             trunk_fwd:
                 description:
-                - "None"
+                - "Trunk interface number"
             template_udp_shared:
                 description:
-                - "None"
+                - "UDP Template Name"
             pool:
                 description:
-                - "None"
+                - "Specify NAT pool or pool group"
             snat_on_vip:
                 description:
-                - "None"
+                - "Enable source NAT traffic against VIP"
             shared_partition_tcp:
                 description:
-                - "None"
+                - "Reference a tcp template from shared partition"
             template_tcp_proxy_server:
                 description:
-                - "None"
+                - "TCP Proxy Config Server (TCP Proxy Config name)"
             shared_partition_http_template:
                 description:
-                - "None"
+                - "Reference a HTTP template from shared partition"
             template_external_service:
                 description:
-                - "None"
+                - "External service template (external-service template name)"
             template_udp:
                 description:
-                - "None"
+                - "L4 UDP Template"
             force_routing_mode:
                 description:
-                - "None"
+                - "Force routing mode"
             template_file_inspection:
                 description:
-                - "None"
+                - "File Inspection service template (file-inspection template name)"
             when_down_protocol2:
                 description:
-                - "None"
+                - "Use alternate virtual port when down"
             def_selection_if_pref_failed:
                 description:
-                - "None"
+                - "'def-selection-if-pref-failed'= Use default server selection method if prefer method failed; 'def-selection-if-pref-failed-disable'= Stop using default server selection method if prefer method failed; "
             template_smtp:
                 description:
-                - "None"
+                - "SMTP Template (SMTP Config Name)"
             redirect_to_https:
                 description:
-                - "None"
+                - "Redirect HTTP to HTTPS"
             alt_protocol2:
                 description:
-                - "None"
+                - "'tcp'= TCP LB service; "
             alt_protocol1:
                 description:
-                - "None"
+                - "'http'= HTTP Port; "
             message_switching:
                 description:
-                - "None"
+                - "Message switching"
             template_imap_pop3:
                 description:
-                - "None"
+                - "IMAP/POP3 Template (IMAP/POP3 Config Name)"
             scaleout_device_group:
                 description:
-                - "None"
+                - "Device group id"
             l7_hardware_assist:
                 description:
-                - "None"
+                - "FPGA assist L7 packet parsing"
             template_http_policy:
                 description:
-                - "None"
+                - "http-policy template (http-policy template name)"
             reset:
                 description:
-                - "None"
+                - "Send client reset when connection number over limit"
             use_alternate_port:
                 description:
-                - "None"
+                - "Use alternate virtual port"
             acl_id_list:
                 description:
                 - "Field acl_id_list"
             trunk_rev:
                 description:
-                - "None"
+                - "Trunk interface number"
             eth_fwd:
                 description:
-                - "None"
+                - "Ethernet interface number"
             template_respmod_icap:
                 description:
-                - "None"
+                - "ICAP respmod service template (respmod-icap template name)"
             template_server_ssl_shared:
                 description:
-                - "None"
+                - "Server SSL Template Name"
             use_default_if_no_server:
                 description:
-                - "None"
+                - "Use default forwarding if server selection failed"
             auto:
                 description:
-                - "None"
+                - "Configure auto NAT for the vport"
             aflex_scripts:
                 description:
                 - "Field aflex_scripts"
             template_http_shared:
                 description:
-                - "None"
+                - "HTTP Template Name"
             template_server_ssl:
                 description:
-                - "None"
+                - "Server Side SSL Template Name"
             alternate_port_number:
                 description:
-                - "None"
+                - "Virtual Port"
             port_number:
                 description:
-                - "None"
+                - "Port"
             template_tcp_proxy_client:
                 description:
-                - "None"
+                - "TCP Proxy Config Client (TCP Proxy Config name)"
             template_tcp_proxy:
                 description:
-                - "None"
+                - "TCP Proxy Template Name"
             extended_stats:
                 description:
-                - "None"
+                - "Enable extended statistics on virtual port"
             template_http:
                 description:
-                - "None"
+                - "HTTP Template Name"
             expand:
                 description:
-                - "None"
+                - "expand syn-cookie with timestamp and wscale"
             skip_rev_hash:
                 description:
-                - "None"
+                - "Skip rev tuple hash insertion"
             on_syn:
                 description:
-                - "None"
+                - "Enable for HA Conn sync for l4 tcp sessions on SYN"
             clientip_sticky_nat:
                 description:
-                - "None"
+                - "Prefer to use same source NAT address for a client"
             secs:
                 description:
-                - "None"
+                - "Specify the interval in seconds"
             auth_cfg:
                 description:
                 - "Field auth_cfg"
             eth_rev:
                 description:
-                - "None"
+                - "Ethernet interface number"
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for virtual server; 'stats-data-disable'= Disable statistical data collection for virtual server; "
         required: False
     acl_name:
         description:
-        - "None"
+        - "Access List name (IPv4 Access List Name)"
         required: False
     enable_disable_action:
         description:
-        - "None"
+        - "'enable'= Enable Virtual Server (default); 'disable'= Disable Virtual Server; 'disable-when-all-ports-down'= Disable Virtual Server when all member ports are down; 'disable-when-any-port-down'= Disable Virtual Server when any member port is down; "
         required: False
     ha_dynamic:
         description:
-        - "None"
+        - "Dynamic failover based on vip status"
         required: False
     redistribute_route_map:
         description:
-        - "None"
+        - "Route map reference (Name of route-map)"
         required: False
     ip_address:
         description:
-        - "None"
+        - "IP Address"
         required: False
     template_logging:
         description:
-        - "None"
+        - "NAT Logging template (NAT Logging template name)"
         required: False
     use_if_ip:
         description:
-        - "None"
+        - "Use Interface IP"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     vrid:
         description:
-        - "None"
+        - "Join a vrrp group (Specify ha VRRP-A vrid)"
         required: False
     disable_vip_adv:
         description:
-        - "None"
+        - "Disable virtual server GARP and route advertisements"
         required: False
     template_virtual_server:
         description:
-        - "None"
+        - "Virtual server template (Virtual server template name)"
         required: False
     arp_disable:
         description:
-        - "None"
+        - "Disable Respond to Virtual Server ARP request"
         required: False
     description:
         description:
-        - "None"
+        - "Create a description for VIP"
         required: False
     redistribution_flagged:
         description:
-        - "None"
+        - "Flag VIP for special redistribution handling"
         required: False
     netmask:
         description:
-        - "None"
+        - "IP subnet mask"
         required: False
     acl_id:
         description:
-        - "None"
+        - "acl id"
         required: False
     ipv6_acl:
         description:
-        - "None"
+        - "ipv6 acl name"
         required: False
     migrate_vip:
         description:
@@ -440,56 +440,55 @@ options:
         suboptions:
             target_data_cpu:
                 description:
-                - "None"
+                - "Number of CPUs on the target platform"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             finish_migration:
                 description:
-                - "None"
+                - "Complete the migration"
             target_floating_ipv6:
                 description:
-                - "None"
+                - "Specify IPv6 address"
             target_floating_ipv4:
                 description:
-                - "None"
+                - "Specify IP address"
             cancel_migration:
                 description:
-                - "None"
+                - "Cancel migration"
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on virtual server"
         required: False
     name:
         description:
-        - "None"
+        - "SLB Virtual Server Name"
         required: True
     template_scaleout:
         description:
-        - "None"
+        - "Scaleout template (Scaleout template name)"
         required: False
     template_policy:
         description:
-        - "None"
+        - "Policy template (Policy template name)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     ipv6_address:
         description:
-        - "None"
+        - "IPV6 address"
         required: False
     ethernet:
         description:
-        - "None"
+        - "Ethernet interface"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -554,6 +553,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -563,13 +563,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/virtual-server/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -578,8 +580,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -596,6 +600,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -615,6 +620,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

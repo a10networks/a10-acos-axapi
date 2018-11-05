@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_dns
 description:
-    - None
+    - DNS template
 short_description: Configures A10 slb.template.dns
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     dnssec_service_group:
         description:
-        - "None"
+        - "Use different service group if DNSSEC DO bit set (Service Group Name)"
         required: False
     name:
         description:
-        - "None"
+        - "DNS Template Name"
         required: True
     class_list:
         description:
@@ -53,68 +53,67 @@ options:
                 - "Field lid_list"
             name:
                 description:
-                - "None"
+                - "Specify a class list name"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     default_policy:
         description:
-        - "None"
+        - "'nocache'= Cache disable; 'cache'= Cache enable; "
         required: False
     drop:
         description:
-        - "None"
+        - "Drop the malformed query"
         required: False
     period:
         description:
-        - "None"
+        - "Period in minutes"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     query_id_switch:
         description:
-        - "None"
+        - "Use DNS query ID to create sesion"
         required: False
     enable_cache_sharing:
         description:
-        - "None"
+        - "Enable DNS cache sharing"
         required: False
     redirect_to_tcp_port:
         description:
-        - "None"
+        - "Direct the client to retry with TCP for DNS UDP request"
         required: False
     max_query_length:
         description:
-        - "None"
+        - "Define Maximum DNS Query Length, default is unlimited (Specify Maximum Length)"
         required: False
     disable_dns_template:
         description:
-        - "None"
+        - "Disable DNS template"
         required: False
     forward:
         description:
-        - "None"
+        - "Forward to service group (Service group name)"
         required: False
     max_cache_size:
         description:
-        - "None"
+        - "Define maximum cache size (Maximum cache entry per VIP)"
         required: False
     max_cache_entry_size:
         description:
-        - "None"
+        - "Define maximum cache entry size (Maximum cache entry size per VIP)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -168,6 +167,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -177,13 +177,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/dns/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -192,8 +194,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -210,6 +214,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -229,6 +234,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_fix
 description:
-    - None
+    - FIX template
 short_description: Configures A10 slb.template.fix
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     logging:
         description:
-        - "None"
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
         required: False
     name:
         description:
-        - "None"
+        - "FIX Template Name"
         required: True
     tag_switching:
         description:
@@ -50,31 +50,30 @@ options:
         suboptions:
             service_group:
                 description:
-                - "None"
+                - "Create a Service Group comprising Servers (Service Group Name)"
             equals:
                 description:
-                - "None"
+                - "Equals (Tag String)"
             switching_type:
                 description:
-                - "None"
+                - "'sender-comp-id'= Select service group based on SenderCompID; 'target-comp-id'= Select service group based on TargetCompID; "
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     insert_client_ip:
         description:
-        - "None"
+        - "Insert client ip to tag 11447"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -118,6 +117,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -127,13 +127,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/fix/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -142,8 +144,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -160,6 +164,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -179,6 +184,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
