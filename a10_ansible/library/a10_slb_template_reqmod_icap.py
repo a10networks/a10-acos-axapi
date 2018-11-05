@@ -1,95 +1,141 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_slb_template_reqmod-icap
+
+DOCUMENTATION = ''' 
+module: a10_slb_template_reqmod_icap
 description:
     - REQMOD ICAP template
+short_description: Configures A10 slb.template.reqmod-icap
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Reqmod ICAP Template Name
-    
-    allowed-http-methods:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - List of allowed HTTP methods. Default is "Allow All". (List of HTTP methods allowed (default "Allow All"))
-    
-    include-protocol-in-uri:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Include protocol and port in HTTP URI
-    
-    fail-close:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - When template sg is down mark vport down
-    
-    bypass-ip-cfg:
-        
-    
-    action:
+        - Password for AXAPI authentication
+        required: True
+    min_payload_size:
         description:
-            - 'continue': Continue; 'drop': Drop; 'reset': Reset; choices:['continue', 'drop', 'reset']
-    
-    min-payload-size:
-        description:
-            - min-payload-size value 1 - 65535, default is 0
-    
-    preview:
-        description:
-            - Preview value 1 - 32768, default is 32768
-    
-    service-url:
-        description:
-            - URL to send to ICAP server (Service URL Name)
-    
-    service-group:
-        description:
-            - Bind a Service Group to the template (Service Group Name)
-    
-    tcp-proxy:
-        description:
-            - TCP proxy template (TCP proxy template name)
-    
+        - "min-payload-size value 1 - 65535, default is 0"
+        required: False
     logging:
         description:
-            - logging template (Logging template name)
-    
-    server-ssl:
-        description:
-            - Server SSL template (Server SSL template name)
-    
-    source-ip:
-        description:
-            - Source IP persistence template (Source IP persistence template name)
-    
+        - "logging template (Logging template name)"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "uuid of the object"
+        required: False
+    server_ssl:
         description:
-            - Customized tag
-    
+        - "Server SSL template (Server SSL template name)"
+        required: False
+    service_url:
+        description:
+        - "URL to send to ICAP server (Service URL Name)"
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to the template (Service Group Name)"
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    fail_close:
+        description:
+        - "When template sg is down mark vport down"
+        required: False
+    cylance:
+        description:
+        - "cylance external server"
+        required: False
+    allowed_http_methods:
+        description:
+        - "List of allowed HTTP methods. Default is 'Allow All'. (List of HTTP methods allowed (default 'Allow All'))"
+        required: False
+    tcp_proxy:
+        description:
+        - "TCP proxy template (TCP proxy template name)"
+        required: False
+    action:
+        description:
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
+        required: False
+    include_protocol_in_uri:
+        description:
+        - "Include protocol and port in HTTP URI"
+        required: False
+    preview:
+        description:
+        - "Preview value 1 - 32768, default is 32768"
+        required: False
+    bypass_ip_cfg:
+        description:
+        - "Field bypass_ip_cfg"
+        required: False
+        suboptions:
+            bypass_ip:
+                description:
+                - "ip address to bypass reqmod-icap service"
+            mask:
+                description:
+                - "IP prefix mask"
+    source_ip:
+        description:
+        - "Source IP persistence template (Source IP persistence template name)"
+        required: False
+    name:
+        description:
+        - "Reqmod ICAP Template Name"
+        required: True
 
-"""
+'''
 
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","allowed_http_methods","bypass_ip_cfg","fail_close","include_protocol_in_uri","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","source_ip","tcp_proxy","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","allowed_http_methods","bypass_ip_cfg","cylance","fail_close","include_protocol_in_uri","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","source_ip","tcp_proxy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -102,76 +148,46 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        action=dict(
-            type='str' , choices=['continue', 'drop', 'reset']
-        ),
-        allowed_http_methods=dict(
-            type='str' 
-        ),
-        bypass_ip_cfg=dict(
-            type='list' 
-        ),
-        fail_close=dict(
-            type='bool' 
-        ),
-        include_protocol_in_uri=dict(
-            type='bool' 
-        ),
-        logging=dict(
-            type='str' 
-        ),
-        min_payload_size=dict(
-            type='int' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        preview=dict(
-            type='int' 
-        ),
-        server_ssl=dict(
-            type='str' 
-        ),
-        service_group=dict(
-            type='str' 
-        ),
-        service_url=dict(
-            type='str' 
-        ),
-        source_ip=dict(
-            type='str' 
-        ),
-        tcp_proxy=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        min_payload_size=dict(type='int',),
+        logging=dict(type='str',),
+        uuid=dict(type='str',),
+        server_ssl=dict(type='str',),
+        service_url=dict(type='str',),
+        service_group=dict(type='str',),
+        user_tag=dict(type='str',),
+        fail_close=dict(type='bool',),
+        cylance=dict(type='bool',),
+        allowed_http_methods=dict(type='str',),
+        tcp_proxy=dict(type='str',),
+        action=dict(type='str',choices=['continue','drop','reset']),
+        include_protocol_in_uri=dict(type='bool',),
+        preview=dict(type='int',),
+        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
+        source_ip=dict(type='str',),
+        name=dict(type='str',required=True,)
     ))
+
     return rv
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/reqmod-icap/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/reqmod-icap/{name}"
-    f_dict = {}
-    
-    f_dict["name"] = module.params["name"]
 
+    f_dict = {}
+    f_dict["name"] = module.params["name"]
+    
     return url_base.format(**f_dict)
 
 
@@ -180,17 +196,47 @@ def build_envelope(title, data):
         title: data
     }
 
+
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -217,10 +263,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -250,28 +298,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("reqmod-icap", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -302,11 +351,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

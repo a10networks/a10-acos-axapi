@@ -1,200 +1,234 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
+
+DOCUMENTATION = ''' 
 module: a10_slb_template_port
 description:
     - Port template
+short_description: Configures A10 slb.template.port
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Port template name
-    
-    conn-limit:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Connection limit
-    
-    resume:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Resume accepting new connection after connection number drops below threshold (Connection resume threshold)
-    
-    conn-limit-no-logging:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Do not log connection over limit event
-    
-    conn-rate-limit:
+        - Password for AXAPI authentication
+        required: True
+    health_check_disable:
         description:
-            - Connection rate limit
-    
-    rate-interval:
+        - "Disable configured health check configuration"
+        required: False
+    stats_data_action:
         description:
-            - '100ms': Use 100 ms as sampling interval; 'second': Use 1 second as sampling interval; choices:['100ms', 'second']
-    
-    conn-rate-limit-no-logging:
+        - "'stats-data-enable'= Enable statistical data collection for real server port; 'stats-data-disable'= Disable statistical data collection for real server port; "
+        required: False
+    resel_on_reset:
         description:
-            - Do not log connection over limit event
-    
-    request-rate-limit:
+        - "When receiving reset from server, do the server/port reselection (default is 0, don't do reselection)"
+        required: False
+    dest_nat:
         description:
-            - Request rate limit
-    
-    request-rate-interval:
+        - "Destination NAT"
+        required: False
+    request_rate_limit:
         description:
-            - '100ms': Use 100 ms as sampling interval; 'second': Use 1 second as sampling interval; choices:['100ms', 'second']
-    
-    reset:
+        - "Request rate limit"
+        required: False
+    dynamic_member_priority:
         description:
-            - Send client reset when connection rate over limit
-    
-    request-rate-no-logging:
+        - "Set dynamic member's priority (Initial priority (default is 16))"
+        required: False
+    bw_rate_limit:
         description:
-            - Do not log connection over limit event
-    
-    dest-nat:
+        - "Configure bandwidth rate limit on real server port (Bandwidth rate limit in Kbps)"
+        required: False
+    slow_start:
         description:
-            - Destination NAT
-    
-    down-grace-period:
-        description:
-            - Port down grace period (Down grace period in seconds)
-    
-    del-session-on-server-down:
-        description:
-            - Delete session if the server/port goes down (either disabled/hm down)
-    
-    dscp:
-        description:
-            - Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)
-    
-    dynamic-member-priority:
-        description:
-            - Set dynamic member's priority (Initial priority (default is 16))
-    
+        - "Slowly ramp up the connection number after port is up"
+        required: False
     decrement:
         description:
-            - Decrease after every round of DNS query (default is 0)
-    
-    extended-stats:
+        - "Decrease after every round of DNS query (default is 0)"
+        required: False
+    conn_limit:
         description:
-            - Enable extended statistics on real server port
-    
-    no-ssl:
-        description:
-            - No SSL
-    
-    stats-data-action:
-        description:
-            - 'stats-data-enable': Enable statistical data collection for real server port; 'stats-data-disable': Disable statistical data collection for real server port; choices:['stats-data-enable', 'stats-data-disable']
-    
-    health-check:
-        description:
-            - Health Check Monitor (Health monitor name)
-    
-    health-check-disable:
-        description:
-            - Disable configured health check configuration
-    
-    inband-health-check:
-        description:
-            - Use inband traffic to detect port's health status
-    
+        - "Connection limit"
+        required: False
     retry:
         description:
-            - Maximum retry times before reassign this connection to another server/port (default is 2) (The maximum retry number)
-    
-    reassign:
-        description:
-            - Maximum reassign times before declear the server/port down (default is 25) (The maximum reassign number)
-    
-    down-timer:
-        description:
-            - The timer to bring the marked down server/port to up (default is 0, never bring up) (The timer to bring up server (in second, default is 0))
-    
-    resel-on-reset:
-        description:
-            - When receiving reset from server, do the server/port reselection (default is 0, don't do reselection)
-    
-    source-nat:
-        description:
-            - Source NAT (IP NAT Pool or pool group name)
-    
+        - "Maximum retry times before reassign this connection to another server/port (default is 2) (The maximum retry number)"
+        required: False
     weight:
         description:
-            - Weight (port weight)
-    
-    sub-group:
+        - "Weight (port weight)"
+        required: False
+    inband_health_check:
         description:
-            - Divide service group members into different sub groups (Sub group ID (default is 0))
-    
-    slow-start:
+        - "Use inband traffic to detect port's health status"
+        required: False
+    resume:
         description:
-            - Slowly ramp up the connection number after port is up
-    
-    initial-slow-start:
+        - "Resume accepting new connection after connection number drops below threshold (Connection resume threshold)"
+        required: False
+    rate_interval:
         description:
-            - Initial slow start connection limit (default 128)
-    
-    add:
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
+        required: False
+    no_ssl:
         description:
-            - Slow start connection limit add by a number every interval (Add by this number every interval)
-    
-    times:
-        description:
-            - Slow start connection limit multiply by a number every interval (default 2) (Multiply by this number every interval)
-    
-    every:
-        description:
-            - Slow start connection limit increment interval (default 10)
-    
+        - "No SSL"
+        required: False
     till:
         description:
-            - Slow start ends when slow start connection limit reaches a number (default 4096) (Slow start ends when connection limit reaches this number)
-    
-    bw-rate-limit:
+        - "Slow start ends when slow start connection limit reaches a number (default 4096) (Slow start ends when connection limit reaches this number)"
+        required: False
+    add:
         description:
-            - Configure bandwidth rate limit on real server port (Bandwidth rate limit in Kbps)
-    
-    bw-rate-limit-resume:
+        - "Slow start connection limit add by a number every interval (Add by this number every interval)"
+        required: False
+    sub_group:
         description:
-            - Resume server selection after bandwidth drops below this threshold (in Kbps) (Bandwidth rate limit resume threshold (in Kbps))
-    
-    bw-rate-limit-duration:
+        - "Divide service group members into different sub groups (Sub group ID (default is 0))"
+        required: False
+    bw_rate_limit_no_logging:
         description:
-            - Duration in seconds the observed rate needs to honor
-    
-    bw-rate-limit-no-logging:
+        - "Do not log bandwidth rate limit related state transitions"
+        required: False
+    down_grace_period:
         description:
-            - Do not log bandwidth rate limit related state transitions
-    
+        - "Port down grace period (Down grace period in seconds)"
+        required: False
+    initial_slow_start:
+        description:
+        - "Initial slow start connection limit (default 128)"
+        required: False
+    dscp:
+        description:
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
+        required: False
+    request_rate_interval:
+        description:
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
+        required: False
+    every:
+        description:
+        - "Slow start connection limit increment interval (default 10)"
+        required: False
+    conn_limit_no_logging:
+        description:
+        - "Do not log connection over limit event"
+        required: False
+    extended_stats:
+        description:
+        - "Enable extended statistics on real server port"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "uuid of the object"
+        required: False
+    reset:
         description:
-            - Customized tag
-    
+        - "Send client reset when connection rate over limit"
+        required: False
+    del_session_on_server_down:
+        description:
+        - "Delete session if the server/port goes down (either disabled/hm down)"
+        required: False
+    conn_rate_limit_no_logging:
+        description:
+        - "Do not log connection over limit event"
+        required: False
+    name:
+        description:
+        - "Port template name"
+        required: True
+    bw_rate_limit_duration:
+        description:
+        - "Duration in seconds the observed rate needs to honor"
+        required: False
+    bw_rate_limit_resume:
+        description:
+        - "Resume server selection after bandwidth drops below this threshold (in Kbps) (Bandwidth rate limit resume threshold (in Kbps))"
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    times:
+        description:
+        - "Slow start connection limit multiply by a number every interval (default 2) (Multiply by this number every interval)"
+        required: False
+    request_rate_no_logging:
+        description:
+        - "Do not log connection over limit event"
+        required: False
+    down_timer:
+        description:
+        - "The timer to bring the marked down server/port to up (default is 0, never bring up) (The timer to bring up server (in second, default is 0))"
+        required: False
+    conn_rate_limit:
+        description:
+        - "Connection rate limit"
+        required: False
+    source_nat:
+        description:
+        - "Source NAT (IP NAT Pool or pool group name)"
+        required: False
+    reassign:
+        description:
+        - "Maximum reassign times before declear the server/port down (default is 25) (The maximum reassign number)"
+        required: False
+    health_check:
+        description:
+        - "Health Check Monitor (Health monitor name)"
+        required: False
 
-"""
+'''
 
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","decrement","del_session_on_server_down","dest_nat","down_grace_period","down_timer","dscp","dynamic_member_priority","every","extended_stats","health_check","health_check_disable","inband_health_check","initial_slow_start","name","no_ssl","rate_interval","reassign","request_rate_interval","request_rate_limit","request_rate_no_logging","resel_on_reset","reset","resume","retry","slow_start","source_nat","stats_data_action","sub_group","till","times","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -207,154 +241,71 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        add=dict(
-            type='int' 
-        ),
-        bw_rate_limit=dict(
-            type='int' 
-        ),
-        bw_rate_limit_duration=dict(
-            type='int' 
-        ),
-        bw_rate_limit_no_logging=dict(
-            type='bool' 
-        ),
-        bw_rate_limit_resume=dict(
-            type='int' 
-        ),
-        conn_limit=dict(
-            type='int' 
-        ),
-        conn_limit_no_logging=dict(
-            type='bool' 
-        ),
-        conn_rate_limit=dict(
-            type='int' 
-        ),
-        conn_rate_limit_no_logging=dict(
-            type='bool' 
-        ),
-        decrement=dict(
-            type='int' 
-        ),
-        del_session_on_server_down=dict(
-            type='bool' 
-        ),
-        dest_nat=dict(
-            type='bool' 
-        ),
-        down_grace_period=dict(
-            type='int' 
-        ),
-        down_timer=dict(
-            type='int' 
-        ),
-        dscp=dict(
-            type='int' 
-        ),
-        dynamic_member_priority=dict(
-            type='int' 
-        ),
-        every=dict(
-            type='int' 
-        ),
-        extended_stats=dict(
-            type='bool' 
-        ),
-        health_check=dict(
-            type='str' 
-        ),
-        health_check_disable=dict(
-            type='bool' 
-        ),
-        inband_health_check=dict(
-            type='bool' 
-        ),
-        initial_slow_start=dict(
-            type='int' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        no_ssl=dict(
-            type='bool' 
-        ),
-        rate_interval=dict(
-            type='str' , choices=['100ms', 'second']
-        ),
-        reassign=dict(
-            type='int' 
-        ),
-        request_rate_interval=dict(
-            type='str' , choices=['100ms', 'second']
-        ),
-        request_rate_limit=dict(
-            type='int' 
-        ),
-        request_rate_no_logging=dict(
-            type='bool' 
-        ),
-        resel_on_reset=dict(
-            type='bool' 
-        ),
-        reset=dict(
-            type='bool' 
-        ),
-        resume=dict(
-            type='int' 
-        ),
-        retry=dict(
-            type='int' 
-        ),
-        slow_start=dict(
-            type='bool' 
-        ),
-        source_nat=dict(
-            type='str' 
-        ),
-        stats_data_action=dict(
-            type='str' , choices=['stats-data-enable', 'stats-data-disable']
-        ),
-        sub_group=dict(
-            type='int' 
-        ),
-        till=dict(
-            type='int' 
-        ),
-        times=dict(
-            type='int' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ),
-        weight=dict(
-            type='int' 
-        ), 
+        health_check_disable=dict(type='bool',),
+        stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
+        resel_on_reset=dict(type='bool',),
+        dest_nat=dict(type='bool',),
+        request_rate_limit=dict(type='int',),
+        dynamic_member_priority=dict(type='int',),
+        bw_rate_limit=dict(type='int',),
+        slow_start=dict(type='bool',),
+        decrement=dict(type='int',),
+        conn_limit=dict(type='int',),
+        retry=dict(type='int',),
+        weight=dict(type='int',),
+        inband_health_check=dict(type='bool',),
+        resume=dict(type='int',),
+        rate_interval=dict(type='str',choices=['100ms','second']),
+        no_ssl=dict(type='bool',),
+        till=dict(type='int',),
+        add=dict(type='int',),
+        sub_group=dict(type='int',),
+        bw_rate_limit_no_logging=dict(type='bool',),
+        down_grace_period=dict(type='int',),
+        initial_slow_start=dict(type='int',),
+        dscp=dict(type='int',),
+        request_rate_interval=dict(type='str',choices=['100ms','second']),
+        every=dict(type='int',),
+        conn_limit_no_logging=dict(type='bool',),
+        extended_stats=dict(type='bool',),
+        uuid=dict(type='str',),
+        reset=dict(type='bool',),
+        del_session_on_server_down=dict(type='bool',),
+        conn_rate_limit_no_logging=dict(type='bool',),
+        name=dict(type='str',required=True,),
+        bw_rate_limit_duration=dict(type='int',),
+        bw_rate_limit_resume=dict(type='int',),
+        user_tag=dict(type='str',),
+        times=dict(type='int',),
+        request_rate_no_logging=dict(type='bool',),
+        down_timer=dict(type='int',),
+        conn_rate_limit=dict(type='int',),
+        source_nat=dict(type='str',),
+        reassign=dict(type='int',),
+        health_check=dict(type='str',)
     ))
+
     return rv
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/port/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/port/{name}"
-    f_dict = {}
-    
-    f_dict["name"] = module.params["name"]
 
+    f_dict = {}
+    f_dict["name"] = module.params["name"]
+    
     return url_base.format(**f_dict)
 
 
@@ -363,17 +314,47 @@ def build_envelope(title, data):
         title: data
     }
 
+
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -400,10 +381,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -433,28 +416,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("port", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -485,11 +469,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

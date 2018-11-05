@@ -1,108 +1,142 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
+
+DOCUMENTATION = ''' 
 module: a10_slb_template_tcp
 description:
     - L4 TCP switch config
+short_description: Configures A10 slb.template.tcp
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Fast TCP Template Name
-    
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
+        description:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
+        description:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
+    del_session_on_server_down:
+        description:
+        - "Delete session if the server/port goes down (either disabled/hm down)"
+        required: False
+    initial_window_size:
+        description:
+        - "Set the initial window size (number)"
+        required: False
+    half_open_idle_timeout:
+        description:
+        - "TCP Half Open Idle Timeout (sec), default off (half open idle timeout in second, default off)"
+        required: False
     logging:
         description:
-            - 'init': init only log; 'term': termination only log; 'both': both initial and termination log; choices:['init', 'term', 'both']
-    
-    idle-timeout:
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
+        required: False
+    name:
         description:
-            - Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout in second, default 120)
-    
-    half-open-idle-timeout:
+        - "Fast TCP Template Name"
+        required: True
+    reset_fwd:
         description:
-            - TCP Half Open Idle Timeout (sec), default off (half open idle timeout in second, default off)
-    
-    half-close-idle-timeout:
+        - "send reset to server if error happens"
+        required: False
+    alive_if_active:
         description:
-            - TCP Half Close Idle Timeout (sec), default off (half close idle timeout in second, default off)
-    
-    initial-window-size:
+        - "keep connection alive if active traffic"
+        required: False
+    idle_timeout:
         description:
-            - Set the initial window size (number)
-    
-    force-delete-timeout:
+        - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout in second, default 120)"
+        required: False
+    force_delete_timeout:
         description:
-            - The maximum time that a session can stay in the system before being delete (number (second))
-    
-    force-delete-timeout-100ms:
+        - "The maximum time that a session can stay in the system before being delete (number (second))"
+        required: False
+    user_tag:
         description:
-            - The maximum time that a session can stay in the system before being delete (number in 100ms)
-    
-    alive-if-active:
-        description:
-            - keep connection alive if active traffic
-    
-    qos:
-        description:
-            - QOS level (number)
-    
-    insert-client-ip:
-        description:
-            - Insert client ip into TCP option
-    
-    lan-fast-ack:
-        description:
-            - Enable fast TCP ack on LAN
-    
-    reset-fwd:
-        description:
-            - send reset to server if error happens
-    
-    reset-rev:
-        description:
-            - send reset to client if error happens
-    
-    disable:
-        description:
-            - send reset to client when server is disabled
-    
+        - "Customized tag"
+        required: False
     down:
         description:
-            - send reset to client when server is down
-    
-    del-session-on-server-down:
+        - "send reset to client when server is down"
+        required: False
+    disable:
         description:
-            - Delete session if the server/port goes down (either disabled/hm down)
-    
+        - "send reset to client when server is disabled"
+        required: False
+    reset_rev:
+        description:
+        - "send reset to client if error happens"
+        required: False
+    insert_client_ip:
+        description:
+        - "Insert client ip into TCP option"
+        required: False
+    lan_fast_ack:
+        description:
+        - "Enable fast TCP ack on LAN"
+        required: False
+    half_close_idle_timeout:
+        description:
+        - "TCP Half Close Idle Timeout (sec), default off (half close idle timeout in second, default off)"
+        required: False
+    force_delete_timeout_100ms:
+        description:
+        - "The maximum time that a session can stay in the system before being delete (number in 100ms)"
+        required: False
+    qos:
+        description:
+        - "QOS level (number)"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
-        description:
-            - Customized tag
-    
+        - "uuid of the object"
+        required: False
 
-"""
+'''
 
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_fwd","reset_rev","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -115,85 +149,48 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        alive_if_active=dict(
-            type='bool' 
-        ),
-        del_session_on_server_down=dict(
-            type='bool' 
-        ),
-        disable=dict(
-            type='bool' 
-        ),
-        down=dict(
-            type='bool' 
-        ),
-        force_delete_timeout=dict(
-            type='int' 
-        ),
-        force_delete_timeout_100ms=dict(
-            type='int' 
-        ),
-        half_close_idle_timeout=dict(
-            type='int' 
-        ),
-        half_open_idle_timeout=dict(
-            type='int' 
-        ),
-        idle_timeout=dict(
-            type='int' 
-        ),
-        initial_window_size=dict(
-            type='int' 
-        ),
-        insert_client_ip=dict(
-            type='bool' 
-        ),
-        lan_fast_ack=dict(
-            type='bool' 
-        ),
-        logging=dict(
-            type='str' , choices=['init', 'term', 'both']
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        qos=dict(
-            type='int' 
-        ),
-        reset_fwd=dict(
-            type='bool' 
-        ),
-        reset_rev=dict(
-            type='bool' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        del_session_on_server_down=dict(type='bool',),
+        initial_window_size=dict(type='int',),
+        half_open_idle_timeout=dict(type='int',),
+        logging=dict(type='str',choices=['init','term','both']),
+        name=dict(type='str',required=True,),
+        reset_fwd=dict(type='bool',),
+        alive_if_active=dict(type='bool',),
+        idle_timeout=dict(type='int',),
+        force_delete_timeout=dict(type='int',),
+        user_tag=dict(type='str',),
+        down=dict(type='bool',),
+        disable=dict(type='bool',),
+        reset_rev=dict(type='bool',),
+        insert_client_ip=dict(type='bool',),
+        lan_fast_ack=dict(type='bool',),
+        half_close_idle_timeout=dict(type='int',),
+        force_delete_timeout_100ms=dict(type='int',),
+        qos=dict(type='int',),
+        uuid=dict(type='str',)
     ))
+
     return rv
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/tcp/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/tcp/{name}"
-    f_dict = {}
-    
-    f_dict["name"] = module.params["name"]
 
+    f_dict = {}
+    f_dict["name"] = module.params["name"]
+    
     return url_base.format(**f_dict)
 
 
@@ -202,17 +199,47 @@ def build_envelope(title, data):
         title: data
     }
 
+
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -239,10 +266,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -272,28 +301,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("tcp", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -324,11 +354,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():
