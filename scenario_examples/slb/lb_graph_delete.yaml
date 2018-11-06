@@ -1,0 +1,29 @@
+- name: Delete a10_slb_virtual_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_vport
+    a10_slb_virtual_server_port:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      virtual_server: vs1
+      port_number: 80
+      protocol: tcp
+
+  - name: Delete a10_slb_virtual_server instance
+    a10_slb_virtual_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: vs1
+
+  - name: Delete sg
+    a10_slb_service_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name:  sg1 
