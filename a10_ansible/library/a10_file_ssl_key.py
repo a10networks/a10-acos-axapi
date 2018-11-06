@@ -99,6 +99,7 @@ def get_argspec():
     rv.update(dict(
         file=dict(type='str',),
         action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
+        file_content=dict(type='str',),
     ))
 
     return rv
@@ -159,7 +160,6 @@ def build_json(title, module, action):
         "file": module.params["file"],
         "size": size,
         "file-handle": fname,
-        "certificate-type": module.params["certificate_type"]
         "action": action
     }
 
@@ -204,14 +204,15 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
- (modul):
+
+def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
         return False
 
 def create(module, result):
-    json_payload = build_json("ssl-cert", module, "import")
+    json_payload = build_json("ssl-key", module, "import")
     try:
         file_content=module.params["file_content"]
 
@@ -237,9 +238,13 @@ def delete(module, result):
     except a10_ex.NotFound:
         result["changed"] = False
     except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def update(module, result, existing_config):
-    payload = build_json("ssl-cert", module)
+    payload = build_json("ssl-key", module)
     changed = False
     try:
         # The only way we get changed=True is successful post 
