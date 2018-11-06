@@ -92,7 +92,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         # pfx_password=dict(type='str',),
-        # dst_file=dict(type='str',),
+        dst_file=dict(type='str',),
         # uuid=dict(type='str',),
         file=dict(type='str',),
         certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
@@ -247,7 +247,7 @@ def update(module, result, existing_config):
     payload = build_json("ssl-cert", module)
     changed = False 
     try:
-        # The only way we get chang
+        # The only way we get changed=True is successful post
         module.client.post(existing_url(module), payload)
         changed = True
     except a10_ex.ACOSException as ex:

@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_file_ssl_key
 description:
-    - None
+    - ssl key file information and management commands
 short_description: Configures A10 file.ssl-key
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,34 +37,33 @@ options:
         required: True
     dst_file:
         description:
-        - "None"
+        - "destination file name for copy and rename action"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     file:
         description:
-        - "None"
+        - "ssl key local file name"
         required: False
     action:
         description:
-        - "None"
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     file_handle:
         description:
-        - "None"
+        - "full path of the uploaded file"
         required: False
     size:
         description:
-        - "None"
+        - "ssl key file size in byte"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -108,6 +107,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -116,12 +116,14 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/file/ssl-key"
-    f_dict = {}
 
+    f_dict = {}
+    
     return url_base.format(**f_dict)
 
 
@@ -130,8 +132,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -148,6 +152,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -167,6 +172,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
