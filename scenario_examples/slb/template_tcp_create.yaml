@@ -1,0 +1,21 @@
+
+
+- name: Create a10_slb_template_tcp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_tcp instance
+    a10_slb_template_tcp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: session-aging-5min 
+      idle_timeout: 300
+
+  - name: Create a10_slb_template_tcp_proxy
+    a10_slb_template_tcp_proxy:
+      idle_timeout: 300
+      reset_fwd: True
+      reset_rev: True
+      
+
