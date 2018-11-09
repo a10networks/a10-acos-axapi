@@ -1,0 +1,11 @@
+- name: Delete a10_vrrp_a_partition_vrid_status example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_partition_vrid_status instance
+    a10_vrrp_a_partition_vrid_status:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+

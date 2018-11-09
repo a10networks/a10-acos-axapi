@@ -1,63 +1,165 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = """
 module: a10_slb_template_monitor
 description:
-    - Monitor template
+    - None
+short_description: Configures A10 slb.template.monitor
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    id:
+    state:
         description:
-            - Monitor template ID Number
-    
-    clear-cfg:
-        
-    
-    link-disable-cfg:
-        
-    
-    link-enable-cfg:
-        
-    
-    monitor-relation:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - 'monitor-and': Configures the monitors in current template to work with AND logic; 'monitor-or': Configures the monitors in current template to work with OR logic; choices:['monitor-and', 'monitor-or']
-    
-    link-up-cfg:
-        
-    
-    link-down-cfg:
-        
-    
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
+        description:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
+    clear_cfg:
+        description:
+        - "Field clear_cfg"
+        required: False
+        suboptions:
+            clear_sequence:
+                description:
+                - "None"
+            clear_all_sequence:
+                description:
+                - "None"
+            sessions:
+                description:
+                - "None"
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    link_enable_cfg:
         description:
-            - Customized tag
-    
+        - "Field link_enable_cfg"
+        required: False
+        suboptions:
+            ena_sequence:
+                description:
+                - "None"
+            enaeth:
+                description:
+                - "None"
+    link_up_cfg:
+        description:
+        - "Field link_up_cfg"
+        required: False
+        suboptions:
+            linkup_ethernet3:
+                description:
+                - "None"
+            linkup_ethernet2:
+                description:
+                - "None"
+            linkup_ethernet1:
+                description:
+                - "None"
+            link_up_sequence1:
+                description:
+                - "None"
+            link_up_sequence3:
+                description:
+                - "None"
+            link_up_sequence2:
+                description:
+                - "None"
+    link_down_cfg:
+        description:
+        - "Field link_down_cfg"
+        required: False
+        suboptions:
+            link_down_sequence1:
+                description:
+                - "None"
+            link_down_sequence2:
+                description:
+                - "None"
+            link_down_sequence3:
+                description:
+                - "None"
+            linkdown_ethernet2:
+                description:
+                - "None"
+            linkdown_ethernet3:
+                description:
+                - "None"
+            linkdown_ethernet1:
+                description:
+                - "None"
+    user_tag:
+        description:
+        - "None"
+        required: False
+    link_disable_cfg:
+        description:
+        - "Field link_disable_cfg"
+        required: False
+        suboptions:
+            dis_sequence:
+                description:
+                - "None"
+            diseth:
+                description:
+                - "None"
+    monitor_relation:
+        description:
+        - "None"
+        required: False
+    id:
+        description:
+        - "None"
+        required: True
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["clear_cfg","id","link_disable_cfg","link_down_cfg","link_enable_cfg","link_up_cfg","monitor_relation","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -70,35 +172,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        clear_cfg=dict(
-            type='list' 
-        ),
-        id=dict(
-            type='int' , required=True
-        ),
-        link_disable_cfg=dict(
-            type='list' 
-        ),
-        link_down_cfg=dict(
-            type='list' 
-        ),
-        link_enable_cfg=dict(
-            type='list' 
-        ),
-        link_up_cfg=dict(
-            type='list' 
-        ),
-        monitor_relation=dict(
-            type='str' , choices=['monitor-and', 'monitor-or']
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        clear_cfg=dict(type='list',clear_sequence=dict(type='int',),clear_all_sequence=dict(type='int',),sessions=dict(type='str',choices=['all','sequence'])),
+        uuid=dict(type='str',),
+        link_enable_cfg=dict(type='list',ena_sequence=dict(type='int',),enaeth=dict(type='str',)),
+        link_up_cfg=dict(type='list',linkup_ethernet3=dict(type='str',),linkup_ethernet2=dict(type='str',),linkup_ethernet1=dict(type='str',),link_up_sequence1=dict(type='int',),link_up_sequence3=dict(type='int',),link_up_sequence2=dict(type='int',)),
+        link_down_cfg=dict(type='list',link_down_sequence1=dict(type='int',),link_down_sequence2=dict(type='int',),link_down_sequence3=dict(type='int',),linkdown_ethernet2=dict(type='str',),linkdown_ethernet3=dict(type='str',),linkdown_ethernet1=dict(type='str',)),
+        user_tag=dict(type='str',),
+        link_disable_cfg=dict(type='list',dis_sequence=dict(type='int',),diseth=dict(type='str',)),
+        monitor_relation=dict(type='str',choices=['monitor-and','monitor-or']),
+        id=dict(type='int',required=True,)
     ))
+
     return rv
 
 def new_url(module):
@@ -106,7 +190,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/monitor/{id}"
     f_dict = {}
-    
     f_dict["id"] = ""
 
     return url_base.format(**f_dict)
@@ -116,7 +199,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/monitor/{id}"
     f_dict = {}
-    
     f_dict["id"] = module.params["id"]
 
     return url_base.format(**f_dict)
@@ -127,15 +209,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -164,10 +272,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -197,28 +307,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("monitor", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -249,11 +360,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

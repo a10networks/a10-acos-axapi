@@ -1,0 +1,10 @@
+
+- name: Create a10_debug_sess example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_debug_sess instance
+    a10_debug_sess:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

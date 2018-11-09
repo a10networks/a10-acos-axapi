@@ -1,0 +1,12 @@
+
+- name: Update a10_aam_authentication_logon_form_based example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_aam_authentication_logon_form_based instance
+    a10_aam_authentication_logon_form_based:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_form-based

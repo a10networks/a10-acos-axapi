@@ -1,190 +1,382 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_rule
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_rule_set_rule
+description:
+    - None
+short_description: Configures A10 rule-set.rule
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Rule name
-    
-    remark:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Rule entry comment (Notes for this rule)
-    
-    status:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - 'enable': Enable rule; 'disable': Disable rule; choices:['enable', 'disable']
-    
-    action:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - 'permit': permit; 'deny': deny; 'reset': reset; choices:['permit', 'deny', 'reset']
-    
-    log:
+        - Password for AXAPI authentication
+        required: True
+    cgnv6_fixed_nat_log:
         description:
-            - Enable logging
-    
-    listen-on-port:
+        - "None"
+        required: False
+    forward_listen_on_port:
         description:
-            - Listen on port
-    
-    policy:
+        - "None"
+        required: False
+    listen_on_port_lid:
         description:
-            - 'cgnv6': Apply CGNv6 policy; 'forward': Forward packet; choices:['cgnv6', 'forward']
-    
-    forward-listen-on-port:
+        - "None"
+        required: False
+    app_list:
         description:
-            - Listen on port
-    
-    fw-log:
+        - "Field app_list"
+        required: False
+        suboptions:
+            obj_grp_application:
+                description:
+                - "None"
+            protocol:
+                description:
+                - "None"
+            protocol_tag:
+                description:
+                - "None"
+    src_threat_list:
         description:
-            - Enable logging
-    
-    fwlog:
+        - "None"
+        required: False
+    cgnv6_policy:
         description:
-            - Enable logging
-    
-    cgnv6-log:
+        - "None"
+        required: False
+    cgnv6_log:
         description:
-            - Enable logging
-    
-    forward-log:
+        - "None"
+        required: False
+    forward_log:
         description:
-            - Enable logging
-    
-    cgnv6-policy:
+        - "None"
+        required: False
+    lid:
         description:
-            - 'lsn-lid': Apply specified CGNv6 LSN LID; 'fixed-nat': Apply CGNv6 Fixed NAT; 'static-nat': Apply CGNv6 Static NAT; choices:['lsn-lid', 'fixed-nat', 'static-nat']
-    
-    cgnv6-fixed-nat-log:
+        - "None"
+        required: False
+    listen_on_port:
         description:
-            - Enable logging
-    
-    cgnv6-lsn-lid:
+        - "None"
+        required: False
+    move_rule:
         description:
-            - LSN LID
-    
-    cgnv6-lsn-log:
-        description:
-            - Enable logging
-    
-    ip-version:
-        description:
-            - 'v4': IPv4 rule; 'v6': IPv6 rule; choices:['v4', 'v6']
-    
-    src-class-list:
-        description:
-            - Match source IP against class-list
-    
-    src-ipv4-any:
-        description:
-            - 'any': Any IPv4 address; choices:['any']
-    
-    src-ipv6-any:
-        description:
-            - 'any': Any IPv6 address; choices:['any']
-    
-    source-list:
-        
-    
-    src-zone:
-        description:
-            - Zone name
-    
-    src-zone-any:
-        description:
-            - 'any': any; choices:['any']
-    
-    src-threat-list:
-        description:
-            - Bind threat-list for source IP based filtering
-    
-    dst-class-list:
-        description:
-            - Match destination IP against class-list
-    
-    dst-ipv4-any:
-        description:
-            - 'any': Any IPv4 address; choices:['any']
-    
-    dst-ipv6-any:
-        description:
-            - 'any': Any IPv6 address; choices:['any']
-    
-    dest-list:
-        
-    
-    dst-zone:
-        description:
-            - Zone name
-    
-    dst-zone-any:
-        description:
-            - 'any': any; choices:['any']
-    
-    dst-threat-list:
-        description:
-            - Bind threat-list for destination IP based filtering
-    
-    service-any:
-        description:
-            - 'any': any; choices:['any']
-    
-    service-list:
-        
-    
-    idle-timeout:
-        description:
-            - TCP/UDP idle-timeout
-    
-    application-any:
-        description:
-            - 'any': any; choices:['any']
-    
-    app-list:
-        
-    
-    track-application:
-        description:
-            - Enable application statistic
-    
+        - "Field move_rule"
+        required: False
+        suboptions:
+            location:
+                description:
+                - "None"
+            target_rule:
+                description:
+                - "Field target_rule"
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    idle_timeout:
         description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
-    move-rule:
-        
-    
+        - "None"
+        required: False
+    ip_version:
+        description:
+        - "None"
+        required: False
+    src_zone_any:
+        description:
+        - "None"
+        required: False
+    listen_on_port_lidlog:
+        description:
+        - "None"
+        required: False
+    application_any:
+        description:
+        - "None"
+        required: False
+    src_zone:
+        description:
+        - "None"
+        required: False
+    policy:
+        description:
+        - "None"
+        required: False
+    source_list:
+        description:
+        - "Field source_list"
+        required: False
+        suboptions:
+            src_ipv6_subnet:
+                description:
+                - "None"
+            src_obj_network:
+                description:
+                - "None"
+            src_slb_server:
+                description:
+                - "None"
+            src_obj_grp_network:
+                description:
+                - "None"
+            src_ip_subnet:
+                description:
+                - "None"
+    dst_zone_any:
+        description:
+        - "None"
+        required: False
+    status:
+        description:
+        - "None"
+        required: False
+    lidlog:
+        description:
+        - "None"
+        required: False
+    dst_ipv4_any:
+        description:
+        - "None"
+        required: False
+    cgnv6_lsn_lid:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    src_ipv4_any:
+        description:
+        - "None"
+        required: False
+    fwlog:
+        description:
+        - "None"
+        required: False
+    dst_zone:
+        description:
+        - "None"
+        required: False
+    dst_class_list:
+        description:
+        - "None"
+        required: False
+    log:
+        description:
+        - "None"
+        required: False
+    dst_threat_list:
+        description:
+        - "None"
+        required: False
+    remark:
+        description:
+        - "None"
+        required: False
+    src_class_list:
+        description:
+        - "None"
+        required: False
+    name:
+        description:
+        - "None"
+        required: True
+    src_ipv6_any:
+        description:
+        - "None"
+        required: False
+    track_application:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    cgnv6_lsn_log:
+        description:
+        - "None"
+        required: False
+    dst_ipv6_any:
+        description:
+        - "None"
+        required: False
+    service_any:
+        description:
+        - "None"
+        required: False
+    service_list:
+        description:
+        - "Field service_list"
+        required: False
+        suboptions:
+            gtp_template:
+                description:
+                - "None"
+            icmp_type:
+                description:
+                - "None"
+            range_dst_port:
+                description:
+                - "None"
+            icmpv6_code:
+                description:
+                - "None"
+            gt_src_port:
+                description:
+                - "None"
+            lt_src_port:
+                description:
+                - "None"
+            proto_id:
+                description:
+                - "None"
+            lt_dst_port:
+                description:
+                - "None"
+            alg:
+                description:
+                - "None"
+            obj_grp_service:
+                description:
+                - "None"
+            icmpv6_type:
+                description:
+                - "None"
+            icmp_code:
+                description:
+                - "None"
+            range_src_port:
+                description:
+                - "None"
+            eq_dst_port:
+                description:
+                - "None"
+            sctp_template:
+                description:
+                - "None"
+            icmp:
+                description:
+                - "None"
+            protocols:
+                description:
+                - "None"
+            gt_dst_port:
+                description:
+                - "None"
+            port_num_end_src:
+                description:
+                - "None"
+            special_v6_type:
+                description:
+                - "None"
+            eq_src_port:
+                description:
+                - "None"
+            special_v6_code:
+                description:
+                - "None"
+            icmpv6:
+                description:
+                - "None"
+            port_num_end_dst:
+                description:
+                - "None"
+            special_code:
+                description:
+                - "None"
+            special_type:
+                description:
+                - "None"
+    dest_list:
+        description:
+        - "Field dest_list"
+        required: False
+        suboptions:
+            dst_obj_network:
+                description:
+                - "None"
+            dst_obj_grp_network:
+                description:
+                - "None"
+            dst_slb_vserver:
+                description:
+                - "None"
+            dst_ip_subnet:
+                description:
+                - "None"
+            dst_ipv6_subnet:
+                description:
+                - "None"
+            dst_slb_server:
+                description:
+                - "None"
+    action:
+        description:
+        - "None"
+        required: False
+    fw_log:
+        description:
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","listen_on_port","log","move_rule","name","policy","remark","sampling_enable","service_any","service_list","source_list","src_class_list","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","policy","remark","sampling_enable","service_any","service_list","source_list","src_class_list","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -197,131 +389,53 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        action=dict(
-            type='enum' , choices=['permit', 'deny', 'reset']
-        ),
-        app_list=dict(
-            type='str' 
-        ),
-        application_any=dict(
-            type='enum' , choices=['any']
-        ),
-        cgnv6_fixed_nat_log=dict(
-            type='str' 
-        ),
-        cgnv6_log=dict(
-            type='str' 
-        ),
-        cgnv6_lsn_lid=dict(
-            type='str' 
-        ),
-        cgnv6_lsn_log=dict(
-            type='str' 
-        ),
-        cgnv6_policy=dict(
-            type='enum' , choices=['lsn-lid', 'fixed-nat', 'static-nat']
-        ),
-        dest_list=dict(
-            type='str' 
-        ),
-        dst_class_list=dict(
-            type='str' 
-        ),
-        dst_ipv4_any=dict(
-            type='enum' , choices=['any']
-        ),
-        dst_ipv6_any=dict(
-            type='enum' , choices=['any']
-        ),
-        dst_threat_list=dict(
-            type='str' 
-        ),
-        dst_zone=dict(
-            type='str' 
-        ),
-        dst_zone_any=dict(
-            type='enum' , choices=['any']
-        ),
-        forward_listen_on_port=dict(
-            type='str' 
-        ),
-        forward_log=dict(
-            type='str' 
-        ),
-        fw_log=dict(
-            type='str' 
-        ),
-        fwlog=dict(
-            type='str' 
-        ),
-        idle_timeout=dict(
-            type='str' 
-        ),
-        ip_version=dict(
-            type='enum' , choices=['v4', 'v6']
-        ),
-        listen_on_port=dict(
-            type='str' 
-        ),
-        log=dict(
-            type='str' 
-        ),
-        move_rule=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        policy=dict(
-            type='enum' , choices=['cgnv6', 'forward']
-        ),
-        remark=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='str' 
-        ),
-        service_any=dict(
-            type='enum' , choices=['any']
-        ),
-        service_list=dict(
-            type='str' 
-        ),
-        source_list=dict(
-            type='str' 
-        ),
-        src_class_list=dict(
-            type='str' 
-        ),
-        src_ipv4_any=dict(
-            type='enum' , choices=['any']
-        ),
-        src_ipv6_any=dict(
-            type='enum' , choices=['any']
-        ),
-        src_threat_list=dict(
-            type='str' 
-        ),
-        src_zone=dict(
-            type='str' 
-        ),
-        src_zone_any=dict(
-            type='enum' , choices=['any']
-        ),
-        status=dict(
-            type='enum' , choices=['enable', 'disable']
-        ),
-        track_application=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        cgnv6_fixed_nat_log=dict(type='bool',),
+        forward_listen_on_port=dict(type='bool',),
+        listen_on_port_lid=dict(type='int',),
+        app_list=dict(type='list',obj_grp_application=dict(type='str',),protocol=dict(type='str',),protocol_tag=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails'])),
+        src_threat_list=dict(type='str',),
+        cgnv6_policy=dict(type='str',choices=['lsn-lid','fixed-nat']),
+        cgnv6_log=dict(type='bool',),
+        forward_log=dict(type='bool',),
+        lid=dict(type='int',),
+        listen_on_port=dict(type='bool',),
+        move_rule=dict(type='dict',location=dict(type='str',choices=['top','before','after','bottom']),target_rule=dict(type='str',)),
+        uuid=dict(type='str',),
+        idle_timeout=dict(type='int',),
+        ip_version=dict(type='str',choices=['v4','v6']),
+        src_zone_any=dict(type='str',choices=['any']),
+        listen_on_port_lidlog=dict(type='bool',),
+        application_any=dict(type='str',choices=['any']),
+        src_zone=dict(type='str',),
+        policy=dict(type='str',choices=['cgnv6','forward']),
+        source_list=dict(type='list',src_ipv6_subnet=dict(type='str',),src_obj_network=dict(type='str',),src_slb_server=dict(type='str',),src_obj_grp_network=dict(type='str',),src_ip_subnet=dict(type='str',)),
+        dst_zone_any=dict(type='str',choices=['any']),
+        status=dict(type='str',choices=['enable','disable']),
+        lidlog=dict(type='bool',),
+        dst_ipv4_any=dict(type='str',choices=['any']),
+        cgnv6_lsn_lid=dict(type='int',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','permit-packets','deny-packets','reset-packets','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp'])),
+        src_ipv4_any=dict(type='str',choices=['any']),
+        fwlog=dict(type='bool',),
+        dst_zone=dict(type='str',),
+        dst_class_list=dict(type='str',),
+        log=dict(type='bool',),
+        dst_threat_list=dict(type='str',),
+        remark=dict(type='str',),
+        src_class_list=dict(type='str',),
+        name=dict(type='str',required=True,),
+        src_ipv6_any=dict(type='str',choices=['any']),
+        track_application=dict(type='bool',),
+        user_tag=dict(type='str',),
+        cgnv6_lsn_log=dict(type='bool',),
+        dst_ipv6_any=dict(type='str',choices=['any']),
+        service_any=dict(type='str',choices=['any']),
+        service_list=dict(type='list',gtp_template=dict(type='str',),icmp_type=dict(type='int',),range_dst_port=dict(type='int',),icmpv6_code=dict(type='int',),gt_src_port=dict(type='int',),lt_src_port=dict(type='int',),proto_id=dict(type='int',),lt_dst_port=dict(type='int',),alg=dict(type='str',choices=['FTP','TFTP','SIP','DNS','PPTP','RTSP']),obj_grp_service=dict(type='str',),icmpv6_type=dict(type='int',),icmp_code=dict(type='int',),range_src_port=dict(type='int',),eq_dst_port=dict(type='int',),sctp_template=dict(type='str',),icmp=dict(type='bool',),protocols=dict(type='str',choices=['tcp','udp','sctp']),gt_dst_port=dict(type='int',),port_num_end_src=dict(type='int',),special_v6_type=dict(type='str',choices=['any-type','dest-unreachable','echo-reply','echo-request','packet-too-big','param-prob','time-exceeded']),eq_src_port=dict(type='int',),special_v6_code=dict(type='str',choices=['any-code','addr-unreachable','admin-prohibited','no-route','not-neighbour','port-unreachable']),icmpv6=dict(type='bool',),port_num_end_dst=dict(type='int',),special_code=dict(type='str',choices=['any-code','frag-required','host-unreachable','network-unreachable','port-unreachable','proto-unreachable','route-failed']),special_type=dict(type='str',choices=['any-type','echo-reply','echo-request','info-reply','info-request','mask-reply','mask-request','parameter-problem','redirect','source-quench','time-exceeded','timestamp','timestamp-reply','dest-unreachable'])),
+        dest_list=dict(type='list',dst_obj_network=dict(type='str',),dst_obj_grp_network=dict(type='str',),dst_slb_vserver=dict(type='str',),dst_ip_subnet=dict(type='str',),dst_ipv6_subnet=dict(type='str',),dst_slb_server=dict(type='str',)),
+        action=dict(type='str',choices=['permit','deny','reset']),
+        fw_log=dict(type='bool',)
     ))
+
     return rv
 
 def new_url(module):
@@ -329,7 +443,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -339,7 +452,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -350,13 +462,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -385,10 +525,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -418,28 +560,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("rule", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -458,8 +601,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -467,11 +613,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

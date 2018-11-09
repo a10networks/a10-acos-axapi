@@ -1,0 +1,22 @@
+- name: Delete a10_gslb_zone_service_dns_a_record_dns_a_record_ipv6 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_zone_service_dns_a_record_dns_a_record_ipv6 instance
+    a10_gslb_zone_service_dns_a_record_dns_a_record_ipv6:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      dns_a_record_ipv6: NO_EXAMPLE
+
+
+
+
+
+
+
+
+
+

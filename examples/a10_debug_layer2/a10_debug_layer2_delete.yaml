@@ -1,0 +1,17 @@
+- name: Delete a10_debug_layer2 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_debug_layer2 instance
+    a10_debug_layer2:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+
+

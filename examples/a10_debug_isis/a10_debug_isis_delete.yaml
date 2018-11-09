@@ -1,0 +1,20 @@
+- name: Delete a10_debug_isis example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_debug_isis instance
+    a10_debug_isis:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+
+
+
+
+

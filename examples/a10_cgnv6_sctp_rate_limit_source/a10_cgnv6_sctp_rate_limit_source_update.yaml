@@ -1,0 +1,12 @@
+
+- name: Update a10_cgnv6_sctp_rate_limit_source example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_cgnv6_sctp_rate_limit_source instance
+    a10_cgnv6_sctp_rate_limit_source:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      ip: 10.0.0.1

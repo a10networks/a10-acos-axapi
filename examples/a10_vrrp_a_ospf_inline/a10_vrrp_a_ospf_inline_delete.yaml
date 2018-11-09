@@ -1,0 +1,13 @@
+- name: Delete a10_vrrp_a_ospf_inline example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_ospf_inline instance
+    a10_vrrp_a_ospf_inline:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      vlan: 1
+
+

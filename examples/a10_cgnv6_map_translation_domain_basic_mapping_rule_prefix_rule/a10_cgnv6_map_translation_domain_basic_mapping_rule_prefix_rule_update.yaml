@@ -1,0 +1,12 @@
+
+- name: Update a10_cgnv6_map_translation_domain_basic_mapping_rule_prefix_rule example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_cgnv6_map_translation_domain_basic_mapping_rule_prefix_rule instance
+    a10_cgnv6_map_translation_domain_basic_mapping_rule_prefix_rule:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_prefix-rule

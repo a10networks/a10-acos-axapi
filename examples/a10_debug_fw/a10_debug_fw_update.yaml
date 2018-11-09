@@ -1,0 +1,11 @@
+
+- name: Update a10_debug_fw example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_debug_fw instance
+    a10_debug_fw:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

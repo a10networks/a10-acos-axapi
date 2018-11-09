@@ -1,0 +1,12 @@
+
+- name: Update a10_acos_events_log_server_port example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_acos_events_log_server_port instance
+    a10_acos_events_log_server_port:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      protocol: tcp

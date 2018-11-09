@@ -1,0 +1,11 @@
+- name: Delete a10_bios_prog example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_bios_prog instance
+    a10_bios_prog:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+

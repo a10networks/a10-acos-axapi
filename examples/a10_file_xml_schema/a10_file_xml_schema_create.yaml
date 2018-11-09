@@ -1,0 +1,10 @@
+
+- name: Create a10_file_xml_schema example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_file_xml_schema instance
+    a10_file_xml_schema:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

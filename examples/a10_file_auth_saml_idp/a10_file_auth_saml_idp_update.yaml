@@ -1,0 +1,11 @@
+
+- name: Update a10_file_auth_saml_idp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_file_auth_saml_idp instance
+    a10_file_auth_saml_idp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

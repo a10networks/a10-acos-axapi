@@ -1,103 +1,143 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_group
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_gslb_group
+description:
+    - None
+short_description: Configures A10 gslb.group
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Specify Group domain name
-    
-    auto-map-smart:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Choose Best IP address
-    
-    mgmt-interface:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Management Interface IP Address
-    
-    data-interface:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Data Interface IP Address
-    
-    auto-map-primary:
+        - Password for AXAPI authentication
+        required: True
+    config_save:
         description:
-            - Primary Controller's IP address
-    
-    auto-map-learn:
-        description:
-            - IP Address learned from other controller
-    
-    config-anywhere:
-        description:
-            - Every member can do config
-    
-    config-merge:
-        description:
-            - Merge old master's config when new one take over
-    
-    config-save:
-        description:
-            - Accept config-save message from master
-    
-    dns-discover:
-        description:
-            - Discover member via DNS Protocol
-    
+        - "None"
+        required: False
     enable:
         description:
-            - Join GSLB Group
-    
-    learn:
-        description:
-            - Learn neighbour information from other controllers
-    
-    primary-list:
-        
-    
-    priority:
-        description:
-            - Specify Local Priority, default is 100
-    
-    suffix:
-        description:
-            - Set DNS Suffix (Name)
-    
-    standalone:
-        description:
-            - Run GSLB Group in standalone mode
-    
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    standalone:
         description:
-            - Customized tag
-    
+        - "None"
+        required: False
+    mgmt_interface:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    dns_discover:
+        description:
+        - "None"
+        required: False
+    priority:
+        description:
+        - "None"
+        required: False
+    config_anywhere:
+        description:
+        - "None"
+        required: False
+    data_interface:
+        description:
+        - "None"
+        required: False
+    auto_map_primary:
+        description:
+        - "None"
+        required: False
+    learn:
+        description:
+        - "None"
+        required: False
+    primary_list:
+        description:
+        - "Field primary_list"
+        required: False
+        suboptions:
+            primary:
+                description:
+                - "None"
+    auto_map_learn:
+        description:
+        - "None"
+        required: False
+    suffix:
+        description:
+        - "None"
+        required: False
+    config_merge:
+        description:
+        - "None"
+        required: False
+    auto_map_smart:
+        description:
+        - "None"
+        required: False
+    name:
+        description:
+        - "None"
+        required: True
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"auto_map_learn","auto_map_primary","auto_map_smart","config_anywhere","config_merge","config_save","data_interface","dns_discover","enable","learn","mgmt_interface","name","primary_list","priority","standalone","suffix","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["auto_map_learn","auto_map_primary","auto_map_smart","config_anywhere","config_merge","config_save","data_interface","dns_discover","enable","learn","mgmt_interface","name","primary_list","priority","standalone","suffix","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -110,62 +150,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        auto_map_learn=dict(
-            type='str' 
-        ),
-        auto_map_primary=dict(
-            type='str' 
-        ),
-        auto_map_smart=dict(
-            type='str' 
-        ),
-        config_anywhere=dict(
-            type='str' 
-        ),
-        config_merge=dict(
-            type='str' 
-        ),
-        config_save=dict(
-            type='str' 
-        ),
-        data_interface=dict(
-            type='str' 
-        ),
-        dns_discover=dict(
-            type='str' 
-        ),
-        enable=dict(
-            type='str' 
-        ),
-        learn=dict(
-            type='str' 
-        ),
-        mgmt_interface=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        primary_list=dict(
-            type='str' 
-        ),
-        priority=dict(
-            type='str' 
-        ),
-        standalone=dict(
-            type='str' 
-        ),
-        suffix=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        config_save=dict(type='bool',),
+        enable=dict(type='bool',),
+        uuid=dict(type='str',),
+        standalone=dict(type='bool',),
+        mgmt_interface=dict(type='bool',),
+        user_tag=dict(type='str',),
+        dns_discover=dict(type='bool',),
+        priority=dict(type='int',),
+        config_anywhere=dict(type='bool',),
+        data_interface=dict(type='bool',),
+        auto_map_primary=dict(type='bool',),
+        learn=dict(type='bool',),
+        primary_list=dict(type='list',primary=dict(type='str',)),
+        auto_map_learn=dict(type='bool',),
+        suffix=dict(type='str',),
+        config_merge=dict(type='bool',),
+        auto_map_smart=dict(type='bool',),
+        name=dict(type='str',required=True,)
     ))
+
     return rv
 
 def new_url(module):
@@ -173,7 +177,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/group/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -183,7 +186,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/group/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -194,13 +196,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -229,10 +259,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -262,28 +294,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("group", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -302,8 +335,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -311,11 +347,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

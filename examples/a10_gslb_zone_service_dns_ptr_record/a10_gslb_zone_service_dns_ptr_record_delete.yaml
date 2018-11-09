@@ -1,0 +1,15 @@
+- name: Delete a10_gslb_zone_service_dns_ptr_record example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_zone_service_dns_ptr_record instance
+    a10_gslb_zone_service_dns_ptr_record:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      ptr_name: NO_EXAMPLE
+
+
+
+

@@ -1,0 +1,14 @@
+- name: Delete a10_cgnv6_map_encapsulation_domain_health_check_gateway example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_map_encapsulation_domain_health_check_gateway instance
+    a10_cgnv6_map_encapsulation_domain_health_check_gateway:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+

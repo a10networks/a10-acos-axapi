@@ -1,0 +1,11 @@
+
+- name: Update a10_fw_tcp_mss_clamp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_fw_tcp_mss_clamp instance
+    a10_fw_tcp_mss_clamp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

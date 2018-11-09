@@ -1,0 +1,50 @@
+- name: Delete a10_gslb_policy example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_policy instance
+    a10_gslb_policy:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      name: my_policy
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

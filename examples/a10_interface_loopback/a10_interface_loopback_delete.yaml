@@ -1,0 +1,19 @@
+- name: Delete a10_interface_loopback example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_interface_loopback instance
+    a10_interface_loopback:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+
+
+      ifnum: 1
+
+
+

@@ -1,0 +1,19 @@
+- name: Delete a10_acos_events_message_selector_rule example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_acos_events_message_selector_rule instance
+    a10_acos_events_message_selector_rule:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      index: 1
+
+
+
+
+
+
+
+

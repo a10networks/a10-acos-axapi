@@ -1,0 +1,11 @@
+
+- name: Update a10_aam_authentication_saml_metadata_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_aam_authentication_saml_metadata_monitor instance
+    a10_aam_authentication_saml_metadata_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

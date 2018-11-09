@@ -1,0 +1,11 @@
+
+- name: Update a10_health_monitor_method_tcp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_health_monitor_method_tcp instance
+    a10_health_monitor_method_tcp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

@@ -1,0 +1,12 @@
+
+- name: Update a10_enable_management_service_http_acl_v4 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_enable_management_service_http_acl_v4 instance
+    a10_enable_management_service_http_acl_v4:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      acl_id: 1

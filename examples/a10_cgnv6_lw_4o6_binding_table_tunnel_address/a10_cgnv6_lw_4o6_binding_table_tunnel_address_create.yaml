@@ -1,0 +1,11 @@
+
+- name: Create a10_cgnv6_lw_4o6_binding_table_tunnel_address example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_lw_4o6_binding_table_tunnel_address instance
+    a10_cgnv6_lw_4o6_binding_table_tunnel_address:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      ipv6_tunnel_addr: NO_EXAMPLE

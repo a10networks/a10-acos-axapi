@@ -1,100 +1,381 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
+
 DOCUMENTATION = """
 module: a10_interface_ve
 description:
-    - Virtual ethernet interface
+    - None
+short_description: Configures A10 interface.ve
 author: A10 Networks 2018 
-version_added: 1.8
-
+version_added: 2.4
 options:
-    
-    ifnum:
+    state:
         description:
-            - Virtual ethernet interface number
-    
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
+        description:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
+        description:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
+        description:
+        - Password for AXAPI authentication
+        required: True
+    map:
+        description:
+        - "Field map"
+        required: False
+        suboptions:
+            inside:
+                description:
+                - "None"
+            map_t_inside:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+            map_t_outside:
+                description:
+                - "None"
+            outside:
+                description:
+                - "None"
+    nptv6:
+        description:
+        - "Field nptv6"
+        required: False
+        suboptions:
+            domain_list:
+                description:
+                - "Field domain_list"
+    isis:
+        description:
+        - "Field isis"
+        required: False
+        suboptions:
+            priority_list:
+                description:
+                - "Field priority_list"
+            padding:
+                description:
+                - "None"
+            hello_interval_minimal_list:
+                description:
+                - "Field hello_interval_minimal_list"
+            mesh_group:
+                description:
+                - "Field mesh_group"
+            network:
+                description:
+                - "None"
+            authentication:
+                description:
+                - "Field authentication"
+            csnp_interval_list:
+                description:
+                - "Field csnp_interval_list"
+            retransmit_interval:
+                description:
+                - "None"
+            password_list:
+                description:
+                - "Field password_list"
+            bfd_cfg:
+                description:
+                - "Field bfd_cfg"
+            wide_metric_list:
+                description:
+                - "Field wide_metric_list"
+            hello_interval_list:
+                description:
+                - "Field hello_interval_list"
+            circuit_type:
+                description:
+                - "None"
+            hello_multiplier_list:
+                description:
+                - "Field hello_multiplier_list"
+            metric_list:
+                description:
+                - "Field metric_list"
+            lsp_interval:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
     name:
         description:
-            - Name for the interface
-    
-    l3-vlan-fwd-disable:
+        - "None"
+        required: False
+    trap_source:
         description:
-            - Disable L3 forwarding between VLANs for incoming packets on this interface
-    
+        - "None"
+        required: False
+    bfd:
+        description:
+        - "Field bfd"
+        required: False
+        suboptions:
+            interval_cfg:
+                description:
+                - "Field interval_cfg"
+            authentication:
+                description:
+                - "Field authentication"
+            echo:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+            demand:
+                description:
+                - "None"
+    ip:
+        description:
+        - "Field ip"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "None"
+            generate_membership_query:
+                description:
+                - "None"
+            address_list:
+                description:
+                - "Field address_list"
+            inside:
+                description:
+                - "None"
+            allow_promiscuous_vip:
+                description:
+                - "None"
+            helper_address_list:
+                description:
+                - "Field helper_address_list"
+            max_resp_time:
+                description:
+                - "None"
+            query_interval:
+                description:
+                - "None"
+            outside:
+                description:
+                - "None"
+            client:
+                description:
+                - "None"
+            stateful_firewall:
+                description:
+                - "Field stateful_firewall"
+            rip:
+                description:
+                - "Field rip"
+            ttl_ignore:
+                description:
+                - "None"
+            router:
+                description:
+                - "Field router"
+            dhcp:
+                description:
+                - "None"
+            server:
+                description:
+                - "None"
+            ospf:
+                description:
+                - "Field ospf"
+            slb_partition_redirect:
+                description:
+                - "None"
+    icmpv6_rate_limit:
+        description:
+        - "Field icmpv6_rate_limit"
+        required: False
+        suboptions:
+            lockup_period_v6:
+                description:
+                - "None"
+            normal_v6:
+                description:
+                - "None"
+            lockup_v6:
+                description:
+                - "None"
+    user_tag:
+        description:
+        - "None"
+        required: False
     mtu:
         description:
-            - Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))
-    
-    trap-source:
-        description:
-            - The trap source
-    
+        - "None"
+        required: False
     action:
         description:
-            - 'enable': Enable; 'disable': Disable; choices:['enable', 'disable']
-    
-    icmp-rate-limit:
-        
-    
-    icmpv6-rate-limit:
-        
-    
-    access-list:
-        
-    
+        - "None"
+        required: False
+    ifnum:
+        description:
+        - "None"
+        required: True
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    lw_4o6:
+        description:
+        - "Field lw_4o6"
+        required: False
+        suboptions:
+            outside:
+                description:
+                - "None"
+            inside:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+    ipv6:
+        description:
+        - "Field ipv6"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "None"
+            inbound:
+                description:
+                - "None"
+            address_list:
+                description:
+                - "Field address_list"
+            inside:
+                description:
+                - "None"
+            ipv6_enable:
+                description:
+                - "None"
+            rip:
+                description:
+                - "Field rip"
+            outside:
+                description:
+                - "None"
+            stateful_firewall:
+                description:
+                - "Field stateful_firewall"
+            v6_acl_name:
+                description:
+                - "None"
+            ttl_ignore:
+                description:
+                - "None"
+            router:
+                description:
+                - "Field router"
+            ospf:
+                description:
+                - "Field ospf"
+            router_adver:
+                description:
+                - "Field router_adver"
+    access_list:
+        description:
+        - "Field access_list"
+        required: False
+        suboptions:
+            acl_name:
+                description:
+                - "None"
+            acl_id:
+                description:
+                - "None"
+    l3_vlan_fwd_disable:
+        description:
+        - "None"
+        required: False
+    icmp_rate_limit:
+        description:
+        - "Field icmp_rate_limit"
+        required: False
+        suboptions:
+            lockup:
+                description:
+                - "None"
+            lockup_period:
+                description:
+                - "None"
+            normal:
+                description:
+                - "None"
+    ddos:
+        description:
+        - "Field ddos"
+        required: False
+        suboptions:
+            outside:
+                description:
+                - "None"
+            inside:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
-        description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
-    ip:
-        
-    
-    ipv6:
-        
-    
-    ddos:
-        
-    
-    nptv6:
-        
-    
-    map:
-        
-    
-    lw-4o6:
-        
-    
-    bfd:
-        
-    
-    isis:
-        
-    
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
 AVAILABLE_PROPERTIES = ["access_list","action","bfd","ddos","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lw_4o6","map","mtu","name","nptv6","sampling_enable","trap_source","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -107,68 +388,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        access_list=dict(
-            type='str' 
-        ),
-        action=dict(
-            type='str' , choices=['enable', 'disable']
-        ),
-        bfd=dict(
-            type='str' 
-        ),
-        ddos=dict(
-            type='str' 
-        ),
-        icmp_rate_limit=dict(
-            type='str' 
-        ),
-        icmpv6_rate_limit=dict(
-            type='str' 
-        ),
-        ifnum=dict(
-            type='int' , required=True
-        ),
-        ip=dict(
-            type='str' 
-        ),
-        ipv6=dict(
-            type='str' 
-        ),
-        isis=dict(
-            type='str' 
-        ),
-        l3_vlan_fwd_disable=dict(
-            type='bool' 
-        ),
-        lw_4o6=dict(
-            type='str' 
-        ),
-        map=dict(
-            type='str' 
-        ),
-        mtu=dict(
-            type='int' 
-        ),
-        name=dict(
-            type='str' 
-        ),
-        nptv6=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='list' 
-        ),
-        trap_source=dict(
-            type='bool' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        map=dict(type='dict',inside=dict(type='bool',),map_t_inside=dict(type='bool',),uuid=dict(type='str',),map_t_outside=dict(type='bool',),outside=dict(type='bool',)),
+        nptv6=dict(type='dict',domain_list=dict(type='list',domain_name=dict(type='str',required=True,),bind_type=dict(type='str',required=True,choices=['inside','outside']),uuid=dict(type='str',))),
+        isis=dict(type='dict',priority_list=dict(type='list',priority=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),padding=dict(type='bool',),hello_interval_minimal_list=dict(type='list',hello_interval_minimal=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mesh_group=dict(type='dict',value=dict(type='int',),blocked=dict(type='bool',)),network=dict(type='str',choices=['broadcast','point-to-point']),authentication=dict(type='dict',send_only_list=dict(type='list',send_only=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mode_list=dict(type='list',mode=dict(type='str',choices=['md5']),level=dict(type='str',choices=['level-1','level-2'])),key_chain_list=dict(type='list',key_chain=dict(type='str',),level=dict(type='str',choices=['level-1','level-2']))),csnp_interval_list=dict(type='list',csnp_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),retransmit_interval=dict(type='int',),password_list=dict(type='list',password=dict(type='str',),level=dict(type='str',choices=['level-1','level-2'])),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),wide_metric_list=dict(type='list',wide_metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),hello_interval_list=dict(type='list',hello_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),circuit_type=dict(type='str',choices=['level-1','level-1-2','level-2-only']),hello_multiplier_list=dict(type='list',hello_multiplier=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),metric_list=dict(type='list',metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),lsp_interval=dict(type='int',),uuid=dict(type='str',)),
+        name=dict(type='str',),
+        trap_source=dict(type='bool',),
+        bfd=dict(type='dict',interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),authentication=dict(type='dict',encrypted=dict(type='str',),password=dict(type='str',),method=dict(type='str',choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int',)),echo=dict(type='bool',),uuid=dict(type='str',),demand=dict(type='bool',)),
+        ip=dict(type='dict',uuid=dict(type='str',),generate_membership_query=dict(type='bool',),address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),inside=dict(type='bool',),allow_promiscuous_vip=dict(type='bool',),helper_address_list=dict(type='list',helper_address=dict(type='str',)),max_resp_time=dict(type='int',),query_interval=dict(type='int',),outside=dict(type='bool',),client=dict(type='bool',),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),ttl_ignore=dict(type='bool',),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),dhcp=dict(type='bool',),server=dict(type='bool',),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),slb_partition_redirect=dict(type='bool',)),
+        icmpv6_rate_limit=dict(type='dict',lockup_period_v6=dict(type='int',),normal_v6=dict(type='int',),lockup_v6=dict(type='int',)),
+        user_tag=dict(type='str',),
+        mtu=dict(type='int',),
+        action=dict(type='str',choices=['enable','disable']),
+        ifnum=dict(type='int',required=True,),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num_pkts','num_total_bytes','num_unicast_pkts','num_broadcast_pkts','num_multicast_pkts','num_tx_pkts','num_total_tx_bytes','num_unicast_tx_pkts','num_broadcast_tx_pkts','num_multicast_tx_pkts','rate_pkt_sent','rate_byte_sent','rate_pkt_rcvd','rate_byte_rcvd','load_interval'])),
+        lw_4o6=dict(type='dict',outside=dict(type='bool',),inside=dict(type='bool',),uuid=dict(type='str',)),
+        ipv6=dict(type='dict',uuid=dict(type='str',),inbound=dict(type='bool',),address_list=dict(type='list',address_type=dict(type='str',choices=['anycast','link-local']),ipv6_addr=dict(type='str',)),inside=dict(type='bool',),ipv6_enable=dict(type='bool',),rip=dict(type='dict',split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),uuid=dict(type='str',)),outside=dict(type='bool',),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),acl_name=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),access_list=dict(type='bool',)),v6_acl_name=dict(type='str',),ttl_ignore=dict(type='bool',),router=dict(type='dict',ripng=dict(type='dict',uuid=dict(type='str',),rip=dict(type='bool',)),ospf=dict(type='dict',area_list=dict(type='list',area_id_addr=dict(type='str',),tag=dict(type='str',),instance_id=dict(type='int',),area_id_num=dict(type='int',)),uuid=dict(type='str',)),isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),neighbor_cfg=dict(type='list',neighbor_priority=dict(type='int',),neighbor_poll_interval=dict(type='int',),neig_inst=dict(type='int',),neighbor=dict(type='str',),neighbor_cost=dict(type='int',)),network_list=dict(type='list',broadcast_type=dict(type='str',choices=['broadcast','non-broadcast','point-to-point','point-to-multipoint']),p2mp_nbma=dict(type='bool',),network_instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',))),router_adver=dict(type='dict',max_interval=dict(type='int',),default_lifetime=dict(type='int',),reachable_time=dict(type='int',),other_config_action=dict(type='str',choices=['enable','disable']),floating_ip_default_vrid=dict(type='str',),managed_config_action=dict(type='str',choices=['enable','disable']),min_interval=dict(type='int',),rate_limit=dict(type='int',),adver_mtu_disable=dict(type='bool',),prefix_list=dict(type='list',not_autonomous=dict(type='bool',),not_on_link=dict(type='bool',),valid_lifetime=dict(type='int',),prefix=dict(type='str',),preferred_lifetime=dict(type='int',)),floating_ip=dict(type='str',),adver_vrid=dict(type='int',),use_floating_ip_default_vrid=dict(type='bool',),action=dict(type='str',choices=['enable','disable']),adver_vrid_default=dict(type='bool',),adver_mtu=dict(type='int',),retransmit_timer=dict(type='int',),hop_limit=dict(type='int',),use_floating_ip=dict(type='bool',))),
+        access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',)),
+        l3_vlan_fwd_disable=dict(type='bool',),
+        icmp_rate_limit=dict(type='dict',lockup=dict(type='int',),lockup_period=dict(type='int',),normal=dict(type='int',)),
+        ddos=dict(type='dict',outside=dict(type='bool',),inside=dict(type='bool',),uuid=dict(type='str',)),
+        uuid=dict(type='str',)
     ))
+
     return rv
 
 def new_url(module):
@@ -176,7 +417,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/interface/ve/{ifnum}"
     f_dict = {}
-    
     f_dict["ifnum"] = ""
 
     return url_base.format(**f_dict)
@@ -186,7 +426,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/interface/ve/{ifnum}"
     f_dict = {}
-    
     f_dict["ifnum"] = module.params["ifnum"]
 
     return url_base.format(**f_dict)
@@ -197,15 +436,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
-        # else:
-        #     del module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -234,10 +499,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -267,28 +534,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("ve", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -319,11 +587,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

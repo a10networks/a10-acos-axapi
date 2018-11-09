@@ -1,0 +1,11 @@
+
+- name: Update a10_enable_management_service_ping example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_enable_management_service_ping instance
+    a10_enable_management_service_ping:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

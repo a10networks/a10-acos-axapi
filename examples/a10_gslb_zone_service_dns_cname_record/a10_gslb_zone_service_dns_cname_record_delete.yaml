@@ -1,0 +1,17 @@
+- name: Delete a10_gslb_zone_service_dns_cname_record example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_gslb_zone_service_dns_cname_record instance
+    a10_gslb_zone_service_dns_cname_record:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      alias_name: NO_EXAMPLE
+
+
+
+
+
+

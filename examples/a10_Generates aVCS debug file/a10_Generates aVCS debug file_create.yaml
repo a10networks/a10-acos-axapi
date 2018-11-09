@@ -1,0 +1,10 @@
+
+- name: Create a10_Generates aVCS debug file example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_Generates aVCS debug file instance
+    a10_Generates aVCS debug file:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

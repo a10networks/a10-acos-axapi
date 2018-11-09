@@ -1,0 +1,11 @@
+
+- name: Update a10_debug_ipv6_ospf_lsa example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_debug_ipv6_ospf_lsa instance
+    a10_debug_ipv6_ospf_lsa:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

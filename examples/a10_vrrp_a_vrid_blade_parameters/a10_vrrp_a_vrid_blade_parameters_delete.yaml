@@ -1,0 +1,14 @@
+- name: Delete a10_vrrp_a_vrid_blade_parameters example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_vrrp_a_vrid_blade_parameters instance
+    a10_vrrp_a_vrid_blade_parameters:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
+

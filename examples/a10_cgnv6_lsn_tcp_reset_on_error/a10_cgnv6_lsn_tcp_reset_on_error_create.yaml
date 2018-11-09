@@ -1,0 +1,10 @@
+
+- name: Create a10_cgnv6_lsn_tcp_reset_on_error example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_lsn_tcp_reset_on_error instance
+    a10_cgnv6_lsn_tcp_reset_on_error:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

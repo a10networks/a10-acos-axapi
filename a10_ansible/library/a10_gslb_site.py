@@ -1,94 +1,258 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_site
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_gslb_site
+description:
+    - None
+short_description: Configures A10 gslb.site
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    site-name:
+    state:
         description:
-            - Specify GSLB site name
-    
-    auto-map:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Enable DNS Auto Mapping
-    
-    disable:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Disable all servers in the GSLB site
-    
-    weight:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Specify a weight for the GSLB site (Weight, default is 1)
-    
-    multiple-geo-locations:
-        
-    
-    template:
+        - Password for AXAPI authentication
+        required: True
+    ip_server_list:
         description:
-            - Specify template to collect site information (Specify template name)
-    
-    bw-cost:
-        description:
-            - Specify cost of band-width
-    
-    limit:
-        description:
-            - Specify the limit for bandwidth, default is unlimited
-    
-    threshold:
-        description:
-            - Specify the threshold for limit
-    
-    controller:
-        description:
-            - Specify the local controller for the GSLB site (Specify the hostname of the local controller)
-    
+        - "Field ip_server_list"
+        required: False
+        suboptions:
+            ip_server_name:
+                description:
+                - "None"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "None"
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    weight:
         description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
-    ip-server-list:
-        
-    
-    active-rdt:
-        
-    
-    easy-rdt:
-        
-    
-    slb-dev-list:
-        
-    
+        - "None"
+        required: False
+    site_name:
+        description:
+        - "None"
+        required: True
+    slb_dev_list:
+        description:
+        - "Field slb_dev_list"
+        required: False
+        suboptions:
+            health_check_action:
+                description:
+                - "None"
+            client_ip:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+            device_name:
+                description:
+                - "None"
+            proto_compatible:
+                description:
+                - "None"
+            user_tag:
+                description:
+                - "None"
+            auto_map:
+                description:
+                - "None"
+            proto_aging_time:
+                description:
+                - "None"
+            rdt_value:
+                description:
+                - "None"
+            gateway_ip_addr:
+                description:
+                - "None"
+            vip_server:
+                description:
+                - "Field vip_server"
+            ip_address:
+                description:
+                - "None"
+            proto_aging_fast:
+                description:
+                - "None"
+            auto_detect:
+                description:
+                - "None"
+            max_client:
+                description:
+                - "None"
+            admin_preference:
+                description:
+                - "None"
+    controller:
+        description:
+        - "None"
+        required: False
+    bw_cost:
+        description:
+        - "None"
+        required: False
+    auto_map:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    disable:
+        description:
+        - "None"
+        required: False
+    limit:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    template:
+        description:
+        - "None"
+        required: False
+    threshold:
+        description:
+        - "None"
+        required: False
+    multiple_geo_locations:
+        description:
+        - "Field multiple_geo_locations"
+        required: False
+        suboptions:
+            geo_location:
+                description:
+                - "None"
+    easy_rdt:
+        description:
+        - "Field easy_rdt"
+        required: False
+        suboptions:
+            range_factor:
+                description:
+                - "None"
+            smooth_factor:
+                description:
+                - "None"
+            mask:
+                description:
+                - "None"
+            overlap:
+                description:
+                - "None"
+            limit:
+                description:
+                - "None"
+            ignore_count:
+                description:
+                - "None"
+            aging_time:
+                description:
+                - "None"
+            bind_geoloc:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+    active_rdt:
+        description:
+        - "Field active_rdt"
+        required: False
+        suboptions:
+            range_factor:
+                description:
+                - "None"
+            smooth_factor:
+                description:
+                - "None"
+            mask:
+                description:
+                - "None"
+            overlap:
+                description:
+                - "None"
+            limit:
+                description:
+                - "None"
+            ignore_count:
+                description:
+                - "None"
+            aging_time:
+                description:
+                - "None"
+            bind_geoloc:
+                description:
+                - "None"
+            uuid:
+                description:
+                - "None"
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"active_rdt","auto_map","bw_cost","controller","disable","easy_rdt","ip_server_list","limit","multiple_geo_locations","sampling_enable","site_name","slb_dev_list","template","threshold","user_tag","uuid","weight",}
+AVAILABLE_PROPERTIES = ["active_rdt","auto_map","bw_cost","controller","disable","easy_rdt","ip_server_list","limit","multiple_geo_locations","sampling_enable","site_name","slb_dev_list","template","threshold","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -101,59 +265,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        active_rdt=dict(
-            type='str' 
-        ),
-        auto_map=dict(
-            type='str' 
-        ),
-        bw_cost=dict(
-            type='str' 
-        ),
-        controller=dict(
-            type='str' 
-        ),
-        disable=dict(
-            type='str' 
-        ),
-        easy_rdt=dict(
-            type='str' 
-        ),
-        ip_server_list=dict(
-            type='str' 
-        ),
-        limit=dict(
-            type='str' 
-        ),
-        multiple_geo_locations=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='str' 
-        ),
-        site_name=dict(
-            type='str' , required=True
-        ),
-        slb_dev_list=dict(
-            type='str' 
-        ),
-        template=dict(
-            type='str' 
-        ),
-        threshold=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ),
-        weight=dict(
-            type='str' 
-        ), 
+        ip_server_list=dict(type='list',ip_server_name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',)),
+        uuid=dict(type='str',),
+        weight=dict(type='int',),
+        site_name=dict(type='str',required=True,),
+        slb_dev_list=dict(type='list',health_check_action=dict(type='str',choices=['health-check','health-check-disable']),client_ip=dict(type='str',),uuid=dict(type='str',),device_name=dict(type='str',required=True,),proto_compatible=dict(type='bool',),user_tag=dict(type='str',),auto_map=dict(type='bool',),proto_aging_time=dict(type='int',),rdt_value=dict(type='int',),gateway_ip_addr=dict(type='str',),vip_server=dict(type='dict',vip_server_v4_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),ipv4=dict(type='str',required=True,),uuid=dict(type='str',)),vip_server_v6_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),uuid=dict(type='str',),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),vip_name=dict(type='str',required=True,),uuid=dict(type='str',))),ip_address=dict(type='str',),proto_aging_fast=dict(type='bool',),auto_detect=dict(type='str',choices=['ip','port','ip-and-port','disabled']),max_client=dict(type='int',),admin_preference=dict(type='int',)),
+        controller=dict(type='str',),
+        bw_cost=dict(type='bool',),
+        auto_map=dict(type='bool',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
+        disable=dict(type='bool',),
+        limit=dict(type='int',),
+        user_tag=dict(type='str',),
+        template=dict(type='str',),
+        threshold=dict(type='int',),
+        multiple_geo_locations=dict(type='list',geo_location=dict(type='str',)),
+        easy_rdt=dict(type='dict',range_factor=dict(type='int',),smooth_factor=dict(type='int',),mask=dict(type='str',),overlap=dict(type='bool',),limit=dict(type='int',),ignore_count=dict(type='int',),aging_time=dict(type='int',),bind_geoloc=dict(type='bool',),uuid=dict(type='str',)),
+        active_rdt=dict(type='dict',range_factor=dict(type='int',),smooth_factor=dict(type='int',),mask=dict(type='str',),overlap=dict(type='bool',),limit=dict(type='int',),ignore_count=dict(type='int',),aging_time=dict(type='int',),bind_geoloc=dict(type='bool',),uuid=dict(type='str',))
     ))
+
     return rv
 
 def new_url(module):
@@ -161,7 +291,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/site/{site-name}"
     f_dict = {}
-    
     f_dict["site-name"] = ""
 
     return url_base.format(**f_dict)
@@ -171,7 +300,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/site/{site-name}"
     f_dict = {}
-    
     f_dict["site-name"] = module.params["site-name"]
 
     return url_base.format(**f_dict)
@@ -182,13 +310,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -217,10 +373,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -250,28 +408,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("site", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -290,8 +449,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -299,11 +461,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():

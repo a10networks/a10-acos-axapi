@@ -1,0 +1,13 @@
+- name: Delete a10_cgnv6_map_translation_fragmentation_inbound example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_cgnv6_map_translation_fragmentation_inbound instance
+    a10_cgnv6_map_translation_fragmentation_inbound:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+

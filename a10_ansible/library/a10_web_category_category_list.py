@@ -1,383 +1,423 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_category-list
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = """
+module: a10_web_category_category_list
+description:
+    - None
+short_description: Configures A10 web-category.category-list
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    name:
+    state:
         description:
-            - Web Category List name
-    
-    uncategorized:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Uncategorized URLs
-    
-    real-estate:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Category Real Estate
-    
-    computer-and-internet-security:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Category Computer and Internet Security
-    
-    financial-services:
+        - Password for AXAPI authentication
+        required: True
+    streaming_media:
         description:
-            - Category Financial Services
-    
-    business-and-economy:
-        description:
-            - Category Business and Economy
-    
-    computer-and-internet-info:
-        description:
-            - Category Computer and Internet Info
-    
-    auctions:
-        description:
-            - Category Auctions
-    
-    shopping:
-        description:
-            - Category Shopping
-    
-    cult-and-occult:
-        description:
-            - Category Cult and Occult
-    
-    travel:
-        description:
-            - Category Travel
-    
-    drugs:
-        description:
-            - Category Abused Drugs
-    
-    adult-and-pornography:
-        description:
-            - Category Adult and Pornography
-    
-    home-and-garden:
-        description:
-            - Category Home and Garden
-    
-    military:
-        description:
-            - Category Military
-    
-    social-network:
-        description:
-            - Category Social Network
-    
-    dead-sites:
-        description:
-            - Category Dead Sites (db Ops only)
-    
-    stock-advice-and-tools:
-        description:
-            - Category Stock Advice and Tools
-    
-    training-and-tools:
-        description:
-            - Category Training and Tools
-    
-    dating:
-        description:
-            - Category Dating
-    
-    sex-education:
-        description:
-            - Category Sex Education
-    
-    religion:
-        description:
-            - Category Religion
-    
-    entertainment-and-arts:
-        description:
-            - Category Entertainment and Arts
-    
-    personal-sites-and-blogs:
-        description:
-            - Category Personal sites and Blogs
-    
-    legal:
-        description:
-            - Category Legal
-    
-    local-information:
-        description:
-            - Category Local Information
-    
-    streaming-media:
-        description:
-            - Category Streaming Media
-    
-    job-search:
-        description:
-            - Category Job Search
-    
-    gambling:
-        description:
-            - Category Gambling
-    
-    translation:
-        description:
-            - Category Translation
-    
-    reference-and-research:
-        description:
-            - Category Reference and Research
-    
-    shareware-and-freeware:
-        description:
-            - Category Shareware and Freeware
-    
-    peer-to-peer:
-        description:
-            - Category Peer to Peer
-    
-    marijuana:
-        description:
-            - Category Marijuana
-    
-    hacking:
-        description:
-            - Category Hacking
-    
-    games:
-        description:
-            - Category Games
-    
-    philosophy-and-politics:
-        description:
-            - Category Philosophy and Political Advocacy
-    
+        - "None"
+        required: False
     weapons:
         description:
-            - Category Weapons
-    
-    pay-to-surf:
-        description:
-            - Category Pay to Surf
-    
-    hunting-and-fishing:
-        description:
-            - Category Hunting and Fishing
-    
-    society:
-        description:
-            - Category Society
-    
-    educational-institutions:
-        description:
-            - Category Educational Institutions
-    
-    online-greeting-cards:
-        description:
-            - Category Online Greeting cards
-    
-    sports:
-        description:
-            - Category Sports
-    
-    swimsuits-and-intimate-apparel:
-        description:
-            - Category Swimsuits and Intimate Apparel
-    
-    questionable:
-        description:
-            - Category Questionable
-    
-    kids:
-        description:
-            - Category Kids
-    
-    hate-and-racism:
-        description:
-            - Category Hate and Racism
-    
-    personal-storage:
-        description:
-            - Category Personal Storage
-    
-    violence:
-        description:
-            - Category Violence
-    
-    keyloggers-and-monitoring:
-        description:
-            - Category Keyloggers and Monitoring
-    
-    search-engines:
-        description:
-            - Category Search Engines
-    
-    internet-portals:
-        description:
-            - Category Internet Portals
-    
-    web-advertisements:
-        description:
-            - Category Web Advertisements
-    
-    cheating:
-        description:
-            - Category Cheating
-    
-    gross:
-        description:
-            - Category Gross
-    
-    web-based-email:
-        description:
-            - Category Web based email
-    
-    malware-sites:
-        description:
-            - Category Malware Sites
-    
-    phishing-and-other-fraud:
-        description:
-            - Category Phishing and Other Frauds
-    
-    proxy-avoid-and-anonymizers:
-        description:
-            - Category Proxy Avoid and Anonymizers
-    
-    spyware-and-adware:
-        description:
-            - Category Spyware and Adware
-    
-    music:
-        description:
-            - Category Music
-    
-    government:
-        description:
-            - Category Government
-    
-    nudity:
-        description:
-            - Category Nudity
-    
-    news-and-media:
-        description:
-            - Category News and Media
-    
-    illegal:
-        description:
-            - Category Illegal
-    
-    cdns:
-        description:
-            - Category CDNs
-    
-    internet-communications:
-        description:
-            - Category Internet Communications
-    
-    bot-nets:
-        description:
-            - Category Bot Nets
-    
-    abortion:
-        description:
-            - Category Abortion
-    
-    health-and-medicine:
-        description:
-            - Category Health and Medicine
-    
-    confirmed-spam-sources:
-        description:
-            - Category Confirmed SPAM Sources
-    
-    spam-urls:
-        description:
-            - Category SPAM URLs
-    
-    unconfirmed-spam-sources:
-        description:
-            - Category Unconfirmed SPAM Sources
-    
-    open-http-proxies:
-        description:
-            - Category Open HTTP Proxies
-    
-    dynamic-comment:
-        description:
-            - Category Dynamic Comment
-    
-    parked-domains:
-        description:
-            - Category Parked Domains
-    
-    alcohol-and-tobacco:
-        description:
-            - Category Alcohol and Tobacco
-    
-    private-ip-addresses:
-        description:
-            - Category Private IP Addresses
-    
-    image-and-video-search:
-        description:
-            - Category Image and Video Search
-    
-    fashion-and-beauty:
-        description:
-            - Category Fashion and Beauty
-    
-    recreation-and-hobbies:
-        description:
-            - Category Recreation and Hobbies
-    
-    motor-vehicles:
-        description:
-            - Category Motor Vehicles
-    
-    web-hosting-sites:
-        description:
-            - Category Web Hosting Sites
-    
-    food-and-dining:
-        description:
-            - Category Food and Dining
-    
+        - "None"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
+        - "None"
+        required: False
+    entertainment_and_arts:
         description:
-            - Customized tag
-    
-    sampling-enable:
-        
-    
+        - "None"
+        required: False
+    cdns:
+        description:
+        - "None"
+        required: False
+    financial_services:
+        description:
+        - "None"
+        required: False
+    social_network:
+        description:
+        - "None"
+        required: False
+    government:
+        description:
+        - "None"
+        required: False
+    web_advertisements:
+        description:
+        - "None"
+        required: False
+    fashion_and_beauty:
+        description:
+        - "None"
+        required: False
+    computer_and_internet_security:
+        description:
+        - "None"
+        required: False
+    name:
+        description:
+        - "None"
+        required: True
+    real_estate:
+        description:
+        - "None"
+        required: False
+    user_tag:
+        description:
+        - "None"
+        required: False
+    web_based_email:
+        description:
+        - "None"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "None"
+    recreation_and_hobbies:
+        description:
+        - "None"
+        required: False
+    business_and_economy:
+        description:
+        - "None"
+        required: False
+    confirmed_spam_sources:
+        description:
+        - "None"
+        required: False
+    philosophy_and_politics:
+        description:
+        - "None"
+        required: False
+    society:
+        description:
+        - "None"
+        required: False
+    motor_vehicles:
+        description:
+        - "None"
+        required: False
+    proxy_avoid_and_anonymizers:
+        description:
+        - "None"
+        required: False
+    gross:
+        description:
+        - "None"
+        required: False
+    legal:
+        description:
+        - "None"
+        required: False
+    bot_nets:
+        description:
+        - "None"
+        required: False
+    religion:
+        description:
+        - "None"
+        required: False
+    private_ip_addresses:
+        description:
+        - "None"
+        required: False
+    dating:
+        description:
+        - "None"
+        required: False
+    pay_to_surf:
+        description:
+        - "None"
+        required: False
+    reference_and_research:
+        description:
+        - "None"
+        required: False
+    keyloggers_and_monitoring:
+        description:
+        - "None"
+        required: False
+    kids:
+        description:
+        - "None"
+        required: False
+    online_greeting_cards:
+        description:
+        - "None"
+        required: False
+    violence:
+        description:
+        - "None"
+        required: False
+    games:
+        description:
+        - "None"
+        required: False
+    auctions:
+        description:
+        - "None"
+        required: False
+    military:
+        description:
+        - "None"
+        required: False
+    alcohol_and_tobacco:
+        description:
+        - "None"
+        required: False
+    stock_advice_and_tools:
+        description:
+        - "None"
+        required: False
+    news_and_media:
+        description:
+        - "None"
+        required: False
+    cult_and_occult:
+        description:
+        - "None"
+        required: False
+    food_and_dining:
+        description:
+        - "None"
+        required: False
+    cheating:
+        description:
+        - "None"
+        required: False
+    illegal:
+        description:
+        - "None"
+        required: False
+    local_information:
+        description:
+        - "None"
+        required: False
+    sports:
+        description:
+        - "None"
+        required: False
+    music:
+        description:
+        - "None"
+        required: False
+    shareware_and_freeware:
+        description:
+        - "None"
+        required: False
+    spyware_and_adware:
+        description:
+        - "None"
+        required: False
+    questionable:
+        description:
+        - "None"
+        required: False
+    shopping:
+        description:
+        - "None"
+        required: False
+    drugs:
+        description:
+        - "None"
+        required: False
+    web_hosting_sites:
+        description:
+        - "None"
+        required: False
+    malware_sites:
+        description:
+        - "None"
+        required: False
+    dynamic_comment:
+        description:
+        - "None"
+        required: False
+    translation:
+        description:
+        - "None"
+        required: False
+    job_search:
+        description:
+        - "None"
+        required: False
+    hunting_and_fishing:
+        description:
+        - "None"
+        required: False
+    search_engines:
+        description:
+        - "None"
+        required: False
+    educational_institutions:
+        description:
+        - "None"
+        required: False
+    internet_portals:
+        description:
+        - "None"
+        required: False
+    computer_and_internet_info:
+        description:
+        - "None"
+        required: False
+    abortion:
+        description:
+        - "None"
+        required: False
+    hacking:
+        description:
+        - "None"
+        required: False
+    adult_and_pornography:
+        description:
+        - "None"
+        required: False
+    phishing_and_other_fraud:
+        description:
+        - "None"
+        required: False
+    nudity:
+        description:
+        - "None"
+        required: False
+    health_and_medicine:
+        description:
+        - "None"
+        required: False
+    marijuana:
+        description:
+        - "None"
+        required: False
+    home_and_garden:
+        description:
+        - "None"
+        required: False
+    personal_storage:
+        description:
+        - "None"
+        required: False
+    sex_education:
+        description:
+        - "None"
+        required: False
+    swimsuits_and_intimate_apparel:
+        description:
+        - "None"
+        required: False
+    dead_sites:
+        description:
+        - "None"
+        required: False
+    travel:
+        description:
+        - "None"
+        required: False
+    hate_and_racism:
+        description:
+        - "None"
+        required: False
+    open_http_proxies:
+        description:
+        - "None"
+        required: False
+    internet_communications:
+        description:
+        - "None"
+        required: False
+    gambling:
+        description:
+        - "None"
+        required: False
+    peer_to_peer:
+        description:
+        - "None"
+        required: False
+    uncategorized:
+        description:
+        - "None"
+        required: False
+    personal_sites_and_blogs:
+        description:
+        - "None"
+        required: False
+    spam_urls:
+        description:
+        - "None"
+        required: False
+    unconfirmed_spam_sources:
+        description:
+        - "None"
+        required: False
+    image_and_video_search:
+        description:
+        - "None"
+        required: False
+    training_and_tools:
+        description:
+        - "None"
+        required: False
+    parked_domains:
+        description:
+        - "None"
+        required: False
+
 
 """
 
 EXAMPLES = """
 """
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"abortion","adult_and_pornography","alcohol_and_tobacco","auctions","bot_nets","business_and_economy","cdns","cheating","computer_and_internet_info","computer_and_internet_security","confirmed_spam_sources","cult_and_occult","dating","dead_sites","drugs","dynamic_comment","educational_institutions","entertainment_and_arts","fashion_and_beauty","financial_services","food_and_dining","gambling","games","government","gross","hacking","hate_and_racism","health_and_medicine","home_and_garden","hunting_and_fishing","illegal","image_and_video_search","internet_communications","internet_portals","job_search","keyloggers_and_monitoring","kids","legal","local_information","malware_sites","marijuana","military","motor_vehicles","music","name","news_and_media","nudity","online_greeting_cards","open_http_proxies","parked_domains","pay_to_surf","peer_to_peer","personal_sites_and_blogs","personal_storage","philosophy_and_politics","phishing_and_other_fraud","private_ip_addresses","proxy_avoid_and_anonymizers","questionable","real_estate","recreation_and_hobbies","reference_and_research","religion","sampling_enable","search_engines","sex_education","shareware_and_freeware","shopping","social_network","society","spam_urls","sports","spyware_and_adware","stock_advice_and_tools","streaming_media","swimsuits_and_intimate_apparel","training_and_tools","translation","travel","uncategorized","unconfirmed_spam_sources","user_tag","uuid","violence","weapons","web_advertisements","web_based_email","web_hosting_sites",}
+AVAILABLE_PROPERTIES = ["abortion","adult_and_pornography","alcohol_and_tobacco","auctions","bot_nets","business_and_economy","cdns","cheating","computer_and_internet_info","computer_and_internet_security","confirmed_spam_sources","cult_and_occult","dating","dead_sites","drugs","dynamic_comment","educational_institutions","entertainment_and_arts","fashion_and_beauty","financial_services","food_and_dining","gambling","games","government","gross","hacking","hate_and_racism","health_and_medicine","home_and_garden","hunting_and_fishing","illegal","image_and_video_search","internet_communications","internet_portals","job_search","keyloggers_and_monitoring","kids","legal","local_information","malware_sites","marijuana","military","motor_vehicles","music","name","news_and_media","nudity","online_greeting_cards","open_http_proxies","parked_domains","pay_to_surf","peer_to_peer","personal_sites_and_blogs","personal_storage","philosophy_and_politics","phishing_and_other_fraud","private_ip_addresses","proxy_avoid_and_anonymizers","questionable","real_estate","recreation_and_hobbies","reference_and_research","religion","sampling_enable","search_engines","sex_education","shareware_and_freeware","shopping","social_network","society","spam_urls","sports","spyware_and_adware","stock_advice_and_tools","streaming_media","swimsuits_and_intimate_apparel","training_and_tools","translation","travel","uncategorized","unconfirmed_spam_sources","user_tag","uuid","violence","weapons","web_advertisements","web_based_email","web_hosting_sites",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -390,272 +430,96 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        abortion=dict(
-            type='str' 
-        ),
-        adult_and_pornography=dict(
-            type='str' 
-        ),
-        alcohol_and_tobacco=dict(
-            type='str' 
-        ),
-        auctions=dict(
-            type='str' 
-        ),
-        bot_nets=dict(
-            type='str' 
-        ),
-        business_and_economy=dict(
-            type='str' 
-        ),
-        cdns=dict(
-            type='str' 
-        ),
-        cheating=dict(
-            type='str' 
-        ),
-        computer_and_internet_info=dict(
-            type='str' 
-        ),
-        computer_and_internet_security=dict(
-            type='str' 
-        ),
-        confirmed_spam_sources=dict(
-            type='str' 
-        ),
-        cult_and_occult=dict(
-            type='str' 
-        ),
-        dating=dict(
-            type='str' 
-        ),
-        dead_sites=dict(
-            type='str' 
-        ),
-        drugs=dict(
-            type='str' 
-        ),
-        dynamic_comment=dict(
-            type='str' 
-        ),
-        educational_institutions=dict(
-            type='str' 
-        ),
-        entertainment_and_arts=dict(
-            type='str' 
-        ),
-        fashion_and_beauty=dict(
-            type='str' 
-        ),
-        financial_services=dict(
-            type='str' 
-        ),
-        food_and_dining=dict(
-            type='str' 
-        ),
-        gambling=dict(
-            type='str' 
-        ),
-        games=dict(
-            type='str' 
-        ),
-        government=dict(
-            type='str' 
-        ),
-        gross=dict(
-            type='str' 
-        ),
-        hacking=dict(
-            type='str' 
-        ),
-        hate_and_racism=dict(
-            type='str' 
-        ),
-        health_and_medicine=dict(
-            type='str' 
-        ),
-        home_and_garden=dict(
-            type='str' 
-        ),
-        hunting_and_fishing=dict(
-            type='str' 
-        ),
-        illegal=dict(
-            type='str' 
-        ),
-        image_and_video_search=dict(
-            type='str' 
-        ),
-        internet_communications=dict(
-            type='str' 
-        ),
-        internet_portals=dict(
-            type='str' 
-        ),
-        job_search=dict(
-            type='str' 
-        ),
-        keyloggers_and_monitoring=dict(
-            type='str' 
-        ),
-        kids=dict(
-            type='str' 
-        ),
-        legal=dict(
-            type='str' 
-        ),
-        local_information=dict(
-            type='str' 
-        ),
-        malware_sites=dict(
-            type='str' 
-        ),
-        marijuana=dict(
-            type='str' 
-        ),
-        military=dict(
-            type='str' 
-        ),
-        motor_vehicles=dict(
-            type='str' 
-        ),
-        music=dict(
-            type='str' 
-        ),
-        name=dict(
-            type='str' , required=True
-        ),
-        news_and_media=dict(
-            type='str' 
-        ),
-        nudity=dict(
-            type='str' 
-        ),
-        online_greeting_cards=dict(
-            type='str' 
-        ),
-        open_http_proxies=dict(
-            type='str' 
-        ),
-        parked_domains=dict(
-            type='str' 
-        ),
-        pay_to_surf=dict(
-            type='str' 
-        ),
-        peer_to_peer=dict(
-            type='str' 
-        ),
-        personal_sites_and_blogs=dict(
-            type='str' 
-        ),
-        personal_storage=dict(
-            type='str' 
-        ),
-        philosophy_and_politics=dict(
-            type='str' 
-        ),
-        phishing_and_other_fraud=dict(
-            type='str' 
-        ),
-        private_ip_addresses=dict(
-            type='str' 
-        ),
-        proxy_avoid_and_anonymizers=dict(
-            type='str' 
-        ),
-        questionable=dict(
-            type='str' 
-        ),
-        real_estate=dict(
-            type='str' 
-        ),
-        recreation_and_hobbies=dict(
-            type='str' 
-        ),
-        reference_and_research=dict(
-            type='str' 
-        ),
-        religion=dict(
-            type='str' 
-        ),
-        sampling_enable=dict(
-            type='str' 
-        ),
-        search_engines=dict(
-            type='str' 
-        ),
-        sex_education=dict(
-            type='str' 
-        ),
-        shareware_and_freeware=dict(
-            type='str' 
-        ),
-        shopping=dict(
-            type='str' 
-        ),
-        social_network=dict(
-            type='str' 
-        ),
-        society=dict(
-            type='str' 
-        ),
-        spam_urls=dict(
-            type='str' 
-        ),
-        sports=dict(
-            type='str' 
-        ),
-        spyware_and_adware=dict(
-            type='str' 
-        ),
-        stock_advice_and_tools=dict(
-            type='str' 
-        ),
-        streaming_media=dict(
-            type='str' 
-        ),
-        swimsuits_and_intimate_apparel=dict(
-            type='str' 
-        ),
-        training_and_tools=dict(
-            type='str' 
-        ),
-        translation=dict(
-            type='str' 
-        ),
-        travel=dict(
-            type='str' 
-        ),
-        uncategorized=dict(
-            type='str' 
-        ),
-        unconfirmed_spam_sources=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ),
-        violence=dict(
-            type='str' 
-        ),
-        weapons=dict(
-            type='str' 
-        ),
-        web_advertisements=dict(
-            type='str' 
-        ),
-        web_based_email=dict(
-            type='str' 
-        ),
-        web_hosting_sites=dict(
-            type='str' 
-        ), 
+        streaming_media=dict(type='bool',),
+        weapons=dict(type='bool',),
+        uuid=dict(type='str',),
+        entertainment_and_arts=dict(type='bool',),
+        cdns=dict(type='bool',),
+        financial_services=dict(type='bool',),
+        social_network=dict(type='bool',),
+        government=dict(type='bool',),
+        web_advertisements=dict(type='bool',),
+        fashion_and_beauty=dict(type='bool',),
+        computer_and_internet_security=dict(type='bool',),
+        name=dict(type='str',required=True,),
+        real_estate=dict(type='bool',),
+        user_tag=dict(type='str',),
+        web_based_email=dict(type='bool',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','uncategorized','real-estate','computer-and-internet-security','financial-services','business-and-economy','computer-and-internet-info','auctions','shopping','cult-and-occult','travel','drugs','adult-and-pornography','home-and-garden','military','social-network','dead-sites','stock-advice-and-tools','training-and-tools','dating','sex-education','religion','entertainment-and-arts','personal-sites-and-blogs','legal','local-information','streaming-media','job-search','gambling','translation','reference-and-research','shareware-and-freeware','peer-to-peer','marijuana','hacking','games','philosophy-and-politics','weapons','pay-to-surf','hunting-and-fishing','society','educational-institutions','online-greeting-cards','sports','swimsuits-and-intimate-apparel','questionable','kids','hate-and-racism','personal-storage','violence','keyloggers-and-monitoring','search-engines','internet-portals','web-advertisements','cheating','gross','web-based-email','malware-sites','phishing-and-other-fraud','proxy-avoid-and-anonymizers','spyware-and-adware','music','government','nudity','news-and-media','illegal','CDNs','internet-communications','bot-nets','abortion','health-and-medicine','confirmed-SPAM-sources','SPAM-URLs','unconfirmed-SPAM-sources','open-HTTP-proxies','dynamic-comment','parked-domains','alcohol-and-tobacco','private-IP-addresses','image-and-video-search','fashion-and-beauty','recreation-and-hobbies','motor-vehicles','web-hosting-sites','food-and-dining'])),
+        recreation_and_hobbies=dict(type='bool',),
+        business_and_economy=dict(type='bool',),
+        confirmed_spam_sources=dict(type='bool',),
+        philosophy_and_politics=dict(type='bool',),
+        society=dict(type='bool',),
+        motor_vehicles=dict(type='bool',),
+        proxy_avoid_and_anonymizers=dict(type='bool',),
+        gross=dict(type='bool',),
+        legal=dict(type='bool',),
+        bot_nets=dict(type='bool',),
+        religion=dict(type='bool',),
+        private_ip_addresses=dict(type='bool',),
+        dating=dict(type='bool',),
+        pay_to_surf=dict(type='bool',),
+        reference_and_research=dict(type='bool',),
+        keyloggers_and_monitoring=dict(type='bool',),
+        kids=dict(type='bool',),
+        online_greeting_cards=dict(type='bool',),
+        violence=dict(type='bool',),
+        games=dict(type='bool',),
+        auctions=dict(type='bool',),
+        military=dict(type='bool',),
+        alcohol_and_tobacco=dict(type='bool',),
+        stock_advice_and_tools=dict(type='bool',),
+        news_and_media=dict(type='bool',),
+        cult_and_occult=dict(type='bool',),
+        food_and_dining=dict(type='bool',),
+        cheating=dict(type='bool',),
+        illegal=dict(type='bool',),
+        local_information=dict(type='bool',),
+        sports=dict(type='bool',),
+        music=dict(type='bool',),
+        shareware_and_freeware=dict(type='bool',),
+        spyware_and_adware=dict(type='bool',),
+        questionable=dict(type='bool',),
+        shopping=dict(type='bool',),
+        drugs=dict(type='bool',),
+        web_hosting_sites=dict(type='bool',),
+        malware_sites=dict(type='bool',),
+        dynamic_comment=dict(type='bool',),
+        translation=dict(type='bool',),
+        job_search=dict(type='bool',),
+        hunting_and_fishing=dict(type='bool',),
+        search_engines=dict(type='bool',),
+        educational_institutions=dict(type='bool',),
+        internet_portals=dict(type='bool',),
+        computer_and_internet_info=dict(type='bool',),
+        abortion=dict(type='bool',),
+        hacking=dict(type='bool',),
+        adult_and_pornography=dict(type='bool',),
+        phishing_and_other_fraud=dict(type='bool',),
+        nudity=dict(type='bool',),
+        health_and_medicine=dict(type='bool',),
+        marijuana=dict(type='bool',),
+        home_and_garden=dict(type='bool',),
+        personal_storage=dict(type='bool',),
+        sex_education=dict(type='bool',),
+        swimsuits_and_intimate_apparel=dict(type='bool',),
+        dead_sites=dict(type='bool',),
+        travel=dict(type='bool',),
+        hate_and_racism=dict(type='bool',),
+        open_http_proxies=dict(type='bool',),
+        internet_communications=dict(type='bool',),
+        gambling=dict(type='bool',),
+        peer_to_peer=dict(type='bool',),
+        uncategorized=dict(type='bool',),
+        personal_sites_and_blogs=dict(type='bool',),
+        spam_urls=dict(type='bool',),
+        unconfirmed_spam_sources=dict(type='bool',),
+        image_and_video_search=dict(type='bool',),
+        training_and_tools=dict(type='bool',),
+        parked_domains=dict(type='bool',)
     ))
+
     return rv
 
 def new_url(module):
@@ -663,7 +527,6 @@ def new_url(module):
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/web-category/category-list/{name}"
     f_dict = {}
-    
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
@@ -673,7 +536,6 @@ def existing_url(module):
     # Build the format dictionary
     url_base = "/axapi/v3/web-category/category-list/{name}"
     f_dict = {}
-    
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
@@ -684,13 +546,41 @@ def build_envelope(title, data):
         title: data
     }
 
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
 
@@ -719,10 +609,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -752,28 +644,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("category-list", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -792,8 +685,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -801,11 +697,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():
