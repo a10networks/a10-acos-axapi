@@ -126,7 +126,7 @@ def new_url(module):
     url_base = "/axapi/v3/ip/nat/pool/{pool-name}"
     f_dict = {}
     
-    f_dict["pool_name"] = ""
+    f_dict["pool-name"] = ""
 
     return url_base.format(**f_dict)
 
@@ -136,7 +136,7 @@ def existing_url(module):
     url_base = "/axapi/v3/ip/nat/pool/{pool-name}"
     f_dict = {}
     
-    f_dict["pool_name"] = module.params["pool-name"]
+    f_dict["pool-name"] = module.params["pool_name"]
 
     return url_base.format(**f_dict)
 
