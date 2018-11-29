@@ -16,7 +16,7 @@ options:
         description:
             - LSN Rule-List Name
     
-    http-match-domain-name:
+    http_match_domain_name:
         description:
             - Enable match domain name in http request
     
@@ -24,29 +24,44 @@ options:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    domain-ip:
+    domain_ip:
         
     
     default:
         
     
-    domain-name-list:
+    domain_name_list:
         
     
-    domain-list-name-list:
+    domain_list_name_list:
         
     
-    ip-list:
+    ip_list:
         
     
 
 """
 
 EXAMPLES = """
+  a10_cgnv6_lsn_rule_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      ip_list:
+            - ipv4-addr: "1.2.3.4/32"
+            - ipv4-addr: "10.0.0.0/24"
+      domain_name_list:
+            - name-domain: "www.cnn.com"
+      domain_list_name_list:
+            - name-domain-list: "DOM1"
+t
+
 """
 
 ANSIBLE_METADATA = """
@@ -78,16 +93,16 @@ def get_argspec():
             type='str' 
         ),
         domain_list_name_list=dict(
-            type='str' 
+            type='list' 
         ),
         domain_name_list=dict(
-            type='str' 
+            type='list' 
         ),
         http_match_domain_name=dict(
             type='str' 
         ),
         ip_list=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True

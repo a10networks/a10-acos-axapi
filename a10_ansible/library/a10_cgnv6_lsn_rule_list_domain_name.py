@@ -12,28 +12,58 @@ version_added: 1.8
 
 options:
     
-    name-domain:
+    name:
+        description:
+            - LSN Rule-List Name
+
+    name_domain:
         description:
             - Configure a Specific Rule-Set (Domain Name)
     
-    rule-cfg:
+    rule_cfg:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
-    sampling-enable:
+    sampling_enable:
         
     
 
 """
 
 EXAMPLES = """
+- name: Create a10_cgnv6_lsn_rule_list_domain_name instance
+  a10_cgnv6_lsn_rule_list_domain_name:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      name_domain: "www.cnn.com"
+      rule_cfg:
+          - proto: "tcp"
+            tcp-cfg: {
+                    "start-port": 0,
+                    "action-type": "pass-through",
+                    "action-cfg": "action"
+                }
+          - proto: "icmp"
+            icmp-others-cfg: {
+                    "action-cfg": "action",
+                    "action-type": "drop"
+           }
+          - proto: "udp"
+            udp-cfg: {
+                   "action-cfg": "no-action",
+                   "start-port": 0
+            }
+
 """
 
 ANSIBLE_METADATA = """
@@ -58,11 +88,14 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         
+        name=dict(
+            type='str' , required=True
+        ),
         name_domain=dict(
             type='str' , required=True
         ),
         rule_cfg=dict(
-            type='str' 
+            type='list' 
         ),
         sampling_enable=dict(
             type='str' 
@@ -79,20 +112,22 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/domain-name/{name-domain}"
+    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/domain-name/{name_domain}"
     f_dict = {}
     
-    f_dict["name-domain"] = ""
+    f_dict["name"] = module.params["name"]
+    f_dict["name_domain"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/domain-name/{name-domain}"
+    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/domain-name/{name_domain}"
     f_dict = {}
     
-    f_dict["name-domain"] = module.params["name-domain"]
+    f_dict["name"] = module.params["name"]
+    f_dict["name_domain"] = module.params["name_domain"]
 
     return url_base.format(**f_dict)
 

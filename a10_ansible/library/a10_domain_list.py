@@ -16,14 +16,14 @@ options:
         description:
             - Name of the domain list
     
-    domain-name-list:
+    domain_name_list:
         
     
     uuid:
         description:
             - uuid of the object
     
-    user-tag:
+    user_tag:
         description:
             - Customized tag
     
@@ -31,6 +31,17 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a10_domain_list instance
+  a10_domain_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "DOMAIN1"
+      domain_name_list:
+            - domain-name: "www.test1.com"
+            - domain-name: "www.test2.com"
+
 """
 
 ANSIBLE_METADATA = """
@@ -56,7 +67,7 @@ def get_argspec():
     rv.update(dict(
         
         domain_name_list=dict(
-            type='str' 
+            type='list' 
         ),
         name=dict(
             type='str' , required=True
