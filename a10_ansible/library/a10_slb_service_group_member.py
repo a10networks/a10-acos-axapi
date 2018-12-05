@@ -162,7 +162,7 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/service-group/service_group/member/{name}+{port}"
+    url_base = "/axapi/v3/slb/service-group/{service_group}/member/{name}+{port}"
 
     f_dict = {}
     f_dict["name"] = module.params["name"]
