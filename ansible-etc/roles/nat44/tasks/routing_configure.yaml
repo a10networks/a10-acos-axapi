@@ -4,8 +4,8 @@
 - name: Create  routing
   a10_routes:
         host: "{{ inventory_hostname }}"
-        username: admin
-        password: a10
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
         validate_certs: false
         state: present
         ip_routes:

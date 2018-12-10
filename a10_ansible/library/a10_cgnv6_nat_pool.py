@@ -295,7 +295,9 @@ def present(module, result):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+	delete(module, result)
+        return create(module, result)
+#        return update(module, result)
 
 def absent(module, result):
     return delete(module, result)

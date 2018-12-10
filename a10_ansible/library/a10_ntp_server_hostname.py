@@ -12,7 +12,7 @@ version_added: 1.8
 
 options:
     
-    host-servername:
+    host_servername:
         description:
             - IPV4 address, IPV6 address or host name of NTP server(string1~63)
     
@@ -36,6 +36,16 @@ options:
 """
 
 EXAMPLES = """
+- name: Create a10_ntp_server_hostname
+  a10_ntp_server_hostname:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      host_servername: 192.168.168.1
+      action: enable
+      prefer: 1
+
 """
 
 ANSIBLE_METADATA = """
@@ -61,7 +71,7 @@ def get_argspec():
     rv.update(dict(
         
         action=dict(
-            type='enum' , choices=['enable', 'disable']
+            type='str' , choices=['enable', 'disable']
         ),
         host_servername=dict(
             type='str' , required=True
@@ -81,20 +91,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/ntp/server/hostname/{host-servername}"
+    url_base = "/axapi/v3/ntp/server/hostname/{host_servername}"
     f_dict = {}
     
-    f_dict["host-servername"] = ""
+    f_dict["host_servername"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/ntp/server/hostname/{host-servername}"
+    url_base = "/axapi/v3/ntp/server/hostname/{host_servername}"
     f_dict = {}
     
-    f_dict["host-servername"] = module.params["host-servername"]
+    f_dict["host_servername"] = module.params["host_servername"]
 
     return url_base.format(**f_dict)
 

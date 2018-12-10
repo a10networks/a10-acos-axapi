@@ -4,7 +4,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
-module: a10_lsn-lid
+module: a10_hostname
 description:
     - 
 author: A10 Networks 2018 
@@ -12,86 +12,33 @@ version_added: 1.8
 
 options:
     
-    lid_number:
+    hostname:
         description:
-            - LSN Lid
-    
-    drop_on_nat_pool_mismatch:
-        description:
-            - Drop traffic from users if their current NAT pool does not match the lid's (default: off)
-    
-    name:
-        description:
-            - LSN Lid Name
-    
-    respond_to_user_mac:
-        description:
-            - Use the user's source MAC for the next hop rather than the routing table (default: off)
-    
-    override:
-        description:
-            - 'none': Apply source NAT if configured (default); 'drop': Drop packets that match this LSN lid; 'pass-through': Layer-3 route packets that match this LSN lid and do not apply source NAT; choices:['none', 'drop', 'pass-through']
-    
-    user_quota_prefix_length:
-        description:
-            - NAT64/DS-Lite user quota prefix length (Prefix Length (Default: Uses the global NAT64/DS-Lite configured value))
-    
-    ds_lite:
-        
-    
-    lsn_rule_list:
-        
-    
-    source_nat_pool:
-        
-    
-    extended_user_quota:
-        
-    
-    conn_rate_limit:
-        
-    
-    user_quota:
-        
+            - host name of ACOS (string1~63)
     
     uuid:
         description:
             - uuid of the object
     
-    user_tag:
-        description:
-            - Customized tag
-    
 
 """
 
 EXAMPLES = """
-- name: Create a10_cgnv6_lsn_lid instance
-  a10_cgnv6_lsn_lid:
+- name: Create a10_hostname
+  a10_hostname:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
-      lid_number: 2
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       state: present
-      source_nat_pool:
-            "pool-name":
-               "POOL3"
-      user_quota: {
-          "quota-udp": {
-            "udp-quota":200
-          },
-          "quota-tcp": {
-            "tcp-quota":100,
-            "tcp-reserve":10
-          }
-          }
+      hostname: ANSIBLE1
+
 """
 
 ANSIBLE_METADATA = """
 """
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"conn_rate_limit","drop_on_nat_pool_mismatch","ds_lite","extended_user_quota","lid_number","lsn_rule_list","name","override","respond_to_user_mac","source_nat_pool","user_quota","user_quota_prefix_length","user_tag","uuid",}
+AVAILABLE_PROPERTIES = {"hostname","uuid",}
 
 # our imports go at the top so we fail fast.
 from a10_ansible.axapi_http import client_factory
@@ -109,44 +56,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         
-        conn_rate_limit=dict(
-            type='str' 
-        ),
-        drop_on_nat_pool_mismatch=dict(
-            type='str' 
-        ),
-        ds_lite=dict(
-            type='str' 
-        ),
-        extended_user_quota=dict(
-            type='str' 
-        ),
-        lid_number=dict(
+        hostname=dict(
             type='str' , required=True
-        ),
-        lsn_rule_list=dict(
-            type='dict' 
-        ),
-        name=dict(
-            type='str' 
-        ),
-        override=dict(
-            type='str' , choices=['none', 'drop', 'pass-through']
-        ),
-        respond_to_user_mac=dict(
-            type='str' 
-        ),
-        source_nat_pool=dict(
-            type='dict' 
-        ),
-        user_quota=dict(
-            type='dict' 
-        ),
-        user_quota_prefix_length=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
         ),
         uuid=dict(
             type='str' 
@@ -157,20 +68,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lsn-lid/"
+    url_base = "/axapi/v3/hostname"
     f_dict = {}
     
-    f_dict["lid_number"] = ""
+#    f_dict["hostname"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/lsn-lid/{lid_number}"
+    url_base = "/axapi/v3/hostname"
     f_dict = {}
     
-    f_dict["lid_number"] = module.params["lid_number"]
+#    f_dict["hostname"] = module.params["hostname"]
 
     return url_base.format(**f_dict)
 
@@ -186,7 +97,7 @@ def build_json(title, module):
         v = module.params.get(x)
         if v:
             rx = x.replace("_", "-")
-            rx = rx.replace("\"", "")
+            rx = rx.replace("hostname", "value")
             rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
@@ -224,7 +135,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("lsn-lid", module)
+    payload = build_json("hostname", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         result.update(**post_result)
@@ -250,7 +161,7 @@ def delete(module, result):
     return result
 
 def update(module, result):
-    payload = build_json("lsn-lid", module)
+    payload = build_json("hostname", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)

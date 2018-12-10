@@ -1,0 +1,119 @@
+---
+- debug: msg="Start a10_domain_list"
+- name: Create a10_domain_list instance
+  a10_domain_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "DOMAIN1"
+      domain_name_list:
+            - domain-name: "www.test1.com"
+            - domain-name: "www.test2.com"
+- debug: msg="Stop a10_domain_list"
+
+
+- debug: msg="Start START a10_cgnv6_lsn_rule"
+- name: Create a10_cgnv6_lsn_rule instance
+  a10_cgnv6_lsn_rule_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      ip_list:
+            - ipv4-addr: "1.2.3.4/32"
+            - ipv4-addr: "10.0.0.0/24"
+      domain_name_list:
+            - name-domain: "www.cnn.com"
+      domain_list_name_list:
+            - name-domain-list: "DOMAIN1"
+- debug: msg="Stop START a10_cgnv6_lsn_rule"
+
+- debug: msg="Start START a10_cgnv6_lsn_rule_list_ip"
+- name: Create a10_cgnv6_lsn_rule_list_ip instance
+  a10_cgnv6_lsn_rule_list_ip:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      ipv4_addr: "1.2.3.4/32"
+      rule_cfg:
+          - proto: "tcp"
+            tcp-cfg: {
+                    "end-port": 90,
+                    "action-type": "pass-through",
+                    "start-port": 90,
+                    "action-cfg": "action"
+                }
+          - proto: "icmp"
+            icmp-others-cfg: {
+                    "action-cfg": "action",
+                    "action-type": "drop"
+           }
+          - proto: "udp"
+            udp-cfg: {
+                   "action-cfg": "no-action",
+                   "start-port": 0
+            }
+- debug: msg="Stop START a10_cgnv6_lsn_rule_list_ip"
+
+
+- debug: msg="Start START a10_cgnv6_lsn_rule_list_domain_list_name"
+- name: Create a10_cgnv6_lsn_rule_list_domain_list_name instance
+  a10_cgnv6_lsn_rule_list_domain_list_name:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      name_domain_list: "DOMAIN1"
+      rule_cfg:
+          - proto: "tcp"
+            tcp-cfg: {
+                    "end-port": 70,
+                    "action-type": "pass-through",
+                    "start-port": 70,
+                    "action-cfg": "action"
+                }
+          - proto: "icmp"
+            icmp-others-cfg: {
+                    "action-cfg": "action",
+                    "action-type": "drop"
+           }
+          - proto: "udp"
+            udp-cfg: {
+                   "action-cfg": "no-action",
+                   "start-port": 0
+            }
+- debug: msg="Stop START a10_cgnv6_lsn_rule_list_domain_list_name"
+
+- debug: msg="Start START a10_cgnv6_lsn_rule_list_domain_name"
+- name: Create a10_cgnv6_lsn_rule_list_domain_name instance
+  a10_cgnv6_lsn_rule_list_domain_name:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      name_domain: "www.cnn.com"
+      rule_cfg:
+          - proto: "tcp"
+            tcp-cfg: {
+                    "start-port": 0,
+                    "action-type": "pass-through",
+                    "action-cfg": "action"
+                }
+          - proto: "icmp"
+            icmp-others-cfg: {
+                    "action-cfg": "action",
+                    "action-type": "drop"
+           }
+          - proto: "udp"
+            udp-cfg: {
+                   "action-cfg": "no-action",
+                   "start-port": 0
+            }
+- debug: msg="Stop a10_cgnv6_lsn_rule_list_domain_name"
+

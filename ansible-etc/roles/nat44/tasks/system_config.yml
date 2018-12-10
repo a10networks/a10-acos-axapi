@@ -1,0 +1,23 @@
+---
+- debug: msg="Start START a10_ntp_server_hostname.py"
+- name: Create a10_ntp_server_hostname
+  a10_ntp_server_hostname:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      host_servername: 192.168.168.1
+      action: enable
+      prefer: 1
+- debug: msg="Stop a10_ntp_server_hostname"
+
+- debug: msg="Start START a10_hostname.py"
+- name: Create a10_hostname
+  a10_hostname:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      hostname: "{{ HOSTNAME }}"
+- debug: msg="Stop a10_hostname"
+

@@ -1,0 +1,19 @@
+---
+# Configure routing
+- debug: msg="START a10_ip_route_rib"
+- name: Create  routing
+  a10_ip_route_rib:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
+        state: present
+        ip_dest_addr: 192.168.1.0
+        ip_mask: 255.255.255.0
+        ip_nexthop_ipv4: [
+                {
+                "ip-next-hop":"10.0.0.102",
+                "distance-nexthop-ip":103
+                }
+        ]
+
+- debug: msg="STOP a10_ip_route_rib"

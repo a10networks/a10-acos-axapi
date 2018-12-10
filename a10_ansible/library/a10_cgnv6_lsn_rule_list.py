@@ -4,9 +4,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 DOCUMENTATION = """
+---
 module: a10_lsn-rule-list
 description:
-    - 
+    -  create lsn-lid-rule object
 author: A10 Networks 2018 
 version_added: 1.8
 
@@ -15,10 +16,12 @@ options:
     name:
         description:
             - LSN Rule-List Name
+        required: true
     
     http_match_domain_name:
         description:
             - Enable match domain name in http request
+        required: false
     
     uuid:
         description:
@@ -27,22 +30,32 @@ options:
     user_tag:
         description:
             - Customized tag
+        required: false
     
     domain_ip:
-        
+        description:
+            - Specify IP address
+        required: false
     
     default:
-        
+        description:
+            - Customized tag
+        required: false
     
     domain_name_list:
-        
+        description:
+            - specify name of domains
+        required: false
     
     domain_list_name_list:
-        
+        description:
+            - specify domain-list
+        required: false
     
     ip_list:
-        
-    
+        description:
+            - IP list
+        required: false
 
 """
 
@@ -60,8 +73,6 @@ EXAMPLES = """
             - name-domain: "www.cnn.com"
       domain_list_name_list:
             - name-domain-list: "DOM1"
-t
-
 """
 
 ANSIBLE_METADATA = """

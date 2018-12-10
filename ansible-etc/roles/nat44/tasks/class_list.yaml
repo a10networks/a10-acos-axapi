@@ -4,8 +4,8 @@
 - name: Create a class-lsit
   a10_class_list:
         a10_host: "{{ inventory_hostname }}"
-        a10_username: admin
-        a10_password: a10
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
         state: present
         name: "NAT44-ANSIBLE"
         ipv4_list: [
@@ -22,8 +22,8 @@
 - name: Create a  source class-lsit
   a10_cgnv6_lsn_inside_source_list:
         a10_host: "{{ inventory_hostname }}"
-        a10_username: admin
-        a10_password: a10
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
         state: present
         class_list: "NAT44-ANSIBLE"
           

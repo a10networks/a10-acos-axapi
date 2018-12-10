@@ -3,19 +3,22 @@
 - name: Create a10_cgnv6_lsn_lid instance
   a10_cgnv6_lsn_lid:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       lid_number: 2
       state: present
+      lsn_rule_list: {
+        "destination":"RULE1"
+      }
       source_nat_pool:
             "pool-name": 
-               "{{ NAT_POOL_NAME }}"
+               "{{ NAT1_POOL_NAME }}"
       user_quota: {
           "quota-udp": {
-            "udp-quota":200
+            "udp-quota":500
           },
           "quota-tcp": {
-            "tcp-quota":100,
+            "tcp-quota":500,
             "tcp-reserve":10
           }
           }

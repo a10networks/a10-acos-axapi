@@ -1,0 +1,26 @@
+---
+- debug: msg="Start a10_cgnv6_lsn_lid"
+- name: Create a10_cgnv6_lsn_lid instance
+  a10_cgnv6_lsn_lid:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      lid_number: 2
+      state: absent
+- debug: msg="Stop START a10_cgnv6_lsn_lid"
+
+- debug: msg="START a10_cgnv6_nat_pool"
+- name: Create a10_cgnv6_nat_pool
+  a10_cgnv6_nat_pool:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      pool_name: "{{ NAT1_POOL_NAME }}"
+      start_address: "{{ NAT1_START_ADDRESS }}"
+      end_address: "{{ NAT1_END_ADDRESS }}"
+      netmask: "{{ NAT1_POOL__MASK }}"
+      max_users_per_ip: 128
+      port_batch_v2_size: 256
+      simultaneous_batch_allocation: 1
+
+- debug: msg="STOP a10_cgnv6_nat_pool"

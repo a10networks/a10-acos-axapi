@@ -3,8 +3,8 @@
 - name: Create a10_cgnv6_server
   a10_cgnv6_server:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       name: "SERVER-ANSIBLE"
       host: "20.17.53.199"
       port_list: [
@@ -21,8 +21,8 @@
 - name: Create a10_cgnv6_service_group
   a10_cgnv6_service_group:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       name: "SG-ANSIBLE"
       protocol: "udp"
       member_list: [
@@ -37,8 +37,8 @@
 - name: Create a10_cgnv6_template_logging
   a10_cgnv6_template_logging:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       name: "LOG-ANSIBLE"
       format: "compact"
       service_group: "SG-ANSIBLE"
@@ -65,8 +65,24 @@
 - name: Create a10_cgnv6_template_default_logging
   a10_cgnv6_template_default_logging:
       a10_host: "{{ inventory_hostname }}"
-      a10_username: admin
-      a10_password: a10
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
       logging: { "default-template":"LOG-ANSIBLE" }
 - debug: msg="STOP a10_cgnv6_template_default_logging"
 
+#- debug: msg="START sh ver"
+#- name: show version
+#  ios_command:
+#      commands:
+#        - show version
+#      username: "{{ a10_username }}"
+#      password: "{{ a10_password }}"
+#      host: "{{ inventory_hostname }}"
+#  register: output
+#
+#- assert:
+#      that:
+#        - "'4.1.2-P2' in output['stdout'][0]"
+#- debug: var=output
+#- debug: msg="STOP sh ver"
+#
