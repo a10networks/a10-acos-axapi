@@ -685,7 +685,7 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("virtual-server", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module), payload)
         result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False

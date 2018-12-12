@@ -16,7 +16,7 @@ short_description: Configures A10 slb.server.port
 author: A10 Networks 2018 
 version_added: 2.4
 options:
-    name:
+    server:
         description:
         - Name of server to attach to port
         required: True
@@ -183,7 +183,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str', required=True,),
+        server=dict(type='str', required=True,),
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp']),
         weight=dict(type='int',),
@@ -218,7 +218,7 @@ def new_url(module):
     f_dict = {}
     f_dict["port-number"] = ""
     f_dict["protocol"] = ""
-    f_dict["name"] = module.params["name"]
+    f_dict["name"] = module.params["server"]
     return url_base.format(**f_dict)
 
 
@@ -228,7 +228,7 @@ def existing_url(module):
     url_base = "/axapi/v3/slb/server/{name}/port/{port-number}+{protocol}"
 
     f_dict = {}
-    f_dict["name"] = module.params["name"]
+    f_dict["name"] = module.params["server"]
     f_dict["port-number"] = module.params["port_number"]
     f_dict["protocol"] = module.params["protocol"]
     
@@ -345,7 +345,7 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("port", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module), payload)
         result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
