@@ -1,75 +1,120 @@
 #!/usr/bin/python
+
+# Copyright 2018 A10 Networks
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
-DOCUMENTATION = """
-module: a10_lid
-description:
-    - 
-author: A10 Networks 2018 
-version_added: 1.8
 
+DOCUMENTATION = ''' 
+module: a10_cgnv6_template_dns_class_list_lid
+description:
+    - Limit ID
+short_description: Configures A10 cgnv6.template.dns.class.list.lid
+author: A10 Networks 2018 
+version_added: 2.4
 options:
-    
-    lidnum:
+    state:
         description:
-            - Specify a limit ID
-    
-    conn-rate-limit:
+        - State of the object to be created.
+        choices:
+        - present
+        - absent
+        required: True
+    a10_host:
         description:
-            - Connection rate limit
-    
-    per:
+        - Host for AXAPI authentication
+        required: True
+    a10_username:
         description:
-            - Per (Number of 100ms)
-    
-    over-limit-action:
+        - Username for AXAPI authentication
+        required: True
+    a10_password:
         description:
-            - Action when exceeds limit
-    
-    action-value:
+        - Password for AXAPI authentication
+        required: True
+    action_value:
         description:
-            - 'dns-cache-disable': Disable DNS cache when it exceeds limit; 'dns-cache-enable': Enable DNS cache when it exceeds limit; 'forward': Forward the traffic even it exceeds limit; choices:['dns-cache-disable', 'dns-cache-enable', 'forward']
-    
-    lockout:
-        description:
-            - Don't accept any new connection for certain time (Lockout duration in minutes)
-    
+        - "'dns-cache-disable'= Disable DNS cache when it exceeds limit; 'dns-cache-enable'= Enable DNS cache when it exceeds limit; 'forward'= Forward the traffic even it exceeds limit; "
+        required: False
     log:
         description:
-            - Log a message
-    
-    log-interval:
+        - "Log a message"
+        required: False
+    lidnum:
         description:
-            - Log interval (minute, by default system will log every over limit instance)
-    
+        - "Specify a limit ID"
+        required: True
+    over_limit_action:
+        description:
+        - "Action when exceeds limit"
+        required: False
+    per:
+        description:
+        - "Per (Number of 100ms)"
+        required: False
+    lockout:
+        description:
+        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
     dns:
-        
-    
+        description:
+        - "Field dns"
+        required: False
+        suboptions:
+            cache_action:
+                description:
+                - "'cache-disable'= Disable dns cache; 'cache-enable'= Enable dns cache; "
+            weight:
+                description:
+                - "Weight for cache entry"
+            ttl:
+                description:
+                - "TTL for cache entry (TTL in seconds)"
+    conn_rate_limit:
+        description:
+        - "Connection rate limit"
+        required: False
+    log_interval:
+        description:
+        - "Log interval (minute, by default system will log every over limit instance)"
+        required: False
     uuid:
         description:
-            - uuid of the object
-    
-    user-tag:
-        description:
-            - Customized tag
-    
+        - "uuid of the object"
+        required: False
 
-"""
+'''
 
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
-ANSIBLE_METADATA = """
-"""
+ANSIBLE_METADATA = {
+    'metadata_version': '1.1',
+    'supported_by': 'community',
+    'status': ['preview']
+}
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = {"action_value","conn_rate_limit","dns","lidnum","lockout","log","log_interval","over_limit_action","per","user_tag","uuid",}
+AVAILABLE_PROPERTIES = ["action_value","conn_rate_limit","dns","lidnum","lockout","log","log_interval","over_limit_action","per","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
-from a10_ansible.axapi_http import client_factory
-from a10_ansible import errors as a10_ex
+try:
+    from a10_ansible import errors as a10_ex
+    from a10_ansible.axapi_http import client_factory, session_factory
+    from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
+
+except (ImportError) as ex:
+    module.fail_json(msg="Import Error:{0}".format(ex))
+except (Exception) as ex:
+    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+
 
 def get_default_argspec():
     return dict(
@@ -82,61 +127,40 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
-        action_value=dict(
-            type='enum' , choices=['dns-cache-disable', 'dns-cache-enable', 'forward']
-        ),
-        conn_rate_limit=dict(
-            type='str' 
-        ),
-        dns=dict(
-            type='str' 
-        ),
-        lidnum=dict(
-            type='str' , required=True
-        ),
-        lockout=dict(
-            type='str' 
-        ),
-        log=dict(
-            type='str' 
-        ),
-        log_interval=dict(
-            type='str' 
-        ),
-        over_limit_action=dict(
-            type='str' 
-        ),
-        per=dict(
-            type='str' 
-        ),
-        user_tag=dict(
-            type='str' 
-        ),
-        uuid=dict(
-            type='str' 
-        ), 
+        action_value=dict(type='str',choices=['dns-cache-disable','dns-cache-enable','forward']),
+        log=dict(type='bool',),
+        lidnum=dict(type='int',required=True,),
+        over_limit_action=dict(type='bool',),
+        per=dict(type='int',),
+        lockout=dict(type='int',),
+        user_tag=dict(type='str',),
+        dns=dict(type='dict',cache_action=dict(type='str',choices=['cache-disable','cache-enable']),weight=dict(type='int',),ttl=dict(type='int',)),
+        conn_rate_limit=dict(type='int',),
+        log_interval=dict(type='int',),
+        uuid=dict(type='str',)
     ))
+
     return rv
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/template/dns/{name}/class-list/lid/{lidnum}"
     f_dict = {}
-    
     f_dict["lidnum"] = ""
 
     return url_base.format(**f_dict)
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/template/dns/{name}/class-list/lid/{lidnum}"
-    f_dict = {}
-    
-    f_dict["lidnum"] = module.params["lidnum"]
 
+    f_dict = {}
+    f_dict["lidnum"] = module.params["lidnum"]
+    
     return url_base.format(**f_dict)
 
 
@@ -145,15 +169,47 @@ def build_envelope(title, data):
         title: data
     }
 
+
+def _to_axapi(key):
+    return translateBlacklist(key, KW_OUT).replace("_", "-")
+
+
+def _build_dict_from_param(param):
+    rv = {}
+
+    for k,v in param.items():
+        hk = _to_axapi(k)
+        if isinstance(v, dict):
+            v_dict = _build_dict_from_param(v)
+            rv[hk] = v_dict
+        if isinstance(v, list):
+            nv = [_build_dict_from_param(x) for x in v]
+            rv[hk] = nv
+        else:
+            rv[hk] = v
+
+    return rv
+
+
 def build_json(title, module):
     rv = {}
+
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
         if v:
-            rx = x.replace("_", "-")
-            rv[rx] = module.params[x]
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            if isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -180,10 +236,12 @@ def validate(params):
     
     return rc,errors
 
+def get(module):
+    return module.client.get(existing_url(module))
+
 def exists(module):
     try:
-        module.client.get(existing_url(module))
-        return True
+        return get(module)
     except a10_ex.NotFound:
         return False
 
@@ -213,28 +271,29 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result):
+def update(module, result, existing_config):
     payload = build_json("lid", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         result.update(**post_result)
-        result["changed"] = True
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
     return result
 
-def present(module, result):
+def present(module, result, existing_config):
     if not exists(module):
         return create(module, result)
     else:
-        return update(module, result)
+        return update(module, result, existing_config)
 
 def absent(module, result):
     return delete(module, result)
-
-
 
 def run_command(module):
     run_errors = []
@@ -253,8 +312,11 @@ def run_command(module):
     a10_port = 443
     a10_protocol = "https"
 
-    valid, validation_errors = validate(module.params)
-    map(run_errors.append, validation_errors)
+    valid = True
+
+    if state == 'present':
+        valid, validation_errors = validate(module.params)
+        map(run_errors.append, validation_errors)
     
     if not valid:
         result["messages"] = "Validation failure"
@@ -262,11 +324,14 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    existing_config = exists(module)
 
     if state == 'present':
-        result = present(module, result)
+        result = present(module, result, existing_config)
+        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result)
+        module.client.session.close()
     return result
 
 def main():
