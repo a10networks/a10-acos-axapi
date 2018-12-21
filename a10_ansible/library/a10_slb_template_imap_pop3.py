@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_imap_pop3
 description:
-    - None
+    - IMAP
 short_description: Configures A10 slb.template.imap-pop3
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,30 +37,29 @@ options:
         required: True
     logindisabled:
         description:
-        - "None"
+        - "Disable Login before STARTTLS.Works only for imap"
         required: False
     starttls:
         description:
-        - "None"
+        - "'disabled'= Disable STARTTLS; 'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS command before imap transaction; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     name:
         description:
-        - "None"
+        - "IMAP-POP3 Template Name"
         required: True
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -103,6 +102,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -112,13 +112,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/imap-pop3/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -127,8 +129,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -145,6 +149,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -164,6 +169,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

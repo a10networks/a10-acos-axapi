@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_cache
 description:
-    - None
+    - RAM caching template
 short_description: Configures A10 slb.template.cache
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     accept_reload_req:
         description:
-        - "None"
+        - "Accept reload requests via cache-control directives in HTTP headers"
         required: False
     name:
         description:
-        - "None"
+        - "Specify cache template name"
         required: True
     default_policy_nocache:
         description:
-        - "None"
+        - "Specify default policy to be to not cache"
         required: False
     age:
         description:
-        - "None"
+        - "Specify duration in seconds cached content valid, default is 3600 seconds (seconds that the cached content is valid (default 3600 seconds))"
         required: False
     disable_insert_via:
         description:
-        - "None"
+        - "Disable insertion of via header in response served from RAM cache"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     local_uri_policy:
         description:
@@ -66,7 +66,7 @@ options:
         suboptions:
             local_uri:
                 description:
-                - "None"
+                - "Specify Local URI for caching (Specify URI pattern that the policy should be applied to, maximum 63 charaters)"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -74,26 +74,26 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'hits'= Cache hits; 'miss'= Cache misses; 'bytes_served'= Bytes served from cache; 'total_req'= Total requests received; 'caching_req'= Total requests to cache; 'nc_req_header'= nc_req_header; 'nc_res_header'= nc_res_header; 'rv_success'= rv_success; 'rv_failure'= rv_failure; 'ims_request'= ims_request; 'nm_response'= nm_response; 'rsp_type_CL'= rsp_type_CL; 'rsp_type_CE'= rsp_type_CE; 'rsp_type_304'= rsp_type_304; 'rsp_type_other'= rsp_type_other; 'rsp_no_compress'= rsp_no_compress; 'rsp_gzip'= rsp_gzip; 'rsp_deflate'= rsp_deflate; 'rsp_other'= rsp_other; 'nocache_match'= nocache_match; 'match'= match; 'invalidate_match'= invalidate_match; 'content_toobig'= content_toobig; 'content_toosmall'= content_toosmall; 'entry_create_failures'= entry_create_failures; 'mem_size'= mem_size; 'entry_num'= entry_num; 'replaced_entry'= replaced_entry; 'aging_entry'= aging_entry; 'cleaned_entry'= cleaned_entry; "
     replacement_policy:
         description:
-        - "None"
+        - "'LFU'= LFU; "
         required: False
     disable_insert_age:
         description:
-        - "None"
+        - "Disable insertion of age header in response served from RAM cache"
         required: False
     max_content_size:
         description:
-        - "None"
+        - "Maximum size (bytes) of response that can be cached - default 81920 (80KB)"
         required: False
     max_cache_size:
         description:
-        - "None"
+        - "Specify maximum cache size in megabytes, default is 80MB (RAM cache size in megabytes (default 80MB))"
         required: False
     logging:
         description:
-        - "None"
+        - "Specify logging template (Logging Config name)"
         required: False
     uri_policy:
         description:
@@ -102,38 +102,37 @@ options:
         suboptions:
             cache_action:
                 description:
-                - "None"
+                - "'cache'= Specify if certain URIs should be cached; 'nocache'= Specify if certain URIs should not be cached; "
             cache_value:
                 description:
-                - "None"
+                - "Specify seconds that content should be cached, default is age specified in cache template"
             uri:
                 description:
-                - "None"
+                - "Specify URI for cache policy (Specify URI pattern that the policy should be applied to, maximum 63 charaters)"
             invalidate:
                 description:
-                - "None"
+                - "Specify if URI should invalidate cache entries matching pattern (pattern that would match entries to be invalidated (64 chars max))"
     remove_cookies:
         description:
-        - "None"
+        - "Remove cookies in response and cache"
         required: False
     verify_host:
         description:
-        - "None"
+        - "Verify request using host before sending response from RAM cache"
         required: False
     min_content_size:
         description:
-        - "None"
+        - "Minimum size (bytes) of response that can be cached - default 512"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -189,6 +188,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -198,13 +198,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/cache/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -213,8 +215,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -231,6 +235,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -250,6 +255,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_external_service
 description:
-    - None
+    - External service template
 short_description: Configures A10 slb.template.external-service
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     name:
         description:
-        - "None"
+        - "External Service Template Name"
         required: True
     source_ip:
         description:
-        - "None"
+        - "Source IP persistence template (Source IP persistence template name)"
         required: False
     request_header_forward_list:
         description:
@@ -50,7 +50,7 @@ options:
         suboptions:
             request_header_forward:
                 description:
-                - "None"
+                - "Request header to be forwarded to external service (Header Name)"
     bypass_ip_cfg:
         description:
         - "Field bypass_ip_cfg"
@@ -58,48 +58,47 @@ options:
         suboptions:
             bypass_ip:
                 description:
-                - "None"
+                - "ip address to bypass external service"
             mask:
                 description:
-                - "None"
+                - "IP prefix mask"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     service_group:
         description:
-        - "None"
+        - "Bind a Service Group to the template (Service Group Name)"
         required: False
     failure_action:
         description:
-        - "None"
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
         required: False
     timeout:
         description:
-        - "None"
+        - "Timeout value 1 - 200 in units of 200ms, default is 5 (default is 1000ms) (1 - 200 in units of 200ms, default is 5 (1000ms))"
         required: False
     tcp_proxy:
         description:
-        - "None"
+        - "TCP proxy template (TCP proxy template name)"
         required: False
     action:
         description:
-        - "None"
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
         required: False
     ntype:
         description:
-        - "None"
+        - "'skyfire-icap'= Skyfire ICAP service; 'url-filter'= URL filtering service; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -149,6 +148,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -158,13 +158,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/external-service/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -173,8 +175,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -191,6 +195,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -210,6 +215,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

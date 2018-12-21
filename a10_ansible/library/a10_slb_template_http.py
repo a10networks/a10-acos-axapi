@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_http
 description:
-    - None
+    - HTTP
 short_description: Configures A10 slb.template.http
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,15 +37,15 @@ options:
         required: True
     keep_client_alive:
         description:
-        - "None"
+        - "Keep client alive"
         required: False
     compression_auto_disable_on_high_cpu:
         description:
-        - "None"
+        - "Auto-disable software compression on high cpu usage (Disable compression if cpu usage is above threshold. Default is off.)"
         required: False
     req_hdr_wait_time:
         description:
-        - "None"
+        - "HTTP request header wait time before abort connection"
         required: False
     compression_exclude_uri:
         description:
@@ -54,18 +54,18 @@ options:
         suboptions:
             exclude_uri:
                 description:
-                - "None"
+                - "Compression exclude uri"
     compression_enable:
         description:
-        - "None"
+        - "Enable Compression"
         required: False
     compression_keep_accept_encoding:
         description:
-        - "None"
+        - "Keep accept encoding"
         required: False
     failover_url:
         description:
-        - "None"
+        - "Failover to this URL (Failover URL Name)"
         required: False
     redirect_rewrite:
         description:
@@ -74,10 +74,10 @@ options:
         suboptions:
             redirect_secure_port:
                 description:
-                - "None"
+                - "Port (Port Number)"
             redirect_secure:
                 description:
-                - "None"
+                - "Use HTTPS"
             match_list:
                 description:
                 - "Field match_list"
@@ -88,10 +88,10 @@ options:
         suboptions:
             request_header_erase:
                 description:
-                - "None"
+                - "Erase a header from HTTP request (Header Name)"
     rd_port:
         description:
-        - "None"
+        - "Port (Port Number)"
         required: False
     host_switching:
         description:
@@ -100,28 +100,28 @@ options:
         suboptions:
             host_switching_type:
                 description:
-                - "None"
+                - "'contains'= Select service group if hostname contains another string; 'ends-with'= Select service group if hostname ends with another string; 'equals'= Select service group if hostname equals another string; 'starts-with'= Select service group if hostname starts with another string; 'regex-match'= Select service group if URL string matches with regular expression; 'host-hits-enable'= Enables Host Hits counters; "
             host_service_group:
                 description:
-                - "None"
+                - "Create a Service Group comprising Servers (Service Group Name)"
             host_match_string:
                 description:
-                - "None"
+                - "Hostname String"
     url_hash_last:
         description:
-        - "None"
+        - "Use the end part of URL to calculate hash value (URL string length to calculate hash value)"
         required: False
     client_ip_hdr_replace:
         description:
-        - "None"
+        - "Replace the existing header"
         required: False
     use_server_status:
         description:
-        - "None"
+        - "Use Server-Status header to do URL hashing"
         required: False
     req_hdr_wait_time_val:
         description:
-        - "None"
+        - "Number of seconds wait for client request header (default is 7)"
         required: False
     response_header_insert_list:
         description:
@@ -130,49 +130,49 @@ options:
         suboptions:
             response_header_insert_type:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
             response_header_insert:
                 description:
-                - "None"
+                - "Insert a header into HTTP response (Header Content (Format= '[name]= [value]'))"
     persist_on_401:
         description:
-        - "None"
+        - "Persist to the same server if the response code is 401"
         required: False
     redirect:
         description:
-        - "None"
+        - "Automatically send a redirect response"
         required: False
     insert_client_port:
         description:
-        - "None"
+        - "Insert Client Port address into HTTP header"
         required: False
     retry_on_5xx_per_req_val:
         description:
-        - "None"
+        - "Number of times to retry (default is 3)"
         required: False
     url_hash_offset:
         description:
-        - "None"
+        - "Skip part of URL to calculate hash value (Offset of the URL string)"
         required: False
     rd_simple_loc:
         description:
-        - "None"
+        - "Redirect location tag absolute URI string"
         required: False
     log_retry:
         description:
-        - "None"
+        - "log when HTTP request retry"
         required: False
     non_http_bypass:
         description:
-        - "None"
+        - "Bypass non-http traffic instead of dropping"
         required: False
     retry_on_5xx_per_req:
         description:
-        - "None"
+        - "Retry http request on HTTP 5xx code for each request"
         required: False
     insert_client_ip:
         description:
-        - "None"
+        - "Insert Client IP address into HTTP header"
         required: False
     template:
         description:
@@ -181,7 +181,7 @@ options:
         suboptions:
             logging:
                 description:
-                - "None"
+                - "Logging template (Logging Config name)"
     url_switching:
         description:
         - "Field url_switching"
@@ -189,20 +189,20 @@ options:
         suboptions:
             url_service_group:
                 description:
-                - "None"
+                - "Create a Service Group comprising Servers (Service Group Name)"
             url_match_string:
                 description:
-                - "None"
+                - "URL String"
             url_switching_type:
                 description:
-                - "None"
+                - "'contains'= Select service group if URL string contains another string; 'ends-with'= Select service group if URL string ends with another string; 'equals'= Select service group if URL string equals another string; 'starts-with'= Select service group if URL string starts with another string; 'regex-match'= Select service group if URL string matches with regular expression; 'url-case-insensitive'= Case insensitive URL switching; 'url-hits-enable'= Enables URL Hits; "
     insert_client_port_header_name:
         description:
-        - "None"
+        - "HTTP Header Name for inserting Client Port"
         required: False
     strict_transaction_switch:
         description:
-        - "None"
+        - "Force server selection on every HTTP request"
         required: False
     response_content_replace_list:
         description:
@@ -211,13 +211,13 @@ options:
         suboptions:
             response_new_string:
                 description:
-                - "None"
+                - "String will be in the http content"
             response_content_replace:
                 description:
-                - "None"
+                - "replace the data from HTTP response content (String in the http content need to be replaced)"
     http_100_cont_wait_for_req_complete:
         description:
-        - "None"
+        - "When REQ has Expect 100 and response is not 100, then wait for whole request to be sent"
         required: False
     request_header_insert_list:
         description:
@@ -226,25 +226,25 @@ options:
         suboptions:
             request_header_insert:
                 description:
-                - "None"
+                - "Insert a header into HTTP request (Header Content (Format= '[name]= [value]'))"
             request_header_insert_type:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
     compression_minimum_content_length:
         description:
-        - "None"
+        - "Minimum Content Length (Minimum content length for compression in bytes. Default is 120.)"
         required: False
     compression_level:
         description:
-        - "None"
+        - "compression level, default 1 (compression level value, default is 1)"
         required: False
     request_line_case_insensitive:
         description:
-        - "None"
+        - "Parse http request line as case insensitive"
         required: False
     url_hash_persist:
         description:
-        - "None"
+        - "Use URL's hash value to select server"
         required: False
     response_header_erase_list:
         description:
@@ -253,34 +253,34 @@ options:
         suboptions:
             response_header_erase:
                 description:
-                - "None"
+                - "Erase a header from HTTP response (Header Name)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     bypass_sg:
         description:
-        - "None"
+        - "Select service group for non-http traffic (Service Group Name)"
         required: False
     name:
         description:
-        - "None"
+        - "HTTP Template Name"
         required: True
     retry_on_5xx_val:
         description:
-        - "None"
+        - "Number of times to retry (default is 3)"
         required: False
     url_hash_first:
         description:
-        - "None"
+        - "Use the begining part of URL to calculate hash value (URL string length to calculate hash value)"
         required: False
     compression_keep_accept_encoding_enable:
         description:
-        - "None"
+        - "Enable Server Accept Encoding"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     compression_content_type:
         description:
@@ -289,30 +289,30 @@ options:
         suboptions:
             content_type:
                 description:
-                - "None"
+                - "Compression content-type"
     client_port_hdr_replace:
         description:
-        - "None"
+        - "Replace the existing header"
         required: False
     insert_client_ip_header_name:
         description:
-        - "None"
+        - "HTTP Header Name for inserting Client IP"
         required: False
     rd_secure:
         description:
-        - "None"
+        - "Use HTTPS"
         required: False
     retry_on_5xx:
         description:
-        - "None"
+        - "Retry http request on HTTP 5xx code"
         required: False
     cookie_format:
         description:
-        - "None"
+        - "'rfc6265'= Follow rfc6265; "
         required: False
     term_11client_hdr_conn_close:
         description:
-        - "None"
+        - "Terminate HTTP 1.1 client when req has Connection= close"
         required: False
     compression_exclude_content_type:
         description:
@@ -321,17 +321,16 @@ options:
         suboptions:
             exclude_content_type:
                 description:
-                - "None"
+                - "Compression exclude content-type (Compression exclude content type)"
     rd_resp_code:
         description:
-        - "None"
+        - "'301'= Moved Permanently; '302'= Found; '303'= See Other; '307'= Temporary Redirect; "
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -423,6 +422,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -432,13 +432,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/http/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -447,8 +449,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -465,6 +469,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -484,6 +489,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

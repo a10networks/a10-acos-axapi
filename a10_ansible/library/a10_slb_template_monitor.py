@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_monitor
 description:
-    - None
+    - Monitor template
 short_description: Configures A10 slb.template.monitor
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,16 +42,16 @@ options:
         suboptions:
             clear_sequence:
                 description:
-                - "None"
+                - "Specify the port physical port number"
             clear_all_sequence:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             sessions:
                 description:
-                - "None"
+                - "'all'= Clear all sessions; 'sequence'= Sequence number; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     link_enable_cfg:
         description:
@@ -60,10 +60,10 @@ options:
         suboptions:
             ena_sequence:
                 description:
-                - "None"
+                - "Sequence number (Specify the physical port number)"
             enaeth:
                 description:
-                - "None"
+                - "Specify the physical port number (Ethernet interface number)"
     link_up_cfg:
         description:
         - "Field link_up_cfg"
@@ -71,22 +71,22 @@ options:
         suboptions:
             linkup_ethernet3:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
             linkup_ethernet2:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
             linkup_ethernet1:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
             link_up_sequence1:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             link_up_sequence3:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             link_up_sequence2:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
     link_down_cfg:
         description:
         - "Field link_down_cfg"
@@ -94,25 +94,25 @@ options:
         suboptions:
             link_down_sequence1:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             link_down_sequence2:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             link_down_sequence3:
                 description:
-                - "None"
+                - "Sequence number (Specify the port physical port number)"
             linkdown_ethernet2:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
             linkdown_ethernet3:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
             linkdown_ethernet1:
                 description:
-                - "None"
+                - "Specify the port physical port number (Ethernet interface number)"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     link_disable_cfg:
         description:
@@ -121,24 +121,23 @@ options:
         suboptions:
             dis_sequence:
                 description:
-                - "None"
+                - "Sequence number (Specify the physical port number)"
             diseth:
                 description:
-                - "None"
+                - "Specify the physical port number (Ethernet interface number)"
     monitor_relation:
         description:
-        - "None"
+        - "'monitor-and'= Configures the monitors in current template to work with AND logic; 'monitor-or'= Configures the monitors in current template to work with OR logic; "
         required: False
     id:
         description:
-        - "None"
+        - "Monitor template ID Number"
         required: True
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -185,6 +184,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -194,13 +194,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/monitor/{id}"
+
     f_dict = {}
     f_dict["id"] = module.params["id"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -209,8 +211,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -227,6 +231,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -246,6 +251,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

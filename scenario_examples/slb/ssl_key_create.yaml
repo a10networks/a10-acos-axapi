@@ -1,0 +1,11 @@
+- hosts: all 
+  connection: local
+  name: "My thing"
+  tasks:
+  - name: "Create ssl cert "
+    a10_file_ssl_key:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      file: myxc
+      file_content: "{{lookup('file', '~/certs/new.cert.key')}}"

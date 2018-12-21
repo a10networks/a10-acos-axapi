@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_tcp_proxy
 description:
-    - None
+    - TCP Proxy
 short_description: Configures A10 slb.template.tcp-proxy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,158 +37,157 @@ options:
         required: True
     qos:
         description:
-        - "None"
+        - "QOS level (number)"
         required: False
     init_cwnd:
         description:
-        - "None"
+        - "The initial congestion control window size (packets), default is 10 (number)"
         required: False
     idle_timeout:
         description:
-        - "None"
+        - "Idle Timeout (Interval of 60 seconds), default is 600 (idle timeout in second, default 600)"
         required: False
     fin_timeout:
         description:
-        - "None"
+        - "FIN timeout (sec), default is 5 (number)"
         required: False
     half_open_idle_timeout:
         description:
-        - "None"
+        - "TCP Half Open Idle Timeout (sec), default is off (number)"
         required: False
     reno:
         description:
-        - "None"
+        - "Enable Reno Congestion Control Algorithm"
         required: False
     down:
         description:
-        - "None"
+        - "send reset to client when server is down"
         required: False
     server_down_action:
         description:
-        - "None"
+        - "'FIN'= FIN Connection; 'RST'= Reset Connection; "
         required: False
     timewait:
         description:
-        - "None"
+        - "Timewait Threshold (sec), default 5 (number)"
         required: False
     dynamic_buffer_allocation:
         description:
-        - "None"
+        - "Optimally adjust the transmit and receive buffer sizes of TCP proxy while keeping their sum constant"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     disable_sack:
         description:
-        - "None"
+        - "disable Selective Ack Option"
         required: False
     alive_if_active:
         description:
-        - "None"
+        - "keep connection alive if active traffic"
         required: False
     mss:
         description:
-        - "None"
+        - "Responding MSS to use if client MSS is large, default is off (number)"
         required: False
     keepalive_interval:
         description:
-        - "None"
+        - "Interval between keepalive probes (sec), default is off (number)"
         required: False
     retransmit_retries:
         description:
-        - "None"
+        - "Number of Retries for Retransmit, default is 5"
         required: False
     insert_client_ip:
         description:
-        - "None"
+        - "Insert client ip into TCP option"
         required: False
     transmit_buffer:
         description:
-        - "None"
+        - "TCP Transmit Buffer (default 200k) (number)"
         required: False
     nagle:
         description:
-        - "None"
+        - "Enable Nagle Algorithm"
         required: False
     force_delete_timeout_100ms:
         description:
-        - "None"
+        - "The maximum time that a session can stay in the system before being deleted, default is off (number in 100ms)"
         required: False
     initial_window_size:
         description:
-        - "None"
+        - "Set the initial window size, default is off (number)"
         required: False
     keepalive_probes:
         description:
-        - "None"
+        - "Number of keepalive probes sent, default is off"
         required: False
     ack_aggressiveness:
         description:
-        - "None"
+        - "'low'= Delayed ACK; 'medium'= Delayed ACK, with ACK on each packet with PUSH flag; 'high'= ACK on each packet; "
         required: False
     backend_wscale:
         description:
-        - "None"
+        - "The TCP window scale used for the server side, default is off (number)"
         required: False
     disable:
         description:
-        - "None"
+        - "send reset to client when server is disabled"
         required: False
     reset_rev:
         description:
-        - "None"
+        - "send reset to client if error happens"
         required: False
     disable_window_scale:
         description:
-        - "None"
+        - "disable TCP Window-Scale Option"
         required: False
     receive_buffer:
         description:
-        - "None"
+        - "TCP Receive Buffer (default 200k) (number)"
         required: False
     del_session_on_server_down:
         description:
-        - "None"
+        - "Delete session if the server/port goes down (either disabled/hm down)"
         required: False
     name:
         description:
-        - "None"
+        - "TCP Proxy Template Name"
         required: True
     reset_fwd:
         description:
-        - "None"
+        - "send reset to server if error happens"
         required: False
     disable_tcp_timestamps:
         description:
-        - "None"
+        - "disable TCP Timestamps Option"
         required: False
     syn_retries:
         description:
-        - "None"
+        - "SYN Retry Numbers, default is 5"
         required: False
     force_delete_timeout:
         description:
-        - "None"
+        - "The maximum time that a session can stay in the system before being deleted, default is off (number (second))"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     invalid_rate_limit:
         description:
-        - "None"
+        - "Invalid Packet Response Rate Limit (ms), default is 500 (number)"
         required: False
     half_close_idle_timeout:
         description:
-        - "None"
+        - "TCP Half Close Idle Timeout (sec), default is off (number)"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -263,6 +262,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -272,13 +272,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/tcp-proxy/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -287,8 +289,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -305,6 +309,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -324,6 +329,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

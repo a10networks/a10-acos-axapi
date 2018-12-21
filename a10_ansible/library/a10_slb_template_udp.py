@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_udp
 description:
-    - None
+    - L4 UDP switch config
 short_description: Configures A10 slb.template.udp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,54 +37,53 @@ options:
         required: True
     short:
         description:
-        - "None"
+        - "Short lived session"
         required: False
     qos:
         description:
-        - "None"
+        - "QOS level (number)"
         required: False
     name:
         description:
-        - "None"
+        - "Fast UDP Template Name"
         required: True
     age:
         description:
-        - "None"
+        - "short age (in sec), default is 30"
         required: False
     stateless_conn_timeout:
         description:
-        - "None"
+        - "Stateless Current Connection Timeout value (5 - 120 seconds) (idle timeout in second, default 120)"
         required: False
     idle_timeout:
         description:
-        - "None"
+        - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout in second, default 120)"
         required: False
     re_select_if_server_down:
         description:
-        - "None"
+        - "re-select another server if service port is down"
         required: False
     immediate:
         description:
-        - "None"
+        - "Immediate Removal after Transaction"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     disable_clear_session:
         description:
-        - "None"
+        - "Disable immediate clearing of session"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -133,6 +132,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -142,13 +142,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/udp/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -157,8 +159,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -175,6 +179,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -194,6 +199,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

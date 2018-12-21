@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_tcp
 description:
-    - None
+    - L4 TCP switch config
 short_description: Configures A10 slb.template.tcp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,86 +37,85 @@ options:
         required: True
     del_session_on_server_down:
         description:
-        - "None"
+        - "Delete session if the server/port goes down (either disabled/hm down)"
         required: False
     initial_window_size:
         description:
-        - "None"
+        - "Set the initial window size (number)"
         required: False
     half_open_idle_timeout:
         description:
-        - "None"
+        - "TCP Half Open Idle Timeout (sec), default off (half open idle timeout in second, default off)"
         required: False
     logging:
         description:
-        - "None"
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
         required: False
     name:
         description:
-        - "None"
+        - "Fast TCP Template Name"
         required: True
     reset_fwd:
         description:
-        - "None"
+        - "send reset to server if error happens"
         required: False
     alive_if_active:
         description:
-        - "None"
+        - "keep connection alive if active traffic"
         required: False
     idle_timeout:
         description:
-        - "None"
+        - "Idle Timeout value (Interval of 60 seconds), default 120 seconds (idle timeout in second, default 120)"
         required: False
     force_delete_timeout:
         description:
-        - "None"
+        - "The maximum time that a session can stay in the system before being delete (number (second))"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     down:
         description:
-        - "None"
+        - "send reset to client when server is down"
         required: False
     disable:
         description:
-        - "None"
+        - "send reset to client when server is disabled"
         required: False
     reset_rev:
         description:
-        - "None"
+        - "send reset to client if error happens"
         required: False
     insert_client_ip:
         description:
-        - "None"
+        - "Insert client ip into TCP option"
         required: False
     lan_fast_ack:
         description:
-        - "None"
+        - "Enable fast TCP ack on LAN"
         required: False
     half_close_idle_timeout:
         description:
-        - "None"
+        - "TCP Half Close Idle Timeout (sec), default off (half close idle timeout in second, default off)"
         required: False
     force_delete_timeout_100ms:
         description:
-        - "None"
+        - "The maximum time that a session can stay in the system before being delete (number in 100ms)"
         required: False
     qos:
         description:
-        - "None"
+        - "QOS level (number)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -173,6 +172,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -182,13 +182,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/tcp/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -197,8 +199,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -215,6 +219,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -234,6 +239,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_persist_cookie
 description:
-    - None
+    - Cookie persistence
 short_description: Configures A10 slb.template.persist.cookie
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,90 +37,89 @@ options:
         required: True
     pass_phrase:
         description:
-        - "None"
+        - "Set passphrase for encryption"
         required: False
     domain:
         description:
-        - "None"
+        - "Set cookie domain"
         required: False
     cookie_name:
         description:
-        - "None"
+        - "Set cookie name (Cookie name, default 'sto-id')"
         required: False
     secure:
         description:
-        - "None"
+        - "Enable secure attribute"
         required: False
     encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     dont_honor_conn_rules:
         description:
-        - "None"
+        - "Do not observe connection rate rules"
         required: False
     encrypt_level:
         description:
-        - "None"
+        - "Encryption level for cookie name / value"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     server:
         description:
-        - "None"
+        - "Persist to the same server, default is port"
         required: False
     server_service_group:
         description:
-        - "None"
+        - "Persist to the same server and within the same service group"
         required: False
     service_group:
         description:
-        - "None"
+        - "Persist within the same service group"
         required: False
     expire:
         description:
-        - "None"
+        - "Set cookie expiration time (Expiration in seconds)"
         required: False
     httponly:
         description:
-        - "None"
+        - "Enable HttpOnly attribute"
         required: False
     path:
         description:
-        - "None"
+        - "Set cookie path (Cookie path, default is '/')"
         required: False
     pass_thru:
         description:
-        - "None"
+        - "Pass thru mode - Server sends the persist cookie"
         required: False
     scan_all_members:
         description:
-        - "None"
+        - "Persist within the same server SCAN"
         required: False
     insert_always:
         description:
-        - "None"
+        - "Insert persist cookie to every reponse"
         required: False
     match_type:
         description:
-        - "None"
+        - "Persist for server, default is port"
         required: False
     name:
         description:
-        - "None"
+        - "Cookie persistence (Cookie persistence template name)"
         required: True
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -178,6 +177,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -187,13 +187,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/persist/cookie/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -202,8 +204,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -220,6 +224,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -239,6 +244,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

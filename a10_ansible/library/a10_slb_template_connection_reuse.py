@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_connection_reuse
 description:
-    - None
+    - Connection Reuse
 short_description: Configures A10 slb.template.connection-reuse
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,42 +37,41 @@ options:
         required: True
     preopen:
         description:
-        - "None"
+        - "Preopen server connection"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     keep_alive_conn:
         description:
-        - "None"
+        - "Keep a number of server connections open"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     limit_per_server:
         description:
-        - "None"
+        - "Max Server Connections allowed (Connections per Server Port (default 1000))"
         required: False
     timeout:
         description:
-        - "None"
+        - "Timeout in seconds. Multiple of 60 (def 2400)"
         required: False
     num_conn_per_port:
         description:
-        - "None"
+        - "Connections per Server Port (default 100)"
         required: False
     name:
         description:
-        - "None"
+        - "Connection Reuse Template Name"
         required: True
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -118,6 +117,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -127,13 +127,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/connection-reuse/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -142,8 +144,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -160,6 +164,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -179,6 +184,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

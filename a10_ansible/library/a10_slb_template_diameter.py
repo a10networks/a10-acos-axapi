@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_diameter
 description:
-    - None
+    - diameter template
 short_description: Configures A10 slb.template.diameter
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     avp_string:
         description:
-        - "None"
+        - "pattern to be matched in the avp string name, max length 127 bytes"
         required: False
     terminate_on_cca_t:
         description:
-        - "None"
+        - "remove diameter session when receiving CCA-T message"
         required: False
     message_code_list:
         description:
@@ -58,78 +58,78 @@ options:
         suboptions:
             int32:
                 description:
-                - "None"
+                - "32 bits integer"
             avp:
                 description:
-                - "None"
+                - "customize avps for cer to the server (avp number)"
             mandatory:
                 description:
-                - "None"
+                - "mandatory avp"
             string:
                 description:
-                - "None"
+                - "String (string name, max length 127 bytes)"
             int64:
                 description:
-                - "None"
+                - "64 bits integer"
     service_group_name:
         description:
-        - "None"
+        - "service group name, this is the service group that the message needs to be copied to"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     idle_timeout:
         description:
-        - "None"
+        - "user sesison idle timeout (in minutes, default is 5)"
         required: False
     customize_cea:
         description:
-        - "None"
+        - "customizing cea response"
         required: False
     product_name:
         description:
-        - "None"
+        - "product name avp"
         required: False
     dwr_up_retry:
         description:
-        - "None"
+        - "number of successful dwr health-check before declaring target up"
         required: False
     forward_unknown_session_id:
         description:
-        - "None"
+        - "Forward server message even it has unknown session id"
         required: False
     avp_code:
         description:
-        - "None"
+        - "avp code"
         required: False
     vendor_id:
         description:
-        - "None"
+        - "vendor-id avp (Vendor Id)"
         required: False
     session_age:
         description:
-        - "None"
+        - "user session age allowed (default 10), this is not idle-time (in minutes)"
         required: False
     load_balance_on_session_id:
         description:
-        - "None"
+        - "Load balance based on the session id"
         required: False
     name:
         description:
-        - "None"
+        - "diameter template Name"
         required: True
     dwr_time:
         description:
-        - "None"
+        - "dwr health-check timer interval (in 100 milli second unit, default is 100, 0 means unset this option)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     origin_realm:
         description:
-        - "None"
+        - "origin-realm name avp"
         required: False
     origin_host:
         description:
@@ -138,24 +138,23 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             origin_host_name:
                 description:
-                - "None"
+                - "origin-host name avp"
     multiple_origin_host:
         description:
-        - "None"
+        - "allowing multiple origin-host to a single server"
         required: False
     forward_to_latest_server:
         description:
-        - "None"
+        - "Forward client message to the latest server that sends message with the same session id"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -215,6 +214,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -224,13 +224,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/diameter/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -239,8 +241,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -257,6 +261,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -276,6 +281,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

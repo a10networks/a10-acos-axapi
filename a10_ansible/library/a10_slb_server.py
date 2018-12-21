@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_server
 description:
-    - None
+    - Server
 short_description: Configures A10 slb.server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     health_check_disable:
         description:
-        - "None"
+        - "Disable configured health check configuration"
         required: False
     port_list:
         description:
@@ -46,113 +46,113 @@ options:
         suboptions:
             health_check_disable:
                 description:
-                - "None"
+                - "Disable health check"
             protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
             weight:
                 description:
-                - "None"
+                - "Port Weight (Connection Weight)"
             stats_data_action:
                 description:
-                - "None"
+                - "'stats-data-enable'= Enable statistical data collection for real server port; 'stats-data-disable'= Disable statistical data collection for real server port; "
             health_check_follow_port:
                 description:
-                - "None"
+                - "Specify which port to follow for health status (Port Number)"
             template_port:
                 description:
-                - "None"
+                - "Port template (Port template name)"
             conn_limit:
                 description:
-                - "None"
+                - "Connection Limit"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             no_ssl:
                 description:
-                - "None"
+                - "No SSL"
             follow_port_protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
             template_server_ssl:
                 description:
-                - "None"
+                - "Server side SSL template (Server side SSL Name)"
             alternate_port:
                 description:
                 - "Field alternate_port"
             port_number:
                 description:
-                - "None"
+                - "Port Number"
             extended_stats:
                 description:
-                - "None"
+                - "Enable extended statistics on real server port"
             conn_resume:
                 description:
-                - "None"
+                - "Connection Resume"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             range:
                 description:
-                - "None"
+                - "Port range (Port range value - used for vip-to-rport-mapping and vport-rport range mapping)"
             auth_cfg:
                 description:
                 - "Field auth_cfg"
             action:
                 description:
-                - "None"
+                - "'enable'= enable; 'disable'= disable; 'disable-with-health-check'= disable port, but health check work; "
             health_check:
                 description:
-                - "None"
+                - "Health Check (Monitor Name)"
             no_logging:
                 description:
-                - "None"
+                - "Do not log connection over limit event"
     stats_data_action:
         description:
-        - "None"
+        - "'stats-data-enable'= Enable statistical data collection for real server; 'stats-data-disable'= Disable statistical data collection for real server; "
         required: False
     spoofing_cache:
         description:
-        - "None"
+        - "This server is a spoofing cache"
         required: False
     weight:
         description:
-        - "None"
+        - "Weight for this Real Server (Connection Weight)"
         required: False
     slow_start:
         description:
-        - "None"
+        - "Slowly ramp up the connection number after server is up (start from 128, then double every 10 sec till 4096)"
         required: False
     conn_limit:
         description:
-        - "None"
+        - "Connection Limit"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     fqdn_name:
         description:
-        - "None"
+        - "Server hostname"
         required: False
     external_ip:
         description:
-        - "None"
+        - "External IP address for NAT of GSLB"
         required: False
     ipv6:
         description:
-        - "None"
+        - "IPv6 address Mapping of GSLB"
         required: False
     template_server:
         description:
-        - "None"
+        - "Server template (Server template name)"
         required: False
     server_ipv6_addr:
         description:
-        - "None"
+        - "IPV6 address"
         required: False
     alternate_server:
         description:
@@ -161,29 +161,29 @@ options:
         suboptions:
             alternate_name:
                 description:
-                - "None"
+                - "Alternate Name"
             alternate:
                 description:
-                - "None"
+                - "Alternate Server (Alternate Server Number)"
     host:
         description:
-        - "None"
+        - "IP Address"
         required: False
     extended_stats:
         description:
-        - "None"
+        - "Enable extended statistics on real server"
         required: False
     conn_resume:
         description:
-        - "None"
+        - "Connection Resume (Connection Resume (min active conn before resume taking new conn))"
         required: False
     name:
         description:
-        - "None"
+        - "Server Name"
         required: True
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     sampling_enable:
         description:
@@ -192,25 +192,24 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total-conn'= Total established connections; 'fwd-pkt'= Forward Packets Processed; 'rev-pkt'= Reverse Packets Processed; 'peak-conn'= Peak number of established connections; 'total_req'= Total Requests processed; 'total_req_succ'= Total Requests succeeded; 'curr_ssl_conn'= Current SSL connections established; 'total_ssl_conn'= Total SSL connections established; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_pkts'= Packets processed in reverse direction; "
     action:
         description:
-        - "None"
+        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server; 'disable-with-health-check'= disable real server, but health check work; "
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check Monitor (Health monitor name)"
         required: False
     no_logging:
         description:
-        - "None"
+        - "Do not log connection over limit event"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -271,6 +270,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -280,13 +280,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/server/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -295,8 +297,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -313,6 +317,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -332,6 +337,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -396,7 +402,7 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("server", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module), payload)
         result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False

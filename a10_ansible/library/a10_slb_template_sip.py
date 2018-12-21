@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_sip
 description:
-    - None
+    - SIP Template
 short_description: Configures A10 slb.template.sip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,35 +42,35 @@ options:
         suboptions:
             server_request_header_insert:
                 description:
-                - "None"
+                - "Insert a SIP header (Header Content (Format= 'name= value'))"
             server_request_erase_all:
                 description:
-                - "None"
+                - "Erase all headers"
             insert_condition_server_request:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
             server_request_header_erase:
                 description:
-                - "None"
+                - "Erase a SIP header (Header Name)"
     smp_call_id_rtp_session:
         description:
-        - "None"
+        - "Create the across cpu call-id rtp session"
         required: False
     keep_server_ip_if_match_acl:
         description:
-        - "None"
+        - "Use Real Server IP for addresses matching the ACL for a Call-Id"
         required: False
     client_keep_alive:
         description:
-        - "None"
+        - "Respond client keep-alive packet directly instead of forwarding to server"
         required: False
     alg_source_nat:
         description:
-        - "None"
+        - "Translate source IP to NAT IP in SIP message when source NAT is used"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     server_response_header:
         description:
@@ -79,19 +79,19 @@ options:
         suboptions:
             server_response_header_insert:
                 description:
-                - "None"
+                - "Insert a SIP header (Header Content (Format= 'name= value'))"
             insert_condition_server_response:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
             server_response_header_erase:
                 description:
-                - "None"
+                - "Erase a SIP header (Header Name)"
             server_response_erase_all:
                 description:
-                - "None"
+                - "Erase all headers"
     server_selection_per_request:
         description:
-        - "None"
+        - "Force server selection on every SIP request"
         required: False
     client_request_header:
         description:
@@ -100,51 +100,51 @@ options:
         suboptions:
             client_request_header_erase:
                 description:
-                - "None"
+                - "Erase a SIP header (Header Name)"
             client_request_header_insert:
                 description:
-                - "None"
+                - "Insert a SIP header (Header Content (Format= 'name= value'))"
             client_request_erase_all:
                 description:
-                - "None"
+                - "Erase all headers"
             insert_condition_client_request:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
     pstn_gw:
         description:
-        - "None"
+        - "configure pstn gw host name for tel= uri translate to sip= uri (Hostname String, default is 'pstn')"
         required: False
     service_group:
         description:
-        - "None"
+        - "service group name"
         required: False
     insert_client_ip:
         description:
-        - "None"
+        - "Insert Client IP address into SIP header"
         required: False
     failed_client_selection:
         description:
-        - "None"
+        - "Define action when select client fail"
         required: False
     failed_client_selection_message:
         description:
-        - "None"
+        - "Send SIP message (includs status code) to server when select client fail(Format= 3 digits(1XX~6XX) space reason)"
         required: False
     call_id_persist_disable:
         description:
-        - "None"
+        - "Disable call-ID persistence"
         required: False
     acl_id:
         description:
-        - "None"
+        - "ACL id"
         required: False
     alg_dest_nat:
         description:
-        - "None"
+        - "Translate VIP to real server IP in SIP message when destination NAT is used"
         required: False
     server_keep_alive:
         description:
-        - "None"
+        - "Send server keep-alive packet for every persist connection when enable conn-reuse"
         required: False
     client_response_header:
         description:
@@ -153,23 +153,23 @@ options:
         suboptions:
             client_response_erase_all:
                 description:
-                - "None"
+                - "Erase all headers"
             insert_condition_client_response:
                 description:
-                - "None"
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
             client_response_header_erase:
                 description:
-                - "None"
+                - "Erase a SIP header (Header Name)"
             client_response_header_insert:
                 description:
-                - "None"
+                - "Insert a SIP header (Header Content (Format= 'name= value'))"
     failed_server_selection_message:
         description:
-        - "None"
+        - "Send SIP message (includs status code) to client when select server fail(Format= 3 digits(1XX~6XX) space reason)"
         required: False
     name:
         description:
-        - "None"
+        - "SIP Template Name"
         required: True
     exclude_translation:
         description:
@@ -178,48 +178,47 @@ options:
         suboptions:
             translation_value:
                 description:
-                - "None"
+                - "'start-line'= SIP request line or status line; 'header'= SIP message headers; 'body'= SIP message body; "
             header_string:
                 description:
-                - "None"
+                - "SIP header name"
     interval:
         description:
-        - "None"
+        - "The interval of keep-alive packet for each persist connection (second)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     dialog_aware:
         description:
-        - "None"
+        - "Permit system processes dialog session"
         required: False
     failed_server_selection:
         description:
-        - "None"
+        - "Define action when select server fail"
         required: False
     drop_when_client_fail:
         description:
-        - "None"
+        - "Drop current SIP message when select client fail"
         required: False
     timeout:
         description:
-        - "None"
+        - "Time in minutes"
         required: False
     drop_when_server_fail:
         description:
-        - "None"
+        - "Drop current SIP message when select server fail"
         required: False
     acl_name_value:
         description:
-        - "None"
+        - "IPv4 Access List Name"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -287,6 +286,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -296,13 +296,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/sip/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -311,8 +313,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -329,6 +333,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -348,6 +353,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.

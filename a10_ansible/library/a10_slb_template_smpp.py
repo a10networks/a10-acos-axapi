@@ -8,10 +8,10 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = ''' 
 module: a10_slb_template_smpp
 description:
-    - None
+    - SMPP template
 short_description: Configures A10 slb.template.smpp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,46 +37,45 @@ options:
         required: True
     name:
         description:
-        - "None"
+        - "SMPP Template Name"
         required: True
     server_enquire_link:
         description:
-        - "None"
+        - "Send server ENQUIRE_LINK packet for every persist connection when enable conn-reuse"
         required: False
     server_selection_per_request:
         description:
-        - "None"
+        - "Force server selection on every SMPP request when enable conn-reuse"
         required: False
     client_enquire_link:
         description:
-        - "None"
+        - "Respond client ENQUIRE_LINK packet directly instead of forwarding to server"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     server_enquire_link_val:
         description:
-        - "None"
+        - "Set interval of keep-alive packet for each persistent connection (second, default is 30)"
         required: False
     user:
         description:
-        - "None"
+        - "Configure the user to bind (The name used to bind)"
         required: False
     password:
         description:
-        - "None"
+        - "Configure the password used to bind"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
+'''
 
-"""
-
-EXAMPLES = """
-"""
+EXAMPLES = ''' 
+'''
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -123,6 +122,7 @@ def get_argspec():
 
     return rv
 
+
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
@@ -132,13 +132,15 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/template/smpp/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
-
+    
     return url_base.format(**f_dict)
 
 
@@ -147,8 +149,10 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
@@ -165,6 +169,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -184,6 +189,7 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
+
 
 def validate(params):
     # Ensure that params contains all the keys.
