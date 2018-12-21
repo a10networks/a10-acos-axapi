@@ -297,6 +297,7 @@ def build_envelope(title, data):
         title: data
     }
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
 
@@ -316,6 +317,7 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
+
 
 def build_json(title, module):
     rv = {}
@@ -400,7 +402,7 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("server", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module), payload)
         result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
