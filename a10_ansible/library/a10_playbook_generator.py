@@ -50,6 +50,14 @@ PATH_MAPPING = {
             DEP_TASKNAME: "slb_virtual_server",
             DEP_ENVELOPE: "virtual-server"
         },
+        SLB_SERVER: {
+            DEP_TASKNAME: "slb_server",
+            DEP_ENVELOPE: "server"
+        },
+        SLB_SERVICE_GROUP: {
+            DEP_TASKNAME: "slb_service_group",
+            DEP_ENVELOPE: "service-group"
+        },
 }
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
@@ -120,6 +128,7 @@ try:
     from a10_ansible.axapi_http import client_factory, session_factory
     from a10_ansible.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
 
+    import copy
     import json
     import os
     import yaml
@@ -239,62 +248,6 @@ def validate(params):
     
     return rc,errors
 
-def get(module):
-    return module.client.get(existing_url(module))
-
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return False
-
-def create(module, result):
-    payload = build_json("shutdown", module)
-    try:
-        post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
-        result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-def delete(module, result):
-    try:
-        module.client.delete(existing_url(module))
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-def update(module, result, existing_config):
-    payload = build_json("shutdown", module)
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
-    else:
-        return update(module, result, existing_config)
-
 def url_path(path):
     return "/axapi/v3/{0}".format(path)
 
@@ -355,11 +308,18 @@ def run_command(module):
         fq_path = get_fq_path(px)
         t_val = get_nested(slb, fq_path)
         t_dict = PATH_MAPPING.get(px)
+
+        import pdb; pdb.set_trace()
+        playbook_dict = {
+                "hosts": "all",
+                "name": "{0} Configuration Playbook",
+                "connection": "local",
+                "tasks": []
+        }
+    
         if t_dict:
             taskname = t_dict[DEP_TASKNAME]
             env_key = t_dict[DEP_ENVELOPE]
-            playbook_dict = {}
-            playbook_dict.update(DEFAULT_PLAYBOOK_DICT)
 
             # For each object in the list
             for obj in t_val:
@@ -373,8 +333,9 @@ def run_command(module):
                 playbook_dict["tasks"].append({"name": taskdesc, formatted_task: task_dict})
                 
                 # Wrap it in the taskname
-                shortname = "{0}.yaml".format(px)
 
+            shortname = "{0}.yaml".format(px)
+            import pdb; pdb.set_trace()
             playbook_path = os.path.join(output_path, shortname)
             with open(playbook_path, 'w') as playbook_f:
                 yaml.safe_dump([playbook_dict], playbook_f, default_flow_style=False)
