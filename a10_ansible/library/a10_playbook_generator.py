@@ -309,7 +309,6 @@ def run_command(module):
         t_val = get_nested(slb, fq_path)
         t_dict = PATH_MAPPING.get(px)
 
-        import pdb; pdb.set_trace()
         playbook_dict = {
                 "hosts": "all",
                 "name": "{0} Configuration Playbook",
@@ -335,7 +334,6 @@ def run_command(module):
                 # Wrap it in the taskname
 
             shortname = "{0}.yaml".format(px)
-            import pdb; pdb.set_trace()
             playbook_path = os.path.join(output_path, shortname)
             with open(playbook_path, 'w') as playbook_f:
                 yaml.safe_dump([playbook_dict], playbook_f, default_flow_style=False)
