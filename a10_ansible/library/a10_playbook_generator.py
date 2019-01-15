@@ -35,7 +35,7 @@ DEFAULT_TASK_DICT = {
 PATHS = [
     SLB_TEMPLATE_CLIENT_SSL,
     SLB_TEMPLATE_PERSIST_SOURCE_IP,
-    SLB_TEMPLATE_FTP,
+    # SLB_TEMPLATE_FTP,
     SLB_VIRTUAL_SERVER,
     SLB_SERVER,
     SLB_SERVICE_GROUP,
@@ -260,7 +260,10 @@ def get_fq_path(path, demarc="."):
 def get_nested(target, path):
     tl = target[path[0]] 
     for x in path[1:]:
-        tl = tl[x]
+        if x in tl:
+            tl = tl[x]
+        else:
+            tl = {}
     return tl
 
 def transform_keys(in_dict):
@@ -304,6 +307,16 @@ def run_command(module):
 
     output_path = module.params.get("output_path")
 
+    absolute_path = os.path.abspath(output_path)
+    # Rewrite the output path to match.
+
+    if not os.path.isdir(absolute_path):
+        try:
+            os.mkdir(absolute_path)
+        except Exception:
+            err_msg = "{0} is not a valid output directory. Did you create the directory above it?".format(absolute_path)
+            module.fail_json(msg=err_msg, **result)
+
     for px in PATHS:
         fq_path = get_fq_path(px)
         t_val = get_nested(slb, fq_path)
@@ -316,7 +329,7 @@ def run_command(module):
                 "tasks": []
         }
     
-        if t_dict:
+        if t_dict and t_val != {}:
             taskname = t_dict[DEP_TASKNAME]
             env_key = t_dict[DEP_ENVELOPE]
 
@@ -337,13 +350,9 @@ def run_command(module):
             playbook_path = os.path.join(output_path, shortname)
             with open(playbook_path, 'w') as playbook_f:
                 yaml.safe_dump([playbook_dict], playbook_f, default_flow_style=False)
-
-    slb = module.client.get(url_path("slb"))["slb"]
-    virtual_servers = slb["virtual-server-list"]
-    service_groups = slb["service-group-list"]
-    zz = yaml.dump(slb)
-    return {"result": zz}
-
+        
+    result["message"] = "Success"
+    return result
 
 #     valid = True
 # 
