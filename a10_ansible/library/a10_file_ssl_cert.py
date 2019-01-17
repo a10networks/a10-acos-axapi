@@ -231,9 +231,9 @@ def create(module, result):
 
 def delete(module, result):
     try:
-        url = "/axapi/v3/pki/delete-oper"
-        payload = {"delete-oper": {"filename": module.params["file"]}}
-        module.client.post(existing_url(module), payload)
+        url = "/axapi/v3/pki/delete"
+        payload = {"delete": {"cert-name": module.params["file"]}}
+        module.client.post(url, payload)
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
