@@ -166,6 +166,15 @@ class HttpClient(object):
         return self.request("DELETE", api_url, params, headers, **kwargs)
 
 
+    def activate_partition(self, partition_name):
+        if partition_name:
+            url = "/axapi/v3/active-partition/{0}".format(partition_name)
+	    try:
+                self.post(url, {})
+            except Exception as ex:
+		raise Exception("Could not activate {0}".format(partition_name))
+
+
 class Session(object):
 
     def __init__(self, http, username, password):
@@ -252,6 +261,8 @@ class A10Client(object):
 
     def delete(self, url, params={}, **kwargs):
         return self._request('DELETE', url, params, **kwargs)
+
+    
 
 def http_factory(host, port, protocol):
     return HttpClient(host, port, protocol)
