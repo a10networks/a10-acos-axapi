@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_lsn_alg_mgcp
 description:
-    - None
+    - Change LSN MGCP ALG Settings
 short_description: Configures A10 cgnv6.lsn.alg.mgcp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,14 +42,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'auep'= MGCP AUEP; 'aucx'= MGCP AUCX; 'crcx'= MGCP CRCX; 'dlcx'= MGCP DLCX; 'epcf'= MGCP EPCF; 'mdcx'= MGCP MDCX; 'ntfy'= MGCP NTFY; 'rqnt'= MGCP RQNT; 'rsip'= MGCP RSIP; 'parse-error'= MGCP Message Parse Error; 'conn-ext-creation-failure'= MGCP Create Connection Extension Failure; 'third-party-sdp'= MGCP Third-Party SDP; 'sdp-process-candidate-failure'= MGCP Operate SDP Media Candidate Attribute Failure; 'sdp-op-failure'= MGCP Operate SDP Failure; 'sdp-alloc-port-map-success'= MGCP Alloc SDP Port Map Success; 'sdp-alloc-port-map-failure'= MGCP Alloc SDP Port Map Failure; 'modify-failure'= MGCP Message Modify Failure; 'rewrite-failure'= MGCP Message Rewrite Failure; 'tcp-out-of-order-drop'= TCP Out-of-Order Drop; "
     mgcp_value:
         description:
-        - "None"
+        - "'enable'= Enable MGCP ALG for LSN; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -84,7 +84,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -254,9 +257,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -270,6 +275,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

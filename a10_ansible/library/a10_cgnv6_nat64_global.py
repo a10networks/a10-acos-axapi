@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_nat64_global
 description:
-    - None
+    - Configure NAT64 parameters
 short_description: Configures A10 cgnv6.nat64.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,15 +37,15 @@ options:
         required: True
     user_quota_prefix_length:
         description:
-        - "None"
+        - "User Quota Prefix Length (Default= 128)"
         required: False
     all:
         description:
-        - "None"
+        - "All packet sizes"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     inside:
         description:
@@ -68,7 +68,7 @@ options:
                 - "Field reset_on_error"
     force_non_zero_ipv4_id:
         description:
-        - "None"
+        - "Enable non-zero ID field in IPv4 header if no IPv6 fragment & IPv4 pkt size is more than 88 & less than or equal to 1280 bytes"
         required: False
     icmp:
         description:
@@ -77,10 +77,10 @@ options:
         suboptions:
             send_on_user_quota_exceeded:
                 description:
-                - "None"
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'= Send ICMP admin filtered (default); 'disable'= Disable ICMP quota exceeded message; "
             send_on_port_unavailable:
                 description:
-                - "None"
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'= Send ICMP admin filtered; 'disable'= Disable ICMP port unavailable message (default); "
 
 
 """
@@ -114,7 +114,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -288,9 +291,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -304,6 +309,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

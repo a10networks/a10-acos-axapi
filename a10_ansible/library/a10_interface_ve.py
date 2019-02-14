@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_ve
 description:
-    - None
+    - Virtual ethernet interface
 short_description: Configures A10 interface.ve
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,19 +42,19 @@ options:
         suboptions:
             inside:
                 description:
-                - "None"
+                - "Configure MAP inside interface (connected to MAP domains)"
             map_t_inside:
                 description:
-                - "None"
+                - "Configure MAP inside interface (connected to MAP domains)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             map_t_outside:
                 description:
-                - "None"
+                - "Configure MAP outside interface"
             outside:
                 description:
-                - "None"
+                - "Configure MAP outside interface"
     nptv6:
         description:
         - "Field nptv6"
@@ -73,7 +73,7 @@ options:
                 - "Field priority_list"
             padding:
                 description:
-                - "None"
+                - "Add padding to IS-IS hello packets"
             hello_interval_minimal_list:
                 description:
                 - "Field hello_interval_minimal_list"
@@ -82,7 +82,7 @@ options:
                 - "Field mesh_group"
             network:
                 description:
-                - "None"
+                - "'broadcast'= Specify IS-IS broadcast multi-access network; 'point-to-point'= Specify IS-IS point-to-point network; "
             authentication:
                 description:
                 - "Field authentication"
@@ -91,7 +91,7 @@ options:
                 - "Field csnp_interval_list"
             retransmit_interval:
                 description:
-                - "None"
+                - "Set per-LSP retransmission interval (Interval between retransmissions of the same LSP (seconds))"
             password_list:
                 description:
                 - "Field password_list"
@@ -106,7 +106,7 @@ options:
                 - "Field hello_interval_list"
             circuit_type:
                 description:
-                - "None"
+                - "'level-1'= Level-1 only adjacencies are formed; 'level-1-2'= Level-1-2 adjacencies are formed; 'level-2-only'= Level-2 only adjacencies are formed; "
             hello_multiplier_list:
                 description:
                 - "Field hello_multiplier_list"
@@ -115,17 +115,17 @@ options:
                 - "Field metric_list"
             lsp_interval:
                 description:
-                - "None"
+                - "Set LSP transmission interval (LSP transmission interval (milliseconds))"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     name:
         description:
-        - "None"
+        - "Name for the interface"
         required: False
     trap_source:
         description:
-        - "None"
+        - "The trap source"
         required: False
     bfd:
         description:
@@ -140,13 +140,13 @@ options:
                 - "Field authentication"
             echo:
                 description:
-                - "None"
+                - "Enable BFD Echo"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             demand:
                 description:
-                - "None"
+                - "Demand mode"
     ip:
         description:
         - "Field ip"
@@ -154,34 +154,34 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             generate_membership_query:
                 description:
-                - "None"
+                - "Enable Membership Query"
             address_list:
                 description:
                 - "Field address_list"
             inside:
                 description:
-                - "None"
+                - "Configure interface as inside"
             allow_promiscuous_vip:
                 description:
-                - "None"
+                - "Allow traffic to be associated with promiscuous VIP"
             helper_address_list:
                 description:
                 - "Field helper_address_list"
             max_resp_time:
                 description:
-                - "None"
+                - "Maximum Response Time (Max Response Time (Default is 100))"
             query_interval:
                 description:
-                - "None"
+                - "1 - 255 (Default is 125)"
             outside:
                 description:
-                - "None"
+                - "Configure interface as outside"
             client:
                 description:
-                - "None"
+                - "Client facing interface for IPv4/v6 traffic"
             stateful_firewall:
                 description:
                 - "Field stateful_firewall"
@@ -190,22 +190,22 @@ options:
                 - "Field rip"
             ttl_ignore:
                 description:
-                - "None"
+                - "Ignore TTL decrement for a received packet"
             router:
                 description:
                 - "Field router"
             dhcp:
                 description:
-                - "None"
+                - "Use DHCP to configure IP address"
             server:
                 description:
-                - "None"
+                - "Server facing interface for IPv4/v6 traffic"
             ospf:
                 description:
                 - "Field ospf"
             slb_partition_redirect:
                 description:
-                - "None"
+                - "Redirect SLB traffic across partition"
     icmpv6_rate_limit:
         description:
         - "Field icmpv6_rate_limit"
@@ -213,28 +213,28 @@ options:
         suboptions:
             lockup_period_v6:
                 description:
-                - "None"
+                - "Lockup period (second)"
             normal_v6:
                 description:
-                - "None"
+                - "Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit"
             lockup_v6:
                 description:
-                - "None"
+                - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate limit. If exceeds this limit, drop all ICMP packet for a time period)"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     mtu:
         description:
-        - "None"
+        - "Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))"
         required: False
     action:
         description:
-        - "None"
+        - "'enable'= Enable; 'disable'= Disable; "
         required: False
     ifnum:
         description:
-        - "None"
+        - "Virtual ethernet interface number"
         required: True
     sampling_enable:
         description:
@@ -243,7 +243,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'num_pkts'= Input packets; 'num_total_bytes'= Input bytes; 'num_unicast_pkts'= Received unicasts; 'num_broadcast_pkts'= Received broadcasts; 'num_multicast_pkts'= Received multicasts; 'num_tx_pkts'= Transmitted packtes; 'num_total_tx_bytes'= Transmitte bytes; 'num_unicast_tx_pkts'= Trasnmitted unicasts; 'num_broadcast_tx_pkts'= Transmitted broadcasts; 'num_multicast_tx_pkts'= Transmitted multicasts; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval; "
     lw_4o6:
         description:
         - "Field lw_4o6"
@@ -251,13 +251,13 @@ options:
         suboptions:
             outside:
                 description:
-                - "None"
+                - "Configure LW-4over6 inside interface"
             inside:
                 description:
-                - "None"
+                - "Configure LW-4over6 outside interface"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ipv6:
         description:
         - "Field ipv6"
@@ -265,34 +265,34 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             inbound:
                 description:
-                - "None"
+                - "ACL applied on incoming packets to this interface"
             address_list:
                 description:
                 - "Field address_list"
             inside:
                 description:
-                - "None"
+                - "Configure interface as NAT inside"
             ipv6_enable:
                 description:
-                - "None"
+                - "Enable IPv6 processing"
             rip:
                 description:
                 - "Field rip"
             outside:
                 description:
-                - "None"
+                - "Configure interface as NAT outside"
             stateful_firewall:
                 description:
                 - "Field stateful_firewall"
             v6_acl_name:
                 description:
-                - "None"
+                - "Apply ACL rules to incoming packets on this interface (Named Access List)"
             ttl_ignore:
                 description:
-                - "None"
+                - "Ignore TTL decrement for a received packet"
             router:
                 description:
                 - "Field router"
@@ -309,13 +309,13 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "Named Access List"
             acl_id:
                 description:
-                - "None"
+                - "ACL id"
     l3_vlan_fwd_disable:
         description:
-        - "None"
+        - "Disable L3 forwarding between VLANs for incoming packets on this interface"
         required: False
     icmp_rate_limit:
         description:
@@ -324,13 +324,13 @@ options:
         suboptions:
             lockup:
                 description:
-                - "None"
+                - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate limit. If exceeds this limit, drop all ICMP packet for a time period)"
             lockup_period:
                 description:
-                - "None"
+                - "Lockup period (second)"
             normal:
                 description:
-                - "None"
+                - "Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit"
     ddos:
         description:
         - "Field ddos"
@@ -338,16 +338,16 @@ options:
         suboptions:
             outside:
                 description:
-                - "None"
+                - "DDoS inside (trusted) or outside (untrusted) interface"
             inside:
                 description:
-                - "None"
+                - "DDoS inside (trusted) or outside (untrusted) interface"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -382,7 +382,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -571,9 +574,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -587,6 +592,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

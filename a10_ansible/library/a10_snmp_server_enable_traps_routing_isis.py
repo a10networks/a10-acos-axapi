@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_enable_traps_routing_isis
 description:
-    - None
+    - Enable isis traps
 short_description: Configures A10 snmp.server.enable.traps.routing.isis
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,75 +37,75 @@ options:
         required: True
     isisAuthenticationFailure:
         description:
-        - "None"
+        - "Enable isisAuthenticationFailure traps"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     isisProtocolsSupportedMismatch:
         description:
-        - "None"
+        - "Enable isisProtocolsSupportedMismatch traps"
         required: False
     isisRejectedAdjacency:
         description:
-        - "None"
+        - "Enable isisRejectedAdjacency traps"
         required: False
     isisMaxAreaAddressesMismatch:
         description:
-        - "None"
+        - "Enable isisMaxAreaAddressesMismatch traps"
         required: False
     isisCorruptedLSPDetected:
         description:
-        - "None"
+        - "Enable isisCorruptedLSPDetected traps"
         required: False
     isisOriginatingLSPBufferSizeMismatch:
         description:
-        - "None"
+        - "Enable isisOriginatingLSPBufferSizeMismatch traps"
         required: False
     isisAreaMismatch:
         description:
-        - "None"
+        - "Enable isisAreaMismatch traps"
         required: False
     isisLSPTooLargeToPropagate:
         description:
-        - "None"
+        - "Enable isisLSPTooLargeToPropagate traps"
         required: False
     isisOwnLSPPurge:
         description:
-        - "None"
+        - "Enable isisOwnLSPPurge traps"
         required: False
     isisSequenceNumberSkip:
         description:
-        - "None"
+        - "Enable isisSequenceNumberSkip traps"
         required: False
     isisDatabaseOverload:
         description:
-        - "None"
+        - "Enable isisDatabaseOverload traps"
         required: False
     isisAttemptToExceedMaxSequence:
         description:
-        - "None"
+        - "Enable isisAttemptToExceedMaxSequence traps"
         required: False
     isisIDLenMismatch:
         description:
-        - "None"
+        - "Enable isisIDLenMismatch traps"
         required: False
     isisAuthenticationTypeFailure:
         description:
-        - "None"
+        - "Enable isisAuthenticationTypeFailure traps"
         required: False
     isisVersionSkew:
         description:
-        - "None"
+        - "Enable isisVersionSkew traps"
         required: False
     isisManualAddressDrops:
         description:
-        - "None"
+        - "Enable isisManualAddressDrops traps"
         required: False
     isisAdjacencyChange:
         description:
-        - "None"
+        - "Enable isisAdjacencyChange traps"
         required: False
 
 
@@ -140,7 +140,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -325,9 +328,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -341,6 +346,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

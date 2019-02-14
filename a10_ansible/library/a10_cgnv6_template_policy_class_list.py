@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_policy_class_list
 description:
-    - None
+    - Configure classification list
 short_description: Configures A10 cgnv6.template.policy.class-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     header_name:
         description:
-        - "None"
+        - "Specify L7 header name"
         required: False
     lid_list:
         description:
@@ -46,64 +46,64 @@ options:
         suboptions:
             request_limit:
                 description:
-                - "None"
+                - "Request limit (Specify request limit)"
             conn_limit:
                 description:
-                - "None"
+                - "Connection limit"
             lidnum:
                 description:
-                - "None"
+                - "Specify a limit ID"
             log:
                 description:
-                - "None"
+                - "Log a message"
             dns64:
                 description:
                 - "Field dns64"
             interval:
                 description:
-                - "None"
+                - "Specify log interval in minutes, by default system will log every over limit instance"
             request_rate_limit:
                 description:
-                - "None"
+                - "Request rate limit (Specify request rate limit)"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             conn_per:
                 description:
-                - "None"
+                - "Per (Specify interval in number of 100ms)"
             request_per:
                 description:
-                - "None"
+                - "Per (Specify interval in number of 100ms)"
             conn_rate_limit:
                 description:
-                - "None"
+                - "Specify connection rate limit"
             lockout:
                 description:
-                - "None"
+                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
             action_value:
                 description:
-                - "None"
+                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the connection when it exceeds limit; "
             over_limit_action:
                 description:
-                - "None"
+                - "Set action when exceeds limit"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     name:
         description:
-        - "None"
+        - "Class list name"
         required: True
     client_ip_l3_dest:
         description:
-        - "None"
+        - "Use destination IP as client IP address"
         required: False
     client_ip_l7_header:
         description:
-        - "None"
+        - "Use extract client IP address from L7 header"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -138,7 +138,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -311,9 +314,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -327,6 +332,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

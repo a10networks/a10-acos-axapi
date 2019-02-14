@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_enable_traps
 description:
-    - None
+    - Enable SNMP traps
 short_description: Configures A10 snmp.server.enable.traps
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     lldp:
         description:
-        - "None"
+        - "Enable lldp traps"
         required: False
     all:
         description:
-        - "None"
+        - "Enable all SNMP traps"
         required: False
     slb_change:
         description:
@@ -50,37 +50,37 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Enable all system group traps"
             resource_usage_warning:
                 description:
-                - "None"
+                - "Enable partition resource usage warning trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ssl_cert_change:
                 description:
-                - "None"
+                - "Enable SSL certificate change trap"
             ssl_cert_expire:
                 description:
-                - "None"
+                - "Enable SSL certificate expiring trap"
             server:
                 description:
-                - "None"
+                - "Enable slb server create/delete trap"
             vip:
                 description:
-                - "None"
+                - "Enable slb vip create/delete trap"
             connection_resource_event:
                 description:
-                - "None"
+                - "Enable system connection resource event trap"
             server_port:
                 description:
-                - "None"
+                - "Enable slb server port create/delete trap"
             vip_port:
                 description:
-                - "None"
+                - "Enable slb vip-port create/delete trap"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     lsn:
         description:
@@ -89,28 +89,28 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Enable all LSN group traps"
             fixed_nat_port_mapping_file_change:
                 description:
-                - "None"
+                - "Enable LSN trap when fixed nat port mapping file change"
             per_ip_port_usage_threshold:
                 description:
-                - "None"
+                - "Enable LSN trap when IP total port usage reaches the threshold (default 64512)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             total_port_usage_threshold:
                 description:
-                - "None"
+                - "Enable LSN trap when NAT total port usage reaches the threshold (default 655350000)"
             max_port_threshold:
                 description:
-                - "None"
+                - "Maximum threshold"
             max_ipport_threshold:
                 description:
-                - "None"
+                - "Maximum threshold"
             traffic_exceeded:
                 description:
-                - "None"
+                - "Enable LSN trap when NAT pool reaches the threshold"
     vrrp_a:
         description:
         - "Field vrrp_a"
@@ -118,16 +118,16 @@ options:
         suboptions:
             active:
                 description:
-                - "None"
+                - "Enable VRRP-A active trap"
             standby:
                 description:
-                - "None"
+                - "Enable VRRP-A standby trap"
             all:
                 description:
-                - "None"
+                - "Enable all VRRP-A group traps"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     snmp:
         description:
         - "Field snmp"
@@ -135,16 +135,16 @@ options:
         suboptions:
             linkup:
                 description:
-                - "None"
+                - "Enable SNMP link-up trap"
             all:
                 description:
-                - "None"
+                - "Enable all SNMP group traps"
             linkdown:
                 description:
-                - "None"
+                - "Enable SNMP link-down trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     system:
         description:
         - "Field system"
@@ -152,58 +152,58 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Enable all system group traps"
             data_cpu_high:
                 description:
-                - "None"
+                - "Enable data CPU usage high trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             power:
                 description:
-                - "None"
+                - "Enable system power supply trap"
             high_disk_use:
                 description:
-                - "None"
+                - "Enable system high disk usage trap"
             high_memory_use:
                 description:
-                - "None"
+                - "Enable system high memory usage trap"
             control_cpu_high:
                 description:
-                - "None"
+                - "Enable control CPU usage high trap"
             file_sys_read_only:
                 description:
-                - "None"
+                - "Enable file system read-only trap"
             low_temp:
                 description:
-                - "None"
+                - "Enable system low temperature trap"
             high_temp:
                 description:
-                - "None"
+                - "Enable system high temperature trap"
             sec_disk:
                 description:
-                - "None"
+                - "Enable system secondary hard disk trap"
             start:
                 description:
-                - "None"
+                - "Enable system start trap"
             fan:
                 description:
-                - "None"
+                - "Enable system fan trap"
             shutdown:
                 description:
-                - "None"
+                - "Enable system shutdown trap"
             pri_disk:
                 description:
-                - "None"
+                - "Enable system primary hard disk trap"
             license_management:
                 description:
-                - "None"
+                - "Enable system license management traps"
             packet_drop:
                 description:
-                - "None"
+                - "Enable system packet dropped trap"
             restart:
                 description:
-                - "None"
+                - "Enable system restart trap"
     ssl:
         description:
         - "Field ssl"
@@ -211,10 +211,10 @@ options:
         suboptions:
             server_certificate_error:
                 description:
-                - "None"
+                - "Enable SSL server certificate error trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     vcs:
         description:
         - "Field vcs"
@@ -222,10 +222,10 @@ options:
         suboptions:
             state_change:
                 description:
-                - "None"
+                - "Enable VCS state change trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     routing:
         description:
         - "Field routing"
@@ -247,22 +247,22 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Enable all GSLB traps"
             group:
                 description:
-                - "None"
+                - "Enable GSLB group related traps"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             zone:
                 description:
-                - "None"
+                - "Enable GSLB zone related traps"
             site:
                 description:
-                - "None"
+                - "Enable GSLB site related traps"
             service_ip:
                 description:
-                - "None"
+                - "Enable GSLB service-ip related traps"
     slb:
         description:
         - "Field slb"
@@ -270,91 +270,91 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Enable all SLB traps"
             server_down:
                 description:
-                - "None"
+                - "Enable SLB server-down trap"
             vip_port_connratelimit:
                 description:
-                - "None"
+                - "Enable the virtual port reach conn-rate-limit trap"
             server_selection_failure:
                 description:
-                - "None"
+                - "Enable SLB server selection failure trap"
             service_group_down:
                 description:
-                - "None"
+                - "Enable SLB service-group-down trap"
             server_conn_limit:
                 description:
-                - "None"
+                - "Enable SLB server connection limit trap"
             service_group_member_up:
                 description:
-                - "None"
+                - "Enable SLB service-group-member-up trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             server_conn_resume:
                 description:
-                - "None"
+                - "Enable SLB server connection resume trap"
             service_up:
                 description:
-                - "None"
+                - "Enable SLB service-up trap"
             service_conn_limit:
                 description:
-                - "None"
+                - "Enable SLB service connection limit trap"
             gateway_up:
                 description:
-                - "None"
+                - "Enable SLB server gateway up trap"
             service_group_up:
                 description:
-                - "None"
+                - "Enable SLB service-group-up trap"
             application_buffer_limit:
                 description:
-                - "None"
+                - "Enable application buffer reach limit trap"
             vip_connratelimit:
                 description:
-                - "None"
+                - "Enable the virtual server reach conn-rate-limit trap"
             vip_connlimit:
                 description:
-                - "None"
+                - "Enable the virtual server reach conn-limit trap"
             service_group_member_down:
                 description:
-                - "None"
+                - "Enable SLB service-group-member-down trap"
             service_down:
                 description:
-                - "None"
+                - "Enable SLB service-down trap"
             bw_rate_limit_exceed:
                 description:
-                - "None"
+                - "Enable SLB server/port bandwidth rate limit exceed trap"
             server_disabled:
                 description:
-                - "None"
+                - "Enable SLB server-disabled trap"
             server_up:
                 description:
-                - "None"
+                - "Enable slb server up trap"
             vip_port_connlimit:
                 description:
-                - "None"
+                - "Enable the virtual port reach conn-limit trap"
             vip_port_down:
                 description:
-                - "None"
+                - "Enable SLB virtual port down trap"
             bw_rate_limit_resume:
                 description:
-                - "None"
+                - "Enable SLB server/port bandwidth rate limit resume trap"
             gateway_down:
                 description:
-                - "None"
+                - "Enable SLB server gateway down trap"
             vip_up:
                 description:
-                - "None"
+                - "Enable SLB virtual server up trap"
             vip_port_up:
                 description:
-                - "None"
+                - "Enable SLB virtual port up trap"
             vip_down:
                 description:
-                - "None"
+                - "Enable SLB virtual server down trap"
             service_conn_resume:
                 description:
-                - "None"
+                - "Enable SLB service connection resume trap"
     network:
         description:
         - "Field network"
@@ -362,10 +362,10 @@ options:
         suboptions:
             trunk_port_threshold:
                 description:
-                - "None"
+                - "Enable network trunk-port-threshold trap"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
 
 
 """
@@ -399,7 +399,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -580,9 +583,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -596,6 +601,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

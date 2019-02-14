@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_tacacs_server_host_ipv4
 description:
-    - None
+    - Specify the hostname of TACACS+ server
 short_description: Configures A10 tacacs-server.host.ipv4
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     ipv4_addr:
         description:
-        - "None"
+        - "IPV4 address of TACACS+ server"
         required: True
     secret:
         description:
@@ -46,34 +46,34 @@ options:
         suboptions:
             source_trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             source_ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             encrypted:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) help-val The ENCRYPTED secret string"
             source_ip:
                 description:
-                - "None"
+                - "IP address"
             source_eth:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
             port_cfg:
                 description:
                 - "Field port_cfg"
             source_lif:
                 description:
-                - "None"
+                - "Logical interface (Lif interface number)"
             source_loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
             secret_value:
                 description:
-                - "None"
+                - "The TACACS+ server's secret"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -108,7 +108,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -280,9 +283,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -296,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

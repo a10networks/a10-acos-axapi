@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_http_alg
 description:
-    - None
+    - HTTP-ALG Template
 short_description: Configures A10 cgnv6.template.http-alg
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,63 +37,63 @@ options:
         required: True
     header_name_client_ip:
         description:
-        - "None"
+        - "Header name (default= X-Forwarded-For)"
         required: False
     retry:
         description:
-        - "None"
+        - "Specify the maximum retries allowed for sending an request to a RADIUS server (default 2) (The maximum retries allowed for sending an request to the radius server (default 2))"
         required: False
     retry_svr_num:
         description:
-        - "None"
+        - "Specify the maximum RADIUS servers allowed to try (default 0)"
         required: False
     name:
         description:
-        - "None"
+        - "HTTP-ALG template name"
         required: True
     request_insert_msisdn:
         description:
-        - "None"
+        - "Insert MSISDN into HTTP request"
         required: False
     radius_sg:
         description:
-        - "None"
+        - "RADIUS service group (RADIUS service group name)"
         required: False
     encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     request_insert_client_ip:
         description:
-        - "None"
+        - "Insert Client IP into HTTP request"
         required: False
     header_name_msisdn:
         description:
-        - "None"
+        - "Header name (default= X-MSISDN)"
         required: False
     timeout:
         description:
-        - "None"
+        - "The maximum time allowed for waiting for a response from a radius server (default 2)"
         required: False
     include_tunnel_ip:
         description:
-        - "None"
+        - "Include the tunnel IP (applies to DS-Lite and 6RD-NAT64 sessions)"
         required: False
     secret_string:
         description:
-        - "None"
+        - "The RADIUS secret"
         required: False
     method:
         description:
-        - "None"
+        - "'append'= Append if there is already a header (default); 'replace'= Replace if there is already a header; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -128,7 +128,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -312,9 +315,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -328,6 +333,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

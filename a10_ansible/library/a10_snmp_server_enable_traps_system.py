@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_enable_traps_system
 description:
-    - None
+    - Enable system group traps
 short_description: Configures A10 snmp.server.enable.traps.system
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,75 +37,75 @@ options:
         required: True
     all:
         description:
-        - "None"
+        - "Enable all system group traps"
         required: False
     data_cpu_high:
         description:
-        - "None"
+        - "Enable data CPU usage high trap"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     power:
         description:
-        - "None"
+        - "Enable system power supply trap"
         required: False
     high_disk_use:
         description:
-        - "None"
+        - "Enable system high disk usage trap"
         required: False
     high_memory_use:
         description:
-        - "None"
+        - "Enable system high memory usage trap"
         required: False
     control_cpu_high:
         description:
-        - "None"
+        - "Enable control CPU usage high trap"
         required: False
     file_sys_read_only:
         description:
-        - "None"
+        - "Enable file system read-only trap"
         required: False
     low_temp:
         description:
-        - "None"
+        - "Enable system low temperature trap"
         required: False
     high_temp:
         description:
-        - "None"
+        - "Enable system high temperature trap"
         required: False
     sec_disk:
         description:
-        - "None"
+        - "Enable system secondary hard disk trap"
         required: False
     start:
         description:
-        - "None"
+        - "Enable system start trap"
         required: False
     fan:
         description:
-        - "None"
+        - "Enable system fan trap"
         required: False
     shutdown:
         description:
-        - "None"
+        - "Enable system shutdown trap"
         required: False
     pri_disk:
         description:
-        - "None"
+        - "Enable system primary hard disk trap"
         required: False
     license_management:
         description:
-        - "None"
+        - "Enable system license management traps"
         required: False
     packet_drop:
         description:
-        - "None"
+        - "Enable system packet dropped trap"
         required: False
     restart:
         description:
-        - "None"
+        - "Enable system restart trap"
         required: False
 
 
@@ -140,7 +140,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -325,9 +328,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -341,6 +346,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

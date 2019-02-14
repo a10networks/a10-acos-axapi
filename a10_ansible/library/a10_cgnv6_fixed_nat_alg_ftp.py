@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_fixed_nat_alg_ftp
 description:
-    - None
+    - Change Fixed NAT FTP ALG Settings
 short_description: Configures A10 cgnv6.fixed.nat.alg.ftp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'port-requests'= PORT Requests From Client; 'eprt-requests'= EPRT Requests From Client; 'lprt-requests'= LPRT Requests From Client; 'pasv-replies'= PASV Replies From Server; 'epsv-replies'= EPSV Replies From Server; 'lpsv-replies'= LPSV Replies From Server; 'port-retransmits'= Port Mode Request Retransmits; 'pasv-retransmits'= Passive Mode Reply Retransmits; 'port-helper-created'= Port Mode Helper Created; 'pasv-helper-created'= Passive Mode Helper Created; 'port-helper-freed'= Port Mode Helper Freed; 'pasv-helper-freed'= Passive Mode Helper Freed; 'port-helper-unused'= Port Mode Helper Unused; 'pasv-helper-unused'= Passive Mode Helper Unused; 'port-helper-creation-failure'= Port Helper Creation Failure; 'pasv-helper-creation-failure'= Passive Helper Creation Failure; 'get-conn-ext-failure'= Get Conn Extension Failure; 'smp-app-type-mismatch'= SMP ALG App Type Mismatch; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -249,9 +252,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -265,6 +270,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

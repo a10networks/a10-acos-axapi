@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_nat46_stateless_global
 description:
-    - None
+    - Stateless NAT46 Statistics
 short_description: Configures A10 cgnv6.nat46.stateless.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'outbound_ipv4_received'= Outbound IPv4 packets received; 'outbound_ipv4_drop'= Outbound IPv4 packets dropped; 'outbound_ipv4_fragment_received'= Outbound IPv4 fragment packets received; 'outbound_ipv6_unreachable'= Outbound IPv6 destination unreachable; 'outbound_ipv6_fragmented'= Outbound IPv6 packets fragmented; 'inbound_ipv6_received'= Inbound IPv6 packets received; 'inbound_ipv6_drop'= Inbound IPv6 packets dropped; 'inbound_ipv6_fragment_received'= Inbound IPv6 fragment packets received; 'inbound_ipv4_unreachable'= Inbound IPv4 destination unreachable; 'inbound_ipv4_fragmented'= Inbound IPv4 packets fragmented; 'packet_too_big'= Packet too big; 'fragment_error'= Fragment processing errors; 'icmpv6_to_icmp'= ICMPv6 to ICMP; 'icmpv6_to_icmp_error'= ICMPv6 to ICMP errors; 'icmp_to_icmpv6'= ICMP to ICMPv6; 'icmp_to_icmpv6_error'= ICMP to ICMPv6 errors; 'ha_standby'= HA is standby; 'other_error'= Other errors; 'conn_count'= conn count; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -249,9 +252,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -265,6 +270,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

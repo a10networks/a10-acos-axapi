@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_stateful_firewall_alg_ftp
 description:
-    - None
+    - Configure FTP ALG for NAT stateful firewall (default= enabled)
 short_description: Configures A10 cgnv6.stateful.firewall.alg.ftp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,14 +42,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'client-port-request'= PORT Requests From Client; 'client-eprt-request'= EPRT Requests From Client; 'server-pasv-reply'= PASV Replies From Server; 'server-epsv-reply'= EPSV Replies From Server; 'port-retransmits'= PORT Retransmits; 'pasv-retransmits'= PASV Retransmits; 'smp-app-type-mismatch'= SMP App Type Mismatch; 'retransmit-sanity-check-failure'= Retransmit Sanity Check Failure; 'smp-conn-alloc-failure'= SMP Helper Conn Alloc Failure; 'port-helper-created'= PORT Helper Created; 'pasv-helper-created'= PASV Helper Created; 'port-helper-acquire-in-del-q'= PORT Helper Acquire In Del Queue; 'port-helper-acquire-already-used'= PORT Helper Acquire Already Used; 'pasv-helper-acquire-in-del-q'= PASV Helper Acquire In Del Queue; 'pasv-helper-acquire-already-used'= PASV Helper Acquire Already Used; 'port-helper-freed-used'= PORT Helper Freed Used; 'port-helper-freed-unused'= PORT Helper Freed Unused; 'pasv-helper-freed-used'= PASV Helper Freed Used; 'pasv-helper-freed-unused'= PASV Helper Freed Unused; "
     ftp_value:
         description:
-        - "None"
+        - "'disable'= Disable ALG; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -84,7 +84,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -254,9 +257,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -270,6 +275,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

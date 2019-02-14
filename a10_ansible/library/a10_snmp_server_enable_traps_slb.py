@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_enable_traps_slb
 description:
-    - None
+    - Enable SLB group traps
 short_description: Configures A10 snmp.server.enable.traps.slb
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,119 +37,119 @@ options:
         required: True
     all:
         description:
-        - "None"
+        - "Enable all SLB traps"
         required: False
     server_down:
         description:
-        - "None"
+        - "Enable SLB server-down trap"
         required: False
     vip_port_connratelimit:
         description:
-        - "None"
+        - "Enable the virtual port reach conn-rate-limit trap"
         required: False
     server_selection_failure:
         description:
-        - "None"
+        - "Enable SLB server selection failure trap"
         required: False
     service_group_down:
         description:
-        - "None"
+        - "Enable SLB service-group-down trap"
         required: False
     server_conn_limit:
         description:
-        - "None"
+        - "Enable SLB server connection limit trap"
         required: False
     service_group_member_up:
         description:
-        - "None"
+        - "Enable SLB service-group-member-up trap"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     server_conn_resume:
         description:
-        - "None"
+        - "Enable SLB server connection resume trap"
         required: False
     service_up:
         description:
-        - "None"
+        - "Enable SLB service-up trap"
         required: False
     service_conn_limit:
         description:
-        - "None"
+        - "Enable SLB service connection limit trap"
         required: False
     gateway_up:
         description:
-        - "None"
+        - "Enable SLB server gateway up trap"
         required: False
     service_group_up:
         description:
-        - "None"
+        - "Enable SLB service-group-up trap"
         required: False
     application_buffer_limit:
         description:
-        - "None"
+        - "Enable application buffer reach limit trap"
         required: False
     vip_connratelimit:
         description:
-        - "None"
+        - "Enable the virtual server reach conn-rate-limit trap"
         required: False
     vip_connlimit:
         description:
-        - "None"
+        - "Enable the virtual server reach conn-limit trap"
         required: False
     service_group_member_down:
         description:
-        - "None"
+        - "Enable SLB service-group-member-down trap"
         required: False
     service_down:
         description:
-        - "None"
+        - "Enable SLB service-down trap"
         required: False
     bw_rate_limit_exceed:
         description:
-        - "None"
+        - "Enable SLB server/port bandwidth rate limit exceed trap"
         required: False
     server_disabled:
         description:
-        - "None"
+        - "Enable SLB server-disabled trap"
         required: False
     server_up:
         description:
-        - "None"
+        - "Enable slb server up trap"
         required: False
     vip_port_connlimit:
         description:
-        - "None"
+        - "Enable the virtual port reach conn-limit trap"
         required: False
     vip_port_down:
         description:
-        - "None"
+        - "Enable SLB virtual port down trap"
         required: False
     bw_rate_limit_resume:
         description:
-        - "None"
+        - "Enable SLB server/port bandwidth rate limit resume trap"
         required: False
     gateway_down:
         description:
-        - "None"
+        - "Enable SLB server gateway down trap"
         required: False
     vip_up:
         description:
-        - "None"
+        - "Enable SLB virtual server up trap"
         required: False
     vip_port_up:
         description:
-        - "None"
+        - "Enable SLB virtual port up trap"
         required: False
     vip_down:
         description:
-        - "None"
+        - "Enable SLB virtual server down trap"
         required: False
     service_conn_resume:
         description:
-        - "None"
+        - "Enable SLB service connection resume trap"
         required: False
 
 
@@ -184,7 +184,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -380,9 +383,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -396,6 +401,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

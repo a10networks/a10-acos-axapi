@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_fixed_nat_inside_ipv4address
 description:
-    - None
+    - Configure Fixed NAT
 short_description: Configures A10 cgnv6.fixed.nat.inside.ipv4address
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,51 +37,51 @@ options:
         required: True
     partition:
         description:
-        - "None"
+        - "Inside User Partition (Partition Name)"
         required: True
     inside_netmask:
         description:
-        - "None"
+        - "IPv4 Netmask"
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     nat_end_address:
         description:
-        - "None"
+        - "IPv4 End NAT Address"
         required: False
     vrid:
         description:
-        - "None"
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
     ports_per_user:
         description:
-        - "None"
+        - "Configure Ports per Inside User (ports-per-user)"
         required: False
     session_quota:
         description:
-        - "None"
+        - "Configure per user quota on sessions"
         required: False
     method:
         description:
-        - "None"
+        - "'use-all-nat-ips'= Use all the NAT IP addresses configured; 'use-least-nat-ips'= Use the least number of NAT IP addresses required (default); "
         required: False
     inside_start_address:
         description:
-        - "None"
+        - "IPv4 Inside User Start Address"
         required: True
     dest_rule_list:
         description:
-        - "None"
+        - "Bind destination based Rule-List (Fixed NAT Rule-List Name)"
         required: False
     nat_start_address:
         description:
-        - "None"
+        - "Start NAT Address"
         required: False
     nat_ip_list:
         description:
-        - "None"
+        - "Name of IP List used to specify NAT addresses"
         required: False
     offset:
         description:
@@ -90,17 +90,17 @@ options:
         suboptions:
             numeric_offset:
                 description:
-                - "None"
+                - "Configure a numeric offset to the first NAT IP address"
             random:
                 description:
-                - "None"
+                - "Randomly choose the first NAT IP address"
     respond_to_user_mac:
         description:
-        - "None"
+        - "Use the user's source MAC for the next hop rather than the routing table (Default= off)"
         required: False
     inside_end_address:
         description:
-        - "None"
+        - "IPv4 Inside User End Address"
         required: True
     usable_nat_ports:
         description:
@@ -109,17 +109,17 @@ options:
         suboptions:
             usable_start_port:
                 description:
-                - "None"
+                - "Start Port of Usable NAT Ports"
             usable_end_port:
                 description:
-                - "None"
+                - "End Port of Usable NAT Ports"
     nat_netmask:
         description:
-        - "None"
+        - "NAT Addresses IP Netmask"
         required: False
     dynamic_pool_size:
         description:
-        - "None"
+        - "Configure size of Dynamic pool (Default= 0)"
         required: False
 
 
@@ -154,7 +154,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -347,9 +350,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -363,6 +368,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

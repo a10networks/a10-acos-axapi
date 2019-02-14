@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_logging
 description:
-    - None
+    - Logging Template
 short_description: Configures A10 cgnv6.template.logging
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     include_inside_user_mac:
         description:
-        - "None"
+        - "Include the inside user MAC address in logs"
         required: False
     facility:
         description:
-        - "None"
+        - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3= System daemons; 'security-authorization'= 4= Security/authorization; 'syslog'= 5= Syslog internal; 'line-printer'= 6= Line printer; 'news'= 7= Network news; 'uucp'= 8= UUCP subsystem; 'cron'= 9= Time-related; 'security-authorization-private'= 10= Private security/authorization; 'ftp'= 11= FTP; 'ntp'= 12= NTP; 'audit'= 13= Audit; 'alert'= 14= Alert; 'clock'= 15= Clock-related; 'local0'= 16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2; 'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use 5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7; "
         required: False
     rule:
         description:
@@ -53,10 +53,10 @@ options:
                 - "Field rule_http_requests"
             interim_update_interval:
                 description:
-                - "None"
+                - "Log interim update of NAT mappings (Interim update interval in minutes)"
     include_partition_name:
         description:
-        - "None"
+        - "Include partition name in logging events"
         required: False
     severity:
         description:
@@ -65,10 +65,10 @@ options:
         suboptions:
             severity_string:
                 description:
-                - "None"
+                - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'= 3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6= Informational; 'debug'= 7= Debug; "
             severity_val:
                 description:
-                - "None"
+                - "Logging severity level"
     custom:
         description:
         - "Field custom"
@@ -76,28 +76,28 @@ options:
         suboptions:
             custom_header:
                 description:
-                - "None"
+                - "'use-syslog-header'= Use syslog header as custom log header; "
             custom_message:
                 description:
                 - "Field custom_message"
             custom_time_stamp_format:
                 description:
-                - "None"
+                - "Customize the time stamp format (Customize the time-stamp format. Default=%Y%m%d%H%M%S)"
     service_group:
         description:
-        - "None"
+        - "Set NAT logging service-group"
         required: False
     shared:
         description:
-        - "None"
+        - "Service group is in shared patition"
         required: False
     include_session_byte_count:
         description:
-        - "None"
+        - "include byte count in session deletion logs"
         required: False
     format:
         description:
-        - "None"
+        - "'binary'= Binary logging format; 'compact'= Compact ASCII logging format (Hex format with compact representation); 'custom'= Arbitrary custom logging format; 'default'= Default A10 logging format (ASCII); 'rfc5424'= RFC5424 compliant logging format; 'cef'= Common Event Format for logging; "
         required: False
     source_address:
         description:
@@ -106,13 +106,13 @@ options:
         suboptions:
             ip:
                 description:
-                - "None"
+                - "Specify source IP address"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ipv6:
                 description:
-                - "None"
+                - "Specify source IPv6 address"
     log:
         description:
         - "Field log"
@@ -120,22 +120,22 @@ options:
         suboptions:
             sessions:
                 description:
-                - "None"
+                - "Log all data sessions created using NAT"
             map_dhcpv6:
                 description:
                 - "Field map_dhcpv6"
             port_overloading:
                 description:
-                - "None"
+                - "Force logging of all port-overloading sessions"
             http_requests:
                 description:
-                - "None"
+                - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL; "
             port_mappings:
                 description:
-                - "None"
+                - "'creation'= Log only creation of NAT mappgins; 'disable'= Disable Log creation and deletion of NAT mappings; "
             merged_style:
                 description:
-                - "None"
+                - "Merge creation and deletion of session logs to one"
             fixed_nat:
                 description:
                 - "Field fixed_nat"
@@ -146,17 +146,17 @@ options:
         suboptions:
             source_port_num:
                 description:
-                - "None"
+                - "Set source port for sending NAT syslogs (default= 514)"
             any:
                 description:
-                - "None"
+                - "Use any source port"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     batched_logging_disable:
         description:
-        - "None"
+        - "Disable multiple logs per packet"
         required: False
     log_receiver:
         description:
@@ -165,20 +165,20 @@ options:
         suboptions:
             encrypted:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
             radius:
                 description:
-                - "None"
+                - "Use RADIUS server for NAT logging"
             secret_string:
                 description:
-                - "None"
+                - "The RADIUS server's secret"
     name:
         description:
-        - "None"
+        - "Logging template name"
         required: True
     include_destination:
         description:
-        - "None"
+        - "Include the destination IP and port in logs"
         required: False
     include_radius_attribute:
         description:
@@ -187,25 +187,25 @@ options:
         suboptions:
             framed_ipv6_prefix:
                 description:
-                - "None"
+                - "Include radius attributes for the prefix"
             prefix_length:
                 description:
-                - "None"
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'= Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112; "
             insert_if_not_existing:
                 description:
-                - "None"
+                - "Configure what string is to be inserted for custom RADIUS attributes"
             zero_in_custom_attr:
                 description:
-                - "None"
+                - "Insert 0000 for standard and custom attributes in log string"
             no_quote:
                 description:
-                - "None"
+                - "No quotation marks for RADIUS attributes in logs"
             attr_cfg:
                 description:
                 - "Field attr_cfg"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     disable_log_by_destination:
         description:
@@ -217,16 +217,16 @@ options:
                 - "Field udp_list"
             icmp:
                 description:
-                - "None"
+                - "Disable logging for icmp traffic"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             tcp_list:
                 description:
                 - "Field tcp_list"
             others:
                 description:
-                - "None"
+                - "Disable logging for other L4 protocols"
     rfc_custom:
         description:
         - "Field rfc_custom"
@@ -240,7 +240,7 @@ options:
                 - "Field message"
     resolution:
         description:
-        - "None"
+        - "'seconds'= Logging timestamp resolution in seconds (default); '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds; "
         required: False
     include_http:
         description:
@@ -252,16 +252,16 @@ options:
                 - "Field header_cfg"
             request_number:
                 description:
-                - "None"
+                - "HTTP Request Number"
             file_extension:
                 description:
-                - "None"
+                - "HTTP file extension"
             method:
                 description:
-                - "None"
+                - "Log the HTTP Request Method"
             l4_session_info:
                 description:
-                - "None"
+                - "Log the L4 session information of the HTTP request"
 
 
 """
@@ -295,7 +295,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -488,9 +491,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -504,6 +509,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

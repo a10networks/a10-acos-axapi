@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_management
 description:
-    - None
+    - Management interface
 short_description: Configures A10 interface.management
 author: A10 Networks 2018 
 version_added: 2.4
@@ -54,10 +54,10 @@ options:
                 - "Field tx_tlvs_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     flow_control:
         description:
-        - "None"
+        - "Enable 802.3x flow control on full duplex port"
         required: False
     broadcast_rate_limit:
         description:
@@ -66,17 +66,17 @@ options:
         suboptions:
             rate:
                 description:
-                - "None"
+                - "packets per second. Default is 500. (packets per second. Please specify an even number. Default is 500)"
             bcast_rate_limit_enable:
                 description:
-                - "None"
+                - "Rate limit the l2 broadcast packet on mgmt port"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     duplexity:
         description:
-        - "None"
+        - "'Full'= Full; 'Half'= Half; 'auto'= Auto; "
         required: False
     ip:
         description:
@@ -85,19 +85,19 @@ options:
         suboptions:
             dhcp:
                 description:
-                - "None"
+                - "Use DHCP to configure IP address"
             ipv4_address:
                 description:
-                - "None"
+                - "IP address"
             control_apps_use_mgmt_port:
                 description:
-                - "None"
+                - "Control applications use management port"
             default_gateway:
                 description:
-                - "None"
+                - "Set default gateway (Default gateway address)"
             ipv4_netmask:
                 description:
-                - "None"
+                - "IP subnet mask"
     secondary_ip:
         description:
         - "Field secondary_ip"
@@ -105,22 +105,22 @@ options:
         suboptions:
             ipv4_netmask:
                 description:
-                - "None"
+                - "IP subnet mask"
             control_apps_use_mgmt_port:
                 description:
-                - "None"
+                - "Control applications use management port"
             secondary_ip:
                 description:
-                - "None"
+                - "Global IP configuration subcommands"
             default_gateway:
                 description:
-                - "None"
+                - "Set default gateway (Default gateway address)"
             dhcp:
                 description:
-                - "None"
+                - "Use DHCP to configure IP address"
             ipv4_address:
                 description:
-                - "None"
+                - "IP address"
     access_list:
         description:
         - "Field access_list"
@@ -128,10 +128,10 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "Apply an access list (Named Access List)"
             acl_id:
                 description:
-                - "None"
+                - "ACL id"
     ipv6:
         description:
         - "Field ipv6"
@@ -139,26 +139,26 @@ options:
         suboptions:
             inbound:
                 description:
-                - "None"
+                - "ACL applied on incoming packets to this interface"
             address_type:
                 description:
-                - "None"
+                - "'link-local'= Configure an IPv6 link local address; "
             default_ipv6_gateway:
                 description:
-                - "None"
+                - "Set default gateway (Default gateway address)"
             ipv6_addr:
                 description:
-                - "None"
+                - "Set the IPv6 address of an interface"
             v6_acl_name:
                 description:
-                - "None"
+                - "Apply ACL rules to incoming packets on this interface (Named Access List)"
     action:
         description:
-        - "None"
+        - "'enable'= Enable Management Port; 'disable'= Disable Management Port; "
         required: False
     speed:
         description:
-        - "None"
+        - "'10'= 10 Mbs/sec; '100'= 100 Mbs/sec; '1000'= 1 Gb/sec; 'auto'= Auto Negotiate Speed;  (Interface Speed)"
         required: False
 
 
@@ -193,7 +193,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -371,9 +374,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -387,6 +392,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

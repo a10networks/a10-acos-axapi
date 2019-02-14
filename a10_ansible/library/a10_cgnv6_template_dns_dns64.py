@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_dns_dns64
 description:
-    - None
+    - Enable DNS64
 short_description: Configures A10 cgnv6.template.dns.dns64
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,79 +37,79 @@ options:
         required: True
     deep_check_rr_disable:
         description:
-        - "None"
+        - "Disable Check DNS Response Records"
         required: False
     answer_only_disable:
         description:
-        - "None"
+        - "Disable Only translate the Answer Section"
         required: False
     enable:
         description:
-        - "None"
+        - "Enable DNS64 (Need to config this option before config any other dns64 options)"
         required: False
     single_response_disable:
         description:
-        - "None"
+        - "Disable Single Response which is used to avoid ambiguity"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     max_qr_length:
         description:
-        - "None"
+        - "Max Question Record Length, default is 128"
         required: False
     ignore_rcode3_disable:
         description:
-        - "None"
+        - "Disable Ignore DNS error Response with rcode 3"
         required: False
     auth_data:
         description:
-        - "None"
+        - "Set AA flag in DNS Response"
         required: False
     change_query:
         description:
-        - "None"
+        - "Always change incoming AAAA DNS Query to A"
         required: False
     drop_cname_disable:
         description:
-        - "None"
+        - "Disable Drop DNS CNAME Response"
         required: False
     cache:
         description:
-        - "None"
+        - "Generate Response by DNS Cache"
         required: False
     passive_query_disable:
         description:
-        - "None"
+        - "Disable Generate A query upon empty or error Response"
         required: False
     retry:
         description:
-        - "None"
+        - "Retry count, default is 3 (Retry Number)"
         required: False
     parallel_query:
         description:
-        - "None"
+        - "Forward AAAA Query & generate A Query in parallel"
         required: False
     timeout:
         description:
-        - "None"
+        - "Timeout to send additional Queries, unit= second, default is 1"
         required: False
     ttl:
         description:
-        - "None"
+        - "Specify Max TTL in DNS Response, unit= second"
         required: False
     trans_ptr_query:
         description:
-        - "None"
+        - "Translate DNS PTR Query"
         required: False
     trans_ptr:
         description:
-        - "None"
+        - "Translate DNS PTR Records"
         required: False
     compress_disable:
         description:
-        - "None"
+        - "Disable Always try DNS Compression"
         required: False
 
 
@@ -144,7 +144,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -330,9 +333,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -346,6 +351,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

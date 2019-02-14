@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_sixrd_domain
 description:
-    - None
+    - sixrd Domain
 short_description: Configures A10 cgnv6.sixrd.domain
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     ipv6_prefix:
         description:
-        - "None"
+        - "IPv6 prefix"
         required: False
     name:
         description:
-        - "None"
+        - "6rd Domain name"
         required: True
     ce_ipv4_network:
         description:
-        - "None"
+        - "Customer Edge IPv4 network"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     mtu:
         description:
-        - "None"
+        - "Tunnel MTU"
         required: False
     ce_ipv4_netmask:
         description:
-        - "None"
+        - "Mask length"
         required: False
     sampling_enable:
         description:
@@ -66,14 +66,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'outbound-tcp-packets-received'= Outbound TCP packets received; 'outbound-udp-packets-received'= Outbound UDP packets received; 'outbound-icmp-packets-received'= Outbound ICMP packets received; 'outbound-other-packets-received'= Outbound other packets received; 'outbound-packets-drop'= Outbound packets dropped; 'outbound-ipv6-dest-unreachable'= Outbound IPv6 destination unreachable; 'outbound-fragment-ipv6'= Outbound Fragmented IPv6; 'inbound-tcp-packets-received'= Inbound TCP packets received; 'inbound-udp-packets-received'= Inbound UDP packets received; 'inbound-icmp-packets-received'= Inbound ICMP packets received; 'inbound-other-packets-received'= Inbound other packets received; 'inbound-packets-drop'= Inbound packets dropped; 'inbound-ipv4-dest-unreachable'= Inbound IPv4 destination unreachable; 'inbound-fragment-ipv4'= Inbound Fragmented IPv4; 'inbound-tunnel-fragment-ipv6'= Inbound Fragmented IPv6 in tunnel; 'vport-matched'= Traffic match SLB virtual port; 'unknown-delegated-prefix'= Unknown 6rd delegated prefix; 'packet-too-big'= Packet too big; 'not-local-ip'= Not local IP; 'fragment-error'= Fragment processing errors; 'other-error'= Other errors; "
     br_ipv4_address:
         description:
-        - "None"
+        - "6rd BR IPv4 address"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -108,7 +108,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -286,9 +289,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -302,6 +307,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

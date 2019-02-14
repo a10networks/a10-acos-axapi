@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_lsn_global
 description:
-    - None
+    - Set Large-Scale NAT config parameters
 short_description: Configures A10 cgnv6.lsn.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,27 +42,27 @@ options:
         suboptions:
             partition_name:
                 description:
-                - "None"
+                - "Select partition name for logging"
             shared:
                 description:
-                - "None"
+                - "Select shared partition"
             default_template:
                 description:
-                - "None"
+                - "Bind the default NAT logging template for LSN (Bind a NAT logging template)"
             pool:
                 description:
                 - "Field pool"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     inbound_refresh:
         description:
-        - "None"
+        - "'disable'= Disable NAT Inbound Refresh Behavior; "
         required: False
     hairpinning:
         description:
-        - "None"
+        - "'filter-none'= Allow self-hairpinning (default). Warning= Only applies to UDP.  TCP will use filter-self-ip-port; 'filter-self-ip'= Block hairpinning to the user's own IP; 'filter-self-ip-port'= Block hairpinning to the user's same IP and port combination; "
         required: False
     port_batching:
         description:
@@ -71,25 +71,25 @@ options:
         suboptions:
             tcp_time_wait_interval:
                 description:
-                - "None"
+                - "Minutes before TCP NAT ports can be reused (default= 2)"
             size:
                 description:
-                - "None"
+                - "'1'= Allocate 1 port at a time (default); '8'= Allocate 8 ports at a time; '16'= Allocate 16 ports at a time; '32'= Allocate 32 ports at a time; '64'= Allocate 64 ports at a time; '128'= Allocate 128 ports at a time; '256'= Allocate 256 ports at a time; '512'= Allocate 512 ports at a time; "
     half_close_timeout:
         description:
-        - "None"
+        - "Set LSN Half close timeout (Half close timeout in seconds (default not set))"
         required: False
     attempt_port_preservation:
         description:
-        - "None"
+        - "'disable'= Don't attempt port preservation for NAT allocation; "
         required: False
     ip_selection:
         description:
-        - "None"
+        - "'random'= Random (long-run uniformly distributed) NAT IP selection (default); 'round-robin'= Round-robin; 'least-used-strict'= Fewest NAT ports used; 'least-udp-used-strict'= Fewest UDP NAT ports used; 'least-tcp-used-strict'= Fewest TCP NAT ports used; 'least-reserved-strict'= Fewest NAT ports reserved; 'least-udp-reserved-strict'= Fewest UDP NAT ports reserved; 'least-tcp-reserved-strict'= Fewest TCP NAT ports reserved; 'least-users-strict'= Fewest number of users; "
         required: False
     syn_timeout:
         description:
-        - "None"
+        - "Set LSN SYN timeout (SYN idle-timeout in seconds (default= 4 seconds))"
         required: False
     icmp:
         description:
@@ -98,10 +98,10 @@ options:
         suboptions:
             send_on_user_quota_exceeded:
                 description:
-                - "None"
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'= Send ICMP admin filtered (default); 'disable'= Disable ICMP quota exceeded message; "
             send_on_port_unavailable:
                 description:
-                - "None"
+                - "'host-unreachable'= Send ICMP destination host unreachable; 'admin-filtered'= Send ICMP admin filtered; 'disable'= Disable ICMP port unavailable message (default); "
 
 
 """
@@ -135,7 +135,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -312,9 +315,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -328,6 +333,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

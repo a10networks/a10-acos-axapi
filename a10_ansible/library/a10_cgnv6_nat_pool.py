@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_nat_pool
 description:
-    - None
+    - Configure CGNv6 NAT pool
 short_description: Configures A10 cgnv6.nat.pool
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,71 +37,71 @@ options:
         required: True
     all:
         description:
-        - "None"
+        - "Share with all partitions"
         required: False
     tcp_time_wait_interval:
         description:
-        - "None"
+        - "Minutes before TCP NAT ports can be reused"
         required: False
     group:
         description:
-        - "None"
+        - "Share with a partition group (Partition Group Name)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     start_address:
         description:
-        - "None"
+        - "Configure start IP address of NAT pool"
         required: False
     per_batch_port_usage_warning_threshold:
         description:
-        - "None"
+        - "Configure warning log threshold for per batch port usage (default= disabled) (Number of ports)"
         required: False
     vrid:
         description:
-        - "None"
+        - "Configure VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
     usable_nat_ports_start:
         description:
-        - "None"
+        - "Start Port of Usable NAT Ports (needs to be even)"
         required: False
     usable_nat_ports_end:
         description:
-        - "None"
+        - "End Port of Usable NAT Ports"
         required: False
     partition:
         description:
-        - "None"
+        - "Share with a single partition (Partition Name)"
         required: False
     netmask:
         description:
-        - "None"
+        - "Configure mask for pool"
         required: False
     max_users_per_ip:
         description:
-        - "None"
+        - "Number of users that can be assigned to a NAT IP"
         required: False
     simultaneous_batch_allocation:
         description:
-        - "None"
+        - "Allocate same TCP and UDP batches at once"
         required: False
     shared:
         description:
-        - "None"
+        - "Share this pool with other partitions (default= not shared)"
         required: False
     port_batch_v2_size:
         description:
-        - "None"
+        - "'64'= Allocate 64 ports at a time; '128'= Allocate 128 ports at a time; '256'= Allocate 256 ports at a time; '512'= Allocate 512 ports at a time; '1024'= Allocate 1024 ports at a time; '2048'= Allocate 2048 ports at a time; '4096'= Allocate 4096 ports at a time; "
         required: False
     end_address:
         description:
-        - "None"
+        - "Configure end IP address of NAT pool"
         required: False
     usable_nat_ports:
         description:
-        - "None"
+        - "Configure usable NAT ports"
         required: False
     exclude_ip:
         description:
@@ -110,13 +110,13 @@ options:
         suboptions:
             exclude_ip_start:
                 description:
-                - "None"
+                - "Single IP address or IP address range start"
             exclude_ip_end:
                 description:
-                - "None"
+                - "Address range end"
     pool_name:
         description:
-        - "None"
+        - "Specify pool name or pool group"
         required: True
 
 
@@ -151,7 +151,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -339,9 +342,11 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
+    partition = module.params["partition"]
+
     # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
 
     valid = True
 
@@ -355,6 +360,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
