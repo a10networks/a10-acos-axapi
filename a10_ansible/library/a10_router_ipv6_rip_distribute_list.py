@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_ipv6_rip_distribute_list
 description:
-    - None
+    - Filter networks in routing updates
 short_description: Configures A10 router.ipv6.rip.distribute-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,25 +42,25 @@ options:
         suboptions:
             acl_direction:
                 description:
-                - "None"
+                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates; "
             ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface (Tunnel interface number)"
             acl:
                 description:
-                - "None"
+                - "Access-list name"
             trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             ethernet:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
     prefix:
         description:
         - "Field prefix"
@@ -68,13 +68,13 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             prefix_cfg:
                 description:
                 - "Field prefix_cfg"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -109,9 +109,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -282,11 +282,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

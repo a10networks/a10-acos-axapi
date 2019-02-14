@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_bgp_address_family_ipv6_neighbor_ipv6_neighbor
 description:
-    - None
+    - Specify a peer-group neighbor router
 short_description: Configures A10 router.bgp.address.family.ipv6-neighbor.ipv6.neighbor
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     maximum_prefix:
         description:
-        - "None"
+        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit (various depends on model))"
         required: False
     neighbor_prefix_lists:
         description:
@@ -46,65 +46,65 @@ options:
         suboptions:
             nbr_prefix_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             nbr_prefix_list:
                 description:
-                - "None"
+                - "Filter updates to/from this neighbor (Name of a prefix list)"
     allowas_in_count:
         description:
-        - "None"
+        - "Number of occurrences of AS number"
         required: False
     neighbor_ipv6:
         description:
-        - "None"
+        - "Neighbor IPv6 address"
         required: True
     send_community_val:
         description:
-        - "None"
+        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable Sending Community attributes; 'standard'= Send Standard Community attributes; 'extended'= Send Extended Community attributes; "
         required: False
     inbound:
         description:
-        - "None"
+        - "Allow inbound soft reconfiguration for this neighbor"
         required: False
     next_hop_self:
         description:
-        - "None"
+        - "Disable the next hop calculation for this neighbor"
         required: False
     maximum_prefix_thres:
         description:
-        - "None"
+        - "threshold-value, 1 to 100 percent"
         required: False
     route_map:
         description:
-        - "None"
+        - "Route-map to specify criteria to originate default (route-map name)"
         required: False
     peer_group_name:
         description:
-        - "None"
+        - "Configure peer-group (peer-group name)"
         required: False
     weight:
         description:
-        - "None"
+        - "Set default weight for routes from this neighbor"
         required: False
     unsuppress_map:
         description:
-        - "None"
+        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
         required: False
     prefix_list_direction:
         description:
-        - "None"
+        - "'both'= both; 'receive'= receive; 'send'= send; "
         required: False
     default_originate:
         description:
-        - "None"
+        - "Originate default route to this neighbor"
         required: False
     activate:
         description:
-        - "None"
+        - "Enable the Address Family for this Neighbor"
         required: False
     remove_private_as:
         description:
-        - "None"
+        - "Remove private AS number from outbound updates"
         required: False
     distribute_lists:
         description:
@@ -113,13 +113,13 @@ options:
         suboptions:
             distribute_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             distribute_list:
                 description:
-                - "None"
+                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
     allowas_in:
         description:
-        - "None"
+        - "Accept as-path with my AS present in it"
         required: False
     neighbor_route_map_lists:
         description:
@@ -128,10 +128,10 @@ options:
         suboptions:
             nbr_rmap_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             nbr_route_map:
                 description:
-                - "None"
+                - "Apply route map to neighbor (Name of route map)"
     neighbor_filter_lists:
         description:
         - "Field neighbor_filter_lists"
@@ -139,13 +139,13 @@ options:
         suboptions:
             filter_list:
                 description:
-                - "None"
+                - "Establish BGP filters (AS path access-list name)"
             filter_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -180,9 +180,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -373,11 +373,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

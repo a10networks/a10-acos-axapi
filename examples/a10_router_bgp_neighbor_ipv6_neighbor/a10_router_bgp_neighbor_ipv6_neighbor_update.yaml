@@ -1,0 +1,12 @@
+
+- name: Update a10_router_bgp_neighbor_ipv6_neighbor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_router_bgp_neighbor_ipv6_neighbor instance
+    a10_router_bgp_neighbor_ipv6_neighbor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      neighbor_ipv6: NO_EXAMPLE

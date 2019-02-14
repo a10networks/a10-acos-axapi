@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_isis_address_family_ipv6
 description:
-    - None
+    - Address family
 short_description: Configures A10 router.isis.address.family.ipv6
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     distance:
         description:
-        - "None"
+        - "ISIS Administrative Distance (Distance value)"
         required: False
     redistribute:
         description:
@@ -55,10 +55,10 @@ options:
                 - "Field isis"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     multi_topology_cfg:
         description:
@@ -67,19 +67,19 @@ options:
         suboptions:
             multi_topology:
                 description:
-                - "None"
+                - "Enable multi-topology mode"
             level_transition:
                 description:
-                - "None"
+                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
             transition:
                 description:
-                - "None"
+                - "Accept and generate both IS-IS IPv6 and Multi-topology IPV6 TLVs"
             level:
                 description:
-                - "None"
+                - "'level-1'= Level-1 only; 'level-1-2'= Level-1-2; 'level-2'= Level-2 only; "
     adjacency_check:
         description:
-        - "None"
+        - "Check ISIS neighbor protocol support"
         required: False
     summary_prefix_list:
         description:
@@ -88,13 +88,13 @@ options:
         suboptions:
             prefix:
                 description:
-                - "None"
+                - "IPv6 prefix"
             level:
                 description:
-                - "None"
+                - "'level-1'= Summarize into level-1 area; 'level-1-2'= Summarize into both area and sub-domain; 'level-2'= Summarize into level-2 sub-domain; "
     default_information:
         description:
-        - "None"
+        - "'originate'= Distribute a default route; "
         required: False
 
 
@@ -129,9 +129,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -306,11 +306,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

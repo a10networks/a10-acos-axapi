@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_ospf_area
 description:
-    - None
+    - OSPF area parameters
 short_description: Configures A10 router.ospf.area
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,28 +42,28 @@ options:
         suboptions:
             default_information_originate:
                 description:
-                - "None"
+                - "Originate Type 7 default into NSSA area"
             translator_role:
                 description:
-                - "None"
+                - "'always'= Translate always; 'candidate'= Candidate for translator (default); 'never'= Do not translate; "
             metric:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             nssa:
                 description:
-                - "None"
+                - "Specify a NSSA area"
             no_redistribution:
                 description:
-                - "None"
+                - "No redistribution into this NSSA area"
             no_summary:
                 description:
-                - "None"
+                - "Do not send summary LSA into NSSA"
             metric_type:
                 description:
-                - "None"
+                - "OSPF metric type (OSPF metric type for default routes)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     filter_lists:
         description:
@@ -72,22 +72,22 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "Filter networks by access-list (Name of an access-list)"
             acl_direction:
                 description:
-                - "None"
+                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this area; "
             filter_list:
                 description:
-                - "None"
+                - "Filter networks between OSPF areas"
             plist_name:
                 description:
-                - "None"
+                - "Filter networks by prefix-list (Name of an IP prefix-list)"
             plist_direction:
                 description:
-                - "None"
+                - "'in'= Filter networks sent to this area; 'out'= Filter networks sent from this area; "
     area_num:
         description:
-        - "None"
+        - "OSPF area ID as a decimal value"
         required: True
     virtual_link_list:
         description:
@@ -96,37 +96,37 @@ options:
         suboptions:
             dead_interval:
                 description:
-                - "None"
+                - "Dead router detection time (Seconds)"
             message_digest_key:
                 description:
-                - "None"
+                - "Set message digest key (Key ID)"
             hello_interval:
                 description:
-                - "None"
+                - "Hello packet interval (Seconds)"
             bfd:
                 description:
-                - "None"
+                - "Bidirectional Forwarding Detection (BFD)"
             transmit_delay:
                 description:
-                - "None"
+                - "LSA transmission delay (Seconds)"
             virtual_link_authentication:
                 description:
-                - "None"
+                - "Enable authentication"
             virtual_link_ip_addr:
                 description:
-                - "None"
+                - "ID (IP addr) associated with virtual link neighbor"
             virtual_link_auth_type:
                 description:
-                - "None"
+                - "'message-digest'= Use message-digest authentication; 'null'= Use null authentication; "
             authentication_key:
                 description:
-                - "None"
+                - "Set authentication key (Authentication key (8 chars))"
             retransmit_interval:
                 description:
-                - "None"
+                - "LSA retransmit interval (Seconds)"
             md5:
                 description:
-                - "None"
+                - "Use MD5 algorithm (Authentication key (16 chars))"
     stub_cfg:
         description:
         - "Field stub_cfg"
@@ -134,13 +134,13 @@ options:
         suboptions:
             stub:
                 description:
-                - "None"
+                - "Configure OSPF area as stub"
             no_summary:
                 description:
-                - "None"
+                - "Do not inject inter-area routes into area"
     shortcut:
         description:
-        - "None"
+        - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting through the area; 'enable'= Enable shortcutting through the area; "
         required: False
     auth_cfg:
         description:
@@ -149,10 +149,10 @@ options:
         suboptions:
             authentication:
                 description:
-                - "None"
+                - "Enable authentication"
             message_digest:
                 description:
-                - "None"
+                - "Use message-digest authentication"
     range_list:
         description:
         - "Field range_list"
@@ -160,17 +160,17 @@ options:
         suboptions:
             area_range_prefix:
                 description:
-                - "None"
+                - "Area range for IPv4 prefix"
             option:
                 description:
-                - "None"
+                - "'advertise'= Advertise this range (default); 'not-advertise'= DoNotAdvertise this range; "
     default_cost:
         description:
-        - "None"
+        - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default summary cost)"
         required: False
     area_ipv4:
         description:
-        - "None"
+        - "OSPF area ID in IP address format"
         required: True
 
 
@@ -205,9 +205,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -390,11 +390,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

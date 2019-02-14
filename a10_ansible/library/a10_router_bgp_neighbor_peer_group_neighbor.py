@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_bgp_neighbor_peer_group_neighbor
 description:
-    - None
+    - Specify a peer-group neighbor router
 short_description: Configures A10 router.bgp.neighbor.peer-group-neighbor
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,31 +37,31 @@ options:
         required: True
     activate:
         description:
-        - "None"
+        - "Enable the Address Family for this Neighbor"
         required: False
     route_refresh:
         description:
-        - "None"
+        - "Advertise route-refresh capability to this neighbor"
         required: False
     ve:
         description:
-        - "None"
+        - "Virtual ethernet interface (Virtual ethernet interface number)"
         required: False
     weight:
         description:
-        - "None"
+        - "Set default weight for routes from this neighbor"
         required: False
     timers_keepalive:
         description:
-        - "None"
+        - "Keepalive interval"
         required: False
     dynamic:
         description:
-        - "None"
+        - "Advertise dynamic capability to this neighbor"
         required: False
     default_originate:
         description:
-        - "None"
+        - "Originate default route to this neighbor"
         required: False
     distribute_lists:
         description:
@@ -70,21 +70,21 @@ options:
         suboptions:
             distribute_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             distribute_list:
                 description:
-                - "None"
+                - "Filter updates to/from this neighbor (IP standard/extended/named access list)"
     shutdown:
         description:
-        - "None"
+        - "Administratively shut down this neighbor"
         required: False
     enforce_multihop:
         description:
-        - "None"
+        - "Enforce EBGP neighbors to perform multihop"
         required: False
     prefix_list_direction:
         description:
-        - "None"
+        - "'both'= both; 'receive'= receive; 'send'= send; "
         required: False
     neighbor_route_map_lists:
         description:
@@ -93,37 +93,37 @@ options:
         suboptions:
             nbr_rmap_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             nbr_route_map:
                 description:
-                - "None"
+                - "Apply route map to neighbor (Name of route map)"
     advertisement_interval:
         description:
-        - "None"
+        - "Minimum interval between sending BGP routing updates (time in seconds)"
         required: False
     lif:
         description:
-        - "None"
+        - "Logical interface (Lif interface number)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     send_community_val:
         description:
-        - "None"
+        - "'both'= Send Standard and Extended Community attributes; 'none'= Disable Sending Community attributes; 'standard'= Send Standard Community attributes; 'extended'= Send Extended Community attributes; "
         required: False
     loopback:
         description:
-        - "None"
+        - "Loopback interface (Port number)"
         required: False
     collide_established:
         description:
-        - "None"
+        - "Include Neighbor in Established State for Collision Detection"
         required: False
     next_hop_self:
         description:
-        - "None"
+        - "Disable the next hop calculation for this neighbor"
         required: False
     pass_encrypted:
         description:
@@ -131,71 +131,71 @@ options:
         required: False
     peer_group:
         description:
-        - "None"
+        - "Neighbor tag"
         required: True
     dont_capability_negotiate:
         description:
-        - "None"
+        - "Do not perform capability negotiation"
         required: False
     unsuppress_map:
         description:
-        - "None"
+        - "Route-map to selectively unsuppress suppressed routes (Name of route map)"
         required: False
     passive:
         description:
-        - "None"
+        - "Don't send open messages to this neighbor"
         required: False
     ebgp_multihop_hop_count:
         description:
-        - "None"
+        - "maximum hop count"
         required: False
     allowas_in:
         description:
-        - "None"
+        - "Accept as-path with my AS present in it"
         required: False
     pass_value:
         description:
-        - "None"
+        - "Key String"
         required: False
     timers_holdtime:
         description:
-        - "None"
+        - "Holdtime"
         required: False
     description:
         description:
-        - "None"
+        - "Neighbor specific description (Up to 80 characters describing this neighbor)"
         required: False
     inbound:
         description:
-        - "None"
+        - "Allow inbound soft reconfiguration for this neighbor"
         required: False
     maximum_prefix_thres:
         description:
-        - "None"
+        - "threshold-value, 1 to 100 percent"
         required: False
     peer_group_key:
         description:
-        - "None"
+        - "Configure peer-group"
         required: False
     peer_group_remote_as:
         description:
-        - "None"
+        - "Specify AS number of BGP neighbor"
         required: False
     disallow_infinite_holdtime:
         description:
-        - "None"
+        - "BGP per neighbor disallow-infinite-holdtime"
         required: False
     route_map:
         description:
-        - "None"
+        - "Route-map to specify criteria to originate default (route-map name)"
         required: False
     trunk:
         description:
-        - "None"
+        - "Trunk interface (Trunk interface number)"
         required: False
     remove_private_as:
         description:
-        - "None"
+        - "Remove private AS number from outbound updates"
         required: False
     neighbor_filter_lists:
         description:
@@ -204,17 +204,17 @@ options:
         suboptions:
             filter_list:
                 description:
-                - "None"
+                - "Establish BGP filters (AS path access-list name)"
             filter_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
     update_source_ipv6:
         description:
-        - "None"
+        - "IPv6 address"
         required: False
     maximum_prefix:
         description:
-        - "None"
+        - "Maximum number of prefix accept from this peer (maximum no. of prefix limit (various depends on model))"
         required: False
     neighbor_prefix_lists:
         description:
@@ -223,45 +223,45 @@ options:
         suboptions:
             nbr_prefix_list_direction:
                 description:
-                - "None"
+                - "'in'= in; 'out'= out; "
             nbr_prefix_list:
                 description:
-                - "None"
+                - "Filter updates to/from this neighbor (Name of a prefix list)"
     allowas_in_count:
         description:
-        - "None"
+        - "Number of occurrences of AS number"
         required: False
     as_origination_interval:
         description:
-        - "None"
+        - "Minimum interval between sending AS-origination routing updates (time in seconds)"
         required: False
     override_capability:
         description:
-        - "None"
+        - "Override capability negotiation result"
         required: False
     update_source_ip:
         description:
-        - "None"
+        - "IP address"
         required: False
     tunnel:
         description:
-        - "None"
+        - "Tunnel interface (Tunnel interface number)"
         required: False
     strict_capability_match:
         description:
-        - "None"
+        - "Strict capability negotiation match"
         required: False
     ebgp_multihop:
         description:
-        - "None"
+        - "Allow EBGP neighbors not on directly connected networks"
         required: False
     ethernet:
         description:
-        - "None"
+        - "Ethernet interface (Port number)"
         required: False
     connect:
         description:
-        - "None"
+        - "BGP connect timer"
         required: False
 
 
@@ -296,9 +296,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -518,11 +518,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

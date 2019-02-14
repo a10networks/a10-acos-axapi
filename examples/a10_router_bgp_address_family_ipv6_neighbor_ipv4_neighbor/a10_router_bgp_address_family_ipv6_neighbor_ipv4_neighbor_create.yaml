@@ -1,0 +1,11 @@
+
+- name: Create a10_router_bgp_address_family_ipv6_neighbor_ipv4_neighbor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_router_bgp_address_family_ipv6_neighbor_ipv4_neighbor instance
+    a10_router_bgp_address_family_ipv6_neighbor_ipv4_neighbor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      neighbor_ipv4: 10.0.0.1

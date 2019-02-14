@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_log
 description:
-    - None
+    - Router log options
 short_description: Configures A10 router.log
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     log_buffer:
         description:
-        - "None"
+        - "Logging goes to log-buffer"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     file:
         description:
@@ -50,19 +50,19 @@ options:
         suboptions:
             size:
                 description:
-                - "None"
+                - "Log file maximum size (File size in MBytes)"
             rotate:
                 description:
-                - "None"
+                - "Log file rotation (Number of backup files)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             per_protocol:
                 description:
-                - "None"
+                - "Per protocol"
             name:
                 description:
-                - "None"
+                - "Logging filename (File name)"
 
 
 """
@@ -96,9 +96,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -269,11 +269,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

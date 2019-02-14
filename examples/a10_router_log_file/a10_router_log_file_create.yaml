@@ -1,0 +1,10 @@
+
+- name: Create a10_router_log_file example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_router_log_file instance
+    a10_router_log_file:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"

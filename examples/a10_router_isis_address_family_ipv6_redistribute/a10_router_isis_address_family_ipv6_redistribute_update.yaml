@@ -1,0 +1,11 @@
+
+- name: Update a10_router_isis_address_family_ipv6_redistribute example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_router_isis_address_family_ipv6_redistribute instance
+    a10_router_isis_address_family_ipv6_redistribute:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

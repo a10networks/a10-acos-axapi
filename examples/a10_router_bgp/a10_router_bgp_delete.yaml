@@ -1,0 +1,26 @@
+- name: Delete a10_router_bgp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_router_bgp instance
+    a10_router_bgp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      as_number: 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+

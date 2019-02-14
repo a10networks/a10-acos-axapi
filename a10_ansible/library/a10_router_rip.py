@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_rip
 description:
-    - None
+    - Routing Information Protocol (RIP)
 short_description: Configures A10 router.rip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     default_metric:
         description:
-        - "None"
+        - "Set a metric of redistribute routes (Default metric)"
         required: False
     route_cfg:
         description:
@@ -46,14 +46,14 @@ options:
         suboptions:
             route:
                 description:
-                - "None"
+                - "Static route advertisement (debugging purpose) (IP prefix network/length)"
     cisco_metric_behavior:
         description:
-        - "None"
+        - "'enable'= Enables updating metric consistent with Cisco; 'disable'= Disables updating metric consistent with Cisco;  (Enable/Disable updating metric consistent with Cisco)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     rip_maximum_prefix_cfg:
         description:
@@ -62,10 +62,10 @@ options:
         suboptions:
             maximum_prefix:
                 description:
-                - "None"
+                - "Set the maximum number of RIP routes"
             maximum_prefix_thres:
                 description:
-                - "None"
+                - "Percentage of maximum routes to generate a warning (Default 75%)"
     offset_list:
         description:
         - "Field offset_list"
@@ -76,7 +76,7 @@ options:
                 - "Field acl_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     passive_interface_list:
         description:
         - "Field passive_interface_list"
@@ -84,19 +84,19 @@ options:
         suboptions:
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface (Tunnel interface number)"
             ethernet:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
             trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
     redistribute:
         description:
         - "Field redistribute"
@@ -110,7 +110,7 @@ options:
                 - "Field redist_list"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     neighbor:
         description:
         - "Field neighbor"
@@ -118,7 +118,7 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "Neighbor address"
     network_interface_list_cfg:
         description:
         - "Field network_interface_list_cfg"
@@ -126,22 +126,22 @@ options:
         suboptions:
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface (Tunnel interface number)"
             ethernet:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
             trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
     recv_buffer_size:
         description:
-        - "None"
+        - "Set the RIP UDP receive buffer size (the RIP UDP receive buffer size value)"
         required: False
     timers:
         description:
@@ -153,11 +153,11 @@ options:
                 - "Field timers_cfg"
     version:
         description:
-        - "None"
+        - "Set routing protocol version (RIP version)"
         required: False
     default_information:
         description:
-        - "None"
+        - "'originate'= originate;  (Distribute default route)"
         required: False
     distribute_list:
         description:
@@ -172,7 +172,7 @@ options:
                 - "Field prefix"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     distance_list_cfg:
         description:
         - "Field distance_list_cfg"
@@ -180,13 +180,13 @@ options:
         suboptions:
             distance:
                 description:
-                - "None"
+                - "Administrative distance (Distance value)"
             distance_ipv4_mask:
                 description:
-                - "None"
+                - "IP source prefix"
             distance_acl:
                 description:
-                - "None"
+                - "Access list name"
     network_addresses:
         description:
         - "Field network_addresses"
@@ -194,7 +194,7 @@ options:
         suboptions:
             network_ipv4_mask:
                 description:
-                - "None"
+                - "IP prefix network/length, e.g., 35.0.0.0/8"
 
 
 """
@@ -228,9 +228,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -415,11 +415,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

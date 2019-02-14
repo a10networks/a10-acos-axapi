@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_ipv6_ospf_area
 description:
-    - None
+    - OSPF area parameters
 short_description: Configures A10 router.ipv6.ospf.area
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     area_ipv4:
         description:
-        - "None"
+        - "OSPFv3 area ID in IP address format"
         required: True
     virtual_link_list:
         description:
@@ -50,32 +50,32 @@ options:
         suboptions:
             dead_interval:
                 description:
-                - "None"
+                - "Dead router detection time (Seconds)"
             hello_interval:
                 description:
-                - "None"
+                - "Hello packet interval (Seconds)"
             bfd:
                 description:
-                - "None"
+                - "Bidirectional Forwarding Detection (BFD)"
             transmit_delay:
                 description:
-                - "None"
+                - "LSA transmission delay (Seconds)"
             value:
                 description:
-                - "None"
+                - "ID (IP addr) associated with virtual link neighbor"
             retransmit_interval:
                 description:
-                - "None"
+                - "LSA retransmit interval (Seconds)"
             instance_id:
                 description:
-                - "None"
+                - "OSPFv3 instance ID"
     stub:
         description:
-        - "None"
+        - "Configure OSPFv3 area as stub"
         required: False
     area_num:
         description:
-        - "None"
+        - "OSPFv3 area ID as a decimal value"
         required: True
     range_list:
         description:
@@ -84,17 +84,17 @@ options:
         suboptions:
             option:
                 description:
-                - "None"
+                - "'advertise'= Advertise this range (default); 'not-advertise'= DoNotAdvertise this range; "
             value:
                 description:
-                - "None"
+                - "Area range for IPv6 prefix"
     default_cost:
         description:
-        - "None"
+        - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default summary cost)"
         required: False
     no_summary:
         description:
-        - "None"
+        - "Do not inject inter-area routes into area"
         required: False
 
 
@@ -129,9 +129,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -311,11 +311,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

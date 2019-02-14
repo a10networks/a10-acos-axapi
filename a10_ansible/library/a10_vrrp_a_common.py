@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_vrrp_a_common
 description:
-    - None
+    - HA VRRP-A Global Commands
 short_description: Configures A10 vrrp.a.common
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,51 +37,51 @@ options:
         required: True
     forward_l4_packet_on_standby:
         description:
-        - "None"
+        - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"
         required: False
     get_ready_time:
         description:
-        - "None"
+        - "set get ready time after ax starting up (60-1200, in unit of 100millisec, default is 60)"
         required: False
     hello_interval:
         description:
-        - "None"
+        - "VRRP-A Hello Interval (1-255, in unit of 100millisec, default is 2)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     preemption_delay:
         description:
-        - "None"
+        - "Delay before changing state from Active to Standby (1-255, in unit of 100millisec, default is 60)"
         required: False
     set_id:
         description:
-        - "None"
+        - "Set-ID for HA configuration (Set id from 1 to 15)"
         required: False
     device_id:
         description:
-        - "None"
+        - "Unique ID for each VRRP-A box (Device-id number)"
         required: False
     arp_retry:
         description:
-        - "None"
+        - "Number of additional gratuitous ARPs sent out after HA failover (1-255, default is 4)"
         required: False
     dead_timer:
         description:
-        - "None"
+        - "VRRP-A dead timer in terms of how many hello messages missed, default is 5 (2-255, default is 5)"
         required: False
     disable_default_vrid:
         description:
-        - "None"
+        - "Disable default vrid"
         required: False
     track_event_delay:
         description:
-        - "None"
+        - "Delay before changing state after up/down event (Units of 100 milliseconds (default 30))"
         required: False
     action:
         description:
-        - "None"
+        - "'enable'= enable vrrp-a; 'disable'= disable vrrp-a; "
         required: False
     hostid_append_to_vrid:
         description:
@@ -90,13 +90,13 @@ options:
         suboptions:
             hostid_append_to_vrid_value:
                 description:
-                - "None"
+                - "hostid append to vrid num"
             hostid_append_to_vrid_default:
                 description:
-                - "None"
+                - "hostid append to vrid default"
     restart_time:
         description:
-        - "None"
+        - "Time between restarting ports on standby system after transition"
         required: False
     inline_mode_cfg:
         description:
@@ -105,13 +105,13 @@ options:
         suboptions:
             inline_mode:
                 description:
-                - "None"
+                - "Enable Layer 2 Inline Hot Standby Mode"
             preferred_trunk:
                 description:
-                - "None"
+                - "Preferred trunk Port"
             preferred_port:
                 description:
-                - "None"
+                - "Preferred ethernet Port"
 
 
 """
@@ -145,7 +145,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -268,8 +271,7 @@ def create(module, result):
     payload = build_json("common", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -294,9 +296,8 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("common", module)
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        post_result = module.client.put(existing_url(module), payload)
+        result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -316,22 +317,6 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
-def replace(module, result, existing_config):
-    payload = build_json("common", module)
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def run_command(module):
     run_errors = []
 
@@ -345,9 +330,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -361,6 +347,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

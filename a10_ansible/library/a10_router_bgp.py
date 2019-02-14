@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_bgp
 description:
-    - None
+    - Border Gateway Protocol (BGP)
 short_description: Configures A10 router.bgp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,7 +48,7 @@ options:
                 - "Field lw4o6_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             connected_cfg:
                 description:
                 - "Field connected_cfg"
@@ -78,7 +78,7 @@ options:
                 - "Field nat_map_cfg"
     as_number:
         description:
-        - "None"
+        - "AS number"
         required: True
     aggregate_address_list:
         description:
@@ -87,24 +87,24 @@ options:
         suboptions:
             as_set:
                 description:
-                - "None"
+                - "Generate AS set path information"
             aggregate_address:
                 description:
-                - "None"
+                - "Configure BGP aggregate entries (Aggregate prefix)"
             summary_only:
                 description:
-                - "None"
+                - "Filter more specific routes from updates"
     originate:
         description:
-        - "None"
+        - "Distribute a default route"
         required: False
     maximum_paths_value:
         description:
-        - "None"
+        - "Supported BGP multipath numbers"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     bgp:
         description:
@@ -113,44 +113,44 @@ options:
         suboptions:
             enforce_first_as:
                 description:
-                - "None"
+                - "Enforce the first AS for EBGP routes"
             scan_time:
                 description:
-                - "None"
+                - "Configure background scan interval (Scan interval (sec) [Default=60 Disable=0])"
             router_id:
                 description:
-                - "None"
+                - "Override current router identifier (peers will reset) (Manually configured router identifier)"
             log_neighbor_changes:
                 description:
-                - "None"
+                - "Log neighbor up/down and reset reason"
             deterministic_med:
                 description:
-                - "None"
+                - "Pick the best-MED path among paths advertised from the neighboring AS"
             fast_external_failover:
                 description:
-                - "None"
+                - "Immediately reset session if a link to a directly connected external peer goes down"
             local_preference_value:
                 description:
-                - "None"
+                - "Configure default local preference value"
             nexthop_trigger_count:
                 description:
-                - "None"
+                - "BGP nexthop-tracking status (count)"
             dampening_cfg:
                 description:
                 - "Field dampening_cfg"
             always_compare_med:
                 description:
-                - "None"
+                - "Allow comparing MED from different neighbors"
             bestpath_cfg:
                 description:
                 - "Field bestpath_cfg"
     auto_summary:
         description:
-        - "None"
+        - "Enable automatic network number summarization"
         required: False
     synchronization:
         description:
-        - "None"
+        - "Perform IGP synchronization"
         required: False
     timers:
         description:
@@ -159,10 +159,10 @@ options:
         suboptions:
             bgp_holdtime:
                 description:
-                - "None"
+                - "Holdtime"
             bgp_keepalive:
                 description:
-                - "None"
+                - "Keepalive interval"
     neighbor:
         description:
         - "Field neighbor"
@@ -184,25 +184,25 @@ options:
         suboptions:
             ext_routes_dist:
                 description:
-                - "None"
+                - "Distance for routes external to the AS"
             src_prefix:
                 description:
-                - "None"
+                - "IP source prefix"
             int_routes_dist:
                 description:
-                - "None"
+                - "Distance for routes internal to the AS"
             acl_str:
                 description:
-                - "None"
+                - "Access list name"
             admin_distance:
                 description:
-                - "None"
+                - "Define an administrative distance"
             local_routes_dist:
                 description:
-                - "None"
+                - "Distance for local routes"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     address_family:
         description:
@@ -256,9 +256,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -443,11 +443,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

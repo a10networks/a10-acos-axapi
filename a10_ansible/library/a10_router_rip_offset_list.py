@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_rip_offset_list
 description:
-    - None
+    - Modify RIP metric
 short_description: Configures A10 router.rip.offset-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,31 +42,31 @@ options:
         suboptions:
             ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface (Tunnel interface number)"
             metric:
                 description:
-                - "None"
+                - "Metric value"
             offset_list_direction:
                 description:
-                - "None"
+                - "'in'= Filter incoming updates; 'out'= Filter outgoing updates; "
             acl:
                 description:
-                - "None"
+                - "Access-list name"
             trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             ethernet:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -101,9 +101,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -273,11 +273,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
