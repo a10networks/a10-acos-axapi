@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_logging
 description:
-    - None
+    - CGNV6 Logging Statistics
 short_description: Configures A10 cgnv6.logging
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     source_address:
         description:
@@ -54,7 +54,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     nat_quota_exceeded:
         description:
         - "Field nat_quota_exceeded"
@@ -62,10 +62,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             level:
                 description:
-                - "None"
+                - "'warning'= Log level Warning (Default); 'critical'= Log level Critical; 'notice'= Log level Notice; "
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -73,7 +73,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'tcp-session-created'= TCP Session Created; 'tcp-session-deleted'= TCP Session Deleted; 'tcp-port-allocated'= TCP Port Allocated; 'tcp-port-freed'= TCP Port Freed; 'tcp-port-batch-allocated'= TCP Port Batch Allocated; 'tcp-port-batch-freed'= TCP Port Batch Freed; 'udp-session-created'= UDP Session Created; 'udp-session-deleted'= UDP Session Deleted; 'udp-port-allocated'= UDP Port Allocated; 'udp-port-freed'= UDP Port Freed; 'udp-port-batch-allocated'= UDP Port Batch Allocated; 'udp-port-batch-freed'= UDP Port Batch Freed; 'icmp-session-created'= ICMP Session Created; 'icmp-session-deleted'= ICMP Session Deleted; 'icmp-resource-allocated'= ICMP Resource Allocated; 'icmp-resource-freed'= ICMP Resource Freed; 'icmpv6-session-created'= ICMPV6 Session Created; 'icmpv6-session-deleted'= ICMPV6 Session Deleted; 'icmpv6-resource-allocated'= ICMPV6 Resource Allocated; 'icmpv6-resource-freed'= ICMPV6 Resource Freed; 'gre-session-created'= GRE Session Created; 'gre-session-deleted'= GRE Session Deleted; 'gre-resource-allocated'= GRE Resource Allocated; 'gre-resource-freed'= GRE Resource Freed; 'esp-session-created'= ESP Session Created; 'esp-session-deleted'= ESP Session Deleted; 'esp-resource-allocated'= ESP Resource Allocated; 'esp-resource-freed'= ESP Resource Freed; 'fixed-nat-user-ports'= Fixed NAT Inside User Port Mapping; 'fixed-nat-disable-config-logged'= Fixed NAT Periodic Configs Logged; 'fixed-nat-disable-config-logs-sent'= Fixed NAT Periodic Config Logs Sent; 'fixed-nat-periodic-config-logs-sent'= Fixed NAT Disabled Configs Logged; 'fixed-nat-periodic-config-logged'= Fixed NAT Disabled Config Logs Sent; 'fixed-nat-interim-updated'= Fixed NAT Interim Updated; 'log-sent'= Log Packets Sent; 'log-dropped'= Log Packets Dropped; 'conn-tcp-established'= TCP Connection Established; 'conn-tcp-dropped'= TCP Connection Lost; 'tcp-port-overloading-allocated'= TCP Port Overloading Allocated; 'tcp-port-overloading-freed'= TCP Port Overloading Freed; 'udp-port-overloading-allocated'= UDP Port Overloading Allocated; 'udp-port-overloading-freed'= UDP Port Overloading Freed; 'http-request-logged'= HTTP Request Logged; 'reduced-logs-by-destination'= Reduced Logs by Destination Protocol and Port; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'rtsp-port-allocated'= RTSP UDP Port Allocated; 'rtsp-port-freed'= RTSP UDP Port Freed; 'conn-tcp-create-failed'= TCP Connection Failed; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'interim-update-scheduled'= Port Allocation Interim Update Scheduled; 'interim-update-schedule-failed'= Port Allocation Interim Update Failed; 'interim-update-terminated'= Port Allocation Interim Update Terminated; 'interim-update-memory-freed'= Port Allocation Interim Update Memory Freed; 'interim-update-no-buff-retried'= Port Allocation Interim Update Memory Freed; 'tcp-port-batch-interim-updated'= TCP Port Batch Interim Updated; 'udp-port-batch-interim-updated'= UDP Port Batch Interim Updated; 'port-block-accounting-freed'= Port Allocation Accounting Freed; 'port-block-accounting-allocated'= Port Allocation Accounting Allocated; 'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed; 'http-frag-merge-failed-dropped'= HTTP frag merge failed dropped; "
     nat_resource_exhausted:
         description:
         - "Field nat_resource_exhausted"
@@ -81,10 +81,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             level:
                 description:
-                - "None"
+                - "'warning'= Log level Warning; 'critical'= Log level Critical (Default); 'notice'= Log level Notice; "
 
 
 """
@@ -118,7 +118,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -291,9 +294,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -307,6 +311,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

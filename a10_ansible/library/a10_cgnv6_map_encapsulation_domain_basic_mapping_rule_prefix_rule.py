@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule
 description:
-    - None
+    - IPv6 and IPv4 prefix rules
 short_description: Configures A10 cgnv6.map.encapsulation.domain.basic.mapping.rule.prefix-rule
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,43 +37,43 @@ options:
         required: True
     port_start:
         description:
-        - "None"
+        - "Starting Port, Must be Power of 2 value"
         required: False
     name:
         description:
-        - "None"
+        - "MAP BMR prefix rule name"
         required: True
     ipv4_address_port_settings:
         description:
-        - "None"
+        - "'prefix-addr'= Each CE is assigned an IPv4 prefix; 'single-addr'= Each CE is assigned an IPv4 address; 'shared-addr'= Each CE is assigned a shared IPv4 address; "
         required: False
     ipv4_netmask:
         description:
-        - "None"
+        - "Subnet mask (subnet bigger than /8 is not allowed)"
         required: False
     rule_ipv4_prefix:
         description:
-        - "None"
+        - "IPv4 prefix of BMR"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     share_ratio:
         description:
-        - "None"
+        - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
         required: False
     rule_ipv6_prefix:
         description:
-        - "None"
+        - "IPv6 prefix of BMR"
         required: False
     ea_length:
         description:
-        - "None"
+        - "Length of Embedded Address (EA) bits"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -108,7 +108,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -287,9 +290,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -303,6 +307,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_l4
 description:
-    - None
+    - CGNV6 L4 Statistics
 short_description: Configures A10 cgnv6.l4
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'no-fwd-route'= No Forward Route for Session; 'no-rev-route'= No Reverse Route for Session; 'out-of-session-memory'= Out of Session Memory; 'tcp-rst-sent'= TCP RST Sent; 'ipip-icmp-reply-sent'= IPIP ICMP Echo Reply Sent; 'icmp-filtered-sent'= ICMP Administratively Filtered Sent; 'icmp-host-unreachable-sent'= ICMP Host Unreachable Sent; 'icmp-reply-no-session-drop'= ICMP Reply No Session Drop; 'ipip-truncated'= IPIP Truncated Packet; 'ip-src-invalid-unicast'= IPv4 Source Not Valid Unicast; 'ip-dst-invalid-unicast'= IPv4 Destination Not Valid Unicast; 'ipv6-src-invalid-unicast'= IPv6 Source Not Valid Unicast; 'ipv6-dst-invalid-unicast'= IPv6 Destination Not Valid Unicast; 'bad-l3-protocol'= Bad Layer 3 Protocol; 'special-ipv4-no-route'= Stateless IPv4 No Forward Route; 'special-ipv6-no-route'= Stateless IPv6 No Forward Route; 'icmp-reply-sent'= ICMP Echo Reply Sent; 'icmpv6-reply-sent'= ICMPv6 Echo Reply Sent; 'out-of-state-dropped'= L4 Out of State packets; 'ttl-exceeded-sent'= ICMP TTL Exceeded Sent; 'cross-cpu-alg-gre-no-match'= ALG GRE Cross CPU No Matching Session; 'cross-cpu-alg-gre-preprocess-err'= ALG GRE Cross CPU Preprocess Error; 'lsn-fast-setup'= LSN Fast Setup Attempt; 'lsn-fast-setup-err'= LSN Fast Setup Error; 'nat64-fast-setup'= NAT64 Fast Setup Attempt; 'nat64-fast-setup-err'= NAT64 Fast Setup Error; 'dslite-fast-setup'= DS-Lite Fast Setup Attempt; 'dslite-fast-setup-err'= DS-Lite Fast Setup Error; 'fast-setup-delayed-err'= Fast Setup Delayed Error; 'fast-setup-mtu-too-small'= Fast Setup MTU Too Small; 'fixed-nat44-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat44-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat64-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat64-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat-dslite-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat-dslite-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat-fast-setup-delayed-err'= Fixed NAT Fast Setup Delayed Error; 'fixed-nat-fast-setup-mtu-too-small'= Fixed NAT Fast Setup MTU Too Small; 'static-nat-fast-setup'= Static NAT Fast Setup Attempt; 'static-nat-fast-setup-err'= Static NAT Fast Setup Error; 'dst-nat-needed-drop'= Destination NAT Needed Drop; 'invalid-nat64-translated-addr'= Invalid NAT64 Translated IPv4 Address; 'tcp-rst-loop-drop'= RST Loop Drop; 'static-nat-alloc'= Static NAT Alloc; 'static-nat-free'= Static NAT Free; 'process-l4'= Process L4; 'preprocess-error'= Preprocess Error; 'process-special'= Process Special; 'process-continue'= Process Continue; 'process-error'= Process Error; 'fw-match-no-rule-drop'= Firewall Matched No CGNv6 Rule Drop; 'ip-unknown-process'= Process IP Unknown; 'src-nat-pool-not-found'= Src NAT Pool Not Found; 'dst-nat-pool-not-found'= Dst NAT Pool Not Found; 'l3-ip-src-invalid-unicast'= IPv4 L3 Source Invalid Unicast; 'l3-ip-dst-invalid-unicast'= IPv4 L3 Destination Invalid Unicast; 'l3-ipv6-src-invalid-unicast'= IPv6 L3 Source Invalid Unicast; 'l3-ipv6-dst-invalid-unicast'= IPv6 L3 Destination Invalid Unicast; 'fw-zone-mismatch-rerouting-drop'= Rerouting Zone Mismatch Drop; 'nat-range-list-acl-deny'= Nat range-list ACL deny; 'nat-range-list-acl-permit'= Nat range-list ACL permit; 'fw-next-action-incorrect-drop'= FW Next Action Incorrect Drop; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -249,9 +252,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +269,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

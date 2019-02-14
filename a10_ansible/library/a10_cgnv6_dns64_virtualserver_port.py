@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_dns64_virtualserver_port
 description:
-    - None
+    - Virtual Port
 short_description: Configures A10 cgnv6.dns64.virtualserver.port
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,31 +37,31 @@ options:
         required: True
     protocol:
         description:
-        - "None"
+        - "'dns-udp'= DNS service over UDP; "
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     precedence:
         description:
-        - "None"
+        - "Set auto NAT pool as higher precedence for source NAT"
         required: False
     auto:
         description:
-        - "None"
+        - "Configure auto NAT for the vport"
         required: False
     template_policy:
         description:
-        - "None"
+        - "Policy Template (Policy template name)"
         required: False
     service_group:
         description:
-        - "None"
+        - "Bind a Service Group to this Virtual Server (Service Group Name)"
         required: False
     port_number:
         description:
-        - "None"
+        - "Port"
         required: True
     acl_name_list:
         description:
@@ -70,13 +70,13 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "Apply an access list name (Named Access List)"
             acl_name_src_nat_pool:
                 description:
-                - "None"
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
             acl_name_seq_num:
                 description:
-                - "None"
+                - "Specify ACL precedence (sequence-number)"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -84,14 +84,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr_conn'= Current connection; 'total_l4_conn'= Total L4 connections; 'total_l7_conn'= Total L7 connections; 'toatal_tcp_conn'= Total TCP connections; 'total_conn'= Total connections; 'total_fwd_bytes'= Total forward bytes; 'total_fwd_pkts'= Total forward packets; 'total_rev_bytes'= Total reverse bytes; 'total_rev_pkts'= Total reverse packets; 'total_dns_pkts'= Total DNS packets; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; "
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     template_dns:
         description:
-        - "None"
+        - "DNS template (DNS template name)"
         required: False
     acl_id_list:
         description:
@@ -100,20 +100,20 @@ options:
         suboptions:
             acl_id_seq_num:
                 description:
-                - "None"
+                - "Specify ACL precedence (sequence-number)"
             acl_id:
                 description:
-                - "None"
+                - "ACL id VPORT"
             acl_id_src_nat_pool:
                 description:
-                - "None"
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
     action:
         description:
-        - "None"
+        - "'enable'= Enable; 'disable'= Disable; "
         required: False
     pool:
         description:
-        - "None"
+        - "Specify NAT pool or pool group"
         required: False
 
 
@@ -148,7 +148,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -333,9 +336,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -349,6 +353,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

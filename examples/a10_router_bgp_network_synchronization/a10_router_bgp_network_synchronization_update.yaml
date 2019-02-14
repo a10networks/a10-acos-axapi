@@ -1,0 +1,11 @@
+
+- name: Update a10_router_bgp_network_synchronization example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_router_bgp_network_synchronization instance
+    a10_router_bgp_network_synchronization:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present

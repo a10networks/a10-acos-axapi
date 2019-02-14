@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_stateful_firewall_global
 description:
-    - None
+    - Stateful Firewall Configuration (default=disabled)
 short_description: Configures A10 cgnv6.stateful.firewall.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,11 +37,11 @@ options:
         required: True
     respond_to_user_mac:
         description:
-        - "None"
+        - "Use the user's source MAC for the next hop rather than the routing table (default= off)"
         required: False
     stateful_firewall_value:
         description:
-        - "None"
+        - "'enable'= Enable stateful firewall; "
         required: False
     sampling_enable:
         description:
@@ -50,10 +50,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'tcp_packet_process'= TCP Packet Process; 'udp_packet_process'= UDP Packet Process; 'other_packet_process'= Other Packet Process; 'packet_inbound_deny'= Inbound Packet Denied; 'packet_process_failure'= Packet Error Drop; 'outbound_session_created'= Outbound Session Created; 'outbound_session_freed'= Outbound Session Freed; 'inbound_session_created'= Inbound Session Created; 'inbound_session_freed'= Inbound Session Freed; 'tcp_session_created'= TCP Session Created; 'tcp_session_freed'= TCP Session Freed; 'udp_session_created'= UDP Session Created; 'udp_session_freed'= UDP Session Freed; 'other_session_created'= Other Session Created; 'other_session_freed'= Other Session Freed; 'session_creation_failure'= Session Creation Failure; 'no_fwd_route'= No Forward Route; 'no_rev_route'= No Reverse Route; 'packet_standby_drop'= Standby Drop; 'tcp_fullcone_created'= TCP Full-cone Created; 'tcp_fullcone_freed'= TCP Full-cone Freed; 'udp_fullcone_created'= UDP Full-cone Created; 'udp_fullcone_freed'= UDP Full-cone Freed; 'fullcone_creation_failure'= Full-Cone Creation Failure; 'eif_process'= Endpnt-Independent Filter Matched; 'one_arm_drop'= One-Arm Drop; 'no_class_list_match'= No Class-List Match Drop; 'outbound_session_created_shadow'= Outbound Session Created Shadow; 'outbound_session_freed_shadow'= Outbound Session Freed Shadow; 'inbound_session_created_shadow'= Inbound Session Created Shadow; 'inbound_session_freed_shadow'= Inbound Session Freed Shadow; 'tcp_session_created_shadow'= TCP Session Created Shadow; 'tcp_session_freed_shadow'= TCP Session Freed Shadow; 'udp_session_created_shadow'= UDP Session Created Shadow; 'udp_session_freed_shadow'= UDP Session Freed Shadow; 'other_session_created_shadow'= Other Session Created Shadow; 'other_session_freed_shadow'= Other Session Freed Shadow; 'session_creation_failure_shadow'= Session Creation Failure Shadow; 'bad_session_freed'= Bad Session Proto on Free; 'ctl_mem_alloc'= Memory Alloc; 'ctl_mem_free'= Memory Free; 'tcp_fullcone_created_shadow'= TCP Full-cone Created Shadow; 'tcp_fullcone_freed_shadow'= TCP Full-cone Freed Shadow; 'udp_fullcone_created_shadow'= UDP Full-cone Created Shadow; 'udp_fullcone_freed_shadow'= UDP Full-cone Freed Shadow; 'fullcone_in_del_q'= Full-cone Found in Delete Queue; 'fullcone_overflow_eim'= EIM Overflow; 'fullcone_overflow_eif'= EIF Overflow; 'fullcone_free_found'= Full-cone Free Found From Conn; 'fullcone_free_retry_lookup'= Full-cone Retry Look-up; 'fullcone_free_not_found'= Full-cone Free Not Found; 'eif_limit_exceeded'= EIF Limit Exceeded; 'eif_disable_drop'= EIF Disable Drop; 'eif_process_failure'= EIF Process Failure; 'eif_filtered'= EIF Filtered; 'ha_standby_session_created'= HA Standby Session Created; 'ha_standby_session_eim'= HA Standby Session EIM; 'ha_standby_session_eif'= HA Standby Session EIF; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -88,7 +88,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -259,9 +262,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -275,6 +279,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_SNMPv3_user
 description:
-    - None
+    - Define a user who can access the SNMP engine
 short_description: Configures A10 snmp-server.SNMPv3.user
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,43 +37,43 @@ options:
         required: True
     username:
         description:
-        - "None"
+        - "Name of the user"
         required: True
     auth_val:
         description:
-        - "None"
+        - "'md5'= Use HMAC MD5 algorithm for authentication; 'sha'= Use HMAC SHA algorithm for authentication; "
         required: False
     group:
         description:
-        - "None"
+        - "Group to which the user belongs"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     encpasswd:
         description:
-        - "None"
+        - "Passphrase for encryption"
         required: False
     passwd:
         description:
-        - "None"
+        - "Password of this user"
         required: False
     priv_pw_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED passphrase string)"
         required: False
     v3:
         description:
-        - "None"
+        - "'auth'= Using the authNoPriv Security Level; 'noauth'= Using the noAuthNoPriv Security Level; "
         required: False
     pw_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED passphrase string)"
         required: False
     priv:
         description:
-        - "None"
+        - "'des'= DES encryption alogrithm; 'aes'= AES encryption alogrithm;  (Encryption type)"
         required: False
 
 
@@ -108,7 +108,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -287,9 +290,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -303,6 +307,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

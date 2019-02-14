@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_server
 description:
-    - None
+    - CGNV6 logging Server
 short_description: Configures A10 cgnv6.server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     health_check_disable:
         description:
-        - "None"
+        - "Disable configured health check configuration"
         required: False
     port_list:
         description:
@@ -46,49 +46,49 @@ options:
         suboptions:
             health_check_disable:
                 description:
-                - "None"
+                - "Disable health check"
             protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             follow_port_protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
             port_number:
                 description:
-                - "None"
+                - "Port Number"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             action:
                 description:
-                - "None"
+                - "'enable'= enable; 'disable'= disable; "
             health_check_follow_port:
                 description:
-                - "None"
+                - "Specify which port to follow for health status (Port Number)"
             health_check:
                 description:
-                - "None"
+                - "Health Check (Monitor Name)"
     name:
         description:
-        - "None"
+        - "Server Name"
         required: True
     fqdn_name:
         description:
-        - "None"
+        - "Server hostname"
         required: False
     host:
         description:
-        - "None"
+        - "IP Address"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     sampling_enable:
         description:
@@ -97,22 +97,22 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr-conn'= Current connections; 'total-conn'= Total connections; 'fwd-pkt'= Forward packets; 'rev-pkt'= Reverse Packets; 'peak-conn'= Peak connections; "
     action:
         description:
-        - "None"
+        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server; "
         required: False
     server_ipv6_addr:
         description:
-        - "None"
+        - "IPV6 address"
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check Monitor (Health monitor name)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -147,7 +147,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -327,9 +330,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -343,6 +347,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

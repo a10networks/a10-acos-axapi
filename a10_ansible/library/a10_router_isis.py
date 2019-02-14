@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_isis
 description:
-    - None
+    - Intermediate System - Intermediate System (IS-IS)
 short_description: Configures A10 router.isis
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,21 +42,21 @@ options:
         suboptions:
             password:
                 description:
-                - "None"
+                - "Set the authentication password for a routing domain (Routing domain password)"
             authenticate:
                 description:
                 - "Field authenticate"
     max_lsp_lifetime:
         description:
-        - "None"
+        - "Set maximum LSP lifetime (Maximum LSP lifetime in seconds)"
         required: False
     tag:
         description:
-        - "None"
+        - "ISO routing area tag"
         required: True
     lsp_refresh_interval:
         description:
-        - "None"
+        - "Set LSP refresh interval (LSP refresh time in seconds)"
         required: False
     set_overload_bit_cfg:
         description:
@@ -68,7 +68,7 @@ options:
                 - "Field suppress_cfg"
             set_overload_bit:
                 description:
-                - "None"
+                - "Signal other touers not to use us in SPF"
             on_startup:
                 description:
                 - "Field on_startup"
@@ -79,14 +79,14 @@ options:
         suboptions:
             net:
                 description:
-                - "None"
+                - "A Network Entity Title for this process (XX.XXXX. ... .XXXX.XX  Network entity title (NET))"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     bfd:
         description:
-        - "None"
+        - "'all-interfaces'= Enable BFD on all interfaces; "
         required: False
     metric_style_list:
         description:
@@ -95,10 +95,10 @@ options:
         suboptions:
             ntype:
                 description:
-                - "None"
+                - "'narrow'= Use old style of TLVs with narrow metric; 'wide'= Use new style of TLVs to carry wider metric; 'transition'= Send and accept both styles of TLVs during transition; 'narrow-transition'= Send old style of TLVs with narrow metric with accepting both styles of TLVs; 'wide-transition'= Send new style of TLVs to carry wider metric with accepting both styles of TLVs; "
             level:
                 description:
-                - "None"
+                - "'level-1'= Level-1 only; 'level-1-2'= Level-1-2; 'level-2'= Level-2 only; "
     authentication:
         description:
         - "Field authentication"
@@ -115,7 +115,7 @@ options:
                 - "Field key_chain_list"
     ignore_lsp_errors:
         description:
-        - "None"
+        - "Ignore LSPs with bad checksums"
         required: False
     protocol_list:
         description:
@@ -124,7 +124,7 @@ options:
         suboptions:
             protocol_topology:
                 description:
-                - "None"
+                - "Protocol Topology"
     log_adjacency_changes_cfg:
         description:
         - "Field log_adjacency_changes_cfg"
@@ -132,7 +132,7 @@ options:
         suboptions:
             state:
                 description:
-                - "None"
+                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging; "
     spf_interval_exp_list:
         description:
         - "Field spf_interval_exp_list"
@@ -140,13 +140,13 @@ options:
         suboptions:
             max:
                 description:
-                - "None"
+                - "Maximum Delay between receiving a change to SPF calculation in milliseconds"
             min:
                 description:
-                - "None"
+                - "Minimum Delay between receiving a change to SPF calculation in milliseconds"
             level:
                 description:
-                - "None"
+                - "'level-1'= Set interval for level 1 only; 'level-2'= Set interval for level 2 only; "
     passive_interface_list:
         description:
         - "Field passive_interface_list"
@@ -154,22 +154,22 @@ options:
         suboptions:
             lif:
                 description:
-                - "None"
+                - "Logical interface (Lif interface number)"
             ve:
                 description:
-                - "None"
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
-                - "None"
+                - "Loopback interface (Port number)"
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface (Tunnel interface number)"
             trunk:
                 description:
-                - "None"
+                - "Trunk interface (Trunk interface number)"
             ethernet:
                 description:
-                - "None"
+                - "Ethernet interface (Port number)"
     summary_address_list:
         description:
         - "Field summary_address_list"
@@ -177,17 +177,17 @@ options:
         suboptions:
             prefix:
                 description:
-                - "None"
+                - "IP network prefix"
             level:
                 description:
-                - "None"
+                - "'level-1'= Summarize into level-1 area; 'level-1-2'= Summarize into both area and sub-domain; 'level-2'= Summarize into level-2 sub-domain; "
     adjacency_check:
         description:
-        - "None"
+        - "Check ISIS neighbor protocol support"
         required: False
     default_information:
         description:
-        - "None"
+        - "'originate'= Distribute a default route; "
         required: False
     address_family:
         description:
@@ -213,7 +213,7 @@ options:
                 - "Field isis"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ha_standby_extra_cost:
         description:
         - "Field ha_standby_extra_cost"
@@ -221,10 +221,10 @@ options:
         suboptions:
             group:
                 description:
-                - "None"
+                - "Group (Group ID)"
             extra_cost:
                 description:
-                - "None"
+                - "The extra cost value"
     lsp_gen_interval_list:
         description:
         - "Field lsp_gen_interval_list"
@@ -232,17 +232,17 @@ options:
         suboptions:
             interval:
                 description:
-                - "None"
+                - "Minimum interval in seconds"
             level:
                 description:
-                - "None"
+                - "'level-1'= Set interval for level 1 only; 'level-2'= Set interval for level 2 only; "
     is_type:
         description:
-        - "None"
+        - "'level-1'= Act as a station router only; 'level-1-2'= Act as both a station router and an area router; 'level-2-only'= Act as an area router only; "
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     distance_list:
         description:
@@ -251,13 +251,13 @@ options:
         suboptions:
             distance:
                 description:
-                - "None"
+                - "ISIS Administrative Distance (Distance value)"
             System_ID:
                 description:
-                - "None"
+                - "System-ID in XXXX.XXXX.XXXX"
             acl:
                 description:
-                - "None"
+                - "Access list name"
     area_password_cfg:
         description:
         - "Field area_password_cfg"
@@ -265,7 +265,7 @@ options:
         suboptions:
             password:
                 description:
-                - "None"
+                - "Configure the authentication password for an area (Area password)"
             authenticate:
                 description:
                 - "Field authenticate"
@@ -302,9 +302,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -500,11 +500,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_lsn_radius_server
 description:
-    - None
+    - Configure system as a RADIUS server
 short_description: Configures A10 cgnv6.lsn.radius.server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,15 +37,15 @@ options:
         required: True
     accounting_start:
         description:
-        - "None"
+        - "'ignore'= Ignore; 'append-entry'= Append the AVPs to existing entry (default); 'replace-entry'= Replace the AVPs of existing entry; "
         required: False
     attribute_name:
         description:
-        - "None"
+        - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using IMSI; "
         required: False
     vrid:
         description:
-        - "None"
+        - "Join a VRRP-A failover group"
         required: False
     remote:
         description:
@@ -57,23 +57,23 @@ options:
                 - "Field ip_list"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
         required: False
     disable_reply:
         description:
-        - "None"
+        - "Toggle option for RADIUS reply packet(Default= Accounting response will be sent)"
         required: False
     accounting_interim_update:
         description:
-        - "None"
+        - "'ignore'= Ignore (default); 'append-entry'= Append the AVPs to existing entry; 'replace-entry'= Replace the AVPs of existing entry; "
         required: False
     secret:
         description:
-        - "None"
+        - "Configure shared secret"
         required: False
     sampling_enable:
         description:
@@ -82,14 +82,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'msisdn-received'= MSISDN Received; 'imei-received'= IMEI Received; 'imsi-received'= IMSI Received; 'custom-received'= Custom attribute Received; 'radius-request-received'= RADIUS Request Received; 'radius-request-dropped'= RADIUS Request Dropped (Malformed Packet); 'request-bad-secret-dropped'= RADIUS Request Bad Secret Dropped; 'request-no-key-vap-dropped'= RADIUS Request No Key Attribute Dropped; 'request-malformed-dropped'= RADIUS Request Malformed Dropped; 'request-ignored'= RADIUS Request Ignored; 'radius-table-full'= RADIUS Request Dropped (Table Full); 'secret-not-configured-dropped'= RADIUS Secret Not Configured Dropped; 'ha-standby-dropped'= HA Standby Dropped; 'ipv6-prefix-length-mismatch'= Framed IPV6 Prefix Length Mismatch; 'invalid-key'= Radius Request has Invalid Key Field; 'smp-created'= RADIUS SMP Created; 'smp-deleted'= RADIUS SMP Deleted; 'smp-mem-allocated'= RADIUS SMP Memory Allocated; 'smp-mem-alloc-failed'= RADIUS SMP Memory Allocation Failed; 'smp-mem-freed'= RADIUS SMP Memory Freed; 'smp-in-rml'= RADIUS SMP in RML; 'mem-allocated'= RADIUS Memory Allocated; 'mem-alloc-failed'= RADIUS Memory Allocation Failed; 'mem-freed'= RADIUS Memory Freed; 'ha-sync-create-sent'= HA Record Sync Create Sent; 'ha-sync-delete-sent'= HA Record Sync Delete Sent; 'ha-sync-create-recv'= HA Record Sync Create Received; 'ha-sync-delete-recv'= HA Record Sync Delete Received; 'acct-on-filters-full'= RADIUS Acct On Request Ignored(Filters Full); 'acct-on-dup-request'= Duplicate RADIUS Acct On Request; 'ip-mismatch-delete'= Radius Entry IP Mismatch Delete; 'ip-add-race-drop'= Radius Entry IP Add Race Drop; 'ha-sync-no-key-vap-dropped'= HA Record Sync No key dropped; 'entry-set-to-obsolete'= RADIUS Entry Set to Obsolete; 'inter-card-msg-fail-drop'= Inter-Card Message Fail Drop; "
     accounting_stop:
         description:
-        - "None"
+        - "'ignore'= Ignore; 'delete-entry'= Delete the entry (default); 'delete-entry-and-sessions'= Delete the entry and data sessions associated; "
         required: False
     custom_attribute_name:
         description:
-        - "None"
+        - "Clear using customized attribute"
         required: False
     attribute:
         description:
@@ -98,45 +98,45 @@ options:
         suboptions:
             prefix_number:
                 description:
-                - "None"
+                - "RADIUS attribute number"
             prefix_length:
                 description:
-                - "None"
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'= Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112; "
             name:
                 description:
-                - "None"
+                - "Customized attribute name"
             prefix_vendor:
                 description:
-                - "None"
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
             number:
                 description:
-                - "None"
+                - "RADIUS attribute number"
             value:
                 description:
-                - "None"
+                - "'hexadecimal'= Type of attribute value is hexadecimal; "
             custom_vendor:
                 description:
-                - "None"
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
             custom_number:
                 description:
-                - "None"
+                - "RADIUS attribute number"
             vendor:
                 description:
-                - "None"
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
             attribute_value:
                 description:
-                - "None"
+                - "'inside-ipv6-prefix'= Framed IPv6 Prefix; 'inside-ip'= Inside IP address; 'inside-ipv6'= Inside IPv6 address; 'imei'= International Mobile Equipment Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI); 'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2; 'custom3'= Customized attribute 3; "
     listen_port:
         description:
-        - "None"
+        - "Configure the listen port of RADIUS server (Port number)"
         required: False
     accounting_on:
         description:
-        - "None"
+        - "'ignore'= Ignore (default); 'delete-entries-using-attribute'= Delete entries matching attribute in RADIUS Table; "
         required: False
     secret_string:
         description:
-        - "None"
+        - "The RADIUS secret"
         required: False
 
 
@@ -171,7 +171,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -354,9 +357,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -370,6 +374,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_bgp_address_family_ipv6
 description:
-    - None
+    - ipv6 Address family
 short_description: Configures A10 router.bgp.address.family.ipv6
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,13 +42,13 @@ options:
         suboptions:
             distance_ext:
                 description:
-                - "None"
+                - "Distance for routes external to the AS"
             distance_local:
                 description:
-                - "None"
+                - "Distance for local routes"
             distance_int:
                 description:
-                - "None"
+                - "Distance for routes internal to the AS"
     redistribute:
         description:
         - "Field redistribute"
@@ -65,7 +65,7 @@ options:
                 - "Field nat64_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             connected_cfg:
                 description:
                 - "Field connected_cfg"
@@ -100,20 +100,20 @@ options:
         suboptions:
             as_set:
                 description:
-                - "None"
+                - "Generate AS set path information"
             aggregate_address:
                 description:
-                - "None"
+                - "Configure BGP aggregate entries (Aggregate IPv6 prefix)"
             summary_only:
                 description:
-                - "None"
+                - "Filter more specific routes from updates"
     originate:
         description:
-        - "None"
+        - "Distribute an IPv6 default route"
         required: False
     maximum_paths_value:
         description:
-        - "None"
+        - "Supported BGP multipath numbers"
         required: False
     bgp:
         description:
@@ -122,32 +122,32 @@ options:
         suboptions:
             dampening_max_supress:
                 description:
-                - "None"
+                - "Maximum duration to suppress a stable route(minutes)"
             dampening:
                 description:
-                - "None"
+                - "Enable route-flap dampening"
             dampening_half:
                 description:
-                - "None"
+                - "Reachability Half-life time for the penalty(minutes)"
             dampening_start_reuse:
                 description:
-                - "None"
+                - "Value to start reusing a route"
             route_map:
                 description:
-                - "None"
+                - "Route-map to specify criteria for dampening (Route-map name)"
             dampening_start_supress:
                 description:
-                - "None"
+                - "Value to start suppressing a route"
             dampening_unreachability:
                 description:
-                - "None"
+                - "Un-reachability Half-life time for the penalty(minutes)"
     auto_summary:
         description:
-        - "None"
+        - "Enable automatic network number summarization"
         required: False
     synchronization:
         description:
-        - "None"
+        - "Perform IGP synchronization"
         required: False
     neighbor:
         description:
@@ -165,7 +165,7 @@ options:
                 - "Field ipv4_neighbor_list"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     network:
         description:
@@ -211,9 +211,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -392,11 +392,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

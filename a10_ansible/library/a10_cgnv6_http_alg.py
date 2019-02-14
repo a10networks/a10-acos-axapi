@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_http_alg
 description:
-    - None
+    - HTTP-ALG Statistics
 short_description: Configures A10 cgnv6.http-alg
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'request-processed'= HTTP Request Processed; 'request-insert-msisdn-performed'= HTTP MSISDN Insertion Performed; 'request-insert-client-ip-performed'= HTTP Client IP Insertion Performed; 'request-insert-msisdn-unavailable'= Inserted MSISDN is 0000 (MSISDN Unavailable); 'queued-session-too-many'= Queued Session Exceed Drop; 'radius-query-succeed'= MSISDN Query Succeed; 'radius-query-failed'= MSISDN Query Failed; 'radius-requst-sent'= Query Request Sent; 'radius-requst-dropped'= Query Request Dropped; 'radius-response-received'= Query Response Received; 'radius-response-dropped'= Query Response Dropped; 'out-of-memory-dropped'= Out-of-Memory Dropped; 'queue-len-exceed-dropped'= Queue Length Exceed Dropped; 'out-of-order-dropped'= Packet Out-of-Order Dropped; 'buff-resent'= Packet Resent from Queue; 'buff-spilt-failed'= Buff Split Failed; 'header-insertion-failed'= Buff Insertion Failed; 'header-removal-failed'= Buff Removal Failed; 'no-queue'= No Queue; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -249,9 +252,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +269,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

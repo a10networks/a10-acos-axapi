@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_pcp
 description:
-    - None
+    - Set Port Control Protocol parameters
 short_description: Configures A10 cgnv6.pcp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,14 +42,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'packets-rcv'= Packets Received; 'lsn-map-process-success'= PCP MAP Request Processing Success (NAT44); 'dslite-map-process-success'= PCP MAP Request Processing Success (DS-Lite); 'nat64-map-process-success'= PCP MAP Request Processing Success (NAT64); 'lsn-peer-process-success'= PCP PEER Request Processing Success (NAT44); 'dslite-peer-process-success'= PCP PEER Request Processing Success (DS-Lite); 'nat64-peer-process-success'= PCP PEER Request Processing Success (NAT64); 'lsn-announce-process-success'= PCP ANNOUNCE Request Processing Success (NAT44); 'dslite-announce-process-success'= PCP ANNOUNCE Request Processing Success (DS-Lite); 'nat64-announce-process-success'= PCP ANNOUNCE Request Processing Success (NAT64); 'pkt-not-request-drop'= Packet Not a PCP Request; 'pkt-too-short-drop'= Packet Too Short; 'noroute-drop'= Response No Route; 'unsupported-version'= Unsupported PCP version; 'not-authorized'= PCP Request Not Authorized; 'malform-request'= PCP Request Malformed; 'unsupp-opcode'= Unsupported PCP Opcode; 'unsupp-option'= Unsupported PCP Option; 'malform-option'= PCP Option Malformed; 'no-resources'= No System or NAT Resources; 'unsupp-protocol'= Unsupported Mapping Protocol; 'user-quota-exceeded'= User Quota Exceeded; 'cannot-provide-suggest'= Cannot Provide Suggested Port When PREFER_FAILURE; 'address-mismatch'= PCP Client Address Mismatch; 'excessive-remote-peers'= Excessive Remote Peers; 'pkt-not-from-nat-inside'= Packet Dropped For Not Coming From NAT Inside; 'l4-process-error'= L3/L4 Process Error; 'internal-error-drop'= Internal Error; 'unsol_ance_sent_succ'= Unsolicited Announce Sent; 'unsol_ance_sent_fail'= Unsolicited Announce Send Failure; 'ha_sync_epoch_sent'= HA Sync PCP Epoch Sent; 'ha_sync_epoch_rcv'= HA Sync PCP Epoch Recv; 'fullcone-ext-alloc'= PCP Fullcone Extension Alloc; 'fullcone-ext-free'= PCP Fullcone Extension Free; 'fullcone-ext-alloc-failure'= PCP Fullcone Extension Alloc Failure; 'fullcone-ext-notfound'= PCP Fullcone Extension Not Found; 'fullcone-ext-reuse'= PCP Fullcone Extension Reuse; 'client-nonce-mismatch'= PCP Client Nonce Mismatch; 'map-filter-set'= PCP MAP Filter Set; 'map-filter-deny'= PCP MAP Filter Deny Inbound; 'inter-board-pkts'= PCP Inter board packets; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     default_template:
         description:
-        - "None"
+        - "Bind the default template for PCP (Bind a PCP template)"
         required: False
 
 
@@ -84,7 +84,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -254,9 +257,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -270,6 +274,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

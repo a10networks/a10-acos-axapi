@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_vrrp_a_vrid_blade_parameters
 description:
-    - None
+    - blade parameters of VRRP-A vrid
 short_description: Configures A10 vrrp.a.vrid.blade-parameters
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,15 +37,15 @@ options:
         required: True
     priority:
         description:
-        - "None"
+        - "VRRP-A priorty (Priority, default is 150)"
         required: False
     fail_over_policy_template:
         description:
-        - "None"
+        - "Apply a fail over policy template (VRRP-A fail over policy template name)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     tracking_options:
         description:
@@ -57,7 +57,7 @@ options:
                 - "Field vlan_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             route:
                 description:
                 - "Field route"
@@ -106,7 +106,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -218,8 +221,7 @@ def create(module, result):
     payload = build_json("blade-parameters", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -244,9 +246,8 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("blade-parameters", module)
     try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
+        post_result = module.client.put(existing_url(module), payload)
+        result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -266,22 +267,6 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
-def replace(module, result, existing_config):
-    payload = build_json("blade-parameters", module)
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def run_command(module):
     run_errors = []
 
@@ -295,9 +280,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -311,6 +297,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_one_to_one_global
 description:
-    - None
+    - Set one-to-one NAT config parameters
 short_description: Configures A10 cgnv6.one.to.one.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,14 +42,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total-map-allocated'= Total One-to-One Address Mapping Allocated; 'total-map-freed'= Total One-to-One Address Mapping Freed; 'map-alloc-failure'= One-to-One Address Mapping Allocation Failure; 'map-dbl-free'= Address Mapping Double Free; 'alloc-map-race'= Mapping Exists When Allocating Address Mapping; 'map-not-found'= Mapping to be Released Not Found; 'ha-map-mismatch'= HA Standby Mapping Mismatch; 'ha-select-addr-failure'= HA Standby Allocate Address Failure; 'ha-alloc-map-conflicts'= HA Standby Allocate Mapping Conflicts; "
     mapping_timeout:
         description:
-        - "None"
+        - "Configure timeout for the one-to-one NAT mapping (Timeout in minutes (default= 10 minutes))"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -84,7 +84,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -254,9 +257,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -270,6 +274,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

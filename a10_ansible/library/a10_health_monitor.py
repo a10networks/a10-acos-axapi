@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_health_monitor
 description:
-    - None
+    - Define the Health Monitor object
 short_description: Configures A10 health.monitor
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,75 +37,75 @@ options:
         required: True
     override_ipv4:
         description:
-        - "None"
+        - "Override implicitly inherited IPv4 address from target"
         required: False
     override_ipv6:
         description:
-        - "None"
+        - "Override implicitly inherited IPv6 address from target"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     ssl_ciphers:
         description:
-        - "None"
+        - "Specify OpenSSL Cipher Suite name(s) for Health check (OpenSSL Cipher Suite(s) (Eg= AES128-SHA256), if the cipher is invalid, would give information at HM down reason)"
         required: False
     strict_retry_on_server_err_resp:
         description:
-        - "None"
+        - "Require strictly retry"
         required: False
     passive_interval:
         description:
-        - "None"
+        - "Interval to do manual health checking while in passive mode (Specify value in seconds (Default is 10 s))"
         required: False
     override_port:
         description:
-        - "None"
+        - "Override implicitly inherited port from target (Port number (1-65534))"
         required: False
     up_retry:
         description:
-        - "None"
+        - "Specify the Healthcheck Retries before declaring target up (Up-retry count (default 1))"
         required: False
     interval:
         description:
-        - "None"
+        - "Specify the Healthcheck Interval (Interval Value, in seconds (default 5))"
         required: False
     sample_threshold:
         description:
-        - "None"
+        - "Number of samples in one epoch above which passive HC is enabled. If below or equal to the threshold, passive HC is disabled (Specify number of samples in one second (Default is 50). If the number of samples is 0, no action is taken)"
         required: False
     retry:
         description:
-        - "None"
+        - "Specify the Healthcheck Retries (Retry Count (default 3))"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     timeout:
         description:
-        - "None"
+        - "Specify the Healthcheck Timeout (Timeout Value, in seconds(default 5), Timeout should be less than or equal to interval)"
         required: False
     passive:
         description:
-        - "None"
+        - "Specify passive mode"
         required: False
     threshold:
         description:
-        - "None"
+        - "Threshold percentage above which passive mode is enabled (Specify percentage (Default is 75%))"
         required: False
     dsr_l2_strict:
         description:
-        - "None"
+        - "Enable strict L2dsr health-check"
         required: False
     status_code:
         description:
-        - "None"
+        - "'status-code-2xx'= Enable passive mode with 2xx http status code; 'status-code-non-5xx'= Enable passive mode with non-5xx http status code; "
         required: False
     disable_after_down:
         description:
-        - "None"
+        - "Disable the target if health check failed"
         required: False
     method:
         description:
@@ -177,7 +177,7 @@ options:
                 - "Field imap"
     name:
         description:
-        - "None"
+        - "Monitor Name"
         required: True
 
 
@@ -212,7 +212,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -401,9 +404,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -417,6 +421,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

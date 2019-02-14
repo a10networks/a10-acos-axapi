@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_map_encapsulation_domain
 description:
-    - None
+    - MAP Encapsulation domain
 short_description: Configures A10 cgnv6.map.encapsulation.domain
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,23 +37,23 @@ options:
         required: True
     description:
         description:
-        - "None"
+        - "MAP-E domain description"
         required: False
     format:
         description:
-        - "None"
+        - "'draft-03'= Construct IPv6 Interface Identifier according to draft-03; "
         required: False
     tunnel_endpoint_address:
         description:
-        - "None"
+        - "Tunnel Endpoint Address for MAP-E domain"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     name:
         description:
-        - "None"
+        - "MAP-E domain name"
         required: True
     sampling_enable:
         description:
@@ -62,7 +62,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'inbound_packet_received'= Inbound IPv4 Packets Received; 'inbound_frag_packet_received'= Inbound IPv4 Fragment Packets Received; 'inbound_addr_port_validation_failed'= Inbound IPv4 Destination Address Port Validation Failed; 'inbound_rev_lookup_failed'= Inbound IPv4 Reverse Route Lookup Failed; 'inbound_dest_unreachable'= Inbound IPv6 Destination Address Unreachable; 'outbound_packet_received'= Outbound IPv6 Packets Received; 'outbound_frag_packet_received'= Outbound IPv6 Fragment Packets Received; 'outbound_addr_validation_failed'= Outbound IPv6 Source Address Validation Failed; 'outbound_rev_lookup_failed'= Outbound IPv6 Reverse Route Lookup Failed; 'outbound_dest_unreachable'= Outbound IPv4 Destination Address Unreachable; 'packet_mtu_exceeded'= Packet Exceeded MTU; 'frag_icmp_sent'= ICMP Packet Too Big Sent; 'interface_not_configured'= Interfaces not Configured Dropped; 'bmr_prefixrules_configured'= BMR prefix rules configured; 'helper_count'= Helper Count; 'active_dhcpv6_leases'= Active DHCPv6 leases; "
     health_check_gateway:
         description:
         - "Field health_check_gateway"
@@ -76,10 +76,10 @@ options:
                 - "Field address_list"
             withdraw_route:
                 description:
-                - "None"
+                - "'all-link-failure'= Withdraw routes on health-check failure of all IPv4 gateways or all IPv6 gateways; 'any-link-failure'= Withdraw routes on health-check failure of any gateway (default); "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     basic_mapping_rule:
         description:
         - "Field basic_mapping_rule"
@@ -87,25 +87,25 @@ options:
         suboptions:
             rule_ipv4_address_port_settings:
                 description:
-                - "None"
+                - "'prefix-addr'= Each CE is assigned an IPv4 prefix; 'single-addr'= Each CE is assigned an IPv4 address; 'shared-addr'= Each CE is assigned a shared IPv4 address; "
             port_start:
                 description:
-                - "None"
+                - "Starting Port, Must be Power of 2 value"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             share_ratio:
                 description:
-                - "None"
+                - "Port sharing ratio for each NAT IP. Must be Power of 2 value"
             prefix_rule_list:
                 description:
                 - "Field prefix_rule_list"
             ea_length:
                 description:
-                - "None"
+                - "Length of Embedded Address (EA) bits"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -140,7 +140,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -318,9 +321,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -334,6 +338,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

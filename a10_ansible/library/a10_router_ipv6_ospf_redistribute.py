@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_ipv6_ospf_redistribute
 description:
-    - None
+    - Redistribute information from another routing protocol
 short_description: Configures A10 router.ipv6.ospf.redistribute
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,16 +42,16 @@ options:
         suboptions:
             metric:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             ntype:
                 description:
-                - "None"
+                - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'= Floating IP; 'ip-nat-list'= IP NAT list; 'nat-map'= NAT MAP Prefix; 'nat64'= NAT64 Prefix; 'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-IS; 'rip'= Routing Information Protocol (RIP); 'static'= Static routes; "
             metric_type:
                 description:
-                - "None"
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
     ospf_list:
         description:
         - "Field ospf_list"
@@ -59,22 +59,22 @@ options:
         suboptions:
             route_map_ospf:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             metric_ospf:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             metric_type_ospf:
                 description:
-                - "None"
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
             ospf:
                 description:
-                - "None"
+                - "Open Shortest Path First (OSPF)"
             process_id:
                 description:
-                - "None"
+                - "OSPF process ID"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     ip_nat_floating_list:
         description:
@@ -83,10 +83,10 @@ options:
         suboptions:
             ip_nat_floating_IP_forward:
                 description:
-                - "None"
+                - "Floating-IP as forward address"
             ip_nat_prefix:
                 description:
-                - "None"
+                - "Address"
     vip_list:
         description:
         - "Field vip_list"
@@ -94,27 +94,27 @@ options:
         suboptions:
             metric_vip:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             metric_type_vip:
                 description:
-                - "None"
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
             type_vip:
                 description:
-                - "None"
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not flagged; "
             route_map_vip:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
     ip_nat:
         description:
-        - "None"
+        - "IP-NAT"
         required: False
     metric_ip_nat:
         description:
-        - "None"
+        - "OSPF default metric (OSPF metric)"
         required: False
     route_map_ip_nat:
         description:
-        - "None"
+        - "Route map reference (Pointer to route-map entries)"
         required: False
     vip_floating_list:
         description:
@@ -123,13 +123,13 @@ options:
         suboptions:
             vip_address:
                 description:
-                - "None"
+                - "Address"
             vip_floating_IP_forward:
                 description:
-                - "None"
+                - "Floating-IP as forward address"
     metric_type_ip_nat:
         description:
-        - "None"
+        - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
         required: False
 
 
@@ -164,9 +164,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -344,11 +344,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

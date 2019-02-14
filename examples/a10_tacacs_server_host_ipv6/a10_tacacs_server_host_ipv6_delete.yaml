@@ -1,0 +1,14 @@
+- name: Delete a10_tacacs_server_host_ipv6 example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_tacacs_server_host_ipv6 instance
+    a10_tacacs_server_host_ipv6:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+      ipv6_addr: NO_EXAMPLE
+
+

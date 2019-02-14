@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_pcp
 description:
-    - None
+    - Port Control Protocol Template
 short_description: Configures A10 cgnv6.template.pcp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,63 +37,63 @@ options:
         required: True
     source_ipv6:
         description:
-        - "None"
+        - "Specify source IPv6 address for IPv6 ANNOUNCE message"
         required: False
     allow_third_party_from_lan:
         description:
-        - "None"
+        - "Allow third party request coming from LAN (default is disabled)"
         required: False
     name:
         description:
-        - "None"
+        - "PCP Template name"
         required: True
     map:
         description:
-        - "None"
+        - "PCP MAP Opcode (default is enabled)"
         required: False
     allow_third_party_from_wan:
         description:
-        - "None"
+        - "Allow third party request coming from WAN (default is disabled)"
         required: False
     maximum:
         description:
-        - "None"
+        - "To set maximum lifetime of PCP mappings (default 1440 minutes)"
         required: False
     disable_map_filter:
         description:
-        - "None"
+        - "To disable processing of FILTER options in MAP request"
         required: False
     check_client_nonce:
         description:
-        - "None"
+        - "To validate NONCE value in PCP request (default= disabled)"
         required: False
     minimum:
         description:
-        - "None"
+        - "To set minimum lifetime of PCP mappings (default 2 minutes)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     peer:
         description:
-        - "None"
+        - "PCP PEER Opcode (default is enabled)"
         required: False
     announce:
         description:
-        - "None"
+        - "PCP ANNOUNCE Opcode (default is enabled)"
         required: False
     source_ip:
         description:
-        - "None"
+        - "Specify source IP address for IPv4 ANNOUNCE message"
         required: False
     pcp_server_port:
         description:
-        - "None"
+        - "PCP server listening port (default 5351) (PCP UDP destination port)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -128,7 +128,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -312,9 +315,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -328,6 +332,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

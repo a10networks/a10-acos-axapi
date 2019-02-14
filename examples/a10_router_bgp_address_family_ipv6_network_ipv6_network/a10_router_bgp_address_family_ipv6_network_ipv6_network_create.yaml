@@ -1,0 +1,11 @@
+
+- name: Create a10_router_bgp_address_family_ipv6_network_ipv6_network example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_router_bgp_address_family_ipv6_network_ipv6_network instance
+    a10_router_bgp_address_family_ipv6_network_ipv6_network:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      network_ipv6: NO_EXAMPLE

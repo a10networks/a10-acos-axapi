@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_snmp_server_host_ipv6_host
 description:
-    - None
+    - Specify IPV6 hosts to receive SNMP traps
 short_description: Configures A10 snmp-server.host.ipv6-host
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     ipv6_addr:
         description:
-        - "None"
+        - "IPV6 address of SNMP trap host"
         required: True
     udp_port:
         description:
-        - "None"
+        - "The trap host's UDP port number(default= 162)"
         required: False
     v1_v2c_comm:
         description:
-        - "None"
+        - "SNMPv1/v2c community string"
         required: False
     user:
         description:
-        - "None"
+        - "SNMPv3 user to send traps (User Name)"
         required: False
     version:
         description:
-        - "None"
+        - "'v1'= Use SNMPv1; 'v2c'= Use SNMPv2c; 'v3'= User SNMPv3; "
         required: True
 
 
@@ -92,7 +92,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -269,9 +272,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -285,6 +289,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

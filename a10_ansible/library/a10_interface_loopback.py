@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_loopback
 description:
-    - None
+    - Loopback interface
 short_description: Configures A10 interface.loopback
 author: A10 Networks 2018 
 version_added: 2.4
@@ -45,7 +45,7 @@ options:
                 - "Field priority_list"
             padding:
                 description:
-                - "None"
+                - "Add padding to IS-IS hello packets"
             hello_interval_minimal_list:
                 description:
                 - "Field hello_interval_minimal_list"
@@ -54,7 +54,7 @@ options:
                 - "Field mesh_group"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             authentication:
                 description:
                 - "Field authentication"
@@ -63,7 +63,7 @@ options:
                 - "Field csnp_interval_list"
             retransmit_interval:
                 description:
-                - "None"
+                - "Set per-LSP retransmission interval (Interval between retransmissions of the same LSP (seconds))"
             password_list:
                 description:
                 - "Field password_list"
@@ -78,7 +78,7 @@ options:
                 - "Field hello_interval_list"
             circuit_type:
                 description:
-                - "None"
+                - "'level-1'= Level-1 only adjacencies are formed; 'level-1-2'= Level-1-2 adjacencies are formed; 'level-2-only'= Level-2 only adjacencies are formed; "
             hello_multiplier_list:
                 description:
                 - "Field hello_multiplier_list"
@@ -87,10 +87,10 @@ options:
                 - "Field metric_list"
             lsp_interval:
                 description:
-                - "None"
+                - "Set LSP transmission interval (LSP transmission interval (milliseconds))"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     snmp_server:
         description:
@@ -99,7 +99,7 @@ options:
         suboptions:
             trap_source:
                 description:
-                - "None"
+                - "The trap source"
     ip:
         description:
         - "Field ip"
@@ -113,7 +113,7 @@ options:
                 - "Field ospf"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             rip:
                 description:
                 - "Field rip"
@@ -122,11 +122,11 @@ options:
                 - "Field router"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     ifnum:
         description:
-        - "None"
+        - "Loopback interface number"
         required: True
     ipv6:
         description:
@@ -135,7 +135,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             address_list:
                 description:
                 - "Field address_list"
@@ -144,7 +144,7 @@ options:
                 - "Field rip"
             ipv6_enable:
                 description:
-                - "None"
+                - "Enable IPv6 processing"
             router:
                 description:
                 - "Field router"
@@ -153,7 +153,7 @@ options:
                 - "Field ospf"
     name:
         description:
-        - "None"
+        - "Name for the interface"
         required: False
 
 
@@ -188,7 +188,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -365,9 +368,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -381,6 +385,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

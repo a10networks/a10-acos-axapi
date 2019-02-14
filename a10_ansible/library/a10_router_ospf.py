@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_ospf
 description:
-    - None
+    - Open Shortest Path First (OSPF)
 short_description: Configures A10 router.ospf
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,16 +42,16 @@ options:
         suboptions:
             di_cost:
                 description:
-                - "None"
+                - "Cost of route"
             di_area_ipv4:
                 description:
-                - "None"
+                - "OSPF area ID as a IP address format"
             di_area_num:
                 description:
-                - "None"
+                - "OSPF area ID as a decimal value"
             di_type:
                 description:
-                - "None"
+                - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
     distribute_lists:
         description:
         - "Field distribute_lists"
@@ -59,30 +59,30 @@ options:
         suboptions:
             ospf_id:
                 description:
-                - "None"
+                - "OSPF process ID"
             direction:
                 description:
-                - "None"
+                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates; "
             protocol:
                 description:
-                - "None"
+                - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'= Floating IP; 'lw4o6'= LW4O6 Prefix; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'isis'= ISO IS-IS; 'ospf'= Open Shortest Path First (OSPF); 'rip'= Routing Information Protocol (RIP); 'static'= Static routes; "
             option:
                 description:
-                - "None"
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not flagged; "
             value:
                 description:
-                - "None"
+                - "Access-list name"
     default_metric:
         description:
-        - "None"
+        - "Set metric of redistributed routes (Default metric)"
         required: False
     auto_cost_reference_bandwidth:
         description:
-        - "None"
+        - "Use reference bandwidth method to assign OSPF cost (The reference bandwidth in terms of Mbits per second)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     router_id:
         description:
@@ -91,7 +91,7 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "OSPF router-id in IPv4 address format"
     neighbor_list:
         description:
         - "Field neighbor_list"
@@ -99,16 +99,16 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "OSPF priority of non-broadcast neighbor"
             cost:
                 description:
-                - "None"
+                - "OSPF cost for point-to-multipoint neighbor (Metric)"
             poll_interval:
                 description:
-                - "None"
+                - "OSPF dead-router polling interval (Seconds)"
             address:
                 description:
-                - "None"
+                - "Neighbor address"
     ospf_1:
         description:
         - "Field ospf_1"
@@ -124,7 +124,7 @@ options:
         suboptions:
             host_address:
                 description:
-                - "None"
+                - "Host address"
             area_cfg:
                 description:
                 - "Field area_cfg"
@@ -135,7 +135,7 @@ options:
         suboptions:
             state:
                 description:
-                - "None"
+                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging; "
     area_list:
         description:
         - "Field area_list"
@@ -146,13 +146,13 @@ options:
                 - "Field nssa_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             filter_lists:
                 description:
                 - "Field filter_lists"
             area_num:
                 description:
-                - "None"
+                - "OSPF area ID as a decimal value"
             virtual_link_list:
                 description:
                 - "Field virtual_link_list"
@@ -161,7 +161,7 @@ options:
                 - "Field stub_cfg"
             shortcut:
                 description:
-                - "None"
+                - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting through the area; 'enable'= Enable shortcutting through the area; "
             auth_cfg:
                 description:
                 - "Field auth_cfg"
@@ -170,13 +170,13 @@ options:
                 - "Field range_list"
             default_cost:
                 description:
-                - "None"
+                - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default summary cost)"
             area_ipv4:
                 description:
-                - "None"
+                - "OSPF area ID in IP address format"
     maximum_area:
         description:
-        - "None"
+        - "Maximum number of OSPF area (OSPF area limit)"
         required: False
     summary_address_list:
         description:
@@ -185,24 +185,24 @@ options:
         suboptions:
             summary_address:
                 description:
-                - "None"
+                - "Configure IP address summaries (Summary prefix)"
             not_advertise:
                 description:
-                - "None"
+                - "Suppress routes that match the prefix"
             tag:
                 description:
-                - "None"
+                - "Set tag (32-bit tag value)"
     rfc1583_compatible:
         description:
-        - "None"
+        - "Compatible with RFC 1583"
         required: False
     max_concurrent_dd:
         description:
-        - "None"
+        - "Maximum number allowed to process DD concurrently (Number of DD process)"
         required: False
     process_id:
         description:
-        - "None"
+        - "OSPF process ID"
         required: True
     passive_interface:
         description:
@@ -234,22 +234,22 @@ options:
         suboptions:
             originate:
                 description:
-                - "None"
+                - "Distribute a default route"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             always:
                 description:
-                - "None"
+                - "Always advertise default route"
             metric:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             metric_type:
                 description:
-                - "None"
+                - "OSPF metric type for default routes"
     overflow:
         description:
         - "Field overflow"
@@ -260,7 +260,7 @@ options:
                 - "Field database"
     bfd_all_interfaces:
         description:
-        - "None"
+        - "Enable BFD on all interfaces"
         required: False
     distance:
         description:
@@ -269,7 +269,7 @@ options:
         suboptions:
             distance_value:
                 description:
-                - "None"
+                - "OSPF Administrative distance"
             distance_ospf:
                 description:
                 - "Field distance_ospf"
@@ -286,7 +286,7 @@ options:
                 - "Field ospf_list"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ip_nat_floating_list:
                 description:
                 - "Field ip_nat_floating_list"
@@ -295,25 +295,25 @@ options:
                 - "Field vip_list"
             route_map_ip_nat:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             ip_nat:
                 description:
-                - "None"
+                - "IP-NAT"
             metric_ip_nat:
                 description:
-                - "None"
+                - "OSPF default metric (OSPF metric)"
             tag_ip_nat:
                 description:
-                - "None"
+                - "Set tag for routes redistributed into OSPF (32-bit tag value)"
             vip_floating_list:
                 description:
                 - "Field vip_floating_list"
             metric_type_ip_nat:
                 description:
-                - "None"
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     network_list:
         description:
@@ -322,16 +322,16 @@ options:
         suboptions:
             network_ipv4_cidr:
                 description:
-                - "None"
+                - "OSPF network prefix"
             network_ipv4:
                 description:
-                - "None"
+                - "Network number"
             network_area:
                 description:
                 - "Field network_area"
             network_ipv4_mask:
                 description:
-                - "None"
+                - "OSPF wild card bits"
     timers:
         description:
         - "Field timers"
@@ -347,10 +347,10 @@ options:
         suboptions:
             group:
                 description:
-                - "None"
+                - "Group (Group ID)"
             extra_cost:
                 description:
-                - "None"
+                - "The extra cost value"
 
 
 """
@@ -384,9 +384,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -582,11 +582,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

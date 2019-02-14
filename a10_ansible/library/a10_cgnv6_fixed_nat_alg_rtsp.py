@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_fixed_nat_alg_rtsp
 description:
-    - None
+    - Change Fixed NAT RTSP ALG Settings
 short_description: Configures A10 cgnv6.fixed.nat.alg.rtsp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'streams-created'= Streams Created; 'streams-freed'= Streams Freed; 'stream-creation-failure'= Stream Creation Failures; 'ports-allocated'= Stream Client Ports Allocated; 'ports-freed'= Stream Client Ports Freed; 'port-allocation-failure'= Stream Client Port Allocation Failures; 'unknown-client-port-from-server'= Server Replies With Unknown Client Ports; 'data-session-created'= Data Session Created; 'data-session-freed'= Data Session Freed; 'no-session-mem'= Data Session Creation Failures; 'smp-inserted'= SMP Session Inserted; 'smp-removed'= SMP Session Removed; 'smp-reused'= SMP Session Reused; 'fixed-nat-lid-standby'= New Session Fixed NAT LID Standby; 'smp-deleted'= New Session SMP Already Deleted; 'control-closed'= New Session Closed; 'data-session-exists'= New Session Already Exists; 'data-session-creation-failure'= New Data Session Creation Failure; 'rtp-reversed'= RTP Reverse Creation; 'rtcp-reversed'= RTCP Reverse Creation; 'cross-cpu-sent'= Cross CPU Sent; 'cross-cpu-rcv'= Cross CPU Received; 'cross-cpu-no-session'= Cross CPU No Session Found; 'cross-cpu-created'= Cross CPU Creation; 'cross-cpu-rcv-failure'= Cross CPU Receive Failure; 'data-free-smp-retry-lookup'= Data Session Free SMP Retry Lookup; 'data-free-smp-not-found'= Data Session Free SMP Not Found; 'ha-streams-sent'= HA Streams Sent; 'ha-streams-rcv'= HA Streams Received; 'ha-stream-incompatible'= HA Incompatible Streams Received; 'ha-stream-exists'= HA Stream Already Exists; 'ha-port-allocation-failure'= HA Stream Port Allocation Failure; 'ha-data-session-sent'= HA Data Session Sent; 'ha-data-session-rcv'= HA Data Session Received; 'ha-data-no-smp'= HA Data Session SMP Not Found; 'ha-control-closed'= HA New Data Control Session Closed; 'ha-data-exists'= HA New Data Session Already Exists; 'ha-extension-failure'= HA Conn Extension Failure; 'ha-stream-smp-reused'= HA SMP Session Reused; 'ha-stream-smp-acquire-failure'= HA SMP Session Acquire Failure; 'smp-app-type-mismatch'= SMP ALG App Type Mismatch; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -249,9 +252,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +269,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

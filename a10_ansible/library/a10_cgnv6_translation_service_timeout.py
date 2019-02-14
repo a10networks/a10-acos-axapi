@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_translation_service_timeout
 description:
-    - None
+    - Specify any custom service timeout
 short_description: Configures A10 cgnv6.translation.service-timeout
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,27 +37,27 @@ options:
         required: True
     service_type:
         description:
-        - "None"
+        - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     timeout_val:
         description:
-        - "None"
+        - "Timeout in seconds (Interval of 60 seconds)"
         required: False
     port_end:
         description:
-        - "None"
+        - "End Port Number"
         required: False
     fast:
         description:
-        - "None"
+        - "Use Fast Aging"
         required: False
     port:
         description:
-        - "None"
+        - "Port Number"
         required: True
 
 
@@ -92,7 +92,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -269,9 +272,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -285,6 +289,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

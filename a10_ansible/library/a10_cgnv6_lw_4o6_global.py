@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_lw_4o6_global
 description:
-    - None
+    - Configure LW-4over6 parameters
 short_description: Configures A10 cgnv6.lw.4o6.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,22 +42,22 @@ options:
         suboptions:
             send_icmpv6:
                 description:
-                - "None"
+                - "Send ICMPv6 Type 1 Code 5"
     nat_prefix_list:
         description:
-        - "None"
+        - "Configure LW-4over6 NAT Prefix List (LW-4over6 NAT Prefix Class-list)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     hairpinning:
         description:
-        - "None"
+        - "'filter-all'= Disable all Hairpinning; 'filter-none'= Allow all Hairpinning (default); 'filter-self-ip'= Block Hairpinning to same IP; 'filter-self-ip-port'= Block hairpinning to same IP and Port combination; "
         required: False
     inside_src_access_list:
         description:
-        - "None"
+        - "Access List for inside IPv4 addresses (ACL ID)"
         required: False
     sampling_enable:
         description:
@@ -66,14 +66,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'entry_count'= Total Entries Configured; 'self_hairpinning_drop'= Self-Hairpinning Drops; 'all_hairpinning_drop'= All Hairpinning Drops; 'no_match_icmpv6_sent'= No-Forward-Match ICMPv6 Sent; 'no_match_icmp_sent'= No-Reverse-Match ICMP Sent; 'icmp_inbound_drop'= Inbound ICMP Drops; 'fwd_lookup_failed'= Forward Route Lookup Failed; 'rev_lookup_failed'= Reverse Route Lookup Failed; 'interface_not_configured'= LW-4over6 Interfaces not Configured Drops; 'no_binding_table_matches_fwd'= No Forward Binding Table Entry Match Drops; 'no_binding_table_matches_rev'= No Reverse Binding Table Entry Match Drops; 'session_count'= LW-4over6 Session Count; 'system_address_drop'= LW-4over6 System Address Drops; "
     icmp_inbound:
         description:
-        - "None"
+        - "'drop'= Drop Inbound ICMP packets; 'handle'= Handle Inbound ICMP packets(default); "
         required: False
     use_binding_table:
         description:
-        - "None"
+        - "Bind LW-4over6 binding table for use (LW-4over6 Binding Table Name)"
         required: False
     no_reverse_match:
         description:
@@ -82,7 +82,7 @@ options:
         suboptions:
             send_icmp:
                 description:
-                - "None"
+                - "Send ICMP Type 3 Code 1"
 
 
 """
@@ -116,7 +116,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -292,9 +295,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -308,6 +312,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

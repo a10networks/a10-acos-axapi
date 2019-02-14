@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_router_bgp_redistribute
 description:
-    - None
+    - Redistribute information from another routing protocol
 short_description: Configures A10 router.bgp.redistribute
 author: A10 Networks 2018 
 version_added: 2.4
@@ -42,10 +42,10 @@ options:
         suboptions:
             ip_nat_list:
                 description:
-                - "None"
+                - "IP NAT list"
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
     lw4o6_cfg:
         description:
         - "Field lw4o6_cfg"
@@ -53,13 +53,13 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             lw4o6:
                 description:
-                - "None"
+                - "LW4O6 Prefix"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     connected_cfg:
         description:
@@ -68,10 +68,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             connected:
                 description:
-                - "None"
+                - "Connected"
     ip_nat_cfg:
         description:
         - "Field ip_nat_cfg"
@@ -79,10 +79,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             ip_nat:
                 description:
-                - "None"
+                - "IP NAT"
     floating_ip_cfg:
         description:
         - "Field floating_ip_cfg"
@@ -90,10 +90,10 @@ options:
         suboptions:
             floating_ip:
                 description:
-                - "None"
+                - "Floating IP"
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
     isis_cfg:
         description:
         - "Field isis_cfg"
@@ -101,10 +101,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             isis:
                 description:
-                - "None"
+                - "ISO IS-IS"
     vip:
         description:
         - "Field vip"
@@ -123,10 +123,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             rip:
                 description:
-                - "None"
+                - "Routing Information Protocol (RIP)"
     ospf_cfg:
         description:
         - "Field ospf_cfg"
@@ -134,10 +134,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             ospf:
                 description:
-                - "None"
+                - "Open Shortest Path First (OSPF)"
     static_cfg:
         description:
         - "Field static_cfg"
@@ -145,10 +145,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             static:
                 description:
-                - "None"
+                - "Static routes"
     nat_map_cfg:
         description:
         - "Field nat_map_cfg"
@@ -156,10 +156,10 @@ options:
         suboptions:
             route_map:
                 description:
-                - "None"
+                - "Route map reference (Pointer to route-map entries)"
             nat_map:
                 description:
-                - "None"
+                - "NAT MAP Prefix"
 
 
 """
@@ -193,9 +193,9 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
         partition=dict(type='str', required=False)
     )
 
@@ -375,11 +375,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 

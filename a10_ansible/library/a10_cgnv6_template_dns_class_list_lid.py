@@ -11,8 +11,8 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_dns_class_list_lid
 description:
-    - None
-short_description: Configures A10 cgnv6.template.dns.class-list.lid
+    - Limit ID
+short_description: Configures A10 cgnv6.template.dns.class.list.lid
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -37,31 +37,31 @@ options:
         required: True
     action_value:
         description:
-        - "None"
+        - "'dns-cache-disable'= Disable DNS cache when it exceeds limit; 'dns-cache-enable'= Enable DNS cache when it exceeds limit; 'forward'= Forward the traffic even it exceeds limit; "
         required: False
     log:
         description:
-        - "None"
+        - "Log a message"
         required: False
     lidnum:
         description:
-        - "None"
+        - "Specify a limit ID"
         required: True
     over_limit_action:
         description:
-        - "None"
+        - "Action when exceeds limit"
         required: False
     per:
         description:
-        - "None"
+        - "Per (Number of 100ms)"
         required: False
     lockout:
         description:
-        - "None"
+        - "Don't accept any new connection for certain time (Lockout duration in minutes)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     dns:
         description:
@@ -70,24 +70,24 @@ options:
         suboptions:
             cache_action:
                 description:
-                - "None"
+                - "'cache-disable'= Disable dns cache; 'cache-enable'= Enable dns cache; "
             weight:
                 description:
-                - "None"
+                - "Weight for cache entry"
             ttl:
                 description:
-                - "None"
+                - "TTL for cache entry (TTL in seconds)"
     conn_rate_limit:
         description:
-        - "None"
+        - "Connection rate limit"
         required: False
     log_interval:
         description:
-        - "None"
+        - "Log interval (minute, by default system will log every over limit instance)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -122,7 +122,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -302,9 +305,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -318,6 +322,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

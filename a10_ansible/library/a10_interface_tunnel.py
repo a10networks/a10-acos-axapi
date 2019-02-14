@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_tunnel
 description:
-    - None
+    - Tunnel interface
 short_description: Configures A10 interface.tunnel
 author: A10 Networks 2018 
 version_added: 2.4
@@ -37,7 +37,7 @@ options:
         required: True
     name:
         description:
-        - "None"
+        - "Name for the interface"
         required: False
     ip:
         description:
@@ -46,13 +46,13 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             generate_membership_query:
                 description:
-                - "None"
+                - "Enable Membership Query"
             max_resp_time:
                 description:
-                - "None"
+                - "Max Response Time (Default is 100)"
             address:
                 description:
                 - "Field address"
@@ -61,22 +61,22 @@ options:
                 - "Field ospf"
             generate_membership_query_val:
                 description:
-                - "None"
+                - "1 - 255 (Default is 125)"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     mtu:
         description:
-        - "None"
+        - "Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))"
         required: False
     ifnum:
         description:
-        - "None"
+        - "Tunnel interface number"
         required: True
     load_interval:
         description:
-        - "None"
+        - "Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)"
         required: False
     ipv6:
         description:
@@ -94,21 +94,21 @@ options:
                 - "Field ospf"
             ipv6_enable:
                 description:
-                - "None"
+                - "Enable IPv6 processing"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     action:
         description:
-        - "None"
+        - "'enable'= Enable; 'disable'= Disable; "
         required: False
     speed:
         description:
-        - "None"
+        - "Speed in Gbit/Sec (Default 10 Gbps)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -143,7 +143,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -322,9 +325,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -338,6 +342,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

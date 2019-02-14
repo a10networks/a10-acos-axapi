@@ -1,0 +1,13 @@
+- name: Delete a10_router_ipv6_rip_redistribute example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_router_ipv6_rip_redistribute instance
+    a10_router_ipv6_rip_redistribute:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+
+
+
