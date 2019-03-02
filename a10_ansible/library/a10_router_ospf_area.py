@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     nssa_cfg:
         description:
         - "Field nssa_cfg"
@@ -226,26 +230,35 @@ def get_argspec():
         default_cost=dict(type='int',),
         area_ipv4=dict(type='str',required=True,)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        ospf_process_id=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/router/ospf/{process-id}/area/{area-ipv4}+{area-num}"
+    url_base = "/axapi/v3/router/ospf/{ospf_process_id}/area/{area-ipv4}+{area-num}"
+
     f_dict = {}
     f_dict["area-ipv4"] = ""
     f_dict["area-num"] = ""
+    f_dict["ospf_process_id"] = module.params["ospf_process_id"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/router/ospf/{process-id}/area/{area-ipv4}+{area-num}"
+    url_base = "/axapi/v3/router/ospf/{ospf_process_id}/area/{area-ipv4}+{area-num}"
+
     f_dict = {}
-    f_dict["area-ipv4"] = module.params["area-ipv4"]
-    f_dict["area-num"] = module.params["area-num"]
+    f_dict["area-ipv4"] = module.params["area_ipv4"]
+    f_dict["area-num"] = module.params["area_num"]
+    f_dict["ospf_process_id"] = module.params["ospf_process_id"]
 
     return url_base.format(**f_dict)
 
@@ -331,7 +344,8 @@ def create(module, result):
     payload = build_json("area", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -356,8 +370,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("area", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -376,6 +391,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("area", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

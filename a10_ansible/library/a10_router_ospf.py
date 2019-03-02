@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     distribute_internal_list:
         description:
         - "Field distribute_internal_list"
@@ -420,6 +424,7 @@ def get_argspec():
         timers=dict(type='dict',spf=dict(type='dict',exp=dict(type='dict',max_delay=dict(type='int',),min_delay=dict(type='int',)))),
         ha_standby_extra_cost=dict(type='list',group=dict(type='int',),extra_cost=dict(type='int',))
     ))
+   
 
     return rv
 
@@ -427,6 +432,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/router/ospf/{process-id}"
+
     f_dict = {}
     f_dict["process-id"] = ""
 
@@ -436,8 +442,9 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/router/ospf/{process-id}"
+
     f_dict = {}
-    f_dict["process-id"] = module.params["process-id"]
+    f_dict["process-id"] = module.params["process_id"]
 
     return url_base.format(**f_dict)
 
@@ -523,7 +530,8 @@ def create(module, result):
     payload = build_json("ospf", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -548,8 +556,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ospf", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -568,6 +577,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("ospf", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

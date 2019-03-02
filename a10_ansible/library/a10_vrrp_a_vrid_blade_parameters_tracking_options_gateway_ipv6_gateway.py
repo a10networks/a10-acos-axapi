@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     ipv6_address:
         description:
         - "IPV6 address"
@@ -93,24 +97,33 @@ def get_argspec():
         uuid=dict(type='str',),
         priority_cost=dict(type='int',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        vrid_val=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/vrrp-a/vrid/{vrid-val}/blade-parameters/tracking-options/gateway/ipv6-gateway/{ipv6-address}"
+    url_base = "/axapi/v3/vrrp-a/vrid/{vrid_val}/blade-parameters/tracking-options/gateway/ipv6-gateway/{ipv6-address}"
+
     f_dict = {}
     f_dict["ipv6-address"] = ""
+    f_dict["vrid_val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/vrrp-a/vrid/{vrid-val}/blade-parameters/tracking-options/gateway/ipv6-gateway/{ipv6-address}"
+    url_base = "/axapi/v3/vrrp-a/vrid/{vrid_val}/blade-parameters/tracking-options/gateway/ipv6-gateway/{ipv6-address}"
+
     f_dict = {}
-    f_dict["ipv6-address"] = module.params["ipv6-address"]
+    f_dict["ipv6-address"] = module.params["ipv6_address"]
+    f_dict["vrid_val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
 
@@ -196,7 +209,8 @@ def create(module, result):
     payload = build_json("ipv6-gateway", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -221,8 +235,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ipv6-gateway", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -241,6 +256,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("ipv6-gateway", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

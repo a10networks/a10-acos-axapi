@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     redistribute:
         description:
         - "Field redistribute"
@@ -281,6 +285,7 @@ def get_argspec():
         address_family=dict(type='dict',ipv6=dict(type='dict',distance=dict(type='dict',distance_ext=dict(type='int',),distance_local=dict(type='int',),distance_int=dict(type='int',)),redistribute=dict(type='dict',ip_nat_list_cfg=dict(type='dict',ip_nat_list=dict(type='bool',),route_map=dict(type='str',)),lw4o6_cfg=dict(type='dict',route_map=dict(type='str',),lw4o6=dict(type='bool',)),nat64_cfg=dict(type='dict',nat64=dict(type='bool',),route_map=dict(type='str',)),uuid=dict(type='str',),connected_cfg=dict(type='dict',route_map=dict(type='str',),connected=dict(type='bool',)),ip_nat_cfg=dict(type='dict',route_map=dict(type='str',),ip_nat=dict(type='bool',)),floating_ip_cfg=dict(type='dict',floating_ip=dict(type='bool',),route_map=dict(type='str',)),isis_cfg=dict(type='dict',route_map=dict(type='str',),isis=dict(type='bool',)),vip=dict(type='dict',only_not_flagged_cfg=dict(type='dict',route_map=dict(type='str',),only_not_flagged=dict(type='bool',)),only_flagged_cfg=dict(type='dict',route_map=dict(type='str',),only_flagged=dict(type='bool',))),rip_cfg=dict(type='dict',route_map=dict(type='str',),rip=dict(type='bool',)),ospf_cfg=dict(type='dict',route_map=dict(type='str',),ospf=dict(type='bool',)),static_cfg=dict(type='dict',route_map=dict(type='str',),static=dict(type='bool',)),nat_map_cfg=dict(type='dict',route_map=dict(type='str',),nat_map=dict(type='bool',))),aggregate_address_list=dict(type='list',as_set=dict(type='bool',),aggregate_address=dict(type='str',),summary_only=dict(type='bool',)),originate=dict(type='bool',),maximum_paths_value=dict(type='int',),bgp=dict(type='dict',dampening_max_supress=dict(type='int',),dampening=dict(type='bool',),dampening_half=dict(type='int',),dampening_start_reuse=dict(type='int',),route_map=dict(type='str',),dampening_start_supress=dict(type='int',),dampening_unreachability=dict(type='int',)),auto_summary=dict(type='bool',),synchronization=dict(type='bool',),neighbor=dict(type='dict',peer_group_neighbor_list=dict(type='list',maximum_prefix=dict(type='int',),neighbor_prefix_lists=dict(type='list',nbr_prefix_list_direction=dict(type='str',choices=['in','out']),nbr_prefix_list=dict(type='str',)),activate=dict(type='bool',),weight=dict(type='int',),send_community_val=dict(type='str',choices=['both','none','standard','extended']),inbound=dict(type='bool',),next_hop_self=dict(type='bool',),maximum_prefix_thres=dict(type='int',),route_map=dict(type='str',),peer_group=dict(type='str',required=True,),remove_private_as=dict(type='bool',),default_originate=dict(type='bool',),allowas_in_count=dict(type='int',),distribute_lists=dict(type='list',distribute_list_direction=dict(type='str',choices=['in','out']),distribute_list=dict(type='str',)),prefix_list_direction=dict(type='str',choices=['both','receive','send']),allowas_in=dict(type='bool',),unsuppress_map=dict(type='str',),neighbor_filter_lists=dict(type='list',filter_list=dict(type='str',),filter_list_direction=dict(type='str',choices=['in','out'])),neighbor_route_map_lists=dict(type='list',nbr_rmap_direction=dict(type='str',choices=['in','out']),nbr_route_map=dict(type='str',)),uuid=dict(type='str',)),ipv6_neighbor_list=dict(type='list',maximum_prefix=dict(type='int',),neighbor_prefix_lists=dict(type='list',nbr_prefix_list_direction=dict(type='str',choices=['in','out']),nbr_prefix_list=dict(type='str',)),allowas_in_count=dict(type='int',),neighbor_ipv6=dict(type='str',required=True,),send_community_val=dict(type='str',choices=['both','none','standard','extended']),inbound=dict(type='bool',),next_hop_self=dict(type='bool',),maximum_prefix_thres=dict(type='int',),route_map=dict(type='str',),peer_group_name=dict(type='str',),weight=dict(type='int',),unsuppress_map=dict(type='str',),prefix_list_direction=dict(type='str',choices=['both','receive','send']),default_originate=dict(type='bool',),activate=dict(type='bool',),remove_private_as=dict(type='bool',),distribute_lists=dict(type='list',distribute_list_direction=dict(type='str',choices=['in','out']),distribute_list=dict(type='str',)),allowas_in=dict(type='bool',),neighbor_route_map_lists=dict(type='list',nbr_rmap_direction=dict(type='str',choices=['in','out']),nbr_route_map=dict(type='str',)),neighbor_filter_lists=dict(type='list',filter_list=dict(type='str',),filter_list_direction=dict(type='str',choices=['in','out'])),uuid=dict(type='str',)),ipv4_neighbor_list=dict(type='list',maximum_prefix=dict(type='int',),neighbor_prefix_lists=dict(type='list',nbr_prefix_list_direction=dict(type='str',choices=['in','out']),nbr_prefix_list=dict(type='str',)),allowas_in_count=dict(type='int',),peer_group_name=dict(type='str',),send_community_val=dict(type='str',choices=['both','none','standard','extended']),neighbor_ipv4=dict(type='str',required=True,),inbound=dict(type='bool',),next_hop_self=dict(type='bool',),maximum_prefix_thres=dict(type='int',),route_map=dict(type='str',),uuid=dict(type='str',),weight=dict(type='int',),unsuppress_map=dict(type='str',),default_originate=dict(type='bool',),activate=dict(type='bool',),remove_private_as=dict(type='bool',),prefix_list_direction=dict(type='str',choices=['both','receive','send']),allowas_in=dict(type='bool',),neighbor_route_map_lists=dict(type='list',nbr_rmap_direction=dict(type='str',choices=['in','out']),nbr_route_map=dict(type='str',)),neighbor_filter_lists=dict(type='list',filter_list=dict(type='str',),filter_list_direction=dict(type='str',choices=['in','out'])),distribute_lists=dict(type='list',distribute_list_direction=dict(type='str',choices=['in','out']),distribute_list=dict(type='str',)))),uuid=dict(type='str',),network=dict(type='dict',ipv6_network_list=dict(type='list',description=dict(type='str',),route_map=dict(type='str',),comm_value=dict(type='str',),network_ipv6=dict(type='str',required=True,),backdoor=dict(type='bool',),uuid=dict(type='str',)),synchronization=dict(type='dict',network_synchronization=dict(type='bool',),uuid=dict(type='str',))))),
         network=dict(type='dict',synchronization=dict(type='dict',network_synchronization=dict(type='bool',),uuid=dict(type='str',)),ip_cidr_list=dict(type='list',description=dict(type='str',),route_map=dict(type='str',),comm_value=dict(type='str',),backdoor=dict(type='bool',),network_ipv4_cidr=dict(type='str',required=True,),uuid=dict(type='str',)))
     ))
+   
 
     return rv
 
@@ -288,6 +293,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/router/bgp/{as-number}"
+
     f_dict = {}
     f_dict["as-number"] = ""
 
@@ -297,8 +303,9 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/router/bgp/{as-number}"
+
     f_dict = {}
-    f_dict["as-number"] = module.params["as-number"]
+    f_dict["as-number"] = module.params["as_number"]
 
     return url_base.format(**f_dict)
 
@@ -384,7 +391,8 @@ def create(module, result):
     payload = build_json("bgp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -409,8 +417,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("bgp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -429,6 +438,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("bgp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

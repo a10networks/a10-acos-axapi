@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     isis:
         description:
         - "Field isis"
@@ -247,6 +251,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num_pkts','num_total_bytes','num_unicast_pkts','num_broadcast_pkts','num_multicast_pkts','num_tx_pkts','num_total_tx_bytes','num_unicast_tx_pkts','num_broadcast_tx_pkts','num_multicast_tx_pkts','dropped_dis_rx_pkts','dropped_rx_pkts','dropped_dis_tx_pkts','dropped_tx_pkts'])),
         access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',))
     ))
+   
 
     return rv
 
@@ -254,6 +259,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/interface/lif/{ifnum}"
+
     f_dict = {}
     f_dict["ifnum"] = ""
 
@@ -263,6 +269,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/interface/lif/{ifnum}"
+
     f_dict = {}
     f_dict["ifnum"] = module.params["ifnum"]
 
@@ -350,7 +357,8 @@ def create(module, result):
     payload = build_json("lif", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -375,8 +383,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("lif", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -395,6 +404,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("lif", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

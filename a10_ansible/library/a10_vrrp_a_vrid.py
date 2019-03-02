@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     blade_parameters:
         description:
         - "Field blade_parameters"
@@ -150,6 +154,7 @@ def get_argspec():
         floating_ip=dict(type='dict',ipv6_address_part_cfg=dict(type='list',ethernet=dict(type='str',),ipv6_address_partition=dict(type='str',),ve=dict(type='int',),trunk=dict(type='int',)),ip_address_cfg=dict(type='list',ip_address=dict(type='str',)),ip_address_part_cfg=dict(type='list',ip_address_partition=dict(type='str',)),ipv6_address_cfg=dict(type='list',ipv6_address=dict(type='str',),ethernet=dict(type='str',),ve=dict(type='int',),trunk=dict(type='int',))),
         follow=dict(type='dict',vrid_lead=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -157,6 +162,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/vrrp-a/vrid/{vrid-val}"
+
     f_dict = {}
     f_dict["vrid-val"] = ""
 
@@ -166,8 +172,9 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/vrrp-a/vrid/{vrid-val}"
+
     f_dict = {}
-    f_dict["vrid-val"] = module.params["vrid-val"]
+    f_dict["vrid-val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
 
@@ -253,7 +260,8 @@ def create(module, result):
     payload = build_json("vrid", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -278,8 +286,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("vrid", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -298,6 +307,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("vrid", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []
