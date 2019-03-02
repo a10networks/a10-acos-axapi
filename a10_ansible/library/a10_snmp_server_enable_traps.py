@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     lldp:
         description:
         - "Enable lldp traps"
@@ -423,6 +427,7 @@ def get_argspec():
         slb=dict(type='dict',all=dict(type='bool',),server_down=dict(type='bool',),vip_port_connratelimit=dict(type='bool',),server_selection_failure=dict(type='bool',),service_group_down=dict(type='bool',),server_conn_limit=dict(type='bool',),service_group_member_up=dict(type='bool',),uuid=dict(type='str',),server_conn_resume=dict(type='bool',),service_up=dict(type='bool',),service_conn_limit=dict(type='bool',),gateway_up=dict(type='bool',),service_group_up=dict(type='bool',),application_buffer_limit=dict(type='bool',),vip_connratelimit=dict(type='bool',),vip_connlimit=dict(type='bool',),service_group_member_down=dict(type='bool',),service_down=dict(type='bool',),bw_rate_limit_exceed=dict(type='bool',),server_disabled=dict(type='bool',),server_up=dict(type='bool',),vip_port_connlimit=dict(type='bool',),vip_port_down=dict(type='bool',),bw_rate_limit_resume=dict(type='bool',),gateway_down=dict(type='bool',),vip_up=dict(type='bool',),vip_port_up=dict(type='bool',),vip_down=dict(type='bool',),service_conn_resume=dict(type='bool',)),
         network=dict(type='dict',trunk_port_threshold=dict(type='bool',),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -430,6 +435,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/snmp-server/enable/traps"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -438,6 +444,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/snmp-server/enable/traps"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -524,7 +531,8 @@ def create(module, result):
     payload = build_json("traps", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -549,8 +557,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("traps", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -569,6 +578,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("traps", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []
