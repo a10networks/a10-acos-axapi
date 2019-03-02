@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     vrid:
         description:
         - "Specify one VRRP-A vrid to force into standby state"
@@ -88,6 +92,7 @@ def get_argspec():
         vrid=dict(type='int',required=True,),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -95,6 +100,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/vrrp-a/force-self-standby-persistent/{vrid}"
+
     f_dict = {}
     f_dict["vrid"] = ""
 
@@ -104,6 +110,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/vrrp-a/force-self-standby-persistent/{vrid}"
+
     f_dict = {}
     f_dict["vrid"] = module.params["vrid"]
 
@@ -191,7 +198,8 @@ def create(module, result):
     payload = build_json("force-self-standby-persistent", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -216,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("force-self-standby-persistent", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +245,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("force-self-standby-persistent", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

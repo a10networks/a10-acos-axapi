@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     vlan_cfg:
         description:
         - "Field vlan_cfg"
@@ -171,6 +175,7 @@ def get_argspec():
         trunk_cfg=dict(type='list',per_port_weight=dict(type='int',),weight=dict(type='int',),trunk=dict(type='int',)),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -178,6 +183,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/vrrp-a/fail-over-policy-template/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -187,6 +193,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/vrrp-a/fail-over-policy-template/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -274,7 +281,8 @@ def create(module, result):
     payload = build_json("fail-over-policy-template", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -299,8 +307,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("fail-over-policy-template", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -319,6 +328,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("fail-over-policy-template", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []
