@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     override_ipv4:
         description:
         - "Override implicitly inherited IPv4 address from target"
@@ -242,6 +246,7 @@ def get_argspec():
         method=dict(type='dict',ftp=dict(type='dict',ftp=dict(type='bool',),uuid=dict(type='str',),ftp_password_string=dict(type='str',),ftp_password=dict(type='bool',),ftp_port=dict(type='int',),ftp_encrypted=dict(type='str',),ftp_username=dict(type='str',)),udp=dict(type='dict',udp=dict(type='bool',),uuid=dict(type='str',),force_up_with_single_healthcheck=dict(type='bool',),udp_port=dict(type='int',)),sip=dict(type='dict',sip=dict(type='bool',),uuid=dict(type='str',),register=dict(type='bool',),expect_response_code=dict(type='str',),sip_port=dict(type='int',),sip_tcp=dict(type='bool',)),http=dict(type='dict',http_url=dict(type='bool',),text_regex=dict(type='str',),http_maintenance_code=dict(type='str',),http_kerberos_auth=dict(type='bool',),http_postfile=dict(type='str',),response_code_regex=dict(type='str',),uuid=dict(type='str',),post_type=dict(type='str',choices=['postdata','postfile']),http_password_string=dict(type='str',),url_path=dict(type='str',),http_response_code=dict(type='str',),http_host=dict(type='str',),http=dict(type='bool',),url_type=dict(type='str',choices=['GET','POST','HEAD']),http_postdata=dict(type='str',),http_text=dict(type='str',),http_encrypted=dict(type='str',),http_kerberos_realm=dict(type='str',),http_password=dict(type='bool',),http_kerberos_kdc=dict(type='dict',http_kerberos_hostipv6=dict(type='str',),http_kerberos_port=dict(type='int',),http_kerberos_portv6=dict(type='int',),http_kerberos_hostip=dict(type='str',)),http_expect=dict(type='bool',),post_path=dict(type='str',),http_username=dict(type='str',),http_port=dict(type='int',)),dns=dict(type='dict',dns_domain_type=dict(type='str',choices=['A','CNAME','SOA','PTR','MX','TXT','AAAA']),dns_ipv4_recurse=dict(type='str',choices=['enabled','disabled']),uuid=dict(type='str',),dns_ipv6_port=dict(type='int',),dns_ipv4_addr=dict(type='str',),dns_domain_expect=dict(type='dict',dns_domain_response=dict(type='str',)),dns_ipv4_expect=dict(type='dict',dns_ipv4_response=dict(type='str',)),dns_ipv4_port=dict(type='int',),dns_ipv6_expect=dict(type='dict',dns_ipv6_response=dict(type='str',)),dns_ip_key=dict(type='bool',),dns_ipv6_recurse=dict(type='str',choices=['enabled','disabled']),dns_ipv6_tcp=dict(type='bool',),dns_domain_recurse=dict(type='str',choices=['enabled','disabled']),dns_domain_tcp=dict(type='bool',),dns=dict(type='bool',),dns_ipv4_tcp=dict(type='bool',),dns_domain=dict(type='str',),dns_ipv6_addr=dict(type='str',),dns_domain_port=dict(type='int',)),database=dict(type='dict',db_send=dict(type='str',),db_password=dict(type='bool',),uuid=dict(type='str',),db_encrypted=dict(type='str',),database=dict(type='bool',),database_name=dict(type='str',choices=['mssql','mysql','oracle','postgresql']),db_row_integer=dict(type='int',),db_receive=dict(type='str',),db_receive_integer=dict(type='int',),db_password_str=dict(type='str',),db_column=dict(type='int',),db_name=dict(type='str',),db_column_integer=dict(type='int',),db_username=dict(type='str',),db_row=dict(type='int',)),ntp=dict(type='dict',ntp=dict(type='bool',),uuid=dict(type='str',),ntp_port=dict(type='int',)),icmp=dict(type='dict',ip=dict(type='str',),icmp=dict(type='bool',),uuid=dict(type='str',),ipv6=dict(type='str',),transparent=dict(type='bool',)),rtsp=dict(type='dict',rtsp_port=dict(type='int',),rtsp=dict(type='bool',),rtspurl=dict(type='str',),uuid=dict(type='str',)),smtp=dict(type='dict',smtp_port=dict(type='int',),smtp_starttls=dict(type='bool',),uuid=dict(type='str',),smtp_domain=dict(type='str',),smtp=dict(type='bool',),mail_from=dict(type='str',),rcpt_to=dict(type='str',)),tcp=dict(type='dict',uuid=dict(type='str',),tcp_port=dict(type='int',),port_resp=dict(type='dict',port_contains=dict(type='str',)),method_tcp=dict(type='bool',),port_send=dict(type='str',),port_halfopen=dict(type='bool',)),pop3=dict(type='dict',pop3_password_string=dict(type='str',),uuid=dict(type='str',),pop3_password=dict(type='bool',),pop3_username=dict(type='str',),pop3_encrypted=dict(type='str',),pop3=dict(type='bool',),pop3_port=dict(type='int',)),tacplus=dict(type='dict',tacplus_encrypted=dict(type='str',),secret_encrypted=dict(type='str',),uuid=dict(type='str',),tacplus_password_string=dict(type='str',),tacplus_secret=dict(type='bool',),tacplus_username=dict(type='str',),tacplus=dict(type='bool',),tacplus_secret_string=dict(type='str',),tacplus_type=dict(type='str',choices=['inbound-ascii-login']),tacplus_password=dict(type='bool',),tacplus_port=dict(type='int',)),radius=dict(type='dict',radius_username=dict(type='str',),radius_password_string=dict(type='str',),radius_encrypted=dict(type='str',),radius_response_code=dict(type='str',),radius_expect=dict(type='bool',),radius=dict(type='bool',),radius_secret=dict(type='str',),radius_password=dict(type='bool',),radius_port=dict(type='int',),uuid=dict(type='str',)),external=dict(type='dict',ext_program=dict(type='str',),ext_preference=dict(type='bool',),ext_arguments=dict(type='str',),uuid=dict(type='str',),external=dict(type='bool',),ext_port=dict(type='int',)),https=dict(type='dict',https_kerberos_realm=dict(type='str',),text_regex=dict(type='str',),response_code_regex=dict(type='str',),uuid=dict(type='str',),post_type=dict(type='str',choices=['postdata','postfile']),https_kerberos_auth=dict(type='bool',),https_username=dict(type='str',),key_phrase=dict(type='str',),https_postdata=dict(type='str',),https_key_encrypted=dict(type='str',),https_expect=dict(type='bool',),https=dict(type='bool',),https_host=dict(type='str',),key_pass_phrase=dict(type='bool',),https_encrypted=dict(type='str',),url_type=dict(type='str',choices=['GET','POST','HEAD']),web_port=dict(type='int',),disable_sslv2hello=dict(type='bool',),https_kerberos_kdc=dict(type='dict',https_kerberos_hostip=dict(type='str',),https_kerberos_port=dict(type='int',),https_kerberos_portv6=dict(type='int',),https_kerberos_hostipv6=dict(type='str',)),key=dict(type='str',),https_password_string=dict(type='str',),post_path=dict(type='str',),https_postfile=dict(type='str',),https_password=dict(type='bool',),cert=dict(type='str',),https_text=dict(type='str',),https_response_code=dict(type='str',),url_path=dict(type='str',),https_maintenance_code=dict(type='str',),https_url=dict(type='bool',)),compound=dict(type='dict',rpn_string=dict(type='str',),uuid=dict(type='str',),compound=dict(type='bool',)),ldap=dict(type='dict',AcceptResRef=dict(type='bool',),ldap_port=dict(type='int',),uuid=dict(type='str',),ldap_password_string=dict(type='str',),ldap_encrypted=dict(type='str',),BaseDN=dict(type='str',),ldap_password=dict(type='bool',),ldap_binddn=dict(type='str',),ldap_query=dict(type='str',),ldap_security=dict(type='str',choices=['overssl','StartTLS']),ldap=dict(type='bool',),ldap_run_search=dict(type='bool',),AcceptNotFound=dict(type='bool',)),snmp=dict(type='dict',snmp_port=dict(type='int',),uuid=dict(type='str',),oid=dict(type='dict',mib=dict(type='str',choices=['sysDescr','sysUpTime','sysName']),asn=dict(type='str',)),snmp=dict(type='bool',),community=dict(type='str',),operation=dict(type='dict',oper_type=dict(type='str',choices=['getnext','get']))),kerberos_kdc=dict(type='dict',kerberos_cfg=dict(type='dict',tcp_only=dict(type='bool',),kpasswd_password=dict(type='str',),kadmin_server=dict(type='str',),kinit_password=dict(type='str',),kpasswd=dict(type='bool',),kinit_pricipal_name=dict(type='str',),kpasswd_server=dict(type='str',),kadmin_encrypted=dict(type='str',),kinit=dict(type='bool',),kadmin_pricipal_name=dict(type='str',),kadmin_realm=dict(type='str',),kinit_kdc=dict(type='str',),kpasswd_pricipal_name=dict(type='str',),kadmin=dict(type='bool',),kadmin_kdc=dict(type='str',),kpasswd_kdc=dict(type='str',),kadmin_password=dict(type='str',),kpasswd_encrypted=dict(type='str',),kinit_encrypted=dict(type='str',)),uuid=dict(type='str',)),imap=dict(type='dict',imap_cram_md5=dict(type='bool',),imap_port=dict(type='int',),imap_login=dict(type='bool',),imap_password=dict(type='bool',),imap_password_string=dict(type='str',),imap_username=dict(type='str',),imap_encrypted=dict(type='str',),pwd_auth=dict(type='bool',),imap_plain=dict(type='bool',),imap=dict(type='bool',),uuid=dict(type='str',))),
         name=dict(type='str',required=True,)
     ))
+   
 
     return rv
 
@@ -249,6 +254,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/health/monitor/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -258,6 +264,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/health/monitor/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -345,7 +352,8 @@ def create(module, result):
     payload = build_json("monitor", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -370,8 +378,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("monitor", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -390,6 +399,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("monitor", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_template_policy_forward_policy
 description:
-    - None
+    - Forward Policy commands
 short_description: Configures A10 slb.template.policy.forward-policy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     filtering:
         description:
         - "Field filtering"
@@ -42,14 +46,14 @@ options:
         suboptions:
             ssli_url_filtering:
                 description:
-                - "None"
+                - "'bypassed-sni-disable'= Disable SNI filtering for bypassed URL's(enabled by default); 'intercepted-sni-enable'= Enable SNI filtering for intercepted URL's(disabled by default); 'intercepted-http-disable'= Disable HTTP(host/URL) filtering for intercepted URL's(enabled by default); 'no-sni-allow'= Allow connection if SNI filtering is enabled and SNI header is not present(Drop by default); "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     local_logging:
         description:
-        - "None"
+        - "Enable local logging"
         required: False
     action_list:
         description:
@@ -58,49 +62,49 @@ options:
         suboptions:
             log:
                 description:
-                - "None"
+                - "enable logging"
             forward_snat:
                 description:
-                - "None"
+                - "Source NAT pool or pool group"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             http_status_code:
                 description:
-                - "None"
+                - "'301'= Moved permanently; '302'= Found; "
             action1:
                 description:
-                - "None"
+                - "'forward-to-internet'= Forward request to Internet; 'forward-to-service-group'= Forward request to service group; 'forward-to-proxy'= Forward request to HTTP proxy server; 'drop'= Drop request; "
             fake_sg:
                 description:
-                - "None"
+                - "service group to forward the packets to Internet"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             real_sg:
                 description:
-                - "None"
+                - "service group to forward the packets"
             drop_message:
                 description:
-                - "None"
+                - "drop-message sent to the client as webpage(html tags are included and quotation marks are required for white spaces)"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             fall_back:
                 description:
-                - "None"
+                - "Fallback service group for Internet"
             fall_back_snat:
                 description:
-                - "None"
+                - "Source NAT pool or pool group for fallback server"
             drop_redirect_url:
                 description:
-                - "None"
+                - "Specify URL to which client request is redirected upon being dropped"
             name:
                 description:
-                - "None"
+                - "Action policy name"
     no_client_conn_reuse:
         description:
-        - "None"
+        - "Inspects only first request of a connection"
         required: False
     source_list:
         description:
@@ -109,31 +113,31 @@ options:
         suboptions:
             match_any:
                 description:
-                - "None"
+                - "Match any source"
             name:
                 description:
-                - "None"
+                - "source destination match rule name"
             match_authorize_policy:
                 description:
-                - "None"
+                - "Authorize-policy for user and group based policy"
             destination:
                 description:
                 - "Field destination"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             priority:
                 description:
-                - "None"
+                - "Priority of the source(higher the number higher the priority, default 0)"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             match_class_list:
                 description:
-                - "None"
+                - "Class List Name"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
 
 
 """
@@ -167,7 +171,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -180,22 +187,31 @@ def get_argspec():
         no_client_conn_reuse=dict(type='bool',),
         source_list=dict(type='list',match_any=dict(type='bool',),name=dict(type='str',required=True,),match_authorize_policy=dict(type='str',),destination=dict(type='dict',class_list_list=dict(type='list',uuid=dict(type='str',),dest_class_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url','ip'])),web_category_list_list=dict(type='list',uuid=dict(type='str',),web_category_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url'])),any=dict(type='dict',action=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',))),user_tag=dict(type='str',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','destination-match-not-found','no-host-info'])),match_class_list=dict(type='str',),uuid=dict(type='str',))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        policy_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/policy/{name}/forward-policy"
+    url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/template/policy/{name}/forward-policy"
+    url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
@@ -281,7 +297,8 @@ def create(module, result):
     payload = build_json("forward-policy", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -306,8 +323,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("forward-policy", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -327,6 +345,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("forward-policy", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -340,9 +374,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -356,6 +391,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

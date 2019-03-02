@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_virtual_server_port_stats_http_vport
 description:
-    - None
+    - Statistics for the object port
 short_description: Configures A10 slb.virtual-server.port.stats.http-vport
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     stats:
         description:
         - "Field stats"
@@ -76,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -84,22 +91,37 @@ def get_argspec():
     rv.update(dict(
         stats=dict(type='dict',http_vport=dict(type='dict',REQ_50u=dict(type='str',),http2_control_bytes=dict(type='str',),ws_server_switch=dict(type='str',),REQ_50m=dict(type='str',),status_450=dict(type='str',),http2_reset_received=dict(type='str',),status_510=dict(type='str',),ws_handshake_request=dict(type='str',),http2_header_bytes=dict(type='str',),status_207=dict(type='str',),status_206=dict(type='str',),status_205=dict(type='str',),status_204=dict(type='str',),status_203=dict(type='str',),status_202=dict(type='str',),status_201=dict(type='str',),status_200=dict(type='str',),ws_client_switch=dict(type='str',),status_2xx=dict(type='str',),http2_goaway_received=dict(type='str',),REQ_500u=dict(type='str',),status_4xx=dict(type='str',),status_305=dict(type='str',),total_requests=dict(type='str',),status_3xx=dict(type='str',),REQ_200u=dict(type='str',),stream_closed=dict(type='str',),REQ_100m=dict(type='str',),REQ_5m=dict(type='str',),REQ_100u=dict(type='str',),REQ_5s=dict(type='str',),REQ_500m=dict(type='str',),REQ_20u=dict(type='str',),REQ_2s=dict(type='str',),total_http2_bytes=dict(type='str',),status_411=dict(type='str',),status_306=dict(type='str',),status_307=dict(type='str',),status_304=dict(type='str',),http2_goaway_sent=dict(type='str',),status_302=dict(type='str',),status_303=dict(type='str',),REQ_2m=dict(type='str',),status_301=dict(type='str',),REQ_10u=dict(type='str',),total_http2_conn=dict(type='str',),REQ_10m=dict(type='str',),REQ_200m=dict(type='str',),peak_http2_conn=dict(type='str',),status_412=dict(type='str',),status_413=dict(type='str',),status_410=dict(type='str',),http2_reset_sent=dict(type='str',),status_416=dict(type='str',),status_417=dict(type='str',),status_414=dict(type='str',),status_415=dict(type='str',),status_418=dict(type='str',),status_unknown=dict(type='str',),status_100=dict(type='str',),status_101=dict(type='str',),status_102=dict(type='str',),status_103=dict(type='str',),status_300=dict(type='str',),status_424=dict(type='str',),curr_http2_conn=dict(type='str',),ws_handshake_success=dict(type='str',),status_504_ax=dict(type='str',),status_6xx=dict(type='str',),status_5xx=dict(type='str',),status_401=dict(type='str',),status_400=dict(type='str',),status_403=dict(type='str',),status_402=dict(type='str',),status_405=dict(type='str',),status_404=dict(type='str',),status_407=dict(type='str',),status_406=dict(type='str',),status_409=dict(type='str',),status_408=dict(type='str',),REQ_1m=dict(type='str',),REQ_1s=dict(type='str',),status_1xx=dict(type='str',),http2_data_bytes=dict(type='str',),status_423=dict(type='str',),status_422=dict(type='str',),status_426=dict(type='str',),status_425=dict(type='str',),REQ_20m=dict(type='str',),status_508=dict(type='str',),status_509=dict(type='str',),REQ_OVER_5s=dict(type='str',),status_500=dict(type='str',),status_501=dict(type='str',),status_502=dict(type='str',),status_503=dict(type='str',),status_504=dict(type='str',),status_505=dict(type='str',),status_506=dict(type='str',),status_507=dict(type='str',),status_449=dict(type='str',)))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        protocol=dict(type='str', required=True),
+        port_number=dict(type='str', required=True),
+        virtual_server_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/virtual-server/{name}/port/{port-number}+{protocol}/stats?http_vport=true"
+    url_base = "/axapi/v3/slb/virtual-server/{virtual_server_name}/port/{port_number}+{protocol}/stats?http_vport=true"
+
     f_dict = {}
+    f_dict["protocol"] = module.params["protocol"]
+    f_dict["port_number"] = module.params["port_number"]
+    f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/virtual-server/{name}/port/{port-number}+{protocol}/stats?http_vport=true"
+    url_base = "/axapi/v3/slb/virtual-server/{virtual_server_name}/port/{port_number}+{protocol}/stats?http_vport=true"
+
     f_dict = {}
+    f_dict["protocol"] = module.params["protocol"]
+    f_dict["port_number"] = module.params["port_number"]
+    f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
     return url_base.format(**f_dict)
 
@@ -185,7 +207,8 @@ def create(module, result):
     payload = build_json("port", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -210,8 +233,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("port", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -231,6 +255,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("port", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -244,9 +284,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -260,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

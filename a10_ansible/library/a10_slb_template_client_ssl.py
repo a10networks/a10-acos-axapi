@@ -8,7 +8,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = ''' 
+DOCUMENTATION = """
 module: a10_slb_template_client_ssl
 description:
     - Client SSL Template
@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     verify_cert_fail_action:
         description:
         - "'bypass'= bypass SSLi processing; 'continue'= continue the connection; 'drop'= close the connection; "
@@ -852,6 +856,10 @@ options:
         description:
         - "Exceptions to forward-proxy-bypass"
         required: False
+    dh_type:
+        description:
+        - "'1024'= 1024; '1024-dsa'= 1024-dsa; '2048'= 2048; "
+        required: False
     fp_alt_cert:
         description:
         - "CA Certificate for forward proxy alternate signing (Certificate name)"
@@ -880,10 +888,12 @@ options:
             starts_with:
                 description:
                 - "Forward proxy bypass if SNI string starts with another string"
-'''
 
-EXAMPLES = ''' 
-'''
+
+"""
+
+EXAMPLES = """
+"""
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -892,7 +902,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","ca_certs","cache_persistence_list_name","case_insensitive","cert","cert_revoke_action","cert_unknown_action","chain_cert","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_class_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_list_name","key","key_encrypted","key_passphrase","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","template_cipher","template_cipher_shared","template_hsm","user_tag","uuid","verify_cert_fail_action","version","web_category","dh_type"]
+AVAILABLE_PROPERTIES = ["alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","ca_certs","cache_persistence_list_name","case_insensitive","cert","cert_revoke_action","cert_unknown_action","chain_cert","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_class_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_list_name","key","key_encrypted","key_passphrase","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","template_cipher","template_cipher_shared","template_hsm","user_tag","uuid","verify_cert_fail_action","version","web_category",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -911,7 +921,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -1042,19 +1055,19 @@ def get_argspec():
         ocspst_sg_minutes=dict(type='int',),
         starts_with_list=dict(type='list',starts_with=dict(type='str',))
     ))
+   
 
     return rv
-
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/template/client-ssl/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
     return url_base.format(**f_dict)
-
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -1063,7 +1076,7 @@ def existing_url(module):
 
     f_dict = {}
     f_dict["name"] = module.params["name"]
-    
+
     return url_base.format(**f_dict)
 
 
@@ -1072,10 +1085,8 @@ def build_envelope(title, data):
         title: data
     }
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
-
 
 def _build_dict_from_param(param):
     rv = {}
@@ -1092,7 +1103,6 @@ def _build_dict_from_param(param):
             rv[hk] = v
 
     return rv
-
 
 def build_json(title, module):
     rv = {}
@@ -1112,7 +1122,6 @@ def build_json(title, module):
                 rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
-
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -1152,7 +1161,8 @@ def create(module, result):
     payload = build_json("client-ssl", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -1177,8 +1187,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("client-ssl", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -1198,6 +1209,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("client-ssl", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -1211,9 +1238,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -1227,6 +1255,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
