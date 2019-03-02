@@ -11,8 +11,8 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_virtual_server_port_stats_file_inspection
 description:
-    - None
-short_description: Configures A10 slb.virtual-server.port.stats.file-inspection
+    - Statistics for the object port
+short_description: Configures A10 slb.virtual-server.port.stats.file.inspection
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -35,6 +35,10 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     stats:
         description:
         - "Field stats"
@@ -76,7 +80,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -84,22 +91,37 @@ def get_argspec():
     rv.update(dict(
         stats=dict(type='dict',file_inspection=dict(type='dict',file_inspection_download_bad_blocked=dict(type='str',),file_inspection_download_suspect_allowed=dict(type='str',),file_inspection_icap_bytes_sent=dict(type='str',),file_inspection_icap_other_status_code=dict(type='str',),file_inspection_upload_bad_allowed=dict(type='str',),file_inspection_upload_suspect_blocked=dict(type='str',),file_inspection_bypass_service_down=dict(type='str',),file_inspection_upload_bad_blocked=dict(type='str',),file_inspection_icap_200=dict(type='str',),file_inspection_icap_connection_created=dict(type='str',),file_inspection_download_good_blocked=dict(type='str',),file_inspection_bypass_aflex=dict(type='str',),file_inspection_upload_good_ext_inspect=dict(type='str',),file_inspection_transactions_free=dict(type='str',),file_inspection_download_good_allowed=dict(type='str',),file_inspection_icap_connect_fail=dict(type='str',),file_inspection_download_good_ext_inspect=dict(type='str',),file_inspection_download_bad_allowed=dict(type='str',),file_inspection_bypass_max_concurrent_files_reached=dict(type='str',),file_inspection_icap_500=dict(type='str',),file_inspection_reset_service_down=dict(type='str',),file_inspection_upload_bad_ext_inspect=dict(type='str',),file_inspection_upload_suspect_allowed=dict(type='str',),file_inspection_upload_good_allowed=dict(type='str',),file_inspection_bypass_service_disabled=dict(type='str',),file_inspection_upload_good_blocked=dict(type='str',),file_inspection_download_suspect_blocked=dict(type='str',),file_inspection_icap_204=dict(type='str',),file_inspection_download_bad_ext_inspect=dict(type='str',),file_inspection_transactions_alloc=dict(type='str',),file_inspection_icap_bytes_received=dict(type='str',),file_inspection_icap_connection_established=dict(type='str',),file_inspection_transactions_failure=dict(type='str',),file_inspection_download_suspect_ext_inspect=dict(type='str',),file_inspection_bypass_large_file=dict(type='str',),file_inspection_upload_suspect_ext_inspect=dict(type='str',),file_inspection_icap_connection_rst=dict(type='str',),file_inspection_icap_connection_closed=dict(type='str',)))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        protocol=dict(type='str', required=True),
+        port_number=dict(type='str', required=True),
+        virtual_server_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/virtual-server/{name}/port/{port-number}+{protocol}/stats?file-inspection=true"
+    url_base = "/axapi/v3/slb/virtual-server/{virtual_server_name}/port/{port_number}+{protocol}/stats?file-inspection=true"
+
     f_dict = {}
+    f_dict["protocol"] = module.params["protocol"]
+    f_dict["port_number"] = module.params["port_number"]
+    f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/virtual-server/{name}/port/{port-number}+{protocol}/stats?file-inspection=true"
+    url_base = "/axapi/v3/slb/virtual-server/{virtual_server_name}/port/{port_number}+{protocol}/stats?file-inspection=true"
+
     f_dict = {}
+    f_dict["protocol"] = module.params["protocol"]
+    f_dict["port_number"] = module.params["port_number"]
+    f_dict["virtual_server_name"] = module.params["virtual_server_name"]
 
     return url_base.format(**f_dict)
 
@@ -185,7 +207,8 @@ def create(module, result):
     payload = build_json("port", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -210,8 +233,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("port", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -231,6 +255,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("port", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -244,9 +284,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -260,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

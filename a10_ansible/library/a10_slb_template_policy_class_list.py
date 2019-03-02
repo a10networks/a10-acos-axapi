@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_template_policy_class_list
 description:
-    - None
+    - Configure classification list
 short_description: Configures A10 slb.template.policy.class-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,13 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+
     header_name:
         description:
-        - "None"
+        - "Specify L7 header name"
         required: False
     lid_list:
         description:
@@ -46,97 +50,97 @@ options:
         suboptions:
             request_rate_limit:
                 description:
-                - "None"
+                - "Request rate limit (Specify request rate limit)"
             action_value:
                 description:
-                - "None"
+                - "'forward'= Forward the traffic even it exceeds limit; 'reset'= Reset the connection when it exceeds limit; "
             request_per:
                 description:
-                - "None"
+                - "Per (Specify interval in number of 100ms)"
             bw_rate_limit:
                 description:
-                - "None"
+                - "Specify bandwidth rate limit (Bandwidth rate limit in bytes)"
             conn_limit:
                 description:
-                - "None"
+                - "Connection limit"
             log:
                 description:
-                - "None"
+                - "Log a message"
             direct_action_value:
                 description:
-                - "None"
+                - "'drop'= drop the packet; 'reset'= Send reset back; "
             conn_per:
                 description:
-                - "None"
+                - "Per (Specify interval in number of 100ms)"
             direct_fail:
                 description:
-                - "None"
+                - "Only log unsuccessful connections"
             conn_rate_limit:
                 description:
-                - "None"
+                - "Specify connection rate limit"
             direct_pbslb_logging:
                 description:
-                - "None"
+                - "Configure PBSLB logging"
             dns64:
                 description:
                 - "Field dns64"
             lidnum:
                 description:
-                - "None"
+                - "Specify a limit ID"
             over_limit_action:
                 description:
-                - "None"
+                - "Set action when exceeds limit"
             response_code_rate_limit:
                 description:
                 - "Field response_code_rate_limit"
             direct_service_group:
                 description:
-                - "None"
+                - "Specify a service group (Specify the service group name)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             request_limit:
                 description:
-                - "None"
+                - "Request limit (Specify request limit)"
             direct_action_interval:
                 description:
-                - "None"
+                - "Specify logging interval in minute (default is 3)"
             bw_per:
                 description:
-                - "None"
+                - "Per (Specify interval in number of 100ms)"
             interval:
                 description:
-                - "None"
+                - "Specify log interval in minutes, by default system will log every over limit instance"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             direct_action:
                 description:
-                - "None"
+                - "Set action when match the lid"
             lockout:
                 description:
-                - "None"
+                - "Don't accept any new connection for certain time (Lockout duration in minutes)"
             direct_logging_drp_rst:
                 description:
-                - "None"
+                - "Configure PBSLB logging"
             direct_pbslb_interval:
                 description:
-                - "None"
+                - "Specify logging interval in minutes(default is 3)"
     name:
         description:
-        - "None"
+        - "Class list name or geo-location-class-list name"
         required: True
     client_ip_l3_dest:
         description:
-        - "None"
+        - "Use destination IP as client IP address"
         required: False
     client_ip_l7_header:
         description:
-        - "None"
+        - "Use extract client IP address from L7 header"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -171,7 +175,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -184,22 +191,31 @@ def get_argspec():
         client_ip_l7_header=dict(type='bool',),
         uuid=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        policy_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/template/policy/{name}/class-list"
+    url_base = "/axapi/v3/slb/template/policy/{policy_name}/class-list"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/template/policy/{name}/class-list"
+    url_base = "/axapi/v3/slb/template/policy/{policy_name}/class-list"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
@@ -285,7 +301,8 @@ def create(module, result):
     payload = build_json("class-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -310,8 +327,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("class-list", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -331,6 +349,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("class-list", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -344,9 +378,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -360,6 +395,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
