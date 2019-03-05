@@ -129,7 +129,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/restart-port-list/vrid/{vrid-val}"
 
     f_dict = {}
-    f_dict["vrid-val"] = module.params["vrid_val"]
+    f_dict["vrid-val"] = module.params["vrid-val"]
 
     return url_base.format(**f_dict)
 
@@ -150,7 +150,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:

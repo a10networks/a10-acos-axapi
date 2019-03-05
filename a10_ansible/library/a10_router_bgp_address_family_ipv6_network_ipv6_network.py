@@ -137,7 +137,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/bgp/{bgp_as_number}/address-family/ipv6/network/ipv6-network/{network-ipv6}"
 
     f_dict = {}
-    f_dict["network-ipv6"] = module.params["network_ipv6"]
+    f_dict["network-ipv6"] = module.params["network-ipv6"]
     f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
     return url_base.format(**f_dict)
@@ -159,7 +159,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:

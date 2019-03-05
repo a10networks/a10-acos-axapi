@@ -117,7 +117,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/preferred-session-sync-port/ethernet/{pre-eth}"
 
     f_dict = {}
-    f_dict["pre-eth"] = module.params["pre_eth"]
+    f_dict["pre-eth"] = module.params["pre-eth"]
 
     return url_base.format(**f_dict)
 
@@ -138,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
