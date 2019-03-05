@@ -143,7 +143,7 @@ def existing_url(module):
     url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy/source/{name}/destination/class-list/{dest-class-list}"
 
     f_dict = {}
-    f_dict["dest-class-list"] = module.params["dest_class_list"]
+    f_dict["dest-class-list"] = module.params["dest-class-list"]
     f_dict["name"] = module.params["name"]
     f_dict["policy_name"] = module.params["policy_name"]
 
@@ -166,7 +166,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
