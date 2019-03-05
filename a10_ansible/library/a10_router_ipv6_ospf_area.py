@@ -177,8 +177,8 @@ def existing_url(module):
     url_base = "/axapi/v3/router/ipv6/ospf/{ospf_process_id}/area/{area-ipv4}+{area-num}"
 
     f_dict = {}
-    f_dict["area-ipv4"] = module.params["area_ipv4"]
-    f_dict["area-num"] = module.params["area_num"]
+    f_dict["area-ipv4"] = module.params["area-ipv4"]
+    f_dict["area-num"] = module.params["area-num"]
     f_dict["ospf_process_id"] = module.params["ospf_process_id"]
 
     return url_base.format(**f_dict)
@@ -200,7 +200,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
