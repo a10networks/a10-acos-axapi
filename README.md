@@ -34,4 +34,4 @@ Please see (https://github.com/a10networks/a10-ansible/tree/master/examples) for
 Please submit bug reports and feature requests via GitHub issues. When reporting bugs, please include the playbook that demonstrates the bug and the Ansible output. Stack traces are always nice, but playbooks work well. Please ensure any sensitive information is redacted as Issues and Pull Requests are publicly viewable.
 
 ## Contact
-If you have a question that cannot be submitted via Github Issues, please email openstack-dl@a10networks.com with "a10-ansible" in the subject line. 
+If you have a question that cannot be submitted via Github Issues, please email support@a10networks.com with "a10-ansible" in the subject line. 
