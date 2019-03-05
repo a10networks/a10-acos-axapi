@@ -236,7 +236,7 @@ def existing_url(module):
     url_base = "/axapi/v3/slb/server/{server_name}/port/{port-number}+{protocol}"
 
     f_dict = {}
-    f_dict["port-number"] = module.params["port_number"]
+    f_dict["port-number"] = module.params["port-number"]
     f_dict["protocol"] = module.params["protocol"]
     f_dict["server_name"] = module.params["server_name"]
 
@@ -259,7 +259,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
