@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    bgp_as_number:
+        description:
+        - Key to identify parent object
     maximum_prefix:
         description:
         - "Maximum number of prefix accept from this peer (maximum no. of prefix limit (various depends on model))"
@@ -240,7 +242,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/bgp/{bgp_as_number}/address-family/ipv6/neighbor/ipv6-neighbor/{neighbor-ipv6}"
 
     f_dict = {}
-    f_dict["neighbor-ipv6"] = module.params["neighbor-ipv6"]
+    f_dict["neighbor-ipv6"] = module.params["neighbor_ipv6"]
     f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
     return url_base.format(**f_dict)

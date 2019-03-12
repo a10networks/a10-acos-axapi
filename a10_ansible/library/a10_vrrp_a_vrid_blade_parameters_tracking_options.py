@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    vrid_val:
+        description:
+        - Key to identify parent object
     vlan_cfg:
         description:
         - "Field vlan_cfg"

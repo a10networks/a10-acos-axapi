@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     forward_l4_packet_on_standby:
         description:
         - "Enables Layer 2/3 forwarding of Layer 4 traffic on the Standby ACOS device"

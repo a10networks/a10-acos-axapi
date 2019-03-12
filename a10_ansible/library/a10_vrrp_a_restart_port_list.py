@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vrid_list:
         description:
         - "Field vrid_list"

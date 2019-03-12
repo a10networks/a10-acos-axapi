@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     timers:
         description:
         - "Field timers"
@@ -302,7 +301,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/ipv6/ospf/{process-id}"
 
     f_dict = {}
-    f_dict["process-id"] = module.params["process-id"]
+    f_dict["process-id"] = module.params["process_id"]
 
     return url_base.format(**f_dict)
 

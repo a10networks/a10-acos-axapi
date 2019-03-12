@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     uuid:
         description:
         - "uuid of the object"
@@ -112,7 +111,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/l2-inline-peer-ip/{ip-address}"
 
     f_dict = {}
-    f_dict["ip-address"] = module.params["ip-address"]
+    f_dict["ip-address"] = module.params["ip_address"]
 
     return url_base.format(**f_dict)
 

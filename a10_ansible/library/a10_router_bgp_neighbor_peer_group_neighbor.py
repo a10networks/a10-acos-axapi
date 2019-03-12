@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    bgp_as_number:
+        description:
+        - Key to identify parent object
     activate:
         description:
         - "Enable the Address Family for this Neighbor"
@@ -385,7 +387,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/bgp/{bgp_as_number}/neighbor/peer-group-neighbor/{peer-group}"
 
     f_dict = {}
-    f_dict["peer-group"] = module.params["peer-group"]
+    f_dict["peer-group"] = module.params["peer_group"]
     f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
     return url_base.format(**f_dict)

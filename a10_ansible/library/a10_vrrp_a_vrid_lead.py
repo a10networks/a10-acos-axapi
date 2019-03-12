@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vrid_lead_str:
         description:
         - "VRRP-A VRID leader name"
@@ -132,7 +131,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/vrid-lead/{vrid-lead-str}"
 
     f_dict = {}
-    f_dict["vrid-lead-str"] = module.params["vrid-lead-str"]
+    f_dict["vrid-lead-str"] = module.params["vrid_lead_str"]
 
     return url_base.format(**f_dict)
 

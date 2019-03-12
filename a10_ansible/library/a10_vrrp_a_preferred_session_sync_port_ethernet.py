@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     pre_eth:
         description:
         - "Ethernet interface number"
@@ -117,7 +116,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/preferred-session-sync-port/ethernet/{pre-eth}"
 
     f_dict = {}
-    f_dict["pre-eth"] = module.params["pre-eth"]
+    f_dict["pre-eth"] = module.params["pre_eth"]
 
     return url_base.format(**f_dict)
 

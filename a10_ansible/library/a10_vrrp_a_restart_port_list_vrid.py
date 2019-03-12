@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     ethernet_cfg:
         description:
         - "Field ethernet_cfg"
@@ -129,7 +128,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/restart-port-list/vrid/{vrid-val}"
 
     f_dict = {}
-    f_dict["vrid-val"] = module.params["vrid-val"]
+    f_dict["vrid-val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
 

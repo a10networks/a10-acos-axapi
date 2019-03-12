@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     log_buffer:
         description:
         - "Logging goes to log-buffer"

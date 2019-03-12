@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     distribute_internal_list:
         description:
         - "Field distribute_internal_list"
@@ -444,7 +443,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/ospf/{process-id}"
 
     f_dict = {}
-    f_dict["process-id"] = module.params["process-id"]
+    f_dict["process-id"] = module.params["process_id"]
 
     return url_base.format(**f_dict)
 

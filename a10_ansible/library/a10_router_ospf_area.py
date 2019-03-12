@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    ospf_process_id:
+        description:
+        - Key to identify parent object
     nssa_cfg:
         description:
         - "Field nssa_cfg"
@@ -256,8 +258,8 @@ def existing_url(module):
     url_base = "/axapi/v3/router/ospf/{ospf_process_id}/area/{area-ipv4}+{area-num}"
 
     f_dict = {}
-    f_dict["area-ipv4"] = module.params["area-ipv4"]
-    f_dict["area-num"] = module.params["area-num"]
+    f_dict["area-ipv4"] = module.params["area_ipv4"]
+    f_dict["area-num"] = module.params["area_num"]
     f_dict["ospf_process_id"] = module.params["ospf_process_id"]
 
     return url_base.format(**f_dict)
