@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    bgp_as_number:
+        description:
+        - Key to identify parent object
     description:
         description:
         - "Network specific description (Up to 80 characters describing this network)"
@@ -137,7 +139,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/bgp/{bgp_as_number}/address-family/ipv6/network/ipv6-network/{network-ipv6}"
 
     f_dict = {}
-    f_dict["network-ipv6"] = module.params["network-ipv6"]
+    f_dict["network-ipv6"] = module.params["network_ipv6"]
     f_dict["bgp_as_number"] = module.params["bgp_as_number"]
 
     return url_base.format(**f_dict)

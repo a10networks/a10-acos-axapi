@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     sampling_enable:
         description:
         - "Field sampling_enable"

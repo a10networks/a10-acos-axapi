@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    bgp_as_number:
+        description:
+        - Key to identify parent object
     ip_nat_list_cfg:
         description:
         - "Field ip_nat_list_cfg"

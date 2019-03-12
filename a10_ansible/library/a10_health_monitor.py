@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     override_ipv4:
         description:
         - "Override implicitly inherited IPv4 address from target"

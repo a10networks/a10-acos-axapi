@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     traffic_distribution_mode:
         description:
         - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'= l4-src-port; 'l4-dst-port'= l4-dst-port; "
@@ -199,7 +198,7 @@ def existing_url(module):
     url_base = "/axapi/v3/network/vlan/{vlan-num}"
 
     f_dict = {}
-    f_dict["vlan-num"] = module.params["vlan-num"]
+    f_dict["vlan-num"] = module.params["vlan_num"]
 
     return url_base.format(**f_dict)
 

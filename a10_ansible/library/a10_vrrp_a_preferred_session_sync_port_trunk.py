@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     pre_vlan:
         description:
         - "Interface VLAN (VLAN ID)"
@@ -117,7 +116,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/preferred-session-sync-port/trunk/{pre-trunk}"
 
     f_dict = {}
-    f_dict["pre-trunk"] = module.params["pre-trunk"]
+    f_dict["pre-trunk"] = module.params["pre_trunk"]
 
     return url_base.format(**f_dict)
 

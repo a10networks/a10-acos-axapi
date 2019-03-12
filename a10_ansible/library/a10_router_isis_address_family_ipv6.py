@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    isis_tag:
+        description:
+        - Key to identify parent object
     distance:
         description:
         - "ISIS Administrative Distance (Distance value)"

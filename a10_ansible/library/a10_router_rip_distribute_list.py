@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     acl_cfg:
         description:
         - "Field acl_cfg"

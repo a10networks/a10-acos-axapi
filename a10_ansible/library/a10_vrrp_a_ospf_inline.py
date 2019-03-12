@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vlan:
         description:
         - "Do not filter OSPF packet on specific vlan (Vlan number)"

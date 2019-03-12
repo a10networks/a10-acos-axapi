@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     default_metric:
         description:
         - "Set a metric of redistribute routes (Default metric)"

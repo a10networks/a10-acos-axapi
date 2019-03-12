@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     both:
         description:
         - "both a router and server interface"
@@ -142,7 +141,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/interface/ethernet/{ethernet-val}"
 
     f_dict = {}
-    f_dict["ethernet-val"] = module.params["ethernet-val"]
+    f_dict["ethernet-val"] = module.params["ethernet_val"]
 
     return url_base.format(**f_dict)
 

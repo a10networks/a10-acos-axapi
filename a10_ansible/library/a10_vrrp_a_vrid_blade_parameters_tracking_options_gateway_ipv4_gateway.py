@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    vrid_val:
+        description:
+        - Key to identify parent object
     uuid:
         description:
         - "uuid of the object"
@@ -122,7 +124,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/vrid/{vrid_val}/blade-parameters/tracking-options/gateway/ipv4-gateway/{ip-address}"
 
     f_dict = {}
-    f_dict["ip-address"] = module.params["ip-address"]
+    f_dict["ip-address"] = module.params["ip_address"]
     f_dict["vrid_val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)

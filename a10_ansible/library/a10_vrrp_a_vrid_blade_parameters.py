@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    vrid_val:
+        description:
+        - Key to identify parent object
     priority:
         description:
         - "VRRP-A priorty (Priority, default is 150)"

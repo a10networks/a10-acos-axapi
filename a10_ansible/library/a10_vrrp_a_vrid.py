@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     blade_parameters:
         description:
         - "Field blade_parameters"
@@ -174,7 +173,7 @@ def existing_url(module):
     url_base = "/axapi/v3/vrrp-a/vrid/{vrid-val}"
 
     f_dict = {}
-    f_dict["vrid-val"] = module.params["vrid-val"]
+    f_dict["vrid-val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
 

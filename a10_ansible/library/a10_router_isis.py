@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     domain_password_cfg:
         description:
         - "Field domain_password_cfg"

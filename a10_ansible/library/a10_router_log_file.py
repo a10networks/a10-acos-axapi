@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     size:
         description:
         - "Log file maximum size (File size in MBytes)"

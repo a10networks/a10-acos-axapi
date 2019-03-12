@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vip_list:
         description:
         - "Field vip_list"

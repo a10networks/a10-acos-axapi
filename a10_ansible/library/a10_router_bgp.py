@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     redistribute:
         description:
         - "Field redistribute"
@@ -305,7 +304,7 @@ def existing_url(module):
     url_base = "/axapi/v3/router/bgp/{as-number}"
 
     f_dict = {}
-    f_dict["as-number"] = module.params["as-number"]
+    f_dict["as-number"] = module.params["as_number"]
 
     return url_base.format(**f_dict)
 

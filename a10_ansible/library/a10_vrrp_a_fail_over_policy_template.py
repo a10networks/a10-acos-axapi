@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vlan_cfg:
         description:
         - "Field vlan_cfg"

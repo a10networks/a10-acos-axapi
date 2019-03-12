@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     action:
         description:
         - "'enable'= enable vrrp-a force-self-standby; 'disable'= disable vrrp-a force-self-standby; "

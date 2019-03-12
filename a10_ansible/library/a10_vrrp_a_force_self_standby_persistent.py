@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     vrid:
         description:
         - "Specify one VRRP-A vrid to force into standby state"

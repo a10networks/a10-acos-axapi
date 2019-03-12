@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    ospf_process_id:
+        description:
+        - Key to identify parent object
     redist_list:
         description:
         - "Field redist_list"

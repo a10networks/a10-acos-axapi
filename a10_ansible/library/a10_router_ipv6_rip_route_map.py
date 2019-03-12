@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     map_cfg:
         description:
         - "Field map_cfg"
