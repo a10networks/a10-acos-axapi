@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_system_resource_accounting_template
 description:
-    - None
+    - Create resource accounting template
 short_description: Configures A10 system.resource.accounting.template
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     app_resources:
         description:
         - "Field app_resources"
@@ -54,7 +57,7 @@ options:
                 - "Field gslb_geo_location_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             real_server_cfg:
                 description:
                 - "Field real_server_cfg"
@@ -81,7 +84,7 @@ options:
                 - "Field health_monitor_cfg"
             threshold:
                 description:
-                - "None"
+                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
             gslb_svc_group_cfg:
                 description:
                 - "Field gslb_svc_group_cfg"
@@ -96,7 +99,7 @@ options:
                 - "Field gslb_service_ip_cfg"
     name:
         description:
-        - "None"
+        - "Enter template name"
         required: True
     system_resources:
         description:
@@ -114,7 +117,7 @@ options:
                 - "Field l4cps_limit_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             natcps_limit_cfg:
                 description:
                 - "Field natcps_limit_cfg"
@@ -129,7 +132,7 @@ options:
                 - "Field ssl_throughput_limit_cfg"
             threshold:
                 description:
-                - "None"
+                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
             bw_limit_cfg:
                 description:
                 - "Field bw_limit_cfg"
@@ -138,7 +141,7 @@ options:
                 - "Field concurrent_session_limit_cfg"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     network_resources:
         description:
@@ -150,7 +153,7 @@ options:
                 - "Field static_ipv6_route_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ipv4_acl_line_cfg:
                 description:
                 - "Field ipv4_acl_line_cfg"
@@ -174,13 +177,13 @@ options:
                 - "Field static_neighbor_cfg"
             threshold:
                 description:
-                - "None"
+                - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
             ipv6_acl_line_cfg:
                 description:
                 - "Field ipv6_acl_line_cfg"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -215,7 +218,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -228,6 +234,7 @@ def get_argspec():
         network_resources=dict(type='dict',static_ipv6_route_cfg=dict(type='dict',static_ipv6_route_max=dict(type='int',),static_ipv6_route_min_guarantee=dict(type='int',)),uuid=dict(type='str',),ipv4_acl_line_cfg=dict(type='dict',ipv4_acl_line_min_guarantee=dict(type='int',),ipv4_acl_line_max=dict(type='int',)),static_ipv4_route_cfg=dict(type='dict',static_ipv4_route_max=dict(type='int',),static_ipv4_route_min_guarantee=dict(type='int',)),static_arp_cfg=dict(type='dict',static_arp_min_guarantee=dict(type='int',),static_arp_max=dict(type='int',)),object_group_clause_cfg=dict(type='dict',object_group_clause_min_guarantee=dict(type='int',),object_group_clause_max=dict(type='int',)),static_mac_cfg=dict(type='dict',static_mac_min_guarantee=dict(type='int',),static_mac_max=dict(type='int',)),object_group_cfg=dict(type='dict',object_group_min_guarantee=dict(type='int',),object_group_max=dict(type='int',)),static_neighbor_cfg=dict(type='dict',static_neighbor_max=dict(type='int',),static_neighbor_min_guarantee=dict(type='int',)),threshold=dict(type='int',),ipv6_acl_line_cfg=dict(type='dict',ipv6_acl_line_max=dict(type='int',),ipv6_acl_line_min_guarantee=dict(type='int',))),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -235,6 +242,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/system/resource-accounting/template/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -244,6 +252,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/system/resource-accounting/template/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -266,7 +275,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -331,7 +340,8 @@ def create(module, result):
     payload = build_json("template", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -356,8 +366,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("template", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -377,6 +388,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("template", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -390,9 +417,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -406,6 +434,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_system_session
 description:
-    - None
+    - Session Entries
 short_description: Configures A10 system.session
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,10 +45,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total_l4_conn'= Total L4 Count; 'conn_counter'= Conn Count; 'conn_freed_counter'= Conn Freed; 'total_l4_packet_count'= Total L4 Packet Count; 'total_l7_packet_count'= Total L7 Packet Count; 'total_l4_conn_proxy'= Total L4 Conn Proxy Count; 'total_l7_conn'= Total L7 Conn; 'total_tcp_conn'= Total TCP Conn; 'curr_free_conn'= Curr Free Conn; 'tcp_est_counter'= TCP Established; 'tcp_half_open_counter'= TCP Half Open; 'tcp_half_close_counter'= TCP Half Closed; 'udp_counter'= UDP Count; 'ip_counter'= IP Count; 'other_counter'= Non TCP/UDP IP sessions; 'reverse_nat_tcp_counter'= Reverse NAT TCP; 'reverse_nat_udp_counter'= Reverse NAT UDP; 'tcp_syn_half_open_counter'= TCP SYN Half Open; 'conn_smp_alloc_counter'= Conn SMP Alloc; 'conn_smp_free_counter'= Conn SMP Free; 'conn_smp_aged_counter'= Conn SMP Aged; 'ssl_count_curr'= Curr SSL Count; 'ssl_count_total'= Total SSL Count; 'server_ssl_count_curr'= Current SSL Server Count; 'server_ssl_count_total'= Total SSL Server Count; 'client_ssl_reuse_total'= Total SSL Client Reuse; 'server_ssl_reuse_total'= Total SSL Server Reuse; 'ssl_failed_total'= Total SSL Failures; 'ssl_failed_ca_verification'= SSL Cert Auth Verification Errors; 'ssl_server_cert_error'= SSL Server Cert Errors; 'ssl_client_cert_auth_fail'= SSL Client Cert Auth Failures; 'total_ip_nat_conn'= Total IP Nat Conn; 'total_l2l3_conn'= Totl L2/L3 Connections; 'client_ssl_ctx_malloc_failure'= Client SSL Ctx malloc Failures; 'conn_type_0_available'= Conn Type 0 Available; 'conn_type_1_available'= Conn Type 1 Available; 'conn_type_2_available'= Conn Type 2 Available; 'conn_type_3_available'= Conn Type 3 Available; 'conn_type_4_available'= Conn Type 4 Available; 'conn_smp_type_0_available'= Conn SMP Type 0 Available; 'conn_smp_type_1_available'= Conn SMP Type 1 Available; 'conn_smp_type_2_available'= Conn SMP Type 2 Available; 'conn_smp_type_3_available'= Conn SMP Type 3 Available; 'conn_smp_type_4_available'= Conn SMP Type 4 Available; 'sctp-half-open-counter'= SCTP Half Open; 'sctp-est-counter'= SCTP Established; 'nonssl_bypass'= NON SSL Bypass Count; 'ssl_failsafe_total'= Total SSL Failsafe Count; 'ssl_forward_proxy_failed_handshake_total'= Total SSL Forward Proxy Failed Handshake Count; 'ssl_forward_proxy_failed_tcp_total'= Total SSL Forward Proxy Failed TCP Count; 'ssl_forward_proxy_failed_crypto_total'= Total SSL Forward Proxy Failed Crypto Count; 'ssl_forward_proxy_failed_cert_verify_total'= Total SSL Forward Proxy Failed Certificate Verification Count; 'ssl_forward_proxy_invalid_ocsp_stapling_total'= Total SSL Forward Proxy Invalid OCSP Stapling Count; 'ssl_forward_proxy_revoked_ocsp_total'= Total SSL Forward Proxy Revoked OCSP Response Count; 'ssl_forward_proxy_failed_cert_signing_total'= Total SSL Forward Proxy Failed Certificate Signing Count; 'ssl_forward_proxy_failed_ssl_version_total'= Total SSL Forward Proxy Unsupported version Count; 'ssl_forward_proxy_sni_bypass_total'= Total SSL Forward Proxy SNI Bypass Count; 'ssl_forward_proxy_client_auth_bypass_total'= Total SSL Forward Proxy Client Auth Bypass Count; 'conn_app_smp_alloc_counter'= Conn APP SMP Alloc; 'diameter_conn_counter'= Diameter Conn Count; 'diameter_conn_freed_counter'= Diameter Conn Freed; 'debug_tcp_counter'= Hidden TCP sessions for CGNv6 Stateless Technologies; 'debug_udp_counter'= Hidden UDP sessions for CGNv6 Stateless Technologies; 'total_fw_conn'= Total Firewall Conn; 'total_local_conn'= Total Local Conn; 'total_curr_conn'= Total Curr Conn; 'client_ssl_fatal_alert'= client ssl fatal alert; 'client_ssl_fin_rst'= client ssl fin rst; 'fp_session_fin_rst'= FP Session FIN/RST; 'server_ssl_fatal_alert'= server ssl fatal alert; 'server_ssl_fin_rst'= server ssl fin rst; 'client_template_int_err'= client template internal error; 'client_template_unknown_err'= client template unknown error; 'server_template_int_err'= server template int error; 'server_template_unknown_err'= server template unknown error; 'total_debug_conn'= Total Debug Conn; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -80,7 +83,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -89,6 +95,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_l4_conn','conn_counter','conn_freed_counter','total_l4_packet_count','total_l7_packet_count','total_l4_conn_proxy','total_l7_conn','total_tcp_conn','curr_free_conn','tcp_est_counter','tcp_half_open_counter','tcp_half_close_counter','udp_counter','ip_counter','other_counter','reverse_nat_tcp_counter','reverse_nat_udp_counter','tcp_syn_half_open_counter','conn_smp_alloc_counter','conn_smp_free_counter','conn_smp_aged_counter','ssl_count_curr','ssl_count_total','server_ssl_count_curr','server_ssl_count_total','client_ssl_reuse_total','server_ssl_reuse_total','ssl_failed_total','ssl_failed_ca_verification','ssl_server_cert_error','ssl_client_cert_auth_fail','total_ip_nat_conn','total_l2l3_conn','client_ssl_ctx_malloc_failure','conn_type_0_available','conn_type_1_available','conn_type_2_available','conn_type_3_available','conn_type_4_available','conn_smp_type_0_available','conn_smp_type_1_available','conn_smp_type_2_available','conn_smp_type_3_available','conn_smp_type_4_available','sctp-half-open-counter','sctp-est-counter','nonssl_bypass','ssl_failsafe_total','ssl_forward_proxy_failed_handshake_total','ssl_forward_proxy_failed_tcp_total','ssl_forward_proxy_failed_crypto_total','ssl_forward_proxy_failed_cert_verify_total','ssl_forward_proxy_invalid_ocsp_stapling_total','ssl_forward_proxy_revoked_ocsp_total','ssl_forward_proxy_failed_cert_signing_total','ssl_forward_proxy_failed_ssl_version_total','ssl_forward_proxy_sni_bypass_total','ssl_forward_proxy_client_auth_bypass_total','conn_app_smp_alloc_counter','diameter_conn_counter','diameter_conn_freed_counter','debug_tcp_counter','debug_udp_counter','total_fw_conn','total_local_conn','total_curr_conn','client_ssl_fatal_alert','client_ssl_fin_rst','fp_session_fin_rst','server_ssl_fatal_alert','server_ssl_fin_rst','client_template_int_err','client_template_unknown_err','server_template_int_err','server_template_unknown_err','total_debug_conn'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +103,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/system/session"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +112,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/system/session"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +134,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -190,7 +199,8 @@ def create(module, result):
     payload = build_json("session", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +225,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("session", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +247,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("session", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +276,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +293,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

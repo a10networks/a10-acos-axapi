@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_system_resource_accounting_template_network_resources
 description:
-    - None
+    - Enter the network resource limits
 short_description: Configures A10 system.resource.accounting.template.network-resources
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    template_name:
+        description:
+        - Key to identify parent object
     static_ipv6_route_cfg:
         description:
         - "Field static_ipv6_route_cfg"
@@ -42,13 +48,13 @@ options:
         suboptions:
             static_ipv6_route_max:
                 description:
-                - "None"
+                - "Enter the number of static ipv6 routes allowed (Static ipv6 routes (default is max-value))"
             static_ipv6_route_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     ipv4_acl_line_cfg:
         description:
@@ -57,10 +63,10 @@ options:
         suboptions:
             ipv4_acl_line_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             ipv4_acl_line_max:
                 description:
-                - "None"
+                - "Enter the number of ACL lines allowed (IPV4 ACL lines (default is max-value))"
     static_ipv4_route_cfg:
         description:
         - "Field static_ipv4_route_cfg"
@@ -68,10 +74,10 @@ options:
         suboptions:
             static_ipv4_route_max:
                 description:
-                - "None"
+                - "Enter the number of static ipv4 routes allowed (Static ipv4 routes (default is max-value))"
             static_ipv4_route_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     static_arp_cfg:
         description:
         - "Field static_arp_cfg"
@@ -79,10 +85,10 @@ options:
         suboptions:
             static_arp_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             static_arp_max:
                 description:
-                - "None"
+                - "Enter the number of static arp entries allowed (Static arp (default is max-value))"
     object_group_clause_cfg:
         description:
         - "Field object_group_clause_cfg"
@@ -90,10 +96,10 @@ options:
         suboptions:
             object_group_clause_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             object_group_clause_max:
                 description:
-                - "None"
+                - "Enter the number of object group clauses allowed (Object group clauses (default is max-value))"
     static_mac_cfg:
         description:
         - "Field static_mac_cfg"
@@ -101,10 +107,10 @@ options:
         suboptions:
             static_mac_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             static_mac_max:
                 description:
-                - "None"
+                - "Enter the number of static MAC entries allowed (Static MACs (default is max-value))"
     object_group_cfg:
         description:
         - "Field object_group_cfg"
@@ -112,10 +118,10 @@ options:
         suboptions:
             object_group_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             object_group_max:
                 description:
-                - "None"
+                - "Enter the number of object groups allowed (Object group (default is max-value))"
     static_neighbor_cfg:
         description:
         - "Field static_neighbor_cfg"
@@ -123,13 +129,13 @@ options:
         suboptions:
             static_neighbor_max:
                 description:
-                - "None"
+                - "Enter the number of static neighbor entries allowed (Static neighbors (default is max-value))"
             static_neighbor_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     threshold:
         description:
-        - "None"
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
         required: False
     ipv6_acl_line_cfg:
         description:
@@ -138,10 +144,10 @@ options:
         suboptions:
             ipv6_acl_line_max:
                 description:
-                - "None"
+                - "Enter the number of ACL lines allowed (IPV6 ACL lines (default is max-value))"
             ipv6_acl_line_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
 
 
 """
@@ -175,7 +181,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -193,22 +202,31 @@ def get_argspec():
         threshold=dict(type='int',),
         ipv6_acl_line_cfg=dict(type='dict',ipv6_acl_line_max=dict(type='int',),ipv6_acl_line_min_guarantee=dict(type='int',))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        template_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-accounting/template/{name}/network-resources"
+    url_base = "/axapi/v3/system/resource-accounting/template/{template_name}/network-resources"
+
     f_dict = {}
+    f_dict["template_name"] = module.params["template_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-accounting/template/{name}/network-resources"
+    url_base = "/axapi/v3/system/resource-accounting/template/{template_name}/network-resources"
+
     f_dict = {}
+    f_dict["template_name"] = module.params["template_name"]
 
     return url_base.format(**f_dict)
 
@@ -229,7 +247,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -294,7 +312,8 @@ def create(module, result):
     payload = build_json("network-resources", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -319,8 +338,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("network-resources", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -340,6 +360,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("network-resources", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -353,9 +389,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -369,6 +406,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
