@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_system_resource_accounting_template_app_resources
 description:
-    - None
+    - Enter the application resource limits
 short_description: Configures A10 system.resource.accounting.template.app-resources
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    template_name:
+        description:
+        - Key to identify parent object
     gslb_site_cfg:
         description:
         - "Field gslb_site_cfg"
@@ -42,10 +48,10 @@ options:
         suboptions:
             gslb_site_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             gslb_site_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-site allowed (gslb-site count (default is max-value))"
     gslb_policy_cfg:
         description:
         - "Field gslb_policy_cfg"
@@ -53,10 +59,10 @@ options:
         suboptions:
             gslb_policy_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             gslb_policy_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-policy allowed (gslb-policy count (default is max-value))"
     gslb_service_cfg:
         description:
         - "Field gslb_service_cfg"
@@ -64,10 +70,10 @@ options:
         suboptions:
             gslb_service_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             gslb_service_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-service allowed (gslb-service count (default is max-value)"
     gslb_geo_location_cfg:
         description:
         - "Field gslb_geo_location_cfg"
@@ -75,13 +81,13 @@ options:
         suboptions:
             gslb_geo_location_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-geo-location allowed (gslb-geo-location count (default is max-value))"
             gslb_geo_location_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     real_server_cfg:
         description:
@@ -90,10 +96,10 @@ options:
         suboptions:
             real_server_max:
                 description:
-                - "None"
+                - "Enter the number of real-servers allowed (real-server count (default is max-value))"
             real_server_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     gslb_ip_list_cfg:
         description:
         - "Field gslb_ip_list_cfg"
@@ -101,10 +107,10 @@ options:
         suboptions:
             gslb_ip_list_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-ip-list allowed (gslb-ip-list count (default is max-value))"
             gslb_ip_list_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     gslb_template_cfg:
         description:
         - "Field gslb_template_cfg"
@@ -112,10 +118,10 @@ options:
         suboptions:
             gslb_template_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-template allowed (gslb-template count (default is max-value))"
             gslb_template_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     gslb_zone_cfg:
         description:
         - "Field gslb_zone_cfg"
@@ -123,10 +129,10 @@ options:
         suboptions:
             gslb_zone_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             gslb_zone_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-zone allowed (gslb-zone count (default is max-value))"
     gslb_device_cfg:
         description:
         - "Field gslb_device_cfg"
@@ -134,10 +140,10 @@ options:
         suboptions:
             gslb_device_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             gslb_device_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-device allowed (gslb-device count (default is max-value))"
     virtual_server_cfg:
         description:
         - "Field virtual_server_cfg"
@@ -145,10 +151,10 @@ options:
         suboptions:
             virtual_server_max:
                 description:
-                - "None"
+                - "Enter the number of virtual-servers allowed (virtual-server count (default is max-value))"
             virtual_server_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     real_port_cfg:
         description:
         - "Field real_port_cfg"
@@ -156,10 +162,10 @@ options:
         suboptions:
             real_port_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
             real_port_max:
                 description:
-                - "None"
+                - "Enter the number of real-ports allowed (real-port count (default is max-value))"
     health_monitor_cfg:
         description:
         - "Field health_monitor_cfg"
@@ -167,13 +173,13 @@ options:
         suboptions:
             health_monitor_max:
                 description:
-                - "None"
+                - "Enter the number of health monitors allowed (health-monitor count (default is max-value))"
             health_monitor_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     threshold:
         description:
-        - "None"
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
         required: False
     gslb_svc_group_cfg:
         description:
@@ -182,10 +188,10 @@ options:
         suboptions:
             gslb_svc_group_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-svc-group allowed (gslb-svc-group count (default is max-value))"
             gslb_svc_group_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     service_group_cfg:
         description:
         - "Field service_group_cfg"
@@ -193,10 +199,10 @@ options:
         suboptions:
             service_group_max:
                 description:
-                - "None"
+                - "Enter the number of service groups allowed (service-group count (default is max-value))"
             service_group_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     gslb_service_port_cfg:
         description:
         - "Field gslb_service_port_cfg"
@@ -204,10 +210,10 @@ options:
         suboptions:
             gslb_service_port_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-service-port allowed ( gslb-service-port count (default is max-value))"
             gslb_service_port_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
     gslb_service_ip_cfg:
         description:
         - "Field gslb_service_ip_cfg"
@@ -215,10 +221,10 @@ options:
         suboptions:
             gslb_service_ip_max:
                 description:
-                - "None"
+                - "Enter the number of gslb-service-ip allowed (gslb-service-ip count (default is max-value))"
             gslb_service_ip_min_guarantee:
                 description:
-                - "None"
+                - "Minimum guaranteed value ( Minimum guaranteed value)"
 
 
 """
@@ -252,7 +258,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -277,22 +286,31 @@ def get_argspec():
         gslb_service_port_cfg=dict(type='dict',gslb_service_port_max=dict(type='int',),gslb_service_port_min_guarantee=dict(type='int',)),
         gslb_service_ip_cfg=dict(type='dict',gslb_service_ip_max=dict(type='int',),gslb_service_ip_min_guarantee=dict(type='int',))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        template_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-accounting/template/{name}/app-resources"
+    url_base = "/axapi/v3/system/resource-accounting/template/{template_name}/app-resources"
+
     f_dict = {}
+    f_dict["template_name"] = module.params["template_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-accounting/template/{name}/app-resources"
+    url_base = "/axapi/v3/system/resource-accounting/template/{template_name}/app-resources"
+
     f_dict = {}
+    f_dict["template_name"] = module.params["template_name"]
 
     return url_base.format(**f_dict)
 
@@ -313,7 +331,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -378,7 +396,8 @@ def create(module, result):
     payload = build_json("app-resources", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -403,8 +422,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("app-resources", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -424,6 +444,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("app-resources", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -437,9 +473,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -453,6 +490,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

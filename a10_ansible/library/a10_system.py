@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_system
 description:
-    - None
+    - Configure System Parameters
 short_description: Configures A10 system
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     port_list:
         description:
         - "Field port_list"
@@ -42,7 +45,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     mgmt_port:
         description:
         - "Field mgmt_port"
@@ -50,16 +53,16 @@ options:
         suboptions:
             port_index:
                 description:
-                - "None"
+                - "port index to be configured (Specify port index)"
             pci_address:
                 description:
-                - "None"
+                - "pci-address to be configured as mgmt port"
             mac_address:
                 description:
-                - "None"
+                - "mac-address to be configured as mgmt port"
     src_ip_hash_enable:
         description:
-        - "None"
+        - "Enable source ip hash"
         required: False
     data_cpu:
         description:
@@ -68,10 +71,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     promiscuous_mode:
         description:
-        - "None"
+        - "Run in promiscous mode settings"
         required: False
     inuse_port_list:
         description:
@@ -80,7 +83,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     control_cpu:
         description:
         - "Field control_cpu"
@@ -88,7 +91,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     tcp:
         description:
         - "Field tcp"
@@ -99,7 +102,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     reboot:
         description:
         - "Field reboot"
@@ -107,10 +110,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     module_ctrl_cpu:
         description:
-        - "None"
+        - "'high'= high cpu usage; 'low'= low cpu usage; 'medium'= medium cpu usage; "
         required: False
     bandwidth:
         description:
@@ -122,7 +125,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     session:
         description:
         - "Field session"
@@ -133,10 +136,10 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     class_list_hitcount_enable:
         description:
-        - "None"
+        - "Enable class list hit count"
         required: False
     modify_port:
         description:
@@ -145,10 +148,10 @@ options:
         suboptions:
             port_index:
                 description:
-                - "None"
+                - "port index to be configured (Specify port index)"
             port_number:
                 description:
-                - "None"
+                - "port number to be configured (Specify port number)"
     shutdown:
         description:
         - "Field shutdown"
@@ -156,7 +159,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     all_vlan_limit:
         description:
         - "Field all_vlan_limit"
@@ -164,19 +167,19 @@ options:
         suboptions:
             unknown_ucast:
                 description:
-                - "None"
+                - "unknown unicast packets (per second limit)"
             bcast:
                 description:
-                - "None"
+                - "broadcast packets (per second limit)"
             mcast:
                 description:
-                - "None"
+                - "multicast packets (per second limit)"
             ipmcast:
                 description:
-                - "None"
+                - "IP multicast packets (per second limit)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cpu_list:
         description:
         - "Field cpu_list"
@@ -184,7 +187,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     del_port:
         description:
         - "Field del_port"
@@ -192,7 +195,7 @@ options:
         suboptions:
             port_index:
                 description:
-                - "None"
+                - "port index to be configured (Specify port index)"
     resource_usage:
         description:
         - "Field resource_usage"
@@ -200,34 +203,34 @@ options:
         suboptions:
             nat_pool_addr_count:
                 description:
-                - "None"
+                - "Total configurable NAT Pool addresses in the System"
             class_list_ipv6_addr_count:
                 description:
-                - "None"
+                - "Total IPv6 addresses for class-list"
             max_aflex_file_size:
                 description:
-                - "None"
+                - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
             class_list_ac_entry_count:
                 description:
-                - "None"
+                - "Total entries for AC class-list"
             aflex_table_entry_count:
                 description:
-                - "None"
+                - "Total aFleX table entry in the system (Total aFlex entry in the system)"
             l4_session_count:
                 description:
-                - "None"
+                - "Total Sessions in the System"
             ssl_context_memory:
                 description:
-                - "None"
+                - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
             auth_portal_html_file_size:
                 description:
-                - "None"
+                - "Specify maximum html file size for each html page in auth portal (in KB)"
             auth_portal_image_file_size:
                 description:
-                - "None"
+                - "Specify maximum image file size for default portal (in KB)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     session_reclaim_limit:
         description:
         - "Field session_reclaim_limit"
@@ -235,13 +238,13 @@ options:
         suboptions:
             scan_freq:
                 description:
-                - "None"
+                - "smp session scan frequency (scan per second)"
             nscan_limit:
                 description:
-                - "None"
+                - "smp session scan limit (number of smp sessions per scan)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     inuse_cpu_list:
         description:
         - "Field inuse_cpu_list"
@@ -249,7 +252,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     add_port:
         description:
         - "Field add_port"
@@ -257,7 +260,7 @@ options:
         suboptions:
             port_index:
                 description:
-                - "None"
+                - "port index to be configured (Specify port index)"
     ip6_stats:
         description:
         - "Field ip6_stats"
@@ -268,10 +271,10 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     attack_log:
         description:
-        - "None"
+        - "log attack anomalies"
         required: False
     per_vlan_limit:
         description:
@@ -280,19 +283,19 @@ options:
         suboptions:
             unknown_ucast:
                 description:
-                - "None"
+                - "unknown unicast packets (per second limit)"
             bcast:
                 description:
-                - "None"
+                - "broadcast packets (per second limit)"
             mcast:
                 description:
-                - "None"
+                - "multicast packets (per second limit)"
             ipmcast:
                 description:
-                - "None"
+                - "IP multicast packets (per second limit)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cots_environment:
         description:
         - "Field cots_environment"
@@ -300,7 +303,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     icmp_rate:
         description:
         - "Field icmp_rate"
@@ -311,10 +314,10 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ddos_attack:
         description:
-        - "None"
+        - "System DDoS Attack"
         required: False
     trunk_xaui_hw_hash:
         description:
@@ -323,10 +326,10 @@ options:
         suboptions:
             mode:
                 description:
-                - "None"
+                - "Set HW hash mode, default is 6 (1=dst-mac 2=src-mac 3=src-dst-mac 4=src-ip 5=dst-ip 6=rtag6 7=rtag7)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cpu_load_sharing:
         description:
         - "Field cpu_load_sharing"
@@ -340,10 +343,10 @@ options:
                 - "Field cpu_usage"
             disable:
                 description:
-                - "None"
+                - "Disable CPU load sharing in overload situations"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ip_stats:
         description:
         - "Field ip_stats"
@@ -354,7 +357,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     environment:
         description:
         - "Field environment"
@@ -362,10 +365,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     attack:
         description:
-        - "None"
+        - "System Attack"
         required: False
     cots_environment_power:
         description:
@@ -374,7 +377,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     template:
         description:
         - "Field template"
@@ -382,10 +385,10 @@ options:
         suboptions:
             template_policy:
                 description:
-                - "None"
+                - "Apply policy template to the whole system (Policy template name)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     port_info:
         description:
         - "Field port_info"
@@ -393,7 +396,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     resource_accounting:
         description:
         - "Field resource_accounting"
@@ -401,13 +404,13 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             template_list:
                 description:
                 - "Field template_list"
     anomaly_log:
         description:
-        - "None"
+        - "log system anomalies"
         required: False
     queuing_buffer:
         description:
@@ -416,10 +419,10 @@ options:
         suboptions:
             enable:
                 description:
-                - "None"
+                - "Enable/Disable micro-burst traffic support"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ipmi_service:
         description:
         - "Field ipmi_service"
@@ -427,10 +430,10 @@ options:
         suboptions:
             disable:
                 description:
-                - "None"
+                - "Disable IPMI on platform"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cpu_hyper_thread:
         description:
         - "Field cpu_hyper_thread"
@@ -438,10 +441,10 @@ options:
         suboptions:
             enable:
                 description:
-                - "None"
+                - "Enable CPU Hyperthreading"
             disable:
                 description:
-                - "None"
+                - "Disable CPU Hyperthreading"
     core:
         description:
         - "Field core"
@@ -449,10 +452,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ddos_log:
         description:
-        - "None"
+        - "log DDoS attack anomalies"
         required: False
     trunk_hw_hash:
         description:
@@ -461,10 +464,10 @@ options:
         suboptions:
             mode:
                 description:
-                - "None"
+                - "Set HW hash mode, default is 6 (1=dst-mac 2=src-mac 3=src-dst-mac 4=src-ip 5=dst-ip 6=rtag6 7=rtag7)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ve_mac_scheme:
         description:
         - "Field ve_mac_scheme"
@@ -472,13 +475,13 @@ options:
         suboptions:
             ve_mac_scheme_val:
                 description:
-                - "None"
+                - "'hash-based'= Hash-based using the VE number; 'round-robin'= Round Robin scheme; 'system-mac'= Use system MAC address; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     glid:
         description:
-        - "None"
+        - "Apply limits to the whole system"
         required: False
     template_bind:
         description:
@@ -495,7 +498,7 @@ options:
         suboptions:
             reset:
                 description:
-                - "None"
+                - "Reset IPMI Controller"
             ip:
                 description:
                 - "Field ip"
@@ -518,7 +521,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ndisc_ra:
         description:
         - "Field ndisc_ra"
@@ -529,7 +532,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     spe_profile:
         description:
         - "Field spe_profile"
@@ -537,7 +540,7 @@ options:
         suboptions:
             action:
                 description:
-                - "None"
+                - "'ipv4-only'= Enable IPv4 HW forward entries only; 'ipv6-only'= Enable IPv6 HW forward entries only; 'ipv4-ipv6'= Enable Both IPv4/IPv6 HW forward entries (shared); "
     add_cpu_core:
         description:
         - "Field add_cpu_core"
@@ -545,7 +548,7 @@ options:
         suboptions:
             core_index:
                 description:
-                - "None"
+                - "core index to be added (Specify core index)"
     trunk:
         description:
         - "Field trunk"
@@ -572,19 +575,19 @@ options:
         suboptions:
             packet_round_robin:
                 description:
-                - "None"
+                - "Enable packet round robin for IPsec packets"
             crypto_core:
                 description:
-                - "None"
+                - "Crypto cores assigned for IPsec processing"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             fpga_decrypt:
                 description:
                 - "Field fpga_decrypt"
             crypto_mem:
                 description:
-                - "None"
+                - "Crypto memory percentage assigned for IPsec processing (rounded to increments of 10)"
     icmp:
         description:
         - "Field icmp"
@@ -595,10 +598,10 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     guest_file:
         description:
@@ -607,7 +610,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     hardware:
         description:
         - "Field hardware"
@@ -615,7 +618,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     upgrade_status:
         description:
         - "Field upgrade_status"
@@ -623,7 +626,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     hardware_forward:
         description:
         - "Field hardware_forward"
@@ -634,7 +637,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cpu_map:
         description:
         - "Field cpu_map"
@@ -642,7 +645,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     bfd:
         description:
         - "Field bfd"
@@ -653,10 +656,10 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     sockstress_disable:
         description:
-        - "None"
+        - "Disable sockstress protection"
         required: False
     icmp6:
         description:
@@ -668,7 +671,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     delete_cpu_core:
         description:
         - "Field delete_cpu_core"
@@ -676,10 +679,10 @@ options:
         suboptions:
             core_index:
                 description:
-                - "None"
+                - "core index to be deleted (Specify core index)"
     log_cpu_interval:
         description:
-        - "None"
+        - "Log high CPU interval (Specify consecutive seconds before logging high CPU)"
         required: False
     throughput:
         description:
@@ -691,7 +694,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     io_cpu:
         description:
         - "Field io_cpu"
@@ -699,7 +702,7 @@ options:
         suboptions:
             max_cores:
                 description:
-                - "None"
+                - "max number of IO cores (Specify number of cores)"
     tcp_stats:
         description:
         - "Field tcp_stats"
@@ -710,7 +713,7 @@ options:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     cm_update_file_name_ref:
         description:
         - "Field cm_update_file_name_ref"
@@ -718,13 +721,13 @@ options:
         suboptions:
             source_name:
                 description:
-                - "None"
+                - "bind source name"
             id:
                 description:
-                - "None"
+                - "Specify unique Partition id"
             dest_name:
                 description:
-                - "None"
+                - "bind dest name"
     platformtype:
         description:
         - "Field platformtype"
@@ -732,7 +735,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     spe_status:
         description:
         - "Field spe_status"
@@ -740,7 +743,7 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
 
 
 """
@@ -774,7 +777,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -854,6 +860,7 @@ def get_argspec():
         platformtype=dict(type='dict',uuid=dict(type='str',)),
         spe_status=dict(type='dict',uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -861,6 +868,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/system"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -869,6 +877,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/system"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -890,7 +899,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -955,7 +964,8 @@ def create(module, result):
     payload = build_json("system", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -980,8 +990,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("system", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -1001,6 +1012,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("system", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -1014,9 +1041,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -1030,6 +1058,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
