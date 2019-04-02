@@ -45,13 +45,13 @@ options:
         suboptions:
             interval:
                 description:
-                - "Transmit interval between BFD packets (Milliseconds)"
+                - "Transmit interval between BFD packets (Milliseconds (default= 800))"
             min_rx:
                 description:
-                - "Minimum receive interval capability (Milliseconds)"
+                - "Minimum receive interval capability (Milliseconds (default= 800))"
             multiplier:
                 description:
-                - "Multiplier value used to compute holddown (value used to multiply the interval)"
+                - "Multiplier value used to compute holddown (value used to multiply the interval (default= 4))"
     enable:
         description:
         - "Enable BFD"

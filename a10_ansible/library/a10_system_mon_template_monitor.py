@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_system_resource_usage
+module: a10_system_mon_template_monitor
 description:
-    - Configure System Resource Usage
-short_description: Configures A10 system.resource-usage
+    - Monitor template
+short_description: Configures A10 system.mon.template.monitor
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,69 +38,104 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
+    clear_cfg:
         description:
-        - "Total Sessions in the System"
-        required: False
-    nat_pool_addr_count:
-        description:
-        - "Total configurable NAT Pool addresses in the System"
-        required: False
-    max_aflex_authz_collection_number:
-        description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
-        required: False
-    visibility:
-        description:
-        - "Field visibility"
+        - "Field clear_cfg"
         required: False
         suboptions:
-            monitored_entity_count:
+            clear_sequence:
                 description:
-                - "Total number of monitored entities for visibility"
-            uuid:
+                - "Specify the port physical port number"
+            clear_all_sequence:
                 description:
-                - "uuid of the object"
-    class_list_ipv6_addr_count:
-        description:
-        - "Total IPv6 addresses for class-list"
-        required: False
-    max_aflex_file_size:
-        description:
-        - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
-        required: False
-    class_list_ac_entry_count:
-        description:
-        - "Total entries for AC class-list"
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
-    aflex_table_entry_count:
-        description:
-        - "Total aFleX table entry in the system (Total aFlex entry in the system)"
-        required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    auth_portal_html_file_size:
-        description:
-        - "Specify maximum html file size for each html page in auth portal (in KB)"
-        required: False
-    auth_portal_image_file_size:
-        description:
-        - "Specify maximum image file size for default portal (in KB)"
-        required: False
+                - "Sequence number (Specify the port physical port number)"
+            sessions:
+                description:
+                - "'all'= Clear all sessions; 'sequence'= Sequence number; "
     uuid:
         description:
         - "uuid of the object"
         required: False
+    link_enable_cfg:
+        description:
+        - "Field link_enable_cfg"
+        required: False
+        suboptions:
+            ena_sequence:
+                description:
+                - "Sequence number (Specify the sequence number)"
+            enaeth:
+                description:
+                - "Specify the physical port number (Ethernet interface number)"
+    link_up_cfg:
+        description:
+        - "Field link_up_cfg"
+        required: False
+        suboptions:
+            linkup_ethernet3:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+            linkup_ethernet2:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+            linkup_ethernet1:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+            link_up_sequence1:
+                description:
+                - "Sequence number (Specify the sequence number)"
+            link_up_sequence3:
+                description:
+                - "Sequence number (Specify the sequece number)"
+            link_up_sequence2:
+                description:
+                - "Sequence number (Specify the sequence number)"
+    link_down_cfg:
+        description:
+        - "Field link_down_cfg"
+        required: False
+        suboptions:
+            link_down_sequence1:
+                description:
+                - "Sequence number (Specify the sequence number)"
+            link_down_sequence2:
+                description:
+                - "Sequence number (Specify the seqeuence number)"
+            link_down_sequence3:
+                description:
+                - "Sequence number (Specify the sequence number)"
+            linkdown_ethernet2:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+            linkdown_ethernet3:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+            linkdown_ethernet1:
+                description:
+                - "Specify the port physical port number (Ethernet interface number)"
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    link_disable_cfg:
+        description:
+        - "Field link_disable_cfg"
+        required: False
+        suboptions:
+            dis_sequence:
+                description:
+                - "Sequence number (Specify the sequence number)"
+            diseth:
+                description:
+                - "Specify the physical port number (Ethernet interface number)"
+    monitor_relation:
+        description:
+        - "'monitor-and'= Configures the monitors in current template to work with AND logic; 'monitor-or'= Configures the monitors in current template to work with OR logic; "
+        required: False
+    id:
+        description:
+        - "Monitor template ID Number"
+        required: True
 
 
 """
@@ -115,7 +150,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["clear_cfg","id","link_disable_cfg","link_down_cfg","link_enable_cfg","link_up_cfg","monitor_relation","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,20 +178,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
-        class_list_ipv6_addr_count=dict(type='int',),
-        max_aflex_file_size=dict(type='int',),
-        class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
-        aflex_table_entry_count=dict(type='int',),
-        ssl_context_memory=dict(type='int',),
-        auth_portal_html_file_size=dict(type='int',),
-        auth_portal_image_file_size=dict(type='int',),
-        uuid=dict(type='str',)
+        clear_cfg=dict(type='list',clear_sequence=dict(type='int',),clear_all_sequence=dict(type='int',),sessions=dict(type='str',choices=['all','sequence'])),
+        uuid=dict(type='str',),
+        link_enable_cfg=dict(type='list',ena_sequence=dict(type='int',),enaeth=dict(type='str',)),
+        link_up_cfg=dict(type='list',linkup_ethernet3=dict(type='str',),linkup_ethernet2=dict(type='str',),linkup_ethernet1=dict(type='str',),link_up_sequence1=dict(type='int',),link_up_sequence3=dict(type='int',),link_up_sequence2=dict(type='int',)),
+        link_down_cfg=dict(type='list',link_down_sequence1=dict(type='int',),link_down_sequence2=dict(type='int',),link_down_sequence3=dict(type='int',),linkdown_ethernet2=dict(type='str',),linkdown_ethernet3=dict(type='str',),linkdown_ethernet1=dict(type='str',)),
+        user_tag=dict(type='str',),
+        link_disable_cfg=dict(type='list',dis_sequence=dict(type='int',),diseth=dict(type='str',)),
+        monitor_relation=dict(type='str',choices=['monitor-and','monitor-or']),
+        id=dict(type='int',required=True,)
     ))
    
 
@@ -165,18 +195,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/mon-template/monitor/{id}"
 
     f_dict = {}
+    f_dict["id"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/mon-template/monitor/{id}"
 
     f_dict = {}
+    f_dict["id"] = module.params["id"]
 
     return url_base.format(**f_dict)
 
@@ -259,7 +291,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("resource-usage", module)
+    payload = build_json("monitor", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -286,7 +318,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("monitor", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -311,7 +343,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("monitor", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:

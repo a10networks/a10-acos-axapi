@@ -135,6 +135,14 @@ options:
             acl_id:
                 description:
                 - "ACL id"
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'packets_input'= Input packets; 'bytes_input'= Input bytes; 'received_broadcasts'= Received broadcasts; 'received_multicasts'= Received multicasts; 'received_unicasts'= Received unicasts; 'input_errors'= Input errors; 'crc'= CRC; 'frame'= Frames; 'input_err_short'= Runts; 'input_err_long'= Giants; 'packets_output'= Output packets; 'bytes_output'= Output bytes; 'transmitted_broadcasts'= Transmitted broadcasts; 'transmitted_multicasts'= Transmitted multicasts; 'transmitted_unicasts'= Transmitted unicasts; 'output_errors'= Output errors; 'collisions'= Collisions; "
     ipv6:
         description:
         - "Field ipv6"
@@ -177,7 +185,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","broadcast_rate_limit","duplexity","flow_control","ip","ipv6","lldp","secondary_ip","speed","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","broadcast_rate_limit","duplexity","flow_control","ip","ipv6","lldp","sampling_enable","secondary_ip","speed","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -213,7 +221,8 @@ def get_argspec():
         ip=dict(type='dict',dhcp=dict(type='bool',),ipv4_address=dict(type='str',),control_apps_use_mgmt_port=dict(type='bool',),default_gateway=dict(type='str',),ipv4_netmask=dict(type='str',)),
         secondary_ip=dict(type='dict',ipv4_netmask=dict(type='str',),control_apps_use_mgmt_port=dict(type='bool',),secondary_ip=dict(type='bool',),default_gateway=dict(type='str',),dhcp=dict(type='bool',),ipv4_address=dict(type='str',)),
         access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',)),
-        ipv6=dict(type='dict',inbound=dict(type='bool',),address_type=dict(type='str',choices=['link-local']),default_ipv6_gateway=dict(type='str',),ipv6_addr=dict(type='str',),v6_acl_name=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets_input','bytes_input','received_broadcasts','received_multicasts','received_unicasts','input_errors','crc','frame','input_err_short','input_err_long','packets_output','bytes_output','transmitted_broadcasts','transmitted_multicasts','transmitted_unicasts','output_errors','collisions'])),
+        ipv6=dict(type='list',inbound=dict(type='bool',),address_type=dict(type='str',choices=['link-local']),default_ipv6_gateway=dict(type='str',),ipv6_addr=dict(type='str',),v6_acl_name=dict(type='str',)),
         action=dict(type='str',choices=['enable','disable']),
         speed=dict(type='str',choices=['10','100','1000','auto'])
     ))

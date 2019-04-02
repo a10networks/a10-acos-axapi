@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_system_resource_usage
+module: a10_system_geo_location_entry
 description:
-    - Configure System Resource Usage
-short_description: Configures A10 system.resource-usage
+    - Manually configure geo-location entry
+short_description: Configures A10 system.geo.location.entry
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,64 +38,36 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
+    geo_locn_obj_name:
         description:
-        - "Total Sessions in the System"
-        required: False
-    nat_pool_addr_count:
+        - "Specify geo-location name, section range is (1-15)"
+        required: True
+    geo_locn_multiple_addresses:
         description:
-        - "Total configurable NAT Pool addresses in the System"
-        required: False
-    max_aflex_authz_collection_number:
-        description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
-        required: False
-    visibility:
-        description:
-        - "Field visibility"
+        - "Field geo_locn_multiple_addresses"
         required: False
         suboptions:
-            monitored_entity_count:
+            first_ip_address:
                 description:
-                - "Total number of monitored entities for visibility"
-            uuid:
+                - "Specify IP information (Specify IP address)"
+            first_ipv6_address:
                 description:
-                - "uuid of the object"
-    class_list_ipv6_addr_count:
+                - "Specify IPv6 address"
+            geol_ipv4_mask:
+                description:
+                - "Specify IPv4 mask"
+            ip_addr2:
+                description:
+                - "Specify IP address range"
+            ipv6_addr2:
+                description:
+                - "Specify IPv6 address range"
+            geol_ipv6_mask:
+                description:
+                - "Specify IPv6 mask"
+    user_tag:
         description:
-        - "Total IPv6 addresses for class-list"
-        required: False
-    max_aflex_file_size:
-        description:
-        - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
-        required: False
-    class_list_ac_entry_count:
-        description:
-        - "Total entries for AC class-list"
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
-    aflex_table_entry_count:
-        description:
-        - "Total aFleX table entry in the system (Total aFlex entry in the system)"
-        required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    auth_portal_html_file_size:
-        description:
-        - "Specify maximum html file size for each html page in auth portal (in KB)"
-        required: False
-    auth_portal_image_file_size:
-        description:
-        - "Specify maximum image file size for default portal (in KB)"
+        - "Customized tag"
         required: False
     uuid:
         description:
@@ -115,7 +87,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["geo_locn_multiple_addresses","geo_locn_obj_name","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,19 +115,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
-        class_list_ipv6_addr_count=dict(type='int',),
-        max_aflex_file_size=dict(type='int',),
-        class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
-        aflex_table_entry_count=dict(type='int',),
-        ssl_context_memory=dict(type='int',),
-        auth_portal_html_file_size=dict(type='int',),
-        auth_portal_image_file_size=dict(type='int',),
+        geo_locn_obj_name=dict(type='str',required=True,),
+        geo_locn_multiple_addresses=dict(type='list',first_ip_address=dict(type='str',),first_ipv6_address=dict(type='str',),geol_ipv4_mask=dict(type='str',),ip_addr2=dict(type='str',),ipv6_addr2=dict(type='str',),geol_ipv6_mask=dict(type='int',)),
+        user_tag=dict(type='str',),
         uuid=dict(type='str',)
     ))
    
@@ -165,18 +127,20 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/geo-location/entry/{geo-locn-obj-name}"
 
     f_dict = {}
+    f_dict["geo-locn-obj-name"] = ""
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/geo-location/entry/{geo-locn-obj-name}"
 
     f_dict = {}
+    f_dict["geo-locn-obj-name"] = module.params["geo_locn_obj_name"]
 
     return url_base.format(**f_dict)
 
@@ -259,7 +223,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("resource-usage", module)
+    payload = build_json("entry", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -286,7 +250,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("entry", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -311,7 +275,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("entry", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
