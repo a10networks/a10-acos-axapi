@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_system_resource_usage
+module: a10_system_geo_location
 description:
-    - Configure System Resource Usage
-short_description: Configures A10 system.resource-usage
+    - Configure system global geo-location
+short_description: Configures A10 system.geo-location
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,64 +38,53 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
+    geolite2_city_include_ipv6:
         description:
-        - "Total Sessions in the System"
+        - "Include IPv6 address"
         required: False
-    nat_pool_addr_count:
+    geolite2_country_include_ipv6:
         description:
-        - "Total configurable NAT Pool addresses in the System"
+        - "Include IPv6 address"
         required: False
-    max_aflex_authz_collection_number:
+    geo_location_geolite2_country:
         description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
+        - "Load built-in Maxmind GeoLite2-Country database. Database available from http=//www.maxmind.com"
         required: False
-    visibility:
+    entry_list:
         description:
-        - "Field visibility"
+        - "Field entry_list"
         required: False
         suboptions:
-            monitored_entity_count:
+            geo_locn_obj_name:
                 description:
-                - "Total number of monitored entities for visibility"
+                - "Specify geo-location name, section range is (1-15)"
+            geo_locn_multiple_addresses:
+                description:
+                - "Field geo_locn_multiple_addresses"
+            user_tag:
+                description:
+                - "Customized tag"
             uuid:
                 description:
                 - "uuid of the object"
-    class_list_ipv6_addr_count:
+    geo_location_geolite2_city:
         description:
-        - "Total IPv6 addresses for class-list"
+        - "Load built-in Maxmind GeoLite2-City database. Database available from http=//www.maxmind.com"
         required: False
-    max_aflex_file_size:
+    geoloc_load_file_list:
         description:
-        - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
+        - "Field geoloc_load_file_list"
         required: False
-    class_list_ac_entry_count:
+        suboptions:
+            geo_location_load_filename:
+                description:
+                - "Specify file to be loaded"
+            template_name:
+                description:
+                - "CSV template to load this file"
+    geo_location_iana:
         description:
-        - "Total entries for AC class-list"
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
-    aflex_table_entry_count:
-        description:
-        - "Total aFleX table entry in the system (Total aFlex entry in the system)"
-        required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    auth_portal_html_file_size:
-        description:
-        - "Specify maximum html file size for each html page in auth portal (in KB)"
-        required: False
-    auth_portal_image_file_size:
-        description:
-        - "Specify maximum image file size for default portal (in KB)"
+        - "Load built-in IANA Database"
         required: False
     uuid:
         description:
@@ -115,7 +104,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["entry_list","geo_location_geolite2_city","geo_location_geolite2_country","geo_location_iana","geolite2_city_include_ipv6","geolite2_country_include_ipv6","geoloc_load_file_list","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,19 +132,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
-        class_list_ipv6_addr_count=dict(type='int',),
-        max_aflex_file_size=dict(type='int',),
-        class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
-        aflex_table_entry_count=dict(type='int',),
-        ssl_context_memory=dict(type='int',),
-        auth_portal_html_file_size=dict(type='int',),
-        auth_portal_image_file_size=dict(type='int',),
+        geolite2_city_include_ipv6=dict(type='bool',),
+        geolite2_country_include_ipv6=dict(type='bool',),
+        geo_location_geolite2_country=dict(type='bool',),
+        entry_list=dict(type='list',geo_locn_obj_name=dict(type='str',required=True,),geo_locn_multiple_addresses=dict(type='list',first_ip_address=dict(type='str',),first_ipv6_address=dict(type='str',),geol_ipv4_mask=dict(type='str',),ip_addr2=dict(type='str',),ipv6_addr2=dict(type='str',),geol_ipv6_mask=dict(type='int',)),user_tag=dict(type='str',),uuid=dict(type='str',)),
+        geo_location_geolite2_city=dict(type='bool',),
+        geoloc_load_file_list=dict(type='list',geo_location_load_filename=dict(type='str',),template_name=dict(type='str',)),
+        geo_location_iana=dict(type='bool',),
         uuid=dict(type='str',)
     ))
    
@@ -165,7 +148,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/geo-location"
 
     f_dict = {}
 
@@ -174,7 +157,7 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/geo-location"
 
     f_dict = {}
 
@@ -259,7 +242,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("resource-usage", module)
+    payload = build_json("geo-location", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -286,7 +269,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("geo-location", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -311,7 +294,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("geo-location", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:

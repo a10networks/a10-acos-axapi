@@ -179,7 +179,7 @@ options:
                 - "OSPF area ID in IP address format"
     maximum_area:
         description:
-        - "Maximum number of OSPF area (OSPF area limit)"
+        - "Maximum number of non-backbone areas (OSPF area limit)"
         required: False
     summary_address_list:
         description:

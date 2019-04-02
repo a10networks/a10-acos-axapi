@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_system_resource_usage
+module: a10_system_ssl_req_q
 description:
-    - Configure System Resource Usage
-short_description: Configures A10 system.resource-usage
+    - System SSL Request Queue statistics
+short_description: Configures A10 system.ssl-req-q
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,65 +38,14 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
+    sampling_enable:
         description:
-        - "Total Sessions in the System"
-        required: False
-    nat_pool_addr_count:
-        description:
-        - "Total configurable NAT Pool addresses in the System"
-        required: False
-    max_aflex_authz_collection_number:
-        description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
-        required: False
-    visibility:
-        description:
-        - "Field visibility"
+        - "Field sampling_enable"
         required: False
         suboptions:
-            monitored_entity_count:
+            counters1:
                 description:
-                - "Total number of monitored entities for visibility"
-            uuid:
-                description:
-                - "uuid of the object"
-    class_list_ipv6_addr_count:
-        description:
-        - "Total IPv6 addresses for class-list"
-        required: False
-    max_aflex_file_size:
-        description:
-        - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
-        required: False
-    class_list_ac_entry_count:
-        description:
-        - "Total entries for AC class-list"
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
-    aflex_table_entry_count:
-        description:
-        - "Total aFleX table entry in the system (Total aFlex entry in the system)"
-        required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    auth_portal_html_file_size:
-        description:
-        - "Specify maximum html file size for each html page in auth portal (in KB)"
-        required: False
-    auth_portal_image_file_size:
-        description:
-        - "Specify maximum image file size for default portal (in KB)"
-        required: False
+                - "'all'= all; 'num-ssl-queues'= num-ssl-queues; 'ssl-req-q-depth-tot'= ssl-req-q-depth-tot; 'ssl-req-q-inuse-tot'= ssl-req-q-inuse-tot; 'ssl-hw-q-depth-tot'= ssl-hw-q-depth-tot; 'ssl-hw-q-inuse-tot'= ssl-hw-q-inuse-tot; "
     uuid:
         description:
         - "uuid of the object"
@@ -115,7 +64,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,19 +92,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
-        class_list_ipv6_addr_count=dict(type='int',),
-        max_aflex_file_size=dict(type='int',),
-        class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
-        aflex_table_entry_count=dict(type='int',),
-        ssl_context_memory=dict(type='int',),
-        auth_portal_html_file_size=dict(type='int',),
-        auth_portal_image_file_size=dict(type='int',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num-ssl-queues','ssl-req-q-depth-tot','ssl-req-q-inuse-tot','ssl-hw-q-depth-tot','ssl-hw-q-inuse-tot'])),
         uuid=dict(type='str',)
     ))
    
@@ -165,7 +102,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/ssl-req-q"
 
     f_dict = {}
 
@@ -174,7 +111,7 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/ssl-req-q"
 
     f_dict = {}
 
@@ -259,7 +196,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("resource-usage", module)
+    payload = build_json("ssl-req-q", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -286,7 +223,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("ssl-req-q", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -311,7 +248,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("ssl-req-q", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:

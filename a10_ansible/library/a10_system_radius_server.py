@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_system_resource_usage
+module: a10_system_radius_server
 description:
-    - Configure System Resource Usage
-short_description: Configures A10 system.resource-usage
+    - Configure system as a RADIUS server
+short_description: Configures A10 system.radius.server
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,68 +38,104 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
+    accounting_start:
         description:
-        - "Total Sessions in the System"
+        - "'ignore'= Ignore; 'append-entry'= Append the AVPs to existing entry (default); 'replace-entry'= Replace the AVPs of existing entry; "
         required: False
-    nat_pool_addr_count:
+    attribute_name:
         description:
-        - "Total configurable NAT Pool addresses in the System"
+        - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using IMSI; 'custom1'= Clear using CUSTOM1 attribute configured; 'custom2'= Clear using CUSTOM2 attribute configured; 'custom3'= Clear using CUSTOM3 attribute configured; "
         required: False
-    max_aflex_authz_collection_number:
+    vrid:
         description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
+        - "Join a VRRP-A failover group"
         required: False
-    visibility:
+    remote:
         description:
-        - "Field visibility"
+        - "Field remote"
         required: False
         suboptions:
-            monitored_entity_count:
+            ip_list:
                 description:
-                - "Total number of monitored entities for visibility"
-            uuid:
-                description:
-                - "uuid of the object"
-    class_list_ipv6_addr_count:
-        description:
-        - "Total IPv6 addresses for class-list"
-        required: False
-    max_aflex_file_size:
-        description:
-        - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
-        required: False
-    class_list_ac_entry_count:
-        description:
-        - "Total entries for AC class-list"
-        required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
-    aflex_table_entry_count:
-        description:
-        - "Total aFleX table entry in the system (Total aFlex entry in the system)"
-        required: False
-    ssl_context_memory:
-        description:
-        - "Total SSL context memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    auth_portal_html_file_size:
-        description:
-        - "Specify maximum html file size for each html page in auth portal (in KB)"
-        required: False
-    auth_portal_image_file_size:
-        description:
-        - "Specify maximum image file size for default portal (in KB)"
-        required: False
+                - "Field ip_list"
     uuid:
         description:
         - "uuid of the object"
+        required: False
+    encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
+        required: False
+    disable_reply:
+        description:
+        - "Toggle option for RADIUS reply packet(Default= Accounting response will be sent)"
+        required: False
+    accounting_interim_update:
+        description:
+        - "'ignore'= Ignore (default); 'append-entry'= Append the AVPs to existing entry; 'replace-entry'= Replace the AVPs of existing entry; "
+        required: False
+    secret:
+        description:
+        - "Configure shared secret"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'msisdn-received'= MSISDN Received; 'imei-received'= IMEI Received; 'imsi-received'= IMSI Received; 'custom-received'= Custom attribute Received; 'radius-request-received'= RADIUS Request Received; 'radius-request-dropped'= RADIUS Request Dropped (Malformed Packet); 'request-bad-secret-dropped'= RADIUS Request Bad Secret Dropped; 'request-no-key-vap-dropped'= RADIUS Request No Key Attribute Dropped; 'request-malformed-dropped'= RADIUS Request Malformed Dropped; 'request-ignored'= RADIUS Request Ignored; 'radius-table-full'= RADIUS Request Dropped (Table Full); 'secret-not-configured-dropped'= RADIUS Secret Not Configured Dropped; 'ha-standby-dropped'= HA Standby Dropped; 'ipv6-prefix-length-mismatch'= Framed IPV6 Prefix Length Mismatch; 'invalid-key'= Radius Request has Invalid Key Field; 'smp-created'= RADIUS SMP Created; 'smp-deleted'= RADIUS SMP Deleted; 'smp-mem-allocated'= RADIUS SMP Memory Allocated; 'smp-mem-alloc-failed'= RADIUS SMP Memory Allocation Failed; 'smp-mem-freed'= RADIUS SMP Memory Freed; 'smp-in-rml'= RADIUS SMP in RML; 'mem-allocated'= RADIUS Memory Allocated; 'mem-alloc-failed'= RADIUS Memory Allocation Failed; 'mem-freed'= RADIUS Memory Freed; 'ha-sync-create-sent'= HA Record Sync Create Sent; 'ha-sync-delete-sent'= HA Record Sync Delete Sent; 'ha-sync-create-recv'= HA Record Sync Create Received; 'ha-sync-delete-recv'= HA Record Sync Delete Received; 'acct-on-filters-full'= RADIUS Acct On Request Ignored(Filters Full); 'acct-on-dup-request'= Duplicate RADIUS Acct On Request; 'ip-mismatch-delete'= Radius Entry IP Mismatch Delete; 'ip-add-race-drop'= Radius Entry IP Add Race Drop; 'ha-sync-no-key-vap-dropped'= HA Record Sync No key dropped; 'inter-card-msg-fail-drop'= Inter-Card Message Fail Drop; "
+    accounting_stop:
+        description:
+        - "'ignore'= Ignore; 'delete-entry'= Delete the entry (default); 'delete-entry-and-sessions'= Delete the entry and data sessions associated(CGN only); "
+        required: False
+    attribute:
+        description:
+        - "Field attribute"
+        required: False
+        suboptions:
+            prefix_number:
+                description:
+                - "RADIUS attribute number"
+            prefix_length:
+                description:
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'= Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112; "
+            name:
+                description:
+                - "Customized attribute name"
+            prefix_vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+            number:
+                description:
+                - "RADIUS attribute number"
+            value:
+                description:
+                - "'hexadecimal'= Type of attribute value is hexadecimal; "
+            custom_vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+            custom_number:
+                description:
+                - "RADIUS attribute number"
+            vendor:
+                description:
+                - "RADIUS vendor attribute information (RADIUS vendor ID)"
+            attribute_value:
+                description:
+                - "'inside-ipv6-prefix'= Framed IPv6 Prefix; 'inside-ip'= Inside IP address; 'inside-ipv6'= Inside IPv6 address; 'imei'= International Mobile Equipment Identity (IMEI); 'imsi'= International Mobile Subscriber Identity (IMSI); 'msisdn'= Mobile Subscriber Integrated Services Digital Network-Number (MSISDN); 'custom1'= Customized attribute 1; 'custom2'= Customized attribute 2; 'custom3'= Customized attribute 3; "
+    listen_port:
+        description:
+        - "Configure the listen port of RADIUS server (default 1813) (Port number)"
+        required: False
+    accounting_on:
+        description:
+        - "'ignore'= Ignore (default); 'delete-entries-using-attribute'= Delete entries matching attribute in RADIUS Table; "
+        required: False
+    secret_string:
+        description:
+        - "The RADIUS secret"
         required: False
 
 
@@ -115,7 +151,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["accounting_interim_update","accounting_on","accounting_start","accounting_stop","attribute","attribute_name","disable_reply","encrypted","listen_port","remote","sampling_enable","secret","secret_string","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,20 +179,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
-        class_list_ipv6_addr_count=dict(type='int',),
-        max_aflex_file_size=dict(type='int',),
-        class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
-        aflex_table_entry_count=dict(type='int',),
-        ssl_context_memory=dict(type='int',),
-        auth_portal_html_file_size=dict(type='int',),
-        auth_portal_image_file_size=dict(type='int',),
-        uuid=dict(type='str',)
+        accounting_start=dict(type='str',choices=['ignore','append-entry','replace-entry']),
+        attribute_name=dict(type='str',choices=['msisdn','imei','imsi','custom1','custom2','custom3']),
+        vrid=dict(type='int',),
+        remote=dict(type='dict',ip_list=dict(type='list',ip_list_name=dict(type='str',),ip_list_encrypted=dict(type='str',),ip_list_secret_string=dict(type='str',),ip_list_secret=dict(type='bool',))),
+        uuid=dict(type='str',),
+        encrypted=dict(type='str',),
+        disable_reply=dict(type='bool',),
+        accounting_interim_update=dict(type='str',choices=['ignore','append-entry','replace-entry']),
+        secret=dict(type='bool',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msisdn-received','imei-received','imsi-received','custom-received','radius-request-received','radius-request-dropped','request-bad-secret-dropped','request-no-key-vap-dropped','request-malformed-dropped','request-ignored','radius-table-full','secret-not-configured-dropped','ha-standby-dropped','ipv6-prefix-length-mismatch','invalid-key','smp-created','smp-deleted','smp-mem-allocated','smp-mem-alloc-failed','smp-mem-freed','smp-in-rml','mem-allocated','mem-alloc-failed','mem-freed','ha-sync-create-sent','ha-sync-delete-sent','ha-sync-create-recv','ha-sync-delete-recv','acct-on-filters-full','acct-on-dup-request','ip-mismatch-delete','ip-add-race-drop','ha-sync-no-key-vap-dropped','inter-card-msg-fail-drop'])),
+        accounting_stop=dict(type='str',choices=['ignore','delete-entry','delete-entry-and-sessions']),
+        attribute=dict(type='list',prefix_number=dict(type='int',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),name=dict(type='str',),prefix_vendor=dict(type='int',),number=dict(type='int',),value=dict(type='str',choices=['hexadecimal']),custom_vendor=dict(type='int',),custom_number=dict(type='int',),vendor=dict(type='int',),attribute_value=dict(type='str',choices=['inside-ipv6-prefix','inside-ip','inside-ipv6','imei','imsi','msisdn','custom1','custom2','custom3'])),
+        listen_port=dict(type='int',),
+        accounting_on=dict(type='str',choices=['ignore','delete-entries-using-attribute']),
+        secret_string=dict(type='str',)
     ))
    
 
@@ -165,7 +202,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/radius/server"
 
     f_dict = {}
 
@@ -174,7 +211,7 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/system/resource-usage"
+    url_base = "/axapi/v3/system/radius/server"
 
     f_dict = {}
 
@@ -259,7 +296,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("resource-usage", module)
+    payload = build_json("server", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -286,7 +323,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("server", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -311,7 +348,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("resource-usage", module)
+    payload = build_json("server", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
