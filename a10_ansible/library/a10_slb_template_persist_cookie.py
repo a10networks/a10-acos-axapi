@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     pass_phrase:
         description:
         - "Set passphrase for encryption"
@@ -49,7 +48,7 @@ options:
         required: False
     cookie_name:
         description:
-        - "Set cookie name (Cookie name, default 'sto-id')"
+        - "Set cookie name"
         required: False
     secure:
         description:
@@ -97,7 +96,7 @@ options:
         required: False
     path:
         description:
-        - "Set cookie path (Cookie path, default is '/')"
+        - "Set cookie path"
         required: False
     pass_thru:
         description:
@@ -242,7 +241,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -253,7 +252,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

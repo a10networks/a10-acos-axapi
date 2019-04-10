@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     keep_client_alive:
         description:
         - "Keep client alive"
@@ -137,7 +136,7 @@ options:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
             response_header_insert:
                 description:
-                - "Insert a header into HTTP response (Header Content (Format= '[name]= [value]'))"
+                - "Insert a header into HTTP response (Header Content (Format= '[name]=[value]'))"
     persist_on_401:
         description:
         - "Persist to the same server if the response code is 401"
@@ -186,6 +185,10 @@ options:
             logging:
                 description:
                 - "Logging template (Logging Config name)"
+    request_timeout:
+        description:
+        - "Request timeout if response not received (timeout in seconds)"
+        required: False
     url_switching:
         description:
         - "Field url_switching"
@@ -223,6 +226,10 @@ options:
         description:
         - "When REQ has Expect 100 and response is not 100, then wait for whole request to be sent"
         required: False
+    max_concurrent_streams:
+        description:
+        - "(http2 only) Max concurrent streams, default 100"
+        required: False
     request_header_insert_list:
         description:
         - "Field request_header_insert_list"
@@ -230,7 +237,7 @@ options:
         suboptions:
             request_header_insert:
                 description:
-                - "Insert a header into HTTP request (Header Content (Format= '[name]= [value]'))"
+                - "Insert a header into HTTP request (Header Content (Format= '[name]=[value]'))"
             request_header_insert_type:
                 description:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
@@ -308,7 +315,7 @@ options:
         required: False
     retry_on_5xx:
         description:
-        - "Retry http request on HTTP 5xx code"
+        - "Retry http request on HTTP 5xx code and request timeout"
         required: False
     cookie_format:
         description:
@@ -344,7 +351,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["http_100_cont_wait_for_req_complete","bypass_sg","client_ip_hdr_replace","client_port_hdr_replace","compression_auto_disable_on_high_cpu","compression_content_type","compression_enable","compression_exclude_content_type","compression_exclude_uri","compression_keep_accept_encoding","compression_keep_accept_encoding_enable","compression_level","compression_minimum_content_length","cookie_format","failover_url","host_switching","insert_client_ip","insert_client_ip_header_name","insert_client_port","insert_client_port_header_name","keep_client_alive","log_retry","name","non_http_bypass","persist_on_401","rd_port","rd_resp_code","rd_secure","rd_simple_loc","redirect","redirect_rewrite","req_hdr_wait_time","req_hdr_wait_time_val","request_header_erase_list","request_header_insert_list","request_line_case_insensitive","response_content_replace_list","response_header_erase_list","response_header_insert_list","retry_on_5xx","retry_on_5xx_per_req","retry_on_5xx_per_req_val","retry_on_5xx_val","strict_transaction_switch","template","term_11client_hdr_conn_close","url_hash_first","url_hash_last","url_hash_offset","url_hash_persist","url_switching","use_server_status","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["http_100_cont_wait_for_req_complete","bypass_sg","client_ip_hdr_replace","client_port_hdr_replace","compression_auto_disable_on_high_cpu","compression_content_type","compression_enable","compression_exclude_content_type","compression_exclude_uri","compression_keep_accept_encoding","compression_keep_accept_encoding_enable","compression_level","compression_minimum_content_length","cookie_format","failover_url","host_switching","insert_client_ip","insert_client_ip_header_name","insert_client_port","insert_client_port_header_name","keep_client_alive","log_retry","max_concurrent_streams","name","non_http_bypass","persist_on_401","rd_port","rd_resp_code","rd_secure","rd_simple_loc","redirect","redirect_rewrite","req_hdr_wait_time","req_hdr_wait_time_val","request_header_erase_list","request_header_insert_list","request_line_case_insensitive","request_timeout","response_content_replace_list","response_header_erase_list","response_header_insert_list","retry_on_5xx","retry_on_5xx_per_req","retry_on_5xx_per_req_val","retry_on_5xx_val","strict_transaction_switch","template","term_11client_hdr_conn_close","url_hash_first","url_hash_last","url_hash_offset","url_hash_persist","url_switching","use_server_status","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -399,11 +406,13 @@ def get_argspec():
         retry_on_5xx_per_req=dict(type='bool',),
         insert_client_ip=dict(type='bool',),
         template=dict(type='dict',logging=dict(type='str',)),
+        request_timeout=dict(type='int',),
         url_switching=dict(type='list',url_service_group=dict(type='str',),url_match_string=dict(type='str',),url_switching_type=dict(type='str',choices=['contains','ends-with','equals','starts-with','regex-match','url-case-insensitive','url-hits-enable'])),
         insert_client_port_header_name=dict(type='str',),
         strict_transaction_switch=dict(type='bool',),
         response_content_replace_list=dict(type='list',response_new_string=dict(type='str',),response_content_replace=dict(type='str',)),
         http_100_cont_wait_for_req_complete=dict(type='bool',),
+        max_concurrent_streams=dict(type='int',),
         request_header_insert_list=dict(type='list',request_header_insert=dict(type='str',),request_header_insert_type=dict(type='str',choices=['insert-if-not-exist','insert-always'])),
         compression_minimum_content_length=dict(type='int',),
         compression_level=dict(type='int',),
@@ -487,7 +496,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -498,7 +507,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

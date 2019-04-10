@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     del_session_on_server_down:
         description:
         - "Delete session if the server/port goes down (either disabled/hm down)"
@@ -62,6 +61,10 @@ options:
     reset_fwd:
         description:
         - "send reset to server if error happens"
+        required: False
+    reset_follow_fin:
+        description:
+        - "send reset to client or server upon receiving first fin"
         required: False
     alive_if_active:
         description:
@@ -129,7 +132,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_fwd","reset_rev","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_follow_fin","reset_fwd","reset_rev","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -163,6 +166,7 @@ def get_argspec():
         logging=dict(type='str',choices=['init','term','both']),
         name=dict(type='str',required=True,),
         reset_fwd=dict(type='bool',),
+        reset_follow_fin=dict(type='bool',),
         alive_if_active=dict(type='bool',),
         idle_timeout=dict(type='int',),
         force_delete_timeout=dict(type='int',),
@@ -237,7 +241,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -248,7 +252,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
