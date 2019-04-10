@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     reset_unknown_conn:
         description:
         - "Send reset back if receives TCP packet without SYN or RST flag and it does not belong to any existing connections"
@@ -53,7 +52,7 @@ options:
         required: False
     snat_msl:
         description:
-        - "Source NAT MSL (Source NAT MSL value)"
+        - "Source NAT MSL (Source NAT MSL value (seconds))"
         required: False
     allow_syn_otherflags:
         description:
@@ -277,7 +276,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -288,7 +287,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

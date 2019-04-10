@@ -38,7 +38,15 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    protocol:
+        description:
+        - Key to identify parent object
+    port_number:
+        description:
+        - Key to identify parent object
+    virtual_server_name:
+        description:
+        - Key to identify parent object
     stats:
         description:
         - "Field stats"
@@ -89,7 +97,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',file_inspection=dict(type='dict',file_inspection_download_bad_blocked=dict(type='str',),file_inspection_download_suspect_allowed=dict(type='str',),file_inspection_icap_bytes_sent=dict(type='str',),file_inspection_icap_other_status_code=dict(type='str',),file_inspection_upload_bad_allowed=dict(type='str',),file_inspection_upload_suspect_blocked=dict(type='str',),file_inspection_bypass_service_down=dict(type='str',),file_inspection_upload_bad_blocked=dict(type='str',),file_inspection_icap_200=dict(type='str',),file_inspection_icap_connection_created=dict(type='str',),file_inspection_download_good_blocked=dict(type='str',),file_inspection_bypass_aflex=dict(type='str',),file_inspection_upload_good_ext_inspect=dict(type='str',),file_inspection_transactions_free=dict(type='str',),file_inspection_download_good_allowed=dict(type='str',),file_inspection_icap_connect_fail=dict(type='str',),file_inspection_download_good_ext_inspect=dict(type='str',),file_inspection_download_bad_allowed=dict(type='str',),file_inspection_bypass_max_concurrent_files_reached=dict(type='str',),file_inspection_icap_500=dict(type='str',),file_inspection_reset_service_down=dict(type='str',),file_inspection_upload_bad_ext_inspect=dict(type='str',),file_inspection_upload_suspect_allowed=dict(type='str',),file_inspection_upload_good_allowed=dict(type='str',),file_inspection_bypass_service_disabled=dict(type='str',),file_inspection_upload_good_blocked=dict(type='str',),file_inspection_download_suspect_blocked=dict(type='str',),file_inspection_icap_204=dict(type='str',),file_inspection_download_bad_ext_inspect=dict(type='str',),file_inspection_transactions_alloc=dict(type='str',),file_inspection_icap_bytes_received=dict(type='str',),file_inspection_icap_connection_established=dict(type='str',),file_inspection_transactions_failure=dict(type='str',),file_inspection_download_suspect_ext_inspect=dict(type='str',),file_inspection_bypass_large_file=dict(type='str',),file_inspection_upload_suspect_ext_inspect=dict(type='str',),file_inspection_icap_connection_rst=dict(type='str',),file_inspection_icap_connection_closed=dict(type='str',)))
+        stats=dict(type='dict',file_inspection=dict(type='dict',icap_200=dict(type='str',),bypass_service_down=dict(type='str',),upload_good_ext_inspect=dict(type='str',),upload_bad_blocked=dict(type='str',),bad_file_size_less_1m=dict(type='str',),suspect_file_size_1_5m=dict(type='str',),orig_conn_bytes_bypassed=dict(type='str',),upload_suspect_allowed=dict(type='str',),suspect_file_size_5_8m=dict(type='str',),total_file_size_less_1m=dict(type='str',),upload_bad_ext_inspect=dict(type='str',),orig_conn_bytes_sent=dict(type='str',),total_file_size_1_5m=dict(type='str',),download_suspect_allowed=dict(type='str',),non_supported_file=dict(type='str',),icap_204=dict(type='str',),suspect_file_size_8_32m=dict(type='str',),total_file_size_5_8m=dict(type='str',),icap_connect_fail=dict(type='str',),upload_good_blocked=dict(type='str',),icap_other_status_code=dict(type='str',),bypass_aflex=dict(type='str',),good_file_size_over_32m=dict(type='str',),total_suspect_bandwidth=dict(type='str',),orig_conn_bytes_received=dict(type='str',),download_suspect_ext_inspect=dict(type='str',),good_file_size_8_32m=dict(type='str',),reset_service_down=dict(type='str',),icap_500=dict(type='str',),bad_file_size_5_8m=dict(type='str',),upload_suspect_ext_inspect=dict(type='str',),bypass_large_file=dict(type='str',),icap_bytes_sent=dict(type='str',),download_good_allowed=dict(type='str',),download_bad_blocked=dict(type='str',),total_bad_bandwidth=dict(type='str',),bad_file_size_over_32m=dict(type='str',),download_bad_ext_inspect=dict(type='str',),transactions_aborted=dict(type='str',),total_good_bandwidth=dict(type='str',),bypass_non_inspection=dict(type='str',),download_good_blocked=dict(type='str',),total_bandwidth=dict(type='str',),download_bad_allowed=dict(type='str',),bypass_buffered_overlimit=dict(type='str',),download_good_ext_inspect=dict(type='str',),download_suspect_blocked=dict(type='str',),upload_suspect_blocked=dict(type='str',),good_file_size_less_1m=dict(type='str',),bad_file_size_8_32m=dict(type='str',),icap_connection_rst=dict(type='str',),total_file_size_over_32m=dict(type='str',),good_file_size_1_5m=dict(type='str',),suspect_file_size_less_1m=dict(type='str',),icap_bytes_received=dict(type='str',),icap_connection_established=dict(type='str',),icap_connection_closed=dict(type='str',),good_file_size_5_8m=dict(type='str',),transactions_alloc=dict(type='str',),upload_bad_allowed=dict(type='str',),icap_connection_created=dict(type='str',),bypass_max_concurrent_files_reached=dict(type='str',),total_file_size_8_32m=dict(type='str',),transactions_free=dict(type='str',),bypass_service_disabled=dict(type='str',),upload_good_allowed=dict(type='str',),transactions_failure=dict(type='str',),suspect_file_size_over_32m=dict(type='str',),bad_file_size_1_5m=dict(type='str',)))
     ))
    
     # Parent keys
@@ -161,7 +169,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -172,7 +180,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

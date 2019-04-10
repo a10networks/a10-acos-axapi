@@ -38,7 +38,12 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    name:
+        description:
+        - Key to identify parent object
+    policy_name:
+        description:
+        - Key to identify parent object
     uuid:
         description:
         - "uuid of the object"
@@ -143,7 +148,7 @@ def existing_url(module):
     url_base = "/axapi/v3/slb/template/policy/{policy_name}/forward-policy/source/{name}/destination/class-list/{dest-class-list}"
 
     f_dict = {}
-    f_dict["dest-class-list"] = module.params["dest-class-list"]
+    f_dict["dest-class-list"] = module.params["dest_class_list"]
     f_dict["name"] = module.params["name"]
     f_dict["policy_name"] = module.params["policy_name"]
 
@@ -185,7 +190,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -196,7 +201,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

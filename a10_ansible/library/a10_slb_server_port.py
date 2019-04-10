@@ -38,7 +38,9 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    server_name:
+        description:
+        - Key to identify parent object
     health_check_disable:
         description:
         - "Disable health check"
@@ -50,6 +52,10 @@ options:
     weight:
         description:
         - "Port Weight (Connection Weight)"
+        required: False
+    shared_rport_health_check:
+        description:
+        - "Reference a health-check from shared partition"
         required: False
     stats_data_action:
         description:
@@ -70,6 +76,10 @@ options:
     uuid:
         description:
         - "uuid of the object"
+        required: False
+    support_http2:
+        description:
+        - "Starting HTTP/2 with Prior Knowledge"
         required: False
     sampling_enable:
         description:
@@ -112,6 +122,10 @@ options:
     extended_stats:
         description:
         - "Enable extended statistics on real server port"
+        required: False
+    rport_health_check_shared:
+        description:
+        - "Health Check (Monitor Name)"
         required: False
     conn_resume:
         description:
@@ -159,7 +173,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","sampling_enable","stats_data_action","template_port","template_server_ssl","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","rport_health_check_shared","sampling_enable","shared_rport_health_check","stats_data_action","support_http2","template_port","template_server_ssl","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -190,11 +204,13 @@ def get_argspec():
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp']),
         weight=dict(type='int',),
+        shared_rport_health_check=dict(type='bool',),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         health_check_follow_port=dict(type='int',),
         template_port=dict(type='str',),
         conn_limit=dict(type='int',),
         uuid=dict(type='str',),
+        support_http2=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','resp-count','resp-1xx','resp-2xx','resp-3xx','resp-4xx','resp-5xx','resp-other','resp-latency','curr_pconn'])),
         no_ssl=dict(type='bool',),
         follow_port_protocol=dict(type='str',choices=['tcp','udp']),
@@ -202,6 +218,7 @@ def get_argspec():
         alternate_port=dict(type='list',alternate_name=dict(type='str',),alternate=dict(type='int',),alternate_server_port=dict(type='int',)),
         port_number=dict(type='int',required=True,),
         extended_stats=dict(type='bool',),
+        rport_health_check_shared=dict(type='str',),
         conn_resume=dict(type='int',),
         user_tag=dict(type='str',),
         range=dict(type='int',),
@@ -236,7 +253,7 @@ def existing_url(module):
     url_base = "/axapi/v3/slb/server/{server_name}/port/{port-number}+{protocol}"
 
     f_dict = {}
-    f_dict["port-number"] = module.params["port-number"]
+    f_dict["port-number"] = module.params["port_number"]
     f_dict["protocol"] = module.params["protocol"]
     f_dict["server_name"] = module.params["server_name"]
 
@@ -278,7 +295,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -289,7 +306,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

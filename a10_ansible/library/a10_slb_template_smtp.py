@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     name:
         description:
         - "SMTP Template Name"
@@ -69,6 +68,14 @@ options:
         description:
         - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS command before mail transaction; "
         required: False
+    template:
+        description:
+        - "Field template"
+        required: False
+        suboptions:
+            logging:
+                description:
+                - "Logging template (Logging Config name)"
     command_disable:
         description:
         - "Field command_disable"
@@ -103,7 +110,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["client_domain_switching","client_starttls_type","command_disable","name","server_domain","server_starttls_type","service_ready_msg","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["client_domain_switching","client_starttls_type","command_disable","name","server_domain","server_starttls_type","service_ready_msg","template","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -136,6 +143,7 @@ def get_argspec():
         server_domain=dict(type='str',),
         client_domain_switching=dict(type='list',service_group=dict(type='str',),match_string=dict(type='str',),switching_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
         client_starttls_type=dict(type='str',choices=['optional','enforced']),
+        template=dict(type='dict',logging=dict(type='str',)),
         command_disable=dict(type='list',disable_type=dict(type='str',choices=['expn','turn','vrfy'])),
         server_starttls_type=dict(type='str',choices=['optional','enforced']),
         service_ready_msg=dict(type='str',),
@@ -201,7 +209,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -212,7 +220,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

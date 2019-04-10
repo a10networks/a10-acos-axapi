@@ -38,10 +38,16 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
+    policy_name:
+        description:
+        - Key to identify parent object
     log:
         description:
         - "enable logging"
+        required: False
+    http_status_code:
+        description:
+        - "'301'= Moved permanently; '302'= Found; "
         required: False
     forward_snat:
         description:
@@ -51,9 +57,9 @@ options:
         description:
         - "uuid of the object"
         required: False
-    http_status_code:
+    drop_response_code:
         description:
-        - "'301'= Moved permanently; '302'= Found; "
+        - "Specify response code for drop action"
         required: False
     action1:
         description:
@@ -113,7 +119,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","drop_response_code","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -142,9 +148,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         log=dict(type='bool',),
+        http_status_code=dict(type='str',choices=['301','302']),
         forward_snat=dict(type='str',),
         uuid=dict(type='str',),
-        http_status_code=dict(type='str',choices=['301','302']),
+        drop_response_code=dict(type='int',),
         action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),
         fake_sg=dict(type='str',),
         user_tag=dict(type='str',),
@@ -222,7 +229,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -233,7 +240,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

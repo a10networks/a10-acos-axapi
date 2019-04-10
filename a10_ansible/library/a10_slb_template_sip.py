@@ -38,7 +38,6 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-
     server_request_header:
         description:
         - "Field server_request_header"
@@ -46,7 +45,7 @@ options:
         suboptions:
             server_request_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             server_request_erase_all:
                 description:
                 - "Erase all headers"
@@ -83,7 +82,7 @@ options:
         suboptions:
             server_response_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             insert_condition_server_response:
                 description:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
@@ -107,7 +106,7 @@ options:
                 - "Erase a SIP header (Header Name)"
             client_request_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             client_request_erase_all:
                 description:
                 - "Erase all headers"
@@ -166,7 +165,7 @@ options:
                 - "Erase a SIP header (Header Name)"
             client_response_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
     failed_server_selection_message:
         description:
         - "Send SIP message (includs status code) to client when select server fail(Format= 3 digits(1XX~6XX) space reason)"
@@ -351,7 +350,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -362,7 +361,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
