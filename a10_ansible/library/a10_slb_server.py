@@ -368,7 +368,7 @@ def build_json(title, module):
 
 def validate(params):
     # Ensure that params contains all the keys.
-    requires_one_of = sorted(['host','fqdn_host','server_ipv6_addr'])
+    requires_one_of = sorted(['host','fqdn_name','server_ipv6_addr'])
     present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
     
     errors = []
