@@ -17,6 +17,7 @@
 import errno
 import json
 import logging
+import re
 import requests
 import socket
 import sys
@@ -62,6 +63,33 @@ class HttpClient(object):
                                   ['[Errno %s]' % n for n in self.retry_errnos] +
                                   [errno.errorcode[n] for n in self.retry_errnos
                                    if n in errno.errorcode])
+
+    def _parse_show_config_resp(self, resp_text):
+        urls = []
+        config = []
+
+        resp_text = resp_text.replace('\n', ' ')[:-5]
+        pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
+        reg_match = re.search(pattern, resp_text)
+
+        while reg_match != None:
+            reg_found = reg_match.group(0)
+            resp_text = resp_text.replace(reg_found, '')
+
+            if pattern == '(a10-url:)([A-Za-z\/1-9\-])+':
+                urls.append(reg_found)
+                pattern = '(?:(?!a10-url).)+'
+            else:
+                config.append(json.loads(reg_found))
+                pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
+
+            reg_match = re.search(pattern, resp_text)
+
+        for i in range(0, len(urls)):
+            temp_url = urls[i].replace('a10-url:', '')
+            config[i]['a10-url'] = temp_url
+
+        return config
 
     def request(self, method, api_url, params={}, headers=None,
                 file_name=None, file_content=None, axapi_args=None, **kwargs):
@@ -122,7 +150,10 @@ class HttpClient(object):
             return None
 
         try:
-            r = z.json()
+            if params.get('commandList'):
+                r = self._parse_show_config_resp(z.text)
+            else:
+                r = z.json()
         except ValueError as e:
             # The response is not JSON but it still succeeded.
             if z.status_code == 200:
