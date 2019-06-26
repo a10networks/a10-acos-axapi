@@ -88,7 +88,7 @@ def run_command(module):
     cli_response = module.client.post("/axapi/v3/clideploy", cli_deploy_body)
     module.client.session.close()
 
-    result['message'] = cli_response
+    result.update(**cli_response)
     return result
 
 def main():
