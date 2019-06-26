@@ -68,6 +68,10 @@ class HttpClient(object):
         urls = []
         config = []
 
+        resp_list = resp_text.split('\r')
+        if len(resp_list) > 1:
+            resp_text = resp_list[-1]
+
         resp_text = resp_text.replace('\n', ' ')[:-5]
         pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
         reg_match = re.search(pattern, resp_text)
