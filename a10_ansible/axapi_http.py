@@ -66,7 +66,12 @@ class HttpClient(object):
 
     def _parse_show_config_resp(self, resp_text):
         urls = []
-        config = []
+        config_vals = []
+        config = {}
+
+        resp_list = resp_text.split('\r')
+        if len(resp_list) > 1:
+            resp_text = resp_list[-1]
 
         resp_text = resp_text.replace('\n', ' ')[:-5]
         pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
@@ -80,14 +85,14 @@ class HttpClient(object):
                 urls.append(reg_found)
                 pattern = '(?:(?!a10-url).)+'
             else:
-                config.append(json.loads(reg_found))
+                config_vals.append(json.loads(reg_found))
                 pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
 
             reg_match = re.search(pattern, resp_text)
 
         for i in range(0, len(urls)):
             temp_url = urls[i].replace('a10-url:', '')
-            config[i]['a10-url'] = temp_url
+            config[temp_url] = config_vals[i]
 
         return config
 
