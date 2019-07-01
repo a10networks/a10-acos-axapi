@@ -1,0 +1,30 @@
+- hosts: all 
+  name: "Get information about a single service group and it's members"
+  connection: local
+  tasks:
+  - name: Get singular service group
+    a10_slb_service_group:
+      state: noop
+      get_type: single
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_protocol: "{{ a10_protocol }}"
+      a10_port: "{{ a10_port }}"
+      name: sg1
+      protocol: "tcp"
+      lb_method: "weighted-rr"
+
+  - name: Get list of members 
+    a10_slb_service_group_member:
+      state: noop
+      get_type: list
+      a10_host: "{{ a10_host }}" 
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      service_group_name: sg1
+      host: noop
+      port: 0 
+      name: noop 
