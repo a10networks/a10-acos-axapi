@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -51,7 +54,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -84,10 +86,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -97,6 +100,7 @@ def get_argspec():
         ftp_value=dict(type='str',choices=['disable']),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -104,6 +108,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/stateful-firewall/alg/ftp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -112,10 +117,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/stateful-firewall/alg/ftp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -133,7 +143,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -152,7 +162,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -163,7 +173,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -188,6 +198,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -198,7 +211,8 @@ def create(module, result):
     payload = build_json("ftp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -223,8 +237,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ftp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -244,13 +259,30 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ftp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -285,6 +317,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

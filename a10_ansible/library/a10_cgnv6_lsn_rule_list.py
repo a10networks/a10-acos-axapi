@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
         - "uuid of the object"
@@ -47,9 +50,6 @@ options:
             sampling_enable:
                 description:
                 - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
     default:
         description:
         - "Field default"
@@ -137,7 +137,6 @@ options:
         - "Enable match domain name in http request"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -169,17 +168,18 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str',),
-        domain_ip=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder'])),uuid=dict(type='str',)),
+        domain_ip=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder']))),
         default=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder'])),uuid=dict(type='str',),rule_cfg=dict(type='list',icmp_others_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),shared=dict(type='bool',),pool=dict(type='str',)),udp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',)),tcp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp','template']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',),http_alg=dict(type='str',)),dscp_cfg=dict(type='dict',dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),action_cfg=dict(type='str',choices=['action']),action_type=dict(type='str',choices=['set-dscp']),dscp_direction=dict(type='str',choices=['inbound','outbound']),dscp_match=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','any','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63'])),proto=dict(type='str',choices=['tcp','udp','icmp','others','dscp']))),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,),
@@ -188,6 +188,7 @@ def get_argspec():
         domain_name_list=dict(type='list',name_domain=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder'])),uuid=dict(type='str',),user_tag=dict(type='str',),rule_cfg=dict(type='list',icmp_others_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),shared=dict(type='bool',),pool=dict(type='str',)),udp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',)),tcp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp','template']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',),http_alg=dict(type='str',)),dscp_cfg=dict(type='dict',dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),action_cfg=dict(type='str',choices=['action']),action_type=dict(type='str',choices=['set-dscp']),dscp_direction=dict(type='str',choices=['inbound','outbound']),dscp_match=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','any','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63'])),proto=dict(type='str',choices=['tcp','udp','icmp','others','dscp']))),
         http_match_domain_name=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -195,6 +196,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -204,11 +206,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -226,7 +233,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -245,7 +252,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -256,7 +263,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -281,6 +288,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -291,7 +301,8 @@ def create(module, result):
     payload = build_json("lsn-rule-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -316,8 +327,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("lsn-rule-list", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -337,13 +349,30 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("lsn-rule-list", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -378,6 +407,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

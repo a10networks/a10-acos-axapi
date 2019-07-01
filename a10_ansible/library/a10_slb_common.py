@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_common
 description:
-    - None
+    - SLB related commands
 short_description: Configures A10 slb.common
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,153 +35,156 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     low_latency:
         description:
-        - "None"
+        - "Enable low latency mode"
         required: False
     use_mss_tab:
         description:
-        - "None"
+        - "Use MSS based on internal table for SLB processing"
         required: False
     stats_data_disable:
         description:
-        - "None"
+        - "Disable global slb data statistics"
         required: False
     compress_block_size:
         description:
-        - "None"
+        - "Set compression block size (Compression block size in bytes)"
         required: False
     player_id_check_enable:
         description:
-        - "None"
+        - "Enable the Player id check"
         required: False
     dns_cache_enable:
         description:
-        - "None"
+        - "Enable DNS cache"
         required: False
     msl_time:
         description:
-        - "None"
+        - "Configure maximum session life, default is 2 seconds (1-40 seconds, default is 2 seconds)"
         required: False
     graceful_shutdown_enable:
         description:
-        - "None"
+        - "Enable graceful shutdown"
         required: False
     buff_thresh_hw_buff:
         description:
-        - "None"
+        - "Set hardware buffer threshold"
         required: False
     hw_syn_rr:
         description:
-        - "None"
+        - "Configure hardware SYN round robin (range 1-500000)"
         required: False
     entity:
         description:
-        - "None"
+        - "'server'= Graceful shutdown server/port only; 'virtual-server'= Graceful shutdown virtual server/port only; "
         required: False
     reset_stale_session:
         description:
-        - "None"
+        - "Send reset if session in delete queue receives a SYN packet"
         required: False
     gateway_health_check:
         description:
-        - "None"
+        - "Enable gateway health check"
         required: False
     scale_out:
         description:
-        - "None"
+        - "Enable SLB scale out"
         required: False
     graceful_shutdown:
         description:
-        - "None"
+        - "1-65535, in unit of seconds"
         required: False
     rate_limit_logging:
         description:
-        - "None"
+        - "Configure rate limit logging"
         required: False
     fast_path_disable:
         description:
-        - "None"
+        - "Disable fast path in SLB processing"
         required: False
     drop_icmp_to_vip_when_vip_down:
         description:
-        - "None"
+        - "Drop ICMP to VIP when VIP down"
         required: False
     ssli_sni_hash_enable:
         description:
-        - "None"
+        - "Enable SSLi SNI hash table"
         required: False
     hw_compression:
         description:
-        - "None"
+        - "Use hardware compression"
         required: False
     dns_vip_stateless:
         description:
-        - "None"
+        - "Enable DNS VIP stateless mode"
         required: False
     buff_thresh_sys_buff_low:
         description:
-        - "None"
+        - "Set low water mark of system buffer"
         required: False
     range_end:
         description:
-        - "None"
+        - "port range end"
         required: False
     after_disable:
         description:
-        - "None"
+        - "Graceful shutdown after disable server/port and/or virtual server/port"
         required: False
     max_local_rate:
         description:
-        - "None"
+        - "Set maximum local rate"
         required: False
     exclude_destination:
         description:
-        - "None"
+        - "'local'= Maximum local rate; 'remote'= Maximum remote rate;  (Maximum rates)"
         required: False
     dns_cache_age:
         description:
-        - "None"
+        - "Set DNS cache entry age, default is 300 seconds (1-1000000 seconds, default is 300 seconds)"
         required: False
     max_http_header_count:
         description:
-        - "None"
+        - "Set maximum number of HTTP headers allowed"
         required: False
     l2l3_trunk_lb_disable:
         description:
-        - "None"
+        - "Disable L2/L3 trunk LB"
         required: False
     sort_res:
         description:
-        - "None"
+        - "Enable SLB sorting of resource names"
         required: False
     snat_gwy_for_l3:
         description:
-        - "None"
+        - "Use source NAT gateway for L3 traffic"
         required: False
     buff_thresh_relieve_thresh:
         description:
-        - "None"
+        - "Relieve threshold"
         required: False
     dsr_health_check_enable:
         description:
-        - "None"
+        - "Enable dsr-health-check (direct server return health check)"
         required: False
     buff_thresh:
         description:
-        - "None"
+        - "Set buffer threshold"
         required: False
     dns_cache_entry_size:
         description:
-        - "None"
+        - "Set DNS cache entry size, default is 256 bytes (1-4096 bytes, default is 256 bytes)"
         required: False
     log_for_reset_unknown_conn:
         description:
-        - "None"
+        - "Log when rate exceed"
         required: False
     auto_nat_no_ip_refresh:
         description:
-        - "None"
+        - "'enable'= enable; 'disable'= disable; "
         required: False
     pkt_rate_for_reset_unknown_conn:
         description:
@@ -189,59 +192,59 @@ options:
         required: False
     buff_thresh_sys_buff_high:
         description:
-        - "None"
+        - "Set high water mark of system buffer"
         required: False
     max_buff_queued_per_conn:
         description:
-        - "None"
+        - "Set per connection buffer threshold (Buffer value range 128-4096)"
         required: False
     max_remote_rate:
         description:
-        - "None"
+        - "Set maximum remote rate"
         required: False
     ttl_threshold:
         description:
-        - "None"
+        - "Only cache DNS response with longer TTL"
         required: False
     extended_stats:
         description:
-        - "None"
+        - "Enable global slb extended statistics"
         required: False
     enable_l7_req_acct:
         description:
-        - "None"
+        - "Enable L7 request accounting"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     snat_on_vip:
         description:
-        - "None"
+        - "Enable source NAT traffic against VIP"
         required: False
     range_start:
         description:
-        - "None"
+        - "port range start"
         required: False
     honor_server_response_ttl:
         description:
-        - "None"
+        - "Honor the server reponse TTL"
         required: False
     interval:
         description:
-        - "None"
+        - "Specify the healthcheck interval, default is 5 seconds (Interval Value, in seconds (default 5))"
         required: False
     stateless_sg_multi_binding:
         description:
-        - "None"
+        - "Enable stateless service groups to be assigned to multiple L2/L3 DSR VIPs"
         required: False
     disable_adaptive_resource_check:
         description:
-        - "None"
+        - "Disable adaptive resource check based on buffer usage"
         required: False
     range:
         description:
-        - "None"
+        - "auto translate port range"
         required: False
     conn_rate_limit:
         description:
@@ -253,15 +256,15 @@ options:
                 - "Field src_ip_list"
     mss_table:
         description:
-        - "None"
+        - "Set MSS table (128-750, default is 536)"
         required: False
     timeout:
         description:
-        - "None"
+        - "Specify the healthcheck timeout value, default is 15 seconds (Timeout Value, in seconds (default 15))"
         required: False
     response_type:
         description:
-        - "None"
+        - "'single-answer'= Only cache DNS response with single answer; 'round-robin'= Round robin; "
         required: False
     ddos_protection:
         description:
@@ -276,24 +279,23 @@ options:
                 - "Field logging"
             ipd_enable_toggle:
                 description:
-                - "None"
+                - "'enable'= Enable SLB DDoS protection; 'disable'= Disable SLB DDoS protection (default); "
     override_port:
         description:
-        - "None"
+        - "Enable override port in DSR health check mode"
         required: False
     no_auto_up_on_aflex:
         description:
-        - "None"
+        - "Don't automatically mark vport up when aFleX is bound"
         required: False
     disable_server_auto_reselect:
         description:
-        - "None"
+        - "Disable auto reselection of server"
         required: False
     software:
         description:
-        - "None"
+        - "Software"
         required: False
-
 
 """
 
@@ -326,7 +328,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -394,6 +400,7 @@ def get_argspec():
         disable_server_auto_reselect=dict(type='bool',),
         software=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -401,6 +408,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/common"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -409,10 +417,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/common"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -430,7 +443,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -449,7 +462,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -460,7 +473,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -485,6 +498,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -495,7 +511,8 @@ def create(module, result):
     payload = build_json("common", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -520,8 +537,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("common", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -541,22 +559,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("common", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -570,6 +606,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -578,6 +617,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

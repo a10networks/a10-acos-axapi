@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_alg
 description:
-    - None
+    - Configure ALG
 short_description: Configures A10 fw.alg
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     ftp:
         description:
         - "Field ftp"
@@ -42,13 +45,13 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable FTP ALG default port 21; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     sip:
         description:
         - "Field sip"
@@ -56,16 +59,16 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable SIP ALG default port 5060; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     pptp:
         description:
@@ -74,13 +77,13 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable PPTP ALG default port 1723; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     rtsp:
         description:
         - "Field rtsp"
@@ -88,13 +91,13 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable RTSP ALG default port 554; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     dns:
         description:
         - "Field dns"
@@ -102,10 +105,10 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable DNS ALG default port 53; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     tftp:
         description:
         - "Field tftp"
@@ -113,13 +116,13 @@ options:
         suboptions:
             default_port_disable:
                 description:
-                - "None"
+                - "'default-port-disable'= Disable TFTP ALG default port 69; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     icmp:
         description:
         - "Field icmp"
@@ -127,11 +130,10 @@ options:
         suboptions:
             disable:
                 description:
-                - "None"
+                - "'disable'= Disable ICMP ALG which allows ICMP errors to pass the firewall; "
             uuid:
                 description:
-                - "None"
-
+                - "uuid of the object"
 
 """
 
@@ -164,14 +166,18 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ftp=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','client-port-request','client-eprt-request','server-pasv-reply','server-epsv-reply','port-retransmits','pasv-retransmits','smp-app-type-mismatch','retransmit-sanity-check-failure','smp-conn-alloc-failure','port-helper-created','pasv-helper-created','port-helper-acquire-in-del-q','port-helper-acquire-already-used','pasv-helper-acquire-in-del-q','pasv-helper-acquire-already-used','port-helper-freed-used','port-helper-freed-unused','pasv-helper-freed-used','pasv-helper-freed-unused'])),uuid=dict(type='str',)),
-        sip=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),uuid=dict(type='str',)),
+        sip=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-port-config','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),uuid=dict(type='str',)),
         uuid=dict(type='str',),
         pptp=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','calls-established','call-req-pns-call-id-mismatch','call-reply-pns-call-id-mismatch','gre-session-created','gre-session-freed','call-req-retransmit','call-req-new','call-req-ext-alloc-failure','call-reply-call-id-unknown','call-reply-retransmit','call-reply-ext-ext-alloc-failure','smp-app-type-mismatch','smp-client-call-id-mismatch','smp-sessions-created','smp-sessions-freed','smp-alloc-failure','gre-conn-creation-failure','gre-conn-ext-creation-failure','gre-no-fwd-route','gre-no-rev-route','gre-no-control-conn','gre-conn-already-exists','gre-free-no-ext','gre-free-no-smp','gre-free-smp-app-type-mismatch','control-freed','control-free-no-ext','control-free-no-smp','control-free-smp-app-type-mismatch'])),uuid=dict(type='str',)),
         rtsp=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','transport-inserted','transport-freed','transport-alloc-failure','data-session-created','data-session-freed','ext-creation-failure','transport-add-to-ext','transport-removed-from-ext','transport-too-many','transport-already-in-ext','transport-exists','transport-link-ext-failure-control','transport-link-ext-data','transport-link-ext-failure-data','transport-inserted-shadow','transport-creation-race','transport-alloc-failure-shadow','transport-put-in-del-q','transport-freed-shadow','transport-acquired-from-control','transport-found-from-prev-control','transport-acquire-failure-from-control','transport-released-from-control','transport-double-release-from-control','transport-acquired-from-data','transport-acquire-failure-from-data','transport-released-from-data','transport-double-release-from-data','transport-retry-lookup-on-data-free','transport-not-found-on-data-free','data-session-created-shadow','data-session-freed-shadow','ha-control-ext-creation-failure','ha-control-session-created','ha-data-session-created'])),uuid=dict(type='str',)),
@@ -179,6 +185,7 @@ def get_argspec():
         tftp=dict(type='dict',default_port_disable=dict(type='str',choices=['default-port-disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','session-created','helper-created','helper-freed','helper-freed-used','helper-freed-unused','helper-already-used','helper-in-rml'])),uuid=dict(type='str',)),
         icmp=dict(type='dict',disable=dict(type='str',choices=['disable']),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -186,6 +193,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/alg"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -194,10 +202,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/alg"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -215,7 +228,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -234,7 +247,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -245,7 +258,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -270,6 +283,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -280,7 +296,8 @@ def create(module, result):
     payload = build_json("alg", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -305,8 +322,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("alg", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -326,22 +344,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("alg", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -355,6 +391,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -363,6 +402,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

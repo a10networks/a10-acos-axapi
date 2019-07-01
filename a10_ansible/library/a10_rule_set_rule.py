@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_rule_set_rule
 description:
-    - None
+    - Configure rule-set rule
 short_description: Configures A10 rule-set.rule
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,17 +35,23 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    rule_set_name:
+        description:
+        - Key to identify parent object
     cgnv6_fixed_nat_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     forward_listen_on_port:
         description:
-        - "None"
+        - "Listen on port"
         required: False
-    listen_on_port_lid:
+    service_any:
         description:
-        - "None"
+        - "'any'= any; "
         required: False
     app_list:
         description:
@@ -54,36 +60,36 @@ options:
         suboptions:
             obj_grp_application:
                 description:
-                - "None"
+                - "Application object group"
             protocol:
                 description:
-                - "None"
+                - "Specify application(s)"
             protocol_tag:
                 description:
-                - "None"
+                - "'basic'= basic; 'networking'= networking; 'email'= email; 'webmails'= webmails; 'instant-messaging-and-multimedia-conferencing'= instant-messaging-and-multimedia-conferencing; 'chat'= chat; 'audio-chat'= audio-chat; 'video-chat'= video-chat; 'file-transfer'= file-transfer; 'social-networks'= social-networks; 'voip'= voip; 'web'= web; 'web-search-engines'= web-search-engines; 'web-e-commerce'= web-e-commerce; 'web-websites'= web-websites; 'mobile'= mobile; 'peer-to-peer'= peer-to-peer; 'file-management'= file-management; 'database'= database; 'enterprise'= enterprise; 'software-update'= software-update; 'gaming'= gaming; 'aaa'= aaa; 'remote-access'= remote-access; 'multimedia-streaming'= multimedia-streaming; 'vpn-tunnels'= vpn-tunnels; 'cdn'= cdn; 'news-portal'= news-portal; 'classified-ads'= classified-ads; 'advertising'= advertising; 'analytics-and-statistics'= analytics-and-statistics; 'adult-content'= adult-content; 'anonymizers-and-proxies'= anonymizers-and-proxies; 'blog'= blog; 'forum'= forum; 'standards-based'= standards-based; 'scada'= scada; 'internet-of-things'= internet-of-things; 'cloud-based-services'= cloud-based-services; "
     src_threat_list:
         description:
-        - "None"
+        - "Bind threat-list for source IP based filtering"
         required: False
     cgnv6_policy:
         description:
-        - "None"
+        - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT; 'static-nat'= Apply CGNv6 Static NAT; "
         required: False
     cgnv6_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     forward_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
-    lid:
+    cgnv6_lsn_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     listen_on_port:
         description:
-        - "None"
+        - "Listen on port"
         required: False
     move_rule:
         description:
@@ -92,41 +98,41 @@ options:
         suboptions:
             location:
                 description:
-                - "None"
+                - "'top'= top; 'before'= before; 'after'= after; 'bottom'= bottom; "
             target_rule:
                 description:
                 - "Field target_rule"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     idle_timeout:
         description:
-        - "None"
+        - "TCP/UDP idle-timeout"
         required: False
-    ip_version:
+    fwlog:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     src_zone_any:
         description:
-        - "None"
+        - "'any'= any; "
         required: False
-    listen_on_port_lidlog:
+    ip_version:
         description:
-        - "None"
+        - "'v4'= IPv4 rule; 'v6'= IPv6 rule; "
         required: False
     application_any:
         description:
-        - "None"
+        - "'any'= any; "
         required: False
-    src_zone:
+    action:
         description:
-        - "None"
+        - "'permit'= permit; 'deny'= deny; 'reset'= reset; "
         required: False
     policy:
         description:
-        - "None"
+        - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; "
         required: False
     source_list:
         description:
@@ -135,38 +141,86 @@ options:
         suboptions:
             src_ipv6_subnet:
                 description:
-                - "None"
+                - "IPv6 IP Address"
             src_obj_network:
                 description:
-                - "None"
+                - "Network object"
             src_slb_server:
                 description:
-                - "None"
+                - "SLB Real server name"
             src_obj_grp_network:
                 description:
-                - "None"
+                - "Network object group"
             src_ip_subnet:
                 description:
-                - "None"
+                - "IPv4 IP Address"
     dst_zone_any:
         description:
-        - "None"
+        - "'any'= any; "
         required: False
     status:
         description:
-        - "None"
-        required: False
-    lidlog:
-        description:
-        - "None"
+        - "'enable'= Enable rule; 'disable'= Disable rule; "
         required: False
     dst_ipv4_any:
         description:
-        - "None"
+        - "'any'= Any IPv4 address; "
         required: False
+    src_zone:
+        description:
+        - "Zone name"
+        required: False
+    src_ipv4_any:
+        description:
+        - "'any'= Any IPv4 address; "
+        required: False
+    log:
+        description:
+        - "Enable logging"
+        required: False
+    dst_zone:
+        description:
+        - "Zone name"
+        required: False
+    dst_class_list:
+        description:
+        - "Match destination IP against class-list"
+        required: False
+    src_ipv6_any:
+        description:
+        - "'any'= Any IPv6 address; "
+        required: False
+    dst_threat_list:
+        description:
+        - "Bind threat-list for destination IP based filtering"
+        required: False
+    remark:
+        description:
+        - "Rule entry comment (Notes for this rule)"
+        required: False
+    src_class_list:
+        description:
+        - "Match source IP against class-list"
+        required: False
+    name:
+        description:
+        - "Rule name"
+        required: True
     cgnv6_lsn_lid:
         description:
-        - "None"
+        - "LSN LID"
+        required: False
+    track_application:
+        description:
+        - "Enable application statistic"
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    dst_ipv6_any:
+        description:
+        - "'any'= Any IPv6 address; "
         required: False
     sampling_enable:
         description:
@@ -175,67 +229,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
-    src_ipv4_any:
-        description:
-        - "None"
-        required: False
-    fwlog:
-        description:
-        - "None"
-        required: False
-    dst_zone:
-        description:
-        - "None"
-        required: False
-    dst_class_list:
-        description:
-        - "None"
-        required: False
-    log:
-        description:
-        - "None"
-        required: False
-    dst_threat_list:
-        description:
-        - "None"
-        required: False
-    remark:
-        description:
-        - "None"
-        required: False
-    src_class_list:
-        description:
-        - "None"
-        required: False
-    name:
-        description:
-        - "None"
-        required: True
-    src_ipv6_any:
-        description:
-        - "None"
-        required: False
-    track_application:
-        description:
-        - "None"
-        required: False
-    user_tag:
-        description:
-        - "None"
-        required: False
-    cgnv6_lsn_log:
-        description:
-        - "None"
-        required: False
-    dst_ipv6_any:
-        description:
-        - "None"
-        required: False
-    service_any:
-        description:
-        - "None"
-        required: False
+                - "'all'= all; 'hit-count'= Hit counts; 'permit-bytes'= Permitted bytes counter; 'deny-bytes'= Denied bytes counter; 'reset-bytes'= Reset bytes counter; 'active-session-tcp'= Active TCP session counter; 'active-session-udp'= Active UDP session counter; 'active-session-icmp'= Active ICMP session counter; 'active-session-other'= Active other protocol session counter; 'session-tcp'= TCP session counter; 'session-udp'= UDP session counter; 'session-icmp'= ICMP session counter; 'session-other'= Other protocol session counter; 'active-session-sctp'= Active SCTP session counter; 'session-sctp'= SCTP session counter; "
     service_list:
         description:
         - "Field service_list"
@@ -243,82 +237,82 @@ options:
         suboptions:
             gtp_template:
                 description:
-                - "None"
+                - "Configure GTP template (GTP Template Name)"
             icmp_type:
                 description:
-                - "None"
+                - "ICMP type number"
             range_dst_port:
                 description:
-                - "None"
+                - "Port range (Starting Port Number)"
             icmpv6_code:
                 description:
-                - "None"
+                - "ICMPv6 code number"
             gt_src_port:
                 description:
-                - "None"
+                - "Greater than the port number"
             lt_src_port:
                 description:
-                - "None"
+                - "Lower than the port number"
             proto_id:
                 description:
-                - "None"
+                - "Protocol ID"
             lt_dst_port:
                 description:
-                - "None"
+                - "Lower than the port number"
             alg:
                 description:
-                - "None"
+                - "'FTP'= FTP; 'TFTP'= TFTP; 'SIP'= SIP; 'DNS'= DNS; 'PPTP'= PPTP; 'RTSP'= RTSP; "
             obj_grp_service:
                 description:
-                - "None"
+                - "service object group"
             icmpv6_type:
                 description:
-                - "None"
+                - "ICMPv6 type number"
             icmp_code:
                 description:
-                - "None"
+                - "ICMP code number"
             range_src_port:
                 description:
-                - "None"
+                - "Port range (Starting Port Number)"
             eq_dst_port:
                 description:
-                - "None"
+                - "Equal to the port number"
             sctp_template:
                 description:
-                - "None"
+                - "SCTP Template"
             icmp:
                 description:
-                - "None"
+                - "ICMP"
             protocols:
                 description:
-                - "None"
+                - "'tcp'= tcp; 'udp'= udp; 'sctp'= sctp; "
             gt_dst_port:
                 description:
-                - "None"
+                - "Greater than the port number"
             port_num_end_src:
                 description:
-                - "None"
+                - "Ending Port Number"
             special_v6_type:
                 description:
-                - "None"
+                - "'any-type'= Any ICMPv6 type; 'dest-unreachable'= Type 1, destination unreachable; 'echo-reply'= Type 129, echo reply; 'echo-request'= Type 128, echo request; 'packet-too-big'= Type 2, packet too big; 'param-prob'= Type 4, parameter problem; 'time-exceeded'= Type 3, time exceeded; "
             eq_src_port:
                 description:
-                - "None"
+                - "Equal to the port number"
             special_v6_code:
                 description:
-                - "None"
+                - "'any-code'= Any ICMPv6 code; 'addr-unreachable'= Code 3, address unreachable; 'admin-prohibited'= Code 1, admin prohibited; 'no-route'= Code 0, no route to destination; 'not-neighbour'= Code 2, not neighbor; 'port-unreachable'= Code 4, destination port unreachable; "
             icmpv6:
                 description:
-                - "None"
+                - "ICMPv6"
             port_num_end_dst:
                 description:
-                - "None"
+                - "Ending Port Number"
             special_code:
                 description:
-                - "None"
+                - "'any-code'= Any ICMP code; 'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1, destination host unreachable; 'network-unreachable'= Code 0, destination network unreachable; 'port-unreachable'= Code 3, destination port unreachable; 'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'= Code 5, source route failed; "
             special_type:
                 description:
-                - "None"
+                - "'any-type'= Any ICMP type; 'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-reply'= Type 16, information reply; 'info-request'= Type 15, information request; 'mask-reply'= Type 18, address mask reply; 'mask-request'= Type 17, address mask request; 'parameter-problem'= Type 12, parameter problem; 'redirect'= Type 5, redirect message; 'source-quench'= Type 4, source quench; 'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp; 'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3, destination unreachable; "
     dest_list:
         description:
         - "Field dest_list"
@@ -326,31 +320,26 @@ options:
         suboptions:
             dst_obj_network:
                 description:
-                - "None"
+                - "Network object"
             dst_obj_grp_network:
                 description:
-                - "None"
+                - "Network object group"
             dst_slb_vserver:
                 description:
-                - "None"
+                - "SLB Virtual server name"
             dst_ip_subnet:
                 description:
-                - "None"
+                - "IPv4 IP Address"
             dst_ipv6_subnet:
                 description:
-                - "None"
+                - "IPv6 IP Address"
             dst_slb_server:
                 description:
-                - "None"
-    action:
-        description:
-        - "None"
-        required: False
+                - "SLB Real server name"
     fw_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
-
 
 """
 
@@ -364,7 +353,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","policy","remark","sampling_enable","service_any","service_list","source_list","src_class_list","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","listen_on_port","log","move_rule","name","policy","remark","sampling_enable","service_any","service_list","source_list","src_class_list","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -383,7 +372,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -391,49 +384,50 @@ def get_argspec():
     rv.update(dict(
         cgnv6_fixed_nat_log=dict(type='bool',),
         forward_listen_on_port=dict(type='bool',),
-        listen_on_port_lid=dict(type='int',),
-        app_list=dict(type='list',obj_grp_application=dict(type='str',),protocol=dict(type='str',),protocol_tag=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails'])),
+        service_any=dict(type='str',choices=['any']),
+        app_list=dict(type='list',obj_grp_application=dict(type='str',),protocol=dict(type='str',),protocol_tag=dict(type='str',choices=['basic','networking','email','webmails','instant-messaging-and-multimedia-conferencing','chat','audio-chat','video-chat','file-transfer','social-networks','voip','web','web-search-engines','web-e-commerce','web-websites','mobile','peer-to-peer','file-management','database','enterprise','software-update','gaming','aaa','remote-access','multimedia-streaming','vpn-tunnels','cdn','news-portal','classified-ads','advertising','analytics-and-statistics','adult-content','anonymizers-and-proxies','blog','forum','standards-based','scada','internet-of-things','cloud-based-services'])),
         src_threat_list=dict(type='str',),
-        cgnv6_policy=dict(type='str',choices=['lsn-lid','fixed-nat']),
+        cgnv6_policy=dict(type='str',choices=['lsn-lid','fixed-nat','static-nat']),
         cgnv6_log=dict(type='bool',),
         forward_log=dict(type='bool',),
-        lid=dict(type='int',),
+        cgnv6_lsn_log=dict(type='bool',),
         listen_on_port=dict(type='bool',),
         move_rule=dict(type='dict',location=dict(type='str',choices=['top','before','after','bottom']),target_rule=dict(type='str',)),
         uuid=dict(type='str',),
         idle_timeout=dict(type='int',),
-        ip_version=dict(type='str',choices=['v4','v6']),
+        fwlog=dict(type='bool',),
         src_zone_any=dict(type='str',choices=['any']),
-        listen_on_port_lidlog=dict(type='bool',),
+        ip_version=dict(type='str',choices=['v4','v6']),
         application_any=dict(type='str',choices=['any']),
-        src_zone=dict(type='str',),
+        action=dict(type='str',choices=['permit','deny','reset']),
         policy=dict(type='str',choices=['cgnv6','forward']),
         source_list=dict(type='list',src_ipv6_subnet=dict(type='str',),src_obj_network=dict(type='str',),src_slb_server=dict(type='str',),src_obj_grp_network=dict(type='str',),src_ip_subnet=dict(type='str',)),
         dst_zone_any=dict(type='str',choices=['any']),
         status=dict(type='str',choices=['enable','disable']),
-        lidlog=dict(type='bool',),
         dst_ipv4_any=dict(type='str',choices=['any']),
-        cgnv6_lsn_lid=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','permit-packets','deny-packets','reset-packets','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp'])),
+        src_zone=dict(type='str',),
         src_ipv4_any=dict(type='str',choices=['any']),
-        fwlog=dict(type='bool',),
+        log=dict(type='bool',),
         dst_zone=dict(type='str',),
         dst_class_list=dict(type='str',),
-        log=dict(type='bool',),
+        src_ipv6_any=dict(type='str',choices=['any']),
         dst_threat_list=dict(type='str',),
         remark=dict(type='str',),
         src_class_list=dict(type='str',),
         name=dict(type='str',required=True,),
-        src_ipv6_any=dict(type='str',choices=['any']),
+        cgnv6_lsn_lid=dict(type='int',),
         track_application=dict(type='bool',),
         user_tag=dict(type='str',),
-        cgnv6_lsn_log=dict(type='bool',),
         dst_ipv6_any=dict(type='str',choices=['any']),
-        service_any=dict(type='str',choices=['any']),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp'])),
         service_list=dict(type='list',gtp_template=dict(type='str',),icmp_type=dict(type='int',),range_dst_port=dict(type='int',),icmpv6_code=dict(type='int',),gt_src_port=dict(type='int',),lt_src_port=dict(type='int',),proto_id=dict(type='int',),lt_dst_port=dict(type='int',),alg=dict(type='str',choices=['FTP','TFTP','SIP','DNS','PPTP','RTSP']),obj_grp_service=dict(type='str',),icmpv6_type=dict(type='int',),icmp_code=dict(type='int',),range_src_port=dict(type='int',),eq_dst_port=dict(type='int',),sctp_template=dict(type='str',),icmp=dict(type='bool',),protocols=dict(type='str',choices=['tcp','udp','sctp']),gt_dst_port=dict(type='int',),port_num_end_src=dict(type='int',),special_v6_type=dict(type='str',choices=['any-type','dest-unreachable','echo-reply','echo-request','packet-too-big','param-prob','time-exceeded']),eq_src_port=dict(type='int',),special_v6_code=dict(type='str',choices=['any-code','addr-unreachable','admin-prohibited','no-route','not-neighbour','port-unreachable']),icmpv6=dict(type='bool',),port_num_end_dst=dict(type='int',),special_code=dict(type='str',choices=['any-code','frag-required','host-unreachable','network-unreachable','port-unreachable','proto-unreachable','route-failed']),special_type=dict(type='str',choices=['any-type','echo-reply','echo-request','info-reply','info-request','mask-reply','mask-request','parameter-problem','redirect','source-quench','time-exceeded','timestamp','timestamp-reply','dest-unreachable'])),
         dest_list=dict(type='list',dst_obj_network=dict(type='str',),dst_obj_grp_network=dict(type='str',),dst_slb_vserver=dict(type='str',),dst_ip_subnet=dict(type='str',),dst_ipv6_subnet=dict(type='str',),dst_slb_server=dict(type='str',)),
-        action=dict(type='str',choices=['permit','deny','reset']),
         fw_log=dict(type='bool',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        rule_set_name=dict(type='str', required=True),
     ))
 
     return rv
@@ -441,21 +435,29 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
+    url_base = "/axapi/v3/rule-set/{rule_set_name}/rule/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
+    f_dict["rule_set_name"] = module.params["rule_set_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
+    url_base = "/axapi/v3/rule-set/{rule_set_name}/rule/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
+    f_dict["rule_set_name"] = module.params["rule_set_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -473,7 +475,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -492,7 +494,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -503,7 +505,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -528,6 +530,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -538,7 +543,8 @@ def create(module, result):
     payload = build_json("rule", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -563,8 +569,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("rule", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -584,22 +591,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("rule", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -613,6 +638,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -621,6 +649,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

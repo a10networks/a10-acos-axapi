@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_global
 description:
-    - None
+    - Configure firewall parameters
 short_description: Configures A10 fw.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,36 +35,24 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     alg_processing:
         description:
-        - "None"
+        - "'honor-rule-set'= Honors firewall rule-sets (Default); 'override-rule-set'= Override firewall rule-sets; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     listen_on_port_timeout:
         description:
-        - "None"
+        - "STUN timeout (default= 2 minutes)"
         required: False
     disable_ip_fw_sessions:
         description:
-        - "None"
-        required: False
-    disable_app_list:
-        description:
-        - "Field disable_app_list"
-        required: False
-        suboptions:
-            disable_application_protocol:
-                description:
-                - "None"
-            disable_application_category:
-                description:
-                - "None"
-    extended_matching:
-        description:
-        - "None"
+        - "disable create sessions for non TCP/UDP/ICMP"
         required: False
     sampling_enable:
         description:
@@ -73,12 +61,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'tcp_fullcone_created'= TCP Full-cone Created; 'tcp_fullcone_freed'= TCP Full-cone Freed; 'udp_fullcone_created'= UDP Full-cone Created; 'udp_fullcone_freed'= UDP Full-cone Freed; 'fullcone_creation_failure'= Full-Cone Creation Failure; 'data_session_created'= Data Session Created; 'data_session_freed'= Data Session Freed; 'fullcone_in_del_q'= Full-cone session found in delete queue; 'fullcone_retry_lookup'= Full-cone session retry look-up; 'fullcone_not_found'= Full-cone session not found; 'fullcone_overflow_eim'= Full-cone Session EIM Overflow; 'fullcone_overflow_eif'= Full-cone Session EIF Overflow; 'udp_fullcone_created_shadow'= Total UDP Full-cone sessions created; 'tcp_fullcone_created_shadow'= Total TCP Full-cone sessions created; 'udp_fullcone_freed_shadow'= Total UDP Full-cone sessions freed; 'tcp_fullcone_freed_shadow'= Total TCP Full-cone sessions freed; 'fullcone_created'= Total Full-cone sessions created; 'fullcone_freed'= Total Full-cone sessions freed; 'fullcone_ext_too_many'= Fullcone Extension Too Many; 'fullcone_ext_mem_allocated'= Fullcone Extension Memory Allocated; 'fullcone_ext_mem_alloc_failure'= Fullcone Extension Memory Allocate Failure; 'fullcone_ext_mem_alloc_init_faulure'= Fullcone Extension Initialization Failure; 'fullcone_ext_mem_freed'= Fullcone Extension Memory Freed; 'fullcone_ext_added'= Fullcone Extension Added; 'ha_fullcone_failure'= HA Full-cone Session Failure; 'data_session_created_shadow'= Total Data Sessions Created; 'data_session_freed_shadow'= Total Data Sessions Freed; 'active_fullcone_session'= Total Active Full-cone sessions; "
     permit_default_action:
         description:
-        - "None"
+        - "'forward'= Forward; 'next-service-mode'= Service to be applied chosen based on configuration; "
         required: False
-
 
 """
 
@@ -92,7 +79,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alg_processing","disable_app_list","disable_ip_fw_sessions","extended_matching","listen_on_port_timeout","permit_default_action","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["alg_processing","disable_ip_fw_sessions","listen_on_port_timeout","permit_default_action","sampling_enable","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -111,7 +98,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -121,11 +112,10 @@ def get_argspec():
         uuid=dict(type='str',),
         listen_on_port_timeout=dict(type='int',),
         disable_ip_fw_sessions=dict(type='bool',),
-        disable_app_list=dict(type='list',disable_application_protocol=dict(type='str',),disable_application_category=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails'])),
-        extended_matching=dict(type='str',choices=['disable']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp_fullcone_created','tcp_fullcone_freed','udp_fullcone_created','udp_fullcone_freed','fullcone_creation_failure','data_session_created','data_session_freed','fullcone_in_del_q','fullcone_retry_lookup','fullcone_not_found','fullcone_overflow_eim','fullcone_overflow_eif','udp_fullcone_created_shadow','tcp_fullcone_created_shadow','udp_fullcone_freed_shadow','tcp_fullcone_freed_shadow','fullcone_created','fullcone_freed','fullcone_ext_too_many','fullcone_ext_mem_allocated','fullcone_ext_mem_alloc_failure','fullcone_ext_mem_alloc_init_faulure','fullcone_ext_mem_freed','fullcone_ext_added','ha_fullcone_failure','data_session_created_shadow','data_session_freed_shadow','active_fullcone_session','limit-entry-failure','limit-entry-allocated','limit-entry-mem-freed','limit-entry-created','limit-entry-not-in-bucket','limit-entry-marked-deleted','invalid-lid-drop','src-session-limit-exceeded','limit-exceeded','limit-entry-per-cpu-mem-allocated','limit-entry-per-cpu-mem-allocation-failed','limit-entry-per-cpu-mem-freed','alg_default_port_disable'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp_fullcone_created','tcp_fullcone_freed','udp_fullcone_created','udp_fullcone_freed','fullcone_creation_failure','data_session_created','data_session_freed','fullcone_in_del_q','fullcone_retry_lookup','fullcone_not_found','fullcone_overflow_eim','fullcone_overflow_eif','udp_fullcone_created_shadow','tcp_fullcone_created_shadow','udp_fullcone_freed_shadow','tcp_fullcone_freed_shadow','fullcone_created','fullcone_freed','fullcone_ext_too_many','fullcone_ext_mem_allocated','fullcone_ext_mem_alloc_failure','fullcone_ext_mem_alloc_init_faulure','fullcone_ext_mem_freed','fullcone_ext_added','ha_fullcone_failure','data_session_created_shadow','data_session_freed_shadow','active_fullcone_session'])),
         permit_default_action=dict(type='str',choices=['forward','next-service-mode'])
     ))
+   
 
     return rv
 
@@ -133,6 +123,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -141,10 +132,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -162,7 +158,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -181,7 +177,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -192,7 +188,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -217,6 +213,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -227,7 +226,8 @@ def create(module, result):
     payload = build_json("global", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -252,8 +252,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("global", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -273,22 +274,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("global", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -302,6 +321,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -310,6 +332,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

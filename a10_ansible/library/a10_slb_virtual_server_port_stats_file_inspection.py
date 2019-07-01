@@ -12,7 +12,7 @@ DOCUMENTATION = """
 module: a10_slb_virtual_server_port_stats_file_inspection
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.file.inspection
+short_description: Configures A10 slb.virtual-server.port.stats.file-inspection
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -56,7 +56,6 @@ options:
                 description:
                 - "Field file_inspection"
 
-
 """
 
 EXAMPLES = """
@@ -88,16 +87,17 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',file_inspection=dict(type='dict',icap_200=dict(type='str',),bypass_service_down=dict(type='str',),upload_good_ext_inspect=dict(type='str',),upload_bad_blocked=dict(type='str',),bad_file_size_less_1m=dict(type='str',),suspect_file_size_1_5m=dict(type='str',),orig_conn_bytes_bypassed=dict(type='str',),upload_suspect_allowed=dict(type='str',),suspect_file_size_5_8m=dict(type='str',),total_file_size_less_1m=dict(type='str',),upload_bad_ext_inspect=dict(type='str',),orig_conn_bytes_sent=dict(type='str',),total_file_size_1_5m=dict(type='str',),download_suspect_allowed=dict(type='str',),non_supported_file=dict(type='str',),icap_204=dict(type='str',),suspect_file_size_8_32m=dict(type='str',),total_file_size_5_8m=dict(type='str',),icap_connect_fail=dict(type='str',),upload_good_blocked=dict(type='str',),icap_other_status_code=dict(type='str',),bypass_aflex=dict(type='str',),good_file_size_over_32m=dict(type='str',),total_suspect_bandwidth=dict(type='str',),orig_conn_bytes_received=dict(type='str',),download_suspect_ext_inspect=dict(type='str',),good_file_size_8_32m=dict(type='str',),reset_service_down=dict(type='str',),icap_500=dict(type='str',),bad_file_size_5_8m=dict(type='str',),upload_suspect_ext_inspect=dict(type='str',),bypass_large_file=dict(type='str',),icap_bytes_sent=dict(type='str',),download_good_allowed=dict(type='str',),download_bad_blocked=dict(type='str',),total_bad_bandwidth=dict(type='str',),bad_file_size_over_32m=dict(type='str',),download_bad_ext_inspect=dict(type='str',),transactions_aborted=dict(type='str',),total_good_bandwidth=dict(type='str',),bypass_non_inspection=dict(type='str',),download_good_blocked=dict(type='str',),total_bandwidth=dict(type='str',),download_bad_allowed=dict(type='str',),bypass_buffered_overlimit=dict(type='str',),download_good_ext_inspect=dict(type='str',),download_suspect_blocked=dict(type='str',),upload_suspect_blocked=dict(type='str',),good_file_size_less_1m=dict(type='str',),bad_file_size_8_32m=dict(type='str',),icap_connection_rst=dict(type='str',),total_file_size_over_32m=dict(type='str',),good_file_size_1_5m=dict(type='str',),suspect_file_size_less_1m=dict(type='str',),icap_bytes_received=dict(type='str',),icap_connection_established=dict(type='str',),icap_connection_closed=dict(type='str',),good_file_size_5_8m=dict(type='str',),transactions_alloc=dict(type='str',),upload_bad_allowed=dict(type='str',),icap_connection_created=dict(type='str',),bypass_max_concurrent_files_reached=dict(type='str',),total_file_size_8_32m=dict(type='str',),transactions_free=dict(type='str',),bypass_service_disabled=dict(type='str',),upload_good_allowed=dict(type='str',),transactions_failure=dict(type='str',),suspect_file_size_over_32m=dict(type='str',),bad_file_size_1_5m=dict(type='str',)))
+        stats=dict(type='dict',file_inspection=dict(type='dict',file_inspection_icap_500=dict(type='str',),file_inspection_download_allowed=dict(type='str',),file_inspection_upload_allowed=dict(type='str',),file_inspection_download_suspect=dict(type='str',),file_inspection_upload_blocked=dict(type='str',),file_inspection_bypass_aflex=dict(type='str',),file_inspection_reset_service_down=dict(type='str',),file_inspection_bypass_large_file=dict(type='str',),file_inspection_download_blocked=dict(type='str',),file_inspection_bypass_service_disabled=dict(type='str',),file_inspection_icap_connect_fail=dict(type='str',),file_inspection_upload_suspect=dict(type='str',),file_inspection_icap_204=dict(type='str',),file_inspection_icap_other_status_code=dict(type='str',),file_inspection_bypass_service_down=dict(type='str',),file_inspection_icap_200=dict(type='str',)))
     ))
    
     # Parent keys
@@ -133,6 +133,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -180,7 +184,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -204,6 +208,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -285,7 +292,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -301,12 +309,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -321,6 +328,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_web_category
 description:
-    - None
+    - Web-Category Commands
 short_description: Configures A10 web-category
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,69 +35,48 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     cloud_query_disable:
         description:
-        - "None"
+        - "Disables cloud queries for URL's not present in local database(default enable)"
         required: False
     rtu_update_interval:
         description:
-        - "None"
+        - "Interval to check for real time updates if enabled in mins(default 60)"
         required: False
     enable:
         description:
-        - "None"
+        - "Enable BrightCloud SDK"
         required: False
-    intercepted_urls:
-        description:
-        - "Field intercepted_urls"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
     use_mgmt_port:
         description:
-        - "None"
+        - "Use management interface for all communication with BrightCloud"
         required: False
     database_server:
         description:
-        - "None"
+        - "BrightCloud Database Server"
         required: False
     db_update_time:
         description:
-        - "None"
+        - "Time of day to update database (default= 00=00)"
         required: False
     server_timeout:
         description:
-        - "None"
+        - "BrightCloud Servers Timeout in seconds (default= 15s)"
         required: False
     server:
         description:
-        - "None"
+        - "BrightCloud Query Server"
         required: False
-    url:
-        description:
-        - "Field url"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
-    bypassed_urls:
-        description:
-        - "Field bypassed_urls"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
     remote_syslog_enable:
         description:
-        - "None"
+        - "Enable data plane logging to a remote syslog server"
         required: False
     rtu_update_disable:
         description:
-        - "None"
+        - "Disables real time updates(default enable)"
         required: False
     proxy_server:
         description:
@@ -106,42 +85,34 @@ options:
         suboptions:
             username:
                 description:
-                - "None"
+                - "Username for proxy authentication"
             domain:
                 description:
-                - "None"
+                - "Realm for NTLM authentication"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             https_port:
                 description:
-                - "None"
+                - "Proxy server HTTPS port(HTTP port will be used if not configured)"
             encrypted:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
             proxy_host:
                 description:
-                - "None"
+                - "Proxy server hostname or IP address"
             auth_type:
                 description:
-                - "None"
+                - "'ntlm'= NTLM authentication(default); 'basic'= Basic authentication; "
             http_port:
                 description:
-                - "None"
+                - "Proxy server HTTP port"
             password:
                 description:
-                - "None"
+                - "Password for proxy authentication"
             secret_string:
                 description:
-                - "None"
-    license:
-        description:
-        - "Field license"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
+                - "password value"
     category_list_list:
         description:
         - "Field category_list_list"
@@ -149,281 +120,280 @@ options:
         suboptions:
             streaming_media:
                 description:
-                - "None"
+                - "Category Streaming Media"
             weapons:
                 description:
-                - "None"
+                - "Category Weapons"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             entertainment_and_arts:
                 description:
-                - "None"
+                - "Category Entertainment and Arts"
             cdns:
                 description:
-                - "None"
+                - "Category CDNs"
             financial_services:
                 description:
-                - "None"
+                - "Category Financial Services"
             social_network:
                 description:
-                - "None"
+                - "Category Social Network"
             government:
                 description:
-                - "None"
+                - "Category Government"
             web_advertisements:
                 description:
-                - "None"
+                - "Category Web Advertisements"
             fashion_and_beauty:
                 description:
-                - "None"
+                - "Category Fashion and Beauty"
             computer_and_internet_security:
                 description:
-                - "None"
+                - "Category Computer and Internet Security"
             name:
                 description:
-                - "None"
+                - "Web Category List name"
             real_estate:
                 description:
-                - "None"
+                - "Category Real Estate"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             web_based_email:
                 description:
-                - "None"
+                - "Category Web based email"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             recreation_and_hobbies:
                 description:
-                - "None"
+                - "Category Recreation and Hobbies"
             business_and_economy:
                 description:
-                - "None"
+                - "Category Business and Economy"
             confirmed_spam_sources:
                 description:
-                - "None"
+                - "Category Confirmed SPAM Sources"
             philosophy_and_politics:
                 description:
-                - "None"
+                - "Category Philosophy and Political Advocacy"
             society:
                 description:
-                - "None"
+                - "Category Society"
             motor_vehicles:
                 description:
-                - "None"
+                - "Category Motor Vehicles"
             proxy_avoid_and_anonymizers:
                 description:
-                - "None"
+                - "Category Proxy Avoid and Anonymizers"
             gross:
                 description:
-                - "None"
+                - "Category Gross"
             legal:
                 description:
-                - "None"
+                - "Category Legal"
             bot_nets:
                 description:
-                - "None"
+                - "Category Bot Nets"
             religion:
                 description:
-                - "None"
+                - "Category Religion"
             private_ip_addresses:
                 description:
-                - "None"
+                - "Category Private IP Addresses"
             dating:
                 description:
-                - "None"
+                - "Category Dating"
             pay_to_surf:
                 description:
-                - "None"
+                - "Category Pay to Surf"
             reference_and_research:
                 description:
-                - "None"
+                - "Category Reference and Research"
             keyloggers_and_monitoring:
                 description:
-                - "None"
+                - "Category Keyloggers and Monitoring"
             kids:
                 description:
-                - "None"
+                - "Category Kids"
             online_greeting_cards:
                 description:
-                - "None"
+                - "Category Online Greeting cards"
             violence:
                 description:
-                - "None"
+                - "Category Violence"
             games:
                 description:
-                - "None"
+                - "Category Games"
             auctions:
                 description:
-                - "None"
+                - "Category Auctions"
             military:
                 description:
-                - "None"
+                - "Category Military"
             alcohol_and_tobacco:
                 description:
-                - "None"
+                - "Category Alcohol and Tobacco"
             stock_advice_and_tools:
                 description:
-                - "None"
+                - "Category Stock Advice and Tools"
             news_and_media:
                 description:
-                - "None"
+                - "Category News and Media"
             cult_and_occult:
                 description:
-                - "None"
+                - "Category Cult and Occult"
             food_and_dining:
                 description:
-                - "None"
+                - "Category Food and Dining"
             cheating:
                 description:
-                - "None"
+                - "Category Cheating"
             illegal:
                 description:
-                - "None"
+                - "Category Illegal"
             local_information:
                 description:
-                - "None"
+                - "Category Local Information"
             sports:
                 description:
-                - "None"
+                - "Category Sports"
             music:
                 description:
-                - "None"
+                - "Category Music"
             shareware_and_freeware:
                 description:
-                - "None"
+                - "Category Shareware and Freeware"
             spyware_and_adware:
                 description:
-                - "None"
+                - "Category Spyware and Adware"
             questionable:
                 description:
-                - "None"
+                - "Category Questionable"
             shopping:
                 description:
-                - "None"
+                - "Category Shopping"
             drugs:
                 description:
-                - "None"
+                - "Category Abused Drugs"
             web_hosting_sites:
                 description:
-                - "None"
+                - "Category Web Hosting Sites"
             malware_sites:
                 description:
-                - "None"
+                - "Category Malware Sites"
             dynamic_comment:
                 description:
-                - "None"
+                - "Category Dynamic Comment"
             translation:
                 description:
-                - "None"
+                - "Category Translation"
             job_search:
                 description:
-                - "None"
+                - "Category Job Search"
             hunting_and_fishing:
                 description:
-                - "None"
+                - "Category Hunting and Fishing"
             search_engines:
                 description:
-                - "None"
+                - "Category Search Engines"
             educational_institutions:
                 description:
-                - "None"
+                - "Category Educational Institutions"
             internet_portals:
                 description:
-                - "None"
+                - "Category Internet Portals"
             computer_and_internet_info:
                 description:
-                - "None"
+                - "Category Computer and Internet Info"
             abortion:
                 description:
-                - "None"
+                - "Category Abortion"
             hacking:
                 description:
-                - "None"
+                - "Category Hacking"
             adult_and_pornography:
                 description:
-                - "None"
+                - "Category Adult and Pornography"
             phishing_and_other_fraud:
                 description:
-                - "None"
+                - "Category Phishing and Other Frauds"
             nudity:
                 description:
-                - "None"
+                - "Category Nudity"
             health_and_medicine:
                 description:
-                - "None"
+                - "Category Health and Medicine"
             marijuana:
                 description:
-                - "None"
+                - "Category Marijuana"
             home_and_garden:
                 description:
-                - "None"
+                - "Category Home and Garden"
             personal_storage:
                 description:
-                - "None"
+                - "Category Personal Storage"
             sex_education:
                 description:
-                - "None"
+                - "Category Sex Education"
             swimsuits_and_intimate_apparel:
                 description:
-                - "None"
+                - "Category Swimsuits and Intimate Apparel"
             dead_sites:
                 description:
-                - "None"
+                - "Category Dead Sites (db Ops only)"
             travel:
                 description:
-                - "None"
+                - "Category Travel"
             hate_and_racism:
                 description:
-                - "None"
+                - "Category Hate and Racism"
             open_http_proxies:
                 description:
-                - "None"
+                - "Category Open HTTP Proxies"
             internet_communications:
                 description:
-                - "None"
+                - "Category Internet Communications"
             gambling:
                 description:
-                - "None"
+                - "Category Gambling"
             peer_to_peer:
                 description:
-                - "None"
+                - "Category Peer to Peer"
             uncategorized:
                 description:
-                - "None"
+                - "Uncategorized URLs"
             personal_sites_and_blogs:
                 description:
-                - "None"
+                - "Category Personal sites and Blogs"
             spam_urls:
                 description:
-                - "None"
+                - "Category SPAM URLs"
             unconfirmed_spam_sources:
                 description:
-                - "None"
+                - "Category Unconfirmed SPAM Sources"
             image_and_video_search:
                 description:
-                - "None"
+                - "Category Image and Video Search"
             training_and_tools:
                 description:
-                - "None"
+                - "Category Training and Tools"
             parked_domains:
                 description:
-                - "None"
+                - "Category Parked Domains"
     port:
         description:
-        - "None"
+        - "BrightCloud Query Server Listening Port(default 80)"
         required: False
     ssl_port:
         description:
-        - "None"
+        - "BrightCloud Servers SSL Port(default 443)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -437,7 +407,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bypassed_urls","category_list_list","cloud_query_disable","database_server","db_update_time","enable","intercepted_urls","license","port","proxy_server","remote_syslog_enable","rtu_update_disable","rtu_update_interval","server","server_timeout","ssl_port","url","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["category_list_list","cloud_query_disable","database_server","db_update_time","enable","port","proxy_server","remote_syslog_enable","rtu_update_disable","rtu_update_interval","server","server_timeout","ssl_port","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -456,7 +426,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -465,23 +439,20 @@ def get_argspec():
         cloud_query_disable=dict(type='bool',),
         rtu_update_interval=dict(type='int',),
         enable=dict(type='bool',),
-        intercepted_urls=dict(type='dict',uuid=dict(type='str',)),
         use_mgmt_port=dict(type='bool',),
         database_server=dict(type='str',),
         db_update_time=dict(type='str',),
         server_timeout=dict(type='int',),
         server=dict(type='str',),
-        url=dict(type='dict',uuid=dict(type='str',)),
-        bypassed_urls=dict(type='dict',uuid=dict(type='str',)),
         remote_syslog_enable=dict(type='bool',),
         rtu_update_disable=dict(type='bool',),
         proxy_server=dict(type='dict',username=dict(type='str',),domain=dict(type='str',),uuid=dict(type='str',),https_port=dict(type='int',),encrypted=dict(type='str',),proxy_host=dict(type='str',),auth_type=dict(type='str',choices=['ntlm','basic']),http_port=dict(type='int',),password=dict(type='bool',),secret_string=dict(type='str',)),
-        license=dict(type='dict',uuid=dict(type='str',)),
         category_list_list=dict(type='list',streaming_media=dict(type='bool',),weapons=dict(type='bool',),uuid=dict(type='str',),entertainment_and_arts=dict(type='bool',),cdns=dict(type='bool',),financial_services=dict(type='bool',),social_network=dict(type='bool',),government=dict(type='bool',),web_advertisements=dict(type='bool',),fashion_and_beauty=dict(type='bool',),computer_and_internet_security=dict(type='bool',),name=dict(type='str',required=True,),real_estate=dict(type='bool',),user_tag=dict(type='str',),web_based_email=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','uncategorized','real-estate','computer-and-internet-security','financial-services','business-and-economy','computer-and-internet-info','auctions','shopping','cult-and-occult','travel','drugs','adult-and-pornography','home-and-garden','military','social-network','dead-sites','stock-advice-and-tools','training-and-tools','dating','sex-education','religion','entertainment-and-arts','personal-sites-and-blogs','legal','local-information','streaming-media','job-search','gambling','translation','reference-and-research','shareware-and-freeware','peer-to-peer','marijuana','hacking','games','philosophy-and-politics','weapons','pay-to-surf','hunting-and-fishing','society','educational-institutions','online-greeting-cards','sports','swimsuits-and-intimate-apparel','questionable','kids','hate-and-racism','personal-storage','violence','keyloggers-and-monitoring','search-engines','internet-portals','web-advertisements','cheating','gross','web-based-email','malware-sites','phishing-and-other-fraud','proxy-avoid-and-anonymizers','spyware-and-adware','music','government','nudity','news-and-media','illegal','CDNs','internet-communications','bot-nets','abortion','health-and-medicine','confirmed-SPAM-sources','SPAM-URLs','unconfirmed-SPAM-sources','open-HTTP-proxies','dynamic-comment','parked-domains','alcohol-and-tobacco','private-IP-addresses','image-and-video-search','fashion-and-beauty','recreation-and-hobbies','motor-vehicles','web-hosting-sites','food-and-dining'])),recreation_and_hobbies=dict(type='bool',),business_and_economy=dict(type='bool',),confirmed_spam_sources=dict(type='bool',),philosophy_and_politics=dict(type='bool',),society=dict(type='bool',),motor_vehicles=dict(type='bool',),proxy_avoid_and_anonymizers=dict(type='bool',),gross=dict(type='bool',),legal=dict(type='bool',),bot_nets=dict(type='bool',),religion=dict(type='bool',),private_ip_addresses=dict(type='bool',),dating=dict(type='bool',),pay_to_surf=dict(type='bool',),reference_and_research=dict(type='bool',),keyloggers_and_monitoring=dict(type='bool',),kids=dict(type='bool',),online_greeting_cards=dict(type='bool',),violence=dict(type='bool',),games=dict(type='bool',),auctions=dict(type='bool',),military=dict(type='bool',),alcohol_and_tobacco=dict(type='bool',),stock_advice_and_tools=dict(type='bool',),news_and_media=dict(type='bool',),cult_and_occult=dict(type='bool',),food_and_dining=dict(type='bool',),cheating=dict(type='bool',),illegal=dict(type='bool',),local_information=dict(type='bool',),sports=dict(type='bool',),music=dict(type='bool',),shareware_and_freeware=dict(type='bool',),spyware_and_adware=dict(type='bool',),questionable=dict(type='bool',),shopping=dict(type='bool',),drugs=dict(type='bool',),web_hosting_sites=dict(type='bool',),malware_sites=dict(type='bool',),dynamic_comment=dict(type='bool',),translation=dict(type='bool',),job_search=dict(type='bool',),hunting_and_fishing=dict(type='bool',),search_engines=dict(type='bool',),educational_institutions=dict(type='bool',),internet_portals=dict(type='bool',),computer_and_internet_info=dict(type='bool',),abortion=dict(type='bool',),hacking=dict(type='bool',),adult_and_pornography=dict(type='bool',),phishing_and_other_fraud=dict(type='bool',),nudity=dict(type='bool',),health_and_medicine=dict(type='bool',),marijuana=dict(type='bool',),home_and_garden=dict(type='bool',),personal_storage=dict(type='bool',),sex_education=dict(type='bool',),swimsuits_and_intimate_apparel=dict(type='bool',),dead_sites=dict(type='bool',),travel=dict(type='bool',),hate_and_racism=dict(type='bool',),open_http_proxies=dict(type='bool',),internet_communications=dict(type='bool',),gambling=dict(type='bool',),peer_to_peer=dict(type='bool',),uncategorized=dict(type='bool',),personal_sites_and_blogs=dict(type='bool',),spam_urls=dict(type='bool',),unconfirmed_spam_sources=dict(type='bool',),image_and_video_search=dict(type='bool',),training_and_tools=dict(type='bool',),parked_domains=dict(type='bool',)),
         port=dict(type='int',),
         ssl_port=dict(type='int',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -489,6 +460,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/web-category"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -497,10 +469,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/web-category"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -518,7 +495,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -537,7 +514,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -548,7 +525,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -573,6 +550,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -583,7 +563,8 @@ def create(module, result):
     payload = build_json("web-category", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -608,8 +589,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("web-category", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -629,22 +611,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("web-category", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -658,6 +658,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -666,6 +669,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

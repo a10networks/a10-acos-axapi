@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_logon_form_based
 description:
-    - None
+    - Form-based Authentication Logon
 short_description: Configures A10 aam.authentication.logon.form-based
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     logon_page_cfg:
         description:
         - "Field logon_page_cfg"
@@ -42,40 +45,40 @@ options:
         suboptions:
             action_url:
                 description:
-                - "None"
+                - "Specify form submission action url"
             username_variable:
                 description:
-                - "None"
+                - "Specify username variable name in form submission"
             login_failure_message:
                 description:
-                - "None"
+                - "Specify login failure message shown in logon page (Specify error string, default is 'Invalid username or password. Please try again.')"
             passcode_variable:
                 description:
-                - "None"
+                - "Specify passcode variable name in form submission"
             disable_change_password_link:
                 description:
-                - "None"
+                - "Do not display change password link on logon page even if the type of backend authentication server supports password change. C"
             password_variable:
                 description:
-                - "None"
+                - "Specify password variable name in form submission"
             authz_failure_message:
                 description:
-                - "None"
+                - "Specify authorization failure message shown in logon page (Specify error string, default is 'Authorization failed. Please contact your system administrator.')"
     retry:
         description:
-        - "None"
+        - "Specify max. number of failure retry per connection (Specify retry count (1 ~ 32) per connection, default is 3)"
         required: False
     name:
         description:
-        - "None"
+        - "Specify form-based authentication logon name"
         required: True
     next_token_variable:
         description:
-        - "None"
+        - "Specify next-token variable name in form submission"
         required: False
     challenge_variable:
         description:
-        - "None"
+        - "Specify challenge variable name in form submission"
         required: False
     notify_cp_page_cfg:
         description:
@@ -84,13 +87,13 @@ options:
         suboptions:
             notifychangepassword_change_url:
                 description:
-                - "None"
+                - "Specify change password action url for notifychangepassword form"
             notifychangepassword_continue_url:
                 description:
-                - "None"
+                - "Specify continue action url for notifychangepassword form"
     new_pin_variable:
         description:
-        - "None"
+        - "Specify new-pin variable name in form submission"
         required: False
     portal:
         description:
@@ -99,42 +102,42 @@ options:
         suboptions:
             new_pin_page:
                 description:
-                - "None"
+                - "Specify new PIN page name for RSA-RADIUS"
             challenge_page:
                 description:
-                - "None"
+                - "Specify challenge page name for RSA-RADIUS"
             portal_name:
                 description:
-                - "None"
+                - "Specify portal name"
             logon:
                 description:
-                - "None"
+                - "Specify logon page name"
             next_token_page:
                 description:
-                - "None"
+                - "Specify next token page name for RSA-RADIUS"
             notifychangepasswordpage:
                 description:
-                - "None"
+                - "Specify change password notification page name"
             failpage:
                 description:
-                - "None"
+                - "Specify logon fail page name (portal fail page name)"
             changepasswordpage:
                 description:
-                - "None"
+                - "Specify change password page name"
             default_portal:
                 description:
-                - "None"
+                - "Use default portal"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     account_lock:
         description:
-        - "None"
+        - "Restrict user enters credential for the same account when retry limit is exceeded"
         required: False
     duration:
         description:
-        - "None"
+        - "Unlock the account after a certain period of time when no password retry failure is found, in seconds , by default 1800"
         required: False
     cp_page_cfg:
         description:
@@ -143,36 +146,35 @@ options:
         suboptions:
             cp_cfm_pwd_var:
                 description:
-                - "None"
+                - "Specify password confirm variable name"
             cp_new_pwd_var:
                 description:
-                - "None"
+                - "Specify new password variable name"
             changepassword_url:
                 description:
-                - "None"
+                - "Specify changepassword form submission action url (changepassword action url)"
             cp_cfm_pwd_enum:
                 description:
-                - "None"
+                - "'changepassword-password-confirm-variable'= Specify password confirm variable name in form submission; "
             cp_new_pwd_enum:
                 description:
-                - "None"
+                - "'changepassword-new-password-variable'= Specify new password variable name in form submission; "
             cp_old_pwd_enum:
                 description:
-                - "None"
+                - "'changepassword-old-password-variable'= Specify old password variable name in form submission; "
             cp_user_var:
                 description:
-                - "None"
+                - "Specify username variable name"
             cp_old_pwd_var:
                 description:
-                - "None"
+                - "Specify old password variable name"
             cp_user_enum:
                 description:
-                - "None"
+                - "'changepassword-username-variable'= Specify username variable name in form submission; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -205,7 +207,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -225,6 +231,7 @@ def get_argspec():
         cp_page_cfg=dict(type='dict',cp_cfm_pwd_var=dict(type='str',),cp_new_pwd_var=dict(type='str',),changepassword_url=dict(type='str',),cp_cfm_pwd_enum=dict(type='str',choices=['changepassword-password-confirm-variable']),cp_new_pwd_enum=dict(type='str',choices=['changepassword-new-password-variable']),cp_old_pwd_enum=dict(type='str',choices=['changepassword-old-password-variable']),cp_user_var=dict(type='str',),cp_old_pwd_var=dict(type='str',),cp_user_enum=dict(type='str',choices=['changepassword-username-variable'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -232,6 +239,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/logon/form-based/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -241,11 +249,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/logon/form-based/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -263,7 +276,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -282,7 +295,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -293,7 +306,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -318,6 +331,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -328,7 +344,8 @@ def create(module, result):
     payload = build_json("form-based", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -353,8 +370,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("form-based", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -374,22 +392,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("form-based", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -403,6 +439,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -411,6 +450,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

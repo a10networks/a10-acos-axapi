@@ -38,29 +38,10 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    l4_session_count:
-        description:
-        - "Total Sessions in the System"
-        required: False
     nat_pool_addr_count:
         description:
         - "Total configurable NAT Pool addresses in the System"
         required: False
-    max_aflex_authz_collection_number:
-        description:
-        - "Specify the maximum number of collections supported by aFleX authorization"
-        required: False
-    visibility:
-        description:
-        - "Field visibility"
-        required: False
-        suboptions:
-            monitored_entity_count:
-                description:
-                - "Total number of monitored entities for visibility"
-            uuid:
-                description:
-                - "uuid of the object"
     class_list_ipv6_addr_count:
         description:
         - "Total IPv6 addresses for class-list"
@@ -73,17 +54,13 @@ options:
         description:
         - "Total entries for AC class-list"
         required: False
-    ssl_dma_memory:
-        description:
-        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
-        required: False
-    radius_table_size:
-        description:
-        - "Total configurable CGNV6 RADIUS Table entries"
-        required: False
     aflex_table_entry_count:
         description:
         - "Total aFleX table entry in the system (Total aFlex entry in the system)"
+        required: False
+    l4_session_count:
+        description:
+        - "Total Sessions in the System"
         required: False
     ssl_context_memory:
         description:
@@ -102,7 +79,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -115,7 +91,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_file_size","nat_pool_addr_count","ssl_context_memory","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -134,25 +110,22 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
         nat_pool_addr_count=dict(type='int',),
-        max_aflex_authz_collection_number=dict(type='int',),
-        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
         class_list_ipv6_addr_count=dict(type='int',),
         max_aflex_file_size=dict(type='int',),
         class_list_ac_entry_count=dict(type='int',),
-        ssl_dma_memory=dict(type='int',),
-        radius_table_size=dict(type='int',),
         aflex_table_entry_count=dict(type='int',),
+        l4_session_count=dict(type='int',),
         ssl_context_memory=dict(type='int',),
         auth_portal_html_file_size=dict(type='int',),
         auth_portal_image_file_size=dict(type='int',),
@@ -180,6 +153,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -227,7 +204,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -251,6 +228,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -332,7 +312,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -367,6 +348,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

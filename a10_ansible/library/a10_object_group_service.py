@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_object_group_service
 description:
-    - None
+    - Configure Service Object Group
 short_description: Configures A10 object-group.service
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     rules:
         description:
         - "Field rules"
@@ -42,108 +45,107 @@ options:
         suboptions:
             icmp_type:
                 description:
-                - "None"
+                - "ICMP type number"
             alg:
                 description:
-                - "None"
+                - "'FTP'= Specify FTP ALG port range; 'TFTP'= Specify TFTP ALG port range; 'SIP'= Specify SIP ALG port range; 'DNS'= Specify DNS ALG port range; 'PPTP'= Specify PPTP ALG port range; 'RTSP'= Specify RTSP ALG port range; "
             icmpv6_code:
                 description:
-                - "None"
+                - "ICMPv6 code number"
             lt_src:
                 description:
-                - "None"
+                - "Match only packets with a lower source port number"
             eq_dst:
                 description:
-                - "None"
+                - "Match only packets on a given destination port (port number)"
             range_dst:
                 description:
-                - "None"
+                - "Match only packets in the range of destination port numbers (Starting Destination Port Number)"
             seq_num:
                 description:
-                - "None"
+                - "Sequence number"
             any_code:
                 description:
-                - "None"
+                - "Any ICMP code"
             source:
                 description:
-                - "None"
+                - "Source Port Information"
             eq_src:
                 description:
-                - "None"
+                - "Match only packets on a given source port (port number)"
             v6_any_code:
                 description:
-                - "None"
+                - "Any ICMPv6 code"
             icmpv6_type:
                 description:
-                - "None"
+                - "ICMPv6 type number"
             icmp_code:
                 description:
-                - "None"
+                - "ICMP code number"
             protocol_id:
                 description:
-                - "None"
+                - "Protocol ID"
             tcp_udp:
                 description:
-                - "None"
+                - "'tcp'= Protocol TCP; 'udp'= Protocol UDP; "
             gt_dst:
                 description:
-                - "None"
+                - "Match only packets with a greater destination port number"
             icmp:
                 description:
-                - "None"
+                - "Internet Control Message Protocol"
             port_num_end_src:
                 description:
-                - "None"
+                - "Ending Source Port Number"
             special_v6_type:
                 description:
-                - "None"
+                - "'dest-unreachable'= Type 1, destination unreachable; 'echo-reply'= Type 129, echo reply; 'echo-request'= Type 128, echo request; 'packet-too-big'= Type 2, packet too big; 'param-prob'= Type 4, parameter problem; 'time-exceeded'= Type 3, time exceeded; "
             any_type:
                 description:
-                - "None"
+                - "Any ICMP type"
             lt_dst:
                 description:
-                - "None"
+                - "Match only packets with a lesser destination port number"
             gt_src:
                 description:
-                - "None"
+                - "Match only packets with a greater source port number"
             special_v6_code:
                 description:
-                - "None"
+                - "'addr-unreachable'= Code 3, address unreachable; 'admin-prohibited'= Code 1, admin prohibited; 'no-route'= Code 0, no route to destination; 'not-neighbour'= Code 2, not neighbor; 'port-unreachable'= Code 4, destination port unreachable; "
             icmpv6:
                 description:
-                - "None"
+                - "Internet Control Message Protocol version 6"
             range_src:
                 description:
-                - "None"
+                - "match only packets in the range of source port numbers (Starting Port Number)"
             port_num_end_dst:
                 description:
-                - "None"
+                - "Ending Destination Port Number"
             v6_any_type:
                 description:
-                - "None"
+                - "Any ICMP type"
             special_code:
                 description:
-                - "None"
+                - "'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1, destination host unreachable; 'network-unreachable'= Code 0, destination network unreachable; 'port-unreachable'= Code 3, destination port unreachable; 'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'= Code 5, source route failed; "
             special_type:
                 description:
-                - "None"
+                - "'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-reply'= Type 16, information reply; 'info-request'= Type 15, information request; 'mask-reply'= Type 18, address mask reply; 'mask-request'= Type 17, address mask request; 'parameter-problem'= Type 12, parameter problem; 'redirect'= Type 5, redirect message; 'source-quench'= Type 4, source quench; 'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp; 'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3, destination unreachable; "
     svc_name:
         description:
-        - "None"
+        - "Service Object Name"
         required: True
     description:
         description:
-        - "None"
+        - "Description of the object-group instance"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -176,7 +178,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -188,6 +194,7 @@ def get_argspec():
         user_tag=dict(type='str',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -195,6 +202,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/object-group/service/{svc-name}"
+
     f_dict = {}
     f_dict["svc-name"] = ""
 
@@ -204,11 +212,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/object-group/service/{svc-name}"
+
     f_dict = {}
-    f_dict["svc-name"] = module.params["svc-name"]
+    f_dict["svc-name"] = module.params["svc_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -226,7 +239,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -245,7 +258,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -256,7 +269,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -281,6 +294,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -291,7 +307,8 @@ def create(module, result):
     payload = build_json("service", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -316,8 +333,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("service", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -337,22 +355,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("service", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -366,6 +402,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -374,6 +413,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

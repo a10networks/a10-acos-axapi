@@ -35,6 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    dns64_virtualserver_name:
+        description:
+        - Key to identify parent object
     protocol:
         description:
         - "'dns-udp'= DNS service over UDP; "
@@ -63,20 +69,10 @@ options:
         description:
         - "Port"
         required: True
-    acl_name_list:
+    action:
         description:
-        - "Field acl_name_list"
+        - "'enable'= Enable; 'disable'= Disable; "
         required: False
-        suboptions:
-            acl_name:
-                description:
-                - "Apply an access list name (Named Access List)"
-            acl_name_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            acl_name_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -93,29 +89,10 @@ options:
         description:
         - "DNS template (DNS template name)"
         required: False
-    acl_id_list:
-        description:
-        - "Field acl_id_list"
-        required: False
-        suboptions:
-            acl_id_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_id:
-                description:
-                - "ACL id VPORT"
-            acl_id_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-    action:
-        description:
-        - "'enable'= Enable; 'disable'= Disable; "
-        required: False
     pool:
         description:
         - "Specify NAT pool or pool group"
         required: False
-
 
 """
 
@@ -129,7 +106,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id_list","acl_name_list","action","auto","pool","port_number","precedence","protocol","sampling_enable","service_group","template_dns","template_policy","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","auto","pool","port_number","precedence","protocol","sampling_enable","service_group","template_dns","template_policy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -148,10 +125,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -164,13 +142,16 @@ def get_argspec():
         template_policy=dict(type='str',),
         service_group=dict(type='str',),
         port_number=dict(type='int',required=True,),
-        acl_name_list=dict(type='list',acl_name=dict(type='str',),acl_name_src_nat_pool=dict(type='str',),acl_name_seq_num=dict(type='int',)),
+        action=dict(type='str',choices=['enable','disable']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','toatal_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time'])),
         user_tag=dict(type='str',),
         template_dns=dict(type='str',),
-        acl_id_list=dict(type='list',acl_id_seq_num=dict(type='int',),acl_id=dict(type='int',),acl_id_src_nat_pool=dict(type='str',)),
-        action=dict(type='str',choices=['enable','disable']),
         pool=dict(type='str',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        dns64_virtualserver_name=dict(type='str', required=True),
     ))
 
     return rv
@@ -178,23 +159,31 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{name}/port/{port-number}+{protocol}"
+    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{dns64_virtualserver_name}/port/{port-number}+{protocol}"
+
     f_dict = {}
     f_dict["port-number"] = ""
     f_dict["protocol"] = ""
+    f_dict["dns64_virtualserver_name"] = module.params["dns64_virtualserver_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{name}/port/{port-number}+{protocol}"
+    url_base = "/axapi/v3/cgnv6/dns64-virtualserver/{dns64_virtualserver_name}/port/{port-number}+{protocol}"
+
     f_dict = {}
-    f_dict["port-number"] = module.params["port-number"]
+    f_dict["port-number"] = module.params["port_number"]
     f_dict["protocol"] = module.params["protocol"]
+    f_dict["dns64_virtualserver_name"] = module.params["dns64_virtualserver_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -212,7 +201,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -231,7 +220,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -242,7 +231,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -267,6 +256,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -277,7 +269,8 @@ def create(module, result):
     payload = build_json("port", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -302,8 +295,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("port", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -323,13 +317,30 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("port", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -364,6 +375,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

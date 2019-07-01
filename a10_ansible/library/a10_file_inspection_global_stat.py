@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_file_inspection_global_stat
 description:
-    - None
+    - File Inspection global stats
 short_description: Configures A10 file.inspection.global-stat
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'file_inspection_download_blocked'= File Inspection download blocked; 'file_inspection_download_suspect'= File Inspection download suspect; 'file_inspection_download_allowed'= File Inspection download allowed; 'file_inspection_upload_blocked'= File Inspection upload blocked; 'file_inspection_upload_suspect'= File Inspection upload suspect; 'file_inspection_upload_allowed'= File Inspection upload allowed; 'file_inspection_icap_200'= File Inspection receive icap status 200; 'file_inspection_icap_204'= File Inspection receive icap status 204; 'file_inspection_icap_500'= File Inspection receive icap status 500; 'file_inspection_icap_other_status_code'= File Inspection receive icap other status code; 'file_inspection_icap_connect_fail'= File Inspection icap connect fail; 'file_inspection_bypass_aflex'= File Inspection bypassed by aflex; 'file_inspection_bypass_large_file'= File Inspection bypassed due to large file size; 'file_inspection_bypass_service_disabled'= File Inspection bypassed due to Internal service disabled; 'file_inspection_bypass_service_down'= File Inspection bypassed due to Internal service down; 'file_inspection_reset_service_down'= File Inspection reset due to Internal service down; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,20 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','file_inspection_download_bad_blocked','file_inspection_download_bad_allowed','file_inspection_download_bad_ext_inspect','file_inspection_download_suspect_blocked','file_inspection_download_suspect_ext_inspect','file_inspection_download_suspect_allowed','file_inspection_download_good_blocked','file_inspection_download_good_allowed','file_inspection_download_good_ext_inspect','file_inspection_upload_bad_blocked','file_inspection_upload_bad_allowed','file_inspection_upload_bad_ext_inspect','file_inspection_upload_suspect_blocked','file_inspection_upload_suspect_ext_inspect','file_inspection_upload_suspect_allowed','file_inspection_upload_good_blocked','file_inspection_upload_good_ext_inspect','file_inspection_upload_good_allowed','file_inspection_icap_200','file_inspection_icap_204','file_inspection_icap_500','file_inspection_icap_other_status_code','file_inspection_icap_connect_fail','file_inspection_icap_connection_created','file_inspection_icap_connection_established','file_inspection_icap_connection_closed','file_inspection_icap_connection_rst','file_inspection_icap_bytes_sent','file_inspection_icap_bytes_received','file_inspection_bypass_aflex','file_inspection_bypass_large_file','file_inspection_bypass_service_disabled','file_inspection_bypass_service_down','file_inspection_reset_service_down','file_inspection_bypass_max_concurrent_files_reached','file_inspection_bypass_max_concurrent_files_reached','file_inspection_transactions_alloc','file_inspection_transactions_free','file_inspection_transactions_failure'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','file_inspection_download_blocked','file_inspection_download_suspect','file_inspection_download_allowed','file_inspection_upload_blocked','file_inspection_upload_suspect','file_inspection_upload_allowed','file_inspection_icap_200','file_inspection_icap_204','file_inspection_icap_500','file_inspection_icap_other_status_code','file_inspection_icap_connect_fail','file_inspection_bypass_aflex','file_inspection_bypass_large_file','file_inspection_bypass_service_disabled','file_inspection_bypass_service_down','file_inspection_reset_service_down'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +103,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/file-inspection/global-stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,10 +112,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/file-inspection/global-stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -125,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -180,6 +193,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -190,7 +206,8 @@ def create(module, result):
     payload = build_json("global-stat", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +232,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("global-stat", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,22 +254,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("global-stat", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -273,6 +312,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

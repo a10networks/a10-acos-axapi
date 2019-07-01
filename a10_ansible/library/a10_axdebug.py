@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_axdebug
 description:
-    - None
+    - Packet Trace Options
 short_description: Configures A10 axdebug
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,21 +35,24 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     count:
         description:
-        - "None"
+        - "Maximum packets to capture. Default is 3000. (Maximum packets to capture. For umlimited, specify 0)"
         required: False
     save_config:
         description:
-        - "None"
+        - "Save AXDebug config file to target filename"
         required: False
     timeout:
         description:
-        - "None"
+        - "Maximum number of minutes for a capture. Default is 5 minutes. For unlimited, specify 0"
         required: False
     sess_filter_dis:
         description:
-        - "None"
+        - "Disable session based filter"
         required: False
     outgoing_list:
         description:
@@ -58,13 +61,13 @@ options:
         suboptions:
             outgoing:
                 description:
-                - "None"
+                - "Outgoing interface (For all ports, don't specify port number.)"
             out_port_num:
                 description:
-                - "None"
+                - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex= 4,5,10-30, or separated by spaces and double-quoted(')"
     maxfile:
         description:
-        - "None"
+        - "Maximum number of debug packet files. Default is 100"
         required: False
     capture:
         description:
@@ -73,38 +76,38 @@ options:
         suboptions:
             current_slot:
                 description:
-                - "None"
+                - "Only for current-slot of chassis"
             outgoing:
                 description:
-                - "None"
+                - "Outgoing interface"
             non_display:
                 description:
-                - "None"
+                - "Do not print to screen"
             incoming:
                 description:
-                - "None"
+                - "Incoming interface"
             port_num:
                 description:
-                - "None"
+                - "Port Numbers separated by commas(,) and hyphens(-) without spaces (ex= 4,5,10-30), or separated by spaces and double-quoted(')"
             brief:
                 description:
-                - "None"
+                - "Print basic packet information"
             detail:
                 description:
-                - "None"
+                - "Include packet payload"
             save:
                 description:
-                - "None"
+                - "Save packets into file (Specify filename to save packets)"
             max_packets:
                 description:
-                - "None"
+                - "Maximum packets to capture for each data cpu."
     length:
         description:
-        - "None"
+        - "Packet length to capture"
         required: False
     exit:
         description:
-        - "None"
+        - "Exit from axdebug mode"
         required: False
     delete_file_list:
         description:
@@ -113,13 +116,13 @@ options:
         suboptions:
             delete_config:
                 description:
-                - "None"
+                - "Delete AXDebug config file (Specify target filename to change)"
             delete_capture:
                 description:
-                - "None"
+                - "Delete a capture file (Specify target filename to change)"
             delete:
                 description:
-                - "None"
+                - "Delete AXDebug capture / config file"
     filter_config:
         description:
         - "Field filter_config"
@@ -127,121 +130,121 @@ options:
         suboptions:
             arp:
                 description:
-                - "None"
+                - "ARP"
             ip:
                 description:
-                - "None"
+                - "IP"
             offset:
                 description:
-                - "None"
+                - "byte offset"
             number:
                 description:
-                - "None"
+                - "Specify filter id"
             tcp:
                 description:
                 - "Field tcp"
             l3_proto:
                 description:
-                - "None"
+                - "Layer 3 protocol"
             ipv4_address:
                 description:
-                - "None"
+                - "ip address"
             port:
                 description:
-                - "None"
+                - "port number"
             port_num_min:
                 description:
-                - "None"
+                - "min port number"
             oper_range:
                 description:
-                - "None"
+                - "'gt'= greater than; 'gte'= greater than or equal to; 'se'= smaller than or equal to; 'st'= smaller than; 'eq'= equal to; "
             ipv6_adddress:
                 description:
-                - "None"
+                - "ipv6 address"
             WORD:
                 description:
-                - "None"
+                - "WORD to compare"
             comp_hex:
                 description:
-                - "None"
+                - "value to compare"
             proto:
                 description:
-                - "None"
+                - "ip protocol number"
             dst:
                 description:
-                - "None"
+                - "Destination"
             hex:
                 description:
-                - "None"
+                - "Define hex value"
             integer_comp:
                 description:
-                - "None"
+                - "value to compare"
             port_num_max:
                 description:
-                - "None"
+                - "max port number"
             exit:
                 description:
-                - "None"
+                - "Exit from axdebug mode"
             ipv6:
                 description:
-                - "None"
+                - "IPV6"
             length:
                 description:
-                - "None"
+                - "byte length"
             udp:
                 description:
                 - "Field udp"
             neighbor:
                 description:
-                - "None"
+                - "IPv6 Neighbor/Router"
             port_num:
                 description:
-                - "None"
+                - "Port number"
             max_hex:
                 description:
-                - "None"
+                - "max value"
             mac:
                 description:
-                - "None"
+                - "mac address"
             min_hex:
                 description:
-                - "None"
+                - "min value"
             WORD1:
                 description:
-                - "None"
+                - "WORD min value"
             WORD2:
                 description:
-                - "None"
+                - "WORD max value"
             integer_max:
                 description:
-                - "None"
+                - "max value"
             integer:
                 description:
-                - "None"
+                - "Define decimal value"
             icmp:
                 description:
                 - "Field icmp"
             src:
                 description:
-                - "None"
+                - "Source"
             mac_addr:
                 description:
-                - "None"
+                - "mac address"
             ipv4_netmask:
                 description:
-                - "None"
+                - "IP subnet mask"
             icmpv6:
                 description:
                 - "Field icmpv6"
             range:
                 description:
-                - "None"
+                - "select a range"
             integer_min:
                 description:
-                - "None"
+                - "min value"
             prot_num:
                 description:
-                - "None"
+                - "protocol number"
     incoming_list:
         description:
         - "Field incoming_list"
@@ -249,15 +252,14 @@ options:
         suboptions:
             incoming:
                 description:
-                - "None"
+                - "Incoming interface. (For all ports, don't specify port number.)"
             inc_port_num:
                 description:
-                - "None"
+                - "Port Numbers separated by commas(,) and hyphens(-) without spaces. ex= 4,5,10-30, or separated by spaces and double-quoted(')"
     apply_config:
         description:
-        - "None"
+        - "Apply AXDebug config file"
         required: False
-
 
 """
 
@@ -290,7 +292,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -310,6 +316,7 @@ def get_argspec():
         incoming_list=dict(type='dict',incoming=dict(type='bool',),inc_port_num=dict(type='str',)),
         apply_config=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -317,6 +324,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/axdebug"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -325,10 +333,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/axdebug"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -346,7 +359,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -365,7 +378,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -376,7 +389,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -401,6 +414,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -411,7 +427,8 @@ def create(module, result):
     payload = build_json("axdebug", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -436,8 +453,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("axdebug", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -457,22 +475,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("axdebug", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -486,6 +522,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -494,6 +533,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_site
 description:
-    - None
+    - Specify a GSLB site
 short_description: Configures A10 gslb.site
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     ip_server_list:
         description:
         - "Field ip_server_list"
@@ -42,24 +45,24 @@ options:
         suboptions:
             ip_server_name:
                 description:
-                - "None"
+                - "Specify the real server name"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     weight:
         description:
-        - "None"
+        - "Specify a weight for the GSLB site (Weight, default is 1)"
         required: False
     site_name:
         description:
-        - "None"
+        - "Specify GSLB site name"
         required: True
     slb_dev_list:
         description:
@@ -68,63 +71,63 @@ options:
         suboptions:
             health_check_action:
                 description:
-                - "None"
+                - "'health-check'= Enable health Check; 'health-check-disable'= Disable health check; "
             client_ip:
                 description:
-                - "None"
+                - "Specify client IP address"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             device_name:
                 description:
-                - "None"
+                - "Specify SLB device name"
             proto_compatible:
                 description:
-                - "None"
+                - "Run GSLB Protocol in compatible mode"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             auto_map:
                 description:
-                - "None"
+                - "Enable DNS Auto Mapping"
             proto_aging_time:
                 description:
-                - "None"
+                - "Specify GSLB Protocol aging time, default is 60"
             rdt_value:
                 description:
-                - "None"
+                - "Specify Round-delay-time"
             gateway_ip_addr:
                 description:
-                - "None"
+                - "IP address"
             vip_server:
                 description:
                 - "Field vip_server"
             ip_address:
                 description:
-                - "None"
+                - "IP address"
             proto_aging_fast:
                 description:
-                - "None"
+                - "Fast GSLB Protocol aging"
             auto_detect:
                 description:
-                - "None"
+                - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service IP and service port; 'disabled'= disable auto-detect; "
             max_client:
                 description:
-                - "None"
+                - "Specify maximum number of clients, default is 32768"
             admin_preference:
                 description:
-                - "None"
+                - "Specify administrative preference (Specify admin-preference value,default is 100)"
     controller:
         description:
-        - "None"
+        - "Specify the local controller for the GSLB site (Specify the hostname of the local controller)"
         required: False
     bw_cost:
         description:
-        - "None"
+        - "Specify cost of band-width"
         required: False
     auto_map:
         description:
-        - "None"
+        - "Enable DNS Auto Mapping"
         required: False
     sampling_enable:
         description:
@@ -133,26 +136,26 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'hits'= Number of times the site was selected; "
     disable:
         description:
-        - "None"
+        - "Disable all servers in the GSLB site"
         required: False
     limit:
         description:
-        - "None"
+        - "Specify the limit for bandwidth, default is unlimited"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     template:
         description:
-        - "None"
+        - "Specify template to collect site information (Specify template name)"
         required: False
     threshold:
         description:
-        - "None"
+        - "Specify the threshold for limit"
         required: False
     multiple_geo_locations:
         description:
@@ -161,7 +164,7 @@ options:
         suboptions:
             geo_location:
                 description:
-                - "None"
+                - "Specify the geographic location of the GSLB site (Specify geo-location for this site)"
     easy_rdt:
         description:
         - "Field easy_rdt"
@@ -169,31 +172,31 @@ options:
         suboptions:
             range_factor:
                 description:
-                - "None"
+                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
             smooth_factor:
                 description:
-                - "None"
+                - "Factor of Smooth RDT, default is 10"
             mask:
                 description:
-                - "None"
+                - "Client IP subnet mask, default is 32"
             overlap:
                 description:
-                - "None"
+                - "Enable overlap for geo-location to do longest match"
             limit:
                 description:
-                - "None"
+                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
             ignore_count:
                 description:
-                - "None"
+                - "Ignore count if RDT is out of range, default is 5"
             aging_time:
                 description:
-                - "None"
+                - "Aging Time, Unit= min, default is 10"
             bind_geoloc:
                 description:
-                - "None"
+                - "Bind RDT to geo-location"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     active_rdt:
         description:
         - "Field active_rdt"
@@ -201,32 +204,31 @@ options:
         suboptions:
             range_factor:
                 description:
-                - "None"
+                - "Factor of RDT Range, default is 25 (Range Factor of Smooth RDT)"
             smooth_factor:
                 description:
-                - "None"
+                - "Factor of Smooth RDT, default is 10"
             mask:
                 description:
-                - "None"
+                - "Client IP subnet mask, default is 32"
             overlap:
                 description:
-                - "None"
+                - "Enable overlap for geo-location to do longest match"
             limit:
                 description:
-                - "None"
+                - "Limit of valid RDT, default is 16383 (Limit, unit= millisecond)"
             ignore_count:
                 description:
-                - "None"
+                - "Ignore count if RDT is out of range, default is 5"
             aging_time:
                 description:
-                - "None"
+                - "Aging Time, Unit= min, default is 10"
             bind_geoloc:
                 description:
-                - "None"
+                - "Bind RDT to geo-location"
             uuid:
                 description:
-                - "None"
-
+                - "uuid of the object"
 
 """
 
@@ -259,7 +261,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -283,6 +289,7 @@ def get_argspec():
         easy_rdt=dict(type='dict',range_factor=dict(type='int',),smooth_factor=dict(type='int',),mask=dict(type='str',),overlap=dict(type='bool',),limit=dict(type='int',),ignore_count=dict(type='int',),aging_time=dict(type='int',),bind_geoloc=dict(type='bool',),uuid=dict(type='str',)),
         active_rdt=dict(type='dict',range_factor=dict(type='int',),smooth_factor=dict(type='int',),mask=dict(type='str',),overlap=dict(type='bool',),limit=dict(type='int',),ignore_count=dict(type='int',),aging_time=dict(type='int',),bind_geoloc=dict(type='bool',),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -290,6 +297,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/site/{site-name}"
+
     f_dict = {}
     f_dict["site-name"] = ""
 
@@ -299,11 +307,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/site/{site-name}"
+
     f_dict = {}
-    f_dict["site-name"] = module.params["site-name"]
+    f_dict["site-name"] = module.params["site_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -321,7 +334,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -340,7 +353,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -351,7 +364,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -376,6 +389,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -386,7 +402,8 @@ def create(module, result):
     payload = build_json("site", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -411,8 +428,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("site", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -432,22 +450,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("site", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -461,6 +497,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -469,6 +508,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

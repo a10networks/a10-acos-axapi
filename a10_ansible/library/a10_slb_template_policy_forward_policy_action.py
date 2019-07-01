@@ -45,10 +45,6 @@ options:
         description:
         - "enable logging"
         required: False
-    http_status_code:
-        description:
-        - "'301'= Moved permanently; '302'= Found; "
-        required: False
     forward_snat:
         description:
         - "Source NAT pool or pool group"
@@ -57,9 +53,9 @@ options:
         description:
         - "uuid of the object"
         required: False
-    drop_response_code:
+    http_status_code:
         description:
-        - "Specify response code for drop action"
+        - "'301'= Moved permanently; '302'= Found; "
         required: False
     action1:
         description:
@@ -106,7 +102,6 @@ options:
         - "Action policy name"
         required: True
 
-
 """
 
 EXAMPLES = """
@@ -119,7 +114,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","drop_response_code","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -138,20 +133,20 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         log=dict(type='bool',),
-        http_status_code=dict(type='str',choices=['301','302']),
         forward_snat=dict(type='str',),
         uuid=dict(type='str',),
-        drop_response_code=dict(type='int',),
+        http_status_code=dict(type='str',choices=['301','302']),
         action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),
         fake_sg=dict(type='str',),
         user_tag=dict(type='str',),
@@ -193,6 +188,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -240,7 +239,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -264,6 +263,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -345,7 +347,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -361,12 +364,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -381,6 +383,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

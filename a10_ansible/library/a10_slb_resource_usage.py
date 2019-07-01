@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_resource_usage
 description:
-    - None
+    - Configure SLB Resource Usage
 short_description: Configures A10 slb.resource-usage
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,83 +35,85 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     proxy_template_count:
         description:
-        - "None"
+        - "Total configurable Proxy Templates in the System"
         required: False
     nat_pool_addr_count:
         description:
-        - "None"
+        - "Total configurable NAT Pool addresses in the System"
         required: False
     fast_tcp_template_count:
         description:
-        - "None"
+        - "Total configurable Fast TCP Templates in the System"
         required: False
     virtual_port_count:
         description:
-        - "None"
+        - "Total Virtual Server Ports in the System"
         required: False
     health_monitor_count:
         description:
-        - "None"
+        - "Total Health Monitors in the System"
         required: False
     fast_udp_template_count:
         description:
-        - "None"
+        - "Total configurable Fast UDP Templates in the System"
         required: False
     persist_srcip_template_count:
         description:
-        - "None"
+        - "Total configurable Source IP Persistent Templates in the System"
         required: False
     client_ssl_template_count:
         description:
-        - "None"
+        - "Total configurable Client SSL Templates in the System"
         required: False
     server_ssl_template_count:
         description:
-        - "None"
+        - "Total configurable Server SSL Templates in the System"
         required: False
     http_template_count:
         description:
-        - "None"
+        - "Total configurable HTTP Templates in the System"
         required: False
     pbslb_subnet_count:
         description:
-        - "None"
+        - "Total PBSLB Subnets in the System"
         required: False
     persist_cookie_template_count:
         description:
-        - "None"
+        - "Total configurable Persistent cookie Templates in the System"
         required: False
     virtual_server_count:
         description:
-        - "None"
+        - "Total Virtual Servers in the System"
         required: False
     stream_template_count:
         description:
-        - "None"
+        - "Total configurable Streaming media in the System"
         required: False
     conn_reuse_template_count:
         description:
-        - "None"
+        - "Total configurable Connection reuse Templates in the System"
         required: False
     real_server_count:
         description:
-        - "None"
+        - "Total Real Servers in the System"
         required: False
     real_port_count:
         description:
-        - "None"
+        - "Total Real Server Ports in the System"
         required: False
     service_group_count:
         description:
-        - "None"
+        - "Total Service Groups in the System"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -144,7 +146,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -170,6 +176,7 @@ def get_argspec():
         service_group_count=dict(type='int',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -177,6 +184,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/resource-usage"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -185,10 +193,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/resource-usage"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -206,7 +219,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -225,7 +238,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -236,7 +249,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -261,6 +274,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -271,7 +287,8 @@ def create(module, result):
     payload = build_json("resource-usage", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -296,8 +313,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("resource-usage", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -317,22 +335,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("resource-usage", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -346,6 +382,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -354,6 +393,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

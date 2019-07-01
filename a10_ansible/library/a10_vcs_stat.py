@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_vcs_stat
 description:
-    - None
+    - Show aVCS statistics information
 short_description: Configures A10 vcs.stat
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'elect_recv_err'= Receive error counter of aVCS election; 'elect_send_err'= Send error counter of aVCS election; 'elect_recv_byte'= Receive bytes counter of aVCS election; 'elect_send_byte'= Send bytes counter of aVCS election; 'elect_pdu_master_recv'= Received vMaster-PDU counter of aVCS election; 'elect_pdu_master_cand_recv'= Received MC-PDU counter of aVCS election; 'elect_pdu_slave_recv'= Received vBlade-PDU counter of aVCS election; 'elect_pdu_master_take_over_recv'= Received MTO-PDU counter of aVCS election; 'elect_pdu_unknown_recv'= Received Unknown-PDU counter of aVCS election; 'elect_pdu_master_sent'= Sent vMaster-PDU counter of aVCS election; 'elect_pdu_master_cand_sent'= Sent MC-PDU counter of aVCS election; 'elect_pdu_slave_sent'= Sent vBlade-PDU counter of aVCS election; 'elect_pdu_master_take_over_sent'= Sent MTO-PDU counter of aVCS election; 'elect_pdu_unknown_sent'= Sent Unknown-PDU counter of aVCS election; 'elect_pdu_inval'= Invalid PDU counter of aVCS election; 'elect_pdu_hw_mismatch'= PDU HW mismatch counter of aVCS election; 'elect_pdu_cluster_mismatch'= PDU Chassis-ID mismatch counter of aVCS election; 'elect_pdu_dev_id_collision'= PDU Device-ID collision counter of aVCS election; 'elect_mc_discard_master'= MC discarded vMaster-PDU counter of aVCS election; 'elect_mc_replace_master'= MC replaced vMaster-PDU counter of aVCS election; 'elect_mc_dup_masterr'= MC duplicate vMaster-PDU counter of aVCS election; 'elect_mc_reset_timer_by_mc'= MC timers reset by MC-PDU counter of aVCS election; 'elect_mc_reset_timer_by_mto'= MC timers reset by MTO-PDU counter of aVCS election; 'elect_slave_dup_master'= vBlade duplicate vMaster-PDU counter of aVCS election; 'elect_slave_discard_challenger'= vBlade discard challenger counter of aVCS election; 'elect_slave_replace_challenger'= vBlade replace challenger counter of aVCS election; 'elect_slave_dup_challenger'= vBlade duplicate challenger counter of aVCS election; 'elect_slave_discard_neighbour'= vBlade discard neighbour counter of aVCS election; 'elect_slave_too_many_neighbour'= vBlade too many neighbours counter of aVCS election; 'elect_slave_dup_neighbour'= send vBlade duplicate neighbours of aVCS election; 'elect_master_discard_challenger'= vMaster discard challenger counter of aVCS election; 'elect_master_new_challenger'= vMaster new challenger counter of aVCS election; 'elect_master_replace_challenger'= vMaster replace challenger counter of aVCS election; 'elect_master_dup_challenger'= vMaster duplicate challenger counter of aVCS election; 'elect_master_discard_neighbour'= vMaster discard neighbour counter of aVCS election; 'elect_master_too_many_neighbour'= vMaster too many neighbours counter of aVCS election; 'elect_master_dup_neighbour'= vMaster duplicate neighbours counter of aVCS election; 'elect_enter_master_cand_stat'= Enter MC counter of aVCS election; 'elect_enter_slave'= Enter vBlade counter of aVCS election; 'elect_enter_master'= Enter vMaster counter of aVCS election; 'elect_enter_master_take_over'= Enter MTO counter of aVCS election; 'elect_leave_master_cand'= Leave MC counter of aVCS election; 'elect_leave_slave'= Leave vBlade counter of aVCS election; 'elect_leave_master'= Leave vMaster counter of aVCS election; 'elect_leave_master_take_over'= Leave MTO counter of aVCS election; 'master_slave_start_err'= vMaster Start vBlade Errors counter of aVCS election; 'master_slave_start'= vMaster vBlades Started counter of aVCS election; 'master_slave_stop'= vMaster vBlades stopped counter of aVCS election; 'master_cfg_upd'= Received vMaster Configuration Updates counter of aVCS election; 'master_cfg_upd_l_fail'= vMaster Local Configuration Update Errors counter of aVCS election; 'master_cfg_upd_r_fail'= vMaster Remote Configuration Update Errors counter of aVCS election; 'master_cfg_upd_notif_err'= vMaster Configuration Update Notif Errors counter of aVCS election; 'master_cfg_upd_result_err'= vMaster Configuration Update Result Errors counter of aVCS election; 'slave_recv_err'= vBlade Receive Errors counter of aVCS election; 'slave_send_err'= vBlade Send Errors counter of aVCS election; 'slave_recv_bytes'= vBlade Received Bytes counter of aVCS election; 'slave_sent_bytes'= vBlade Sent Bytes counter of aVCS election; 'slave_n_recv'= vBlade Received Messages counter of aVCS election; 'slave_n_sent'= vBlade Sent Messages counter of aVCS election; 'slave_msg_inval'= vBlade Invalid Messages counter of aVCS election; 'slave_keepalive'= vBlade Received Keepalives counter of aVCS election; 'slave_cfg_upd'= vBlade Received Configuration Updates counter of aVCS election; 'slave_cfg_upd_fail'= vBlade Configuration Update Failures counter of aVCS election; 'daemon_n_elec_start'= times of aVCS election start; 'daemon_n_elec_stop'= times of aVCS election stop; 'daemon_recv_err'= counter of aVCS daemon receive error; 'daemon_send_err'= counter of aVCS daemon sent error; 'daemon_recv_bytes'= bytes of aVCS daemon receive; 'daemon_sent_bytes'= bytes of aVCS daemon sent; 'daemon_n_recv'= counter of aVCS daemon receive; 'daemon_n_sent'= counter of aVCS daemon sent; 'daemon_msg_inval'= counter of aVCS daemon invalid message; 'daemon_msg_handle_failure'= counter of aVCS daemon message handle failure; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,7 +82,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -89,6 +95,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','elect_recv_err','elect_send_err','elect_recv_byte','elect_send_byte','elect_pdu_master_recv','elect_pdu_master_cand_recv','elect_pdu_slave_recv','elect_pdu_master_take_over_recv','elect_pdu_unknown_recv','elect_pdu_master_sent','elect_pdu_master_cand_sent','elect_pdu_slave_sent','elect_pdu_master_take_over_sent','elect_pdu_unknown_sent','elect_pdu_inval','elect_pdu_hw_mismatch','elect_pdu_cluster_mismatch','elect_pdu_dev_id_collision','elect_mc_discard_master','elect_mc_replace_master','elect_mc_dup_masterr','elect_mc_reset_timer_by_mc','elect_mc_reset_timer_by_mto','elect_slave_dup_master','elect_slave_discard_challenger','elect_slave_replace_challenger','elect_slave_dup_challenger','elect_slave_discard_neighbour','elect_slave_too_many_neighbour','elect_slave_dup_neighbour','elect_master_discard_challenger','elect_master_new_challenger','elect_master_replace_challenger','elect_master_dup_challenger','elect_master_discard_neighbour','elect_master_too_many_neighbour','elect_master_dup_neighbour','elect_enter_master_cand_stat','elect_enter_slave','elect_enter_master','elect_enter_master_take_over','elect_leave_master_cand','elect_leave_slave','elect_leave_master','elect_leave_master_take_over','master_slave_start_err','master_slave_start','master_slave_stop','master_cfg_upd','master_cfg_upd_l_fail','master_cfg_upd_r_fail','master_cfg_upd_notif_err','master_cfg_upd_result_err','slave_recv_err','slave_send_err','slave_recv_bytes','slave_sent_bytes','slave_n_recv','slave_n_sent','slave_msg_inval','slave_keepalive','slave_cfg_upd','slave_cfg_upd_fail','daemon_n_elec_start','daemon_n_elec_stop','daemon_recv_err','daemon_send_err','daemon_recv_bytes','daemon_sent_bytes','daemon_n_recv','daemon_n_sent','daemon_msg_inval','daemon_msg_handle_failure'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +103,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/vcs/stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,10 +112,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/vcs/stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -125,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -180,6 +193,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -190,7 +206,8 @@ def create(module, result):
     payload = build_json("stat", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +232,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("stat", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,22 +254,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("stat", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -273,6 +312,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

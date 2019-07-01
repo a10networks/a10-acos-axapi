@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_trunk_ipv6_ospf
 description:
-    - None
+    - Open Shortest Path First for IPv6 (OSPFv3)
 short_description: Configures A10 interface.trunk.ipv6.ospf
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,13 +35,19 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    trunk_ifnum:
+        description:
+        - Key to identify parent object
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     bfd:
         description:
-        - "None"
+        - "Bidirectional Forwarding Detection (BFD)"
         required: False
     cost_cfg:
         description:
@@ -50,10 +56,10 @@ options:
         suboptions:
             cost:
                 description:
-                - "None"
+                - "Interface cost"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     priority_cfg:
         description:
         - "Field priority_cfg"
@@ -61,10 +67,10 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "Router priority"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     hello_interval_cfg:
         description:
         - "Field hello_interval_cfg"
@@ -72,10 +78,10 @@ options:
         suboptions:
             hello_interval:
                 description:
-                - "None"
+                - "Time between HELLO packets (Seconds)"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     mtu_ignore_cfg:
         description:
         - "Field mtu_ignore_cfg"
@@ -83,10 +89,10 @@ options:
         suboptions:
             mtu_ignore:
                 description:
-                - "None"
+                - "Ignores the MTU in DBD packets"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     retransmit_interval_cfg:
         description:
         - "Field retransmit_interval_cfg"
@@ -94,13 +100,13 @@ options:
         suboptions:
             retransmit_interval:
                 description:
-                - "None"
+                - "Time between retransmitting lost link state advertisements (Seconds)"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     disable:
         description:
-        - "None"
+        - "Disable BFD"
         required: False
     transmit_delay_cfg:
         description:
@@ -109,10 +115,10 @@ options:
         suboptions:
             transmit_delay:
                 description:
-                - "None"
+                - "Link state transmit delay (Seconds)"
             instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     neighbor_cfg:
         description:
         - "Field neighbor_cfg"
@@ -120,19 +126,19 @@ options:
         suboptions:
             neighbor_priority:
                 description:
-                - "None"
+                - "OSPF priority of non-broadcast neighbor"
             neighbor_poll_interval:
                 description:
-                - "None"
+                - "OSPF dead-router polling interval (Seconds)"
             neig_inst:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
             neighbor:
                 description:
-                - "None"
+                - "OSPFv3 neighbor (Neighbor IPv6 address)"
             neighbor_cost:
                 description:
-                - "None"
+                - "OSPF cost for point-to-multipoint neighbor (metric)"
     network_list:
         description:
         - "Field network_list"
@@ -140,13 +146,13 @@ options:
         suboptions:
             broadcast_type:
                 description:
-                - "None"
+                - "'broadcast'= Specify OSPF broadcast multi-access network; 'non-broadcast'= Specify OSPF NBMA network; 'point-to-point'= Specify OSPF point-to-point network; 'point-to-multipoint'= Specify OSPF point-to-multipoint network; "
             p2mp_nbma:
                 description:
-                - "None"
+                - "Specify non-broadcast point-to-multipoint network"
             network_instance_id:
                 description:
-                - "None"
+                - "Specify the interface instance ID"
     dead_interval_cfg:
         description:
         - "Field dead_interval_cfg"
@@ -154,11 +160,10 @@ options:
         suboptions:
             dead_interval:
                 description:
-                - "None"
+                - "Interval after which a neighbor is declared dead (Seconds)"
             instance_id:
                 description:
-                - "None"
-
+                - "Specify the interface instance ID"
 
 """
 
@@ -191,7 +196,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -210,25 +219,38 @@ def get_argspec():
         network_list=dict(type='list',broadcast_type=dict(type='str',choices=['broadcast','non-broadcast','point-to-point','point-to-multipoint']),p2mp_nbma=dict(type='bool',),network_instance_id=dict(type='int',)),
         dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        trunk_ifnum=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/trunk/{ifnum}/ipv6/ospf"
+    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/ipv6/ospf"
+
     f_dict = {}
+    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/trunk/{ifnum}/ipv6/ospf"
+    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/ipv6/ospf"
+
     f_dict = {}
+    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -246,7 +268,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -265,7 +287,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -276,7 +298,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -301,6 +323,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -311,7 +336,8 @@ def create(module, result):
     payload = build_json("ospf", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -336,8 +362,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ospf", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -357,22 +384,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ospf", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -386,6 +431,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -394,6 +442,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

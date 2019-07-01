@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_event_notification_kafka_server
 description:
-    - None
+    - Set remote kafka server ip address
 short_description: Configures A10 event.notification.kafka.server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,24 +45,23 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'pr-acos-harmony-topic'= PR topic counter from acos to harmony; 'avro-device-status-topic'= AVRO device status from acos to harmony; 'avro-data-cpu-usage-topic'= AVRO data cpu usage from acos to harmony; 'avro-generic-sent'= Telemetry exported via avro; 'pr-acos-harmony-topic-enqueue-err'= PR topic to harmony enqueue error; 'pr-acos-harmony-topic-dequeue-err'= PR topic to harmony  dequeue error; 'avro-generic-failed-encoding'= Telemetry exported via avro failed encoding; 'avro-generic-failed-sending'= Telemetry exported via avro failed sending; 'avro-device-status-topic-enqueue-err'= AVRO device status enqueue error; 'avro-device-status-topic-dequeue-err'= AVRO device status dequeue error; 'avro-data-cpu-usage-topic-enqueue-err'= AVRO data cpu usage enqueue error; 'avro-data-cpu-usage-topic-dequeue-err'= AVRO data cpu usage dequeue error; 'kafka-unknown-topic-dequeue-err'= Kafka Unknown topic error; 'kafka-broker-down'= Notification drop because kafka broker is down; 'kafka-queue-full-err'= Notification drop because kafka Queue is full; 'pr-throttle-drop'= PR drop due to throttling; 'pr-not-allowed-drop'= PR drop because not allowed to log; "
     host_ipv4:
         description:
-        - "None"
+        - "Set kafka Broker ip address or hostname"
         required: False
     port:
         description:
-        - "None"
+        - "Set remote kafka port number (Remote kafka port number 1-32767, default is 9092)"
         required: False
     use_mgmt_port:
         description:
-        - "None"
+        - "Use management port for connections"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -92,18 +94,23 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pr-acos-harmony-topic','avro-device-status-topic','avro-partition-metrics-topic','avro-generic-sent','pr-acos-harmony-topic-enqueue-err','pr-acos-harmony-topic-dequeue-err','avro-generic-failed-encoding','avro-generic-failed-sending','avro-device-status-topic-enqueue-err','avro-device-status-topic-dequeue-err','avro-partition-metrics-topic-enqueue-err','avro-partition-metrics-topic-dequeue-err','kafka-unknown-topic-dequeue-err','kafka-broker-down','kafka-queue-full-err','pr-throttle-drop','pr-not-allowed-drop','pr-be-ttfb-anomaly','pr-be-ttlb-anomaly','pr-in-latency-threshold-exceed','pr-out-latency-threshold-exceed','pr-out-latency-anomaly','pr-in-latency-anomaly','kafka-topic-error'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pr-acos-harmony-topic','avro-device-status-topic','avro-data-cpu-usage-topic','avro-generic-sent','pr-acos-harmony-topic-enqueue-err','pr-acos-harmony-topic-dequeue-err','avro-generic-failed-encoding','avro-generic-failed-sending','avro-device-status-topic-enqueue-err','avro-device-status-topic-dequeue-err','avro-data-cpu-usage-topic-enqueue-err','avro-data-cpu-usage-topic-dequeue-err','kafka-unknown-topic-dequeue-err','kafka-broker-down','kafka-queue-full-err','pr-throttle-drop','pr-not-allowed-drop'])),
         host_ipv4=dict(type='str',),
         port=dict(type='int',),
         use_mgmt_port=dict(type='bool',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -111,6 +118,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/event-notification/kafka/server"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -119,10 +127,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/event-notification/kafka/server"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -140,7 +153,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -159,7 +172,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -170,7 +183,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -195,6 +208,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -205,7 +221,8 @@ def create(module, result):
     payload = build_json("server", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -230,8 +247,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("server", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -251,22 +269,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("server", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -280,6 +316,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -288,6 +327,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

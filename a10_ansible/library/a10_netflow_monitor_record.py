@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_netflow_monitor_record
 description:
-    - None
+    - Configure record types to be exported
 short_description: Configures A10 netflow.monitor.record
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,87 +35,92 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    nat44:
+    partition:
         description:
-        - "None"
-        required: False
-    uuid:
+        - Destination/target partition for object/command
+    monitor_name:
         description:
-        - "None"
-        required: False
-    sesn_event_nat64:
-        description:
-        - "None"
-        required: False
-    nat64:
-        description:
-        - "None"
-        required: False
-    port_batch_v2_nat64:
-        description:
-        - "None"
-        required: False
-    dslite:
-        description:
-        - "None"
-        required: False
-    port_batch_v2_dslite:
-        description:
-        - "None"
-        required: False
+        - Key to identify parent object
     sesn_event_fw6:
         description:
-        - "None"
-        required: False
-    netflow_v5_ext:
-        description:
-        - "None"
-        required: False
-    port_mapping_nat64:
-        description:
-        - "None"
-        required: False
-    sesn_event_dslite:
-        description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
     sesn_event_nat44:
         description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    port_batch_v2_nat44:
+    nat44:
         description:
-        - "None"
+        - "NAT44 Flow Record Template"
         required: False
-    netflow_v5:
+    sesn_event_nat64:
         description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    port_batch_dslite:
+    nat64:
         description:
-        - "None"
+        - "NAT64 Flow Record Template"
         required: False
-    port_mapping_dslite:
+    port_batch_v2_nat64:
         description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    port_mapping_nat44:
+    dslite:
         description:
-        - "None"
+        - "DS-Lite Flow Record Template"
         required: False
-    sesn_event_fw4:
+    port_batch_v2_dslite:
         description:
-        - "None"
-        required: False
-    port_batch_nat64:
-        description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
     port_batch_nat44:
         description:
-        - "None"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-
+    netflow_v5_ext:
+        description:
+        - "Extended NetFlow V5 Flow Record Template, supports ipv6"
+        required: False
+    port_mapping_nat64:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    sesn_event_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    port_batch_v2_nat44:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    netflow_v5:
+        description:
+        - "NetFlow V5 Flow Record Template"
+        required: False
+    port_batch_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    port_mapping_dslite:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    port_mapping_nat44:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    sesn_event_fw4:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    port_batch_nat64:
+        description:
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
 """
 
@@ -148,24 +153,28 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        sesn_event_fw6=dict(type='str',choices=['both','creation','deletion']),
+        sesn_event_nat44=dict(type='str',choices=['both','creation','deletion']),
         nat44=dict(type='bool',),
-        uuid=dict(type='str',),
         sesn_event_nat64=dict(type='str',choices=['both','creation','deletion']),
         nat64=dict(type='bool',),
         port_batch_v2_nat64=dict(type='str',choices=['both','creation','deletion']),
         dslite=dict(type='bool',),
         port_batch_v2_dslite=dict(type='str',choices=['both','creation','deletion']),
-        sesn_event_fw6=dict(type='str',choices=['both','creation','deletion']),
+        port_batch_nat44=dict(type='str',choices=['both','creation','deletion']),
         netflow_v5_ext=dict(type='bool',),
         port_mapping_nat64=dict(type='str',choices=['both','creation','deletion']),
         sesn_event_dslite=dict(type='str',choices=['both','creation','deletion']),
-        sesn_event_nat44=dict(type='str',choices=['both','creation','deletion']),
         port_batch_v2_nat44=dict(type='str',choices=['both','creation','deletion']),
         netflow_v5=dict(type='bool',),
         port_batch_dslite=dict(type='str',choices=['both','creation','deletion']),
@@ -173,7 +182,12 @@ def get_argspec():
         port_mapping_nat44=dict(type='str',choices=['both','creation','deletion']),
         sesn_event_fw4=dict(type='str',choices=['both','creation','deletion']),
         port_batch_nat64=dict(type='str',choices=['both','creation','deletion']),
-        port_batch_nat44=dict(type='str',choices=['both','creation','deletion'])
+        uuid=dict(type='str',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        monitor_name=dict(type='str', required=True),
     ))
 
     return rv
@@ -181,19 +195,27 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/netflow/monitor/{name}/record"
+    url_base = "/axapi/v3/netflow/monitor/{monitor_name}/record"
+
     f_dict = {}
+    f_dict["monitor_name"] = module.params["monitor_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/netflow/monitor/{name}/record"
+    url_base = "/axapi/v3/netflow/monitor/{monitor_name}/record"
+
     f_dict = {}
+    f_dict["monitor_name"] = module.params["monitor_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -211,7 +233,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -230,7 +252,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -241,7 +263,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -266,6 +288,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -276,7 +301,8 @@ def create(module, result):
     payload = build_json("record", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -301,8 +327,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("record", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -322,22 +349,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("record", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -351,6 +396,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -359,6 +407,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

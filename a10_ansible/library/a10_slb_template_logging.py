@@ -38,17 +38,13 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    pool_shared:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
     name:
         description:
         - "Logging Template Name"
         required: True
     format:
         description:
-        - "Specify a format string for web logging (format string(less than 250 characters) for web logging)"
+        - "Specfiy a format string for web logging (format string(less than 250 characters) for web logging)"
         required: False
     auto:
         description:
@@ -66,13 +62,9 @@ options:
         description:
         - "Character to mask the matched pattern (default= X)"
         required: False
-    template_tcp_proxy_shared:
+    user_tag:
         description:
-        - "TCP Proxy Template name"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
+        - "Customized tag"
         required: False
     keep_start:
         description:
@@ -86,17 +78,9 @@ options:
         description:
         - "Mask matched PCRE pattern in the log"
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     tcp_proxy:
         description:
-        - "TCP Proxy Template Name"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Reference a NAT pool or pool group from shared partition"
+        - "TCP proxy template (TCP Proxy Config name)"
         required: False
     pool:
         description:
@@ -106,7 +90,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -120,7 +103,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auto","format","keep_end","keep_start","local_logging","mask","name","pcre_mask","pool","pool_shared","service_group","shared_partition_pool","shared_partition_tcp_proxy_template","tcp_proxy","template_tcp_proxy_shared","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["auto","format","keep_end","keep_start","local_logging","mask","name","pcre_mask","pool","service_group","tcp_proxy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -139,30 +122,27 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pool_shared=dict(type='str',),
         name=dict(type='str',required=True,),
         format=dict(type='str',),
         auto=dict(type='str',choices=['auto']),
         keep_end=dict(type='int',),
         local_logging=dict(type='int',),
         mask=dict(type='str',),
-        template_tcp_proxy_shared=dict(type='str',),
-        shared_partition_tcp_proxy_template=dict(type='bool',),
+        user_tag=dict(type='str',),
         keep_start=dict(type='int',),
         service_group=dict(type='str',),
         pcre_mask=dict(type='str',),
-        user_tag=dict(type='str',),
         tcp_proxy=dict(type='str',),
-        shared_partition_pool=dict(type='bool',),
         pool=dict(type='str',),
         uuid=dict(type='str',)
     ))
@@ -190,6 +170,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -237,7 +221,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -261,6 +245,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -342,7 +329,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -358,12 +346,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -378,6 +365,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

@@ -56,7 +56,6 @@ options:
                 description:
                 - "Field http_vport"
 
-
 """
 
 EXAMPLES = """
@@ -88,16 +87,17 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',http_vport=dict(type='dict',jsi_api_no_token=dict(type='str',),REQ_50u=dict(type='str',),http2_control_bytes=dict(type='str',),ws_server_switch=dict(type='str',),REQ_50m=dict(type='str',),status_450=dict(type='str',),http2_reset_received=dict(type='str',),jsi_hash_add_fails=dict(type='str',),jsi_requests=dict(type='str',),ws_handshake_request=dict(type='str',),jsi_api_responses=dict(type='str',),http2_header_bytes=dict(type='str',),status_207=dict(type='str',),status_206=dict(type='str',),status_205=dict(type='str',),status_204=dict(type='str',),status_203=dict(type='str',),status_202=dict(type='str',),status_201=dict(type='str',),status_200=dict(type='str',),jsi_api_no_auth_hdr=dict(type='str',),ws_client_switch=dict(type='str',),status_2xx=dict(type='str',),http2_goaway_received=dict(type='str',),REQ_500u=dict(type='str',),status_4xx=dict(type='str',),total_requests=dict(type='str',),status_3xx=dict(type='str',),REQ_2s=dict(type='str',),stream_closed=dict(type='str',),REQ_100m=dict(type='str',),REQ_5m=dict(type='str',),REQ_100u=dict(type='str',),REQ_5s=dict(type='str',),jsi_hash_lookup_fails=dict(type='str',),REQ_500m=dict(type='str',),REQ_20u=dict(type='str',),REQ_200u=dict(type='str',),status_412=dict(type='str',),total_http2_bytes=dict(type='str',),status_411=dict(type='str',),status_306=dict(type='str',),status_307=dict(type='str',),status_304=dict(type='str',),status_305=dict(type='str',),status_302=dict(type='str',),status_303=dict(type='str',),REQ_2m=dict(type='str',),status_301=dict(type='str',),REQ_10u=dict(type='str',),total_http2_conn=dict(type='str',),REQ_10m=dict(type='str',),REQ_200m=dict(type='str',),peak_http2_conn=dict(type='str',),status_510=dict(type='str',),jsi_api_requests=dict(type='str',),status_413=dict(type='str',),status_410=dict(type='str',),http2_reset_sent=dict(type='str',),status_416=dict(type='str',),status_417=dict(type='str',),status_414=dict(type='str',),status_415=dict(type='str',),status_418=dict(type='str',),status_unknown=dict(type='str',),status_100=dict(type='str',),status_101=dict(type='str',),status_102=dict(type='str',),status_103=dict(type='str',),jsi_responses=dict(type='str',),status_300=dict(type='str',),status_424=dict(type='str',),status_508=dict(type='str',),curr_http2_conn=dict(type='str',),ws_handshake_success=dict(type='str',),status_504_ax=dict(type='str',),status_6xx=dict(type='str',),status_5xx=dict(type='str',),http2_data_bytes=dict(type='str',),status_401=dict(type='str',),status_400=dict(type='str',),status_403=dict(type='str',),status_402=dict(type='str',),status_405=dict(type='str',),status_404=dict(type='str',),status_407=dict(type='str',),status_406=dict(type='str',),status_409=dict(type='str',),status_408=dict(type='str',),jsi_skip_not_browser=dict(type='str',),http2_goaway_sent=dict(type='str',),REQ_1m=dict(type='str',),jsi_skip_no_ua=dict(type='str',),REQ_1s=dict(type='str',),status_1xx=dict(type='str',),jsi_pri_requests=dict(type='str',),status_423=dict(type='str',),status_422=dict(type='str',),status_426=dict(type='str',),status_425=dict(type='str',),REQ_20m=dict(type='str',),jsi_skip_no_fi=dict(type='str',),status_509=dict(type='str',),REQ_OVER_5s=dict(type='str',),status_500=dict(type='str',),status_501=dict(type='str',),status_502=dict(type='str',),status_503=dict(type='str',),status_504=dict(type='str',),status_505=dict(type='str',),status_506=dict(type='str',),status_507=dict(type='str',),status_449=dict(type='str',)))
+        stats=dict(type='dict',http_vport=dict(type='dict',REQ_50u=dict(type='str',),ws_server_switch=dict(type='str',),REQ_50m=dict(type='str',),status_450=dict(type='str',),status_510=dict(type='str',),ws_handshake_request=dict(type='str',),status_207=dict(type='str',),status_206=dict(type='str',),status_205=dict(type='str',),status_204=dict(type='str',),status_203=dict(type='str',),status_202=dict(type='str',),status_201=dict(type='str',),status_200=dict(type='str',),ws_client_switch=dict(type='str',),status_2xx=dict(type='str',),REQ_500u=dict(type='str',),status_4xx=dict(type='str',),status_3xx=dict(type='str',),REQ_200u=dict(type='str',),REQ_100m=dict(type='str',),REQ_5m=dict(type='str',),REQ_100u=dict(type='str',),REQ_5s=dict(type='str',),REQ_500m=dict(type='str',),REQ_20u=dict(type='str',),REQ_2s=dict(type='str',),status_306=dict(type='str',),status_307=dict(type='str',),status_304=dict(type='str',),status_305=dict(type='str',),status_302=dict(type='str',),status_303=dict(type='str',),REQ_2m=dict(type='str',),status_301=dict(type='str',),REQ_10u=dict(type='str',),REQ_10m=dict(type='str',),REQ_200m=dict(type='str',),status_412=dict(type='str',),status_413=dict(type='str',),status_410=dict(type='str',),status_411=dict(type='str',),status_416=dict(type='str',),status_417=dict(type='str',),status_414=dict(type='str',),status_415=dict(type='str',),status_418=dict(type='str',),status_unknown=dict(type='str',),status_100=dict(type='str',),status_101=dict(type='str',),status_102=dict(type='str',),status_103=dict(type='str',),status_300=dict(type='str',),status_424=dict(type='str',),ws_handshake_success=dict(type='str',),status_504_ax=dict(type='str',),status_6xx=dict(type='str',),status_5xx=dict(type='str',),status_401=dict(type='str',),status_400=dict(type='str',),status_403=dict(type='str',),status_402=dict(type='str',),status_405=dict(type='str',),status_404=dict(type='str',),status_407=dict(type='str',),status_406=dict(type='str',),status_409=dict(type='str',),status_408=dict(type='str',),REQ_1m=dict(type='str',),REQ_1s=dict(type='str',),status_1xx=dict(type='str',),total_requests=dict(type='str',),status_423=dict(type='str',),status_422=dict(type='str',),status_426=dict(type='str',),status_425=dict(type='str',),REQ_20m=dict(type='str',),status_508=dict(type='str',),status_509=dict(type='str',),REQ_OVER_5s=dict(type='str',),status_500=dict(type='str',),status_501=dict(type='str',),status_502=dict(type='str',),status_503=dict(type='str',),status_504=dict(type='str',),status_505=dict(type='str',),status_506=dict(type='str',),status_507=dict(type='str',),status_449=dict(type='str',)))
     ))
    
     # Parent keys
@@ -133,6 +133,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -180,7 +184,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -204,6 +208,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -285,7 +292,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -301,12 +309,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -321,6 +328,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

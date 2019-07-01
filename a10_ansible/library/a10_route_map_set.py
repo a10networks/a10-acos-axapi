@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_route_map_set
 description:
-    - None
+    - Set values in destination routing protocol
 short_description: Configures A10 route.map.set
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,18 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    sequence:
+        description:
+        - Key to identify parent object
+    action:
+        description:
+        - Key to identify parent object
+    route_map_tag:
+        description:
+        - Key to identify parent object
     extcommunity:
         description:
         - "Field extcommunity"
@@ -53,13 +65,13 @@ options:
         suboptions:
             egp:
                 description:
-                - "None"
+                - "remote EGP"
             incomplete:
                 description:
-                - "None"
+                - "unknown heritage"
             igp:
                 description:
-                - "None"
+                - "local IGP"
     originator_id:
         description:
         - "Field originator_id"
@@ -67,7 +79,7 @@ options:
         suboptions:
             originator_ip:
                 description:
-                - "None"
+                - "IP address of originator"
     weight:
         description:
         - "Field weight"
@@ -75,7 +87,7 @@ options:
         suboptions:
             weight_val:
                 description:
-                - "None"
+                - "Weight value"
     level:
         description:
         - "Field level"
@@ -83,7 +95,7 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "'level-1'= Export into a level-1 area; 'level-1-2'= Export into level-1 and level-2; 'level-2'= Export into level-2 sub-domain; "
     ip:
         description:
         - "Field ip"
@@ -99,7 +111,7 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "Metric Value (from -4294967295 to 4294967295)"
     as_path:
         description:
         - "Field as_path"
@@ -107,13 +119,13 @@ options:
         suboptions:
             num:
                 description:
-                - "None"
+                - "AS number"
             num2:
                 description:
-                - "None"
+                - "AS number"
             prepend:
                 description:
-                - "None"
+                - "Prepend to the as-path (AS number)"
     comm_list:
         description:
         - "Field comm_list"
@@ -121,29 +133,29 @@ options:
         suboptions:
             name:
                 description:
-                - "None"
+                - "Community-list name"
             v_std:
                 description:
-                - "None"
+                - "Community-list number (standard)"
             v_exp_delete:
                 description:
-                - "None"
+                - "Delete matching communities"
             v_exp:
                 description:
-                - "None"
+                - "Community-list number (expanded)"
             name_delete:
                 description:
-                - "None"
+                - "Delete matching communities"
             delete:
                 description:
-                - "None"
+                - "Delete matching communities"
     atomic_aggregate:
         description:
-        - "None"
+        - "BGP atomic aggregate attribute"
         required: False
     community:
         description:
-        - "None"
+        - "BGP community attribute"
         required: False
     local_preference:
         description:
@@ -152,7 +164,7 @@ options:
         suboptions:
             val:
                 description:
-                - "None"
+                - "Preference value"
     ddos:
         description:
         - "Field ddos"
@@ -160,13 +172,13 @@ options:
         suboptions:
             class_list_name:
                 description:
-                - "None"
+                - "Class-List Name"
             class_list_cid:
                 description:
-                - "None"
+                - "Class-List Cid"
             zone:
                 description:
-                - "None"
+                - "Zone Name"
     tag:
         description:
         - "Field tag"
@@ -174,7 +186,7 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "Tag value"
     aggregator:
         description:
         - "Field aggregator"
@@ -190,22 +202,22 @@ options:
         suboptions:
             dampening_max_supress:
                 description:
-                - "None"
+                - "Maximum duration to suppress a stable route(minutes)"
             dampening:
                 description:
-                - "None"
+                - "Enable route-flap dampening"
             dampening_penalty:
                 description:
-                - "None"
+                - "Un-reachability Half-life time for the penalty(minutes)"
             dampening_half_time:
                 description:
-                - "None"
+                - "Reachability Half-life time for the penalty(minutes)"
             dampening_supress:
                 description:
-                - "None"
+                - "Value to start suppressing a route"
             dampening_reuse:
                 description:
-                - "None"
+                - "Value to start reusing a route"
     ipv6:
         description:
         - "Field ipv6"
@@ -221,12 +233,11 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "'external'= IS-IS external metric type; 'internal'= IS-IS internal metric type; 'type-1'= OSPF external type 1 metric; 'type-2'= OSPF external type 2 metric; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -259,10 +270,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -288,25 +300,44 @@ def get_argspec():
         metric_type=dict(type='dict',value=dict(type='str',choices=['external','internal','type-1','type-2'])),
         uuid=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        sequence=dict(type='str', required=True),
+        action=dict(type='str', required=True),
+        route_map_tag=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/route-map/{tag}+{action}+{sequence}/set"
+    url_base = "/axapi/v3/route-map/{route_map_tag}+{action}+{sequence}/set"
+
     f_dict = {}
+    f_dict["sequence"] = module.params["sequence"]
+    f_dict["action"] = module.params["action"]
+    f_dict["route_map_tag"] = module.params["route_map_tag"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/route-map/{tag}+{action}+{sequence}/set"
+    url_base = "/axapi/v3/route-map/{route_map_tag}+{action}+{sequence}/set"
+
     f_dict = {}
+    f_dict["sequence"] = module.params["sequence"]
+    f_dict["action"] = module.params["action"]
+    f_dict["route_map_tag"] = module.params["route_map_tag"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -324,7 +355,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -343,7 +374,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -354,7 +385,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -379,6 +410,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -389,7 +423,8 @@ def create(module, result):
     payload = build_json("set", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -414,8 +449,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("set", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -435,24 +471,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("set", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -477,6 +529,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

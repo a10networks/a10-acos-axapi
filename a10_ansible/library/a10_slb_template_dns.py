@@ -60,32 +60,10 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    response_rate_limiting:
+    default_policy:
         description:
-        - "Field response_rate_limiting"
+        - "'nocache'= Cache disable; 'cache'= Cache enable; "
         required: False
-        suboptions:
-            filter_response_rate:
-                description:
-                - "Maximum allowed request rate for the filter. This should match average traffic. (default 20 per two seconds)"
-            slip_rate:
-                description:
-                - "Every n'th response that would be rate-limited will be let through instead"
-            response_rate:
-                description:
-                - "Responses exceeding this rate within the window will be dropped (default 5 per second)"
-            window:
-                description:
-                - "Rate-Limiting Interval in Seconds (default is one)"
-            action:
-                description:
-                - "'log-only'= Only log rate-limiting, do not actually rate limit. Requires enable-log configuration; 'rate-limit'= Rate-Limit based on configuration (Default); 'whitelist'= Whitelist, disable rate-limiting; "
-            enable_log:
-                description:
-                - "Enable logging"
-            uuid:
-                description:
-                - "uuid of the object"
     drop:
         description:
         - "Drop the malformed query"
@@ -126,10 +104,6 @@ options:
         description:
         - "Define maximum cache size (Maximum cache entry per VIP)"
         required: False
-    default_policy:
-        description:
-        - "'nocache'= Cache disable; 'cache'= Cache enable; "
-        required: False
     max_cache_entry_size:
         description:
         - "Define maximum cache entry size (Maximum cache entry size per VIP)"
@@ -138,7 +112,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -152,7 +125,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list","default_policy","disable_dns_template","dnssec_service_group","drop","enable_cache_sharing","forward","max_cache_entry_size","max_cache_size","max_query_length","name","period","query_id_switch","redirect_to_tcp_port","response_rate_limiting","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["class_list","default_policy","disable_dns_template","dnssec_service_group","drop","enable_cache_sharing","forward","max_cache_entry_size","max_cache_size","max_query_length","name","period","query_id_switch","redirect_to_tcp_port","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -171,10 +144,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -183,7 +157,7 @@ def get_argspec():
         dnssec_service_group=dict(type='str',),
         name=dict(type='str',required=True,),
         class_list=dict(type='dict',lid_list=dict(type='list',action_value=dict(type='str',choices=['dns-cache-disable','dns-cache-enable','forward']),log=dict(type='bool',),lidnum=dict(type='int',required=True,),over_limit_action=dict(type='bool',),per=dict(type='int',),lockout=dict(type='int',),user_tag=dict(type='str',),dns=dict(type='dict',cache_action=dict(type='str',choices=['cache-disable','cache-enable']),honor_server_response_ttl=dict(type='bool',),weight=dict(type='int',),ttl=dict(type='int',)),conn_rate_limit=dict(type='int',),log_interval=dict(type='int',),uuid=dict(type='str',)),name=dict(type='str',),uuid=dict(type='str',)),
-        response_rate_limiting=dict(type='dict',filter_response_rate=dict(type='int',),slip_rate=dict(type='int',),response_rate=dict(type='int',),window=dict(type='int',),action=dict(type='str',choices=['log-only','rate-limit','whitelist']),enable_log=dict(type='bool',),uuid=dict(type='str',)),
+        default_policy=dict(type='str',choices=['nocache','cache']),
         drop=dict(type='bool',),
         period=dict(type='int',),
         user_tag=dict(type='str',),
@@ -194,7 +168,6 @@ def get_argspec():
         disable_dns_template=dict(type='bool',),
         forward=dict(type='str',),
         max_cache_size=dict(type='int',),
-        default_policy=dict(type='str',choices=['nocache','cache']),
         max_cache_entry_size=dict(type='int',),
         uuid=dict(type='str',)
     ))
@@ -222,6 +195,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -269,7 +246,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -293,6 +270,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -374,7 +354,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -390,12 +371,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -410,6 +390,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

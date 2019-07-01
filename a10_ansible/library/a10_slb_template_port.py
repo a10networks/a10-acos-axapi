@@ -54,10 +54,6 @@ options:
         description:
         - "Destination NAT"
         required: False
-    restore_svc_time:
-        description:
-        - "put the service back to the rotation after time in seconds"
-        required: False
     request_rate_limit:
         description:
         - "Request rate limit"
@@ -110,17 +106,13 @@ options:
         description:
         - "Slow start ends when slow start connection limit reaches a number (default 4096) (Slow start ends when connection limit reaches this number)"
         required: False
-    flap_period:
+    add:
         description:
-        - "take service out of rotation if max-flaps exceeded within time in seconds"
+        - "Slow start connection limit add by a number every interval (Add by this number every interval)"
         required: False
     sub_group:
         description:
         - "Divide service group members into different sub groups (Sub group ID (default is 0))"
-        required: False
-    dampening_flaps:
-        description:
-        - "service dampening flaps count (max-flaps allowed in flap period)"
         required: False
     bw_rate_limit_no_logging:
         description:
@@ -136,23 +128,15 @@ options:
         required: False
     dscp:
         description:
-        - "gui-section Advanced (DSCP to Real Server IP Mapping Value)"
+        - "Differentiated Services Code Point (DSCP to Real Server IP Mapping Value)"
         required: False
     request_rate_interval:
         description:
         - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
         required: False
-    add:
-        description:
-        - "Slow start connection limit add by a number every interval (Add by this number every interval)"
-        required: False
     every:
         description:
         - "Slow start connection limit increment interval (default 10)"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Reference a NAT pool or pool-group from shared partition"
         required: False
     conn_limit_no_logging:
         description:
@@ -182,10 +166,6 @@ options:
         description:
         - "Port template name"
         required: True
-    template_port_pool_shared:
-        description:
-        - "Source NAT (IP NAT Pool or pool group name)"
-        required: False
     bw_rate_limit_duration:
         description:
         - "Duration in seconds the observed rate needs to honor"
@@ -227,7 +207,6 @@ options:
         - "Health Check Monitor (Health monitor name)"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -240,7 +219,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","dampening_flaps","decrement","del_session_on_server_down","dest_nat","down_grace_period","down_timer","dscp","dynamic_member_priority","every","extended_stats","flap_period","health_check","health_check_disable","inband_health_check","initial_slow_start","name","no_ssl","rate_interval","reassign","request_rate_interval","request_rate_limit","request_rate_no_logging","resel_on_reset","reset","restore_svc_time","resume","retry","shared_partition_pool","slow_start","source_nat","stats_data_action","sub_group","template_port_pool_shared","till","times","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","decrement","del_session_on_server_down","dest_nat","down_grace_period","down_timer","dscp","dynamic_member_priority","every","extended_stats","health_check","health_check_disable","inband_health_check","initial_slow_start","name","no_ssl","rate_interval","reassign","request_rate_interval","request_rate_limit","request_rate_no_logging","resel_on_reset","reset","resume","retry","slow_start","source_nat","stats_data_action","sub_group","till","times","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -259,10 +238,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -272,7 +252,6 @@ def get_argspec():
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         resel_on_reset=dict(type='bool',),
         dest_nat=dict(type='bool',),
-        restore_svc_time=dict(type='int',),
         request_rate_limit=dict(type='int',),
         dynamic_member_priority=dict(type='int',),
         bw_rate_limit=dict(type='int',),
@@ -286,17 +265,14 @@ def get_argspec():
         rate_interval=dict(type='str',choices=['100ms','second']),
         no_ssl=dict(type='bool',),
         till=dict(type='int',),
-        flap_period=dict(type='int',),
+        add=dict(type='int',),
         sub_group=dict(type='int',),
-        dampening_flaps=dict(type='int',),
         bw_rate_limit_no_logging=dict(type='bool',),
         down_grace_period=dict(type='int',),
         initial_slow_start=dict(type='int',),
         dscp=dict(type='int',),
         request_rate_interval=dict(type='str',choices=['100ms','second']),
-        add=dict(type='int',),
         every=dict(type='int',),
-        shared_partition_pool=dict(type='bool',),
         conn_limit_no_logging=dict(type='bool',),
         extended_stats=dict(type='bool',),
         uuid=dict(type='str',),
@@ -304,7 +280,6 @@ def get_argspec():
         del_session_on_server_down=dict(type='bool',),
         conn_rate_limit_no_logging=dict(type='bool',),
         name=dict(type='str',required=True,),
-        template_port_pool_shared=dict(type='str',),
         bw_rate_limit_duration=dict(type='int',),
         bw_rate_limit_resume=dict(type='int',),
         user_tag=dict(type='str',),
@@ -340,6 +315,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -387,7 +366,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -411,6 +390,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -492,7 +474,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -508,12 +491,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -528,6 +510,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

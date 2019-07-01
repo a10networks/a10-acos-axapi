@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_portal
 description:
-    - None
+    - Authentication portal configuration
 short_description: Configures A10 aam.authentication.portal
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     name:
         description:
-        - "None"
+        - "'default-portal'= Default portal configuration; "
         required: True
     logon_fail:
         description:
@@ -55,7 +58,7 @@ options:
                 - "Field title_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     logo_cfg:
         description:
         - "Field logo_cfg"
@@ -63,16 +66,16 @@ options:
         suboptions:
             logo:
                 description:
-                - "None"
+                - "Specify logo image filename"
             width:
                 description:
-                - "None"
+                - "Specify logo image width (Default= 134)"
             height:
                 description:
-                - "None"
+                - "Specify logo image height (Default= 71)"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     notify_change_password:
         description:
@@ -84,40 +87,40 @@ options:
                 - "Field old_pwd_cfg"
             username_var:
                 description:
-                - "None"
+                - "Specify username variable name in default change password notification page (Default= cp_usr)"
             new_pwd_cfg:
                 description:
                 - "Field new_pwd_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             cfm_pwd_cfg:
                 description:
                 - "Field cfm_pwd_cfg"
             confirm_password_var:
                 description:
-                - "None"
+                - "Specify confirm password variable name in default change password notification page (Default= cp_cfm_pwd)"
             new_password_var:
                 description:
-                - "None"
+                - "Specify new password variable name in default change password notification page (Default= cp_new_pwd)"
             change_url:
                 description:
-                - "None"
+                - "Specify change password action URL in default change password notification page (Default= /notify_change.fo)"
             continue_url:
                 description:
-                - "None"
+                - "Specify continue action URL in default change password notification page (Default= /continue.fo)"
             background:
                 description:
                 - "Field background"
             old_password_var:
                 description:
-                - "None"
+                - "Specify old password variable name in default change password notification page (Default= cp_old_pwd)"
             change_text:
                 description:
-                - "None"
+                - "Specify change button text in default change password notification page (Default= Change)"
             continue_text:
                 description:
-                - "None"
+                - "Specify continue button text in default change password notification page (Default= Continue)"
             username_cfg:
                 description:
                 - "Field username_cfg"
@@ -128,10 +131,10 @@ options:
         suboptions:
             action_url:
                 description:
-                - "None"
+                - "Specify form action URL in default logon page (Default= /logon.fo)"
             submit_text:
                 description:
-                - "None"
+                - "Specify submit button text in default logon page (Default= Log In)"
             passcode_cfg:
                 description:
                 - "Field passcode_cfg"
@@ -140,16 +143,16 @@ options:
                 - "Field username_cfg"
             username_var:
                 description:
-                - "None"
+                - "Specify username variable name in default logon page (Default= user)"
             password_var:
                 description:
-                - "None"
+                - "Specify password variable name in default logon page (Default= pwd)"
             background:
                 description:
                 - "Field background"
             passcode_var:
                 description:
-                - "None"
+                - "Specify passcode variable name in default logon page (Default= passcode)"
             fail_msg_cfg:
                 description:
                 - "Field fail_msg_cfg"
@@ -158,10 +161,10 @@ options:
                 - "Field password_cfg"
             enable_passcode:
                 description:
-                - "None"
+                - "Enable passcode field in default logon page"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     change_password:
         description:
         - "Field change_password"
@@ -169,22 +172,22 @@ options:
         suboptions:
             action_url:
                 description:
-                - "None"
+                - "Specify form action URL in default change password page (Default= /change.fo)"
             username_var:
                 description:
-                - "None"
+                - "Specify username variable name in default change password page (Default= cp_usr)"
             new_pwd_cfg:
                 description:
                 - "Field new_pwd_cfg"
             submit_text:
                 description:
-                - "None"
+                - "Specify submit button text in default change password page (Default= Submit)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             confirm_password_var:
                 description:
-                - "None"
+                - "Specify confirm password variable name in default change password page (Default= cp_cfm_pwd)"
             title_cfg:
                 description:
                 - "Field title_cfg"
@@ -193,7 +196,7 @@ options:
                 - "Field username_cfg"
             new_password_var:
                 description:
-                - "None"
+                - "Specify new password variable name in default change password page (Default= cp_new_pwd)"
             old_pwd_cfg:
                 description:
                 - "Field old_pwd_cfg"
@@ -202,18 +205,17 @@ options:
                 - "Field background"
             old_password_var:
                 description:
-                - "None"
+                - "Specify old password variable name in default change password page (Default= cp_old_pwd)"
             cfm_pwd_cfg:
                 description:
                 - "Field cfm_pwd_cfg"
             reset_text:
                 description:
-                - "None"
+                - "Specify reset button text in default change password page (Default= Reset)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -246,7 +248,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -261,6 +267,7 @@ def get_argspec():
         change_password=dict(type='dict',action_url=dict(type='str',),username_var=dict(type='str',),new_pwd_cfg=dict(type='dict',new_password=dict(type='bool',),new_size=dict(type='int',),new_font=dict(type='bool',),new_text=dict(type='str',),new_color=dict(type='bool',),new_color_value=dict(type='str',),new_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),new_font_custom=dict(type='str',),new_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana'])),submit_text=dict(type='str',),uuid=dict(type='str',),confirm_password_var=dict(type='str',),title_cfg=dict(type='dict',title_color=dict(type='bool',),title=dict(type='bool',),title_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),title_font_custom=dict(type='str',),title_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),title_color_value=dict(type='str',),title_size=dict(type='int',),title_text=dict(type='str',),title_font=dict(type='bool',)),username_cfg=dict(type='dict',username=dict(type='bool',),user_font=dict(type='bool',),user_text=dict(type='str',),user_size=dict(type='int',),user_color_value=dict(type='str',),user_font_custom=dict(type='str',),user_color=dict(type='bool',),user_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),user_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),new_password_var=dict(type='str',),old_pwd_cfg=dict(type='dict',old_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),old_color=dict(type='bool',),old_color_value=dict(type='str',),old_password=dict(type='bool',),old_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),old_size=dict(type='int',),old_text=dict(type='str',),old_font_custom=dict(type='str',),old_font=dict(type='bool',)),background=dict(type='dict',bgfile=dict(type='str',),bgstyle=dict(type='str',choices=['tile','stretch','fit']),bgcolor_value=dict(type='str',),bgcolor_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),old_password_var=dict(type='str',),cfm_pwd_cfg=dict(type='dict',cfm_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),cfm_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),cfm_color_value=dict(type='str',),cfm_font_custom=dict(type='str',),cfm_size=dict(type='int',),cfm_font=dict(type='bool',),cfm_text=dict(type='str',),confirm_password=dict(type='bool',),cfm_color=dict(type='bool',)),reset_text=dict(type='str',)),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -268,6 +275,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/portal/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -277,11 +285,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/portal/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -299,7 +312,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -318,7 +331,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -329,7 +342,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -354,6 +367,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -364,7 +380,8 @@ def create(module, result):
     payload = build_json("portal", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -389,8 +406,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("portal", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -410,22 +428,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("portal", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -439,6 +475,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -447,6 +486,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_vpn_ipsec
 description:
-    - None
+    - IPsec settings
 short_description: Configures A10 vpn.ipsec
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,13 +35,16 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     lifebytes:
         description:
-        - "None"
+        - "IPsec SA age in megabytes (0 indicates unlimited bytes)"
         required: False
     bind_tunnel:
         description:
@@ -50,39 +53,39 @@ options:
         suboptions:
             tunnel:
                 description:
-                - "None"
+                - "Tunnel interface index"
             next_hop:
                 description:
-                - "None"
+                - "IPsec Next Hop IP Address"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             next_hop_v6:
                 description:
-                - "None"
+                - "IPsec Next Hop IPv6 Address"
     name:
         description:
-        - "None"
+        - "IPsec name"
         required: True
     dh_group:
         description:
-        - "None"
+        - "'0'= Diffie-Hellman group 0 (Default); '1'= Diffie-Hellman group 1 - 768-bits; '2'= Diffie-Hellman group 2 - 1024-bits; '5'= Diffie-Hellman group 5 - 1536-bits; '14'= Diffie-Hellman group 14 - 2048-bits; '15'= Diffie-Hellman group 15 - 3072-bits; '16'= Diffie-Hellman group 16 - 4096-bits; '18'= Diffie-Hellman group 18 - 8192-bits; '19'= Diffie-Hellman group 19 - 256-bit Elliptic Curve; '20'= Diffie-Hellman group 20 - 384-bit Elliptic Curve; "
         required: False
     proto:
         description:
-        - "None"
+        - "'esp'= Encapsulating security protocol (Default); "
         required: False
     up:
         description:
-        - "None"
+        - "Initiates SA negotiation to bring the IPsec connection up"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     anti_replay_window:
         description:
-        - "None"
+        - "'0'= Disable Anti-Replay Window Check; '32'= Window size of 32; '64'= Window size of 64; '128'= Window size of 128; '256'= Window size of 256; '512'= Window size of 512; '1024'= Window size of 1024; "
         required: False
     sampling_enable:
         description:
@@ -91,22 +94,22 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'packets-encrypted'= Encrypted Packets; 'packets-decrypted'= Decrypted Packets; 'anti-replay-num'= Anti-Replay Failure; 'rekey-num'= Rekey Times; 'packets-err-inactive'= Inactive Error; 'packets-err-encryption'= Encryption Error; 'packets-err-pad-check'= Pad Check Error; 'packets-err-pkt-sanity'= Packets Sanity Error; 'packets-err-icv-check'= ICV Check Error; 'packets-err-lifetime-lifebytes'= Lifetime Lifebytes Error; 'bytes-encrypted'= Encrypted Bytes; 'bytes-decrypted'= Decrypted Bytes; 'prefrag-success'= Pre-frag Success; 'prefrag-error'= Pre-frag Error; 'cavium-bytes-encrypted'= CAVIUM Encrypted Bytes; 'cavium-bytes-decrypted'= CAVIUM Decrypted Bytes; 'cavium-packets-encrypted'= CAVIUM Encrypted Packets; 'cavium-packets-decrypted'= CAVIUM Decrypted Packets; 'tunnel-intf-down'= Packet dropped= Tunnel Interface Down; 'pkt-fail-prep-to-send'= Packet dropped= Failed in prepare to send; 'no-next-hop'= Packet dropped= No next hop; 'invalid-tunnel-id'= Packet dropped= Invalid tunnel ID; 'no-tunnel-found'= Packet dropped= No tunnel found; 'pkt-fail-to-send'= Packet dropped= Failed to send; 'frag-after-encap-frag-packets'= Frag-after-encap Fragment Generated; 'frag-received'= Fragment Received; 'sequence-num'= Sequence Number; 'sequence-num-rollover'= Sequence Number Rollover; 'packets-err-nh-check'= Next Header Check Error; "
     ike_gateway:
         description:
-        - "None"
+        - "Gateway to use for IPsec SA"
         required: False
     mode:
         description:
-        - "None"
+        - "'tunnel'= Encapsulating the packet in IPsec tunnel mode (Default); "
         required: False
     sequence_number_disable:
         description:
-        - "None"
+        - "Do not use incremental sequence number in the ESP header"
         required: False
     lifetime:
         description:
-        - "None"
+        - "IPsec SA age in seconds"
         required: False
     enc_cfg:
         description:
@@ -115,16 +118,16 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "Prioritizes (1-10) security protocol, least value has highest priority"
             encryption:
                 description:
-                - "None"
+                - "'des'= Data Encryption Standard algorithm; '3des'= Triple Data Encryption Standard algorithm; 'aes-128'= Advanced Encryption Standard algorithm CBC Mode(key size= 128 bits); 'aes-192'= Advanced Encryption Standard algorithm CBC Mode(key size= 192 bits); 'aes-256'= Advanced Encryption Standard algorithm CBC Mode(key size= 256 bits); 'aes-gcm-128'= Advanced Encryption Standard algorithm Galois/Counter Mode(key size= 128 bits, ICV size= 16 bytes); 'aes-gcm-192'= Advanced Encryption Standard algorithm Galois/Counter Mode(key size= 192 bits, ICV size= 16 bytes); 'aes-gcm-256'= Advanced Encryption Standard algorithm Galois/Counter Mode(key size= 256 bits, ICV size= 16 bytes); 'null'= No encryption algorithm; "
             gcm_priority:
                 description:
-                - "None"
+                - "Prioritizes (1-10) security protocol, least value has highest priority"
             hash:
                 description:
-                - "None"
+                - "'md5'= MD5 Dessage-Digest Algorithm; 'sha1'= Secure Hash Algorithm 1; 'sha256'= Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384; 'sha512'= Secure Hash Algorithm 512; 'null'= No hash algorithm; "
     traffic_selector:
         description:
         - "Field traffic_selector"
@@ -136,7 +139,6 @@ options:
             ipv6:
                 description:
                 - "Field ipv6"
-
 
 """
 
@@ -169,7 +171,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -192,6 +198,7 @@ def get_argspec():
         enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','aes-gcm-128','aes-gcm-192','aes-gcm-256','null']),gcm_priority=dict(type='int',),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512','null'])),
         traffic_selector=dict(type='dict',ipv4=dict(type='dict',remote=dict(type='str',),local_port=dict(type='int',),remote_port=dict(type='int',),local_netmask=dict(type='str',),remote_netmask=dict(type='str',),protocol=dict(type='int',),local=dict(type='str',)),ipv6=dict(type='dict',local_portv6=dict(type='int',),protocolv6=dict(type='int',),localv6=dict(type='str',),remotev6=dict(type='str',),remote_portv6=dict(type='int',)))
     ))
+   
 
     return rv
 
@@ -199,6 +206,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/vpn/ipsec/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -208,11 +216,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/vpn/ipsec/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -230,7 +243,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -249,7 +262,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -260,7 +273,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -285,6 +298,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -295,7 +311,8 @@ def create(module, result):
     payload = build_json("ipsec", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -320,8 +337,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ipsec", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -341,22 +359,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ipsec", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -370,6 +406,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -378,6 +417,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

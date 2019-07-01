@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_sys_ut
 description:
-    - None
+    - System unit test
 short_description: Configures A10 sys-ut
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     event_list:
         description:
@@ -49,13 +52,13 @@ options:
                 - "Field action_list"
             event_number:
                 description:
-                - "None"
+                - "Event number"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
     common:
         description:
         - "Field common"
@@ -63,13 +66,13 @@ options:
         suboptions:
             delay:
                 description:
-                - "None"
+                - "wait time in seconds after each run"
             proceed_on_error:
                 description:
-                - "None"
+                - "Run test even in case of event failure"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     template_list:
         description:
         - "Field template_list"
@@ -80,13 +83,13 @@ options:
                 - "Field udp"
             name:
                 description:
-                - "None"
+                - "template name"
             ignore_validation:
                 description:
                 - "Field ignore_validation"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             l2:
                 description:
                 - "Field l2"
@@ -101,14 +104,14 @@ options:
                 - "Field tcp"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     action:
         description:
-        - "None"
+        - "'enable'= Set device to SUT mode; 'disable'= Set device to normal mode; "
         required: False
     test_name:
         description:
-        - "None"
+        - "Name for this test case"
         required: False
     state_list:
         description:
@@ -120,13 +123,13 @@ options:
                 - "Field next_state_list"
             name:
                 description:
-                - "None"
+                - "Node name"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     run_test:
         description:
         - "Field run_test"
@@ -134,8 +137,7 @@ options:
         suboptions:
             mode:
                 description:
-                - "None"
-
+                - "'basic'= Run Basic mode; 'fault-injection'= Run FI mode. This will also run Basic mode to gather data; 'cpu-rr'= Run CPU RR mode; 'frag'= Run IP frag mode; "
 
 """
 
@@ -168,7 +170,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -183,6 +189,7 @@ def get_argspec():
         state_list=dict(type='list',next_state_list=dict(type='list',case_list=dict(type='list',action_list=dict(type='list',direction=dict(type='str',required=True,choices=['send','expect','wait']),uuid=dict(type='str',),drop=dict(type='bool',),udp=dict(type='dict',uuid=dict(type='str',),checksum=dict(type='str',choices=['valid','invalid']),nat_pool=dict(type='str',),src_port=dict(type='int',),length=dict(type='int',),dest_port=dict(type='bool',),dest_port_value=dict(type='int',)),tcp=dict(type='dict',uuid=dict(type='str',),checksum=dict(type='str',choices=['valid','invalid']),seq_number=dict(type='str',choices=['valid','invalid']),nat_pool=dict(type='str',),src_port=dict(type='int',),urgent=dict(type='str',choices=['valid','invalid']),window=dict(type='str',choices=['valid','invalid']),ack_seq_number=dict(type='str',choices=['valid','invalid']),flags=dict(type='dict',ece=dict(type='bool',),urg=dict(type='bool',),uuid=dict(type='str',),ack=dict(type='bool',),cwr=dict(type='bool',),psh=dict(type='bool',),syn=dict(type='bool',),rst=dict(type='bool',),fin=dict(type='bool',)),dest_port=dict(type='bool',),dest_port_value=dict(type='int',),options=dict(type='dict',uuid=dict(type='str',),mss=dict(type='int',),sack_type=dict(type='str',choices=['permitted','block']),time_stamp_enable=dict(type='bool',),nop=dict(type='bool',),wscale=dict(type='int',))),delay=dict(type='int',),l2=dict(type='dict',protocol=dict(type='str',choices=['arp','ipv4','ipv6']),uuid=dict(type='str',),ethertype=dict(type='bool',),mac_list=dict(type='list',ethernet=dict(type='str',),ve=dict(type='str',),src_dst=dict(type='str',required=True,choices=['dest','src']),address_type=dict(type='str',choices=['broadcast','multicast']),nat_pool=dict(type='str',),value=dict(type='str',),trunk=dict(type='str',),virtual_server=dict(type='str',),uuid=dict(type='str',)),vlan=dict(type='int',),value=dict(type='int',)),l3=dict(type='dict',protocol=dict(type='bool',),uuid=dict(type='str',),checksum=dict(type='str',choices=['valid','invalid']),value=dict(type='int',),ip_list=dict(type='list',ve=dict(type='str',),virtual_server=dict(type='str',),src_dst=dict(type='str',required=True,choices=['dest','src']),nat_pool=dict(type='str',),trunk=dict(type='str',),ipv6_address=dict(type='str',),ethernet=dict(type='str',),ipv4_address=dict(type='str',),uuid=dict(type='str',)),ttl=dict(type='int',),ntype=dict(type='str',choices=['tcp','udp','icmp'])),template=dict(type='str',),l1=dict(type='dict',eth_list=dict(type='list',ethernet_start=dict(type='str',),ethernet_end=dict(type='str',)),uuid=dict(type='str',),auto=dict(type='bool',),value=dict(type='int',),length=dict(type='bool',),trunk_list=dict(type='list',trunk_start=dict(type='int',),trunk_end=dict(type='int',)))),repeat=dict(type='int',),case_number=dict(type='int',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),
         run_test=dict(type='dict',mode=dict(type='str',choices=['basic','fault-injection','cpu-rr','frag']))
     ))
+   
 
     return rv
 
@@ -190,6 +197,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/sys-ut"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -198,10 +206,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/sys-ut"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -219,7 +232,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -238,7 +251,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -249,7 +262,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -274,6 +287,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -284,7 +300,8 @@ def create(module, result):
     payload = build_json("sys-ut", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -309,8 +326,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("sys-ut", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -330,22 +348,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("sys-ut", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -359,6 +395,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -367,6 +406,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

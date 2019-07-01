@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_import
 description:
-    - None
+    - Get files from remote site
 short_description: Configures A10 import
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,25 +35,28 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     geo_location:
         description:
-        - "None"
+        - "Geo-location CSV File"
         required: False
     ssl_cert_key:
         description:
-        - "None"
+        - "'bulk'= import an archive file; "
         required: False
     class_list_convert:
         description:
-        - "None"
+        - "Convert Class List File to A10 format"
         required: False
     bw_list:
         description:
-        - "None"
+        - "Black white List File"
         required: False
     usb_license:
         description:
-        - "None"
+        - "USB License File"
         required: False
     health_external:
         description:
@@ -62,77 +65,77 @@ options:
         suboptions:
             description:
                 description:
-                - "None"
+                - "Describe the Program Function briefly"
             remote_file:
                 description:
                 - "Field remote_file"
             externalfilename:
                 description:
-                - "None"
+                - "Specify the Program Name"
             password:
                 description:
-                - "None"
+                - "password for the remote site"
             use_mgmt_port:
                 description:
-                - "None"
+                - "Use management port as source port"
             overwrite:
                 description:
-                - "None"
+                - "Overwrite existing file"
     auth_portal:
         description:
-        - "None"
+        - "Portal file for http authentication"
         required: False
     aflex:
         description:
-        - "None"
+        - "aFleX Script Source File"
         required: False
     overwrite:
         description:
-        - "None"
+        - "Overwrite existing file"
         required: False
     class_list_type:
         description:
-        - "None"
+        - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-insensitive'= string-case-insensitive; "
         required: False
     pfx_password:
         description:
-        - "None"
+        - "The password for certificate file (pfx type only)"
         required: False
     web_category_license:
         description:
-        - "None"
+        - "License file to enable web-category feature"
         required: False
     thales_kmdata:
         description:
-        - "None"
+        - "Thales Kmdata files"
         required: False
     ssl_crl:
         description:
-        - "None"
+        - "SSL Crl File"
         required: False
     terminal:
         description:
-        - "None"
+        - "terminal vi"
         required: False
     policy:
         description:
-        - "None"
+        - "WAF policy File"
         required: False
     file_inspection_bw_list:
         description:
-        - "None"
+        - "File Inspection Black white List File"
         required: False
     thales_secworld:
         description:
-        - "None"
+        - "Thales security world files"
         required: False
     lw_4o6:
         description:
-        - "None"
+        - "LW-4over6 Binding Table File"
         required: False
     auth_portal_image:
         description:
-        - "None"
+        - "Image file for default portal"
         required: False
     health_postfile:
         description:
@@ -141,58 +144,58 @@ options:
         suboptions:
             postfilename:
                 description:
-                - "None"
+                - "Specify the File Name"
             password:
                 description:
-                - "None"
+                - "password for the remote site"
             use_mgmt_port:
                 description:
-                - "None"
+                - "Use management port as source port"
             remote_file:
                 description:
-                - "None"
+                - "Profile name for remote url"
             overwrite:
                 description:
-                - "None"
+                - "Overwrite existing file"
     class_list:
         description:
-        - "None"
+        - "Class List File"
         required: False
     glm_license:
         description:
-        - "None"
+        - "License File"
         required: False
     dnssec_ds:
         description:
-        - "None"
+        - "DNSSEC DS file for child zone"
         required: False
     local_uri_file:
         description:
-        - "None"
+        - "Local URI files for http response"
         required: False
     wsdl:
         description:
-        - "None"
+        - "Web Service Definition Language File"
         required: False
     password:
         description:
-        - "None"
+        - "password for the remote site"
         required: False
     file_inspection_use_mgmt_port:
         description:
-        - "None"
+        - "Use management port as source port"
         required: False
     ssl_key:
         description:
-        - "None"
+        - "SSL Key File(enter bulk when import an archive file)"
         required: False
     use_mgmt_port:
         description:
-        - "None"
+        - "Use management port as source port"
         required: False
     remote_file:
         description:
-        - "None"
+        - "profile name for remote url"
         required: False
     to_device:
         description:
@@ -201,40 +204,40 @@ options:
         suboptions:
             web_category_license:
                 description:
-                - "None"
+                - "License file to enable web-category feature"
             remote_file:
                 description:
-                - "None"
+                - "profile name for remote url"
             glm_license:
                 description:
-                - "None"
+                - "License File"
             glm_cert:
                 description:
-                - "None"
+                - "GLM certificate"
             device:
                 description:
-                - "None"
+                - "Device (Device ID)"
             use_mgmt_port:
                 description:
-                - "None"
+                - "Use management port as source port"
             overwrite:
                 description:
-                - "None"
+                - "Overwrite existing file"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     store_name:
         description:
-        - "None"
+        - "Import store name"
         required: False
     ca_cert:
         description:
-        - "None"
+        - "CA Cert File(enter bulk when import an archive file)"
         required: False
     glm_cert:
         description:
-        - "None"
+        - "GLM certificate"
         required: False
     store:
         description:
@@ -243,23 +246,23 @@ options:
         suboptions:
             create:
                 description:
-                - "None"
+                - "Create an import store profile"
             name:
                 description:
-                - "None"
+                - "profile name to store remote url"
             remote_file:
                 description:
                 - "Field remote_file"
             delete:
                 description:
-                - "None"
+                - "Delete an import store profile"
     xml_schema:
         description:
-        - "None"
+        - "XML-Schema File"
         required: False
     certificate_type:
         description:
-        - "None"
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
         required: False
     auth_saml_idp:
         description:
@@ -268,31 +271,30 @@ options:
         suboptions:
             remote_file:
                 description:
-                - "None"
+                - "Profile name for remote url"
             saml_idp_name:
                 description:
-                - "None"
+                - "Metadata name"
             verify_xml_signature:
                 description:
-                - "None"
+                - "Verify metadata's XML signature"
             password:
                 description:
-                - "None"
+                - "password for the remote site"
             use_mgmt_port:
                 description:
-                - "None"
+                - "Use management port as source port"
             overwrite:
                 description:
-                - "None"
+                - "Overwrite existing file"
     ssl_cert:
         description:
-        - "None"
+        - "SSL Cert File(enter bulk when import an archive file)"
         required: False
     dnssec_dnskey:
         description:
-        - "None"
+        - "DNSSEC DNSKEY(KSK) file for child zone"
         required: False
-
 
 """
 
@@ -325,7 +327,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -374,6 +380,7 @@ def get_argspec():
         ssl_cert=dict(type='str',),
         dnssec_dnskey=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -381,6 +388,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/import"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -389,10 +397,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/import"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -410,7 +423,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -429,7 +442,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -440,7 +453,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -465,6 +478,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -475,7 +491,8 @@ def create(module, result):
     payload = build_json("import", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -500,8 +517,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("import", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -521,22 +539,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("import", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -550,6 +586,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -558,6 +597,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

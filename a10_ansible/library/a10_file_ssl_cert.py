@@ -8,7 +8,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = ''' 
+DOCUMENTATION = """
 module: a10_file_ssl_cert
 description:
     - ssl certificate file information and management commands
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     pfx_password:
         description:
         - "The password for certificate file (pfx type only)"
@@ -45,19 +48,29 @@ options:
         required: False
     file:
         description:
-        - "PRIMARY KEY: Filename used to access certificate in templates"
+        - "ssl certificate local file name"
+        required: False
+    action:
+        description:
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     certificate_type:
         description:
-        - Certificate encoding scheme "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
         required: False
-    file_content:
+    file_handle:
         description:
-        - SSL Certificate data in PEM/DER/PFX/P7B format 
-'''
+        - "full path of the uploaded file"
+        required: False
+    size:
+        description:
+        - "ssl certificate file size in byte"
+        required: False
 
-EXAMPLES = ''' 
-'''
+"""
+
+EXAMPLES = """
+"""
 
 ANSIBLE_METADATA = {
     'metadata_version': '1.1',
@@ -66,7 +79,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["certificate_type","dst_file","file","pfx_password","uuid",]
+AVAILABLE_PROPERTIES = ["action","certificate_type","dst_file","file","file_handle","pfx_password","size",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -85,51 +98,58 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        # pfx_password=dict(type='str',),
+        pfx_password=dict(type='str',),
         dst_file=dict(type='str',),
-        # uuid=dict(type='str',),
         file=dict(type='str',),
+        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
-        file_content=dict(type='str', no_log=True)
+        file_handle=dict(type='str',),
+        size=dict(type='int',)
     ))
+   
 
     return rv
-
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/file/ssl-cert"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
-
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/file/ssl-cert/{file}"
+    url_base = "/axapi/v3/file/ssl-cert"
 
     f_dict = {}
-    f_dict["file"] = module.params["file"]
+
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
         title: data
     }
 
-
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
-
 
 def _build_dict_from_param(param):
     rv = {}
@@ -139,7 +159,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -147,51 +167,40 @@ def _build_dict_from_param(param):
 
     return rv
 
-
-def build_json(title, module, action):
+def build_json(title, module):
     rv = {}
-    filedata = module.params["file_content"]
-    size = len(filedata)
-    fname = module.params["file"]
 
-    rv = {
-        "file": module.params["file"],
-        "size": size,
-        "file-handle": fname,
-        "certificate-type": module.params["certificate_type"],
-        "action": action
-    }
+    for x in AVAILABLE_PROPERTIES:
+        v = module.params.get(x)
+        if v:
+            rx = _to_axapi(x)
+
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            elif isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
 
     return build_envelope(title, rv)
-
 
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
+    
+    if not len(requires_one_of):
+        return REQUIRED_VALID
 
-    action = params.get("action")
-    dst_file = params.get("dst_file")
-    file_content = params.get("file_content")
-
-    if action in ["check", "create", "export", "copy", "rename"]:
-        rc, msg = (False, "{} is not a supported action".format(action))
-
-    if action in ["copy", "rename"]:
-        if not dst_file:
-            rc,msg = (False, "dst_file must be set for {}".format(action))
-
-    if action == "import":
-        if not file_content:
-            rc,msg = (False, "file_content must be specified for import")
-
-    if len(requires_one_of) > 0 and len(present_keys) == 0:
+    if len(present_keys) == 0:
         rc,msg = REQUIRED_NOT_SET
         marg = requires_one_of
-    elif requires_one_of and requires_one_of == present_keys:
+    elif requires_one_of == present_keys:
         rc,msg = REQUIRED_MUTEX
         marg = present_keys
     else:
@@ -205,6 +214,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -212,14 +224,11 @@ def exists(module):
         return False
 
 def create(module, result):
-    json_payload = build_json("ssl-cert", module, "import")
+    payload = build_json("ssl-cert", module)
     try:
-        file_content=module.params["file_content"]
-
-        module.client.post(new_url(module), json_payload, 
-                           file_content=module.params["file_content"], 
-                           file_name=module.params["file"])
-        # We either get 200 or an error back
+        post_result = module.client.post(new_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -227,13 +236,11 @@ def create(module, result):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
-    return {} 
+    return result
 
 def delete(module, result):
     try:
-        url = "/axapi/v3/pki/delete"
-        payload = {"delete": {"cert-name": module.params["file"]}}
-        module.client.post(url, payload)
+        module.client.delete(existing_url(module))
         result["changed"] = True
     except a10_ex.NotFound:
         result["changed"] = False
@@ -245,17 +252,18 @@ def delete(module, result):
 
 def update(module, result, existing_config):
     payload = build_json("ssl-cert", module)
-    changed = False 
     try:
-        # The only way we get changed=True is successful post
-        module.client.post(existing_url(module), payload)
-        changed = True
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
     except a10_ex.ACOSException as ex:
-        changed = False
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
-    result["changed"] = changed
     return result
 
 def present(module, result, existing_config):
@@ -267,22 +275,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ssl-cert", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -296,6 +322,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -304,6 +333,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

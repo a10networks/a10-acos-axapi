@@ -53,10 +53,6 @@ options:
         description:
         - "Port Weight (Connection Weight)"
         required: False
-    shared_rport_health_check:
-        description:
-        - "Reference a health-check from shared partition"
-        required: False
     stats_data_action:
         description:
         - "'stats-data-enable'= Enable statistical data collection for real server port; 'stats-data-disable'= Disable statistical data collection for real server port; "
@@ -77,10 +73,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-    support_http2:
-        description:
-        - "Starting HTTP/2 with Prior Knowledge"
-        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -88,7 +80,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'curr_req'= Current requests; 'total_req'= Total Requests; 'total_req_succ'= Total requests succ; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total connections; 'last_total_conn'= Last total connections; 'peak_conn'= Peak connections; 'es_resp_200'= Response status 200; 'es_resp_300'= Response status 300; 'es_resp_400'= Response status 400; 'es_resp_500'= Response status 500; 'es_resp_other'= Response status other; 'es_req_count'= Total proxy requests; 'es_resp_count'= Total proxy response; 'es_resp_invalid_http'= Total non-http response; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_good_status_code'= Total reverse packets with good status code inspected; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'resp-count'= Total Response Count; 'resp-1xx'= Response status 1xx; 'resp-2xx'= Response status 2xx; 'resp-3xx'= Response status 3xx; 'resp-4xx'= Response status 4xx; 'resp-5xx'= Response status 5xx; 'resp-other'= Response status Other; 'resp-latency'= Time to First Response Byte; 'curr_pconn'= Current persistent connections; "
+                - "'all'= all; 'curr_req'= Current requests; 'total_req'= Total Requests; 'total_req_succ'= Total requests succ; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total connections; 'last_total_conn'= Last total connections; 'peak_conn'= Peak connections; 'es_resp_200'= Response status 200; 'es_resp_300'= Response status 300; 'es_resp_400'= Response status 400; 'es_resp_500'= Response status 500; 'es_resp_other'= Response status other; 'es_req_count'= Total proxy requests; 'es_resp_count'= Total proxy response; 'es_resp_invalid_http'= Total non-http response; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_good_status_code'= Total reverse packets with good status code inspected; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'resp-count'= Total Response Count; 'resp-1xx'= Response status 1xx; 'resp-2xx'= Response status 2xx; 'resp-3xx'= Response status 3xx; 'resp-4xx'= Response status 4xx; 'resp-5xx'= Response status 5xx; 'resp-other'= Response status Other; 'resp-latency'= Time to First Response Byte; "
     no_ssl:
         description:
         - "No SSL"
@@ -123,10 +115,6 @@ options:
         description:
         - "Enable extended statistics on real server port"
         required: False
-    rport_health_check_shared:
-        description:
-        - "Health Check (Monitor Name)"
-        required: False
     conn_resume:
         description:
         - "Connection Resume"
@@ -160,7 +148,6 @@ options:
         - "Do not log connection over limit event"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -173,7 +160,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","rport_health_check_shared","sampling_enable","shared_rport_health_check","stats_data_action","support_http2","template_port","template_server_ssl","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["action","alternate_port","auth_cfg","conn_limit","conn_resume","extended_stats","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","no_logging","no_ssl","port_number","protocol","range","sampling_enable","stats_data_action","template_port","template_server_ssl","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -192,10 +179,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -204,21 +192,18 @@ def get_argspec():
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp']),
         weight=dict(type='int',),
-        shared_rport_health_check=dict(type='bool',),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         health_check_follow_port=dict(type='int',),
         template_port=dict(type='str',),
         conn_limit=dict(type='int',),
         uuid=dict(type='str',),
-        support_http2=dict(type='bool',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','resp-count','resp-1xx','resp-2xx','resp-3xx','resp-4xx','resp-5xx','resp-other','resp-latency','curr_pconn'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','resp-count','resp-1xx','resp-2xx','resp-3xx','resp-4xx','resp-5xx','resp-other','resp-latency'])),
         no_ssl=dict(type='bool',),
         follow_port_protocol=dict(type='str',choices=['tcp','udp']),
         template_server_ssl=dict(type='str',),
         alternate_port=dict(type='list',alternate_name=dict(type='str',),alternate=dict(type='int',),alternate_server_port=dict(type='int',)),
         port_number=dict(type='int',required=True,),
         extended_stats=dict(type='bool',),
-        rport_health_check_shared=dict(type='str',),
         conn_resume=dict(type='int',),
         user_tag=dict(type='str',),
         range=dict(type='int',),
@@ -259,6 +244,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -306,7 +295,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -330,6 +319,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -411,7 +403,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -427,12 +420,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
@@ -447,6 +439,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

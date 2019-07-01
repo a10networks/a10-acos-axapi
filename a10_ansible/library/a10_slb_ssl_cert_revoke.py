@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_ssl_cert_revoke
 description:
-    - None
+    - Show ssl-cert-revoke-stats
 short_description: Configures A10 slb.ssl-cert-revoke
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'ocsp_stapling_response_good'= OCSP stapling response good; 'ocsp_chain_status_good'= Certificate chain status good; 'ocsp_chain_status_revoked'= Certificate chain status revoked; 'ocsp_chain_status_unknown'= Certificate chain status unknown; 'ocsp_request'= OCSP requests; 'ocsp_response'= OCSP responses; 'ocsp_connection_error'= OCSP connection error; 'ocsp_uri_not_found'= OCSP URI not found; 'ocsp_uri_https'= Log OCSP URI https; 'ocsp_uri_unsupported'= OCSP URI unsupported; 'ocsp_response_status_good'= OCSP response status good; 'ocsp_response_status_revoked'= OCSP response status revoked; 'ocsp_response_status_unknown'= OCSP response status unknown; 'ocsp_cache_status_good'= OCSP cache status good; 'ocsp_cache_status_revoked'= OCSP cache status revoked; 'ocsp_cache_miss'= OCSP cache miss; 'ocsp_cache_expired'= OCSP cache expired; 'ocsp_other_error'= Log OCSP other errors; 'ocsp_response_no_nonce'= Log OCSP other errors; 'ocsp_response_nonce_error'= Log OCSP other errors; 'crl_request'= CRL requests; 'crl_response'= CRL responses; 'crl_connection_error'= CRL connection errors; 'crl_uri_not_found'= CRL URI not found; 'crl_uri_https'= CRL URI https; 'crl_uri_unsupported'= CRL URI unsupported; 'crl_response_status_good'= CRL response status good; 'crl_response_status_revoked'= CRL response status revoked; 'crl_response_status_unknown'= CRL response status unknown; 'crl_cache_status_good'= CRL cache status good; 'crl_cache_status_revoked'= CRL cache status revoked; 'crl_other_error'= CRL other errors; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,7 +82,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -89,6 +95,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','ocsp_stapling_response_good','ocsp_chain_status_good','ocsp_chain_status_revoked','ocsp_chain_status_unknown','ocsp_request','ocsp_response','ocsp_connection_error','ocsp_uri_not_found','ocsp_uri_https','ocsp_uri_unsupported','ocsp_response_status_good','ocsp_response_status_revoked','ocsp_response_status_unknown','ocsp_cache_status_good','ocsp_cache_status_revoked','ocsp_cache_miss','ocsp_cache_expired','ocsp_other_error','ocsp_response_no_nonce','ocsp_response_nonce_error','crl_request','crl_response','crl_connection_error','crl_uri_not_found','crl_uri_https','crl_uri_unsupported','crl_response_status_good','crl_response_status_revoked','crl_response_status_unknown','crl_cache_status_good','crl_cache_status_revoked','crl_other_error'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +103,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/ssl-cert-revoke"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,10 +112,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/ssl-cert-revoke"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -125,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -180,6 +193,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -190,7 +206,8 @@ def create(module, result):
     payload = build_json("ssl-cert-revoke", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +232,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ssl-cert-revoke", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,22 +254,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ssl-cert-revoke", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +301,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -273,6 +312,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

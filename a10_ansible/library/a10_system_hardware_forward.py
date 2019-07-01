@@ -45,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'hit-counts'= Total packts hit counts; 'hit-index'= HW Fwd hit index; 'ipv4-forward-counts'= Total IPv4 hardware forwarded packets; 'ipv6-forward-counts'= Total IPv6 hardware forwarded packets; 'hw-fwd-module-status'= hardware forwarder status flags; 'hw-fwd-prog-reqs'= hardware forward programming requests; 'hw-fwd-prog-errors'= hardware forward programming Errors; 'hw-fwd-flow-singlebit-errors'= hardware forward singlebit Errors; 'hw-fwd-flow-tag-mismatch'= hardware forward tag mismatch errors; 'hw-fwd-flow-seq-mismatch'= hardware forward sequence mismatch errors; 'hw-fwd-ageout-drop-count'= hardware forward ageout drop count; 'hw-fwd-invalidation-drop'= hardware forward invalid drop count; 'hw-fwd-flow-hit-index'= hardware forward flow hit index; 'hw-fwd-flow-reason-flags'= hardware forward flow reason flags; 'hw-fwd-flow-drop-count'= hardware forward flow drop count; 'hw-fwd-flow-error-count'= hardware forward flow error count; 'hw-fwd-flow-unalign-count'= hardware forward flow unalign count; 'hw-fwd-flow-underflow-count'= hardware forward flow underflow count; 'hw-fwd-flow-tx-full-drop'= hardware forward flow tx full drop count; 'hw-fwd-flow-qdr-full-drop'= hardware forward flow qdr full drop count; 'hw-fwd-phyport-mismatch-drop'= hardware forward phyport mismatch count; 'hw-fwd-vlanid-mismatch-drop'= hardware forward vlanid mismatch count; 'hw-fwd-vmid-drop'= hardware forward vmid mismatch count; 'hw-fwd-protocol-mismatch-drop'= hardware forward protocol mismatch count; 'hw-fwd-avail-ipv4-entry'= hardware forward available ipv4 entries count; 'hw-fwd-avail-ipv6-entry'= hardware forward available ipv6 entries count; "
+                - "'all'= all; 'hit-counts'= Total packts hit counts; 'hit-index'= HW Fwd hit index; 'ipv4-forward-counts'= Total IPv4 hardware forwarded packets; 'ipv6-forward-counts'= Total IPv6 hardware forwarded packets; 'hw-fwd-module-status'= hardware forwarder status flags; 'hw-fwd-prog-reqs'= hardware forward programming requests; 'hw-fwd-prog-errors'= hardware forward programming Errors; 'hw-fwd-flow-singlebit-errors'= hardware forward singlebit Errors; 'hw-fwd-flow-tag-mismatch'= hardware forward tag mismatch errors; 'hw-fwd-flow-seq-mismatch'= hardware forward sequence mismatch errors; 'hw-fwd-ageout-drop-count'= hardware forward ageout drop count; 'hw-fwd-invalidation-drop'= hardware forward invalid drop count; 'hw-fwd-flow-hit-index'= hardware forward flow hit index; 'hw-fwd-flow-reason-flags'= hardware forward flow reason flags; 'hw-fwd-flow-drop-count'= hardware forward flow drop count; 'hw-fwd-flow-error-count'= hardware forward flow error count; 'hw-fwd-flow-unalign-count'= hardware forward flow unalign count; 'hw-fwd-flow-underflow-count'= hardware forward flow underflow count; 'hw-fwd-flow-tx-full-drop'= hardware forward flow tx full drop count; 'hw-fwd-flow-qdr-full-drop'= hardware forward flow qdr full drop count; 'hw-fwd-phyport-mismatch-drop'= hardware forward phyport mismatch count; 'hw-fwd-vlanid-mismatch-drop'= hardware forward vlanid mismatch count; 'hw-fwd-vmid-drop'= hardware forward vmid mismatch count; 'hw-fwd-protocol-mismatch-drop'= hardware forward protocol mismatch count; "
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -83,16 +82,17 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-counts','hit-index','ipv4-forward-counts','ipv6-forward-counts','hw-fwd-module-status','hw-fwd-prog-reqs','hw-fwd-prog-errors','hw-fwd-flow-singlebit-errors','hw-fwd-flow-tag-mismatch','hw-fwd-flow-seq-mismatch','hw-fwd-ageout-drop-count','hw-fwd-invalidation-drop','hw-fwd-flow-hit-index','hw-fwd-flow-reason-flags','hw-fwd-flow-drop-count','hw-fwd-flow-error-count','hw-fwd-flow-unalign-count','hw-fwd-flow-underflow-count','hw-fwd-flow-tx-full-drop','hw-fwd-flow-qdr-full-drop','hw-fwd-phyport-mismatch-drop','hw-fwd-vlanid-mismatch-drop','hw-fwd-vmid-drop','hw-fwd-protocol-mismatch-drop','hw-fwd-avail-ipv4-entry','hw-fwd-avail-ipv6-entry'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-counts','hit-index','ipv4-forward-counts','ipv6-forward-counts','hw-fwd-module-status','hw-fwd-prog-reqs','hw-fwd-prog-errors','hw-fwd-flow-singlebit-errors','hw-fwd-flow-tag-mismatch','hw-fwd-flow-seq-mismatch','hw-fwd-ageout-drop-count','hw-fwd-invalidation-drop','hw-fwd-flow-hit-index','hw-fwd-flow-reason-flags','hw-fwd-flow-drop-count','hw-fwd-flow-error-count','hw-fwd-flow-unalign-count','hw-fwd-flow-underflow-count','hw-fwd-flow-tx-full-drop','hw-fwd-flow-qdr-full-drop','hw-fwd-phyport-mismatch-drop','hw-fwd-vlanid-mismatch-drop','hw-fwd-vmid-drop','hw-fwd-protocol-mismatch-drop'])),
         uuid=dict(type='str',)
     ))
    
@@ -117,6 +117,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -164,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -188,6 +192,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -269,7 +276,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -304,6 +312,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

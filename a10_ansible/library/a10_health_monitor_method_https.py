@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_health_monitor_method_https
 description:
-    - None
+    - HTTPS type
 short_description: Configures A10 health.monitor.method.https
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,77 +35,83 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    monitor_name:
+        description:
+        - Key to identify parent object
     https_kerberos_realm:
         description:
-        - "None"
+        - "Specify realm of Kerberos server"
         required: False
     text_regex:
         description:
-        - "None"
+        - "Specify text expected  with Regex"
         required: False
     response_code_regex:
         description:
-        - "None"
+        - "Specify response code range with Regex (code with Regex, such as [2-5][0-9][0-9])"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     post_type:
         description:
-        - "None"
+        - "'postdata'= Specify the HTTP post data; 'postfile'= Specify the HTTP post data; "
         required: False
     https_kerberos_auth:
         description:
-        - "None"
+        - "Https Kerberos Auth"
         required: False
     https_username:
         description:
-        - "None"
+        - "Specify the username"
         required: False
     key_phrase:
         description:
-        - "None"
+        - "Password Phrase"
         required: False
     https_postdata:
         description:
-        - "None"
+        - "Specify the HTTP post data (Input post data here)"
         required: False
     https_key_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     https_expect:
         description:
-        - "None"
+        - "Specify what you expect from the response message"
         required: False
     https:
         description:
-        - "None"
+        - "HTTPS type"
         required: False
     https_host:
         description:
-        - "None"
+        - "Specify 'Host=' header used in request (enclose IPv6 address in [])"
         required: False
     key_pass_phrase:
         description:
-        - "None"
+        - "Client private key password phrase"
         required: False
     https_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     url_type:
         description:
-        - "None"
+        - "'GET'= HTTP GET method; 'POST'= HTTP POST method; 'HEAD'= HTTP HEAD method; "
         required: False
     web_port:
         description:
-        - "None"
+        - "Specify HTTPS port (Port Number (default 443))"
         required: False
     disable_sslv2hello:
         description:
-        - "None"
+        - "Disable SSLv2Hello for HTTPs"
         required: False
     https_kerberos_kdc:
         description:
@@ -114,61 +120,60 @@ options:
         suboptions:
             https_kerberos_hostip:
                 description:
-                - "None"
+                - "Kdc's hostname(length=1-31) or IP address"
             https_kerberos_port:
                 description:
-                - "None"
+                - "Specify the kdc port"
             https_kerberos_portv6:
                 description:
-                - "None"
+                - "Specify the kdc port"
             https_kerberos_hostipv6:
                 description:
-                - "None"
+                - "Server's IPV6 address"
     key:
         description:
-        - "None"
+        - "Specify client private key (Key name)"
         required: False
     https_password_string:
         description:
-        - "None"
+        - "Configure password, '' means empty password"
         required: False
     post_path:
         description:
-        - "None"
+        - "Specify URL path, default is '/'"
         required: False
     https_postfile:
         description:
-        - "None"
+        - "Specify the HTTP post data (Input post data file name here)"
         required: False
     https_password:
         description:
-        - "None"
+        - "Specify the user password"
         required: False
     cert:
         description:
-        - "None"
+        - "Specify client certificate (Certificate name)"
         required: False
     https_text:
         description:
-        - "None"
+        - "Specify text expected"
         required: False
     https_response_code:
         description:
-        - "None"
+        - "Specify response code range (e.g. 200,400-430) (Format is xx,xx-xx (xx between [100, 899])"
         required: False
     url_path:
         description:
-        - "None"
+        - "Specify URL path, default is '/'"
         required: False
     https_maintenance_code:
         description:
-        - "None"
+        - "Specify response code for maintenance (Format is xx,xx-xx (xx between [100, 899])"
         required: False
     https_url:
         description:
-        - "None"
+        - "Specify URL string, default is GET /"
         required: False
-
 
 """
 
@@ -201,7 +206,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -238,25 +247,38 @@ def get_argspec():
         https_maintenance_code=dict(type='str',),
         https_url=dict(type='bool',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        monitor_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/health/monitor/{name}/method/https"
+    url_base = "/axapi/v3/health/monitor/{monitor_name}/method/https"
+
     f_dict = {}
+    f_dict["monitor_name"] = module.params["monitor_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/health/monitor/{name}/method/https"
+    url_base = "/axapi/v3/health/monitor/{monitor_name}/method/https"
+
     f_dict = {}
+    f_dict["monitor_name"] = module.params["monitor_name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -274,7 +296,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -293,7 +315,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -304,7 +326,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -329,6 +351,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -339,7 +364,8 @@ def create(module, result):
     payload = build_json("https", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -364,8 +390,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("https", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -385,22 +412,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("https", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -414,6 +459,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -422,6 +470,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

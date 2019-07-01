@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fail_safe
 description:
-    - None
+    - Fail Safe Global Commands
 short_description: Configures A10 fail-safe
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,29 +35,32 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     session_mem_recovery_threshold:
         description:
-        - "None"
+        - "Session memory recovery threshold (percentage) (Percentage of available session memory (default 30%))"
         required: False
     log:
         description:
-        - "None"
+        - "Log the event"
         required: False
     fpga_buff_recovery_threshold:
         description:
-        - "None"
+        - "FPGA buffers recovery threshold (Units of 256 buffers (default 2))"
         required: False
     hw_error_monitor:
         description:
-        - "None"
+        - "'hw-error-monitor-disable'= Disable fail-safe hardware error monitor; 'hw-error-monitor-enable'= Enable fail-safe hardware error monitor; "
         required: False
     hw_error_recovery_timeout:
         description:
-        - "None"
+        - "Hardware error recovery timeout (minutes) (waiting time of recovery from hardware errors (default 0))"
         required: False
     sw_error_monitor_enable:
         description:
-        - "None"
+        - "Enable fail-safe software error monitor"
         required: False
     disable_failsafe:
         description:
@@ -66,35 +69,26 @@ options:
         suboptions:
             action:
                 description:
-                - "None"
+                - "'all'= Disable All; 'io-buffer'= Disable I/O Buffer; 'session-memory'= Disable Session Memory; 'system-memory'= Disable System Memory; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     kill:
         description:
-        - "None"
+        - "Stop the traffic and log the event"
         required: False
     total_memory_size_check:
         description:
-        - "None"
+        - "Check total memory size of current system (Size of memory (GB))"
         required: False
-    config:
-        description:
-        - "Field config"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
     sw_error_recovery_timeout:
         description:
-        - "None"
+        - "Software error recovery timeout (minutes) (waiting time of recovery from software errors (default 3))"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -108,7 +102,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["config","disable_failsafe","fpga_buff_recovery_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
+AVAILABLE_PROPERTIES = ["disable_failsafe","fpga_buff_recovery_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -127,7 +121,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -142,10 +140,10 @@ def get_argspec():
         disable_failsafe=dict(type='dict',action=dict(type='str',choices=['all','io-buffer','session-memory','system-memory']),uuid=dict(type='str',)),
         kill=dict(type='bool',),
         total_memory_size_check=dict(type='int',),
-        config=dict(type='dict',uuid=dict(type='str',)),
         sw_error_recovery_timeout=dict(type='int',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -153,6 +151,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fail-safe"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -161,10 +160,15 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fail-safe"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -182,7 +186,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -201,7 +205,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -212,7 +216,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -237,6 +241,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -247,7 +254,8 @@ def create(module, result):
     payload = build_json("fail-safe", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -272,8 +280,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("fail-safe", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -293,22 +302,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("fail-safe", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -322,6 +349,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -330,6 +360,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

@@ -135,14 +135,6 @@ options:
             acl_id:
                 description:
                 - "ACL id"
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'packets_input'= Input packets; 'bytes_input'= Input bytes; 'received_broadcasts'= Received broadcasts; 'received_multicasts'= Received multicasts; 'received_unicasts'= Received unicasts; 'input_errors'= Input errors; 'crc'= CRC; 'frame'= Frames; 'input_err_short'= Runts; 'input_err_long'= Giants; 'packets_output'= Output packets; 'bytes_output'= Output bytes; 'transmitted_broadcasts'= Transmitted broadcasts; 'transmitted_multicasts'= Transmitted multicasts; 'transmitted_unicasts'= Transmitted unicasts; 'output_errors'= Output errors; 'collisions'= Collisions; "
     ipv6:
         description:
         - "Field ipv6"
@@ -172,7 +164,6 @@ options:
         - "'10'= 10 Mbs/sec; '100'= 100 Mbs/sec; '1000'= 1 Gb/sec; 'auto'= Auto Negotiate Speed;  (Interface Speed)"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -185,7 +176,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","broadcast_rate_limit","duplexity","flow_control","ip","ipv6","lldp","sampling_enable","secondary_ip","speed","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","broadcast_rate_limit","duplexity","flow_control","ip","ipv6","lldp","secondary_ip","speed","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -204,10 +195,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -221,8 +213,7 @@ def get_argspec():
         ip=dict(type='dict',dhcp=dict(type='bool',),ipv4_address=dict(type='str',),control_apps_use_mgmt_port=dict(type='bool',),default_gateway=dict(type='str',),ipv4_netmask=dict(type='str',)),
         secondary_ip=dict(type='dict',ipv4_netmask=dict(type='str',),control_apps_use_mgmt_port=dict(type='bool',),secondary_ip=dict(type='bool',),default_gateway=dict(type='str',),dhcp=dict(type='bool',),ipv4_address=dict(type='str',)),
         access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets_input','bytes_input','received_broadcasts','received_multicasts','received_unicasts','input_errors','crc','frame','input_err_short','input_err_long','packets_output','bytes_output','transmitted_broadcasts','transmitted_multicasts','transmitted_unicasts','output_errors','collisions'])),
-        ipv6=dict(type='list',inbound=dict(type='bool',),address_type=dict(type='str',choices=['link-local']),default_ipv6_gateway=dict(type='str',),ipv6_addr=dict(type='str',),v6_acl_name=dict(type='str',)),
+        ipv6=dict(type='dict',inbound=dict(type='bool',),address_type=dict(type='str',choices=['link-local']),default_ipv6_gateway=dict(type='str',),ipv6_addr=dict(type='str',),v6_acl_name=dict(type='str',)),
         action=dict(type='str',choices=['enable','disable']),
         speed=dict(type='str',choices=['10','100','1000','auto'])
     ))
@@ -248,6 +239,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -295,7 +290,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -319,6 +314,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -400,7 +398,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -435,6 +434,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

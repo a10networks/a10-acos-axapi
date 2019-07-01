@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_web_category_category_list
 description:
-    - None
+    - List of web categories
 short_description: Configures A10 web-category.category-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,65 +35,68 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     streaming_media:
         description:
-        - "None"
+        - "Category Streaming Media"
         required: False
     weapons:
         description:
-        - "None"
+        - "Category Weapons"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     entertainment_and_arts:
         description:
-        - "None"
+        - "Category Entertainment and Arts"
         required: False
     cdns:
         description:
-        - "None"
+        - "Category CDNs"
         required: False
     financial_services:
         description:
-        - "None"
+        - "Category Financial Services"
         required: False
     social_network:
         description:
-        - "None"
+        - "Category Social Network"
         required: False
     government:
         description:
-        - "None"
+        - "Category Government"
         required: False
     web_advertisements:
         description:
-        - "None"
+        - "Category Web Advertisements"
         required: False
     fashion_and_beauty:
         description:
-        - "None"
+        - "Category Fashion and Beauty"
         required: False
     computer_and_internet_security:
         description:
-        - "None"
+        - "Category Computer and Internet Security"
         required: False
     name:
         description:
-        - "None"
+        - "Web Category List name"
         required: True
     real_estate:
         description:
-        - "None"
+        - "Category Real Estate"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     web_based_email:
         description:
-        - "None"
+        - "Category Web based email"
         required: False
     sampling_enable:
         description:
@@ -102,296 +105,295 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'uncategorized'= uncategorized category; 'real-estate'= real estate category; 'computer-and-internet-security'= computer and internet security category; 'financial-services'= financial services category; 'business-and-economy'= business and economy category; 'computer-and-internet-info'= computer and internet info category; 'auctions'= auctions category; 'shopping'= shopping category; 'cult-and-occult'= cult and occult category; 'travel'= travel category; 'drugs'= drugs category; 'adult-and-pornography'= adult and pornography category; 'home-and-garden'= home and garden category; 'military'= military category; 'social-network'= social network category; 'dead-sites'= dead sites category; 'stock-advice-and-tools'= stock advice and tools category; 'training-and-tools'= training and tools category; 'dating'= dating category; 'sex-education'= sex education category; 'religion'= religion category; 'entertainment-and-arts'= entertainment and arts category; 'personal-sites-and-blogs'= personal sites and blogs category; 'legal'= legal category; 'local-information'= local information category; 'streaming-media'= streaming media category; 'job-search'= job search category; 'gambling'= gambling category; 'translation'= translation category; 'reference-and-research'= reference and research category; 'shareware-and-freeware'= shareware and freeware category; 'peer-to-peer'= peer to peer category; 'marijuana'= marijuana category; 'hacking'= hacking category; 'games'= games category; 'philosophy-and-politics'= philosophy and politics category; 'weapons'= weapons category; 'pay-to-surf'= pay to surf category; 'hunting-and-fishing'= hunting and fishing category; 'society'= society category; 'educational-institutions'= educational institutions category; 'online-greeting-cards'= online greeting cards category; 'sports'= sports category; 'swimsuits-and-intimate-apparel'= swimsuits and intimate apparel category; 'questionable'= questionable category; 'kids'= kids category; 'hate-and-racism'= hate and racism category; 'personal-storage'= personal storage category; 'violence'= violence category; 'keyloggers-and-monitoring'= keyloggers and monitoring category; 'search-engines'= search engines category; 'internet-portals'= internet portals category; 'web-advertisements'= web advertisements category; 'cheating'= cheating category; 'gross'= gross category; 'web-based-email'= web based email category; 'malware-sites'= malware sites category; 'phishing-and-other-fraud'= phishing and other fraud category; 'proxy-avoid-and-anonymizers'= proxy avoid and anonymizers category; 'spyware-and-adware'= spyware and adware category; 'music'= music category; 'government'= government category; 'nudity'= nudity category; 'news-and-media'= news and media category; 'illegal'= illegal category; 'CDNs'= content delivery networks category; 'internet-communications'= internet communications category; 'bot-nets'= bot nets category; 'abortion'= abortion category; 'health-and-medicine'= health and medicine category; 'confirmed-SPAM-sources'= confirmed SPAM sources category; 'SPAM-URLs'= SPAM URLs category; 'unconfirmed-SPAM-sources'= unconfirmed SPAM sources category; 'open-HTTP-proxies'= open HTTP proxies category; 'dynamic-comment'= dynamic comment category; 'parked-domains'= parked domains category; 'alcohol-and-tobacco'= alcohol and tobacco category; 'private-IP-addresses'= private IP addresses category; 'image-and-video-search'= image and video search category; 'fashion-and-beauty'= fashion and beauty category; 'recreation-and-hobbies'= recreation and hobbies category; 'motor-vehicles'= motor vehicles category; 'web-hosting-sites'= web hosting sites category; 'food-and-dining'= food and dining category; "
     recreation_and_hobbies:
         description:
-        - "None"
+        - "Category Recreation and Hobbies"
         required: False
     business_and_economy:
         description:
-        - "None"
+        - "Category Business and Economy"
         required: False
     confirmed_spam_sources:
         description:
-        - "None"
+        - "Category Confirmed SPAM Sources"
         required: False
     philosophy_and_politics:
         description:
-        - "None"
+        - "Category Philosophy and Political Advocacy"
         required: False
     society:
         description:
-        - "None"
+        - "Category Society"
         required: False
     motor_vehicles:
         description:
-        - "None"
+        - "Category Motor Vehicles"
         required: False
     proxy_avoid_and_anonymizers:
         description:
-        - "None"
+        - "Category Proxy Avoid and Anonymizers"
         required: False
     gross:
         description:
-        - "None"
+        - "Category Gross"
         required: False
     legal:
         description:
-        - "None"
+        - "Category Legal"
         required: False
     bot_nets:
         description:
-        - "None"
+        - "Category Bot Nets"
         required: False
     religion:
         description:
-        - "None"
+        - "Category Religion"
         required: False
     private_ip_addresses:
         description:
-        - "None"
+        - "Category Private IP Addresses"
         required: False
     dating:
         description:
-        - "None"
+        - "Category Dating"
         required: False
     pay_to_surf:
         description:
-        - "None"
+        - "Category Pay to Surf"
         required: False
     reference_and_research:
         description:
-        - "None"
+        - "Category Reference and Research"
         required: False
     keyloggers_and_monitoring:
         description:
-        - "None"
+        - "Category Keyloggers and Monitoring"
         required: False
     kids:
         description:
-        - "None"
+        - "Category Kids"
         required: False
     online_greeting_cards:
         description:
-        - "None"
+        - "Category Online Greeting cards"
         required: False
     violence:
         description:
-        - "None"
+        - "Category Violence"
         required: False
     games:
         description:
-        - "None"
+        - "Category Games"
         required: False
     auctions:
         description:
-        - "None"
+        - "Category Auctions"
         required: False
     military:
         description:
-        - "None"
+        - "Category Military"
         required: False
     alcohol_and_tobacco:
         description:
-        - "None"
+        - "Category Alcohol and Tobacco"
         required: False
     stock_advice_and_tools:
         description:
-        - "None"
+        - "Category Stock Advice and Tools"
         required: False
     news_and_media:
         description:
-        - "None"
+        - "Category News and Media"
         required: False
     cult_and_occult:
         description:
-        - "None"
+        - "Category Cult and Occult"
         required: False
     food_and_dining:
         description:
-        - "None"
+        - "Category Food and Dining"
         required: False
     cheating:
         description:
-        - "None"
+        - "Category Cheating"
         required: False
     illegal:
         description:
-        - "None"
+        - "Category Illegal"
         required: False
     local_information:
         description:
-        - "None"
+        - "Category Local Information"
         required: False
     sports:
         description:
-        - "None"
+        - "Category Sports"
         required: False
     music:
         description:
-        - "None"
+        - "Category Music"
         required: False
     shareware_and_freeware:
         description:
-        - "None"
+        - "Category Shareware and Freeware"
         required: False
     spyware_and_adware:
         description:
-        - "None"
+        - "Category Spyware and Adware"
         required: False
     questionable:
         description:
-        - "None"
+        - "Category Questionable"
         required: False
     shopping:
         description:
-        - "None"
+        - "Category Shopping"
         required: False
     drugs:
         description:
-        - "None"
+        - "Category Abused Drugs"
         required: False
     web_hosting_sites:
         description:
-        - "None"
+        - "Category Web Hosting Sites"
         required: False
     malware_sites:
         description:
-        - "None"
+        - "Category Malware Sites"
         required: False
     dynamic_comment:
         description:
-        - "None"
+        - "Category Dynamic Comment"
         required: False
     translation:
         description:
-        - "None"
+        - "Category Translation"
         required: False
     job_search:
         description:
-        - "None"
+        - "Category Job Search"
         required: False
     hunting_and_fishing:
         description:
-        - "None"
+        - "Category Hunting and Fishing"
         required: False
     search_engines:
         description:
-        - "None"
+        - "Category Search Engines"
         required: False
     educational_institutions:
         description:
-        - "None"
+        - "Category Educational Institutions"
         required: False
     internet_portals:
         description:
-        - "None"
+        - "Category Internet Portals"
         required: False
     computer_and_internet_info:
         description:
-        - "None"
+        - "Category Computer and Internet Info"
         required: False
     abortion:
         description:
-        - "None"
+        - "Category Abortion"
         required: False
     hacking:
         description:
-        - "None"
+        - "Category Hacking"
         required: False
     adult_and_pornography:
         description:
-        - "None"
+        - "Category Adult and Pornography"
         required: False
     phishing_and_other_fraud:
         description:
-        - "None"
+        - "Category Phishing and Other Frauds"
         required: False
     nudity:
         description:
-        - "None"
+        - "Category Nudity"
         required: False
     health_and_medicine:
         description:
-        - "None"
+        - "Category Health and Medicine"
         required: False
     marijuana:
         description:
-        - "None"
+        - "Category Marijuana"
         required: False
     home_and_garden:
         description:
-        - "None"
+        - "Category Home and Garden"
         required: False
     personal_storage:
         description:
-        - "None"
+        - "Category Personal Storage"
         required: False
     sex_education:
         description:
-        - "None"
+        - "Category Sex Education"
         required: False
     swimsuits_and_intimate_apparel:
         description:
-        - "None"
+        - "Category Swimsuits and Intimate Apparel"
         required: False
     dead_sites:
         description:
-        - "None"
+        - "Category Dead Sites (db Ops only)"
         required: False
     travel:
         description:
-        - "None"
+        - "Category Travel"
         required: False
     hate_and_racism:
         description:
-        - "None"
+        - "Category Hate and Racism"
         required: False
     open_http_proxies:
         description:
-        - "None"
+        - "Category Open HTTP Proxies"
         required: False
     internet_communications:
         description:
-        - "None"
+        - "Category Internet Communications"
         required: False
     gambling:
         description:
-        - "None"
+        - "Category Gambling"
         required: False
     peer_to_peer:
         description:
-        - "None"
+        - "Category Peer to Peer"
         required: False
     uncategorized:
         description:
-        - "None"
+        - "Uncategorized URLs"
         required: False
     personal_sites_and_blogs:
         description:
-        - "None"
+        - "Category Personal sites and Blogs"
         required: False
     spam_urls:
         description:
-        - "None"
+        - "Category SPAM URLs"
         required: False
     unconfirmed_spam_sources:
         description:
-        - "None"
+        - "Category Unconfirmed SPAM Sources"
         required: False
     image_and_video_search:
         description:
-        - "None"
+        - "Category Image and Video Search"
         required: False
     training_and_tools:
         description:
-        - "None"
+        - "Category Training and Tools"
         required: False
     parked_domains:
         description:
-        - "None"
+        - "Category Parked Domains"
         required: False
-
 
 """
 
@@ -424,7 +426,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -519,6 +525,7 @@ def get_argspec():
         training_and_tools=dict(type='bool',),
         parked_domains=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -526,6 +533,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/web-category/category-list/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -535,11 +543,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/web-category/category-list/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -557,7 +570,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -576,7 +589,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -587,7 +600,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -612,6 +625,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -622,7 +638,8 @@ def create(module, result):
     payload = build_json("category-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -647,8 +664,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("category-list", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -668,22 +686,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("category-list", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -697,6 +733,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -705,6 +744,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

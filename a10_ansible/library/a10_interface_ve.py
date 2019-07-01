@@ -43,21 +43,9 @@ options:
         - "Field map"
         required: False
         suboptions:
-            inside:
+            translation:
                 description:
-                - "Configure MAP inside interface (connected to MAP domains)"
-            map_t_inside:
-                description:
-                - "Configure MAP inside interface (connected to MAP domains)"
-            uuid:
-                description:
-                - "uuid of the object"
-            map_t_outside:
-                description:
-                - "Configure MAP outside interface"
-            outside:
-                description:
-                - "Configure MAP outside interface"
+                - "Field translation"
     nptv6:
         description:
         - "Field nptv6"
@@ -246,7 +234,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num_pkts'= Input packets; 'num_total_bytes'= Input bytes; 'num_unicast_pkts'= Received unicasts; 'num_broadcast_pkts'= Received broadcasts; 'num_multicast_pkts'= Received multicasts; 'num_tx_pkts'= Transmitted packets; 'num_total_tx_bytes'= Transmitted bytes; 'num_unicast_tx_pkts'= Transmitted unicasts; 'num_broadcast_tx_pkts'= Transmitted broadcasts; 'num_multicast_tx_pkts'= Transmitted multicasts; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval; "
+                - "'all'= all; 'num_pkts'= Input packets; 'num_total_bytes'= Input bytes; 'num_unicast_pkts'= Received unicasts; 'num_broadcast_pkts'= Received broadcasts; 'num_multicast_pkts'= Received multicasts; 'num_tx_pkts'= Transmitted packtes; 'num_total_tx_bytes'= Transmitte bytes; 'num_unicast_tx_pkts'= Trasnmitted unicasts; 'num_broadcast_tx_pkts'= Transmitted broadcasts; 'num_multicast_tx_pkts'= Transmitted multicasts; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval; "
     lw_4o6:
         description:
         - "Field lw_4o6"
@@ -353,7 +341,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -385,16 +372,17 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        map=dict(type='dict',inside=dict(type='bool',),map_t_inside=dict(type='bool',),uuid=dict(type='str',),map_t_outside=dict(type='bool',),outside=dict(type='bool',)),
+        map=dict(type='dict',translation=dict(type='dict',inside=dict(type='bool',),outside=dict(type='bool',),uuid=dict(type='str',))),
         nptv6=dict(type='dict',domain_list=dict(type='list',domain_name=dict(type='str',required=True,),bind_type=dict(type='str',required=True,choices=['inside','outside']),uuid=dict(type='str',))),
         isis=dict(type='dict',priority_list=dict(type='list',priority=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),padding=dict(type='bool',),hello_interval_minimal_list=dict(type='list',hello_interval_minimal=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mesh_group=dict(type='dict',value=dict(type='int',),blocked=dict(type='bool',)),network=dict(type='str',choices=['broadcast','point-to-point']),authentication=dict(type='dict',send_only_list=dict(type='list',send_only=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mode_list=dict(type='list',mode=dict(type='str',choices=['md5']),level=dict(type='str',choices=['level-1','level-2'])),key_chain_list=dict(type='list',key_chain=dict(type='str',),level=dict(type='str',choices=['level-1','level-2']))),csnp_interval_list=dict(type='list',csnp_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),retransmit_interval=dict(type='int',),password_list=dict(type='list',password=dict(type='str',),level=dict(type='str',choices=['level-1','level-2'])),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),wide_metric_list=dict(type='list',wide_metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),hello_interval_list=dict(type='list',hello_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),circuit_type=dict(type='str',choices=['level-1','level-1-2','level-2-only']),hello_multiplier_list=dict(type='list',hello_multiplier=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),metric_list=dict(type='list',metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),lsp_interval=dict(type='int',),uuid=dict(type='str',)),
         name=dict(type='str',),
@@ -439,6 +427,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -486,7 +478,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -510,6 +502,9 @@ def validate(params):
 
 def get(module):
     return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
 
 def exists(module):
     try:
@@ -591,7 +586,8 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
@@ -626,6 +622,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

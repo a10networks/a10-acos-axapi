@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_session_filter
 description:
-    - None
+    - Create a convenience Filter to display/clear sessions
 short_description: Configures A10 session-filter
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     filter_cfg:
         description:
         - "Field filter_cfg"
@@ -42,44 +45,43 @@ options:
         suboptions:
             source_addr:
                 description:
-                - "None"
+                - "Forward Source IP (Source IP address)"
             dport2:
                 description:
-                - "None"
+                - "Forward Destination Port (Dest Port)"
             app:
                 description:
-                - "None"
+                - "Specify application(s), separated by comma (For example= http,tcp)"
             dest_mask:
                 description:
-                - "None"
+                - "Forward Destination IP Subnet (Destination Netmask)"
             app_category:
                 description:
-                - "None"
+                - "'basic'= basic; 'networking'= networking; 'email'= email; 'webmails'= webmails; 'instant-messaging-and-multimedia-conferencing'= instant-messaging-and-multimedia-conferencing; 'chat'= chat; 'audio-chat'= audio-chat; 'video-chat'= video-chat; 'file-transfer'= file-transfer; 'social-networks'= social-networks; 'voip'= voip; 'web'= web; 'web-search-engines'= web-search-engines; 'web-e-commerce'= web-e-commerce; 'web-websites'= web-websites; 'mobile'= mobile; 'peer-to-peer'= peer-to-peer; 'file-management'= file-management; 'database'= database; 'enterprise'= enterprise; 'software-update'= software-update; 'gaming'= gaming; 'aaa'= aaa; 'remote-access'= remote-access; 'multimedia-streaming'= multimedia-streaming; 'vpn-tunnels'= vpn-tunnels; 'cdn'= cdn; 'news-portal'= news-portal; 'classified-ads'= classified-ads; 'advertising'= advertising; 'analytics-and-statistics'= analytics-and-statistics; 'adult-content'= adult-content; 'anonymizers-and-proxies'= anonymizers-and-proxies; 'blog'= blog; 'forum'= forum; 'standards-based'= standards-based; 'scada'= scada; 'internet-of-things'= internet-of-things; 'cloud-based-services'= cloud-based-services; "
             session_type:
                 description:
-                - "None"
+                - "'ipv6'= Display ipv6 sessions only; 'sip'= SIP sessions; "
             source_port:
                 description:
-                - "None"
+                - "Forward Source Port"
             source_mask:
                 description:
-                - "None"
+                - "Forward Source IP Subnet (Source Netmask)"
             dest_addr:
                 description:
-                - "None"
+                - "Forward Destination IP (Destination IP address)"
     set:
         description:
-        - "None"
+        - "Set filter criteria"
         required: False
     name:
         description:
-        - "None"
+        - "Session filter name"
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -112,17 +114,22 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        filter_cfg=dict(type='dict',source_addr=dict(type='str',),dport2=dict(type='int',),app=dict(type='str',),dest_mask=dict(type='str',),app_category=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails']),session_type=dict(type='str',choices=['ipv6','sip']),source_port=dict(type='int',),source_mask=dict(type='str',),dest_addr=dict(type='str',)),
+        filter_cfg=dict(type='dict',source_addr=dict(type='str',),dport2=dict(type='int',),app=dict(type='str',),dest_mask=dict(type='str',),app_category=dict(type='str',choices=['basic','networking','email','webmails','instant-messaging-and-multimedia-conferencing','chat','audio-chat','video-chat','file-transfer','social-networks','voip','web','web-search-engines','web-e-commerce','web-websites','mobile','peer-to-peer','file-management','database','enterprise','software-update','gaming','aaa','remote-access','multimedia-streaming','vpn-tunnels','cdn','news-portal','classified-ads','advertising','analytics-and-statistics','adult-content','anonymizers-and-proxies','blog','forum','standards-based','scada','internet-of-things','cloud-based-services']),session_type=dict(type='str',choices=['ipv6','sip']),source_port=dict(type='int',),source_mask=dict(type='str',),dest_addr=dict(type='str',)),
         set=dict(type='bool',),
         name=dict(type='str',required=True,),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -130,6 +137,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/session-filter/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -139,11 +147,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/session-filter/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -161,7 +174,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -180,7 +193,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -191,7 +204,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -216,6 +229,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -226,7 +242,8 @@ def create(module, result):
     payload = build_json("session-filter", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -251,8 +268,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("session-filter", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -272,22 +290,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("session-filter", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -301,6 +337,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -309,6 +348,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

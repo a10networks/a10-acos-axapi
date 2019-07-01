@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_route_map
 description:
-    - None
+    - Configure route-map
 short_description: Configures A10 route-map
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     set:
         description:
         - "Field set"
@@ -69,10 +72,10 @@ options:
                 - "Field comm_list"
             atomic_aggregate:
                 description:
-                - "None"
+                - "BGP atomic aggregate attribute"
             community:
                 description:
-                - "None"
+                - "BGP community attribute"
             local_preference:
                 description:
                 - "Field local_preference"
@@ -96,26 +99,26 @@ options:
                 - "Field metric_type"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     sequence:
         description:
-        - "None"
+        - "Sequence to insert to/delete from existing route-map entry"
         required: True
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     tag:
         description:
-        - "None"
+        - "Route map tag"
         required: True
     action:
         description:
-        - "None"
+        - "'permit'= Route map permits set operations; 'deny'= Route map denies set operations; "
         required: True
     match:
         description:
@@ -133,7 +136,7 @@ options:
                 - "Field group"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ip:
                 description:
                 - "Field ip"
@@ -161,7 +164,6 @@ options:
             interface:
                 description:
                 - "Field interface"
-
 
 """
 
@@ -194,10 +196,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        state=dict(type='str', default="present", choices=["present", "absent"]),
-        partition=dict(type='str', required=False)
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -211,6 +214,7 @@ def get_argspec():
         action=dict(type='str',required=True,choices=['permit','deny']),
         match=dict(type='dict',extcommunity=dict(type='dict',extcommunity_l_name=dict(type='dict',exact_match=dict(type='bool',),name=dict(type='str',))),origin=dict(type='dict',egp=dict(type='bool',),incomplete=dict(type='bool',),igp=dict(type='bool',)),group=dict(type='dict',group_id=dict(type='int',),ha_state=dict(type='str',choices=['active','standby'])),uuid=dict(type='str',),ip=dict(type='dict',peer=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',)),next_hop=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',),prefix_list_1=dict(type='dict',name=dict(type='str',))),address=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),prefix_list=dict(type='dict',name=dict(type='str',)),name=dict(type='str',))),metric=dict(type='dict',value=dict(type='int',)),as_path=dict(type='dict',name=dict(type='str',)),community=dict(type='dict',name_cfg=dict(type='dict',exact_match=dict(type='bool',),name=dict(type='str',))),local_preference=dict(type='dict',val=dict(type='int',)),route_type=dict(type='dict',external=dict(type='dict',value=dict(type='str',choices=['type-1','type-2']))),tag=dict(type='dict',value=dict(type='int',)),ipv6=dict(type='dict',next_hop_1=dict(type='dict',prefix_list_name=dict(type='str',),v6_addr=dict(type='str',),next_hop_acl_name=dict(type='str',)),peer_1=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',)),address_1=dict(type='dict',name=dict(type='str',),prefix_list_2=dict(type='dict',name=dict(type='str',)))),interface=dict(type='dict',tunnel=dict(type='str',),ethernet=dict(type='str',),loopback=dict(type='int',),ve=dict(type='int',),trunk=dict(type='int',)))
     ))
+   
 
     return rv
 
@@ -218,6 +222,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/route-map/{tag}+{action}+{sequence}"
+
     f_dict = {}
     f_dict["tag"] = ""
     f_dict["action"] = ""
@@ -229,6 +234,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/route-map/{tag}+{action}+{sequence}"
+
     f_dict = {}
     f_dict["tag"] = module.params["tag"]
     f_dict["action"] = module.params["action"]
@@ -236,6 +242,10 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -253,7 +263,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -272,7 +282,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -283,7 +293,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -308,6 +318,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -318,7 +331,8 @@ def create(module, result):
     payload = build_json("route-map", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -343,8 +357,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("route-map", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -364,24 +379,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("route-map", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    partition = module.params["partition"]
-
-    # TODO(remove hardcoded port #)
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -406,6 +437,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():

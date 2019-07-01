@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_template_logging
 description:
-    - None
+    - Logging Template
 short_description: Configures A10 fw.template.logging
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     include_http:
         description:
         - "Field include_http"
@@ -45,19 +48,19 @@ options:
                 - "Field header_cfg"
             request_number:
                 description:
-                - "None"
+                - "HTTP Request Number"
             file_extension:
                 description:
-                - "None"
+                - "HTTP file extension"
             method:
                 description:
-                - "None"
+                - "Log the HTTP Request Method"
             l4_session_info:
                 description:
-                - "None"
+                - "Log the L4 session information of the HTTP request"
     severity:
         description:
-        - "None"
+        - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'= 3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6= Informational; 'debug'= 7= Debug; "
         required: False
     source_address:
         description:
@@ -66,16 +69,16 @@ options:
         suboptions:
             ip:
                 description:
-                - "None"
+                - "Specify source IP address"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ipv6:
                 description:
-                - "None"
+                - "Specify source IPv6 address"
     format:
         description:
-        - "None"
+        - "'ascii'= A10 Text logging format (ASCII); 'cef'= Common Event Format for logging (default); "
         required: False
     log:
         description:
@@ -84,10 +87,10 @@ options:
         suboptions:
             http_requests:
                 description:
-                - "None"
+                - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL; "
     facility:
         description:
-        - "None"
+        - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3= System daemons; 'security-authorization'= 4= Security/authorization; 'syslog'= 5= Syslog internal; 'line-printer'= 6= Line printer; 'news'= 7= Network news; 'uucp'= 8= UUCP subsystem; 'cron'= 9= Time-related; 'security-authorization-private'= 10= Private security/authorization; 'ftp'= 11= FTP; 'ntp'= 12= NTP; 'audit'= 13= Audit; 'alert'= 14= Alert; 'clock'= 15= Clock-related; 'local0'= 16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2; 'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use 5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7; "
         required: False
     include_radius_attribute:
         description:
@@ -96,25 +99,25 @@ options:
         suboptions:
             framed_ipv6_prefix:
                 description:
-                - "None"
+                - "Include radius attributes for the prefix"
             prefix_length:
                 description:
-                - "None"
+                - "'32'= Prefix length 32; '48'= Prefix length 48; '64'= Prefix length 64; '80'= Prefix length 80; '96'= Prefix length 96; '112'= Prefix length 112; "
             insert_if_not_existing:
                 description:
-                - "None"
+                - "Configure what string is to be inserted for custom RADIUS attributes"
             zero_in_custom_attr:
                 description:
-                - "None"
+                - "Insert 0000 for standard and custom attributes in log string"
             no_quote:
                 description:
-                - "None"
+                - "No quotation marks for RADIUS attributes in logs"
             attr_cfg:
                 description:
                 - "Field attr_cfg"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     rule:
         description:
@@ -126,21 +129,20 @@ options:
                 - "Field rule_http_requests"
     service_group:
         description:
-        - "None"
+        - "Bind a Service Group to the logging template (Service Group Name)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     resolution:
         description:
-        - "None"
+        - "'seconds'= Logging timestamp resolution in seconds (default); '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds; "
         required: False
     name:
         description:
-        - "None"
+        - "Logging Template Name"
         required: True
-
 
 """
 
@@ -173,7 +175,11 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False),
+        get_type=dict(type='str', choices=["single", "list"])
     )
 
 def get_argspec():
@@ -193,6 +199,7 @@ def get_argspec():
         resolution=dict(type='str',choices=['seconds','10-milliseconds']),
         name=dict(type='str',required=True,)
     ))
+   
 
     return rv
 
@@ -200,6 +207,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/template/logging/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -209,11 +217,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/template/logging/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -231,7 +244,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -250,7 +263,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -261,7 +274,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -286,6 +299,9 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
@@ -296,7 +312,8 @@ def create(module, result):
     payload = build_json("logging", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -321,8 +338,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("logging", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -342,22 +360,40 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("logging", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -371,6 +407,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
@@ -379,6 +418,11 @@ def run_command(module):
     elif state == 'absent':
         result = absent(module, result)
         module.client.session.close()
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
     return result
 
 def main():
