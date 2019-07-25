@@ -9,10 +9,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_harmony_controller_profile
+module: a10_harmony_controller_telemetry
 description:
-    - Harmony controller profile
-short_description: Configures A10 harmony.controller.profile
+    - Harmony controller telemetry config
+short_description: Configures A10 harmony.controller.telemetry
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -38,60 +38,13 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    user_name:
+    log_rate:
         description:
-        - "user-name for the tenant"
+        - "Max number of session logs sent by the partition per second"
         required: False
     uuid:
         description:
         - "uuid of the object"
-        required: False
-    use_mgmt_port:
-        description:
-        - "Use management port for connections"
-        required: False
-    region:
-        description:
-        - "region of the thunder-device"
-        required: False
-    port:
-        description:
-        - "Set port for remote Harmony Controller, default is 8443"
-        required: False
-    thunder_mgmt_ip:
-        description:
-        - "Field thunder_mgmt_ip"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ip_address:
-                description:
-                - "IP address (IPv4 address)"
-    host:
-        description:
-        - "Set harmony controller host adddress"
-        required: False
-    password_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
-        required: False
-    provider:
-        description:
-        - "provider for the harmony-controller"
-        required: False
-    action:
-        description:
-        - "'register'= Register the device to the controller; 'deregister'= Deregister the device from controller; "
-        required: False
-    secret_value:
-        description:
-        - "Specify the password for the user"
-        required: False
-    availability_zone:
-        description:
-        - "availablity zone of the thunder-device"
         required: False
 
 
@@ -107,7 +60,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","availability_zone","host","password_encrypted","port","provider","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
+AVAILABLE_PROPERTIES = ["log_rate","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,18 +88,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        user_name=dict(type='str',),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        region=dict(type='str',),
-        port=dict(type='int',),
-        thunder_mgmt_ip=dict(type='dict',uuid=dict(type='str',),ip_address=dict(type='str',)),
-        host=dict(type='str',),
-        password_encrypted=dict(type='str',),
-        provider=dict(type='str',),
-        action=dict(type='str',choices=['register','deregister']),
-        secret_value=dict(type='str',),
-        availability_zone=dict(type='str',)
+        log_rate=dict(type='int',),
+        uuid=dict(type='str',)
     ))
    
 
@@ -155,7 +98,7 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/harmony-controller/profile"
+    url_base = "/axapi/v3/harmony-controller/telemetry"
 
     f_dict = {}
 
@@ -164,7 +107,7 @@ def new_url(module):
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/harmony-controller/profile"
+    url_base = "/axapi/v3/harmony-controller/telemetry"
 
     f_dict = {}
 
@@ -249,7 +192,7 @@ def exists(module):
         return False
 
 def create(module, result):
-    payload = build_json("profile", module)
+    payload = build_json("telemetry", module)
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -276,7 +219,7 @@ def delete(module, result):
     return result
 
 def update(module, result, existing_config):
-    payload = build_json("profile", module)
+    payload = build_json("telemetry", module)
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -301,7 +244,7 @@ def absent(module, result):
     return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("profile", module)
+    payload = build_json("telemetry", module)
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
