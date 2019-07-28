@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_alg_sip
 description:
-    - None
+    - Change Firewall SIP ALG Settings
 short_description: Configures A10 fw.alg.sip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     default_port_disable:
         description:
-        - "None"
+        - "'default-port-disable'= Disable SIP ALG default port 5060; "
         required: False
     sampling_enable:
         description:
@@ -46,12 +49,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'stat-request'= Request Received; 'stat-response'= Response Received; 'method-register'= Method REGISTER; 'method-invite'= Method INVITE; 'method-ack'= Method ACK; 'method-cancel'= Method CANCEL; 'method-bye'= Method BYE; 'method-options'= Method OPTIONS; 'method-prack'= Method PRACK; 'method-subscribe'= Method SUBSCRIBE; 'method-notify'= Method NOTIFY; 'method-publish'= Method PUBLISH; 'method-info'= Method INFO; 'method-refer'= Method REFER; 'method-message'= Method MESSAGE; 'method-update'= Method UPDATE; 'method-unknown'= Method Unknown; 'parse-error'= Message Parse Error; 'keep-alive'= Keep Alive; 'contact-error'= Contact Process Error; 'sdp-error'= SDP Process Error; 'rtp-port-no-op'= RTP Port No Op; 'rtp-rtcp-port-success'= RTP RTCP Port Success; 'rtp-port-failure'= RTP Port Failure; 'rtcp-port-failure'= RTCP Port Failure; 'contact-port-no-op'= Contact Port No Op; 'contact-port-success'= Contact Port Success; 'contact-port-failure'= Contact Port Failure; 'contact-new'= Contact Alloc; 'contact-alloc-failure'= Contact Alloc Failure; 'contact-eim'= Contact EIM; 'contact-eim-set'= Contact EIM Set; 'rtp-new'= RTP Alloc; 'rtp-alloc-failure'= RTP Alloc Failure; 'rtp-eim'= RTP EIM; 'helper-found'= SMP Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'= SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed; 'helper-failure'= SMP Helper Failure; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -84,7 +86,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -94,6 +99,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -101,6 +107,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/alg/sip"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -109,6 +116,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/alg/sip"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -130,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -149,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -160,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -195,7 +203,8 @@ def create(module, result):
     payload = build_json("sip", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -220,8 +229,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("sip", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -241,6 +251,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("sip", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -254,9 +280,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -270,6 +297,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

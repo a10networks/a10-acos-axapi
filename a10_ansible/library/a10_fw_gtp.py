@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_gtp
 description:
-    - None
+    - Configure GTP
 short_description: Configures A10 fw.gtp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,16 +45,15 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'create-session-request'= Create Session Request; 'create-session-response'= Create Session Response; 'path-management-message'= Path Management Message; 'delete-session-request'= Delete Session Request; 'delete-session-response'= Delete Session Response; 'reserved-field-set-drop'= Reserved field set drop; 'tunnel-id-flag-drop'= Tunnel ID Flag Incorrect; 'message-filtering-drop'= Message Filtering Drop; 'reserved-information-element-drop'= Resevered Information Element Field Drop; 'mandatory-information-element-drop'= Mandatory Information Element Field Drop; 'filter-list-drop'= APN IMSI Information Filtering Drop; 'invalid-teid-drop'= Invalid TEID Drop; 'out-of-state-drop'= Out Of State Drop; 'message-length-drop'= Message Length Exceeded; 'unsupported-message-type-v2'= GTP v2 message type is not supported; 'fast-conn-setup'= Fast Conn Setup Attempt; 'out-of-session-memory'= Out of Session Memory; 'no-fwd-route'= No Forward Route; 'no-rev-route'= NO Reverse Route; 'invalid-key'= Invalid TEID Field; 'create-session-request-retransmit'= Retransmitted Create Session Request; 'delete-session-request-retransmit'= Retransmitted Delete Session Request; 'response-cause-not-accepted-drop'= Response Cause indicates Request not Accepted; 'invalid-imsi-len-drop'= Invalid IMSI Length Drop; 'invalid-apn-len-drop'= Invalid APN Length Drop; 'create-pdp-context-request-v1'= GTP v1 Create PDP Context Request; 'create-pdp-context-response-v1'= GTP v1 Create PDP Context Response; 'path-management-message-v1'= GTP v1 Path Management Message; 'reserved-field-set-drop-v1'= GTP v1 Reserved field set drop; 'message-filtering-drop-v1'= GTP v1 Message Filtering Drop; 'reserved-information-element-drop-v1'= GTP v1 Reserved Information Element Field Drop; 'mandatory-information-element-drop-v1'= GTP v1 Mandatory Information Element Field Drop; 'filter-list-drop-v1'= GTP v1 APN IMSI Information Filtering Drop; 'invalid-teid-drop-v1'= GTP v1 Invalid TEID Drop; 'message-length-drop-v1'= GTP v1 Message Length Exceeded; 'version-not-supported'= GTP version is not supported; 'unsupported-message-type-v1'= GTP v1 message type is not supported; 'delete-pdp-context-request-v1'= GTP v1 Delete Context PDP Request; 'delete-pdp-context-response-v1'= GTP v1 Delete Context PDP Response; 'create-pdp-context-request-v0'= GTP v0 Create PDP Context Request; 'create-pdp-context-response-v0'= GTP v0 Create PDP Context Response; 'delete-pdp-context-request-v0'= GTP v0 Delete Context PDP Request; 'delete-pdp-context-response-v0'= GTP v0 Delete Context PDP Response; 'path-management-message-v0'= GTP v0 Path Management Message; 'message-filtering-drop-v0'= GTP v0 Message Filtering Drop; 'unsupported-message-type-v0'= GTP v0 message type is not supported; 'invalid-flow-label-drop-v0'= GTP v0 Invalid flow label drop; 'invalid-tid-drop-v0'= GTP v0 Invalid tid drop; 'message-length-drop-v0'= GTP v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0 Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     gtp_value:
         description:
-        - "None"
+        - "'enable'= Enable GTP Inspection; "
         required: False
-
 
 """
 
@@ -84,16 +86,20 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','create-session-request','create-session-response','path-management-message','delete-session-request','delete-session-response','reserved-field-set-drop','tunnel-id-flag-drop','message-filtering-drop','reserved-information-element-drop','mandatory-information-element-drop','filter-list-drop','invalid-teid-drop','out-of-state-drop','message-length-drop','fast-conn-setup','out-of-session-memory','no-fwd-route','no-rev-route','invalid-key','create-session-request-retransmit','delete-session-request-retransmit'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','create-session-request','create-session-response','path-management-message','delete-session-request','delete-session-response','reserved-field-set-drop','tunnel-id-flag-drop','message-filtering-drop','reserved-information-element-drop','mandatory-information-element-drop','filter-list-drop','invalid-teid-drop','out-of-state-drop','message-length-drop','unsupported-message-type-v2','fast-conn-setup','out-of-session-memory','no-fwd-route','no-rev-route','invalid-key','create-session-request-retransmit','delete-session-request-retransmit','response-cause-not-accepted-drop','invalid-imsi-len-drop','invalid-apn-len-drop','create-pdp-context-request-v1','create-pdp-context-response-v1','path-management-message-v1','reserved-field-set-drop-v1','message-filtering-drop-v1','reserved-information-element-drop-v1','mandatory-information-element-drop-v1','filter-list-drop-v1','invalid-teid-drop-v1','message-length-drop-v1','version-not-supported','unsupported-message-type-v1','delete-pdp-context-request-v1','delete-pdp-context-response-v1','create-pdp-context-request-v0','create-pdp-context-response-v0','delete-pdp-context-request-v0','delete-pdp-context-response-v0','path-management-message-v0','message-filtering-drop-v0','unsupported-message-type-v0','invalid-flow-label-drop-v0','invalid-tid-drop-v0','message-length-drop-v0','mandatory-information-element-drop-v0','filter-list-drop-v0','gtp-in-gtp-drop'])),
         uuid=dict(type='str',),
         gtp_value=dict(type='str',choices=['enable'])
     ))
+   
 
     return rv
 
@@ -101,6 +107,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/gtp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -109,6 +116,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/gtp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -130,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -149,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -160,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -195,7 +203,8 @@ def create(module, result):
     payload = build_json("gtp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -220,8 +229,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("gtp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -241,6 +251,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("gtp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -254,9 +280,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -270,6 +297,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

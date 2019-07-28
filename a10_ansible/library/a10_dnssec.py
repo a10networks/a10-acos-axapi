@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_dnssec
 description:
-    - None
+    - Domain Name System Security Extensions commands
 short_description: Configures A10 dnssec
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     key_rollover:
         description:
         - "Field key_rollover"
@@ -42,22 +45,22 @@ options:
         suboptions:
             dnssec_key_type:
                 description:
-                - "None"
+                - "'ZSK'= Zone Signing Key; 'KSK'= Key Signing Key; "
             zsk_start:
                 description:
-                - "None"
+                - "start ZSK rollover in emergency mode"
             ksk_start:
                 description:
-                - "None"
+                - "start KSK rollover in emergency mode"
             ds_ready_in_parent_zone:
                 description:
-                - "None"
+                - "DS RR is already ready in the parent zone"
             zone_name:
                 description:
-                - "None"
+                - "Specify the name for the DNS zone"
     standalone:
         description:
-        - "None"
+        - "Run DNSSEC in standalone mode, in GSLB group mode by default"
         required: False
     sign_zone_now:
         description:
@@ -66,7 +69,7 @@ options:
         suboptions:
             zone_name:
                 description:
-                - "None"
+                - "Specify the name for the DNS zone, empty means sign all zones"
     dnskey:
         description:
         - "Field dnskey"
@@ -74,10 +77,10 @@ options:
         suboptions:
             key_delete:
                 description:
-                - "None"
+                - "Delete the DNSKEY file"
             zone_name:
                 description:
-                - "None"
+                - "DNS zone name of the child zone"
     template_list:
         description:
         - "Field template_list"
@@ -85,34 +88,34 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             algorithm:
                 description:
-                - "None"
+                - "'RSASHA1'= RSASHA1 algorithm; 'RSASHA256'= RSASHA256 algorithm; 'RSASHA512'= RSASHA512 algorithm; "
             combinations_limit:
                 description:
-                - "None"
+                - "the max number of combinations per RRset (Default value is 31)"
             dnskey_ttl_k:
                 description:
-                - "None"
+                - "The TTL value of DNSKEY RR"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             hsm:
                 description:
-                - "None"
+                - "specify the HSM template"
             enable_nsec3:
                 description:
-                - "None"
+                - "enable NSEC3 support. disabled by default"
             return_nsec_on_failure:
                 description:
-                - "None"
+                - "return NSEC/NSEC3 or not on failure case. return by default"
             dnskey_ttl_v:
                 description:
-                - "None"
+                - "in seconds, 14400 seconds by default"
             signature_validity_period_k:
                 description:
-                - "None"
+                - "The period that a signature is valid"
             dnssec_template_ksk:
                 description:
                 - "Field dnssec_template_ksk"
@@ -121,10 +124,10 @@ options:
                 - "Field dnssec_template_zsk"
             signature_validity_period_v:
                 description:
-                - "None"
+                - "in days, 10 days by default"
             dnssec_temp_name:
                 description:
-                - "None"
+                - "DNSSEC Template Name"
     ds:
         description:
         - "Field ds"
@@ -132,15 +135,14 @@ options:
         suboptions:
             ds_delete:
                 description:
-                - "None"
+                - "Delete the DS file"
             zone_name:
                 description:
-                - "None"
+                - "DNS zone name of the child zone"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -173,7 +175,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -187,6 +192,7 @@ def get_argspec():
         ds=dict(type='dict',ds_delete=dict(type='bool',),zone_name=dict(type='str',)),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -194,6 +200,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/dnssec"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -202,6 +209,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/dnssec"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -223,7 +231,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -242,7 +250,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -253,7 +261,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -288,7 +296,8 @@ def create(module, result):
     payload = build_json("dnssec", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -313,8 +322,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("dnssec", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -334,6 +344,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("dnssec", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -347,9 +373,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -363,6 +390,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     tcp_svr_status:
         description:
         - "Field tcp_svr_status"
@@ -73,7 +76,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'tcp-session-created'= TCP Session Created; 'tcp-session-deleted'= TCP Session Deleted; 'tcp-port-allocated'= TCP Port Allocated; 'tcp-port-freed'= TCP Port Freed; 'tcp-port-batch-allocated'= TCP Port Batch Allocated; 'tcp-port-batch-freed'= TCP Port Batch Freed; 'udp-session-created'= UDP Session Created; 'udp-session-deleted'= UDP Session Deleted; 'udp-port-allocated'= UDP Port Allocated; 'udp-port-freed'= UDP Port Freed; 'udp-port-batch-allocated'= UDP Port Batch Allocated; 'udp-port-batch-freed'= UDP Port Batch Freed; 'icmp-session-created'= ICMP Session Created; 'icmp-session-deleted'= ICMP Session Deleted; 'icmp-resource-allocated'= ICMP Resource Allocated; 'icmp-resource-freed'= ICMP Resource Freed; 'icmpv6-session-created'= ICMPV6 Session Created; 'icmpv6-session-deleted'= ICMPV6 Session Deleted; 'icmpv6-resource-allocated'= ICMPV6 Resource Allocated; 'icmpv6-resource-freed'= ICMPV6 Resource Freed; 'gre-session-created'= GRE Session Created; 'gre-session-deleted'= GRE Session Deleted; 'gre-resource-allocated'= GRE Resource Allocated; 'gre-resource-freed'= GRE Resource Freed; 'esp-session-created'= ESP Session Created; 'esp-session-deleted'= ESP Session Deleted; 'esp-resource-allocated'= ESP Resource Allocated; 'esp-resource-freed'= ESP Resource Freed; 'fixed-nat-user-ports'= Fixed NAT Inside User Port Mapping; 'fixed-nat-disable-config-logged'= Fixed NAT Periodic Configs Logged; 'fixed-nat-disable-config-logs-sent'= Fixed NAT Periodic Config Logs Sent; 'fixed-nat-periodic-config-logs-sent'= Fixed NAT Disabled Configs Logged; 'fixed-nat-periodic-config-logged'= Fixed NAT Disabled Config Logs Sent; 'fixed-nat-interim-updated'= Fixed NAT Interim Updated; 'log-sent'= Log Packets Sent; 'log-dropped'= Log Packets Dropped; 'conn-tcp-established'= TCP Connection Established; 'conn-tcp-dropped'= TCP Connection Lost; 'tcp-port-overloading-allocated'= TCP Port Overloading Allocated; 'tcp-port-overloading-freed'= TCP Port Overloading Freed; 'udp-port-overloading-allocated'= UDP Port Overloading Allocated; 'udp-port-overloading-freed'= UDP Port Overloading Freed; 'http-request-logged'= HTTP Request Logged; 'reduced-logs-by-destination'= Reduced Logs by Destination Protocol and Port; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'rtsp-port-allocated'= RTSP UDP Port Allocated; 'rtsp-port-freed'= RTSP UDP Port Freed; 'conn-tcp-create-failed'= TCP Connection Failed; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'interim-update-scheduled'= Port Allocation Interim Update Scheduled; 'interim-update-schedule-failed'= Port Allocation Interim Update Failed; 'interim-update-terminated'= Port Allocation Interim Update Terminated; 'interim-update-memory-freed'= Port Allocation Interim Update Memory Freed; 'interim-update-no-buff-retried'= Port Allocation Interim Update Memory Freed; 'tcp-port-batch-interim-updated'= TCP Port Batch Interim Updated; 'udp-port-batch-interim-updated'= UDP Port Batch Interim Updated; 'port-block-accounting-freed'= Port Allocation Accounting Freed; 'port-block-accounting-allocated'= Port Allocation Accounting Allocated; 'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed; 'http-frag-merge-failed-dropped'= HTTP frag merge failed dropped; "
+                - "'all'= all; 'tcp-session-created'= TCP Session Created; 'tcp-session-deleted'= TCP Session Deleted; 'tcp-port-allocated'= TCP Port Allocated; 'tcp-port-freed'= TCP Port Freed; 'tcp-port-batch-allocated'= TCP Port Batch Allocated; 'tcp-port-batch-freed'= TCP Port Batch Freed; 'udp-session-created'= UDP Session Created; 'udp-session-deleted'= UDP Session Deleted; 'udp-port-allocated'= UDP Port Allocated; 'udp-port-freed'= UDP Port Freed; 'udp-port-batch-allocated'= UDP Port Batch Allocated; 'udp-port-batch-freed'= UDP Port Batch Freed; 'icmp-session-created'= ICMP Session Created; 'icmp-session-deleted'= ICMP Session Deleted; 'icmp-resource-allocated'= ICMP Resource Allocated; 'icmp-resource-freed'= ICMP Resource Freed; 'icmpv6-session-created'= ICMPV6 Session Created; 'icmpv6-session-deleted'= ICMPV6 Session Deleted; 'icmpv6-resource-allocated'= ICMPV6 Resource Allocated; 'icmpv6-resource-freed'= ICMPV6 Resource Freed; 'gre-session-created'= GRE Session Created; 'gre-session-deleted'= GRE Session Deleted; 'gre-resource-allocated'= GRE Resource Allocated; 'gre-resource-freed'= GRE Resource Freed; 'esp-session-created'= ESP Session Created; 'esp-session-deleted'= ESP Session Deleted; 'esp-resource-allocated'= ESP Resource Allocated; 'esp-resource-freed'= ESP Resource Freed; 'fixed-nat-user-ports'= Fixed NAT Inside User Port Mapping; 'fixed-nat-disable-config-logged'= Fixed NAT Periodic Configs Logged; 'fixed-nat-disable-config-logs-sent'= Fixed NAT Periodic Config Logs Sent; 'fixed-nat-periodic-config-logs-sent'= Fixed NAT Disabled Configs Logged; 'fixed-nat-periodic-config-logged'= Fixed NAT Disabled Config Logs Sent; 'fixed-nat-interim-updated'= Fixed NAT Interim Updated; 'enhanced-user-log'= Enhanced User Log; 'log-sent'= Log Packets Sent; 'log-dropped'= Log Packets Dropped; 'conn-tcp-established'= TCP Connection Established; 'conn-tcp-dropped'= TCP Connection Lost; 'tcp-port-overloading-allocated'= TCP Port Overloading Allocated; 'tcp-port-overloading-freed'= TCP Port Overloading Freed; 'udp-port-overloading-allocated'= UDP Port Overloading Allocated; 'udp-port-overloading-freed'= UDP Port Overloading Freed; 'http-request-logged'= HTTP Request Logged; 'reduced-logs-by-destination'= Reduced Logs by Destination Protocol and Port; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'rtsp-port-allocated'= RTSP UDP Port Allocated; 'rtsp-port-freed'= RTSP UDP Port Freed; 'conn-tcp-create-failed'= TCP Connection Failed; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'interim-update-scheduled'= Port Allocation Interim Update Scheduled; 'interim-update-schedule-failed'= Port Allocation Interim Update Failed; 'interim-update-terminated'= Port Allocation Interim Update Terminated; 'interim-update-memory-freed'= Port Allocation Interim Update Memory Freed; 'interim-update-no-buff-retried'= Port Allocation Interim Update Memory Freed; 'tcp-port-batch-interim-updated'= TCP Port Batch Interim Updated; 'udp-port-batch-interim-updated'= UDP Port Batch Interim Updated; 'port-block-accounting-freed'= Port Allocation Accounting Freed; 'port-block-accounting-allocated'= Port Allocation Accounting Allocated; 'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed; 'http-frag-merge-failed-dropped'= HTTP frag merge failed dropped; 'http-malloc'= HTTP mem allocate; 'http-mfree'= HTTP mem free; 'http-spm-alloc-type0'= HTTP Conn SPM Type 0 allocate; 'http-spm-alloc-type1'= HTTP Conn SPM Type 1 allocate; 'http-spm-alloc-type2'= HTTP Conn SPM Type 2 allocate; 'http-spm-alloc-type3'= HTTP Conn SPM Type 3 allocate; 'http-spm-alloc-type4'= HTTP Conn SPM Type 4 allocate; 'http-spm-free-type0'= HTTP Conn SPM Type 0 free; 'http-spm-free-type1'= HTTP Conn SPM Type 1 free; 'http-spm-free-type2'= HTTP Conn SPM Type 2 free; 'http-spm-free-type3'= HTTP Conn SPM Type 3 free; 'http-spm-free-type4'= HTTP Conn SPM Type 4 free; "
     nat_resource_exhausted:
         description:
         - "Field nat_resource_exhausted"
@@ -85,7 +88,6 @@ options:
             level:
                 description:
                 - "'warning'= Log level Warning; 'critical'= Log level Critical (Default); 'notice'= Log level Notice; "
-
 
 """
 
@@ -131,9 +133,10 @@ def get_argspec():
         uuid=dict(type='str',),
         source_address=dict(type='dict',uuid=dict(type='str',)),
         nat_quota_exceeded=dict(type='dict',uuid=dict(type='str',),level=dict(type='str',choices=['warning','critical','notice'])),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp-session-created','tcp-session-deleted','tcp-port-allocated','tcp-port-freed','tcp-port-batch-allocated','tcp-port-batch-freed','udp-session-created','udp-session-deleted','udp-port-allocated','udp-port-freed','udp-port-batch-allocated','udp-port-batch-freed','icmp-session-created','icmp-session-deleted','icmp-resource-allocated','icmp-resource-freed','icmpv6-session-created','icmpv6-session-deleted','icmpv6-resource-allocated','icmpv6-resource-freed','gre-session-created','gre-session-deleted','gre-resource-allocated','gre-resource-freed','esp-session-created','esp-session-deleted','esp-resource-allocated','esp-resource-freed','fixed-nat-user-ports','fixed-nat-disable-config-logged','fixed-nat-disable-config-logs-sent','fixed-nat-periodic-config-logs-sent','fixed-nat-periodic-config-logged','fixed-nat-interim-updated','log-sent','log-dropped','conn-tcp-established','conn-tcp-dropped','tcp-port-overloading-allocated','tcp-port-overloading-freed','udp-port-overloading-allocated','udp-port-overloading-freed','http-request-logged','reduced-logs-by-destination','out-of-buffers','add-msg-failed','rtsp-port-allocated','rtsp-port-freed','conn-tcp-create-failed','ipv4-frag-applied','ipv4-frag-failed','ipv6-frag-applied','ipv6-frag-failed','interim-update-scheduled','interim-update-schedule-failed','interim-update-terminated','interim-update-memory-freed','interim-update-no-buff-retried','tcp-port-batch-interim-updated','udp-port-batch-interim-updated','port-block-accounting-freed','port-block-accounting-allocated','log-message-too-long','http-out-of-order-dropped','http-alloc-failed','http-frag-merge-failed-dropped'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp-session-created','tcp-session-deleted','tcp-port-allocated','tcp-port-freed','tcp-port-batch-allocated','tcp-port-batch-freed','udp-session-created','udp-session-deleted','udp-port-allocated','udp-port-freed','udp-port-batch-allocated','udp-port-batch-freed','icmp-session-created','icmp-session-deleted','icmp-resource-allocated','icmp-resource-freed','icmpv6-session-created','icmpv6-session-deleted','icmpv6-resource-allocated','icmpv6-resource-freed','gre-session-created','gre-session-deleted','gre-resource-allocated','gre-resource-freed','esp-session-created','esp-session-deleted','esp-resource-allocated','esp-resource-freed','fixed-nat-user-ports','fixed-nat-disable-config-logged','fixed-nat-disable-config-logs-sent','fixed-nat-periodic-config-logs-sent','fixed-nat-periodic-config-logged','fixed-nat-interim-updated','enhanced-user-log','log-sent','log-dropped','conn-tcp-established','conn-tcp-dropped','tcp-port-overloading-allocated','tcp-port-overloading-freed','udp-port-overloading-allocated','udp-port-overloading-freed','http-request-logged','reduced-logs-by-destination','out-of-buffers','add-msg-failed','rtsp-port-allocated','rtsp-port-freed','conn-tcp-create-failed','ipv4-frag-applied','ipv4-frag-failed','ipv6-frag-applied','ipv6-frag-failed','interim-update-scheduled','interim-update-schedule-failed','interim-update-terminated','interim-update-memory-freed','interim-update-no-buff-retried','tcp-port-batch-interim-updated','udp-port-batch-interim-updated','port-block-accounting-freed','port-block-accounting-allocated','log-message-too-long','http-out-of-order-dropped','http-alloc-failed','http-frag-merge-failed-dropped','http-malloc','http-mfree','http-spm-alloc-type0','http-spm-alloc-type1','http-spm-alloc-type2','http-spm-alloc-type3','http-spm-alloc-type4','http-spm-free-type0','http-spm-free-type1','http-spm-free-type2','http-spm-free-type3','http-spm-free-type4'])),
         nat_resource_exhausted=dict(type='dict',uuid=dict(type='str',),level=dict(type='str',choices=['warning','critical','notice']))
     ))
+   
 
     return rv
 
@@ -141,6 +144,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/logging"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -149,6 +153,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/logging"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -170,7 +175,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -189,7 +194,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -200,7 +205,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -235,7 +240,8 @@ def create(module, result):
     payload = build_json("logging", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -260,8 +266,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("logging", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -280,6 +287,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("logging", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

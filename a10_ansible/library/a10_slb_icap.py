@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_icap
 description:
-    - None
+    - Show ICAP Statistics
 short_description: Configures A10 slb.icap
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'reqmod_request'= Reqmod Request Stats; 'respmod_request'= Respmod Request Stats; 'reqmod_request_after_100'= Reqmod Request Sent After 100 Cont Stats; 'respmod_request_after_100'= Respmod Request Sent After 100 Cont Stats; 'reqmod_response'= Reqmod Response Stats; 'respmod_response'= Respmod Response Stats; 'reqmod_response_after_100'= Reqmod Response After 100 Cont Stats; 'respmod_response_after_100'= Respmod Response After 100 Cont Stats; 'chunk_no_allow_204'= Chunk so no Allow 204 Stats; 'len_exceed_no_allow_204'= Length Exceeded so no Allow 204 Stats; 'result_continue'= Result Continue Stats; 'result_icap_response'= Result ICAP Response Stats; 'result_100_continue'= Result 100 Continue Stats; 'result_other'= Result Other Stats; 'status_2xx'= Status 2xx Stats; 'status_200'= Status 200 Stats; 'status_201'= Status 201 Stats; 'status_202'= Status 202 Stats; 'status_203'= Status 203 Stats; 'status_204'= Status 204 Stats; 'status_205'= Status 205 Stats; 'status_206'= Status 206 Stats; 'status_207'= Status 207 Stats; 'status_1xx'= Status 1xx Stats; 'status_100'= Status 100 Stats; 'status_101'= Status 101 Stats; 'status_102'= Status 102 Stats; 'status_3xx'= Status 3xx Stats; 'status_300'= Status 300 Stats; 'status_301'= Status 301 Stats; 'status_302'= Status 302 Stats; 'status_303'= Status 303 Stats; 'status_304'= Status 304 Stats; 'status_305'= Status 305 Stats; 'status_306'= Status 306 Stats; 'status_307'= Status 307 Stats; 'status_4xx'= Status 4xx Stats; 'status_400'= Status 400 Stats; 'status_401'= Status 401 Stats; 'status_402'= Status 402 Stats; 'status_403'= Status 403 Stats; 'status_404'= Status 404 Stats; 'status_405'= Status 405 Stats; 'status_406'= Status 406 Stats; 'status_407'= Status 407 Stats; 'status_408'= Status 408 Stats; 'status_409'= Status 409 Stats; 'status_410'= Status 410 Stats; 'status_411'= Status 411 Stats; 'status_412'= Status 412 Stats; 'status_413'= Status 413 Stats; 'status_414'= Status 414 Stats; 'status_415'= Status 415 Stats; 'status_416'= Status 416 Stats; 'status_417'= Status 417 Stats; 'status_418'= Status 418 Stats; 'status_419'= Status 419 Stats; 'status_420'= Status 420 Stats; 'status_422'= Status 422 Stats; 'status_423'= Status 423 Stats; 'status_424'= Status 424 Stats; 'status_425'= Status 425 Stats; 'status_426'= Status 426 Stats; 'status_449'= Status 449 Stats; 'status_450'= Status 450 Stats; 'status_5xx'= Status 5xx Stats; 'status_500'= Status 500 Stats; 'status_501'= Status 501 Stats; 'status_502'= Status 502 Stats; 'status_503'= Status 503 Stats; 'status_504'= Status 504 Stats; 'status_505'= Status 505 Stats; 'status_506'= Status 506 Stats; 'status_507'= Status 507 Stats; 'status_508'= Status 508 Stats; 'status_509'= Status 509 Stats; 'status_510'= Status 510 Stats; 'status_6xx'= Status 6xx Stats; 'status_unknown'= Status Unknown Stats; 'send_option_req'= Send Option Req Stats; 'app_serv_conn_no_pcb_err'= App Server Conn no ES PCB Err Stats; 'app_serv_conn_err'= App Server Conn Err Stats; 'chunk1_hdr_err'= Chunk Hdr Err1 Stats; 'chunk2_hdr_err'= Chunk Hdr Err2 Stats; 'chunk_bad_trail_err'= Chunk Bad Trail Err Stats; 'no_payload_next_buff_err'= No Payload In Next Buff Err Stats; 'no_payload_buff_err'= No Payload Buff Err Stats; 'resp_hdr_incomplete_err'= Resp Hdr Incomplete Err Stats; 'serv_sel_fail_err'= Server Select Fail Err Stats; 'start_icap_conn_fail_err'= Start ICAP conn fail Stats; 'prep_req_fail_err'= Prepare ICAP req fail Err Stats; 'icap_ver_err'= ICAP Ver Err Stats; 'icap_line_err'= ICAP Line Err Stats; 'encap_hdr_incomplete_err'= Encap HDR Incomplete Err Stats; 'no_icap_resp_err'= No ICAP Resp Err Stats; 'resp_line_read_err'= Resp Line Read Err Stats; 'resp_line_parse_err'= Resp Line Parse Err Stats; 'resp_hdr_err'= Resp Hdr Err Stats; 'req_hdr_incomplete_err'= Req Hdr Incomplete Err Stats; 'no_status_code_err'= No Status Code Err Stats; 'http_resp_line_read_err'= HTTP Response Line Read Err Stats; 'http_resp_line_parse_err'= HTTP Response Line Parse Err Stats; 'http_resp_hdr_err'= HTTP Resp Hdr Err Stats; 'recv_option_resp'= Send Option Req Stats; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,7 +82,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -89,6 +94,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','reqmod_request','respmod_request','reqmod_request_after_100','respmod_request_after_100','reqmod_response','respmod_response','reqmod_response_after_100','respmod_response_after_100','chunk_no_allow_204','len_exceed_no_allow_204','result_continue','result_icap_response','result_100_continue','result_other','status_2xx','status_200','status_201','status_202','status_203','status_204','status_205','status_206','status_207','status_1xx','status_100','status_101','status_102','status_3xx','status_300','status_301','status_302','status_303','status_304','status_305','status_306','status_307','status_4xx','status_400','status_401','status_402','status_403','status_404','status_405','status_406','status_407','status_408','status_409','status_410','status_411','status_412','status_413','status_414','status_415','status_416','status_417','status_418','status_419','status_420','status_422','status_423','status_424','status_425','status_426','status_449','status_450','status_5xx','status_500','status_501','status_502','status_503','status_504','status_505','status_506','status_507','status_508','status_509','status_510','status_6xx','status_unknown','send_option_req','app_serv_conn_no_pcb_err','app_serv_conn_err','chunk1_hdr_err','chunk2_hdr_err','chunk_bad_trail_err','no_payload_next_buff_err','no_payload_buff_err','resp_hdr_incomplete_err','serv_sel_fail_err','start_icap_conn_fail_err','prep_req_fail_err','icap_ver_err','icap_line_err','encap_hdr_incomplete_err','no_icap_resp_err','resp_line_read_err','resp_line_parse_err','resp_hdr_err','req_hdr_incomplete_err','no_status_code_err','http_resp_line_read_err','http_resp_line_parse_err','http_resp_hdr_err','recv_option_resp'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/icap"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/icap"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("icap", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("icap", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("icap", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

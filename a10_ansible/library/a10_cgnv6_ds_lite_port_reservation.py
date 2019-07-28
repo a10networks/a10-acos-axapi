@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     nat_end_port:
         description:
         - "NAT End Port"
@@ -71,7 +74,6 @@ options:
         description:
         - "Inside User IP address"
         required: True
-
 
 """
 
@@ -123,6 +125,7 @@ def get_argspec():
         nat_start_port=dict(type='int',required=True,),
         inside_addr=dict(type='str',required=True,)
     ))
+   
 
     return rv
 
@@ -130,6 +133,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+
     f_dict = {}
     f_dict["inside"] = ""
     f_dict["tunnel-dest-address"] = ""
@@ -146,15 +150,16 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/ds-lite/port-reservation/{inside}+{tunnel-dest-address}+{inside-addr}+{inside-start-port}+{inside-end-port}+{nat}+{nat-start-port}+{nat-end-port}"
+
     f_dict = {}
     f_dict["inside"] = module.params["inside"]
-    f_dict["tunnel-dest-address"] = module.params["tunnel-dest-address"]
-    f_dict["inside-addr"] = module.params["inside-addr"]
-    f_dict["inside-start-port"] = module.params["inside-start-port"]
-    f_dict["inside-end-port"] = module.params["inside-end-port"]
+    f_dict["tunnel-dest-address"] = module.params["tunnel_dest_address"]
+    f_dict["inside-addr"] = module.params["inside_addr"]
+    f_dict["inside-start-port"] = module.params["inside_start_port"]
+    f_dict["inside-end-port"] = module.params["inside_end_port"]
     f_dict["nat"] = module.params["nat"]
-    f_dict["nat-start-port"] = module.params["nat-start-port"]
-    f_dict["nat-end-port"] = module.params["nat-end-port"]
+    f_dict["nat-start-port"] = module.params["nat_start_port"]
+    f_dict["nat-end-port"] = module.params["nat_end_port"]
 
     return url_base.format(**f_dict)
 
@@ -175,7 +180,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -194,7 +199,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -205,7 +210,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -240,7 +245,8 @@ def create(module, result):
     payload = build_json("port-reservation", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -265,8 +271,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("port-reservation", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -285,6 +292,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("port-reservation", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

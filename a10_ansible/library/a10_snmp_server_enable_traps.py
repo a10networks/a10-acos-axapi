@@ -66,6 +66,9 @@ options:
             ssl_cert_expire:
                 description:
                 - "Enable SSL certificate expiring trap"
+            system_threshold:
+                description:
+                - "Enable slb system threshold trap"
             server:
                 description:
                 - "Enable slb server create/delete trap"
@@ -201,12 +204,18 @@ options:
             license_management:
                 description:
                 - "Enable system license management traps"
-            packet_drop:
+            tacacs_server_up_down:
                 description:
-                - "Enable system packet dropped trap"
+                - "Enable system TACACS monitor server up/down trap"
+            smp_resource_event:
+                description:
+                - "Enable system smp resource event trap"
             restart:
                 description:
                 - "Enable system restart trap"
+            packet_drop:
+                description:
+                - "Enable system packet dropped trap"
     ssl:
         description:
         - "Field ssl"
@@ -370,7 +379,6 @@ options:
                 description:
                 - "uuid of the object"
 
-
 """
 
 EXAMPLES = """
@@ -413,12 +421,12 @@ def get_argspec():
     rv.update(dict(
         lldp=dict(type='bool',),
         all=dict(type='bool',),
-        slb_change=dict(type='dict',all=dict(type='bool',),resource_usage_warning=dict(type='bool',),uuid=dict(type='str',),ssl_cert_change=dict(type='bool',),ssl_cert_expire=dict(type='bool',),server=dict(type='bool',),vip=dict(type='bool',),connection_resource_event=dict(type='bool',),server_port=dict(type='bool',),vip_port=dict(type='bool',)),
+        slb_change=dict(type='dict',all=dict(type='bool',),resource_usage_warning=dict(type='bool',),uuid=dict(type='str',),ssl_cert_change=dict(type='bool',),ssl_cert_expire=dict(type='bool',),system_threshold=dict(type='bool',),server=dict(type='bool',),vip=dict(type='bool',),connection_resource_event=dict(type='bool',),server_port=dict(type='bool',),vip_port=dict(type='bool',)),
         uuid=dict(type='str',),
         lsn=dict(type='dict',all=dict(type='bool',),fixed_nat_port_mapping_file_change=dict(type='bool',),per_ip_port_usage_threshold=dict(type='bool',),uuid=dict(type='str',),total_port_usage_threshold=dict(type='bool',),max_port_threshold=dict(type='int',),max_ipport_threshold=dict(type='int',),traffic_exceeded=dict(type='bool',)),
         vrrp_a=dict(type='dict',active=dict(type='bool',),standby=dict(type='bool',),all=dict(type='bool',),uuid=dict(type='str',)),
         snmp=dict(type='dict',linkup=dict(type='bool',),all=dict(type='bool',),linkdown=dict(type='bool',),uuid=dict(type='str',)),
-        system=dict(type='dict',all=dict(type='bool',),data_cpu_high=dict(type='bool',),uuid=dict(type='str',),power=dict(type='bool',),high_disk_use=dict(type='bool',),high_memory_use=dict(type='bool',),control_cpu_high=dict(type='bool',),file_sys_read_only=dict(type='bool',),low_temp=dict(type='bool',),high_temp=dict(type='bool',),sec_disk=dict(type='bool',),start=dict(type='bool',),fan=dict(type='bool',),shutdown=dict(type='bool',),pri_disk=dict(type='bool',),license_management=dict(type='bool',),packet_drop=dict(type='bool',),restart=dict(type='bool',)),
+        system=dict(type='dict',all=dict(type='bool',),data_cpu_high=dict(type='bool',),uuid=dict(type='str',),power=dict(type='bool',),high_disk_use=dict(type='bool',),high_memory_use=dict(type='bool',),control_cpu_high=dict(type='bool',),file_sys_read_only=dict(type='bool',),low_temp=dict(type='bool',),high_temp=dict(type='bool',),sec_disk=dict(type='bool',),start=dict(type='bool',),fan=dict(type='bool',),shutdown=dict(type='bool',),pri_disk=dict(type='bool',),license_management=dict(type='bool',),tacacs_server_up_down=dict(type='bool',),smp_resource_event=dict(type='bool',),restart=dict(type='bool',),packet_drop=dict(type='bool',)),
         ssl=dict(type='dict',server_certificate_error=dict(type='bool',),uuid=dict(type='str',)),
         vcs=dict(type='dict',state_change=dict(type='bool',),uuid=dict(type='str',)),
         routing=dict(type='dict',bgp=dict(type='dict',bgpEstablishedNotification=dict(type='bool',),uuid=dict(type='str',),bgpBackwardTransNotification=dict(type='bool',)),isis=dict(type='dict',isisAuthenticationFailure=dict(type='bool',),uuid=dict(type='str',),isisProtocolsSupportedMismatch=dict(type='bool',),isisRejectedAdjacency=dict(type='bool',),isisMaxAreaAddressesMismatch=dict(type='bool',),isisCorruptedLSPDetected=dict(type='bool',),isisOriginatingLSPBufferSizeMismatch=dict(type='bool',),isisAreaMismatch=dict(type='bool',),isisLSPTooLargeToPropagate=dict(type='bool',),isisOwnLSPPurge=dict(type='bool',),isisSequenceNumberSkip=dict(type='bool',),isisDatabaseOverload=dict(type='bool',),isisAttemptToExceedMaxSequence=dict(type='bool',),isisIDLenMismatch=dict(type='bool',),isisAuthenticationTypeFailure=dict(type='bool',),isisVersionSkew=dict(type='bool',),isisManualAddressDrops=dict(type='bool',),isisAdjacencyChange=dict(type='bool',)),ospf=dict(type='dict',ospfLsdbOverflow=dict(type='bool',),uuid=dict(type='str',),ospfNbrStateChange=dict(type='bool',),ospfIfStateChange=dict(type='bool',),ospfVirtNbrStateChange=dict(type='bool',),ospfLsdbApproachingOverflow=dict(type='bool',),ospfIfAuthFailure=dict(type='bool',),ospfVirtIfAuthFailure=dict(type='bool',),ospfVirtIfConfigError=dict(type='bool',),ospfVirtIfRxBadPacket=dict(type='bool',),ospfTxRetransmit=dict(type='bool',),ospfVirtIfStateChange=dict(type='bool',),ospfIfConfigError=dict(type='bool',),ospfMaxAgeLsa=dict(type='bool',),ospfIfRxBadPacket=dict(type='bool',),ospfVirtIfTxRetransmit=dict(type='bool',),ospfOriginateLsa=dict(type='bool',))),
@@ -484,7 +492,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -495,7 +503,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_policy
 description:
-    - None
+    - Policy for GSLB zone, service or geo-location
 short_description: Configures A10 gslb.policy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,21 +35,24 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     weighted_ip_enable:
         description:
-        - "None"
+        - "Enable Select Service-IP by weighted preference"
         required: False
     alias_admin_preference:
         description:
-        - "None"
+        - "Select alias name having maximum admin preference"
         required: False
     admin_ip_top_only:
         description:
-        - "None"
+        - "Return highest priority server only"
         required: False
     least_response:
         description:
-        - "None"
+        - "Least response selection"
         required: False
     auto_map:
         description:
@@ -58,26 +61,26 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "All modules"
             ttl:
                 description:
-                - "None"
+                - "Specify Auto Map TTL (TTL, default is 300)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             module_type:
                 description:
                 - "Field module_type"
             module_disable:
                 description:
-                - "None"
+                - "Specify Disable Auto Map Module"
     bw_cost_fail_break:
         description:
-        - "None"
+        - "Break when exceed limit"
         required: False
     metric_fail_break:
         description:
-        - "None"
+        - "Break if no valid Service-IP"
         required: False
     edns:
         description:
@@ -86,10 +89,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             client_subnet_geographic:
                 description:
-                - "None"
+                - "Use client subnet for geo-location"
     active_rdt:
         description:
         - "Field active_rdt"
@@ -97,53 +100,53 @@ options:
         suboptions:
             ignore_id:
                 description:
-                - "None"
+                - "Ignore IP Address specified in IP List by ID"
             keep_tracking:
                 description:
-                - "None"
+                - "Keep tracking client even round-delay-time samples are ready"
             enable:
                 description:
-                - "None"
+                - "Enable the active rdt"
             timeout:
                 description:
-                - "None"
+                - "Specify timeout if round-delay-time samples are not ready (Specify timeout, unit=sec,default is 3)"
             skip:
                 description:
-                - "None"
+                - "Skip query if round-delay-time samples are not ready (Specify maximum skip count,default is 3)"
             fail_break:
                 description:
-                - "None"
+                - "Break when no valid RDT"
             controller:
                 description:
-                - "None"
+                - "Active round-delay-time by controller"
             limit:
                 description:
-                - "None"
+                - "Limit of allowed RDT, default is 16383 (Limit, unit= millisecond)"
             samples:
                 description:
-                - "None"
+                - "Specify samples number for round-delay-time (Number of samples,default is 5)"
             proto_rdt_enable:
                 description:
-                - "None"
+                - "Enable the round-delay-time to the controller"
             single_shot:
                 description:
-                - "None"
+                - "Single Shot RDT"
             difference:
                 description:
-                - "None"
+                - "The difference between the round-delay-time, default is 0"
             tolerance:
                 description:
-                - "None"
+                - "The difference percentage between the round-delay-time, default is 10 (Tolerance)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     round_robin:
         description:
-        - "None"
+        - "Round robin selection, enabled by default"
         required: False
     admin_preference:
         description:
-        - "None"
+        - "Select Service-IP for the device having maximum admin preference"
         required: False
     capacity:
         description:
@@ -152,23 +155,23 @@ options:
         suboptions:
             threshold:
                 description:
-                - "None"
+                - "Specify capacity threshold, default is 90"
             capacity_enable:
                 description:
-                - "None"
+                - "Enable capacity"
             capacity_fail_break:
                 description:
-                - "None"
+                - "Break when exceed threshold"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     active_servers_fail_break:
         description:
-        - "None"
+        - "Break when no active server"
         required: False
     metric_type:
         description:
@@ -176,11 +179,11 @@ options:
         required: False
     num_session_tolerance:
         description:
-        - "None"
+        - "The difference between the available sessions, default is 10 (Tolerance)"
         required: False
     name:
         description:
-        - "None"
+        - "Specify policy name"
         required: True
     dns:
         description:
@@ -189,193 +192,196 @@ options:
         suboptions:
             server_mode_only:
                 description:
-                - "None"
+                - "Only run GSLB as DNS server mode"
             external_soa:
                 description:
-                - "None"
+                - "Return DNS response with external SOA Record"
             server_sec:
                 description:
-                - "None"
+                - "Provide DNSSEC support"
             sticky_ipv6_mask:
                 description:
-                - "None"
+                - "Specify IPv6 mask length, default is 128"
             sticky:
                 description:
-                - "None"
+                - "Make DNS Record sticky for certain time"
             delegation:
                 description:
-                - "None"
+                - "Zone Delegation"
             active_only_fail_safe:
                 description:
-                - "None"
+                - "Continue if no candidate"
             cname_detect:
                 description:
-                - "None"
+                - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
             ttl:
                 description:
-                - "None"
+                - "Specify the TTL value contained in DNS record (TTL value, unit= second, default is 10)"
             dynamic_preference:
                 description:
-                - "None"
+                - "Make dynamically change the preference"
             use_server_ttl:
                 description:
-                - "None"
+                - "Use DNS Server Response TTL value in GSLB Proxy mode"
             server_ptr:
                 description:
-                - "None"
+                - "Provide PTR Records"
             selected_only:
                 description:
-                - "None"
+                - "Only keep selected servers"
             ip_replace:
                 description:
-                - "None"
+                - "Replace DNS Server Response with GSLB Service-IPs"
             dns_addition_mx:
                 description:
-                - "None"
+                - "Append MX Records in Addition Section"
             backup_alias:
                 description:
-                - "None"
+                - "Return alias name when fail"
             server_any:
                 description:
-                - "None"
+                - "Provide All Records"
             hint:
                 description:
-                - "None"
+                - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'= Append Hint Records in DNS Addition Section; "
             cache:
                 description:
-                - "None"
+                - "Cache DNS Server response"
             external_ip:
                 description:
-                - "None"
+                - "Return DNS response with external IP address"
             server_txt:
                 description:
-                - "None"
+                - "Provide TXT Records"
             server_addition_mx:
                 description:
-                - "None"
+                - "Append MX Records in Addition Section"
             aging_time:
                 description:
-                - "None"
+                - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time, default 0 means using TTL in DNS record as aging time)"
             block_action:
                 description:
-                - "None"
+                - "Specify Action"
             template:
                 description:
-                - "None"
+                - "Logging template (Logging Template Name)"
             ipv6:
                 description:
                 - "Field ipv6"
             selected_only_value:
                 description:
-                - "None"
+                - "Answer Number"
             geoloc_action:
                 description:
-                - "None"
+                - "Apply DNS action by geo-location"
             server_ns:
                 description:
-                - "None"
+                - "Provide NS Records"
             action_type:
                 description:
-                - "None"
+                - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
             server_naptr:
                 description:
-                - "None"
+                - "Provide NAPTR Records"
             active_only:
                 description:
-                - "None"
+                - "Only keep active servers"
             block_value:
                 description:
                 - "Field block_value"
             server_srv:
                 description:
-                - "None"
+                - "Provide SRV Records"
             server_auto_ptr:
                 description:
-                - "None"
+                - "Provide PTR Records automatically"
             server_cname:
                 description:
-                - "None"
+                - "Provide CNAME Records"
             server_authoritative:
                 description:
-                - "None"
+                - "As authoritative server"
             server_full_list:
                 description:
-                - "None"
+                - "Append All A Records in Authoritative Section"
+            server_any_with_metric:
+                description:
+                - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
             dns_auto_map:
                 description:
-                - "None"
+                - "Automatically build DNS Infrastructure"
             block_type:
                 description:
                 - "Field block_type"
             sticky_mask:
                 description:
-                - "None"
+                - "Specify IP mask, default is /32"
             geoloc_alias:
                 description:
-                - "None"
+                - "Return alias name by geo-location"
             logging:
                 description:
-                - "None"
+                - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS Query and Response; "
             backup_server:
                 description:
-                - "None"
+                - "Return fallback server when fail"
             sticky_aging_time:
                 description:
-                - "None"
+                - "Specify aging-time, unit= min, default is 5 (Aging time)"
             geoloc_policy:
                 description:
-                - "None"
+                - "Apply different policy by geo-location"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             server:
                 description:
-                - "None"
+                - "Run GSLB as DNS server mode"
             dynamic_weight:
                 description:
-                - "None"
+                - "dynamically change the weight"
             server_ns_list:
                 description:
-                - "None"
+                - "Append All NS Records in Authoritative Section"
             server_auto_ns:
                 description:
-                - "None"
+                - "Provide A-Records for NS-Records automatically"
             action:
                 description:
-                - "None"
+                - "Apply DNS action for service"
             proxy_block_port_range_list:
                 description:
                 - "Field proxy_block_port_range_list"
             server_mx:
                 description:
-                - "None"
+                - "Provide MX Records"
     weighted_ip_total_hits:
         description:
-        - "None"
+        - "Weighted by total hits"
         required: False
     weighted_site_total_hits:
         description:
-        - "None"
+        - "Weighted by total hits"
         required: False
     ip_list:
         description:
-        - "None"
+        - "Specify IP List (IP List Name)"
         required: False
     ordered_ip_top_only:
         description:
-        - "None"
+        - "Return highest priority server only"
         required: False
     weighted_site_enable:
         description:
-        - "None"
+        - "Enable Select Service-IP by weighted site preference"
         required: False
     metric_force_check:
         description:
-        - "None"
+        - "Always check Service-IP for all enabled metrics"
         required: False
     admin_ip_enable:
         description:
-        - "None"
+        - "Enable admin ip"
         required: False
     geo_location_list:
         description:
@@ -387,19 +393,19 @@ options:
                 - "Field ip_multiple_fields"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             name:
                 description:
-                - "None"
+                - "Specify geo-location name, section range is (1-15)"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             ipv6_multiple_fields:
                 description:
                 - "Field ipv6_multiple_fields"
     weighted_alias:
         description:
-        - "None"
+        - "Select alias name by weighted preference"
         required: False
     geo_location_match:
         description:
@@ -408,35 +414,35 @@ options:
         suboptions:
             match_first:
                 description:
-                - "None"
+                - "'global'= Global Geo-location; 'policy'= Policy Geo-location; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             geo_type_overlap:
                 description:
-                - "None"
+                - "'global'= Global Geo-location; 'policy'= Policy Geo-location; "
             overlap:
                 description:
-                - "None"
+                - "Enable overlap mode to do longest match"
     num_session_enable:
         description:
-        - "None"
+        - "Enable Select Service-IP for device having maximum number of available sessions"
         required: False
     bw_cost_enable:
         description:
-        - "None"
+        - "Enable bw cost"
         required: False
     active_servers_enable:
         description:
-        - "None"
+        - "Enable Select Service-IP with the highest number of active servers"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     amount_first:
         description:
-        - "None"
+        - "Select record based on the amount of available service-ip"
         required: False
     connection_load:
         description:
@@ -445,46 +451,45 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             connection_load_enable:
                 description:
-                - "None"
+                - "Enable connection-load"
             connection_load_interval:
                 description:
-                - "None"
+                - "Interval between two samples, Unit= second (Interval value,default is 5)"
             limit:
                 description:
-                - "None"
+                - "Limit of maxinum connection load, default is unlimited"
             connection_load_samples:
                 description:
-                - "None"
+                - "Specify samples for connection-load (Number of samples used to calculate the connection load, default is 5)"
             connection_load_limit:
                 description:
-                - "None"
+                - "The value of the connection-load limit, default is unlimited"
             connection_load_fail_break:
                 description:
-                - "None"
+                - "Break when exceed limit"
     metric_order:
         description:
-        - "None"
+        - "Specify order of metric"
         required: False
     health_check_preference_enable:
         description:
-        - "None"
+        - "Check health preference"
         required: False
     health_preference_top:
         description:
-        - "None"
+        - "Only keep top n"
         required: False
     health_check:
         description:
-        - "None"
+        - "Select Service-IP by health status"
         required: False
     geographic:
         description:
-        - "None"
+        - "Select Service-IP by geographic"
         required: False
-
 
 """
 
@@ -517,7 +522,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -540,7 +548,7 @@ def get_argspec():
         metric_type=dict(type='str',choices=['health-check','weighted-ip','weighted-site','capacity','active-servers','active-rdt','geographic','connection-load','num-session','admin-preference','bw-cost','least-response','admin-ip']),
         num_session_tolerance=dict(type='int',),
         name=dict(type='str',required=True,),
-        dns=dict(type='dict',server_mode_only=dict(type='bool',),external_soa=dict(type='bool',),server_sec=dict(type='bool',),sticky_ipv6_mask=dict(type='int',),sticky=dict(type='bool',),delegation=dict(type='bool',),active_only_fail_safe=dict(type='bool',),cname_detect=dict(type='bool',),ttl=dict(type='int',),dynamic_preference=dict(type='bool',),use_server_ttl=dict(type='bool',),server_ptr=dict(type='bool',),selected_only=dict(type='bool',),ip_replace=dict(type='bool',),dns_addition_mx=dict(type='bool',),backup_alias=dict(type='bool',),server_any=dict(type='bool',),hint=dict(type='str',choices=['none','answer','addition']),cache=dict(type='bool',),external_ip=dict(type='bool',),server_txt=dict(type='bool',),server_addition_mx=dict(type='bool',),aging_time=dict(type='int',),block_action=dict(type='bool',),template=dict(type='str',),ipv6=dict(type='list',dns_ipv6_mapping_type=dict(type='str',choices=['addition','answer','exclusive','replace']),dns_ipv6_option=dict(type='str',choices=['mix','smart','mapping'])),selected_only_value=dict(type='int',),geoloc_action=dict(type='bool',),server_ns=dict(type='bool',),action_type=dict(type='str',choices=['drop','reject','ignore']),server_naptr=dict(type='bool',),active_only=dict(type='bool',),block_value=dict(type='list',block_value=dict(type='int',)),server_srv=dict(type='bool',),server_auto_ptr=dict(type='bool',),server_cname=dict(type='bool',),server_authoritative=dict(type='bool',),server_full_list=dict(type='bool',),dns_auto_map=dict(type='bool',),block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),sticky_mask=dict(type='str',),geoloc_alias=dict(type='bool',),logging=dict(type='str',choices=['none','query','response','both']),backup_server=dict(type='bool',),sticky_aging_time=dict(type='int',),geoloc_policy=dict(type='bool',),uuid=dict(type='str',),server=dict(type='bool',),dynamic_weight=dict(type='bool',),server_ns_list=dict(type='bool',),server_auto_ns=dict(type='bool',),action=dict(type='bool',),proxy_block_port_range_list=dict(type='list',proxy_block_range_from=dict(type='int',),proxy_block_range_to=dict(type='int',)),server_mx=dict(type='bool',)),
+        dns=dict(type='dict',server_mode_only=dict(type='bool',),external_soa=dict(type='bool',),server_sec=dict(type='bool',),sticky_ipv6_mask=dict(type='int',),sticky=dict(type='bool',),delegation=dict(type='bool',),active_only_fail_safe=dict(type='bool',),cname_detect=dict(type='bool',),ttl=dict(type='int',),dynamic_preference=dict(type='bool',),use_server_ttl=dict(type='bool',),server_ptr=dict(type='bool',),selected_only=dict(type='bool',),ip_replace=dict(type='bool',),dns_addition_mx=dict(type='bool',),backup_alias=dict(type='bool',),server_any=dict(type='bool',),hint=dict(type='str',choices=['none','answer','addition']),cache=dict(type='bool',),external_ip=dict(type='bool',),server_txt=dict(type='bool',),server_addition_mx=dict(type='bool',),aging_time=dict(type='int',),block_action=dict(type='bool',),template=dict(type='str',),ipv6=dict(type='list',dns_ipv6_mapping_type=dict(type='str',choices=['addition','answer','exclusive','replace']),dns_ipv6_option=dict(type='str',choices=['mix','smart','mapping'])),selected_only_value=dict(type='int',),geoloc_action=dict(type='bool',),server_ns=dict(type='bool',),action_type=dict(type='str',choices=['drop','reject','ignore']),server_naptr=dict(type='bool',),active_only=dict(type='bool',),block_value=dict(type='list',block_value=dict(type='int',)),server_srv=dict(type='bool',),server_auto_ptr=dict(type='bool',),server_cname=dict(type='bool',),server_authoritative=dict(type='bool',),server_full_list=dict(type='bool',),server_any_with_metric=dict(type='bool',),dns_auto_map=dict(type='bool',),block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),sticky_mask=dict(type='str',),geoloc_alias=dict(type='bool',),logging=dict(type='str',choices=['none','query','response','both']),backup_server=dict(type='bool',),sticky_aging_time=dict(type='int',),geoloc_policy=dict(type='bool',),uuid=dict(type='str',),server=dict(type='bool',),dynamic_weight=dict(type='bool',),server_ns_list=dict(type='bool',),server_auto_ns=dict(type='bool',),action=dict(type='bool',),proxy_block_port_range_list=dict(type='list',proxy_block_range_from=dict(type='int',),proxy_block_range_to=dict(type='int',)),server_mx=dict(type='bool',)),
         weighted_ip_total_hits=dict(type='bool',),
         weighted_site_total_hits=dict(type='bool',),
         ip_list=dict(type='str',),
@@ -563,6 +571,7 @@ def get_argspec():
         health_check=dict(type='bool',),
         geographic=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -570,6 +579,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -579,6 +589,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -601,7 +612,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -620,7 +631,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -631,7 +642,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -666,7 +677,8 @@ def create(module, result):
     payload = build_json("policy", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -691,8 +703,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("policy", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -712,6 +725,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("policy", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -725,9 +754,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -741,6 +771,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

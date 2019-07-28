@@ -12,7 +12,7 @@ DOCUMENTATION = """
 module: a10_slb_virtual_server_port_stats_file_inspection
 description:
     - Statistics for the object port
-short_description: Configures A10 slb.virtual-server.port.stats.file.inspection
+short_description: Configures A10 slb.virtual-server.port.stats.file-inspection
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -55,7 +55,6 @@ options:
             file_inspection:
                 description:
                 - "Field file_inspection"
-
 
 """
 
@@ -180,7 +179,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -301,12 +300,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)

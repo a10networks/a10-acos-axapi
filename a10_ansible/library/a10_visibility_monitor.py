@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_visibility_monitor
 description:
-    - None
+    - Configure monitoring keys
 short_description: Configures A10 visibility.monitor
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,47 +35,164 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     primary_monitor:
         description:
-        - "None"
+        - "'traffic'= Mointor traffic; "
         required: True
-    nflow_collector_port:
+    mon_entity_topk:
         description:
-        - "None"
+        - "Enable topk for primary entities"
         required: False
-    nflow_collector_tmpl_active_timeout:
+    monitor_key:
         description:
-        - "None"
+        - "'source'= Monitor traffic from all sources; 'dest'= Monitor traffic to any destination; 'service'= Monitor traffic to any service; 'source-nat-ip'= Monitor traffic to all source nat IPs; "
         required: False
+    debug_list:
+        description:
+        - "Field debug_list"
+        required: False
+        suboptions:
+            debug_port:
+                description:
+                - "Specify port"
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP; "
+            uuid:
+                description:
+                - "uuid of the object"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-    class_list:
+    sflow:
         description:
-        - "None"
+        - "Field sflow"
         required: False
-    notification:
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+            listening_port:
+                description:
+                - "sFlow port to receive packets (sFlow port number(default 6343))"
+    delete_debug_file:
         description:
-        - "None"
+        - "Field delete_debug_file"
         required: False
+        suboptions:
+            debug_port:
+                description:
+                - "Specify port"
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP; "
     index_sessions:
         description:
-        - "None"
+        - "Start indexing associated sessions"
         required: False
-    traffic_key:
+    source_entity_topk:
         description:
-        - "None"
+        - "Enable topk for sources to primary-entities"
+        required: False
+    template:
+        description:
+        - "Field template"
+        required: False
+        suboptions:
+            notification:
+                description:
+                - "Field notification"
+    replay_debug_file:
+        description:
+        - "Field replay_debug_file"
+        required: False
+        suboptions:
+            debug_port:
+                description:
+                - "Specify port"
+            debug_ip_addr:
+                description:
+                - "Specify source/dest ip addr"
+            debug_protocol:
+                description:
+                - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP; "
+    netflow:
+        description:
+        - "Field netflow"
+        required: False
+        suboptions:
+            template_active_timeout:
+                description:
+                - "Configure active timeout of the netflow templates received in mins (Template active timeout(mins)(default 30mins))"
+            uuid:
+                description:
+                - "uuid of the object"
+            listening_port:
+                description:
+                - "Netflow port to receive packets (Netflow port number(default 9996))"
+    index_sessions_type:
+        description:
+        - "'per-cpu'= Use per cpu list; "
         required: False
     secondary_monitor:
         description:
-        - "None"
+        - "Field secondary_monitor"
         required: False
-    index_sessions_type:
+        suboptions:
+            mon_entity_topk:
+                description:
+                - "Enable topk for secondary entities"
+            debug_list:
+                description:
+                - "Field debug_list"
+            uuid:
+                description:
+                - "uuid of the object"
+            secondary_monitoring_key:
+                description:
+                - "'service'= Monitor traffic to any service; "
+            delete_debug_file:
+                description:
+                - "Field delete_debug_file"
+            source_entity_topk:
+                description:
+                - "Enable topk for sources to secondary-entities"
+            replay_debug_file:
+                description:
+                - "Field replay_debug_file"
+    agent_list:
         description:
-        - "None"
+        - "Field agent_list"
         required: False
-
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+            agent_v4_addr:
+                description:
+                - "Configure agent's IPv4 address"
+            agent_v6_addr:
+                description:
+                - "Configure agent's IPv6 address"
+            user_tag:
+                description:
+                - "Customized tag"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            agent_name:
+                description:
+                - "Specify name for the agent"
 
 """
 
@@ -89,7 +206,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["class_list","index_sessions","index_sessions_type","nflow_collector_port","nflow_collector_tmpl_active_timeout","notification","primary_monitor","secondary_monitor","traffic_key","uuid",]
+AVAILABLE_PROPERTIES = ["agent_list","debug_list","delete_debug_file","index_sessions","index_sessions_type","mon_entity_topk","monitor_key","netflow","primary_monitor","replay_debug_file","secondary_monitor","sflow","source_entity_topk","template","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -108,23 +225,32 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        primary_monitor=dict(type='str',required=True,choices=['traffic','xflow']),
-        nflow_collector_port=dict(type='int',),
-        nflow_collector_tmpl_active_timeout=dict(type='int',),
+        primary_monitor=dict(type='str',required=True,choices=['traffic']),
+        mon_entity_topk=dict(type='bool',),
+        monitor_key=dict(type='str',choices=['source','dest','service','source-nat-ip']),
+        debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),
         uuid=dict(type='str',),
-        class_list=dict(type='str',),
-        notification=dict(type='str',),
+        sflow=dict(type='dict',uuid=dict(type='str',),listening_port=dict(type='int',)),
+        delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),
         index_sessions=dict(type='bool',),
-        traffic_key=dict(type='str',choices=['dest','service','source-nat-ip']),
-        secondary_monitor=dict(type='str',choices=['source','dest','service']),
-        index_sessions_type=dict(type='str',choices=['per-cpu'])
+        source_entity_topk=dict(type='bool',),
+        template=dict(type='dict',notification=dict(type='list',notif_template_name=dict(type='str',))),
+        replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),
+        netflow=dict(type='dict',template_active_timeout=dict(type='int',),uuid=dict(type='str',),listening_port=dict(type='int',)),
+        index_sessions_type=dict(type='str',choices=['per-cpu']),
+        secondary_monitor=dict(type='dict',mon_entity_topk=dict(type='bool',),debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),uuid=dict(type='str',),secondary_monitoring_key=dict(type='str',choices=['service']),delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),source_entity_topk=dict(type='bool',),replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP']))),
+        agent_list=dict(type='list',uuid=dict(type='str',),agent_v4_addr=dict(type='str',),agent_v6_addr=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sflow-packets-received','sflow-samples-received','sflow-samples-bad-len','sflow-samples-non-std','sflow-samples-skipped','sflow-sample-record-bad-len','sflow-samples-sent-for-detection','sflow-sample-record-invalid-layer2','sflow-sample-ipv6-hdr-parse-fail','sflow-disabled','netflow-disabled','netflow-v5-packets-received','netflow-v5-samples-received','netflow-v5-samples-sent-for-detection','netflow-v5-sample-records-bad-len','netflow-v5-max-records-exceed','netflow-v9-packets-received','netflow-v9-samples-received','netflow-v9-samples-sent-for-detection','netflow-v9-sample-records-bad-len','netflow-v9-max-records-exceed','netflow-v10-packets-received','netflow-v10-samples-received','netflow-v10-samples-sent-for-detection','netflow-v10-sample-records-bad-len','netflow-v10-max-records-exceed','netflow-tcp-sample-received','netflow-udp-sample-received','netflow-icmp-sample-received','netflow-other-sample-received','netflow-record-copy-oom-error','netflow-record-rse-invalid','netflow-sample-flow-dur-error'])),agent_name=dict(type='str',required=True,))
     ))
+   
 
     return rv
 
@@ -132,6 +258,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/visibility/monitor"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -140,6 +267,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/visibility/monitor"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -161,7 +289,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -180,7 +308,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -191,7 +319,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -226,7 +354,8 @@ def create(module, result):
     payload = build_json("monitor", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -251,8 +380,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("monitor", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -272,6 +402,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("monitor", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -285,9 +431,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -301,6 +448,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

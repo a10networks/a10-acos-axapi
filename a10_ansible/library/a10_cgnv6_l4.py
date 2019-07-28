@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -47,7 +50,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -92,6 +94,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','no-fwd-route','no-rev-route','out-of-session-memory','tcp-rst-sent','ipip-icmp-reply-sent','icmp-filtered-sent','icmp-host-unreachable-sent','icmp-reply-no-session-drop','ipip-truncated','ip-src-invalid-unicast','ip-dst-invalid-unicast','ipv6-src-invalid-unicast','ipv6-dst-invalid-unicast','bad-l3-protocol','special-ipv4-no-route','special-ipv6-no-route','icmp-reply-sent','icmpv6-reply-sent','out-of-state-dropped','ttl-exceeded-sent','cross-cpu-alg-gre-no-match','cross-cpu-alg-gre-preprocess-err','lsn-fast-setup','lsn-fast-setup-err','nat64-fast-setup','nat64-fast-setup-err','dslite-fast-setup','dslite-fast-setup-err','fast-setup-delayed-err','fast-setup-mtu-too-small','fixed-nat44-fast-setup','fixed-nat44-fast-setup-err','fixed-nat64-fast-setup','fixed-nat64-fast-setup-err','fixed-nat-dslite-fast-setup','fixed-nat-dslite-fast-setup-err','fixed-nat-fast-setup-delayed-err','fixed-nat-fast-setup-mtu-too-small','static-nat-fast-setup','static-nat-fast-setup-err','dst-nat-needed-drop','invalid-nat64-translated-addr','tcp-rst-loop-drop','static-nat-alloc','static-nat-free','process-l4','preprocess-error','process-special','process-continue','process-error','fw-match-no-rule-drop','ip-unknown-process','src-nat-pool-not-found','dst-nat-pool-not-found','l3-ip-src-invalid-unicast','l3-ip-dst-invalid-unicast','l3-ipv6-src-invalid-unicast','l3-ipv6-dst-invalid-unicast','fw-zone-mismatch-rerouting-drop','nat-range-list-acl-deny','nat-range-list-acl-permit','fw-next-action-incorrect-drop'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -99,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/l4"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -107,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/l4"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -128,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -147,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -158,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -193,7 +198,8 @@ def create(module, result):
     payload = build_json("l4", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -218,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("l4", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -238,6 +245,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("l4", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

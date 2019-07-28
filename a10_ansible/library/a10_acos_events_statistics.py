@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_acos_events_statistics
 description:
-    - None
+    - acos events global statistics
 short_description: Configures A10 acos.events.statistics
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'msg_sent'= Messages sent, to Remote; 'msg_sent_logdb'= Messages sent, to LogDB; 'msg_dropped_format_not_defined'= Messages Dropped, format not defined; 'msg_dropped_malloc_failure'= Messages Dropped, malloc failure; 'msg_dropped_no_template'= Messages Dropped, no active template; 'msg_dropped_selector'= Messages Dropped, selector does not enable msg; 'msg_dropped_too_long'= Messages Dropped, invalid length; 'msg_dropped_craft_fail'= Messages Dropped, msg crafting failed; 'msg_dropped_local_log_ratelimit'= Messages Dropped, local log ratelimited; 'msg_dropped_remote_log_ratelimit'= Messages Dropped, remote log ratelimited; 'msg_dropped_send_failed'= Messages Dropped, send failed; 'msg_dropped_no_active_member'= Messages Dropped, no active member in collector grp; 'msg_dropped_route_fail'= Messages Dropped, Route lookup failed; 'msg_dropped_other'= Messages Dropped, unexpected error; 'no_template'= Message API called, with no active template; 'local_enqueue_pass'= Messages enqueue to Logd passed; 'msg_sent_to_logd'= Messages sent to Logd via IPC; 'msg_sent_direct_syslog'= Messages sent to syslog directly from axlog; 'msg_dropped_send_to_logd_fail'= Messages Dropped, send to Logd via IPC failed; 'msg_dropped_trylock_fail'= Messages Dropped, Trylock failed in axlog; 'msg_dropped_remote_cplane_log_ratelimit'= Messages Dropped, Remote cplane log ratelimited; 'msg_dropped_remote_dplane_log_ratelimit'= Messages Dropped, Remote dplane log ratelimited; 'msg_dropped_local_enqueue_failed'= Messages Dropped, Enqueue to Logd failed; 'msg_dropped_grp_not_used'= Messages Dropped, Collector group not used; 'msg_sent_remote_cplane'= Messages Sent, to remote in logd; 'msg_dropped_no_template_logd'= Messages Dropped, no active template in Logd; 'msg_dropped_craft_fail'= Messages Dropped, msg crafting failed in Logd; 'msg_dropped_send_failed_logd'= Messages Dropped, send failed in Logd; 'msg_dropped_no_active_member_logd'= Messages Dropped, no active member in collector grp in Logd; 'msg_dropped_other_logd'= Messages Dropped, unexpected error in Logd; 'msg_dropped_invalid_part'= Messages Dropped, Invalid partition Id; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,19 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msg_dropped_malloc_failure','msg_dropped_no_template','msg_dropped_selector','msg_dropped_too_long','msg_dropped_other'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msg_sent','msg_sent_logdb','msg_dropped_format_not_defined','msg_dropped_malloc_failure','msg_dropped_no_template','msg_dropped_selector','msg_dropped_too_long','msg_dropped_craft_fail','msg_dropped_local_log_ratelimit','msg_dropped_remote_log_ratelimit','msg_dropped_send_failed','msg_dropped_no_active_member','msg_dropped_route_fail','msg_dropped_other','no_template','local_enqueue_pass','msg_sent_to_logd','msg_sent_direct_syslog','msg_dropped_send_to_logd_fail','msg_dropped_trylock_fail','msg_dropped_remote_cplane_log_ratelimit','msg_dropped_remote_dplane_log_ratelimit','msg_dropped_local_enqueue_failed','msg_dropped_grp_not_used','msg_sent_remote_cplane','msg_dropped_no_template_logd','msg_dropped_craft_fail','msg_dropped_send_failed_logd','msg_dropped_no_active_member_logd','msg_dropped_other_logd','msg_dropped_invalid_part'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/acos-events/statistics"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/acos-events/statistics"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("statistics", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("statistics", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("statistics", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

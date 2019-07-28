@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_ethernet_isis
 description:
-    - None
+    - ISIS
 short_description: Configures A10 interface.ethernet.isis
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    ethernet_ifnum:
+        description:
+        - Key to identify parent object
     priority_list:
         description:
         - "Field priority_list"
@@ -42,13 +48,13 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "Set priority for Designated Router election (Priority value)"
             level:
                 description:
-                - "None"
+                - "'level-1'= Specify priority for level-1 routing; 'level-2'= Specify priority for level-2 routing; "
     padding:
         description:
-        - "None"
+        - "Add padding to IS-IS hello packets"
         required: False
     hello_interval_minimal_list:
         description:
@@ -57,10 +63,10 @@ options:
         suboptions:
             hello_interval_minimal:
                 description:
-                - "None"
+                - "Set Hello holdtime 1 second, interval depends on multiplier"
             level:
                 description:
-                - "None"
+                - "'level-1'= Specify hello-interval for level-1 IIHs; 'level-2'= Specify hello-interval for level-2 IIHs; "
     mesh_group:
         description:
         - "Field mesh_group"
@@ -68,13 +74,13 @@ options:
         suboptions:
             value:
                 description:
-                - "None"
+                - "Mesh group number"
             blocked:
                 description:
-                - "None"
+                - "Block LSPs on this interface"
     network:
         description:
-        - "None"
+        - "'broadcast'= Specify IS-IS broadcast multi-access network; 'point-to-point'= Specify IS-IS point-to-point network; "
         required: False
     authentication:
         description:
@@ -97,13 +103,13 @@ options:
         suboptions:
             csnp_interval:
                 description:
-                - "None"
+                - "Set CSNP interval in seconds (CSNP interval value)"
             level:
                 description:
-                - "None"
+                - "'level-1'= Speficy interval for level-1 CSNPs; 'level-2'= Specify interval for level-2 CSNPs; "
     retransmit_interval:
         description:
-        - "None"
+        - "Set per-LSP retransmission interval (Interval between retransmissions of the same LSP (seconds))"
         required: False
     password_list:
         description:
@@ -112,10 +118,10 @@ options:
         suboptions:
             password:
                 description:
-                - "None"
+                - "Configure the authentication password for interface"
             level:
                 description:
-                - "None"
+                - "'level-1'= Specify password for level-1 PDUs; 'level-2'= Specify password for level-2 PDUs; "
     bfd_cfg:
         description:
         - "Field bfd_cfg"
@@ -123,10 +129,10 @@ options:
         suboptions:
             disable:
                 description:
-                - "None"
+                - "Disable BFD"
             bfd:
                 description:
-                - "None"
+                - "Bidirectional Forwarding Detection (BFD)"
     wide_metric_list:
         description:
         - "Field wide_metric_list"
@@ -134,10 +140,10 @@ options:
         suboptions:
             wide_metric:
                 description:
-                - "None"
+                - "Configure the wide metric for interface"
             level:
                 description:
-                - "None"
+                - "'level-1'= Apply metric to level-1 links; 'level-2'= Apply metric to level-2 links; "
     hello_interval_list:
         description:
         - "Field hello_interval_list"
@@ -145,13 +151,13 @@ options:
         suboptions:
             hello_interval:
                 description:
-                - "None"
+                - "Set Hello interval in seconds (Hello interval value)"
             level:
                 description:
-                - "None"
+                - "'level-1'= Specify hello-interval for level-1 IIHs; 'level-2'= Specify hello-interval for level-2 IIHs; "
     circuit_type:
         description:
-        - "None"
+        - "'level-1'= Level-1 only adjacencies are formed; 'level-1-2'= Level-1-2 adjacencies are formed; 'level-2-only'= Level-2 only adjacencies are formed; "
         required: False
     hello_multiplier_list:
         description:
@@ -160,10 +166,10 @@ options:
         suboptions:
             hello_multiplier:
                 description:
-                - "None"
+                - "Set multiplier for Hello holding time (Hello multiplier value)"
             level:
                 description:
-                - "None"
+                - "'level-1'= Specify hello multiplier for level-1 IIHs; 'level-2'= Specify hello multiplier for level-2 IIHs; "
     metric_list:
         description:
         - "Field metric_list"
@@ -171,19 +177,18 @@ options:
         suboptions:
             metric:
                 description:
-                - "None"
+                - "Configure the metric for interface (Default metric)"
             level:
                 description:
-                - "None"
+                - "'level-1'= Apply metric to level-1 links; 'level-2'= Apply metric to level-2 links; "
     lsp_interval:
         description:
-        - "None"
+        - "Set LSP transmission interval (LSP transmission interval (milliseconds))"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -216,7 +221,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -240,22 +248,31 @@ def get_argspec():
         lsp_interval=dict(type='int',),
         uuid=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        ethernet_ifnum=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/ethernet/{ifnum}/isis"
+    url_base = "/axapi/v3/interface/ethernet/{ethernet_ifnum}/isis"
+
     f_dict = {}
+    f_dict["ethernet_ifnum"] = module.params["ethernet_ifnum"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/ethernet/{ifnum}/isis"
+    url_base = "/axapi/v3/interface/ethernet/{ethernet_ifnum}/isis"
+
     f_dict = {}
+    f_dict["ethernet_ifnum"] = module.params["ethernet_ifnum"]
 
     return url_base.format(**f_dict)
 
@@ -276,7 +293,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -295,7 +312,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -306,7 +323,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -341,7 +358,8 @@ def create(module, result):
     payload = build_json("isis", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -366,8 +384,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("isis", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -387,6 +406,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("isis", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -400,9 +435,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -416,6 +452,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

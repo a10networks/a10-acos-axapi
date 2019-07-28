@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_template_gtp
 description:
-    - None
+    - Define a GTP template
 short_description: Configures A10 template.gtp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,28 +35,37 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     mandatory_ie_filtering:
         description:
-        - "None"
+        - "'disable'= Disable  Mandatory Information Element Filtering; "
         required: False
     name:
         description:
-        - "None"
+        - "GTP Template Name"
         required: True
     message_type:
         description:
         - "Field message_type"
         required: False
         suboptions:
-            message_value:
+            message_type_v2:
                 description:
-                - "None"
+                - "'bearer-resource'= Bearer Resource Command/Failure; 'change-notification'= Change Notification Request/Response; 'context'= Context Request/Response/Ack; 'config-transfer'= Configuration Transfer Tunnel; 'create-bearer'= Create Bearer Request/Response; 'create-data-forwarding'= Create Indirect Data Tunnel Request/Response; 'create-tunnel-forwarding'= Create Forwarding Tunnel Request/Response; 'create-session'= Create Session Request/Response; 'cs-paging'= CS Paging Indication; 'delete-bearer'= Delete Bearer Request/Response; 'delete-command'= Delete Bearer Command/Failure; 'delete-data-forwarding'= Delete Indirect Data Tunnel Request/Response; 'delete-pdn'= Delete PDN Connection Request/Response; 'delete-session'= Delete Session Request/Response; 'detach'= Detach Notification/Ack; 'downlink-notification'= Downlink Data Notification/Ack/Failure; 'echo'= Echo Request/Response; 'fwd-access'= Forward Access Context Notification/Ack; 'fwd-relocation'= Forward Relocation Request/Response/Complete; 'identification'= Identification Request/Response; 'mbms-session-start'= MBMS Session Start Request/Response; 'mbms-session-stop'= MBMS Session Stop Request/Response; 'mbms-session-update'= MBMS Session Update Request/Response; 'modify-bearer'= Modify Bearer Request/Response; 'modify-command'= Modify Bearer Command/Failure; 'release-access'= Release Access Bearer Request/Response; 'relocation-cancel'= Relocation Cancel Request/Response; 'resume'= Resume Notification/Ack; 'stop-paging'= Stop Paging Indication; 'suspend'= Suspend Notification/Ack; 'trace-session'= Trace Session Activation/Deactivation; 'update-bearer'= Update Bearer Request/Response; 'update-pdn'= Update PDN Connection Request/Response; 'version-not-supported'= Version Not Supported; "
             drop_value:
                 description:
-                - "None"
+                - "'drop'= Drop the Message Type; "
+            message_type_v0:
+                description:
+                - "'create-pdp'= Create PDP Context Request/Response; 'data-record'= Data Record Request/Response; 'delete-pdp'= Delete PDP Context Request/Response; 'echo'= Echo Request/Response; 'error-indication'= Error Indication; 'failure-report'= Failure Report Request/Response; 'identification'= Identification Request/Response; 'node-alive'= Node Alive Request/Response; 'note-ms-present'= Note MS GPRS present Request/Response; 'pdu-notification'= PDU Notification Request/Response/Reject Request/Reject Response; 'redirection'= Redirection Request/Response; 'send-route'= Send Route Info Request/Response; 'sgsn-context'= Sgsn Context Request/Response/Acknowledge; 'gtp-pdu'= T-PDU; 'update-pdp'= Update PDP Context Request/Response; 'create-aa-pdp'= Create AA PDP Context Request/Response; 'delete-aa-pdp'= Delete AA PDP Context Request/Response; 'version-not-supported'= Version Not Supported; "
+            message_type_v1:
+                description:
+                - "'create-pdp'= Create PDP Context Request/Response; 'data-record'= Data Record Request/Response; 'delete-pdp'= Delete PDP Context Request/Response; 'echo'= Echo Request/Response; 'error-indication'= Error Indication; 'failure-report'= Failure Report Request/Response; 'fwd-relocation'= Forward Relocation Request/Response/Complete/Complete Acknowledge; 'fwd-srns-context'= Forward Srns Context/Context Acknowlege; 'identification'= Identification Request/Response; 'node-alive'= Node Alive Request/Response; 'note-ms-present'= Note MS GPRS present Request/Response; 'pdu-notification'= PDU Notification Request/Response/Reject Request/Reject Response; 'ran-info'= RAN Info Relay; 'redirection'= Redirection Request/Response; 'relocation-cancel'= Relocation Cancel Request/Response; 'send-route'= Send Route Info Request/Response; 'sgsn-context'= Sgsn Context Request/Response/Acknowledge; 'supported-extension'= Supported Extension Headers Notification; 'gtp-pdu'= G-PDU; 'update-pdp'= Update PDP Context Request/Response; 'version-not-supported'= Version Not Supported; "
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     log:
         description:
@@ -65,31 +74,39 @@ options:
         suboptions:
             message_filtering:
                 description:
-                - "None"
+                - "Log Packet Drop due to Message Filtering"
             information_filtering:
                 description:
-                - "None"
+                - "Log Packet Drop due to Information Filtering"
+            mandatory_ie_missing:
+                description:
+                - "Log Packet Drop due to Missing Mandatory Information Element"
+            invalid_teid:
+                description:
+                - "Log Packet Drop due to Invalid Tunnel Endpoint Identifier"
+            reserved_ie_present:
+                description:
+                - "Log Packet Drop due to Presence of Reserved Information Element"
     tunnel_timeout:
         description:
-        - "None"
+        - "Idle Timeout in seconds (default= 5 mins)"
         required: False
     gtp_filter_list:
         description:
-        - "None"
+        - "Specify a GTP Filter-List (GTP Filter-List Value)"
         required: False
     maximum_message_length:
         description:
-        - "None"
+        - "Maximum message length for a GTP message"
         required: False
     protocol_anomaly_filtering:
         description:
-        - "None"
+        - "'disable'= Disable Anomaly Filtering; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -122,7 +139,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -130,15 +150,16 @@ def get_argspec():
     rv.update(dict(
         mandatory_ie_filtering=dict(type='str',choices=['disable']),
         name=dict(type='str',required=True,),
-        message_type=dict(type='list',message_value=dict(type='str',choices=['bearer-resource','change-notification','context','config-transfer','create-bearer','create-data-forwarding','create-tunnel-forwarding','create-session','cs-paging','delete-bearer','delete-command','delete-data-forwarding','delete-pdn','delete-session','detach','downlink-notification','echo','fwd-access','fwd-relocation','identification','mbms-session-start','mbms-session-stop','mbms-session-update','modify-bearer','modify-command','release-access','relocation-cancel','resume','stop-paging','suspend','trace-session','update-bearer','update-pdn','version-not-supported']),drop_value=dict(type='str',choices=['drop'])),
+        message_type=dict(type='list',message_type_v2=dict(type='str',choices=['bearer-resource','change-notification','context','config-transfer','create-bearer','create-data-forwarding','create-tunnel-forwarding','create-session','cs-paging','delete-bearer','delete-command','delete-data-forwarding','delete-pdn','delete-session','detach','downlink-notification','echo','fwd-access','fwd-relocation','identification','mbms-session-start','mbms-session-stop','mbms-session-update','modify-bearer','modify-command','release-access','relocation-cancel','resume','stop-paging','suspend','trace-session','update-bearer','update-pdn','version-not-supported']),drop_value=dict(type='str',choices=['drop']),message_type_v0=dict(type='str',choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','identification','node-alive','note-ms-present','pdu-notification','redirection','send-route','sgsn-context','gtp-pdu','update-pdp','create-aa-pdp','delete-aa-pdp','version-not-supported']),message_type_v1=dict(type='str',choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','fwd-relocation','fwd-srns-context','identification','node-alive','note-ms-present','pdu-notification','ran-info','redirection','relocation-cancel','send-route','sgsn-context','supported-extension','gtp-pdu','update-pdp','version-not-supported'])),
         user_tag=dict(type='str',),
-        log=dict(type='dict',message_filtering=dict(type='bool',),information_filtering=dict(type='bool',)),
+        log=dict(type='dict',message_filtering=dict(type='bool',),information_filtering=dict(type='bool',),mandatory_ie_missing=dict(type='bool',),invalid_teid=dict(type='bool',),reserved_ie_present=dict(type='bool',)),
         tunnel_timeout=dict(type='int',),
         gtp_filter_list=dict(type='str',),
         maximum_message_length=dict(type='int',),
         protocol_anomaly_filtering=dict(type='str',choices=['disable']),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -146,6 +167,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/template/gtp/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -155,6 +177,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/template/gtp/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -177,7 +200,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -196,7 +219,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -207,7 +230,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -242,7 +265,8 @@ def create(module, result):
     payload = build_json("gtp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -267,8 +291,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("gtp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -288,6 +313,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("gtp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -301,9 +342,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -317,6 +359,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

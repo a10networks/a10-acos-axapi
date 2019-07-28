@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     include_inside_user_mac:
         description:
         - "Include the inside user MAC address in logs"
@@ -124,6 +127,9 @@ options:
             map_dhcpv6:
                 description:
                 - "Field map_dhcpv6"
+            user_data:
+                description:
+                - "Log LSN Subscriber Information"
             port_overloading:
                 description:
                 - "Force logging of all port-overloading sessions"
@@ -132,7 +138,7 @@ options:
                 - "'host'= Log the HTTP Host Header; 'url'= Log the HTTP Request URL; "
             port_mappings:
                 description:
-                - "'creation'= Log only creation of NAT mappgins; 'disable'= Disable Log creation and deletion of NAT mappings; "
+                - "'creation'= Log only creation of NAT mappings; 'disable'= Disable Log creation and deletion of NAT mappings; 'both'= Log creation and deletion of NAT mappings; "
             merged_style:
                 description:
                 - "Merge creation and deletion of session logs to one"
@@ -263,7 +269,6 @@ options:
                 description:
                 - "Log the L4 session information of the HTTP request"
 
-
 """
 
 EXAMPLES = """
@@ -315,20 +320,21 @@ def get_argspec():
         include_session_byte_count=dict(type='bool',),
         format=dict(type='str',choices=['binary','compact','custom','default','rfc5424','cef']),
         source_address=dict(type='dict',ip=dict(type='str',),uuid=dict(type='str',),ipv6=dict(type='str',)),
-        log=dict(type='dict',sessions=dict(type='bool',),map_dhcpv6=dict(type='dict',map_dhcpv6_prefix_all=dict(type='bool',),map_dhcpv6_msg_type=dict(type='list',map_dhcpv6_msg_type=dict(type='str',choices=['prefix-assignment','prefix-renewal','prefix-release']))),port_overloading=dict(type='bool',),http_requests=dict(type='str',choices=['host','url']),port_mappings=dict(type='str',choices=['creation','disable']),merged_style=dict(type='bool',),fixed_nat=dict(type='dict',fixed_nat_sessions=dict(type='bool',),fixed_nat_http_requests=dict(type='str',choices=['host','url']),user_ports=dict(type='dict',user_ports=dict(type='bool',),start_time=dict(type='str',),days=dict(type='int',)),fixed_nat_port_mappings=dict(type='str',choices=['both','creation']),fixed_nat_merged_style=dict(type='bool',))),
+        log=dict(type='dict',sessions=dict(type='bool',),map_dhcpv6=dict(type='dict',map_dhcpv6_prefix_all=dict(type='bool',),map_dhcpv6_msg_type=dict(type='list',map_dhcpv6_msg_type=dict(type='str',choices=['prefix-assignment','prefix-renewal','prefix-release']))),user_data=dict(type='bool',),port_overloading=dict(type='bool',),http_requests=dict(type='str',choices=['host','url']),port_mappings=dict(type='str',choices=['creation','disable','both']),merged_style=dict(type='bool',),fixed_nat=dict(type='dict',fixed_nat_sessions=dict(type='bool',),fixed_nat_http_requests=dict(type='str',choices=['host','url']),user_ports=dict(type='dict',user_ports=dict(type='bool',),start_time=dict(type='str',),days=dict(type='int',)),fixed_nat_port_mappings=dict(type='str',choices=['both','creation']),fixed_nat_merged_style=dict(type='bool',))),
         source_port=dict(type='dict',source_port_num=dict(type='int',),any=dict(type='bool',)),
         uuid=dict(type='str',),
         batched_logging_disable=dict(type='bool',),
         log_receiver=dict(type='dict',encrypted=dict(type='str',),radius=dict(type='bool',),secret_string=dict(type='str',)),
         name=dict(type='str',required=True,),
         include_destination=dict(type='bool',),
-        include_radius_attribute=dict(type='dict',framed_ipv6_prefix=dict(type='bool',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),insert_if_not_existing=dict(type='bool',),zero_in_custom_attr=dict(type='bool',),no_quote=dict(type='bool',),attr_cfg=dict(type='list',attr_event=dict(type='str',choices=['http-requests','port-mappings','sessions']),attr=dict(type='str',choices=['imei','imsi','msisdn','custom1','custom2','custom3']))),
+        include_radius_attribute=dict(type='dict',framed_ipv6_prefix=dict(type='bool',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),insert_if_not_existing=dict(type='bool',),zero_in_custom_attr=dict(type='bool',),no_quote=dict(type='bool',),attr_cfg=dict(type='list',attr_event=dict(type='str',choices=['http-requests','port-mappings','sessions','user-data']),attr=dict(type='str',choices=['imei','imsi','msisdn','custom1','custom2','custom3']))),
         user_tag=dict(type='str',),
         disable_log_by_destination=dict(type='dict',udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',),uuid=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',)),
         rfc_custom=dict(type='dict',header=dict(type='dict',use_alternate_timestamp=dict(type='bool',)),message=dict(type='dict',session_created=dict(type='str',),http_request_got=dict(type='str',),session_deleted=dict(type='str',),ipv6_tech=dict(type='list',fixed_nat_freed=dict(type='str',),port_batch_freed=dict(type='str',),tech_type=dict(type='str',choices=['lsn','nat64','ds-lite','sixrd-nat64']),fixed_nat_allocated=dict(type='str',),port_allocated=dict(type='str',),port_batch_v2_allocated=dict(type='str',),port_freed=dict(type='str',),port_batch_v2_freed=dict(type='str',),port_batch_allocated=dict(type='str',)))),
         resolution=dict(type='str',choices=['seconds','10-milliseconds']),
         include_http=dict(type='dict',header_cfg=dict(type='list',custom_max_length=dict(type='int',),http_header=dict(type='str',choices=['cookie','referer','user-agent','header1','header2','header3']),max_length=dict(type='int',),custom_header_name=dict(type='str',)),request_number=dict(type='bool',),file_extension=dict(type='bool',),method=dict(type='bool',),l4_session_info=dict(type='bool',))
     ))
+   
 
     return rv
 
@@ -336,6 +342,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/template/logging/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -345,6 +352,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/template/logging/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -367,7 +375,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -386,7 +394,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -397,7 +405,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -432,7 +440,8 @@ def create(module, result):
     payload = build_json("logging", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -457,8 +466,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("logging", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -477,6 +487,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("logging", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

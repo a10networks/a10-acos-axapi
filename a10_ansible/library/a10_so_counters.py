@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_so_counters
 description:
-    - None
+    - Show scaleout statistics
 short_description: Configures A10 so-counters
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'so_pkts_conn_in'= Total packets processed for an established connection; 'so_pkts_conn_redirect'= Total packets redirected for an established connection; 'so_pkts_dropped'= Total packets dropped; 'so_pkts_errors'= Total packet errors; 'so_pkts_in'= Total packets in-coming; 'so_pkts_new_conn_in'= Total packets processed for a new connection; 'so_pkts_new_conn_redirect'= Total packets redirected for a new connection; 'so_pkts_out'= Total packets sent out; 'so_pkts_redirect'= Total packets redirected; 'so_pkts_conn_sync_fail'= Total connection sync failures; 'so_pkts_nat_reserve_fail'= Total NAT reserve failures; 'so_pkts_nat_release_fail'= Total NAT release failures; 'so_pkts_conn_l7_sync'= Total L7 connection syncs; 'so_pkts_conn_l4_sync'= Total L4 connection syncs; 'so_pkts_conn_nat_sync'= Total NAT connection syncs; 'so_pkts_conn_xparent_fw_sync'= Total Xparent FW connection syncs; 'so_pkts_redirect_conn_aged_out'= Total redirect conns aged out; 'so_pkts_traffic_map_not_found_drop'= Traffic MAP Not Found Drop; 'so_pkts_scaleout_not_active_drop'= Scaleout Not Active Drop; 'so_pkts_dest_mac_mistmatch_drop'= Destination MAC Mistmatch Drop; 'so_pkts_l2redirect_interface_not_up'= L2redirect Intf is not UP; 'so_fw_internal_rule_count'= FW internal rule count; 'so_pkts_redirect_table_error'= Redirect Table Error; 'so_pkts_mac_zero_drop'= MAC Address zero Drop; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,19 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','so_pkts_conn_in','so_pkts_conn_redirect','so_pkts_dropped','so_pkts_errors','so_pkts_in','so_pkts_new_conn_in','so_pkts_new_conn_redirect','so_pkts_out','so_pkts_redirect','so_pkts_conn_sync_fail','so_pkts_nat_reserve_fail','so_pkts_nat_release_fail','so_pkts_conn_l7_sync','so_pkts_conn_l4_sync','so_pkts_conn_nat_sync','so_pkts_redirect_conn_aged_out','so_pkts_traffic_map_not_found_drop','so_pkts_scaleout_not_active_drop','so_pkts_dest_mac_mistmatch_drop','so_pkts_l2redirect_interface_not_up'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','so_pkts_conn_in','so_pkts_conn_redirect','so_pkts_dropped','so_pkts_errors','so_pkts_in','so_pkts_new_conn_in','so_pkts_new_conn_redirect','so_pkts_out','so_pkts_redirect','so_pkts_conn_sync_fail','so_pkts_nat_reserve_fail','so_pkts_nat_release_fail','so_pkts_conn_l7_sync','so_pkts_conn_l4_sync','so_pkts_conn_nat_sync','so_pkts_conn_xparent_fw_sync','so_pkts_redirect_conn_aged_out','so_pkts_traffic_map_not_found_drop','so_pkts_scaleout_not_active_drop','so_pkts_dest_mac_mistmatch_drop','so_pkts_l2redirect_interface_not_up','so_fw_internal_rule_count','so_pkts_redirect_table_error','so_pkts_mac_zero_drop'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/so-counters"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/so-counters"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("so-counters", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("so-counters", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("so-counters", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

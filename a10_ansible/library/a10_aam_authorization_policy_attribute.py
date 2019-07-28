@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authorization_policy_attribute
 description:
-    - None
+    - Authorization-policy attribute configuration
 short_description: Configures A10 aam.authorization.policy.attribute
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,75 +35,84 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    policy_name:
+        description:
+        - Key to identify parent object
     attribute_name:
         description:
-        - "None"
-        required: False
-    ip_type:
-        description:
-        - "None"
-        required: False
-    custom_attr_type:
-        description:
-        - "None"
-        required: False
-    uuid:
-        description:
-        - "None"
-        required: False
-    string_type:
-        description:
-        - "None"
-        required: False
-    attr_str_val:
-        description:
-        - "None"
-        required: False
-    attr_ipv4:
-        description:
-        - "None"
-        required: False
-    attr_type:
-        description:
-        - "None"
-        required: False
-    attr_num:
-        description:
-        - "None"
-        required: True
-    a10_dynamic_defined:
-        description:
-        - "None"
-        required: False
-    attr_int:
-        description:
-        - "None"
+        - "Specify attribute name"
         required: False
     integer_type:
         description:
-        - "None"
+        - "Attribute type is integer"
+        required: False
+    custom_attr_type:
+        description:
+        - "Specify attribute type"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    string_type:
+        description:
+        - "Attribute type is string"
+        required: False
+    attr_str_val:
+        description:
+        - "Set attribute value"
+        required: False
+    attr_ipv4:
+        description:
+        - "IPv4 address"
+        required: False
+    attr_type:
+        description:
+        - "Specify attribute type"
+        required: False
+    attr_num:
+        description:
+        - "Set attribute ID for authorization policy"
+        required: True
+    a10_dynamic_defined:
+        description:
+        - "The value of this attribute will depend on AX configuration instead of user configuration"
+        required: False
+    attr_int:
+        description:
+        - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal; 'less-than'= Operation type is less-than; 'more-than'= Operation type is more-than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-equal-to'= Operation type is more-thatn-equal-to; "
+        required: False
+    ip_type:
+        description:
+        - "IP address is transformed into network byte order"
         required: False
     attr_ip:
         description:
-        - "None"
+        - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal; "
         required: False
     A10_AX_AUTH_URI:
         description:
-        - "None"
+        - "Custom-defined attribute"
         required: False
     attr_str:
         description:
-        - "None"
+        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
+        required: False
+    any:
+        description:
+        - "Matched when attribute is present (with any value)."
         required: False
     custom_attr_str:
         description:
-        - "None"
+        - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
         required: False
     attr_int_val:
         description:
-        - "None"
+        - "Set attribute value"
         required: False
-
 
 """
 
@@ -117,7 +126,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["A10_AX_AUTH_URI","a10_dynamic_defined","attr_int","attr_int_val","attr_ip","attr_ipv4","attr_num","attr_str","attr_str_val","attr_type","attribute_name","custom_attr_str","custom_attr_type","integer_type","ip_type","string_type","uuid",]
+AVAILABLE_PROPERTIES = ["A10_AX_AUTH_URI","a10_dynamic_defined","any","attr_int","attr_int_val","attr_ip","attr_ipv4","attr_num","attr_str","attr_str_val","attr_type","attribute_name","custom_attr_str","custom_attr_type","integer_type","ip_type","string_type","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -136,14 +145,17 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         attribute_name=dict(type='str',),
-        ip_type=dict(type='bool',),
+        integer_type=dict(type='bool',),
         custom_attr_type=dict(type='bool',),
         uuid=dict(type='str',),
         string_type=dict(type='bool',),
@@ -153,12 +165,18 @@ def get_argspec():
         attr_num=dict(type='int',required=True,),
         a10_dynamic_defined=dict(type='bool',),
         attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),
-        integer_type=dict(type='bool',),
+        ip_type=dict(type='bool',),
         attr_ip=dict(type='str',choices=['equal','not-equal']),
         A10_AX_AUTH_URI=dict(type='bool',),
         attr_str=dict(type='str',choices=['match','sub-string']),
+        any=dict(type='bool',),
         custom_attr_str=dict(type='str',choices=['match','sub-string']),
         attr_int_val=dict(type='int',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        policy_name=dict(type='str', required=True),
     ))
 
     return rv
@@ -166,18 +184,22 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authorization/policy/{name}/attribute/{attr-num}"
+    url_base = "/axapi/v3/aam/authorization/policy/{policy_name}/attribute/{attr-num}"
+
     f_dict = {}
     f_dict["attr-num"] = ""
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/aam/authorization/policy/{name}/attribute/{attr-num}"
+    url_base = "/axapi/v3/aam/authorization/policy/{policy_name}/attribute/{attr-num}"
+
     f_dict = {}
-    f_dict["attr-num"] = module.params["attr-num"]
+    f_dict["attr-num"] = module.params["attr_num"]
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
@@ -198,7 +220,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -217,7 +239,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -228,7 +250,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -263,7 +285,8 @@ def create(module, result):
     payload = build_json("attribute", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -288,8 +311,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("attribute", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -309,6 +333,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("attribute", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -322,9 +362,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -338,6 +379,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

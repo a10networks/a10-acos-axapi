@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_server
 description:
-    - None
+    - Firewall logging Server
 short_description: Configures A10 fw.server
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     health_check_disable:
         description:
-        - "None"
+        - "Disable configured health check configuration"
         required: False
     port_list:
         description:
@@ -46,43 +49,39 @@ options:
         suboptions:
             health_check_disable:
                 description:
-                - "None"
+                - "Disable health check"
             protocol:
                 description:
-                - "None"
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             port_number:
                 description:
-                - "None"
+                - "Port Number"
             action:
                 description:
-                - "None"
+                - "'enable'= enable; 'disable'= disable; "
             health_check:
                 description:
-                - "None"
-    name:
+                - "Health Check (Monitor Name)"
+    uuid:
         description:
-        - "None"
-        required: True
+        - "uuid of the object"
+        required: False
     fqdn_name:
         description:
-        - "None"
+        - "Server hostname"
         required: False
-    host:
+    resolve_as:
         description:
-        - "None"
-        required: False
-    user_tag:
-        description:
-        - "None"
+        - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as AAAA Query to resolve FQDN; "
         required: False
     sampling_enable:
         description:
@@ -91,24 +90,31 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr-conn'= Current connections; 'total-conn'= Total connections; 'fwd-pkt'= Forward packets; 'rev-pkt'= Reverse Packets; 'peak-conn'= Peak connections; "
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    host:
+        description:
+        - "IP Address"
+        required: False
     action:
         description:
-        - "None"
+        - "'enable'= Enable this Real Server; 'disable'= Disable this Real Server; "
         required: False
     server_ipv6_addr:
         description:
-        - "None"
+        - "IPV6 address"
         required: False
     health_check:
         description:
-        - "None"
+        - "Health Check Monitor (Health monitor name)"
         required: False
-    uuid:
+    name:
         description:
-        - "None"
-        required: False
-
+        - "Server Name"
+        required: True
 
 """
 
@@ -122,7 +128,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","fqdn_name","health_check","health_check_disable","host","name","port_list","sampling_enable","server_ipv6_addr","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","fqdn_name","health_check","health_check_disable","host","name","port_list","resolve_as","sampling_enable","server_ipv6_addr","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -141,7 +147,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -149,16 +158,18 @@ def get_argspec():
     rv.update(dict(
         health_check_disable=dict(type='bool',),
         port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time'])),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),health_check=dict(type='str',)),
-        name=dict(type='str',required=True,),
+        uuid=dict(type='str',),
         fqdn_name=dict(type='str',),
-        host=dict(type='str',),
-        user_tag=dict(type='str',),
+        resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr-conn','total-conn','fwd-pkt','rev-pkt','peak-conn'])),
+        user_tag=dict(type='str',),
+        host=dict(type='str',),
         action=dict(type='str',choices=['enable','disable']),
         server_ipv6_addr=dict(type='str',),
         health_check=dict(type='str',),
-        uuid=dict(type='str',)
+        name=dict(type='str',required=True,)
     ))
+   
 
     return rv
 
@@ -166,6 +177,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/server/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -175,6 +187,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/server/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -197,7 +210,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -216,7 +229,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -227,7 +240,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -262,7 +275,8 @@ def create(module, result):
     payload = build_json("server", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -287,8 +301,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("server", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -308,6 +323,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("server", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -321,9 +352,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -337,6 +369,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

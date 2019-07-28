@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_ipv4_in_ipv6_frag
 description:
-    - None
+    - IPv4-in-IPv6 fragmentation parameters
 short_description: Configures A10 ipv4.in.ipv6.frag
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'session-inserted'= Session Inserted; 'session-expired'= Session Expired; 'icmp-rcv'= ICMP Received; 'icmpv6-rcv'= ICMPv6 Received; 'udp-rcv'= UDP Received; 'tcp-rcv'= TCP Received; 'ipip-rcv'= IP-in-IP Received; 'ipv6ip-rcv'= IPv6-in-IP Received; 'other-rcv'= Other Received; 'icmp-dropped'= ICMP Dropped; 'icmpv6-dropped'= ICMPv6 Dropped; 'udp-dropped'= UDP Dropped; 'tcp-dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'= IPv6-in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'= Overlapping Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'= Fragment Too Small Drop; 'first-tcp-too-small'= First TCP Fragment Too Small Drop; 'first-l4-too-small'= First L4 Fragment Too Small Drop; 'total-sessions-exceeded'= Total Sessions Exceeded Drop; 'no-session-memory'= Out of Session Memory; 'fast-aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'= Fragmentation Fast Aging Unset; 'fragment-queue-success'= Fragment Queue Success; 'unaligned-len'= Payload Length Unaligned; 'exceeded-len'= Payload Length Out of Bounds; 'duplicate-first-frag'= Duplicate First Fragment; 'duplicate-last-frag'= Duplicate Last Fragment; 'total-fragments-exceeded'= Total Queued Fragments Exceeded; 'fragment-queue-failure'= Fragment Queue Failure; 'reassembly-success'= Fragment Reassembly Success; 'max-len-exceeded'= Fragment Max Data Length Exceeded; 'reassembly-failure'= Fragment Reassembly Failure; 'policy-drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment Processing Drop; 'high-cpu-threshold'= High CPU Threshold Reached; 'low-cpu-threshold'= Low CPU Threshold Reached; 'cpu-threshold-drop'= High CPU Drop; 'ipd-entry-drop'= DDoS Protection Drop; 'max-packets-exceeded'= Too Many Packets Per Reassembly Drop; 'session-packets-exceeded'= Session Max Packets Exceeded; 'frag-session-count'= Fragmentation Session Count; 'sctp-rcv'= SCTP Received; 'sctp-dropped'= SCTP Dropped; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,7 +82,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -89,6 +94,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','session-inserted','session-expired','icmp-rcv','icmpv6-rcv','udp-rcv','tcp-rcv','ipip-rcv','ipv6ip-rcv','other-rcv','icmp-dropped','icmpv6-dropped','udp-dropped','tcp-dropped','ipip-dropped','ipv6ip-dropped','other-dropped','overlap-error','bad-ip-len','too-small','first-tcp-too-small','first-l4-too-small','total-sessions-exceeded','no-session-memory','fast-aging-set','fast-aging-unset','fragment-queue-success','unaligned-len','exceeded-len','duplicate-first-frag','duplicate-last-frag','total-fragments-exceeded','fragment-queue-failure','reassembly-success','max-len-exceeded','reassembly-failure','policy-drop','error-drop','high-cpu-threshold','low-cpu-threshold','cpu-threshold-drop','ipd-entry-drop','max-packets-exceeded','session-packets-exceeded','frag-session-count','sctp-rcv','sctp-dropped'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/ipv4-in-ipv6/frag"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/ipv4-in-ipv6/frag"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("frag", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("frag", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("frag", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

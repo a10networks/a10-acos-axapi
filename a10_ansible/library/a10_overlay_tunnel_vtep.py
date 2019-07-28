@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_overlay_tunnel_vtep
 description:
-    - None
+    - Virtual Tunnel end point Configuration
 short_description: Configures A10 overlay-tunnel.vtep
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,37 +35,42 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
-    destination_ip_address_list:
+    sampling_enable:
         description:
-        - "Field destination_ip_address_list"
+        - "Field sampling_enable"
         required: False
         suboptions:
-            uuid:
+            counters1:
                 description:
-                - "None"
+                - "'all'= all; 'cfg_err_count'= Config errors; 'flooded_pkt_count'= Flooded packet count; 'encap_unresolved_count'= Encap unresolved failures; 'unknown_encap_rx_pkt'= Encap miss rx pkts; 'unknown_encap_tx_pkt'= Encap miss tx pkts; 'arp_req_sent'= Arp request sent; 'vtep_host_learned'= Hosts learned; 'vtep_host_learn_error'= Host learn error; 'invalid_lif_rx'= Invalid Lif pkts in; 'invalid_lif_tx'= Invalid Lif pkts out; 'unknown_vtep_tx'= Vtep unknown tx; 'unknown_vtep_rx'= Vtep Unkown rx; 'unhandled_pkt_rx'= Unhandled packets in; 'unhandled_pkt_tx'= Unhandled packets out; 'total_pkts_rx'= Total packets out; 'total_bytes_rx'= Total packet bytes in; 'unicast_pkt_rx'= Total unicast packets in; 'bcast_pkt_rx'= Total broadcast packets in; 'mcast_pkt_rx'= Total multicast packets in; 'dropped_pkt_rx'= Dropped received packets; 'encap_miss_pkts_rx'= Encap missed in received packets; 'bad_chksum_pks_rx'= Bad checksum in received packets; 'requeue_pkts_in'= Requeued packets in; 'pkts_out'= Packets out; 'total_bytes_tx'= Packet bytes out; 'unicast_pkt_tx'= Unicast packets out; 'bcast_pkt_tx'= Broadcast packets out; 'mcast_pkt_tx'= Multicast packets out; 'dropped_pkts_tx'= Dropped packets out; 'large_pkts_rx'= Too large packets in; 'dot1q_pkts_rx'= Dot1q packets in; 'frag_pkts_tx'= Frag packets out; 'reassembled_pkts_rx'= Reassembled packets in; 'bad_inner_ipv4_len_rx'= bad inner ipv4 packet len; 'bad_inner_ipv6_len_rx'= Bad inner ipv6 packet len; 'lif_un_init_rx'= Lif uninitialized packets in; "
+    source_ip_address:
+        description:
+        - "Field source_ip_address"
+        required: False
+        suboptions:
             ip_address:
                 description:
-                - "None"
+                - "Source Tunnel End Point IPv4 address"
+            uuid:
+                description:
+                - "uuid of the object"
             vni_list:
                 description:
                 - "Field vni_list"
-            user_tag:
-                description:
-                - "None"
-            encap:
-                description:
-                - "None"
     encap:
         description:
-        - "None"
+        - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type is VXLAN; "
         required: False
     host_list:
         description:
@@ -74,38 +79,43 @@ options:
         suboptions:
             destination_vtep:
                 description:
-                - "None"
+                - "Configure the VTEP IP address (IPv4 address of the VTEP for the remote host)"
             ip_addr:
                 description:
-                - "None"
+                - "IPv4 address of the overlay host"
             overlay_mac_addr:
                 description:
-                - "None"
+                - "MAC Address of the overlay host"
             vni:
                 description:
-                - "None"
+                - " Configure the segment id ( VNI of the remote host)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     id:
         description:
-        - "None"
+        - "VTEP Identifier"
         required: True
-    source_ip_address:
+    destination_ip_address_list:
         description:
-        - "Field source_ip_address"
+        - "Field destination_ip_address_list"
         required: False
         suboptions:
-            ip_address:
-                description:
-                - "None"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
+            ip_address:
+                description:
+                - "IP Address of the remote VTEP"
             vni_list:
                 description:
                 - "Field vni_list"
-
+            user_tag:
+                description:
+                - "Customized tag"
+            encap:
+                description:
+                - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type is VXLAN; "
 
 """
 
@@ -119,7 +129,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["destination_ip_address_list","encap","host_list","id","source_ip_address","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["destination_ip_address_list","encap","host_list","id","sampling_enable","source_ip_address","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -138,7 +148,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -146,12 +159,14 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
-        destination_ip_address_list=dict(type='list',uuid=dict(type='str',),ip_address=dict(type='str',required=True,),vni_list=dict(type='list',segment=dict(type='int',required=True,),uuid=dict(type='str',)),user_tag=dict(type='str',),encap=dict(type='str',choices=['nvgre','vxlan'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cfg_err_count','flooded_pkt_count','encap_unresolved_count','unknown_encap_rx_pkt','unknown_encap_tx_pkt','arp_req_sent','vtep_host_learned','vtep_host_learn_error','invalid_lif_rx','invalid_lif_tx','unknown_vtep_tx','unknown_vtep_rx','unhandled_pkt_rx','unhandled_pkt_tx','total_pkts_rx','total_bytes_rx','unicast_pkt_rx','bcast_pkt_rx','mcast_pkt_rx','dropped_pkt_rx','encap_miss_pkts_rx','bad_chksum_pks_rx','requeue_pkts_in','pkts_out','total_bytes_tx','unicast_pkt_tx','bcast_pkt_tx','mcast_pkt_tx','dropped_pkts_tx','large_pkts_rx','dot1q_pkts_rx','frag_pkts_tx','reassembled_pkts_rx','bad_inner_ipv4_len_rx','bad_inner_ipv6_len_rx','lif_un_init_rx'])),
+        source_ip_address=dict(type='dict',ip_address=dict(type='str',),uuid=dict(type='str',),vni_list=dict(type='list',lif=dict(type='int',),partition=dict(type='str',),segment=dict(type='int',required=True,),gateway=dict(type='bool',),uuid=dict(type='str',))),
         encap=dict(type='str',choices=['nvgre','vxlan']),
         host_list=dict(type='list',destination_vtep=dict(type='str',required=True,),ip_addr=dict(type='str',required=True,),overlay_mac_addr=dict(type='str',required=True,),vni=dict(type='int',required=True,),uuid=dict(type='str',)),
         id=dict(type='int',required=True,),
-        source_ip_address=dict(type='dict',ip_address=dict(type='str',),uuid=dict(type='str',),vni_list=dict(type='list',lif=dict(type='int',),partition=dict(type='str',),segment=dict(type='int',required=True,),gateway=dict(type='bool',),uuid=dict(type='str',)))
+        destination_ip_address_list=dict(type='list',uuid=dict(type='str',),ip_address=dict(type='str',required=True,),vni_list=dict(type='list',segment=dict(type='int',required=True,),uuid=dict(type='str',)),user_tag=dict(type='str',),encap=dict(type='str',choices=['nvgre','vxlan']))
     ))
+   
 
     return rv
 
@@ -159,6 +174,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/overlay-tunnel/vtep/{id}"
+
     f_dict = {}
     f_dict["id"] = ""
 
@@ -168,6 +184,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/overlay-tunnel/vtep/{id}"
+
     f_dict = {}
     f_dict["id"] = module.params["id"]
 
@@ -190,7 +207,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -209,7 +226,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -220,7 +237,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -255,7 +272,8 @@ def create(module, result):
     payload = build_json("vtep", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -280,8 +298,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("vtep", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -301,6 +320,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("vtep", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -314,9 +349,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -330,6 +366,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_loopback_ipv6
 description:
-    - None
+    - Global IPv6 configuration subcommands
 short_description: Configures A10 interface.loopback.ipv6
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,15 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    loopback_ifnum:
+        description:
+        - Key to identify parent object
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     address_list:
         description:
@@ -46,13 +52,13 @@ options:
         suboptions:
             link_local:
                 description:
-                - "None"
+                - "Configure an IPv6 link local address"
             ipv6_addr:
                 description:
-                - "None"
+                - "Set the IPv6 address of an interface"
             anycast:
                 description:
-                - "None"
+                - "Configure an IPv6 anycast address"
     rip:
         description:
         - "Field rip"
@@ -63,10 +69,10 @@ options:
                 - "Field split_horizon_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     ipv6_enable:
         description:
-        - "None"
+        - "Enable IPv6 processing"
         required: False
     router:
         description:
@@ -89,10 +95,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             bfd:
                 description:
-                - "None"
+                - "Bidirectional Forwarding Detection (BFD)"
             cost_cfg:
                 description:
                 - "Field cost_cfg"
@@ -110,14 +116,13 @@ options:
                 - "Field retransmit_interval_cfg"
             disable:
                 description:
-                - "None"
+                - "Disable BFD"
             transmit_delay_cfg:
                 description:
                 - "Field transmit_delay_cfg"
             dead_interval_cfg:
                 description:
                 - "Field dead_interval_cfg"
-
 
 """
 
@@ -150,7 +155,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -163,22 +171,31 @@ def get_argspec():
         router=dict(type='dict',ripng=dict(type='dict',uuid=dict(type='str',),rip=dict(type='bool',)),ospf=dict(type='dict',area_list=dict(type='list',area_id_addr=dict(type='str',),tag=dict(type='str',),instance_id=dict(type='int',),area_id_num=dict(type='int',)),uuid=dict(type='str',)),isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),
         ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',)))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        loopback_ifnum=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/loopback/{ifnum}/ipv6"
+    url_base = "/axapi/v3/interface/loopback/{loopback_ifnum}/ipv6"
+
     f_dict = {}
+    f_dict["loopback_ifnum"] = module.params["loopback_ifnum"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/loopback/{ifnum}/ipv6"
+    url_base = "/axapi/v3/interface/loopback/{loopback_ifnum}/ipv6"
+
     f_dict = {}
+    f_dict["loopback_ifnum"] = module.params["loopback_ifnum"]
 
     return url_base.format(**f_dict)
 
@@ -199,7 +216,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -218,7 +235,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -229,7 +246,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -264,7 +281,8 @@ def create(module, result):
     payload = build_json("ipv6", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -289,8 +307,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ipv6", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -310,6 +329,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ipv6", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -323,9 +358,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -339,6 +375,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

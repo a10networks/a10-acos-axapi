@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'enqueue'= Total local-log enqueue; 'enqueue-full'= Total local-log queue full; 'enqueue-error'= Total local-log enqueue error; 'dequeue'= Total local-log dequeue; 'dequeue-error'= Total local-log dequeue processing error; 'raw-log'= Total local-log raw logs; 'raw-log-error'= Total raw log logging error; 'log-summarized'= Total raw log summarized; 'l1-log-summarized'= Total layer 1 log summarized; 'l2-log-summarized'= Total layer 2 log summarized; 'log-summarized-error'= Total local-log summarization error; 'aam-db'= Total local-log AAM raw database; 'ep-db'= Total local-log EP raw database; 'fi-db'= Total local-log File-Inspection raw database; 'fw-db'= Total local-log Firewall raw database; 'aam-top-user-db'= Total local-log AAM top user summary database; 'ep-top-user-db'= Total local-log EP top user summary database; 'ep-top-src-db'= Total local-log EP top client summary database; 'ep-top-dst-db'= Total local-log EP top destination summary database; 'ep-top-domain-db'= Total local-log EP top domain summary database; 'ep-top-web-category-db'= Total local-log EP top web-category summary database; 'ep-top-host-db'= Total local-log EP top host summary database; 'fi-top-src-db'= Total local-log File-Inspection top source summary database; 'fi-top-dst-db'= Total local-log File-Inspection top destination summary database; 'fi-top-filename-db'= Total local-log File-Inspection top file name summary database; 'fi-top-file-ext-db'= Total local-log File-Inspection top file extension summary database; 'fi-top-url-db'= Total local-log File-Inspection top URL summary database; 'fw-top-app-db'= Total local-log Friewall top application summary database; 'fw-top-src-db'= Total local-log Friewall top source summary database; 'fw-top-app-src-db'= Total local-log Friewall top application and source summary database; 'fw-top-category-db'= Total local-log Friewall top category summary database; 'db-erro'= Total local-log database create error; 'query'= Total local-log axapi query; 'response'= Total local-log axapi response; 'query-error'= Total local-log axapi query error; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,7 +82,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -89,6 +94,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','enqueue','enqueue-full','enqueue-error','dequeue','dequeue-error','raw-log','raw-log-error','log-summarized','l1-log-summarized','l2-log-summarized','log-summarized-error','aam-db','ep-db','fi-db','fw-db','aam-top-user-db','ep-top-user-db','ep-top-src-db','ep-top-dst-db','ep-top-domain-db','ep-top-web-category-db','ep-top-host-db','fi-top-src-db','fi-top-dst-db','fi-top-filename-db','fi-top-file-ext-db','fi-top-url-db','fw-top-app-db','fw-top-src-db','fw-top-app-src-db','fw-top-category-db','db-erro','query','response','query-error'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/logging/local-log/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/logging/local-log/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("global", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("global", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("global", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

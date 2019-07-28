@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_switch
 description:
-    - None
+    - Show slb switch statistics
 short_description: Configures A10 slb.switch
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'fwlb'= FWLB; 'licexpire_drop'= License Expire Drop; 'bwl_drop'= BW Limit Drop; 'rx_kernel'= Received kernel; 'rx_arp_req'= ARP REQ Rcvd; 'rx_arp_resp'= ARP RESP Rcvd; 'vlan_flood'= VLAN Flood; 'l2_def_vlan_drop'= L2 Default Vlan FWD Drop; 'ipv4_noroute_drop'= IPv4 No Route Drop; 'ipv6_noroute_drop'= IPv6 No Route Drop; 'prot_down_drop'= Prot Down Drop; 'l2_forward'= L2 Forward; 'l3_forward_ip'= L3 IP Forward; 'l3_forward_ipv6'= L3 IPv6 Forward; 'l4_process'= L4 Process; 'unknown_prot_drop'= Unknown Prot Drop; 'ttl_exceeded_drop'= TTL Exceeded Drop; 'linkdown_drop'= Link Down Drop; 'sport_drop'= SPORT Drop; 'incorrect_len_drop'= Incorrect Length Drop; 'ip_defrag'= IP Defrag; 'acl_deny'= ACL Denys; 'ipfrag_tcp'= IP(TCP) Fragment Rcvd; 'ipfrag_overlap'= IP Fragment Overlap; 'ipfrag_timeout'= IP Fragment Timeout; 'ipfrag_overload'= IP Frag Overload Drops; 'ipfrag_reasmoks'= IP Fragment Reasm OKs; 'ipfrag_reasmfails'= IP Fragment Reasm Fails; 'land_drop'= Anomaly Land Attack Drop; 'ipoptions_drop'= Anomaly IP OPT Drops; 'badpkt_drop'= Bad Pkt Drop; 'pingofdeath_drop'= Anomaly PingDeath Drop; 'allfrag_drop'= Anomaly All Frag Drop; 'tcpnoflag_drop'= Anomaly TCP noFlag Drop; 'tcpsynfrag_drop'= Anomaly SYN Frag Drop; 'tcpsynfin_drop'= Anomaly TCP SYNFIN Drop; 'ipsec_drop'= IPSec Drop; 'bpdu_rcvd'= BPDUs Received; 'bpdu_sent'= BPDUs Sent; 'ctrl_syn_rate_drop'= SYN rate exceeded Drop; 'ip_defrag_invalid_len'= IP Invalid Length Frag; 'ipv4_frag_6rd_ok'= IPv4 Frag 6RD OK; 'ipv4_frag_6rd_drop'= IPv4 Frag 6RD Dropped; 'no_ip_drop'= No IP Drop; 'ipv6frag_udp'= IPv6 Frag UDP; 'ipv6frag_udp_dropped'= IPv6 Frag UDP Dropped; 'ipv6frag_tcp_dropped'= IPv6 Frag TCP Dropped; 'ipv6frag_ipip_ok'= IPv6 Frag IPIP OKs; 'ipv6frag_ipip_dropped'= IPv6 Frag IPIP Drop; 'ip_frag_oversize'= IP Fragment oversize; 'ip_frag_too_many'= IP Fragment too many; 'ipv4_novlanfwd_drop'= IPv4 No L3 VLAN FWD Drop; 'ipv6_novlanfwd_drop'= IPv6 No L3 VLAN FWD Drop; 'fpga_error_pkt1'= FPGA Error PKT1; 'fpga_error_pkt2'= FPGA Error PKT2; 'max_arp_drop'= Max ARP Drop; 'ipv6frag_tcp'= IPv6 Frag TCP; 'ipv6frag_icmp'= IPv6 Frag ICMP; 'ipv6frag_ospf'= IPv6 Frag OSPF; 'ipv6frag_esp'= IPv6 Frag ESP; 'l4_in_ctrl_cpu'= L4 In Ctrl CPU; 'mgmt_svc_drop'= Management Service Drop; 'jumbo_frag_drop'= Jumbo Frag Drop; 'ipv6_jumbo_frag_drop'= IPv6 Jumbo Frag Drop; 'ipipv6_jumbo_frag_drop'= IPIPv6 Jumbo Frag Drop; 'ipv6_ndisc_dad_solicits'= IPv6 DAD on Solicits; 'ipv6_ndisc_dad_adverts'= IPv6 DAD on Adverts; 'ipv6_ndisc_mac_changes'= IPv6 DAD MAC Changed; 'ipv6_ndisc_out_of_memory'= IPv6 DAD Out-of-memory; 'sp_non_ctrl_pkt_drop'= Shared IP mode non ctrl packet to linux drop; 'urpf_pkt_drop'= URPF check packet drop; 'fw_smp_zone_mismatch'= FW SMP Zone Mismatch; 'ipfrag_udp'= IP(UDP) Fragment Rcvd; 'ipfrag_icmp'= IP(ICMP) Fragment Rcvd; 'ipfrag_ospf'= IP(OSPF) Fragment Rcvd; 'ipfrag_esp'= IP(ESP) Fragment Rcvd; 'ipfrag_tcp_dropped'= IP Frag TCP Dropped; 'ipfrag_udp_dropped'= IP Frag UDP Dropped; 'ipfrag_ipip_dropped'= IP Frag IPIP Drop; 'redirect_fwd_fail'= Redirect failed in the fwd direction; 'redirect_fwd_sent'= Redirect succeeded in the fwd direction; 'redirect_rev_fail'= Redirect failed in the rev direction; 'redirect_rev_sent'= Redirect succeeded in the rev direction; 'redirect_setup_fail'= Redirect connection setup failed; 'ip_frag_sent'= IP frag sent; 'invalid_rx_arp_pkt'= Invalid ARP PKT Rcvd; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,19 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','fwlb','licexpire_drop','bwl_drop','rx_kernel','rx_arp_req','rx_arp_resp','vlan_flood','l2_def_vlan_drop','ipv4_noroute_drop','ipv6_noroute_drop','prot_down_drop','l2_forward','l3_forward_ip','l3_forward_ipv6','l4_process','unknown_prot_drop','ttl_exceeded_drop','linkdown_drop','sport_drop','incorrect_len_drop','ip_defrag','acl_deny','ipfrag_tcp','ipfrag_overlap','ipfrag_timeout','ipfrag_overload','ipfrag_reasmoks','ipfrag_reasmfails','land_drop','ipoptions_drop','badpkt_drop','pingofdeath_drop','allfrag_drop','tcpnoflag_drop','tcpsynfrag_drop','tcpsynfin_drop','ipsec_drop','bpdu_rcvd','bpdu_sent','ctrl_syn_rate_drop','ip_defrag_invalid_len','ipv4_frag_6rd_ok','ipv4_frag_6rd_drop','no_ip_drop','ipv6frag_udp','ipv6frag_udp_dropped','ipv6frag_tcp_dropped','ipv6frag_ipip_ok','ipv6frag_ipip_dropped','ip_frag_oversize','ip_frag_too_many','ipv4_novlanfwd_drop','ipv6_novlanfwd_drop','fpga_error_pkt1','fpga_error_pkt2','max_arp_drop','ipv6frag_tcp','ipv6frag_icmp','ipv6frag_ospf','ipv6frag_esp','l4_in_ctrl_cpu','mgmt_svc_drop','jumbo_frag_drop','ipv6_jumbo_frag_drop','ipipv6_jumbo_frag_drop','ipv6_ndisc_dad_solicits','ipv6_ndisc_dad_adverts','ipv6_ndisc_mac_changes','ipv6_ndisc_out_of_memory','sp_non_ctrl_pkt_drop','urpf_pkt_drop','fw_smp_zone_mismatch','ipfrag_udp','ipfrag_icmp','ipfrag_ospf','ipfrag_esp','ipfrag_tcp_dropped','ipfrag_udp_dropped','ipfrag_ipip_dropped','redirect_fwd_fail','redirect_fwd_sent','redirect_rev_fail','redirect_rev_sent','redirect_setup_fail'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','fwlb','licexpire_drop','bwl_drop','rx_kernel','rx_arp_req','rx_arp_resp','vlan_flood','l2_def_vlan_drop','ipv4_noroute_drop','ipv6_noroute_drop','prot_down_drop','l2_forward','l3_forward_ip','l3_forward_ipv6','l4_process','unknown_prot_drop','ttl_exceeded_drop','linkdown_drop','sport_drop','incorrect_len_drop','ip_defrag','acl_deny','ipfrag_tcp','ipfrag_overlap','ipfrag_timeout','ipfrag_overload','ipfrag_reasmoks','ipfrag_reasmfails','land_drop','ipoptions_drop','badpkt_drop','pingofdeath_drop','allfrag_drop','tcpnoflag_drop','tcpsynfrag_drop','tcpsynfin_drop','ipsec_drop','bpdu_rcvd','bpdu_sent','ctrl_syn_rate_drop','ip_defrag_invalid_len','ipv4_frag_6rd_ok','ipv4_frag_6rd_drop','no_ip_drop','ipv6frag_udp','ipv6frag_udp_dropped','ipv6frag_tcp_dropped','ipv6frag_ipip_ok','ipv6frag_ipip_dropped','ip_frag_oversize','ip_frag_too_many','ipv4_novlanfwd_drop','ipv6_novlanfwd_drop','fpga_error_pkt1','fpga_error_pkt2','max_arp_drop','ipv6frag_tcp','ipv6frag_icmp','ipv6frag_ospf','ipv6frag_esp','l4_in_ctrl_cpu','mgmt_svc_drop','jumbo_frag_drop','ipv6_jumbo_frag_drop','ipipv6_jumbo_frag_drop','ipv6_ndisc_dad_solicits','ipv6_ndisc_dad_adverts','ipv6_ndisc_mac_changes','ipv6_ndisc_out_of_memory','sp_non_ctrl_pkt_drop','urpf_pkt_drop','fw_smp_zone_mismatch','ipfrag_udp','ipfrag_icmp','ipfrag_ospf','ipfrag_esp','ipfrag_tcp_dropped','ipfrag_udp_dropped','ipfrag_ipip_dropped','redirect_fwd_fail','redirect_fwd_sent','redirect_rev_fail','redirect_rev_sent','redirect_setup_fail','ip_frag_sent','invalid_rx_arp_pkt'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/switch"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/switch"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("switch", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("switch", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("switch", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

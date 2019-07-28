@@ -102,15 +102,22 @@ options:
         description:
         - "Enable system license management traps"
         required: False
-    packet_drop:
+    tacacs_server_up_down:
         description:
-        - "Enable system packet dropped trap"
+        - "Enable system TACACS monitor server up/down trap"
+        required: False
+    smp_resource_event:
+        description:
+        - "Enable system smp resource event trap"
         required: False
     restart:
         description:
         - "Enable system restart trap"
         required: False
-
+    packet_drop:
+        description:
+        - "Enable system packet dropped trap"
+        required: False
 
 """
 
@@ -124,7 +131,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","control_cpu_high","data_cpu_high","fan","file_sys_read_only","high_disk_use","high_memory_use","high_temp","license_management","low_temp","packet_drop","power","pri_disk","restart","sec_disk","shutdown","start","uuid",]
+AVAILABLE_PROPERTIES = ["all","control_cpu_high","data_cpu_high","fan","file_sys_read_only","high_disk_use","high_memory_use","high_temp","license_management","low_temp","packet_drop","power","pri_disk","restart","sec_disk","shutdown","smp_resource_event","start","tacacs_server_up_down","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -168,8 +175,10 @@ def get_argspec():
         shutdown=dict(type='bool',),
         pri_disk=dict(type='bool',),
         license_management=dict(type='bool',),
-        packet_drop=dict(type='bool',),
-        restart=dict(type='bool',)
+        tacacs_server_up_down=dict(type='bool',),
+        smp_resource_event=dict(type='bool',),
+        restart=dict(type='bool',),
+        packet_drop=dict(type='bool',)
     ))
    
 
@@ -229,7 +238,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -240,7 +249,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

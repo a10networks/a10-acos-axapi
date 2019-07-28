@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_interface_ethernet_ipv6
 description:
-    - None
+    - Global IPv6 configuration subcommands
 short_description: Configures A10 interface.ethernet.ipv6
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,15 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    ethernet_ifnum:
+        description:
+        - Key to identify parent object
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     address_list:
         description:
@@ -46,17 +52,17 @@ options:
         suboptions:
             address_type:
                 description:
-                - "None"
+                - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6 link local address; "
             ipv6_addr:
                 description:
-                - "None"
+                - "Set the IPv6 address of an interface"
     inside:
         description:
-        - "None"
+        - "Configure interface as inside"
         required: False
     ipv6_enable:
         description:
-        - "None"
+        - "Enable IPv6 processing"
         required: False
     rip:
         description:
@@ -68,10 +74,10 @@ options:
                 - "Field split_horizon_cfg"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     outside:
         description:
-        - "None"
+        - "Configure interface as outside"
         required: False
     stateful_firewall:
         description:
@@ -80,25 +86,25 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             class_list:
                 description:
-                - "None"
+                - "Class List (Class List Name)"
             acl_name:
                 description:
-                - "None"
+                - "Access-list Name"
             inside:
                 description:
-                - "None"
+                - "Inside (private) interface for stateful firewall"
             outside:
                 description:
-                - "None"
+                - "Outside (public) interface for stateful firewall"
             access_list:
                 description:
-                - "None"
+                - "Access-list for traffic from the outside"
     ttl_ignore:
         description:
-        - "None"
+        - "Ignore TTL decrement for a received packet before sending out"
         required: False
     router:
         description:
@@ -121,10 +127,10 @@ options:
         suboptions:
             inbound:
                 description:
-                - "None"
+                - "ACL applied on incoming packets to this interface"
             v6_acl_name:
                 description:
-                - "None"
+                - "Apply ACL rules to incoming packets on this interface (Named Access List)"
     ospf:
         description:
         - "Field ospf"
@@ -132,10 +138,10 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             bfd:
                 description:
-                - "None"
+                - "Bidirectional Forwarding Detection (BFD)"
             cost_cfg:
                 description:
                 - "Field cost_cfg"
@@ -153,7 +159,7 @@ options:
                 - "Field retransmit_interval_cfg"
             disable:
                 description:
-                - "None"
+                - "Disable BFD"
             transmit_delay_cfg:
                 description:
                 - "Field transmit_delay_cfg"
@@ -173,62 +179,61 @@ options:
         suboptions:
             max_interval:
                 description:
-                - "None"
+                - "Set Router Advertisement Max Interval (default= 600) (Max Router Advertisement Interval (seconds))"
             default_lifetime:
                 description:
-                - "None"
+                - "Set Router Advertisement Default Lifetime (default= 1800) (Default Lifetime (seconds))"
             reachable_time:
                 description:
-                - "None"
+                - "Set Router Advertisement Reachable ime (default= 0) (Reachable Time (milliseconds))"
             other_config_action:
                 description:
-                - "None"
+                - "'enable'= Enable the Other Stateful Configuration flag; 'disable'= Disable the Other Stateful Configuration flag (default); "
             floating_ip_default_vrid:
                 description:
-                - "None"
+                - "Use a floating IP as the source address for Router advertisements"
             managed_config_action:
                 description:
-                - "None"
+                - "'enable'= Enable the Managed Address Configuration flag; 'disable'= Disable the Managed Address Configuration flag (default); "
             min_interval:
                 description:
-                - "None"
+                - "Set Router Advertisement Min Interval (default= 200) (Min Router Advertisement Interval (seconds))"
             rate_limit:
                 description:
-                - "None"
+                - "Rate Limit the processing of incoming Router Solicitations (Max Number of Router Solicitations to process per second)"
             adver_mtu_disable:
                 description:
-                - "None"
+                - "Disable Router Advertisement MTU Option"
             prefix_list:
                 description:
                 - "Field prefix_list"
             floating_ip:
                 description:
-                - "None"
+                - "Use a floating IP as the source address for Router advertisements"
             adver_vrid:
                 description:
-                - "None"
+                - "Specify ha VRRP-A vrid"
             use_floating_ip_default_vrid:
                 description:
-                - "None"
+                - "Use a floating IP as the source address for Router advertisements"
             action:
                 description:
-                - "None"
+                - "'enable'= Enable Router Advertisements on this interface; 'disable'= Disable Router Advertisements on this interface; "
             adver_vrid_default:
                 description:
-                - "None"
+                - "Default VRRP-A vrid"
             adver_mtu:
                 description:
-                - "None"
+                - "Set Router Advertisement MTU Option"
             retransmit_timer:
                 description:
-                - "None"
+                - "Set Router Advertisement Retransmit Timer (default= 0)"
             hop_limit:
                 description:
-                - "None"
+                - "Set Router Advertisement Hop Limit (default= 255)"
             use_floating_ip:
                 description:
-                - "None"
-
+                - "Use a floating IP as the source address for Router advertisements"
 
 """
 
@@ -261,7 +266,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -280,22 +288,31 @@ def get_argspec():
         ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),neighbor_cfg=dict(type='list',neighbor_priority=dict(type='int',),neighbor_poll_interval=dict(type='int',),neig_inst=dict(type='int',),neighbor=dict(type='str',),neighbor_cost=dict(type='int',)),network_list=dict(type='list',broadcast_type=dict(type='str',choices=['broadcast','non-broadcast','point-to-point','point-to-multipoint']),p2mp_nbma=dict(type='bool',),network_instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',))),
         router_adver=dict(type='dict',max_interval=dict(type='int',),default_lifetime=dict(type='int',),reachable_time=dict(type='int',),other_config_action=dict(type='str',choices=['enable','disable']),floating_ip_default_vrid=dict(type='str',),managed_config_action=dict(type='str',choices=['enable','disable']),min_interval=dict(type='int',),rate_limit=dict(type='int',),adver_mtu_disable=dict(type='bool',),prefix_list=dict(type='list',not_autonomous=dict(type='bool',),not_on_link=dict(type='bool',),valid_lifetime=dict(type='int',),prefix=dict(type='str',),preferred_lifetime=dict(type='int',)),floating_ip=dict(type='str',),adver_vrid=dict(type='int',),use_floating_ip_default_vrid=dict(type='bool',),action=dict(type='str',choices=['enable','disable']),adver_vrid_default=dict(type='bool',),adver_mtu=dict(type='int',),retransmit_timer=dict(type='int',),hop_limit=dict(type='int',),use_floating_ip=dict(type='bool',))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        ethernet_ifnum=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/ethernet/{ifnum}/ipv6"
+    url_base = "/axapi/v3/interface/ethernet/{ethernet_ifnum}/ipv6"
+
     f_dict = {}
+    f_dict["ethernet_ifnum"] = module.params["ethernet_ifnum"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/interface/ethernet/{ifnum}/ipv6"
+    url_base = "/axapi/v3/interface/ethernet/{ethernet_ifnum}/ipv6"
+
     f_dict = {}
+    f_dict["ethernet_ifnum"] = module.params["ethernet_ifnum"]
 
     return url_base.format(**f_dict)
 
@@ -316,7 +333,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -335,7 +352,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -346,7 +363,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -381,7 +398,8 @@ def create(module, result):
     payload = build_json("ipv6", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -406,8 +424,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ipv6", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -427,6 +446,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ipv6", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -440,9 +475,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -456,6 +492,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

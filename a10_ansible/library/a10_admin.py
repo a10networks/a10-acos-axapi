@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_admin
 description:
-    - None
+    - System admin user configuration
 short_description: Configures A10 admin
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     ssh_pubkey:
         description:
         - "Field ssh_pubkey"
@@ -42,34 +45,34 @@ options:
         suboptions:
             nimport:
                 description:
-                - "None"
+                - "Import an authorized public key"
             list:
                 description:
-                - "None"
+                - "List all authorized public keys"
             use_mgmt_port:
                 description:
-                - "None"
+                - "Use management port as source port"
             file_url:
                 description:
-                - "None"
+                - "File URL"
             delete:
                 description:
-                - "None"
+                - "Delete an authorized public key (SSH key index)"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     privilege_global:
         description:
-        - "None"
+        - "'read'= Set read privilege; 'write'= Set write privilege; 'hm'= Set external health monitor script content operations privilege; "
         required: False
     trusted_host:
         description:
-        - "None"
+        - "Set trusted network administrator can login in"
         required: False
     user:
         description:
-        - "None"
+        - "System admin user name"
         required: True
     privilege_list:
         description:
@@ -78,14 +81,30 @@ options:
         suboptions:
             partition_name:
                 description:
-                - "None"
+                - "Partition Name"
             privilege_partition:
                 description:
-                - "None"
-    user_tag:
+                - "'partition-enable-disable'= Set per-partition enable/disable privilege; 'partition-read'= Set per-partition read privilege; 'partition-write'= Set per-partition write privilege; "
+    aws_accesskey:
         description:
-        - "None"
+        - "Field aws_accesskey"
         required: False
+        suboptions:
+            nimport:
+                description:
+                - "Import an aws-accesskey"
+            delete:
+                description:
+                - "Delete an authorized aws accesskey"
+            use_mgmt_port:
+                description:
+                - "Use management port as source port"
+            file_url:
+                description:
+                - "File URL"
+            show:
+                description:
+                - "Show authorized aws accesskey"
     access:
         description:
         - "Field access"
@@ -96,22 +115,26 @@ options:
                 - "Field access_type"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     access_list:
         description:
-        - "None"
+        - "Specify an ACL to classify a trusted host"
         required: False
     unlock:
         description:
-        - "None"
+        - "Unlock admin user"
         required: False
-    password_key:
+    user_tag:
         description:
-        - "None"
+        - "Customized tag"
+        required: False
+    action:
+        description:
+        - "'enable'= Enable user; 'disable'= Disable user; "
         required: False
     trusted_host_acl_id:
         description:
-        - "None"
+        - "ACL ID"
         required: False
     password:
         description:
@@ -120,26 +143,25 @@ options:
         suboptions:
             password_in_module:
                 description:
-                - "None"
+                - "Config admin user password"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             encrypted_in_module:
                 description:
-                - "None"
-    action:
+                - "Specify an ENCRYPTED password string (System admin user password)"
+    passwd_string:
         description:
-        - "None"
+        - "Config admin user password"
         required: False
     trusted_host_cidr:
         description:
-        - "None"
+        - "Trusted IP Address with network mask"
         required: False
-    passwd_string:
+    password_key:
         description:
-        - "None"
+        - "Config admin user password"
         required: False
-
 
 """
 
@@ -153,7 +175,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access","access_list","action","passwd_string","password","password_key","privilege_global","privilege_list","ssh_pubkey","trusted_host","trusted_host_acl_id","trusted_host_cidr","unlock","user","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access","access_list","action","aws_accesskey","passwd_string","password","password_key","privilege_global","privilege_list","ssh_pubkey","trusted_host","trusted_host_acl_id","trusted_host_cidr","unlock","user","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -172,7 +194,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -180,21 +205,23 @@ def get_argspec():
     rv.update(dict(
         ssh_pubkey=dict(type='dict',nimport=dict(type='bool',),list=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',),delete=dict(type='int',)),
         uuid=dict(type='str',),
-        privilege_global=dict(type='str',choices=['read','write']),
+        privilege_global=dict(type='str',choices=['read','write','hm']),
         trusted_host=dict(type='bool',),
         user=dict(type='str',required=True,),
         privilege_list=dict(type='list',partition_name=dict(type='str',),privilege_partition=dict(type='str',choices=['partition-enable-disable','partition-read','partition-write'])),
-        user_tag=dict(type='str',),
+        aws_accesskey=dict(type='dict',nimport=dict(type='bool',),delete=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',),show=dict(type='bool',)),
         access=dict(type='dict',access_type=dict(type='str',choices=['axapi','cli','web']),uuid=dict(type='str',)),
         access_list=dict(type='bool',),
         unlock=dict(type='bool',),
-        password_key=dict(type='bool',),
+        user_tag=dict(type='str',),
+        action=dict(type='str',choices=['enable','disable']),
         trusted_host_acl_id=dict(type='int',),
         password=dict(type='dict',password_in_module=dict(type='str',),uuid=dict(type='str',),encrypted_in_module=dict(type='str',)),
-        action=dict(type='str',choices=['enable','disable']),
+        passwd_string=dict(type='str',),
         trusted_host_cidr=dict(type='str',),
-        passwd_string=dict(type='str',)
+        password_key=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -202,6 +229,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/admin/{user}"
+
     f_dict = {}
     f_dict["user"] = ""
 
@@ -211,6 +239,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/admin/{user}"
+
     f_dict = {}
     f_dict["user"] = module.params["user"]
 
@@ -233,7 +262,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -252,7 +281,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -263,7 +292,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -298,7 +327,8 @@ def create(module, result):
     payload = build_json("admin", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -323,8 +353,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("admin", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -344,6 +375,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("admin", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -357,9 +404,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -373,6 +421,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

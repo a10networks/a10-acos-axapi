@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_server_radius
 description:
-    - None
+    - RADIUS Authentication Server
 short_description: Configures A10 aam.authentication.server.radius
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,10 +45,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'authen_success'= Total Authentication Success; 'authen_failure'= Total Authentication Failure; 'authorize_success'= Total Authorization Success; 'authorize_failure'= Total Authorization Failure; 'access_challenge'= Total Access-Challenge Message Receive; 'timeout_error'= Total Timeout; 'other_error'= Total Other Error; 'request'= Total Request; 'request-normal'= Total Normal Request; 'request-dropped'= Total Dropped Request; 'response-success'= Total Success Response; 'response-failure'= Total Failure Response; 'response-error'= Total Error Response; 'response-timeout'= Total Timeout Response; 'response-other'= Total Other Response; 'job-start-error'= Total Job Start Error; 'polling-control-error'= Total Polling Control Error; 'accounting-request-sent'= Accounting-Request Sent; 'accounting-success'= Accounting Success; 'accounting-failure'= Accounting Failure; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     instance_list:
         description:
@@ -54,43 +57,43 @@ options:
         suboptions:
             auth_type:
                 description:
-                - "None"
+                - "'pap'= PAP authentication. Default; 'mschapv2'= MS-CHAPv2 authentication; 'mschapv2-pap'= Use MS-CHAPv2 first. If server doesn't support it, try PAP; "
             health_check_string:
                 description:
-                - "None"
+                - "Health monitor name"
             retry:
                 description:
-                - "None"
+                - "Specify the retry number for resend the request, default is 5 (The retry number, default is 5)"
             port_hm:
                 description:
-                - "None"
+                - "Check port's health status"
             name:
                 description:
-                - "None"
+                - "Specify RADIUS authentication server name"
             port_hm_disable:
                 description:
-                - "None"
+                - "Disable configured port health check configuration"
             encrypted:
                 description:
-                - "None"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
             interval:
                 description:
-                - "None"
+                - "Specify the interval time for resend the request (second), default is 3 seconds (The interval time(second), default is 3 seconds)"
             accounting_port:
                 description:
-                - "None"
+                - "Specify the RADIUS server's accounting port, default is 1813"
             port:
                 description:
-                - "None"
+                - "Specify the RADIUS server's authentication port, default is 1812"
             health_check:
                 description:
-                - "None"
+                - "Check server's health status"
             acct_port_hm_disable:
                 description:
-                - "None"
+                - "Disable configured accounting port health check configuration"
             secret:
                 description:
-                - "None"
+                - "Specify the RADIUS server's secret"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
@@ -99,17 +102,16 @@ options:
                 - "Field host"
             health_check_disable:
                 description:
-                - "None"
+                - "Disable configured health check configuration"
             secret_string:
                 description:
-                - "None"
+                - "The RADIUS server's secret"
             acct_port_hm:
                 description:
-                - "None"
+                - "Specify accounting port health check method"
             uuid:
                 description:
-                - "None"
-
+                - "uuid of the object"
 
 """
 
@@ -142,7 +144,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -152,6 +157,7 @@ def get_argspec():
         uuid=dict(type='str',),
         instance_list=dict(type='list',auth_type=dict(type='str',choices=['pap','mschapv2','mschapv2-pap']),health_check_string=dict(type='str',),retry=dict(type='int',),port_hm=dict(type='str',),name=dict(type='str',required=True,),port_hm_disable=dict(type='bool',),encrypted=dict(type='str',),interval=dict(type='int',),accounting_port=dict(type='int',),port=dict(type='int',),health_check=dict(type='bool',),acct_port_hm_disable=dict(type='bool',),secret=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),health_check_disable=dict(type='bool',),secret_string=dict(type='str',),acct_port_hm=dict(type='str',),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -159,6 +165,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/server/radius"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -167,6 +174,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/server/radius"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -188,7 +196,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -207,7 +215,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -218,7 +226,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -253,7 +261,8 @@ def create(module, result):
     payload = build_json("radius", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -278,8 +287,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("radius", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -299,6 +309,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("radius", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -312,9 +338,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -328,6 +355,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_class_list
 description:
-    - None
+    - Configure classification list
 short_description: Configures A10 class-list
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,26 +35,35 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     dns:
         description:
         - "Field dns"
         required: False
         suboptions:
-            dns_glid:
-                description:
-                - "None"
-            dns_match_type:
-                description:
-                - "None"
             dns_match_string:
                 description:
-                - "None"
+                - "Domain name"
+            dns_glid_shared:
+                description:
+                - "Use global Limit ID"
+            dns_glid:
+                description:
+                - "Use global Limit ID (Specify global LID index)"
             dns_lid:
                 description:
-                - "None"
+                - "Use Limit ID defined in template (Specify LID index)"
+            shared_partition_dns_glid:
+                description:
+                - "Reference a glid from shared partition"
+            dns_match_type:
+                description:
+                - "'contains'= Domain contains another string; 'ends-with'= Domain ends with another string; 'starts-with'= Domain starts-with another string; "
     name:
         description:
-        - "None"
+        - "Specify name of the class list"
         required: True
     ipv4_list:
         description:
@@ -63,26 +72,32 @@ options:
         suboptions:
             lid:
                 description:
-                - "None"
-            lsn_lid:
-                description:
-                - "None"
-            lsn_radius_profile:
-                description:
-                - "None"
-            ipv4addr:
-                description:
-                - "None"
+                - "Use Limit ID defined in template (Specify LID index)"
             glid:
                 description:
-                - "None"
+                - "Use global Limit ID (Specify global LID index)"
+            glid_shared:
+                description:
+                - "Use global Limit ID"
+            ipv4addr:
+                description:
+                - "Specify IP address"
+            lsn_lid:
+                description:
+                - "LSN Limit ID (LID index)"
+            shared_partition_glid:
+                description:
+                - "Reference a glid from shared partition"
+            lsn_radius_profile:
+                description:
+                - "LSN RADIUS Profile Index"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     ac_list:
         description:
@@ -91,13 +106,13 @@ options:
         suboptions:
             ac_match_type:
                 description:
-                - "None"
+                - "'contains'= String contains another string; 'ends-with'= String ends with another string; 'equals'= String equals another string; 'starts-with'= String starts with another string; "
             ac_key_string:
                 description:
-                - "None"
+                - "Specify key string"
             ac_value:
                 description:
-                - "None"
+                - "Specify value string"
     str_list:
         description:
         - "Field str_list"
@@ -105,51 +120,62 @@ options:
         suboptions:
             str_lid:
                 description:
-                - "None"
+                - "LID index"
+            shared_partition_str_glid:
+                description:
+                - "Reference a glid from shared partition"
             value_str:
                 description:
-                - "None"
+                - "Specify value string"
+            str_glid_shared:
+                description:
+                - "Use global Limit ID"
             str_glid_dummy:
                 description:
-                - "None"
+                - "Use global Limit ID"
             str_glid:
                 description:
-                - "None"
+                - "Global LID index"
             str_lid_dummy:
                 description:
-                - "None"
+                - "Use Limit ID defined in template"
             str:
                 description:
-                - "None"
+                - "Specify key string"
     file:
         description:
-        - "None"
+        - "Create/Edit a class-list stored as a file"
         required: False
     ntype:
         description:
-        - "None"
+        - "'ac'= Make class-list type Aho-Corasick; 'dns'= Make class-list type DNS; 'ipv4'= Make class-list type IPv4; 'ipv6'= Make class-list type IPv6; 'string'= Make class-list type String; 'string-case-insensitive'= Make class-list type String-case-insensitive. Case insensitive is applied to key string; "
         required: False
     ipv6_list:
         description:
         - "Field ipv6_list"
         required: False
         suboptions:
-            v6_glid:
-                description:
-                - "None"
             v6_lsn_lid:
                 description:
-                - "None"
+                - "LSN Limit ID (LID index)"
+            v6_glid:
+                description:
+                - "Use global Limit ID (Specify global LID index)"
             ipv6_addr:
                 description:
-                - "None"
-            v6_lsn_radius_profile:
+                - "Specify IPv6 host or subnet"
+            v6_glid_shared:
                 description:
-                - "None"
+                - "Use global Limit ID"
             v6_lid:
                 description:
-                - "None"
-
+                - "Use Limit ID defined in template (Specify LID index)"
+            shared_partition_v6_glid:
+                description:
+                - "Reference a glid from shared partition"
+            v6_lsn_radius_profile:
+                description:
+                - "LSN RADIUS Profile Index"
 
 """
 
@@ -182,23 +208,27 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dns=dict(type='list',dns_glid=dict(type='int',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with']),dns_match_string=dict(type='str',),dns_lid=dict(type='int',)),
+        dns=dict(type='list',dns_match_string=dict(type='str',),dns_glid_shared=dict(type='int',),dns_glid=dict(type='int',),dns_lid=dict(type='int',),shared_partition_dns_glid=dict(type='bool',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
         name=dict(type='str',required=True,),
-        ipv4_list=dict(type='list',lid=dict(type='int',),lsn_lid=dict(type='int',),lsn_radius_profile=dict(type='int',),ipv4addr=dict(type='str',),glid=dict(type='int',)),
+        ipv4_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),glid_shared=dict(type='int',),ipv4addr=dict(type='str',),lsn_lid=dict(type='int',),shared_partition_glid=dict(type='bool',),lsn_radius_profile=dict(type='int',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         ac_list=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),ac_key_string=dict(type='str',),ac_value=dict(type='str',)),
-        str_list=dict(type='list',str_lid=dict(type='int',),value_str=dict(type='str',),str_glid_dummy=dict(type='bool',),str_glid=dict(type='int',),str_lid_dummy=dict(type='bool',),str=dict(type='str',)),
+        str_list=dict(type='list',str_lid=dict(type='int',),shared_partition_str_glid=dict(type='bool',),value_str=dict(type='str',),str_glid_shared=dict(type='int',),str_glid_dummy=dict(type='bool',),str_glid=dict(type='int',),str_lid_dummy=dict(type='bool',),str=dict(type='str',)),
         file=dict(type='bool',),
         ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive']),
-        ipv6_list=dict(type='list',v6_glid=dict(type='int',),v6_lsn_lid=dict(type='int',),ipv6_addr=dict(type='str',),v6_lsn_radius_profile=dict(type='int',),v6_lid=dict(type='int',))
+        ipv6_list=dict(type='list',v6_lsn_lid=dict(type='int',),v6_glid=dict(type='int',),ipv6_addr=dict(type='str',),v6_glid_shared=dict(type='int',),v6_lid=dict(type='int',),shared_partition_v6_glid=dict(type='bool',),v6_lsn_radius_profile=dict(type='int',))
     ))
+   
 
     return rv
 
@@ -206,6 +236,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/class-list/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -215,6 +246,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/class-list/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -237,7 +269,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -256,7 +288,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -267,7 +299,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -302,7 +334,8 @@ def create(module, result):
     payload = build_json("class-list", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -327,8 +360,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("class-list", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -348,6 +382,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("class-list", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -361,9 +411,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -377,6 +428,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
