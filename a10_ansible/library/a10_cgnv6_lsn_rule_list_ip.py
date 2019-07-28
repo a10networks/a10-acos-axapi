@@ -35,6 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    lsn_rule_list_name:
+        description:
+        - Key to identify parent object
     ipv4_addr:
         description:
         - "Configure a Specific Rule-Set (IP Network Address)"
@@ -75,7 +81,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -123,24 +128,33 @@ def get_argspec():
         user_tag=dict(type='str',),
         uuid=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        lsn_rule_list_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/ip/{ipv4-addr}"
+    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{lsn_rule_list_name}/ip/{ipv4-addr}"
+
     f_dict = {}
     f_dict["ipv4-addr"] = ""
+    f_dict["lsn_rule_list_name"] = module.params["lsn_rule_list_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{name}/ip/{ipv4-addr}"
+    url_base = "/axapi/v3/cgnv6/lsn-rule-list/{lsn_rule_list_name}/ip/{ipv4-addr}"
+
     f_dict = {}
-    f_dict["ipv4-addr"] = module.params["ipv4-addr"]
+    f_dict["ipv4-addr"] = module.params["ipv4_addr"]
+    f_dict["lsn_rule_list_name"] = module.params["lsn_rule_list_name"]
 
     return url_base.format(**f_dict)
 
@@ -161,7 +175,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -180,7 +194,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -191,7 +205,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -226,7 +240,8 @@ def create(module, result):
     payload = build_json("ip", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -251,8 +266,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ip", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -271,6 +287,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("ip", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

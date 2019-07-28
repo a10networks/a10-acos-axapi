@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_smtp
 description:
-    - None
+    - Show SMTP Statistics
 short_description: Configures A10 slb.smtp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'curr_proxy'= Current proxy conns; 'total_proxy'= Total proxy conns; 'request'= SMTP requests; 'request_success'= SMTP requests (success); 'no_proxy'= No proxy error; 'client_reset'= Client reset; 'server_reset'= Server reset; 'no_tuple'= No tuple error; 'parse_req_fail'= Parse request failure; 'server_select_fail'= Server selection failure; 'forward_req_fail'= Forward request failure; 'forward_req_data_fail'= Forward REQ data failure; 'req_retran'= Request retransmit; 'req_ofo'= Request pkt out-of-order; 'server_reselect'= Server reselection; 'server_prem_close'= Server premature close; 'new_server_conn'= Server connection made; 'snat_fail'= Source NAT failure; 'tcp_out_reset'= TCP out reset; 'recv_client_command_EHLO'= Recv client EHLO; 'recv_client_command_HELO'= Recv client HELO; 'recv_client_command_MAIL'= Recv client MAIL; 'recv_client_command_RCPT'= Recv client RCPT; 'recv_client_command_DATA'= Recv client DATA; 'recv_client_command_RSET'= Recv client RSET; 'recv_client_command_VRFY'= Recv client VRFY; 'recv_client_command_EXPN'= Recv client EXPN; 'recv_client_command_HELP'= Recv client HELP; 'recv_client_command_NOOP'= Recv client NOOP; 'recv_client_command_QUIT'= Recv client QUIT; 'recv_client_command_STARTTLS'= Recv client STARTTLS; 'recv_client_command_others'= Recv client other cmds; 'recv_server_service_not_ready'= Recv server serv-not-rdy; 'recv_server_unknow_reply_code'= Recv server unknown-code; 'send_client_service_ready'= Sent client serv-rdy; 'send_client_service_not_ready'= Sent client serv-not-rdy; 'send_client_close_connection'= Sent client close-conn; 'send_client_go_ahead'= Sent client go-ahead; 'send_client_start_TLS_first'= Sent client STARTTLS-1st; 'send_client_TLS_not_available'= Sent client TLS-not-aval; 'send_client_no_command'= Sent client no-such-cmd; 'send_server_cmd_reset'= Sent server RSET; 'TLS_established'= SSL session established; 'L4_switch'= L4 switching; 'Aflex_switch'= aFleX switching; 'Aflex_switch_ok'= aFleX switching (succ); 'client_domain_switch'= Client domain switching; 'client_domain_switch_ok'= Client domain sw (succ); 'LB_switch'= LB switching; 'LB_switch_ok'= LB switching (succ); 'read_request_line_fail'= Read request line fail; 'get_all_headers_fail'= Get all headers fail; 'too_many_headers'= Too many headers; 'line_too_long'= Line too long; 'line_across_packet'= Line across packets; 'line_extend'= Line extend; 'line_extend_fail'= Line extend fail; 'line_table_extend'= Table extend; 'line_table_extend_fail'= Table extend fail; 'parse_request_line_fail'= Parse request line fail; 'insert_resonse_line_fail'= Ins response line fail; 'remove_resonse_line_fail'= Del response line fail; 'parse_resonse_line_fail'= Parse response line fail; 'Aflex_lb_reselect'= aFleX lb reselect; 'Aflex_lb_reselect_ok'= aFleX lb reselect (succ); 'server_STARTTLS_init'= Init server side STARTTLS; 'server_STARTTLS_fail'= Server side STARTTLS fail; 'rserver_STARTTLS_disable'= real server not support STARTTLS; 'recv_client_command_TURN'= Recv client TURN; 'recv_client_command_ETRN'= Recv client ETRN; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,19 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','request','request_success','no_proxy','client_reset','server_reset','no_tuple','parse_req_fail','server_select_fail','forward_req_fail','forward_req_data_fail','req_retran','req_ofo','server_reselect','server_prem_close','new_server_conn','snat_fail','tcp_out_reset','recv_client_command_EHLO','recv_client_command_HELO','recv_client_command_MAIL','recv_client_command_RCPT','recv_client_command_DATA','recv_client_command_RSET','recv_client_command_VRFY','recv_client_command_EXPN','recv_client_command_HELP','recv_client_command_NOOP','recv_client_command_QUIT','recv_client_command_STARTTLS','recv_client_command_others','recv_server_service_not_ready','recv_server_unknow_reply_code','send_client_service_ready','send_client_service_not_ready','send_client_close_connection','send_client_go_ahead','send_client_start_TLS_first','send_client_TLS_not_available','send_client_no_command','send_server_cmd_reset','TLS_established','L4_switch','Aflex_switch','Aflex_switch_ok','client_domain_switch','client_domain_switch_ok','LB_switch','LB_switch_ok','read_request_line_fail','get_all_headers_fail','too_many_headers','line_too_long','line_across_packet','line_extend','line_extend_fail','line_table_extend','line_table_extend_fail','parse_request_line_fail','insert_resonse_line_fail','remove_resonse_line_fail','parse_resonse_line_fail','Aflex_lb_reselect','Aflex_lb_reselect_ok','server_STARTTLS_init','server_STARTTLS_fail','rserver_STARTTLS_disable'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','request','request_success','no_proxy','client_reset','server_reset','no_tuple','parse_req_fail','server_select_fail','forward_req_fail','forward_req_data_fail','req_retran','req_ofo','server_reselect','server_prem_close','new_server_conn','snat_fail','tcp_out_reset','recv_client_command_EHLO','recv_client_command_HELO','recv_client_command_MAIL','recv_client_command_RCPT','recv_client_command_DATA','recv_client_command_RSET','recv_client_command_VRFY','recv_client_command_EXPN','recv_client_command_HELP','recv_client_command_NOOP','recv_client_command_QUIT','recv_client_command_STARTTLS','recv_client_command_others','recv_server_service_not_ready','recv_server_unknow_reply_code','send_client_service_ready','send_client_service_not_ready','send_client_close_connection','send_client_go_ahead','send_client_start_TLS_first','send_client_TLS_not_available','send_client_no_command','send_server_cmd_reset','TLS_established','L4_switch','Aflex_switch','Aflex_switch_ok','client_domain_switch','client_domain_switch_ok','LB_switch','LB_switch_ok','read_request_line_fail','get_all_headers_fail','too_many_headers','line_too_long','line_across_packet','line_extend','line_extend_fail','line_table_extend','line_table_extend_fail','parse_request_line_fail','insert_resonse_line_fail','remove_resonse_line_fail','parse_resonse_line_fail','Aflex_lb_reselect','Aflex_lb_reselect_ok','server_STARTTLS_init','server_STARTTLS_fail','rserver_STARTTLS_disable','recv_client_command_TURN','recv_client_command_ETRN'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/slb/smtp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/slb/smtp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("smtp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("smtp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("smtp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -1164,7 +1164,6 @@ options:
         - "Password Phrase"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -1448,7 +1447,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -1569,12 +1568,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_zone_service_dns_a_record_dns_a_record_srv
 description:
-    - None
+    - Specify DNS Address Record
 short_description: Configures A10 gslb.zone.service.dns.a.record.dns-a-record-srv
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,25 +35,37 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    service-name:
+        description:
+        - Key to identify parent object
+    service_port:
+        description:
+        - Key to identify parent object
+    zone_name:
+        description:
+        - Key to identify parent object
     as_backup:
         description:
-        - "None"
+        - "As backup when fail"
         required: False
     as_replace:
         description:
-        - "None"
+        - "Return this Service-IP when enable ip-replace"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     weight:
         description:
-        - "None"
+        - "Specify weight for Service-IP (Weight value)"
         required: False
     svrname:
         description:
-        - "None"
+        - "Specify name"
         required: True
     sampling_enable:
         description:
@@ -62,28 +74,27 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'hits'= Number of times the record has been used; "
     disable:
         description:
-        - "None"
+        - "Disable this Service-IP"
         required: False
     static:
         description:
-        - "None"
+        - "Return this Service-IP in DNS server mode"
         required: False
     ttl:
         description:
-        - "None"
+        - "Specify TTL for Service-IP"
         required: False
     admin_ip:
         description:
-        - "None"
+        - "Specify admin priority of Service-IP (Specify the priority)"
         required: False
     no_resp:
         description:
-        - "None"
+        - "Don't use this Service-IP as DNS response"
         required: False
-
 
 """
 
@@ -116,7 +127,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -134,24 +148,39 @@ def get_argspec():
         admin_ip=dict(type='int',),
         no_resp=dict(type='bool',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        service-name=dict(type='str', required=True),
+        service_port=dict(type='str', required=True),
+        zone_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/zone/{name}/service/{service-port}+{service-name}/dns-a-record/dns-a-record-srv/{svrname}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-a-record/dns-a-record-srv/{svrname}"
+
     f_dict = {}
     f_dict["svrname"] = ""
+    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_port"] = module.params["service_port"]
+    f_dict["zone_name"] = module.params["zone_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/gslb/zone/{name}/service/{service-port}+{service-name}/dns-a-record/dns-a-record-srv/{svrname}"
+    url_base = "/axapi/v3/gslb/zone/{zone_name}/service/{service_port}+{service-name}/dns-a-record/dns-a-record-srv/{svrname}"
+
     f_dict = {}
     f_dict["svrname"] = module.params["svrname"]
+    f_dict["service-name"] = module.params["service_name"]
+    f_dict["service_port"] = module.params["service_port"]
+    f_dict["zone_name"] = module.params["zone_name"]
 
     return url_base.format(**f_dict)
 
@@ -172,7 +201,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -191,7 +220,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -202,7 +231,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -237,7 +266,8 @@ def create(module, result):
     payload = build_json("dns-a-record-srv", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -262,8 +292,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("dns-a-record-srv", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -283,6 +314,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("dns-a-record-srv", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -296,9 +343,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -312,6 +360,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

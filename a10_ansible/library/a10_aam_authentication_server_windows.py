@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_server_windows
 description:
-    - None
+    - 'Windows Server, using Kerberos or NTLM for authentication'
 short_description: Configures A10 aam.authentication.server.windows
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,10 +45,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'kerberos-request-send'= Total Kerberos Request; 'kerberos-response-get'= Total Kerberos Response; 'kerberos-timeout-error'= Total Kerberos Timeout; 'kerberos-other-error'= Total Kerberos Other Error; 'ntlm-authentication-success'= Total NTLM Authentication Success; 'ntlm-authentication-failure'= Total NTLM Authentication Failure; 'ntlm-proto-negotiation-success'= Total NTLM Protocol Negotiation Success; 'ntlm-proto-negotiation-failure'= Total NTLM Protocol Negotiation Failure; 'ntlm-session-setup-success'= Total NTLM Session Setup Success; 'ntlm-session-setup-failed'= Total NTLM Session Setup Failure; 'kerberos-request-normal'= Total Kerberos Normal Request; 'kerberos-request-dropped'= Total Kerberos Dropped Request; 'kerberos-response-success'= Total Kerberos Success Response; 'kerberos-response-failure'= Total Kerberos Failure Response; 'kerberos-response-error'= Total Kerberos Error Response; 'kerberos-response-timeout'= Total Kerberos Timeout Response; 'kerberos-response-other'= Total Kerberos Other Response; 'kerberos-job-start-error'= Total Kerberos Job Start Error; 'kerberos-polling-control-error'= Total Kerberos Polling Control Error; 'ntlm-prepare-req-success'= Total NTLM Prepare Request Success; 'ntlm-prepare-req-failed'= Total NTLM Prepare Request Failed; 'ntlm-timeout-error'= Total NTLM Timeout; 'ntlm-other-error'= Total NTLM Other Error; 'ntlm-request-normal'= Total NTLM Normal Request; 'ntlm-request-dropped'= Total NTLM Dropped Request; 'ntlm-response-success'= Total NTLM Success Response; 'ntlm-response-failure'= Total NTLM Failure Response; 'ntlm-response-error'= Total NTLM Error Response; 'ntlm-response-timeout'= Total NTLM Timeout Response; 'ntlm-response-other'= Total NTLM Other Response; 'ntlm-job-start-error'= Total NTLM Job Start Error; 'ntlm-polling-control-error'= Total NTLM Polling Control Error; 'kerberos-pw-expiry'= Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos password change success; 'kerberos-pw-change-failure'= Total Kerberos password change failure; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     instance_list:
         description:
@@ -54,13 +57,13 @@ options:
         suboptions:
             health_check_string:
                 description:
-                - "None"
+                - "Health monitor name"
             realm:
                 description:
-                - "None"
+                - "Specify realm of Windows server"
             name:
                 description:
-                - "None"
+                - "Specify Windows authentication server name"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
@@ -69,23 +72,22 @@ options:
                 - "Field host"
             timeout:
                 description:
-                - "None"
+                - "Specify connection timeout to server, default is 10 seconds"
             auth_protocol:
                 description:
                 - "Field auth_protocol"
             health_check_disable:
                 description:
-                - "None"
+                - "Disable configured health check configuration"
             support_apacheds_kdc:
                 description:
-                - "None"
+                - "Enable weak cipher (DES CRC/MD5/MD4) and merge AS-REQ in single packet"
             health_check:
                 description:
-                - "None"
+                - "Check server's health status"
             uuid:
                 description:
-                - "None"
-
+                - "uuid of the object"
 
 """
 
@@ -118,7 +120,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -128,6 +133,7 @@ def get_argspec():
         uuid=dict(type='str',),
         instance_list=dict(type='list',health_check_string=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),timeout=dict(type='int',),auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),health_check_disable=dict(type='bool',),support_apacheds_kdc=dict(type='bool',),health_check=dict(type='bool',),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -135,6 +141,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/server/windows"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -143,6 +150,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/server/windows"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -164,7 +172,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -183,7 +191,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -194,7 +202,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -229,7 +237,8 @@ def create(module, result):
     payload = build_json("windows", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -254,8 +263,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("windows", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -275,6 +285,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("windows", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -288,9 +314,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -304,6 +331,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

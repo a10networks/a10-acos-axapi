@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_visibility_reporting
 description:
-    - None
+    - Configure reporting framework
 short_description: Configures A10 visibility.reporting
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,14 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    reporting_db:
+    partition:
         description:
-        - "Field reporting_db"
-        required: False
-        suboptions:
-            elastic_search:
-                description:
-                - "Field elastic_search"
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -50,24 +45,30 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
-    session_logging:
-        description:
-        - "None"
-        required: False
+                - "'all'= all; 'log-transmit-failure'= Total log transmit failures; 'buffer-alloc-failure'= Total reporting buffer allocation failures; 'notif-jobs-in-queue'= Total notification jobs in queue; 'enqueue-fail'= Total enqueue jobs failed; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     template:
         description:
         - "Field template"
         required: False
         suboptions:
-            notification_list:
+            notification:
                 description:
-                - "Field notification_list"
-
+                - "Field notification"
+    telemetry_export_interval:
+        description:
+        - "Field telemetry_export_interval"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+            value:
+                description:
+                - "Monitored entity telemetry data export interval in mins (Default 5 mins)"
 
 """
 
@@ -81,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["reporting_db","sampling_enable","session_logging","template","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","telemetry_export_interval","template","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -100,18 +101,21 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        reporting_db=dict(type='dict',elastic_search=dict(type='dict',host_ipv6_address=dict(type='str',),use_mgmt_port=dict(type='bool',),local_host=dict(type='bool',),host_name=dict(type='str',),host_ipv4_address=dict(type='str',),http_port=dict(type='int',),http_protocol=dict(type='str',choices=['http','https']),uuid=dict(type='str',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log-transmit-failure','buffer-alloc-failure'])),
-        session_logging=dict(type='str',choices=['enable','disable']),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log-transmit-failure','buffer-alloc-failure','notif-jobs-in-queue','enqueue-fail'])),
         uuid=dict(type='str',),
-        template=dict(type='dict',notification_list=dict(type='list',protocol=dict(type='str',choices=['http','https']),name=dict(type='str',required=True,),use_mgmt_port=dict(type='bool',),user_tag=dict(type='str',),relative_uri=dict(type='str',),authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),host_name=dict(type='str',),ipv6_address=dict(type='str',),action=dict(type='str',choices=['enable','disable']),ipv4_address=dict(type='str',),port=dict(type='int',),uuid=dict(type='str',)))
+        template=dict(type='dict',notification=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),template_name_list=dict(type='list',protocol=dict(type='str',choices=['http','https']),name=dict(type='str',required=True,),use_mgmt_port=dict(type='bool',),https_port=dict(type='int',),debug_mode=dict(type='bool',),relative_uri=dict(type='str',),authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),api_key_encrypted=dict(type='str',),api_key=dict(type='bool',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),api_key_string=dict(type='str',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),host_name=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sent_successful','send_fail','response_fail'])),http_port=dict(type='int',),ipv6_address=dict(type='str',),test_connectivity=dict(type='bool',),ipv4_address=dict(type='str',),action=dict(type='str',choices=['enable','disable']),uuid=dict(type='str',)))),
+        telemetry_export_interval=dict(type='dict',uuid=dict(type='str',),value=dict(type='int',))
     ))
+   
 
     return rv
 
@@ -119,6 +123,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/visibility/reporting"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -127,6 +132,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/visibility/reporting"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -148,7 +154,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -167,7 +173,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -178,7 +184,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -213,7 +219,8 @@ def create(module, result):
     payload = build_json("reporting", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -238,8 +245,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("reporting", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -259,6 +267,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("reporting", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -272,9 +296,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -288,6 +313,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

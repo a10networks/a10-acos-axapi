@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_pki_scep_cert
 description:
-    - None
+    - SCEP Certificate enrollment object
 short_description: Configures A10 pki.scep-cert
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,41 +35,44 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     renew_every_type:
         description:
-        - "None"
+        - "'hour'= Periodic interval in hours; 'day'= Periodic interval in days; 'week'= Periodic interval in weeks; 'month'= Periodic interval in months(1 month=30 days); "
         required: False
     encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
         required: False
     log_level:
         description:
-        - "None"
+        - "level for logging output of scepclient commands(default 1 and detailed 4)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     renew_before_type:
         description:
-        - "None"
+        - "'hour'= Number of hours before cert expiry; 'day'= Number of days before cert expiry; 'week'= Number of weeks before cert expiry; 'month'= Number of months before cert expiry(1 month=30 days); "
         required: False
     renew_every:
         description:
-        - "None"
+        - "Specify periodic interval in which to renew the certificate"
         required: False
     key_length:
         description:
-        - "None"
+        - "'1024'= Key size 1024 bits; '2048'= Key size 2048 bits(default); '4096'= Key size 4096 bits; '8192'= Key size 8192 bits; "
         required: False
     method:
         description:
-        - "None"
+        - "'GET'= GET request; 'POST'= POST request; "
         required: False
     dn:
         description:
-        - "None"
+        - "Specify the Distinguished-Name to use while enrolling the certificate (Format= 'cn=user, dc=example, dc=com')"
         required: False
     subject_alternate_name:
         description:
@@ -78,59 +81,58 @@ options:
         suboptions:
             san_type:
                 description:
-                - "None"
+                - "'email'= Enter e-mail address of the subject; 'dns'= Enter hostname of the subject; 'ip'= Enter IP address of the subject; "
             san_value:
                 description:
-                - "None"
+                - "Value of subject-alternate-name"
     renew_every_value:
         description:
-        - "None"
+        - "Value of renewal period"
         required: False
     max_polltime:
         description:
-        - "None"
+        - "Maximum time in seconds to poll when SCEP response is PENDING (default 180)"
         required: False
     password:
         description:
-        - "None"
+        - "Specify the password used to enroll the device's certificate"
         required: False
     minute:
         description:
-        - "None"
+        - "Periodic interval in minutes"
         required: False
     secret_string:
         description:
-        - "None"
+        - "secret password"
         required: False
     enroll:
         description:
-        - "None"
+        - "Initiates enrollment of device with the CA"
         required: False
     renew_before_value:
         description:
-        - "None"
+        - "Value of renewal period"
         required: False
     name:
         description:
-        - "None"
+        - "Specify Certificate name to be enrolled"
         required: True
     url:
         description:
-        - "None"
+        - "Specify the Enrollment Agent's absolute URL (Format= http=//host/path)"
         required: False
     interval:
         description:
-        - "None"
+        - "Interval time in seconds to poll when SCEP response is PENDING (default 5)"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     renew_before:
         description:
-        - "None"
+        - "Specify interval before certificate expiry to renew the certificate"
         required: False
-
 
 """
 
@@ -163,7 +165,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -192,6 +197,7 @@ def get_argspec():
         user_tag=dict(type='str',),
         renew_before=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -199,6 +205,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/pki/scep-cert/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -208,6 +215,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/pki/scep-cert/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -230,7 +238,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -249,7 +257,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -260,7 +268,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -295,7 +303,8 @@ def create(module, result):
     payload = build_json("scep-cert", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -320,8 +329,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("scep-cert", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -341,6 +351,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("scep-cert", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -354,9 +380,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -370,6 +397,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

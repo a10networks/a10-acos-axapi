@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_scaleout_cluster
 description:
-    - None
+    - Configure scaleout cluster
 short_description: Configures A10 scaleout.cluster
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,11 +35,23 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     local_device:
         description:
         - "Field local_device"
         required: False
         suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+            session_sync_interface:
+                description:
+                - "Field session_sync_interface"
+            start_delay:
+                description:
+                - "Field start_delay"
             priority:
                 description:
                 - "Field priority"
@@ -49,28 +61,28 @@ options:
             id:
                 description:
                 - "Field id"
-            uuid:
-                description:
-                - "None"
     cluster_id:
         description:
-        - "None"
+        - "Scaleout cluster-id"
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     cluster_devices:
         description:
         - "Field cluster_devices"
         required: False
         suboptions:
+            cluster_discovery_timeout:
+                description:
+                - "Field cluster_discovery_timeout"
             device_id_list:
                 description:
                 - "Field device_id_list"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     follow_vcs:
         description:
         - "Field follow_vcs"
@@ -85,7 +97,7 @@ options:
                 - "Field device_group_list"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     service_config:
         description:
         - "Field service_config"
@@ -93,11 +105,18 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             template_list:
                 description:
                 - "Field template_list"
-
+    tracking_template:
+        description:
+        - "Field tracking_template"
+        required: False
+        suboptions:
+            template_list:
+                description:
+                - "Field template_list"
 
 """
 
@@ -111,7 +130,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cluster_devices","cluster_id","device_groups","follow_vcs","local_device","service_config","uuid",]
+AVAILABLE_PROPERTIES = ["cluster_devices","cluster_id","device_groups","follow_vcs","local_device","service_config","tracking_template","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -130,20 +149,25 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        local_device=dict(type='dict',priority=dict(type='int',),l2_redirect=dict(type='dict',ethernet_vlan=dict(type='int',),redirect_eth=dict(type='str',),redirect_trunk=dict(type='int',),trunk_vlan=dict(type='int',),uuid=dict(type='str',)),id=dict(type='int',),uuid=dict(type='str',)),
+        local_device=dict(type='dict',uuid=dict(type='str',),session_sync_interface=dict(type='dict',ve_cfg=dict(type='list',ve=dict(type='int',)),uuid=dict(type='str',),trunk_cfg=dict(type='list',trunk=dict(type='int',)),eth_cfg=dict(type='list',ethernet=dict(type='str',))),start_delay=dict(type='int',),priority=dict(type='int',),l2_redirect=dict(type='dict',ethernet_vlan=dict(type='int',),redirect_eth=dict(type='str',),redirect_trunk=dict(type='int',),trunk_vlan=dict(type='int',),uuid=dict(type='str',)),id=dict(type='int',)),
         cluster_id=dict(type='int',required=True,),
         uuid=dict(type='str',),
-        cluster_devices=dict(type='dict',device_id_list=dict(type='list',action=dict(type='str',choices=['enable','disable']),device_id=dict(type='int',required=True,),uuid=dict(type='str',),user_tag=dict(type='str',),ip=dict(type='str',)),uuid=dict(type='str',)),
+        cluster_devices=dict(type='dict',cluster_discovery_timeout=dict(type='dict',timer_val=dict(type='int',),uuid=dict(type='str',)),device_id_list=dict(type='list',action=dict(type='str',choices=['enable','disable']),device_id=dict(type='int',required=True,),uuid=dict(type='str',),user_tag=dict(type='str',),ip=dict(type='str',)),uuid=dict(type='str',)),
         follow_vcs=dict(type='bool',),
         device_groups=dict(type='dict',device_group_list=dict(type='list',device_group=dict(type='int',required=True,),device_id_list=dict(type='list',device_id_start=dict(type='int',),device_id_end=dict(type='int',)),uuid=dict(type='str',),user_tag=dict(type='str',)),uuid=dict(type='str',)),
-        service_config=dict(type='dict',uuid=dict(type='str',),template_list=dict(type='list',device_group=dict(type='int',),bucket_count=dict(type='int',),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)))
+        service_config=dict(type='dict',uuid=dict(type='str',),template_list=dict(type='list',device_group=dict(type='int',),bucket_count=dict(type='int',),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',))),
+        tracking_template=dict(type='dict',template_list=dict(type='list',uuid=dict(type='str',),threshold_cfg=dict(type='list',threshold=dict(type='int',),action=dict(type='str',choices=['down','exit-cluster'])),user_tag=dict(type='str',),template=dict(type='str',required=True,)))
     ))
+   
 
     return rv
 
@@ -151,6 +175,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/scaleout/cluster/{cluster-id}"
+
     f_dict = {}
     f_dict["cluster-id"] = ""
 
@@ -160,8 +185,9 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/scaleout/cluster/{cluster-id}"
+
     f_dict = {}
-    f_dict["cluster-id"] = module.params["cluster-id"]
+    f_dict["cluster-id"] = module.params["cluster_id"]
 
     return url_base.format(**f_dict)
 
@@ -182,7 +208,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -201,7 +227,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -212,7 +238,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -247,7 +273,8 @@ def create(module, result):
     payload = build_json("cluster", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -272,8 +299,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("cluster", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -293,6 +321,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("cluster", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -306,9 +350,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -322,6 +367,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

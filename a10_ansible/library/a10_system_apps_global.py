@@ -51,7 +51,6 @@ options:
         - "Send TCP session creation log on completion of 3-way handshake"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -165,7 +164,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

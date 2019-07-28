@@ -69,7 +69,6 @@ options:
                 description:
                 - "Ethernet interface (Port number)"
 
-
 """
 
 EXAMPLES = """
@@ -182,7 +181,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

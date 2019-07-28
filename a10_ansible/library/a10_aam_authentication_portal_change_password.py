@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_portal_change_password
 description:
-    - None
+    - Change password page configuration
 short_description: Configures A10 aam.authentication.portal.change-password
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,13 +35,19 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    portal_name:
+        description:
+        - Key to identify parent object
     action_url:
         description:
-        - "None"
+        - "Specify form action URL in default change password page (Default= /change.fo)"
         required: False
     username_var:
         description:
-        - "None"
+        - "Specify username variable name in default change password page (Default= cp_usr)"
         required: False
     new_pwd_cfg:
         description:
@@ -50,42 +56,42 @@ options:
         suboptions:
             new_password:
                 description:
-                - "None"
+                - "Configure new password text in default change password page"
             new_size:
                 description:
-                - "None"
+                - "Specify font size (Default= 3)"
             new_font:
                 description:
-                - "None"
+                - "Sepcify font (Default= Arial)"
             new_text:
                 description:
-                - "None"
+                - "Specify new password text (Default= New Password)"
             new_color:
                 description:
-                - "None"
+                - "Specify font color (Default= black)"
             new_color_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             new_color_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
             new_font_custom:
                 description:
-                - "None"
+                - "Specify custom font"
             new_face:
                 description:
-                - "None"
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia; 'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana; "
     submit_text:
         description:
-        - "None"
+        - "Specify submit button text in default change password page (Default= Submit)"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     confirm_password_var:
         description:
-        - "None"
+        - "Specify confirm password variable name in default change password page (Default= cp_cfm_pwd)"
         required: False
     title_cfg:
         description:
@@ -94,31 +100,31 @@ options:
         suboptions:
             title_color:
                 description:
-                - "None"
+                - "Specify font color (Default= black)"
             title:
                 description:
-                - "None"
+                - "Configure title in default change password page"
             title_color_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
             title_font_custom:
                 description:
-                - "None"
+                - "Specify custom font"
             title_face:
                 description:
-                - "None"
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia; 'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana; "
             title_color_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             title_size:
                 description:
-                - "None"
+                - "Specify font size (Default= 5)"
             title_text:
                 description:
-                - "None"
+                - "Specify title (Default= Please Change Your Password)"
             title_font:
                 description:
-                - "None"
+                - "Sepcify font (Default= Arial)"
     username_cfg:
         description:
         - "Field username_cfg"
@@ -126,34 +132,34 @@ options:
         suboptions:
             username:
                 description:
-                - "None"
+                - "Configure username text in default change password page"
             user_font:
                 description:
-                - "None"
+                - "Sepcify font (Default= Arial)"
             user_text:
                 description:
-                - "None"
+                - "Specify username text (Default= Username)"
             user_size:
                 description:
-                - "None"
+                - "Specify font size (Default= 3)"
             user_color_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             user_font_custom:
                 description:
-                - "None"
+                - "Specify custom font"
             user_color:
                 description:
-                - "None"
+                - "Specify font color (Default= black)"
             user_face:
                 description:
-                - "None"
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia; 'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana; "
             user_color_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
     new_password_var:
         description:
-        - "None"
+        - "Specify new password variable name in default change password page (Default= cp_new_pwd)"
         required: False
     old_pwd_cfg:
         description:
@@ -162,31 +168,31 @@ options:
         suboptions:
             old_face:
                 description:
-                - "None"
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia; 'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana; "
             old_color:
                 description:
-                - "None"
+                - "Specify font color (Default= black)"
             old_color_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             old_password:
                 description:
-                - "None"
+                - "Configure old password text in default change password page"
             old_color_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
             old_size:
                 description:
-                - "None"
+                - "Specify font size (Default= 3)"
             old_text:
                 description:
-                - "None"
+                - "Specify old password text (Default= Old Password)"
             old_font_custom:
                 description:
-                - "None"
+                - "Specify custom font"
             old_font:
                 description:
-                - "None"
+                - "Sepcify font (Default= Arial)"
     background:
         description:
         - "Field background"
@@ -194,19 +200,19 @@ options:
         suboptions:
             bgfile:
                 description:
-                - "None"
+                - "Specify background image filename"
             bgstyle:
                 description:
-                - "None"
+                - "'tile'= Tile; 'stretch'= Stretch; 'fit'= Fit; "
             bgcolor_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             bgcolor_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
     old_password_var:
         description:
-        - "None"
+        - "Specify old password variable name in default change password page (Default= cp_old_pwd)"
         required: False
     cfm_pwd_cfg:
         description:
@@ -215,36 +221,35 @@ options:
         suboptions:
             cfm_color_name:
                 description:
-                - "None"
+                - "'aqua'= aqua; 'black'= black; 'blue'= blue; 'fuchsia'= fuchsia; 'gray'= gray; 'green'= green; 'lime'= lime; 'maroon'= maroon; 'navy'= navy; 'olive'= olive; 'orange'= orange; 'purple'= purple; 'red'= red; 'silver'= silver; 'teal'= teal; 'white'= white; 'yellow'= yellow; "
             cfm_face:
                 description:
-                - "None"
+                - "'Arial'= Arial; 'Courier_New'= Courier New; 'Georgia'= Georgia; 'Times_New_Roman'= Times New Roman; 'Verdana'= Verdana; "
             cfm_color_value:
                 description:
-                - "None"
+                - "Specify 6-digit HEX color value"
             cfm_font_custom:
                 description:
-                - "None"
+                - "Specify custom font"
             cfm_size:
                 description:
-                - "None"
+                - "Specify font size (Default= 3)"
             cfm_font:
                 description:
-                - "None"
+                - "Sepcify font (Default= Arial)"
             cfm_text:
                 description:
-                - "None"
+                - "Specify confirm password text (Default= Confirm New Password)"
             confirm_password:
                 description:
-                - "None"
+                - "Configure confirm password text in default change password page"
             cfm_color:
                 description:
-                - "None"
+                - "Specify font color (Default= black)"
     reset_text:
         description:
-        - "None"
+        - "Specify reset button text in default change password page (Default= Reset)"
         required: False
-
 
 """
 
@@ -277,7 +282,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -298,22 +306,31 @@ def get_argspec():
         cfm_pwd_cfg=dict(type='dict',cfm_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),cfm_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),cfm_color_value=dict(type='str',),cfm_font_custom=dict(type='str',),cfm_size=dict(type='int',),cfm_font=dict(type='bool',),cfm_text=dict(type='str',),confirm_password=dict(type='bool',),cfm_color=dict(type='bool',)),
         reset_text=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        portal_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/authentication/portal/{name}/change-password"
+    url_base = "/axapi/v3/aam/authentication/portal/{portal_name}/change-password"
+
     f_dict = {}
+    f_dict["portal_name"] = module.params["portal_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/aam/authentication/portal/{name}/change-password"
+    url_base = "/axapi/v3/aam/authentication/portal/{portal_name}/change-password"
+
     f_dict = {}
+    f_dict["portal_name"] = module.params["portal_name"]
 
     return url_base.format(**f_dict)
 
@@ -334,7 +351,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -353,7 +370,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -364,7 +381,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -399,7 +416,8 @@ def create(module, result):
     payload = build_json("change-password", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -424,8 +442,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("change-password", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -445,6 +464,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("change-password", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -458,9 +493,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -474,6 +510,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

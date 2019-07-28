@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_sys_ut_event_action
 description:
-    - None
+    - Specify event parameters
 short_description: Configures A10 sys-ut.event.action
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,17 +35,23 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    event_number:
+        description:
+        - Key to identify parent object
     direction:
         description:
-        - "None"
+        - "'send'= Test event; 'expect'= Expected result; 'wait'= Introduce a delay; "
         required: True
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     drop:
         description:
-        - "None"
+        - "Packet drop. Only allowed for output spec"
         required: False
     udp:
         description:
@@ -54,25 +60,25 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             checksum:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             nat_pool:
                 description:
-                - "None"
+                - "Nat pool port"
             src_port:
                 description:
-                - "None"
+                - "Source port value"
             length:
                 description:
-                - "None"
+                - "Total packet length starting at UDP header"
             dest_port:
                 description:
-                - "None"
+                - "Dest port"
             dest_port_value:
                 description:
-                - "None"
+                - "Dest port value"
     tcp:
         description:
         - "Field tcp"
@@ -80,43 +86,43 @@ options:
         suboptions:
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             checksum:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             seq_number:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             nat_pool:
                 description:
-                - "None"
+                - "Nat pool port"
             src_port:
                 description:
-                - "None"
+                - "Source port value"
             urgent:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             window:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             ack_seq_number:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             flags:
                 description:
                 - "Field flags"
             dest_port:
                 description:
-                - "None"
+                - "Dest port"
             dest_port_value:
                 description:
-                - "None"
+                - "Dest port value"
             options:
                 description:
                 - "Field options"
     delay:
         description:
-        - "None"
+        - "Delay in seconds"
         required: False
     l2:
         description:
@@ -125,22 +131,22 @@ options:
         suboptions:
             protocol:
                 description:
-                - "None"
+                - "'arp'= arp; 'ipv4'= ipv4; 'ipv6'= ipv6; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ethertype:
                 description:
-                - "None"
+                - "L2 frame type"
             mac_list:
                 description:
                 - "Field mac_list"
             vlan:
                 description:
-                - "None"
+                - "Vlan ID on the packet. 0 is untagged"
             value:
                 description:
-                - "None"
+                - "ethertype number"
     l3:
         description:
         - "Field l3"
@@ -148,16 +154,16 @@ options:
         suboptions:
             protocol:
                 description:
-                - "None"
+                - "L4 Protocol"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             checksum:
                 description:
-                - "None"
+                - "'valid'= valid; 'invalid'= invalid; "
             value:
                 description:
-                - "None"
+                - "protocol number"
             ip_list:
                 description:
                 - "Field ip_list"
@@ -166,10 +172,10 @@ options:
                 - "Field ttl"
             ntype:
                 description:
-                - "None"
+                - "'tcp'= tcp; 'udp'= udp; 'icmp'= icmp; "
     template:
         description:
-        - "None"
+        - "Packet template"
         required: False
     ignore_validation:
         description:
@@ -178,22 +184,22 @@ options:
         suboptions:
             all:
                 description:
-                - "None"
+                - "Skip validation"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             l4:
                 description:
-                - "None"
+                - "Dont validate L4 header"
             l2:
                 description:
-                - "None"
+                - "Dont validate L2 header"
             l3:
                 description:
-                - "None"
+                - "Dont validate L3 header"
             l1:
                 description:
-                - "None"
+                - "Dont validate TX descriptor. This includes Tx port, Len & vlan"
     l1:
         description:
         - "Field l1"
@@ -204,20 +210,19 @@ options:
                 - "Field eth_list"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             auto:
                 description:
-                - "None"
+                - "Auto calculate pkt len"
             value:
                 description:
-                - "None"
+                - "Total packet length starting at L2 header"
             length:
                 description:
-                - "None"
+                - "packet length"
             trunk_list:
                 description:
                 - "Field trunk_list"
-
 
 """
 
@@ -250,7 +255,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -268,24 +276,33 @@ def get_argspec():
         ignore_validation=dict(type='dict',all=dict(type='bool',),uuid=dict(type='str',),l4=dict(type='bool',),l2=dict(type='bool',),l3=dict(type='bool',),l1=dict(type='bool',)),
         l1=dict(type='dict',eth_list=dict(type='list',ethernet_start=dict(type='str',),ethernet_end=dict(type='str',)),uuid=dict(type='str',),auto=dict(type='bool',),value=dict(type='int',),length=dict(type='bool',),trunk_list=dict(type='list',trunk_start=dict(type='int',),trunk_end=dict(type='int',)))
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        event_number=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/sys-ut/event/{event-number}/action/{direction}"
+    url_base = "/axapi/v3/sys-ut/event/{event_number}/action/{direction}"
+
     f_dict = {}
     f_dict["direction"] = ""
+    f_dict["event_number"] = module.params["event_number"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/sys-ut/event/{event-number}/action/{direction}"
+    url_base = "/axapi/v3/sys-ut/event/{event_number}/action/{direction}"
+
     f_dict = {}
     f_dict["direction"] = module.params["direction"]
+    f_dict["event_number"] = module.params["event_number"]
 
     return url_base.format(**f_dict)
 
@@ -306,7 +323,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -325,7 +342,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -336,7 +353,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -371,7 +388,8 @@ def create(module, result):
     payload = build_json("action", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -396,8 +414,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("action", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -417,6 +436,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("action", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -430,9 +465,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -446,6 +482,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

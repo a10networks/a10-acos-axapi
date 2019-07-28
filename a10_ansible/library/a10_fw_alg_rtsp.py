@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_alg_rtsp
 description:
-    - None
+    - Change Firewall RTSP ALG Settings
 short_description: Configures A10 fw.alg.rtsp
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     default_port_disable:
         description:
-        - "None"
+        - "'default-port-disable'= Disable RTSP ALG default port 554; "
         required: False
     sampling_enable:
         description:
@@ -46,12 +49,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'transport-inserted'= Transport Created; 'transport-freed'= Transport Freed; 'transport-alloc-failure'= Transport Alloc Failure; 'data-session-created'= Data Session Created; 'data-session-freed'= Data Session Freed; 'ext-creation-failure'= Extension Creation Failure; 'transport-add-to-ext'= Transport Added to Extension; 'transport-removed-from-ext'= Transport Removed from Extension; 'transport-too-many'= Too Many Transports for Control Conn; 'transport-already-in-ext'= Transport Already in Extension; 'transport-exists'= Transport Already Exists; 'transport-link-ext-failure-control'= Transport Link to Extension Failure Control; 'transport-link-ext-data'= Transport Link to Extension Data; 'transport-link-ext-failure-data'= Transport Link to Extension Failure Data; 'transport-inserted-shadow'= Transport Inserted Shadow; 'transport-creation-race'= Transport Create Race; 'transport-alloc-failure-shadow'= Transport Alloc Failure Shadow; 'transport-put-in-del-q'= Transport Put in Delete Queue; 'transport-freed-shadow'= Transport Freed Shadow; 'transport-acquired-from-control'= Transport Acquired Control; 'transport-found-from-prev-control'= Transport Found From Prev Control; 'transport-acquire-failure-from-control'= Transport Acquire Failure Control; 'transport-released-from-control'= Transport Released Control; 'transport-double-release-from-control'= Transport Double Release Control; 'transport-acquired-from-data'= Transport Acquired Data; 'transport-acquire-failure-from-data'= Transport Acquire Failure Data; 'transport-released-from-data'= Transport Released Data; 'transport-double-release-from-data'= Transport Double Release Data; 'transport-retry-lookup-on-data-free'= Transport Retry Lookup Data; 'transport-not-found-on-data-free'= Transport Not Found Data; 'data-session-created-shadow'= Data Session Created Shadow; 'data-session-freed-shadow'= Data Session Freed Shadow; 'ha-control-ext-creation-failure'= HA Control Extension Creation Failure; 'ha-control-session-created'= HA Control Session Created; 'ha-data-session-created'= HA Data Session Created; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -84,7 +86,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -94,6 +99,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','transport-inserted','transport-freed','transport-alloc-failure','data-session-created','data-session-freed','ext-creation-failure','transport-add-to-ext','transport-removed-from-ext','transport-too-many','transport-already-in-ext','transport-exists','transport-link-ext-failure-control','transport-link-ext-data','transport-link-ext-failure-data','transport-inserted-shadow','transport-creation-race','transport-alloc-failure-shadow','transport-put-in-del-q','transport-freed-shadow','transport-acquired-from-control','transport-found-from-prev-control','transport-acquire-failure-from-control','transport-released-from-control','transport-double-release-from-control','transport-acquired-from-data','transport-acquire-failure-from-data','transport-released-from-data','transport-double-release-from-data','transport-retry-lookup-on-data-free','transport-not-found-on-data-free','data-session-created-shadow','data-session-freed-shadow','ha-control-ext-creation-failure','ha-control-session-created','ha-data-session-created'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -101,6 +107,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/fw/alg/rtsp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -109,6 +116,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/fw/alg/rtsp"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -130,7 +138,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -149,7 +157,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -160,7 +168,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -195,7 +203,8 @@ def create(module, result):
     payload = build_json("rtsp", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -220,8 +229,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("rtsp", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -241,6 +251,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("rtsp", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -254,9 +280,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -270,6 +297,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

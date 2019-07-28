@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_service_group
 description:
-    - None
+    - Authentication service group
 short_description: Configures A10 aam.authentication.service-group
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,25 +35,28 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     health_check_disable:
         description:
-        - "None"
+        - "Disable health check"
         required: False
     protocol:
         description:
-        - "None"
+        - "'tcp'= TCP AAM service; 'udp'= UDP AAM service; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     lb_method:
         description:
-        - "None"
+        - "'round-robin'= Round robin on server level; "
         required: False
     sampling_enable:
         description:
@@ -62,7 +65,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'server_selection_fail_drop'= Drops due to Service selection failure; 'server_selection_fail_reset'= Resets sent out for Service selection failure; 'service_peak_conn'= Peak connection count for the Service Group; 'service_healthy_host'= Service Group healthy host count; 'service_unhealthy_host'= Service Group unhealthy host count; 'service_req_count'= Service Group request count; 'service_resp_count'= Service Group response count; 'service_resp_2xx'= Service Group response 2xx count; 'service_resp_3xx'= Service Group response 3xx count; 'service_resp_4xx'= Service Group response 4xx count; 'service_resp_5xx'= Service Group response 5xx count; 'service_curr_conn_overflow'= Current connection counter overflow count; "
     member_list:
         description:
         - "Field member_list"
@@ -70,34 +73,33 @@ options:
         suboptions:
             member_priority:
                 description:
-                - "None"
+                - "Priority of Port in the Group"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             member_state:
                 description:
-                - "None"
+                - "'enable'= Enable member service port; 'disable'= Disable member service port; "
             port:
                 description:
-                - "None"
+                - "Port number"
             name:
                 description:
-                - "None"
+                - "Member name"
     health_check:
         description:
-        - "None"
+        - "Health Check (Monitor Name)"
         required: False
     name:
         description:
-        - "None"
+        - "Specify AAM service group name"
         required: True
-
 
 """
 
@@ -130,7 +132,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -141,11 +146,12 @@ def get_argspec():
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         lb_method=dict(type='str',choices=['round-robin']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dummy'])),
-        member_list=dict(type='list',member_priority=dict(type='int',),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dummy'])),member_state=dict(type='str',choices=['enable','disable']),port=dict(type='int',required=True,),name=dict(type='str',required=True,)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn','service_healthy_host','service_unhealthy_host','service_req_count','service_resp_count','service_resp_2xx','service_resp_3xx','service_resp_4xx','service_resp_5xx','service_curr_conn_overflow'])),
+        member_list=dict(type='list',member_priority=dict(type='int',),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','curr_conn_overflow'])),member_state=dict(type='str',choices=['enable','disable']),port=dict(type='int',required=True,),name=dict(type='str',required=True,)),
         health_check=dict(type='str',),
         name=dict(type='str',required=True,)
     ))
+   
 
     return rv
 
@@ -153,6 +159,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/service-group/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -162,6 +169,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/service-group/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -184,7 +192,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -203,7 +211,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -214,7 +222,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -249,7 +257,8 @@ def create(module, result):
     payload = build_json("service-group", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -274,8 +283,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("service-group", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -295,6 +305,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("service-group", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -308,9 +334,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -324,6 +351,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

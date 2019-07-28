@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_aaa_policy_aaa_rule
 description:
-    - None
+    - Rules of AAA policy
 short_description: Configures A10 aam.aaa.policy.aaa-rule
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,21 +35,27 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    aaa_policy_name:
+        description:
+        - Key to identify parent object
     index:
         description:
-        - "None"
+        - "Specify AAA rule index"
         required: True
     match_encoded_uri:
         description:
-        - "None"
+        - "Enable URL decoding for URI matching"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     authorize_policy:
         description:
-        - "None"
+        - "Specify authorization policy to bind to the AAA rule"
         required: False
     uri:
         description:
@@ -58,13 +64,13 @@ options:
         suboptions:
             match_type:
                 description:
-                - "None"
+                - "'contains'= Match URI if request URI contains specified URI; 'ends-with'= Match URI if request URI ends with specified URI; 'equals'= Match URI if request URI equals specified URI; 'starts-with'= Match URI if request URI starts with specified URI; "
             uri_str:
                 description:
-                - "None"
+                - "Specify URI string"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     user_agent:
         description:
@@ -73,10 +79,10 @@ options:
         suboptions:
             user_agent_str:
                 description:
-                - "None"
+                - "Specify request User-Agent string"
             user_agent_match_type:
                 description:
-                - "None"
+                - "'contains'= Match request User-Agent header if it contains specified string; 'ends-with'= Match request User-Agent header if it ends with specified string; 'equals'= Match request User-Agent header if it equals specified string; 'starts-with'= Match request User-Agent header if it starts with specified string; "
     host:
         description:
         - "Field host"
@@ -84,10 +90,10 @@ options:
         suboptions:
             host_str:
                 description:
-                - "None"
+                - "Specify URI string"
             host_match_type:
                 description:
-                - "None"
+                - "'contains'= Match HOST if request HTTP HOST header contains specified hostname; 'ends-with'= Match HOST if request HTTP HOST header ends with specified hostname; 'equals'= Match HOST if request HTTP HOST header equals specified hostname; 'starts-with'= Match HOST if request HTTP HOST header starts with specified hostname; "
     access_list:
         description:
         - "Field access_list"
@@ -95,13 +101,13 @@ options:
         suboptions:
             acl_name:
                 description:
-                - "None"
+                - "'ip-name'= Apply an IP named access list; 'ipv6-name'= Apply an IPv6 named access list; "
             acl_id:
                 description:
-                - "None"
+                - "ACL id"
             name:
                 description:
-                - "None"
+                - "Specify Named Access List"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -109,24 +115,23 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total_count'= total_count; 'hit_deny'= hit_deny; 'hit_auth'= hit_auth; 'hit_bypass'= hit_bypass; "
     domain_name:
         description:
-        - "None"
+        - "Specify domain name to bind to the AAA rule (ex= a10networks.com, www.a10networks.com)"
         required: False
     authentication_template:
         description:
-        - "None"
+        - "Specify authentication template name to bind to the AAA rule"
         required: False
     action:
         description:
-        - "None"
+        - "'allow'= Allow traffic that matches this rule; 'deny'= Deny traffic that matches this rule; "
         required: False
     port:
         description:
-        - "None"
+        - "Specify port number for aaa-rule, default is 0 for all port numbers"
         required: False
-
 
 """
 
@@ -159,7 +164,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -180,24 +188,33 @@ def get_argspec():
         action=dict(type='str',choices=['allow','deny']),
         port=dict(type='int',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        aaa_policy_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/aam/aaa-policy/{name}/aaa-rule/{index}"
+    url_base = "/axapi/v3/aam/aaa-policy/{aaa_policy_name}/aaa-rule/{index}"
+
     f_dict = {}
     f_dict["index"] = ""
+    f_dict["aaa_policy_name"] = module.params["aaa_policy_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/aam/aaa-policy/{name}/aaa-rule/{index}"
+    url_base = "/axapi/v3/aam/aaa-policy/{aaa_policy_name}/aaa-rule/{index}"
+
     f_dict = {}
     f_dict["index"] = module.params["index"]
+    f_dict["aaa_policy_name"] = module.params["aaa_policy_name"]
 
     return url_base.format(**f_dict)
 
@@ -218,7 +235,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -237,7 +254,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -248,7 +265,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -283,7 +300,8 @@ def create(module, result):
     payload = build_json("aaa-rule", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -308,8 +326,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("aaa-rule", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -329,6 +348,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("aaa-rule", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -342,9 +377,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -358,6 +394,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

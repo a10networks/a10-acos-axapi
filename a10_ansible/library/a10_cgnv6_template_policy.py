@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
         - "uuid of the object"
@@ -70,7 +73,6 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-
 
 """
 
@@ -117,6 +119,7 @@ def get_argspec():
         user_tag=dict(type='str',),
         class_list=dict(type='dict',header_name=dict(type='str',),lid_list=dict(type='list',request_limit=dict(type='int',),conn_limit=dict(type='int',),lidnum=dict(type='int',required=True,),log=dict(type='bool',),dns64=dict(type='dict',prefix=dict(type='str',),exclusive_answer=dict(type='bool',),disable=dict(type='bool',)),interval=dict(type='int',),request_rate_limit=dict(type='int',),user_tag=dict(type='str',),conn_per=dict(type='int',),request_per=dict(type='int',),conn_rate_limit=dict(type='int',),lockout=dict(type='int',),action_value=dict(type='str',choices=['forward','reset']),over_limit_action=dict(type='bool',),uuid=dict(type='str',)),name=dict(type='str',),client_ip_l3_dest=dict(type='bool',),client_ip_l7_header=dict(type='bool',),uuid=dict(type='str',))
     ))
+   
 
     return rv
 
@@ -124,6 +127,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/template/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -133,6 +137,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/template/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -155,7 +160,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -174,7 +179,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -185,7 +190,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -220,7 +225,8 @@ def create(module, result):
     payload = build_json("policy", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -245,8 +251,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("policy", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -265,6 +272,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("policy", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_file_inspection_global_stat
 description:
-    - None
+    - global stats
 short_description: Configures A10 file.inspection.global-stat
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -42,12 +45,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'download_bad_blocked'= Download malware blocked; 'download_bad_allowed'= Download malware allowed; 'download_bad_ext_inspect'= Download malware extrnal inspect; 'download_suspect_blocked'= Download suspect blocked; 'download_suspect_ext_inspect'= Download suspect extrnal inspect; 'download_suspect_allowed'= Download suspect allowed; 'download_good_blocked'= Download safe blocked; 'download_good_allowed'= Download safe external inspect; 'download_good_ext_inspect'= Download safe allowed; 'upload_bad_blocked'= Upload malware blocked; 'upload_bad_allowed'= Upload malware allowed; 'upload_bad_ext_inspect'= Upload malware extrnal inspect; 'upload_suspect_blocked'= Upload suspect blocked; 'upload_suspect_ext_inspect'= Upload suspect extrnal inspect; 'upload_suspect_allowed'= Upload suspect allowed; 'upload_good_blocked'= Upload safe blocked; 'upload_good_ext_inspect'= Upload safe external inspect; 'upload_good_allowed'= Upload safe allowed; 'icap_200'= Receive icap status 200; 'icap_204'= Receive icap status 204; 'icap_500'= Receive icap status 500; 'icap_other_status_code'= Receive icap other status code; 'icap_connect_fail'= Icap connect fail; 'icap_connection_created'= Icap connection created; 'icap_connection_established'= Icap connection established; 'icap_connection_closed'= Icap connection closed; 'icap_connection_rst'= Icap connection rst; 'icap_bytes_sent'= Icap bytes sent; 'icap_bytes_received'= Icap bytes received; 'bypass_aflex'= Bypassed by aflex; 'bypass_large_file'= Bypassed - large file size; 'bypass_service_disabled'= Bypassed - Internal service disabled; 'bypass_service_down'= Bypassed - Internal service down; 'reset_service_down'= Reset - Internal service down; 'bypass_max_concurrent_files_reached'= Bypassed - max concurrent files on server reached; 'bypass_non_inspection'= Bypassed non inspection data; 'non_supported_file'= Non supported file type; 'transactions_alloc'= Total transactions allocated; 'transactions_free'= Total transactions freed; 'transactions_failure'= Total transactions failure; 'transactions_aborted'= Total transactions aborted; 'orig_conn_bytes_received'= Original connection bytes received; 'orig_conn_bytes_sent'= Original connection bytes sent; 'orig_conn_bytes_bypassed'= Original connection bytes bypassed; 'bypass_buffered_overlimit'= Total Bytes Buffered Overlimit; 'total_bandwidth'= Total File Bytes; 'total_suspect_bandwidth'= Total Suspected Files Bytes; 'total_bad_bandwidth'= Total Bad Files Bytes; 'total_good_bandwidth'= Total Good Files Bytes; 'total_file_size_less_1m'= Total Files Less than 1Mb; 'total_file_size_1_5m'= Total Files Between 1-5Mb; 'total_file_size_5_8m'= Total Files Between 5-8Mb; 'total_file_size_8_32m'= Total Files Between 8-32Mb; 'total_file_size_over_32m'= Total Files over 32Mb; 'suspect_file_size_less_1m'= Suspect Files Less than 1Mb; 'suspect_file_size_1_5m'= Suspect Files Between 1-5Mb; 'suspect_file_size_5_8m'= Suspect Files Between 5-8Mb; 'suspect_file_size_8_32m'= Suspect Files Between 8-32Mb; 'suspect_file_size_over_32m'= Suspect Files over 32Mb; 'good_file_size_less_1m'= Good Files Less than 1Mb; 'good_file_size_1_5m'= Good Files Between 1-5Mb; 'good_file_size_5_8m'= Good Files Between 5-8Mb; 'good_file_size_8_32m'= Good Files Between 8-32Mb; 'good_file_size_over_32m'= Good Files over 32Mb; 'bad_file_size_less_1m'= Bad Files Less than 1Mb; 'bad_file_size_1_5m'= Bad Files Between 1-5Mb; 'bad_file_size_5_8m'= Bad Files Between 5-8Mb; 'bad_file_size_8_32m'= Bad Files Between 8-32Mb; 'bad_file_size_over_32m'= Bad Files over 32Mb; "
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -80,15 +82,19 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','file_inspection_download_bad_blocked','file_inspection_download_bad_allowed','file_inspection_download_bad_ext_inspect','file_inspection_download_suspect_blocked','file_inspection_download_suspect_ext_inspect','file_inspection_download_suspect_allowed','file_inspection_download_good_blocked','file_inspection_download_good_allowed','file_inspection_download_good_ext_inspect','file_inspection_upload_bad_blocked','file_inspection_upload_bad_allowed','file_inspection_upload_bad_ext_inspect','file_inspection_upload_suspect_blocked','file_inspection_upload_suspect_ext_inspect','file_inspection_upload_suspect_allowed','file_inspection_upload_good_blocked','file_inspection_upload_good_ext_inspect','file_inspection_upload_good_allowed','file_inspection_icap_200','file_inspection_icap_204','file_inspection_icap_500','file_inspection_icap_other_status_code','file_inspection_icap_connect_fail','file_inspection_icap_connection_created','file_inspection_icap_connection_established','file_inspection_icap_connection_closed','file_inspection_icap_connection_rst','file_inspection_icap_bytes_sent','file_inspection_icap_bytes_received','file_inspection_bypass_aflex','file_inspection_bypass_large_file','file_inspection_bypass_service_disabled','file_inspection_bypass_service_down','file_inspection_reset_service_down','file_inspection_bypass_max_concurrent_files_reached','file_inspection_bypass_max_concurrent_files_reached','file_inspection_transactions_alloc','file_inspection_transactions_free','file_inspection_transactions_failure'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','download_bad_blocked','download_bad_allowed','download_bad_ext_inspect','download_suspect_blocked','download_suspect_ext_inspect','download_suspect_allowed','download_good_blocked','download_good_allowed','download_good_ext_inspect','upload_bad_blocked','upload_bad_allowed','upload_bad_ext_inspect','upload_suspect_blocked','upload_suspect_ext_inspect','upload_suspect_allowed','upload_good_blocked','upload_good_ext_inspect','upload_good_allowed','icap_200','icap_204','icap_500','icap_other_status_code','icap_connect_fail','icap_connection_created','icap_connection_established','icap_connection_closed','icap_connection_rst','icap_bytes_sent','icap_bytes_received','bypass_aflex','bypass_large_file','bypass_service_disabled','bypass_service_down','reset_service_down','bypass_max_concurrent_files_reached','bypass_non_inspection','non_supported_file','transactions_alloc','transactions_free','transactions_failure','transactions_aborted','orig_conn_bytes_received','orig_conn_bytes_sent','orig_conn_bytes_bypassed','bypass_buffered_overlimit','total_bandwidth','total_suspect_bandwidth','total_bad_bandwidth','total_good_bandwidth','total_file_size_less_1m','total_file_size_1_5m','total_file_size_5_8m','total_file_size_8_32m','total_file_size_over_32m','suspect_file_size_less_1m','suspect_file_size_1_5m','suspect_file_size_5_8m','suspect_file_size_8_32m','suspect_file_size_over_32m','good_file_size_less_1m','good_file_size_1_5m','good_file_size_5_8m','good_file_size_8_32m','good_file_size_over_32m','bad_file_size_less_1m','bad_file_size_1_5m','bad_file_size_5_8m','bad_file_size_8_32m','bad_file_size_over_32m'])),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -96,6 +102,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/file-inspection/global-stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -104,6 +111,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/file-inspection/global-stat"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,7 +133,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -144,7 +152,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -155,7 +163,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -190,7 +198,8 @@ def create(module, result):
     payload = build_json("global-stat", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -215,8 +224,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("global-stat", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -236,6 +246,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("global-stat", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -249,9 +275,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -265,6 +292,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

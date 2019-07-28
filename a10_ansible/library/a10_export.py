@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_export
 description:
-    - None
+    - Put files to remote site
 short_description: Configures A10 export
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,121 +35,144 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     geo_location:
         description:
-        - "None"
+        - "Geo-location CSV File"
         required: False
     ssl_cert_key:
         description:
-        - "None"
+        - "Local SSL Key/Certificate file name"
         required: False
     bw_list:
         description:
-        - "None"
+        - "Black white List File"
         required: False
     lw_4o6:
         description:
-        - "None"
+        - "LW-4over6 Binding Table File"
         required: False
     tgz:
         description:
-        - "None"
+        - "Export the merged pcap in .tgz format"
         required: False
     merged_pcap:
         description:
-        - "None"
+        - "Export the merged pcap file when there are multiple Export sessions"
+        required: False
+    ip_map_list:
+        description:
+        - "IP Map List File"
         required: False
     syslog:
         description:
-        - "None"
+        - "Enter 'messages' as the default syslog file name"
         required: False
     use_mgmt_port:
         description:
-        - "None"
+        - "Use management port as source port"
         required: False
     auth_portal:
         description:
-        - "None"
+        - "Portal file for http authentication"
+        required: False
+    auth_jwks:
+        description:
+        - "Json web key"
         required: False
     fixed_nat_archive:
         description:
-        - "None"
+        - "Fixed NAT Port Mapping Archive File"
         required: False
     aflex:
         description:
-        - "None"
+        - "aFleX Script Source File"
         required: False
     fixed_nat:
         description:
-        - "None"
+        - "Fixed NAT Port Mapping File"
         required: False
     saml_idp_name:
         description:
-        - "None"
+        - "SAML metadata of identity provider"
         required: False
     thales_kmdata:
         description:
-        - "None"
+        - "Thales Kmdata files"
         required: False
     per_cpu:
         description:
-        - "None"
+        - "Export the per-cpu files along with the merged pcap file in .tgz format"
         required: False
     debug_monitor:
         description:
-        - "None"
+        - "Debug Monitor Output"
         required: False
     policy:
         description:
-        - "None"
+        - "WAF policy File"
         required: False
     lw_4o6_binding_table_validation_log:
         description:
-        - "None"
+        - "LW-4over6 Binding Table Validation Log File"
         required: False
-    thales_secworld:
+    file_inspection_bw_list:
         description:
-        - "None"
+        - "Black white List File"
+        required: False
+    running_config:
+        description:
+        - "Running Config"
         required: False
     csr:
         description:
-        - "None"
+        - "Certificate Signing Request"
         required: False
     auth_portal_image:
         description:
-        - "None"
+        - "Image file for default portal"
         required: False
     ssl_crl:
         description:
-        - "None"
+        - "SSL Crl File"
         required: False
     class_list:
         description:
-        - "None"
+        - "Class List File"
         required: False
     status_check:
         description:
-        - "None"
+        - "check export task status"
+        required: False
+    visibility:
+        description:
+        - "Export Visibility module related files"
         required: False
     dnssec_ds:
         description:
-        - "None"
+        - "DNSSEC DS file for child zone"
         required: False
     profile:
         description:
-        - "None"
+        - "Startup-config Profile"
+        required: False
+    mon_entity_debug_file:
+        description:
+        - "Enter Mon entity debug file name"
         required: False
     local_uri_file:
         description:
-        - "None"
+        - "Local URI files for http response"
         required: False
     wsdl:
         description:
-        - "None"
+        - "Web Services Definition Language File"
         required: False
     ssl_key:
         description:
-        - "None"
+        - "SSL Key File"
         required: False
     store:
         description:
@@ -158,57 +181,56 @@ options:
         suboptions:
             create:
                 description:
-                - "None"
+                - "Create an export store profile"
             name:
                 description:
-                - "None"
+                - "profile name to store remote url"
             remote_file:
                 description:
                 - "Field remote_file"
             delete:
                 description:
-                - "None"
+                - "Delete an export store profile"
     externalfilename:
         description:
-        - "None"
+        - "Export the External Program from the System"
         required: False
     remote_file:
         description:
-        - "None"
+        - "profile name for remote url"
         required: False
     store_name:
         description:
-        - "None"
+        - "Export store name"
         required: False
     ca_cert:
         description:
-        - "None"
+        - "CA Cert File"
         required: False
     axdebug:
         description:
-        - "None"
+        - "AX Debug Packet File"
         required: False
-    running_config:
+    thales_secworld:
         description:
-        - "None"
+        - "Thales security world files"
         required: False
     xml_schema:
         description:
-        - "None"
+        - "XML-Schema File"
         required: False
     startup_config:
         description:
-        - "None"
+        - "Startup Config"
         required: False
     ssl_cert:
         description:
-        - "None"
+        - "SSL Cert File"
         required: False
     dnssec_dnskey:
         description:
-        - "None"
+        - "DNSSEC DNSKEY(KSK) file for child zone"
         required: False
-
 
 """
 
@@ -222,7 +244,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex","auth_portal","auth_portal_image","axdebug","bw_list","ca_cert","class_list","csr","debug_monitor","dnssec_dnskey","dnssec_ds","externalfilename","fixed_nat","fixed_nat_archive","geo_location","local_uri_file","lw_4o6","lw_4o6_binding_table_validation_log","merged_pcap","per_cpu","policy","profile","remote_file","running_config","saml_idp_name","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","startup_config","status_check","store","store_name","syslog","tgz","thales_kmdata","thales_secworld","use_mgmt_port","wsdl","xml_schema",]
+AVAILABLE_PROPERTIES = ["aflex","auth_jwks","auth_portal","auth_portal_image","axdebug","bw_list","ca_cert","class_list","csr","debug_monitor","dnssec_dnskey","dnssec_ds","externalfilename","file_inspection_bw_list","fixed_nat","fixed_nat_archive","geo_location","ip_map_list","local_uri_file","lw_4o6","lw_4o6_binding_table_validation_log","merged_pcap","mon_entity_debug_file","per_cpu","policy","profile","remote_file","running_config","saml_idp_name","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","startup_config","status_check","store","store_name","syslog","tgz","thales_kmdata","thales_secworld","use_mgmt_port","visibility","wsdl","xml_schema",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -241,7 +263,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -253,9 +278,11 @@ def get_argspec():
         lw_4o6=dict(type='str',),
         tgz=dict(type='bool',),
         merged_pcap=dict(type='bool',),
+        ip_map_list=dict(type='str',),
         syslog=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
         auth_portal=dict(type='str',),
+        auth_jwks=dict(type='str',),
         fixed_nat_archive=dict(type='str',),
         aflex=dict(type='str',),
         fixed_nat=dict(type='str',),
@@ -265,14 +292,17 @@ def get_argspec():
         debug_monitor=dict(type='str',),
         policy=dict(type='str',),
         lw_4o6_binding_table_validation_log=dict(type='str',),
-        thales_secworld=dict(type='str',),
+        file_inspection_bw_list=dict(type='str',),
+        running_config=dict(type='bool',),
         csr=dict(type='str',),
         auth_portal_image=dict(type='str',),
         ssl_crl=dict(type='str',),
         class_list=dict(type='str',),
         status_check=dict(type='bool',),
+        visibility=dict(type='bool',),
         dnssec_ds=dict(type='str',),
         profile=dict(type='str',),
+        mon_entity_debug_file=dict(type='str',),
         local_uri_file=dict(type='str',),
         wsdl=dict(type='str',),
         ssl_key=dict(type='str',),
@@ -282,12 +312,13 @@ def get_argspec():
         store_name=dict(type='str',),
         ca_cert=dict(type='str',),
         axdebug=dict(type='str',),
-        running_config=dict(type='bool',),
+        thales_secworld=dict(type='str',),
         xml_schema=dict(type='str',),
         startup_config=dict(type='bool',),
         ssl_cert=dict(type='str',),
         dnssec_dnskey=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -295,6 +326,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/export"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -303,6 +335,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/export"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -324,7 +357,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -343,7 +376,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -354,7 +387,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -389,7 +422,8 @@ def create(module, result):
     payload = build_json("export", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -414,8 +448,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("export", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -435,6 +470,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("export", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -448,9 +499,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -464,6 +516,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_policy_dns
 description:
-    - None
+    - DNS related policy
 short_description: Configures A10 gslb.policy.dns
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,105 +35,111 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    policy_name:
+        description:
+        - Key to identify parent object
     server_mode_only:
         description:
-        - "None"
+        - "Only run GSLB as DNS server mode"
         required: False
     external_soa:
         description:
-        - "None"
+        - "Return DNS response with external SOA Record"
         required: False
     server_sec:
         description:
-        - "None"
+        - "Provide DNSSEC support"
         required: False
     sticky_ipv6_mask:
         description:
-        - "None"
+        - "Specify IPv6 mask length, default is 128"
         required: False
     sticky:
         description:
-        - "None"
+        - "Make DNS Record sticky for certain time"
         required: False
     delegation:
         description:
-        - "None"
+        - "Zone Delegation"
         required: False
     active_only_fail_safe:
         description:
-        - "None"
+        - "Continue if no candidate"
         required: False
     cname_detect:
         description:
-        - "None"
+        - "Apply GSLB for DNS Server response when service is Canonical Name (CNAME)"
         required: False
     ttl:
         description:
-        - "None"
+        - "Specify the TTL value contained in DNS record (TTL value, unit= second, default is 10)"
         required: False
     dynamic_preference:
         description:
-        - "None"
+        - "Make dynamically change the preference"
         required: False
     use_server_ttl:
         description:
-        - "None"
+        - "Use DNS Server Response TTL value in GSLB Proxy mode"
         required: False
     server_ptr:
         description:
-        - "None"
+        - "Provide PTR Records"
         required: False
     selected_only:
         description:
-        - "None"
+        - "Only keep selected servers"
         required: False
     ip_replace:
         description:
-        - "None"
+        - "Replace DNS Server Response with GSLB Service-IPs"
         required: False
     dns_addition_mx:
         description:
-        - "None"
+        - "Append MX Records in Addition Section"
         required: False
     backup_alias:
         description:
-        - "None"
+        - "Return alias name when fail"
         required: False
     server_any:
         description:
-        - "None"
+        - "Provide All Records"
         required: False
     hint:
         description:
-        - "None"
+        - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'= Append Hint Records in DNS Addition Section; "
         required: False
     cache:
         description:
-        - "None"
+        - "Cache DNS Server response"
         required: False
     external_ip:
         description:
-        - "None"
+        - "Return DNS response with external IP address"
         required: False
     server_txt:
         description:
-        - "None"
+        - "Provide TXT Records"
         required: False
     server_addition_mx:
         description:
-        - "None"
+        - "Append MX Records in Addition Section"
         required: False
     aging_time:
         description:
-        - "None"
+        - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time, default 0 means using TTL in DNS record as aging time)"
         required: False
     block_action:
         description:
-        - "None"
+        - "Specify Action"
         required: False
     template:
         description:
-        - "None"
+        - "Logging template (Logging Template Name)"
         required: False
     ipv6:
         description:
@@ -142,33 +148,33 @@ options:
         suboptions:
             dns_ipv6_mapping_type:
                 description:
-                - "None"
+                - "'addition'= Append Mapped Record in DNS Addition Section; 'answer'= Append Mapped Record in DNS Answer Section; 'exclusive'= Only return AAAA Record; 'replace'= Replace Record with Mapped Record; "
             dns_ipv6_option:
                 description:
-                - "None"
+                - "'mix'= Return both AAAA Record and A Record; 'smart'= Return AAAA Record by DNS Query Type; 'mapping'= Map A Record to AAAA Record; "
     selected_only_value:
         description:
-        - "None"
+        - "Answer Number"
         required: False
     geoloc_action:
         description:
-        - "None"
+        - "Apply DNS action by geo-location"
         required: False
     server_ns:
         description:
-        - "None"
+        - "Provide NS Records"
         required: False
     action_type:
         description:
-        - "None"
+        - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
         required: False
     server_naptr:
         description:
-        - "None"
+        - "Provide NAPTR Records"
         required: False
     active_only:
         description:
-        - "None"
+        - "Only keep active servers"
         required: False
     block_value:
         description:
@@ -177,30 +183,34 @@ options:
         suboptions:
             block_value:
                 description:
-                - "None"
+                - "Specify Type Number"
     server_srv:
         description:
-        - "None"
+        - "Provide SRV Records"
         required: False
     server_auto_ptr:
         description:
-        - "None"
+        - "Provide PTR Records automatically"
         required: False
     server_cname:
         description:
-        - "None"
+        - "Provide CNAME Records"
         required: False
     server_authoritative:
         description:
-        - "None"
+        - "As authoritative server"
         required: False
     server_full_list:
         description:
-        - "None"
+        - "Append All A Records in Authoritative Section"
+        required: False
+    server_any_with_metric:
+        description:
+        - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
         required: False
     dns_auto_map:
         description:
-        - "None"
+        - "Automatically build DNS Infrastructure"
         required: False
     block_type:
         description:
@@ -208,51 +218,51 @@ options:
         required: False
     sticky_mask:
         description:
-        - "None"
+        - "Specify IP mask, default is /32"
         required: False
     geoloc_alias:
         description:
-        - "None"
+        - "Return alias name by geo-location"
         required: False
     logging:
         description:
-        - "None"
+        - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS Query and Response; "
         required: False
     backup_server:
         description:
-        - "None"
+        - "Return fallback server when fail"
         required: False
     sticky_aging_time:
         description:
-        - "None"
+        - "Specify aging-time, unit= min, default is 5 (Aging time)"
         required: False
     geoloc_policy:
         description:
-        - "None"
+        - "Apply different policy by geo-location"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     server:
         description:
-        - "None"
+        - "Run GSLB as DNS server mode"
         required: False
     dynamic_weight:
         description:
-        - "None"
+        - "dynamically change the weight"
         required: False
     server_ns_list:
         description:
-        - "None"
+        - "Append All NS Records in Authoritative Section"
         required: False
     server_auto_ns:
         description:
-        - "None"
+        - "Provide A-Records for NS-Records automatically"
         required: False
     action:
         description:
-        - "None"
+        - "Apply DNS action for service"
         required: False
     proxy_block_port_range_list:
         description:
@@ -261,15 +271,14 @@ options:
         suboptions:
             proxy_block_range_from:
                 description:
-                - "None"
+                - "Specify Type Range (From)"
             proxy_block_range_to:
                 description:
-                - "None"
+                - "To"
     server_mx:
         description:
-        - "None"
+        - "Provide MX Records"
         required: False
-
 
 """
 
@@ -283,7 +292,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","action_type","active_only","active_only_fail_safe","aging_time","backup_alias","backup_server","block_action","block_type","block_value","cache","cname_detect","delegation","dns_addition_mx","dns_auto_map","dynamic_preference","dynamic_weight","external_ip","external_soa","geoloc_action","geoloc_alias","geoloc_policy","hint","ip_replace","ipv6","logging","proxy_block_port_range_list","selected_only","selected_only_value","server","server_addition_mx","server_any","server_authoritative","server_auto_ns","server_auto_ptr","server_cname","server_full_list","server_mode_only","server_mx","server_naptr","server_ns","server_ns_list","server_ptr","server_sec","server_srv","server_txt","sticky","sticky_aging_time","sticky_ipv6_mask","sticky_mask","template","ttl","use_server_ttl","uuid",]
+AVAILABLE_PROPERTIES = ["action","action_type","active_only","active_only_fail_safe","aging_time","backup_alias","backup_server","block_action","block_type","block_value","cache","cname_detect","delegation","dns_addition_mx","dns_auto_map","dynamic_preference","dynamic_weight","external_ip","external_soa","geoloc_action","geoloc_alias","geoloc_policy","hint","ip_replace","ipv6","logging","proxy_block_port_range_list","selected_only","selected_only_value","server","server_addition_mx","server_any","server_any_with_metric","server_authoritative","server_auto_ns","server_auto_ptr","server_cname","server_full_list","server_mode_only","server_mx","server_naptr","server_ns","server_ns_list","server_ptr","server_sec","server_srv","server_txt","sticky","sticky_aging_time","sticky_ipv6_mask","sticky_mask","template","ttl","use_server_ttl","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -302,7 +311,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -346,6 +358,7 @@ def get_argspec():
         server_cname=dict(type='bool',),
         server_authoritative=dict(type='bool',),
         server_full_list=dict(type='bool',),
+        server_any_with_metric=dict(type='bool',),
         dns_auto_map=dict(type='bool',),
         block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),
         sticky_mask=dict(type='str',),
@@ -363,22 +376,31 @@ def get_argspec():
         proxy_block_port_range_list=dict(type='list',proxy_block_range_from=dict(type='int',),proxy_block_range_to=dict(type='int',)),
         server_mx=dict(type='bool',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        policy_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/gslb/policy/{name}/dns"
+    url_base = "/axapi/v3/gslb/policy/{policy_name}/dns"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/gslb/policy/{name}/dns"
+    url_base = "/axapi/v3/gslb/policy/{policy_name}/dns"
+
     f_dict = {}
+    f_dict["policy_name"] = module.params["policy_name"]
 
     return url_base.format(**f_dict)
 
@@ -399,7 +421,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -418,7 +440,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -429,7 +451,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -464,7 +486,8 @@ def create(module, result):
     payload = build_json("dns", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -489,8 +512,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("dns", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -510,6 +534,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("dns", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -523,9 +563,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -539,6 +580,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

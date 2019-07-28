@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_rule_set_rule
 description:
-    - None
+    - Configure rule-set rule
 short_description: Configures A10 rule-set.rule
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,138 +35,19 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    rule_set_name:
+        description:
+        - Key to identify parent object
     cgnv6_fixed_nat_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
-    forward_listen_on_port:
+    dst_geoloc_list_shared:
         description:
-        - "None"
-        required: False
-    listen_on_port_lid:
-        description:
-        - "None"
-        required: False
-    app_list:
-        description:
-        - "Field app_list"
-        required: False
-        suboptions:
-            obj_grp_application:
-                description:
-                - "None"
-            protocol:
-                description:
-                - "None"
-            protocol_tag:
-                description:
-                - "None"
-    src_threat_list:
-        description:
-        - "None"
-        required: False
-    cgnv6_policy:
-        description:
-        - "None"
-        required: False
-    cgnv6_log:
-        description:
-        - "None"
-        required: False
-    forward_log:
-        description:
-        - "None"
-        required: False
-    lid:
-        description:
-        - "None"
-        required: False
-    listen_on_port:
-        description:
-        - "None"
-        required: False
-    move_rule:
-        description:
-        - "Field move_rule"
-        required: False
-        suboptions:
-            location:
-                description:
-                - "None"
-            target_rule:
-                description:
-                - "Field target_rule"
-    uuid:
-        description:
-        - "None"
-        required: False
-    idle_timeout:
-        description:
-        - "None"
-        required: False
-    ip_version:
-        description:
-        - "None"
-        required: False
-    src_zone_any:
-        description:
-        - "None"
-        required: False
-    listen_on_port_lidlog:
-        description:
-        - "None"
-        required: False
-    application_any:
-        description:
-        - "None"
-        required: False
-    src_zone:
-        description:
-        - "None"
-        required: False
-    policy:
-        description:
-        - "None"
-        required: False
-    source_list:
-        description:
-        - "Field source_list"
-        required: False
-        suboptions:
-            src_ipv6_subnet:
-                description:
-                - "None"
-            src_obj_network:
-                description:
-                - "None"
-            src_slb_server:
-                description:
-                - "None"
-            src_obj_grp_network:
-                description:
-                - "None"
-            src_ip_subnet:
-                description:
-                - "None"
-    dst_zone_any:
-        description:
-        - "None"
-        required: False
-    status:
-        description:
-        - "None"
-        required: False
-    lidlog:
-        description:
-        - "None"
-        required: False
-    dst_ipv4_any:
-        description:
-        - "None"
-        required: False
-    cgnv6_lsn_lid:
-        description:
-        - "None"
+        - "Use Geolocation list from shared partition"
         required: False
     sampling_enable:
         description:
@@ -175,66 +56,219 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'hit-count'= Hit counts; 'permit-bytes'= Permitted bytes counter; 'deny-bytes'= Denied bytes counter; 'reset-bytes'= Reset bytes counter; 'permit-packets'= Permitted packets counter; 'deny-packets'= Denied packets counter; 'reset-packets'= Reset packets counter; 'active-session-tcp'= Active TCP session counter; 'active-session-udp'= Active UDP session counter; 'active-session-icmp'= Active ICMP session counter; 'active-session-other'= Active other protocol session counter; 'session-tcp'= TCP session counter; 'session-udp'= UDP session counter; 'session-icmp'= ICMP session counter; 'session-other'= Other protocol session counter; 'active-session-sctp'= Active SCTP session counter; 'session-sctp'= SCTP session counter; 'hitcount-timestamp'= Last hit counts timestamp; "
+    forward_listen_on_port:
+        description:
+        - "Listen on port"
+        required: False
+    listen_on_port_lid:
+        description:
+        - "Apply a Template LID"
+        required: False
+    app_list:
+        description:
+        - "Field app_list"
+        required: False
+        suboptions:
+            obj_grp_application:
+                description:
+                - "Application object group"
+            protocol:
+                description:
+                - "Specify application(s)"
+            protocol_tag:
+                description:
+                - "'aaa'= Protocol/application used for AAA (Authentification, Authorization and Accounting) purposes.; 'adult-content'= Adult content.; 'advertising'= Advertising networks and applications.; 'analytics-and-statistics'= user-analytics and statistics.; 'anonymizers-and-proxies'= Traffic-anonymization protocol/application.; 'audio-chat'= Protocol/application used for Audio Chat.; 'basic'= Protocols required for basic classification, e.g., ARP, HTTP; 'blog'= Blogging platform.; 'cdn'= Protocol/application used for Content-Delivery Networks.; 'chat'= Protocol/application used for Text Chat.; 'classified-ads'= Protocol/application used for Classified ads.; 'cloud-based-services'= SaaS and/or PaaS cloud based services.; 'database'= Database-specific protocols.; 'email'= Native email protocol.; 'enterprise'= Protocol/application used in an enterprise network.; 'file-management'= Protocol/application designed specifically for file management and exchange, e.g., Dropbox, SMB; 'file-transfer'= Protocol that offers file transferring as a functionality as a secondary feature. e.g., Skype, Whatsapp; 'forum'= Online forum.; 'gaming'= Protocol/application used by games.; 'instant-messaging-and-multimedia-conferencing'= Protocol/application used for Instant messaging or multiconferencing.; 'internet-of-things'= Internet Of Things protocol/application.; 'mobile'= Mobile-specific protocol/application.; 'multimedia-streaming'= Protocol/application used for multimedia streaming.; 'networking'= Protocol used for (inter) networking purpose.; 'news-portal'= Protocol/application used for News Portals.; 'peer-to-peer'= Protocol/application used for Peer-to-peer purposes.; 'remote-access'= Protocol/application used for remote access.; 'scada'= SCADA (Supervisory control and data acquisition) protocols, all generations.; 'social-networks'= Social networking application.; 'software-update'= Auto-update protocol.; 'standards-based'= Protocol issued from standardized bodies such as IETF, ITU, IEEE, ETSI, OIF.; 'video-chat'= Protocol/application used for Video Chat.; 'voip'= Application used for Voice over IP.; 'vpn-tunnels'= Protocol/application used for VPN or tunneling purposes.; 'web'= Application based on HTTP/HTTPS.; 'web-e-commerce'= Protocol/application used for E-commerce websites.; 'web-search-engines'= Protocol/application used for Web search portals.; 'web-websites'= Protocol/application used for Company Websites.; 'webmails'= Web email application.; 'web-ext-adult'= Web Extension Adult; 'web-ext-auctions'= Web Extension Auctions; 'web-ext-blogs'= Web Extension Blogs; 'web-ext-business-and-economy'= Web Extension Business and Economy; 'web-ext-cdns'= Web Extension CDNs; 'web-ext-collaboration'= Web Extension Collaboration; 'web-ext-computer-and-internet-info'= Web Extension Computer and Internet Info; 'web-ext-computer-and-internet-security'= Web Extension Computer and Internet Security; 'web-ext-dating'= Web Extension Dating; 'web-ext-educational-institutions'= Web Extension Educational Institutions; 'web-ext-entertainment-and-arts'= Web Extension Entertainment and Arts; 'web-ext-fashion-and-beauty'= Web Extension Fashion and Beauty; 'web-ext-file-share'= Web Extension File Share; 'web-ext-financial-services'= Web Extension Financial Services; 'web-ext-gambling'= Web Extension Gambling; 'web-ext-games'= Web Extension Games; 'web-ext-government'= Web Extension Government; 'web-ext-health-and-medicine'= Web Extension Health and Medicine; 'web-ext-individual-stock-advice-and-tools'= Web Extension Individual Stock Advice and Tools; 'web-ext-internet-portals'= Web Extension Internet Portals; 'web-ext-job-search'= Web Extension Job Search; 'web-ext-local-information'= Web Extension Local Information; 'web-ext-malware'= Web Extension Malware; 'web-ext-motor-vehicles'= Web Extension Motor Vehicles; 'web-ext-music'= Web Extension Music; 'web-ext-news'= Web Extension News; 'web-ext-p2p'= Web Extension P2P; 'web-ext-parked-sites'= Web Extension Parked Sites; 'web-ext-proxy-avoid-and-anonymizers'= Web Extension Proxy Avoid and Anonymizers; 'web-ext-real-estate'= Web Extension Real Estate; 'web-ext-reference-and-research'= Web Extension Reference and Research; 'web-ext-search-engines'= Web Extension Search Engines; 'web-ext-shopping'= Web Extension Shopping; 'web-ext-social-network'= Web Extension Social Network; 'web-ext-society'= Web Extension Society; 'web-ext-software'= Web Extension Software; 'web-ext-sports'= Web Extension Sports; 'web-ext-streaming-media'= Web Extension Streaming Media; 'web-ext-training-and-tools'= Web Extension Training and Tools; 'web-ext-translation'= Web Extension Translation; 'web-ext-travel'= Web Extension Travel; 'web-ext-web-advertisements'= Web Extension Web Advertisements; 'web-ext-web-based-email'= Web Extension Web based Email; 'web-ext-web-hosting'= Web Extension Web Hosting; 'web-ext-web-service'= Web Extension Web Service; "
+    src_threat_list:
+        description:
+        - "Bind threat-list for source IP based filtering"
+        required: False
+    cgnv6_policy:
+        description:
+        - "'lsn-lid'= Apply specified CGNv6 LSN LID; 'fixed-nat'= Apply CGNv6 Fixed NAT; "
+        required: False
+    src_geoloc_name:
+        description:
+        - "Single geolocation name"
+        required: False
+    cgnv6_log:
+        description:
+        - "Enable logging"
+        required: False
+    forward_log:
+        description:
+        - "Enable logging"
+        required: False
+    lid:
+        description:
+        - "Apply a Template LID"
+        required: False
+    listen_on_port:
+        description:
+        - "Listen on port"
+        required: False
+    move_rule:
+        description:
+        - "Field move_rule"
+        required: False
+        suboptions:
+            location:
+                description:
+                - "'top'= top; 'before'= before; 'after'= after; 'bottom'= bottom; "
+            target_rule:
+                description:
+                - "Field target_rule"
+    log:
+        description:
+        - "Enable logging"
+        required: False
+    dst_geoloc_name:
+        description:
+        - "Single geolocation name"
+        required: False
+    idle_timeout:
+        description:
+        - "TCP/UDP idle-timeout"
+        required: False
+    listen_on_port_lidlog:
+        description:
+        - "Enable logging"
+        required: False
+    src_zone_any:
+        description:
+        - "'any'= any; "
+        required: False
+    ip_version:
+        description:
+        - "'v4'= IPv4 rule; 'v6'= IPv6 rule; "
+        required: False
+    application_any:
+        description:
+        - "'any'= any; "
+        required: False
+    src_zone:
+        description:
+        - "Zone name"
+        required: False
+    src_geoloc_list_shared:
+        description:
+        - "Use Geolocation list from shared partition"
+        required: False
+    policy:
+        description:
+        - "'cgnv6'= Apply CGNv6 policy; 'forward'= Forward packet; "
+        required: False
+    source_list:
+        description:
+        - "Field source_list"
+        required: False
+        suboptions:
+            src_ipv6_subnet:
+                description:
+                - "IPv6 IP Address"
+            src_obj_network:
+                description:
+                - "Network object"
+            src_slb_server:
+                description:
+                - "SLB Real server name"
+            src_obj_grp_network:
+                description:
+                - "Network object group"
+            src_ip_subnet:
+                description:
+                - "IPv4 IP Address"
+    dst_zone_any:
+        description:
+        - "'any'= any; "
+        required: False
+    status:
+        description:
+        - "'enable'= Enable rule; 'disable'= Disable rule; "
+        required: False
+    lidlog:
+        description:
+        - "Enable logging"
+        required: False
+    dst_ipv4_any:
+        description:
+        - "'any'= Any IPv4 address; "
+        required: False
+    cgnv6_lsn_lid:
+        description:
+        - "LSN LID"
+        required: False
+    src_geoloc_list:
+        description:
+        - "Geolocation name list"
+        required: False
     src_ipv4_any:
         description:
-        - "None"
+        - "'any'= Any IPv4 address; "
         required: False
     fwlog:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     dst_zone:
         description:
-        - "None"
+        - "Zone name"
         required: False
     dst_class_list:
         description:
-        - "None"
+        - "Match destination IP against class-list"
         required: False
-    log:
+    uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     dst_threat_list:
         description:
-        - "None"
+        - "Bind threat-list for destination IP based filtering"
         required: False
     remark:
         description:
-        - "None"
+        - "Rule entry comment (Notes for this rule)"
         required: False
     src_class_list:
         description:
-        - "None"
+        - "Match source IP against class-list"
         required: False
     name:
         description:
-        - "None"
+        - "Rule name"
         required: True
     src_ipv6_any:
         description:
-        - "None"
+        - "'any'= Any IPv6 address; "
+        required: False
+    reset_lid:
+        description:
+        - "Apply a Template LID"
+        required: False
+    dst_geoloc_list:
+        description:
+        - "Geolocation name list"
         required: False
     track_application:
         description:
-        - "None"
+        - "Enable application statistic"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     cgnv6_lsn_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
     dst_ipv6_any:
         description:
-        - "None"
+        - "'any'= Any IPv6 address; "
         required: False
     service_any:
         description:
-        - "None"
+        - "'any'= any; "
         required: False
     service_list:
         description:
@@ -243,82 +277,86 @@ options:
         suboptions:
             gtp_template:
                 description:
-                - "None"
+                - "Configure GTP template (GTP Template Name)"
             icmp_type:
                 description:
-                - "None"
+                - "ICMP type number"
             range_dst_port:
                 description:
-                - "None"
+                - "Port range (Starting Port Number)"
             icmpv6_code:
                 description:
-                - "None"
+                - "ICMPv6 code number"
             gt_src_port:
                 description:
-                - "None"
+                - "Greater than the port number"
             lt_src_port:
                 description:
-                - "None"
+                - "Lower than the port number"
             proto_id:
                 description:
-                - "None"
+                - "Protocol ID"
             lt_dst_port:
                 description:
-                - "None"
+                - "Lower than the port number"
             alg:
                 description:
-                - "None"
+                - "'FTP'= FTP; 'TFTP'= TFTP; 'SIP'= SIP; 'DNS'= DNS; 'PPTP'= PPTP; 'RTSP'= RTSP; "
             obj_grp_service:
                 description:
-                - "None"
+                - "service object group"
             icmpv6_type:
                 description:
-                - "None"
+                - "ICMPv6 type number"
             icmp_code:
                 description:
-                - "None"
+                - "ICMP code number"
             range_src_port:
                 description:
-                - "None"
+                - "Port range (Starting Port Number)"
             eq_dst_port:
                 description:
-                - "None"
+                - "Equal to the port number"
             sctp_template:
                 description:
-                - "None"
+                - "SCTP Template"
             icmp:
                 description:
-                - "None"
+                - "ICMP"
             protocols:
                 description:
-                - "None"
+                - "'tcp'= tcp; 'udp'= udp; 'sctp'= sctp; "
             gt_dst_port:
                 description:
-                - "None"
+                - "Greater than the port number"
             port_num_end_src:
                 description:
-                - "None"
+                - "Ending Port Number"
             special_v6_type:
                 description:
-                - "None"
+                - "'any-type'= Any ICMPv6 type; 'dest-unreachable'= Type 1, destination unreachable; 'echo-reply'= Type 129, echo reply; 'echo-request'= Type 128, echo request; 'packet-too-big'= Type 2, packet too big; 'param-prob'= Type 4, parameter problem; 'time-exceeded'= Type 3, time exceeded; "
             eq_src_port:
                 description:
-                - "None"
+                - "Equal to the port number"
             special_v6_code:
                 description:
-                - "None"
+                - "'any-code'= Any ICMPv6 code; 'addr-unreachable'= Code 3, address unreachable; 'admin-prohibited'= Code 1, admin prohibited; 'no-route'= Code 0, no route to destination; 'not-neighbour'= Code 2, not neighbor; 'port-unreachable'= Code 4, destination port unreachable; "
             icmpv6:
                 description:
-                - "None"
+                - "ICMPv6"
             port_num_end_dst:
                 description:
-                - "None"
+                - "Ending Port Number"
             special_code:
                 description:
-                - "None"
+                - "'any-code'= Any ICMP code; 'frag-required'= Code 4, fragmentation required; 'host-unreachable'= Code 1, destination host unreachable; 'network-unreachable'= Code 0, destination network unreachable; 'port-unreachable'= Code 3, destination port unreachable; 'proto-unreachable'= Code 2, destination protocol unreachable; 'route-failed'= Code 5, source route failed; "
             special_type:
                 description:
-                - "None"
+                - "'any-type'= Any ICMP type; 'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-reply'= Type 16, information reply; 'info-request'= Type 15, information request; 'mask-reply'= Type 18, address mask reply; 'mask-request'= Type 17, address mask request; 'parameter-problem'= Type 12, parameter problem; 'redirect'= Type 5, redirect message; 'source-quench'= Type 4, source quench; 'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp; 'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3, destination unreachable; "
+    dst_domain_list:
+        description:
+        - "Match destination IP against domain-list"
+        required: False
     dest_list:
         description:
         - "Field dest_list"
@@ -326,31 +364,30 @@ options:
         suboptions:
             dst_obj_network:
                 description:
-                - "None"
+                - "Network object"
             dst_obj_grp_network:
                 description:
-                - "None"
+                - "Network object group"
             dst_slb_vserver:
                 description:
-                - "None"
+                - "SLB Virtual server name"
             dst_ip_subnet:
                 description:
-                - "None"
+                - "IPv4 IP Address"
             dst_ipv6_subnet:
                 description:
-                - "None"
+                - "IPv6 IP Address"
             dst_slb_server:
                 description:
-                - "None"
+                - "SLB Real server name"
     action:
         description:
-        - "None"
+        - "'permit'= permit; 'deny'= deny; 'reset'= reset; "
         required: False
     fw_log:
         description:
-        - "None"
+        - "Enable logging"
         required: False
-
 
 """
 
@@ -364,7 +401,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","policy","remark","sampling_enable","service_any","service_list","source_list","src_class_list","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_domain_list","dst_geoloc_list","dst_geoloc_list_shared","dst_geoloc_name","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","policy","remark","reset_lid","sampling_enable","service_any","service_list","source_list","src_class_list","src_geoloc_list","src_geoloc_list_shared","src_geoloc_name","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -383,30 +420,38 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         cgnv6_fixed_nat_log=dict(type='bool',),
+        dst_geoloc_list_shared=dict(type='bool',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','permit-packets','deny-packets','reset-packets','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp','hitcount-timestamp'])),
         forward_listen_on_port=dict(type='bool',),
         listen_on_port_lid=dict(type='int',),
-        app_list=dict(type='list',obj_grp_application=dict(type='str',),protocol=dict(type='str',),protocol_tag=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails'])),
+        app_list=dict(type='list',obj_grp_application=dict(type='str',),protocol=dict(type='str',),protocol_tag=dict(type='str',choices=['aaa','adult-content','advertising','analytics-and-statistics','anonymizers-and-proxies','audio-chat','basic','blog','cdn','chat','classified-ads','cloud-based-services','database','email','enterprise','file-management','file-transfer','forum','gaming','instant-messaging-and-multimedia-conferencing','internet-of-things','mobile','multimedia-streaming','networking','news-portal','peer-to-peer','remote-access','scada','social-networks','software-update','standards-based','video-chat','voip','vpn-tunnels','web','web-e-commerce','web-search-engines','web-websites','webmails','web-ext-adult','web-ext-auctions','web-ext-blogs','web-ext-business-and-economy','web-ext-cdns','web-ext-collaboration','web-ext-computer-and-internet-info','web-ext-computer-and-internet-security','web-ext-dating','web-ext-educational-institutions','web-ext-entertainment-and-arts','web-ext-fashion-and-beauty','web-ext-file-share','web-ext-financial-services','web-ext-gambling','web-ext-games','web-ext-government','web-ext-health-and-medicine','web-ext-individual-stock-advice-and-tools','web-ext-internet-portals','web-ext-job-search','web-ext-local-information','web-ext-malware','web-ext-motor-vehicles','web-ext-music','web-ext-news','web-ext-p2p','web-ext-parked-sites','web-ext-proxy-avoid-and-anonymizers','web-ext-real-estate','web-ext-reference-and-research','web-ext-search-engines','web-ext-shopping','web-ext-social-network','web-ext-society','web-ext-software','web-ext-sports','web-ext-streaming-media','web-ext-training-and-tools','web-ext-translation','web-ext-travel','web-ext-web-advertisements','web-ext-web-based-email','web-ext-web-hosting','web-ext-web-service'])),
         src_threat_list=dict(type='str',),
         cgnv6_policy=dict(type='str',choices=['lsn-lid','fixed-nat']),
+        src_geoloc_name=dict(type='str',),
         cgnv6_log=dict(type='bool',),
         forward_log=dict(type='bool',),
         lid=dict(type='int',),
         listen_on_port=dict(type='bool',),
         move_rule=dict(type='dict',location=dict(type='str',choices=['top','before','after','bottom']),target_rule=dict(type='str',)),
-        uuid=dict(type='str',),
+        log=dict(type='bool',),
+        dst_geoloc_name=dict(type='str',),
         idle_timeout=dict(type='int',),
-        ip_version=dict(type='str',choices=['v4','v6']),
-        src_zone_any=dict(type='str',choices=['any']),
         listen_on_port_lidlog=dict(type='bool',),
+        src_zone_any=dict(type='str',choices=['any']),
+        ip_version=dict(type='str',choices=['v4','v6']),
         application_any=dict(type='str',choices=['any']),
         src_zone=dict(type='str',),
+        src_geoloc_list_shared=dict(type='bool',),
         policy=dict(type='str',choices=['cgnv6','forward']),
         source_list=dict(type='list',src_ipv6_subnet=dict(type='str',),src_obj_network=dict(type='str',),src_slb_server=dict(type='str',),src_obj_grp_network=dict(type='str',),src_ip_subnet=dict(type='str',)),
         dst_zone_any=dict(type='str',choices=['any']),
@@ -414,26 +459,34 @@ def get_argspec():
         lidlog=dict(type='bool',),
         dst_ipv4_any=dict(type='str',choices=['any']),
         cgnv6_lsn_lid=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','permit-packets','deny-packets','reset-packets','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp'])),
+        src_geoloc_list=dict(type='str',),
         src_ipv4_any=dict(type='str',choices=['any']),
         fwlog=dict(type='bool',),
         dst_zone=dict(type='str',),
         dst_class_list=dict(type='str',),
-        log=dict(type='bool',),
+        uuid=dict(type='str',),
         dst_threat_list=dict(type='str',),
         remark=dict(type='str',),
         src_class_list=dict(type='str',),
         name=dict(type='str',required=True,),
         src_ipv6_any=dict(type='str',choices=['any']),
+        reset_lid=dict(type='int',),
+        dst_geoloc_list=dict(type='str',),
         track_application=dict(type='bool',),
         user_tag=dict(type='str',),
         cgnv6_lsn_log=dict(type='bool',),
         dst_ipv6_any=dict(type='str',choices=['any']),
         service_any=dict(type='str',choices=['any']),
         service_list=dict(type='list',gtp_template=dict(type='str',),icmp_type=dict(type='int',),range_dst_port=dict(type='int',),icmpv6_code=dict(type='int',),gt_src_port=dict(type='int',),lt_src_port=dict(type='int',),proto_id=dict(type='int',),lt_dst_port=dict(type='int',),alg=dict(type='str',choices=['FTP','TFTP','SIP','DNS','PPTP','RTSP']),obj_grp_service=dict(type='str',),icmpv6_type=dict(type='int',),icmp_code=dict(type='int',),range_src_port=dict(type='int',),eq_dst_port=dict(type='int',),sctp_template=dict(type='str',),icmp=dict(type='bool',),protocols=dict(type='str',choices=['tcp','udp','sctp']),gt_dst_port=dict(type='int',),port_num_end_src=dict(type='int',),special_v6_type=dict(type='str',choices=['any-type','dest-unreachable','echo-reply','echo-request','packet-too-big','param-prob','time-exceeded']),eq_src_port=dict(type='int',),special_v6_code=dict(type='str',choices=['any-code','addr-unreachable','admin-prohibited','no-route','not-neighbour','port-unreachable']),icmpv6=dict(type='bool',),port_num_end_dst=dict(type='int',),special_code=dict(type='str',choices=['any-code','frag-required','host-unreachable','network-unreachable','port-unreachable','proto-unreachable','route-failed']),special_type=dict(type='str',choices=['any-type','echo-reply','echo-request','info-reply','info-request','mask-reply','mask-request','parameter-problem','redirect','source-quench','time-exceeded','timestamp','timestamp-reply','dest-unreachable'])),
+        dst_domain_list=dict(type='str',),
         dest_list=dict(type='list',dst_obj_network=dict(type='str',),dst_obj_grp_network=dict(type='str',),dst_slb_vserver=dict(type='str',),dst_ip_subnet=dict(type='str',),dst_ipv6_subnet=dict(type='str',),dst_slb_server=dict(type='str',)),
         action=dict(type='str',choices=['permit','deny','reset']),
         fw_log=dict(type='bool',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        rule_set_name=dict(type='str', required=True),
     ))
 
     return rv
@@ -441,18 +494,22 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
+    url_base = "/axapi/v3/rule-set/{rule_set_name}/rule/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
+    f_dict["rule_set_name"] = module.params["rule_set_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/rule-set/{name}/rule/{name}"
+    url_base = "/axapi/v3/rule-set/{rule_set_name}/rule/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
+    f_dict["rule_set_name"] = module.params["rule_set_name"]
 
     return url_base.format(**f_dict)
 
@@ -473,7 +530,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -492,7 +549,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -503,7 +560,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -538,7 +595,8 @@ def create(module, result):
     payload = build_json("rule", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -563,8 +621,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("rule", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -584,6 +643,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("rule", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -597,9 +672,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -613,6 +689,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

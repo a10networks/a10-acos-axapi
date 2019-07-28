@@ -559,14 +559,17 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    syslog_time_msec:
+    throughput:
         description:
-        - "Field syslog_time_msec"
+        - "Field throughput"
         required: False
         suboptions:
-            enable_flag:
+            sampling_enable:
                 description:
-                - "Field enable_flag"
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
     domain_list_hitcount_enable:
         description:
         - "Enable class list hit count"
@@ -932,17 +935,6 @@ options:
         description:
         - "Enable Geolocation database hit count"
         required: False
-    throughput:
-        description:
-        - "Field throughput"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
     ipmi_service:
         description:
         - "Field ipmi_service"
@@ -1037,7 +1029,6 @@ options:
                 description:
                 - "uuid of the object"
 
-
 """
 
 EXAMPLES = """
@@ -1050,7 +1041,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add_cpu_core","add_port","all_vlan_limit","anomaly_log","app_performance","apps_global","attack","attack_log","bandwidth","bfd","class_list_hitcount_enable","cm_update_file_name_ref","control_cpu","core","cosq_show","cosq_stats","cpu_hyper_thread","cpu_list","cpu_load_sharing","cpu_map","data_cpu","ddos_attack","ddos_log","deep_hrxq","del_port","delete_cpu_core","dns","dns_cache","domain_list_hitcount_enable","environment","fw","geo_db_hitcount_enable","geo_location","geoloc","geoloc_list_list","geoloc_name_helper","geolocation_file","glid","guest_file","gui_image_list","hardware","hardware_forward","hrxq_status","icmp","icmp_rate","icmp6","inuse_cpu_list","inuse_port_list","io_cpu","ip_stats","ip6_stats","ipmi","ipmi_service","ipsec","link_capability","log_cpu_interval","memory","mgmt_port","modify_port","module_ctrl_cpu","mon_template","multi_queue_support","ndisc_ra","password_policy","per_vlan_limit","platformtype","port_info","port_list","ports","promiscuous_mode","queuing_buffer","radius","reboot","resource_accounting","resource_usage","session","session_reclaim_limit","shell_privileges","shutdown","sockstress_disable","spe_profile","spe_status","src_ip_hash_enable","ssl_req_q","syslog_time_msec","tcp","tcp_stats","telemetry_log","template","template_bind","throughput","trunk","trunk_hw_hash","trunk_xaui_hw_hash","upgrade_status","uuid","ve_mac_scheme",]
+AVAILABLE_PROPERTIES = ["add_cpu_core","add_port","all_vlan_limit","anomaly_log","app_performance","apps_global","attack","attack_log","bandwidth","bfd","class_list_hitcount_enable","cm_update_file_name_ref","control_cpu","core","cosq_show","cosq_stats","cpu_hyper_thread","cpu_list","cpu_load_sharing","cpu_map","data_cpu","ddos_attack","ddos_log","deep_hrxq","del_port","delete_cpu_core","dns","dns_cache","domain_list_hitcount_enable","environment","fw","geo_db_hitcount_enable","geo_location","geoloc","geoloc_list_list","geoloc_name_helper","geolocation_file","glid","guest_file","gui_image_list","hardware","hardware_forward","hrxq_status","icmp","icmp_rate","icmp6","inuse_cpu_list","inuse_port_list","io_cpu","ip_stats","ip6_stats","ipmi","ipmi_service","ipsec","link_capability","log_cpu_interval","memory","mgmt_port","modify_port","module_ctrl_cpu","mon_template","multi_queue_support","ndisc_ra","password_policy","per_vlan_limit","platformtype","port_info","port_list","ports","promiscuous_mode","queuing_buffer","radius","reboot","resource_accounting","resource_usage","session","session_reclaim_limit","shell_privileges","shutdown","sockstress_disable","spe_profile","spe_status","src_ip_hash_enable","ssl_req_q","tcp","tcp_stats","telemetry_log","template","template_bind","throughput","trunk","trunk_hw_hash","trunk_xaui_hw_hash","upgrade_status","uuid","ve_mac_scheme",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -1126,7 +1117,7 @@ def get_argspec():
         trunk=dict(type='dict',load_balance=dict(type='dict',use_l4=dict(type='bool',),uuid=dict(type='str',),use_l3=dict(type='bool',))),
         attack_log=dict(type='bool',),
         resource_usage=dict(type='dict',l4_session_count=dict(type='int',),nat_pool_addr_count=dict(type='int',),max_aflex_authz_collection_number=dict(type='int',),visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),class_list_ipv6_addr_count=dict(type='int',),max_aflex_file_size=dict(type='int',),class_list_ac_entry_count=dict(type='int',),ssl_dma_memory=dict(type='int',),radius_table_size=dict(type='int',),aflex_table_entry_count=dict(type='int',),ssl_context_memory=dict(type='int',),auth_portal_html_file_size=dict(type='int',),auth_portal_image_file_size=dict(type='int',),uuid=dict(type='str',)),
-        syslog_time_msec=dict(type='dict',enable_flag=dict(type='bool',)),
+        throughput=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','global-system-throughput-bits-per-sec','per-part-throughput-bits-per-sec'])),uuid=dict(type='str',)),
         domain_list_hitcount_enable=dict(type='bool',),
         cm_update_file_name_ref=dict(type='dict',source_name=dict(type='str',),id=dict(type='int',),dest_name=dict(type='str',)),
         spe_status=dict(type='dict',uuid=dict(type='str',)),
@@ -1165,7 +1156,6 @@ def get_argspec():
         deep_hrxq=dict(type='dict',enable=dict(type='bool',)),
         cosq_show=dict(type='dict',uuid=dict(type='str',)),
         geo_db_hitcount_enable=dict(type='bool',),
-        throughput=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','global-system-throughput-bits-per-sec','per-part-throughput-bits-per-sec'])),uuid=dict(type='str',)),
         ipmi_service=dict(type='dict',disable=dict(type='bool',),uuid=dict(type='str',)),
         data_cpu=dict(type='dict',uuid=dict(type='str',)),
         dns_cache=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_q','total_r','hit','bad_q','encode_q','multiple_q','oversize_q','bad_r','oversize_r','encode_r','multiple_r','answer_r','ttl_r','ageout','bad_answer','ageout_weight','total_log','total_alloc','total_freed','current_allocate','current_data_allocate'])),uuid=dict(type='str',)),
@@ -1245,7 +1235,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

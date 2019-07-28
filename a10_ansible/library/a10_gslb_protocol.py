@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_protocol
 description:
-    - None
+    - Specify GSLB Message Protocol parameters
 short_description: Configures A10 gslb.protocol
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,13 +35,20 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     use_mgmt_port:
         description:
-        - "None"
+        - "Use management port for connections"
+        required: False
+    msg_format_acos_2x:
+        description:
+        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
         required: False
     limit:
         description:
@@ -50,32 +57,32 @@ options:
         suboptions:
             ardt_response:
                 description:
-                - "None"
+                - "Response Messages of Active RDT, default is 1000 (Number)"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             conn_response:
                 description:
-                - "None"
+                - "Response Messages of Connection Load, default is no limit (Number)"
             ardt_session:
                 description:
-                - "None"
+                - "Sessions of Active RDT, default is 32768 (Number)"
             ardt_query:
                 description:
-                - "None"
+                - "Query Messages of Active RDT, default is 200 (Number)"
             message:
                 description:
-                - "None"
+                - "Amount of Messages, default is 10000 (Number)"
             response:
                 description:
-                - "None"
+                - "Amount of Response Messages, default is 3600 (Number)"
     ping_site:
         description:
-        - "None"
+        - "name of site or ip address to ping"
         required: False
     auto_detect:
         description:
-        - "None"
+        - "Automatically detect SLB Config"
         required: False
     enable_list:
         description:
@@ -84,15 +91,14 @@ options:
         suboptions:
             ntype:
                 description:
-                - "None"
+                - "'controller'= Enable/Disable GSLB protocol as GSLB controller; 'device'= Enable/Disable GSLB protocol as site device; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
     status_interval:
         description:
-        - "None"
+        - "Specify GSLB Message Protocol update period (The GSLB Protocol update interval (seconds), default is 30)"
         required: False
-
 
 """
 
@@ -106,7 +112,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auto_detect","enable_list","limit","ping_site","status_interval","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["auto_detect","enable_list","limit","msg_format_acos_2x","ping_site","status_interval","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -125,7 +131,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -133,12 +142,14 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
+        msg_format_acos_2x=dict(type='bool',),
         limit=dict(type='dict',ardt_response=dict(type='int',),uuid=dict(type='str',),conn_response=dict(type='int',),ardt_session=dict(type='int',),ardt_query=dict(type='int',),message=dict(type='int',),response=dict(type='int',)),
         ping_site=dict(type='str',),
         auto_detect=dict(type='bool',),
         enable_list=dict(type='list',ntype=dict(type='str',required=True,choices=['controller','device']),uuid=dict(type='str',)),
         status_interval=dict(type='int',)
     ))
+   
 
     return rv
 
@@ -146,6 +157,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/protocol"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -154,6 +166,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/protocol"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -175,7 +188,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -194,7 +207,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -205,7 +218,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -240,7 +253,8 @@ def create(module, result):
     payload = build_json("protocol", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -265,8 +279,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("protocol", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -286,6 +301,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("protocol", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -299,9 +330,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -315,6 +347,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_file_inspection_global
 description:
-    - None
+    - File Inspection global commands
 short_description: Configures A10 file.inspection.global
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,35 +35,57 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    uuid:
+    partition:
         description:
-        - "None"
+        - Destination/target partition for object/command
+    logging:
+        description:
+        - "Field logging"
         required: False
+        suboptions:
+            failed_transactions:
+                description:
+                - "'log'= Log event (default); 'no-log'= Do not Log event; "
+            local_logging_disable:
+                description:
+                - "Disable local logging"
+            bypass:
+                description:
+                - "Field bypass"
+    classification:
+        description:
+        - "Field classification"
+        required: False
+        suboptions:
+            max_classification_len:
+                description:
+                - "maximum length to be taken for file classification - default 65536"
+            classification_disable:
+                description:
+                - "Disable Internal File Inspection Classification"
+            min_classification_len:
+                description:
+                - "minimum length to be taken for file classification - default 4096"
     max_concurrent_files:
         description:
-        - "None"
-        required: False
-    local_logging:
-        description:
-        - "None"
+        - "Max concurrenet inspected files per server - default 10 ( Max concurrenet inspected files per server - default 10)"
         required: False
     max_file_size:
         description:
-        - "None"
+        - "Maximum file size (bytes) - default 157286400"
         required: False
     max_buffer_size:
         description:
-        - "None"
-        required: False
-    max_concurrent_files_log:
-        description:
-        - "None"
+        - "Maximum size (bytes) of content that can be buffered - default 0 (disabled) (Maximum size (bytes) content that can be buffered - default 0 (disabled))"
         required: False
     max_concurrent_files_action:
         description:
-        - "None"
+        - "'bypass'= Bypass File Inspection (default); "
         required: False
-
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
 """
 
@@ -77,7 +99,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["local_logging","max_buffer_size","max_concurrent_files","max_concurrent_files_action","max_concurrent_files_log","max_file_size","uuid",]
+AVAILABLE_PROPERTIES = ["classification","logging","max_buffer_size","max_concurrent_files","max_concurrent_files_action","max_file_size","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -96,20 +118,24 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
+        logging=dict(type='dict',failed_transactions=dict(type='str',choices=['log','no-log']),local_logging_disable=dict(type='bool',),bypass=dict(type='dict',service_down_log=dict(type='str',choices=['log','no-log']),filesize_overlimit_log=dict(type='str',choices=['log','no-log']),service_disabled_log=dict(type='str',choices=['log','no-log']),no_content_disposition_log=dict(type='str',choices=['log','no-log']),all_bypass_log=dict(type='str',choices=['log','no-log']),old_http_version_log=dict(type='str',choices=['log','no-log']),max_concurrent_files_log=dict(type='str',choices=['log','no-log']),aflex_disabled_log=dict(type='str',choices=['log','no-log']),internal_buffered_overlimit_log=dict(type='str',choices=['log','no-log']))),
+        classification=dict(type='dict',max_classification_len=dict(type='int',),classification_disable=dict(type='bool',),min_classification_len=dict(type='int',)),
         max_concurrent_files=dict(type='int',),
-        local_logging=dict(type='bool',),
         max_file_size=dict(type='int',),
         max_buffer_size=dict(type='int',),
-        max_concurrent_files_log=dict(type='str',choices=['log','no-log']),
-        max_concurrent_files_action=dict(type='str',choices=['bypass'])
+        max_concurrent_files_action=dict(type='str',choices=['bypass']),
+        uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -117,6 +143,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/file-inspection/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -125,6 +152,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/file-inspection/global"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -146,7 +174,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -165,7 +193,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -176,7 +204,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -211,7 +239,8 @@ def create(module, result):
     payload = build_json("global", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -236,8 +265,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("global", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -257,6 +287,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("global", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -270,9 +316,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -286,6 +333,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

@@ -199,7 +199,7 @@ options:
         required: False
     lb_method:
         description:
-        - "'dst-ip-hash'= Load-balancing based on only Dst IP and Port hash; 'dst-ip-only-hash'= Load-balancing based on only Dst IP hash; 'fastest-response'= Fastest response time on service port level; 'least-request'= Least request on service port level; 'src-ip-hash'= Load-balancing based on only Src IP and Port hash; 'src-ip-only-hash'= Load-balancing based on only Src IP hash; 'weighted-rr'= Weighted round robin on server level; 'service-weighted-rr'= Weighted round robin on service port level; 'round-robin'= Round robin on server level; 'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'= odd/even hash based of client src-ip; "
+        - "'dst-ip-hash'= Load-balancing based on only Dst IP and Port hash; 'dst-ip-only-hash'= Load-balancing based on only Dst IP hash; 'fastest-response'= Fastest response time on service port level; 'least-request'= Least request on service port level; 'src-ip-hash'= Load-balancing based on only Src IP and Port hash; 'src-ip-only-hash'= Load-balancing based on only Src IP hash; 'weighted-rr'= Weighted round robin on server level; 'round-robin'= Round robin on server level; 'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'= odd/even hash based of client src-ip; "
         required: False
     stateless_auto_switch:
         description:
@@ -310,7 +310,6 @@ options:
         - "Health Check (Monitor Name)"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -379,7 +378,7 @@ def get_argspec():
         traffic_replication_mirror=dict(type='bool',),
         l4_session_revert_duration=dict(type='int',),
         traffic_replication_mirror_sa_da_repl=dict(type='bool',),
-        lb_method=dict(type='str',choices=['dst-ip-hash','dst-ip-only-hash','fastest-response','least-request','src-ip-hash','src-ip-only-hash','weighted-rr','service-weighted-rr','round-robin','round-robin-strict','odd-even-hash']),
+        lb_method=dict(type='str',choices=['dst-ip-hash','dst-ip-only-hash','fastest-response','least-request','src-ip-hash','src-ip-only-hash','weighted-rr','round-robin','round-robin-strict','odd-even-hash']),
         stateless_auto_switch=dict(type='bool',),
         min_active_member_action=dict(type='str',choices=['dynamic-priority','skip-pri-set']),
         l4_session_usage=dict(type='int',),
@@ -477,7 +476,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted(['lb_method','stateless-lb-method','lc_method'])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -598,12 +597,11 @@ def run_command(module):
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        for ve in validation_errors:
-            run_errors.append(ve)
+        map(run_errors.append, validation_errors)
     
     if not valid:
+        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
-        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)

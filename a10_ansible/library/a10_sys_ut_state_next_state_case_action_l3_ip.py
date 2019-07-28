@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_sys_ut_state_next_state_case_action_l3_ip
 description:
-    - None
+    - IP address
 short_description: Configures A10 sys-ut.state.next.state.case.action.l3.ip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,43 +35,57 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    action_direction:
+        description:
+        - Key to identify parent object
+    case_number:
+        description:
+        - Key to identify parent object
+    name:
+        description:
+        - Key to identify parent object
+    state_name:
+        description:
+        - Key to identify parent object
     ve:
         description:
-        - "None"
+        - "Virtual Ethernet interface"
         required: False
     virtual_server:
         description:
-        - "None"
+        - "vip"
         required: False
     src_dst:
         description:
-        - "None"
+        - "'dest'= dest; 'src'= src; "
         required: True
     nat_pool:
         description:
-        - "None"
+        - "Nat pool"
         required: False
     trunk:
         description:
-        - "None"
+        - "Trunk number"
         required: False
     ipv6_address:
         description:
-        - "None"
+        - "Ipv6 address"
         required: False
     ethernet:
         description:
-        - "None"
+        - "Ethernet interface"
         required: False
     ipv4_address:
         description:
-        - "None"
+        - "IP address"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -104,7 +118,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -120,24 +137,42 @@ def get_argspec():
         ipv4_address=dict(type='str',),
         uuid=dict(type='str',)
     ))
+   
+    # Parent keys
+    rv.update(dict(
+        action_direction=dict(type='str', required=True),
+        case_number=dict(type='str', required=True),
+        name=dict(type='str', required=True),
+        state_name=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/sys-ut/state/{name}/next-state/{name}/case/{case-number}/action/{direction}/l3/ip/{src-dst}"
+    url_base = "/axapi/v3/sys-ut/state/{state_name}/next-state/{name}/case/{case_number}/action/{action_direction}/l3/ip/{src-dst}"
+
     f_dict = {}
     f_dict["src-dst"] = ""
+    f_dict["action_direction"] = module.params["action_direction"]
+    f_dict["case_number"] = module.params["case_number"]
+    f_dict["name"] = module.params["name"]
+    f_dict["state_name"] = module.params["state_name"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/sys-ut/state/{name}/next-state/{name}/case/{case-number}/action/{direction}/l3/ip/{src-dst}"
+    url_base = "/axapi/v3/sys-ut/state/{state_name}/next-state/{name}/case/{case_number}/action/{action_direction}/l3/ip/{src-dst}"
+
     f_dict = {}
-    f_dict["src-dst"] = module.params["src-dst"]
+    f_dict["src-dst"] = module.params["src_dst"]
+    f_dict["action_direction"] = module.params["action_direction"]
+    f_dict["case_number"] = module.params["case_number"]
+    f_dict["name"] = module.params["name"]
+    f_dict["state_name"] = module.params["state_name"]
 
     return url_base.format(**f_dict)
 
@@ -158,7 +193,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -177,7 +212,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -188,7 +223,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -223,7 +258,8 @@ def create(module, result):
     payload = build_json("ip", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -248,8 +284,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("ip", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -269,6 +306,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("ip", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -282,9 +335,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -298,6 +352,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

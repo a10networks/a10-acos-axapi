@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_zone
 description:
-    - None
+    - Specify the DNS zone name for which global SLB is provided
 short_description: Configures A10 gslb.zone
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     name:
         description:
-        - "None"
+        - "Specify the name for the DNS zone"
         required: True
     dns_ns_record_list:
         description:
@@ -49,13 +52,13 @@ options:
                 - "Field sampling_enable"
             ns_name:
                 description:
-                - "None"
+                - "Specify Domain Name"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             ttl:
                 description:
-                - "None"
+                - "Specify TTL"
     dns_mx_record_list:
         description:
         - "Field dns_mx_record_list"
@@ -63,22 +66,22 @@ options:
         suboptions:
             priority:
                 description:
-                - "None"
+                - "Specify Priority"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             mx_name:
                 description:
-                - "None"
+                - "Specify Domain Name"
             ttl:
                 description:
-                - "None"
+                - "Specify TTL"
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     sampling_enable:
         description:
@@ -87,10 +90,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'received-query'= Total Number of DNS queries received for the zone; 'sent-response'= Total Number of DNS replies sent to clients for the zone; 'proxy-mode-response'= Total Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the zone; 'cache-mode-response'= Total Number of cached DNS replies sent to clients by the ACOS device for the zone. (This statistic applies only if the DNS cac; 'server-mode-response'= Total Number of DNS replies sent to clients by the ACOS device as a DNS server for the zone. (This statistic applies only if th; 'sticky-mode-response'= Total Number of DNS replies sent to clients by the ACOS device to keep the clients on the same site. (This statistic applies on; 'backup-mode-response'= Total Number of DNS replies sent to clients by the ACOS device in backup mode; "
     disable:
         description:
-        - "None"
+        - "Disable all services in the GSLB zone"
         required: False
     template:
         description:
@@ -99,18 +102,18 @@ options:
         suboptions:
             dnssec:
                 description:
-                - "None"
+                - "Specify DNSSEC template (Specify template name)"
     ttl:
         description:
-        - "None"
+        - "Specify the zone ttl value (TTL value, unit= second, default is 10)"
         required: False
     policy:
         description:
-        - "None"
+        - "Specify the policy for this zone (Specify policy name)"
         required: False
     use_server_ttl:
         description:
-        - "None"
+        - "Use DNS Server Response TTL value in GSLB Proxy mode"
         required: False
     dns_soa_record:
         description:
@@ -119,46 +122,46 @@ options:
         suboptions:
             retry:
                 description:
-                - "None"
+                - "Specify Retry Time Interval, default is 900"
             soa_name:
                 description:
-                - "None"
+                - "DNS Server Name"
             ex_retry:
                 description:
-                - "None"
+                - "Specify Retry Time Interval, default is 900"
             ex_soa_ttl:
                 description:
-                - "None"
+                - "Specify Negative caching TTL, default is Zone TTL"
             ex_serial:
                 description:
-                - "None"
+                - "Specify Serial Number, default is Current Time (Time Interval)"
             refresh:
                 description:
-                - "None"
+                - "Specify Refresh Time Interval, default is 3600"
             ex_mail:
                 description:
-                - "None"
+                - "Mailbox"
             expire:
                 description:
-                - "None"
+                - "Specify Expire Time Interval, default is 1209600"
             ex_expire:
                 description:
-                - "None"
+                - "Specify Expire Time Interval, default is 1209600"
             external:
                 description:
-                - "None"
+                - "Specify External SOA Record (DNS Server Name)"
             mail:
                 description:
-                - "None"
+                - "Mailbox"
             serial:
                 description:
-                - "None"
+                - "Specify Serial Number, default is Current Time (Time Interval)"
             ex_refresh:
                 description:
-                - "None"
+                - "Specify Refresh Time Interval, default is 3600"
             soa_ttl:
                 description:
-                - "None"
+                - "Specify Negative caching TTL, default is Zone TTL"
     service_list:
         description:
         - "Field service_list"
@@ -169,10 +172,10 @@ options:
                 - "Field dns_a_record"
             forward_type:
                 description:
-                - "None"
+                - "'both'= Forward both query and response; 'query'= Forward query; 'response'= Forward response; "
             uuid:
                 description:
-                - "None"
+                - "uuid of the object"
             health_check_port:
                 description:
                 - "Field health_check_port"
@@ -181,7 +184,7 @@ options:
                 - "Field dns_txt_record_list"
             service_port:
                 description:
-                - "None"
+                - "Port number of the service"
             dns_mx_record_list:
                 description:
                 - "Field dns_mx_record_list"
@@ -190,28 +193,28 @@ options:
                 - "Field dns_record_list"
             user_tag:
                 description:
-                - "None"
+                - "Customized tag"
             dns_ns_record_list:
                 description:
                 - "Field dns_ns_record_list"
             health_check_gateway:
                 description:
-                - "None"
+                - "'enable'= Enable Gateway Status Check; 'disable'= Disable Gateway Status Check; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             disable:
                 description:
-                - "None"
+                - "Disable"
             dns_srv_record_list:
                 description:
                 - "Field dns_srv_record_list"
             service_name:
                 description:
-                - "None"
+                - "Specify the service name for the zone, * for wildcard"
             policy:
                 description:
-                - "None"
+                - "Specify policy for this service (Specify policy name)"
             dns_ptr_record_list:
                 description:
                 - "Field dns_ptr_record_list"
@@ -220,7 +223,7 @@ options:
                 - "Field dns_cname_record_list"
             action:
                 description:
-                - "None"
+                - "'drop'= Drop query; 'forward'= Forward packet; 'ignore'= Send empty response; 'reject'= Send refuse response; "
             geo_location_list:
                 description:
                 - "Field geo_location_list"
@@ -229,9 +232,8 @@ options:
                 - "Field dns_naptr_record_list"
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -264,7 +266,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -284,6 +289,7 @@ def get_argspec():
         service_list=dict(type='list',dns_a_record=dict(type='dict',dns_a_record_ipv6_list=dict(type='list',as_replace=dict(type='bool',),dns_a_record_ipv6=dict(type='str',required=True,),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),no_resp=dict(type='bool',),admin_ip=dict(type='int',),uuid=dict(type='str',)),dns_a_record_ipv4_list=dict(type='list',as_replace=dict(type='bool',),dns_a_record_ip=dict(type='str',required=True,),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),no_resp=dict(type='bool',),admin_ip=dict(type='int',),uuid=dict(type='str',)),dns_a_record_srv_list=dict(type='list',as_backup=dict(type='bool',),as_replace=dict(type='bool',),uuid=dict(type='str',),weight=dict(type='int',),svrname=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),admin_ip=dict(type='int',),no_resp=dict(type='bool',))),forward_type=dict(type='str',choices=['both','query','response']),uuid=dict(type='str',),health_check_port=dict(type='list',health_check_port=dict(type='int',)),dns_txt_record_list=dict(type='list',record_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),txt_data=dict(type='str',)),service_port=dict(type='int',required=True,),dns_mx_record_list=dict(type='list',priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),mx_name=dict(type='str',required=True,),ttl=dict(type='int',)),dns_record_list=dict(type='list',ntype=dict(type='int',required=True,),data=dict(type='str',),uuid=dict(type='str',)),user_tag=dict(type='str',),dns_ns_record_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),ns_name=dict(type='str',required=True,),uuid=dict(type='str',),ttl=dict(type='int',)),health_check_gateway=dict(type='str',choices=['enable','disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','received-query','sent-response','proxy-mode-response','cache-mode-response','server-mode-response','sticky-mode-response','backup-mode-response'])),disable=dict(type='bool',),dns_srv_record_list=dict(type='list',srv_name=dict(type='str',required=True,),uuid=dict(type='str',),weight=dict(type='int',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),ttl=dict(type='int',),port=dict(type='int',required=True,)),service_name=dict(type='str',required=True,),policy=dict(type='str',),dns_ptr_record_list=dict(type='list',ptr_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',)),dns_cname_record_list=dict(type='list',alias_name=dict(type='str',required=True,),uuid=dict(type='str',),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cname-hits'])),admin_preference=dict(type='int',)),action=dict(type='str',choices=['drop','forward','ignore','reject']),geo_location_list=dict(type='list',action_type=dict(type='str',choices=['allow','drop','forward','ignore','reject']),uuid=dict(type='str',),user_tag=dict(type='str',),alias=dict(type='list',alias=dict(type='str',)),geo_name=dict(type='str',required=True,),policy=dict(type='str',),forward_type=dict(type='str',choices=['both','query','response']),action=dict(type='bool',)),dns_naptr_record_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','naptr-hits'])),naptr_target=dict(type='str',required=True,),service_proto=dict(type='str',required=True,),flag=dict(type='str',required=True,),preference=dict(type='int',),ttl=dict(type='int',),regexp=dict(type='bool',),order=dict(type='int',),uuid=dict(type='str',))),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -291,6 +297,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/zone/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -300,6 +307,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/zone/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -322,7 +330,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -341,7 +349,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -352,7 +360,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -387,7 +395,8 @@ def create(module, result):
     payload = build_json("zone", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -412,8 +421,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("zone", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -433,6 +443,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("zone", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -446,9 +472,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -462,6 +489,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

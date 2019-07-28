@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authentication_server_windows_instance
 description:
-    - None
+    - 'Windows Server, using Kerberos or NTLM for authentication'
 short_description: Configures A10 aam.authentication.server.windows.instance
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,17 +35,20 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     health_check_string:
         description:
-        - "None"
+        - "Health monitor name"
         required: False
     realm:
         description:
-        - "None"
+        - "Specify realm of Windows server"
         required: False
     name:
         description:
-        - "None"
+        - "Specify Windows authentication server name"
         required: True
     sampling_enable:
         description:
@@ -54,7 +57,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'krb_send_req_success'= Kerberos Request; 'krb_get_resp_success'= Kerberos Response; 'krb_timeout_error'= Kerberos Timeout; 'krb_other_error'= Kerberos Other Error; 'krb_pw_expiry'= Kerberos password expiry; 'krb_pw_change_success'= Kerberos password change success; 'krb_pw_change_failure'= Kerberos password change failure; 'ntlm_proto_nego_success'= NTLM Protocol Negotiation Success; 'ntlm_proto_nego_failure'= NTLM Protocol Negotiation Failure; 'ntlm_session_setup_success'= NTLM Session Setup Success; 'ntlm_session_setup_failure'= NTLM Session Setup Failure; 'ntlm_prepare_req_success'= NTLM Prepare Request Success; 'ntlm_prepare_req_error'= NTLM Prepare Request Error; 'ntlm_auth_success'= NTLM Authentication Success; 'ntlm_auth_failure'= NTLM Authentication Failure; 'ntlm_timeout_error'= NTLM Timeout; 'ntlm_other_error'= NTLM Other Error; "
     host:
         description:
         - "Field host"
@@ -62,13 +65,13 @@ options:
         suboptions:
             hostipv6:
                 description:
-                - "None"
+                - "Specify the Windows server's IPV6 address"
             hostip:
                 description:
-                - "None"
+                - "Specify the Windows server's hostname(Length 1-31) or IP address"
     timeout:
         description:
-        - "None"
+        - "Specify connection timeout to server, default is 10 seconds"
         required: False
     auth_protocol:
         description:
@@ -77,48 +80,47 @@ options:
         suboptions:
             ntlm_health_check:
                 description:
-                - "None"
+                - "Check NTLM port's health status"
             kport_hm_disable:
                 description:
-                - "None"
+                - "Disable configured Kerberos port health check configuration"
             ntlm_health_check_disable:
                 description:
-                - "None"
+                - "Disable configured NTLM port health check configuration"
             kerberos_port:
                 description:
-                - "None"
+                - "Specify the Kerberos port, default is 88"
             ntlm_version:
                 description:
-                - "None"
+                - "Specify NTLM version, default is 2"
             kerberos_disable:
                 description:
-                - "None"
+                - "Disable Kerberos authentication protocol"
             ntlm_disable:
                 description:
-                - "None"
+                - "Disable NTLM authentication protocol"
             kport_hm:
                 description:
-                - "None"
+                - "Check Kerberos port's health status"
             kerberos_password_change_port:
                 description:
-                - "None"
+                - "Specify the Kerbros password change port, default is 464"
     health_check_disable:
         description:
-        - "None"
+        - "Disable configured health check configuration"
         required: False
     support_apacheds_kdc:
         description:
-        - "None"
+        - "Enable weak cipher (DES CRC/MD5/MD4) and merge AS-REQ in single packet"
         required: False
     health_check:
         description:
-        - "None"
+        - "Check server's health status"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -151,7 +153,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -169,6 +174,7 @@ def get_argspec():
         health_check=dict(type='bool',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -176,6 +182,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authentication/server/windows/instance/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -185,6 +192,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authentication/server/windows/instance/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -207,7 +215,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -226,7 +234,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -237,7 +245,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -272,7 +280,8 @@ def create(module, result):
     payload = build_json("instance", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -297,8 +306,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("instance", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -318,6 +328,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("instance", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -331,9 +357,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -347,6 +374,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

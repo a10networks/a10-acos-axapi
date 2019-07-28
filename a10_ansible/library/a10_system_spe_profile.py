@@ -43,7 +43,6 @@ options:
         - "'ipv4-only'= Enable IPv4 HW forward entries only; 'ipv6-only'= Enable IPv6 HW forward entries only; 'ipv4-ipv6'= Enable Both IPv4/IPv6 HW forward entries (shared); "
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -155,7 +154,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []

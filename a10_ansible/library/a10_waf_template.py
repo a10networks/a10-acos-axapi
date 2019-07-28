@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_waf_template
 description:
-    - None
+    - Manage WAF template configuration
 short_description: Configures A10 waf.template
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,475 +35,477 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     log_succ_reqs:
         description:
-        - "None"
+        - "Log successful waf requests"
         required: False
     brute_force_resp_headers_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     keep_end:
         description:
-        - "None"
+        - "Number of unmasked characters at the end (default= 0)"
         required: False
     max_cookie_len:
         description:
-        - "None"
+        - "Max Cookie length allowed in request (default 4096) (Maximum length of cookie allowed (default 4096))"
         required: False
     deploy_mode:
         description:
-        - "None"
+        - "'active'= Deploy WAF in active (blocking) mode; 'passive'= Deploy WAF in passive (log-only) mode; 'learning'= Deploy WAF in learning mode; "
         required: False
     xml_format_check:
         description:
-        - "None"
+        - "Check HTTP body for XML format compliance"
         required: False
     brute_force_resp_string:
         description:
-        - "None"
+        - "Trigger brute-force check on HTTP response line"
         required: False
     max_string:
         description:
-        - "None"
+        - "Maximum length of a string in a JSON request body (default 64) (Maximum length of a JSON string (default 64))"
         required: False
     ccn_mask:
         description:
-        - "None"
+        - "Mask credit card numbers in response"
         required: False
     waf_blist_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     challenge_action_cookie:
         description:
-        - "None"
+        - "Use Set-Cookie to determine if client allows cookies"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     form_set_no_cache:
         description:
-        - "None"
+        - "Disable caching of form-containing responses"
         required: False
     http_redirect:
         description:
-        - "None"
+        - "Send HTTP redirect response (302 Found) to specifed URL (URL to redirect to when denying request)"
         required: False
     bot_check:
         description:
-        - "None"
+        - "Check User-Agent for known bots"
         required: False
     max_cookies_len:
         description:
-        - "None"
+        - "Max Total Cookies length allowed in request (default 4096) (Maximum total length of cookies allowed (default 4096))"
         required: False
     brute_force_global:
         description:
-        - "None"
+        - "Brute-force triggers apply globally instead of per-client (Apply brute-force triggers globally)"
         required: False
     url_check:
         description:
-        - "None"
+        - "Check URL against list of previously learned URLs"
         required: False
     max_parameter_value_len:
         description:
-        - "None"
+        - "Max HTML parameter value length in an HTTP request (default 4096) (Maximum HTML parameter value in an HTTP request (default 4096))"
         required: False
     max_entities:
         description:
-        - "None"
+        - "Maximum number of MIME entities allowed in request (default 10)"
         required: False
     hide_resp_codes:
         description:
-        - "None"
+        - "Hides response codes that are not allowed (default 4xx, 5xx)"
         required: False
     max_depth:
         description:
-        - "None"
+        - "Maximum recursion depth in a value in a JSON requesnt body (default 16) (Maximum recursion depth in a JSON value (default 16))"
         required: False
     hide_resp_codes_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     brute_force_resp_codes_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     max_elem_name_len:
         description:
-        - "None"
+        - "Maximum length for an element name (default 128)"
         required: False
     deny_password_autocomplete:
         description:
-        - "None"
+        - "Check to protect against server-generated form which contain password fields that allow autocomplete"
         required: False
     name:
         description:
-        - "None"
+        - "WAF Template Name"
         required: True
     http_resp_200:
         description:
-        - "None"
+        - "Send HTTP response with status code 200 OK"
         required: False
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     keep_start:
         description:
-        - "None"
+        - "Number of unmasked characters at the beginning (default= 0)"
         required: False
     max_hdrs:
         description:
-        - "None"
+        - "Maximum number of headers allowed in request (default 20)"
         required: False
     max_cookie_value_len:
         description:
-        - "None"
+        - "Max Cookie Value length allowed in request (default 4096) (Maximum length of cookie value allowed (default 4096))"
         required: False
     max_cdata_len:
         description:
-        - "None"
+        - "Maximum length of an CDATA section of an element (default 65535)"
         required: False
     max_hdr_value_len:
         description:
-        - "None"
+        - "Max header value length allowed in request (default 4096) (Maximum length of header value allowed (default 4096))"
         required: False
     secret_encrypted:
         description:
-        - "None"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
         required: False
     cookie_name:
         description:
-        - "None"
+        - "Cookie name (simple string or PCRE pattern)"
         required: False
     max_namespace_uri_len:
         description:
-        - "None"
+        - "Maximum length of a namespace URI (default 256)"
         required: False
     resp_url_403:
         description:
-        - "None"
+        - "Response content to send client when denying request"
         required: False
     csrf_check:
         description:
-        - "None"
+        - "Tag the form to protect against Cross-site Request Forgery"
         required: False
     referer_domain_list:
         description:
-        - "None"
+        - "List of referer domains allowed"
         required: False
     max_parameters:
         description:
-        - "None"
+        - "Maximum number of HTML parameters allowed in request (default 64)"
         required: False
     brute_force_lockout_period:
         description:
-        - "None"
+        - "Number of seconds client should be locked out (default 600)"
         required: False
     max_parameter_name_len:
         description:
-        - "None"
+        - "Max HTML parameter name length in an HTTP request (default 256) (Maximum HTML parameter name length in an HTTP request (default 256))"
         required: False
     deny_non_masked_passwords:
         description:
-        - "None"
+        - "Denies forms that have a password field with a textual type, resulting in this field not being masked"
         required: False
     challenge_action_javascript:
         description:
-        - "None"
+        - "Add JavaScript to response to test if client allows JavaScript"
         required: False
     max_hdr_name_len:
         description:
-        - "None"
+        - "Max header name length allowed in request (default 63) (Maximum length of header name allowed (default 63))"
         required: False
     max_elem_depth:
         description:
-        - "None"
+        - "Maximum recursion level for element definition (default 256)"
         required: False
     form_consistency_check:
         description:
-        - "None"
+        - "Form input consistency check"
         required: False
     redirect_wlist:
         description:
-        - "None"
+        - "Check Redirect URL against list of previously learned redirects"
         required: False
     xml_xss_check:
         description:
-        - "None"
+        - "Check XML data against XSS policy"
         required: False
     referer_check:
         description:
-        - "None"
+        - "Check referer to protect against CSRF attacks"
         required: False
     wsdl_resp_val_file:
         description:
-        - "None"
+        - "Specify name of WSDL file for verifying XML body contents"
         required: False
     brute_force_check:
         description:
-        - "None"
+        - "Enable brute-force attack mitigation"
         required: False
     brute_force_test_period:
         description:
-        - "None"
+        - "Number of seconds for brute-force event counting (default 60)"
         required: False
     max_namespace:
         description:
-        - "None"
+        - "Maximum number of namespace declarations (default 16)"
         required: False
     max_entity_exp:
         description:
-        - "None"
+        - "Maximum number of entity expansions (default 1024)"
         required: False
     form_deny_non_post:
         description:
-        - "None"
+        - "Deny request with forms if the method is not POST"
         required: False
     cookie_encryption_secret:
         description:
-        - "None"
+        - "Cookie encryption secret"
         required: False
     decode_escaped_chars:
         description:
-        - "None"
+        - "Decode escaped characters such as \r \n \' \xXX \u00YY in internal url"
         required: False
     json_format_check:
         description:
-        - "None"
+        - "Check HTTP body for JSON format compliance"
         required: False
     bot_check_policy_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     xml_schema_resp_val_file:
         description:
-        - "None"
+        - "Specify name of XML-Schema file for verifying XML body contents"
         required: False
     brute_force_challenge_limit:
         description:
-        - "None"
+        - "Maximum brute-force events before sending challenge (default 2) (Maximum brute-force events before locking out client (default 2))"
         required: False
     allowed_http_methods:
         description:
-        - "None"
+        - "List of allowed HTTP methods. Default is 'GET POST'. (List of HTTP methods allowed (default 'GET POST'))"
         required: False
     brute_force_resp_codes:
         description:
-        - "None"
+        - "Trigger brute-force check on HTTP response code"
         required: False
     remove_selfref:
         description:
-        - "None"
+        - "Remove self-references such as /./ and /path/../ from internal url"
         required: False
     max_elem_child:
         description:
-        - "None"
+        - "Maximum number of children of an XML element (default 1024)"
         required: False
     max_entity_exp_depth:
         description:
-        - "None"
+        - "Maximum nested depth of entity expansion (default 32)"
         required: False
     max_array_value_count:
         description:
-        - "None"
+        - "Maximum number of values in an array in a JSON request body (default 256) (Maximum number of values in a JSON array (default 256))"
         required: False
     max_elem:
         description:
-        - "None"
+        - "Maximum number of XML elements (default 1024)"
         required: False
     sqlia_check:
         description:
-        - "None"
+        - "'reject'= Reject requests with SQLIA patterns; 'sanitize'= Remove bad SQL from request; "
         required: False
     max_object_member_count:
         description:
-        - "None"
+        - "Maximum number of members in an object in a JSON request body (default 256) (Maximum number of members in a JSON object (default 256))"
         required: False
     http_resp_403:
         description:
-        - "None"
+        - "Send HTTP response with status code 403 Forbidden (default)"
         required: False
     http_check:
         description:
-        - "None"
+        - "Check request for HTTP protocol compliance"
         required: False
     brute_force_resp_headers:
         description:
-        - "None"
+        - "Trigger brute-force check on HTTP response header names"
         required: False
     max_cookie_name_len:
         description:
-        - "None"
+        - "Max Cookie Name length allowed in request (default 64) ( Maximum length of cookie name allowed (default 64))"
         required: False
     remove_comments:
         description:
-        - "None"
+        - "Remove comments from internal url"
         required: False
     logging:
         description:
-        - "None"
+        - "Logging template (Logging Config name)"
         required: False
     uri_wlist_check:
         description:
-        - "None"
+        - "specify name of WAF policy list file to whitelist"
         required: False
     brute_force_resp_string_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     form_deny_non_ssl:
         description:
-        - "None"
+        - "Deny request with forms if the protocol is not SSL"
         required: False
     xss_check:
         description:
-        - "None"
+        - "'reject'= Reject requests with bad cookies; 'sanitize'= Remove bad cookies from request; "
         required: False
     reset_conn:
         description:
-        - "None"
+        - "Reset the client connection"
         required: False
     referer_safe_url:
         description:
-        - "None"
+        - " Safe URL to redirect to if referer is missing"
         required: False
     remove_spaces:
         description:
-        - "None"
+        - "Remove spaces from internal url"
         required: False
     brute_force_lockout_limit:
         description:
-        - "None"
+        - "Maximum brute-force events before locking out client (default 5)"
         required: False
     uri_blist_check:
         description:
-        - "None"
+        - "specify name of WAF policy list file to blacklist"
         required: False
     max_url_len:
         description:
-        - "None"
+        - "Max URL length allowed in request (default 1024) (Maximum length of URL allowed (default 1024))"
         required: False
     max_hdrs_len:
         description:
-        - "None"
+        - "Max headers length allowed in request (default 4096) (Maximum length of headers allowed (default 4096))"
         required: False
     waf_wlist_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     max_attr_name_len:
         description:
-        - "None"
+        - "Maximum length of an attribute name (default 128)"
         required: False
     lifetime:
         description:
-        - "None"
+        - "Session lifetime in minutes (default 10)"
         required: False
     max_attr:
         description:
-        - "None"
+        - "Maximum number of attributes of an XML element (default 256)"
         required: False
     xss_check_policy_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     resp_url_200:
         description:
-        - "None"
+        - "Response content to send client when denying request"
         required: False
     max_post_size:
         description:
-        - "None"
+        - "Max content length allowed in POST request (default 20480) (Maximum size allowed content in an HTTP POST request (default 20480))"
         required: False
     decode_hex_chars:
         description:
-        - "None"
+        - "Decode hex chars such as \%xx and \%u00yy in internal url"
         required: False
     max_line_len:
         description:
-        - "None"
+        - "Max Line length allowed in request (default 1024) (Maximum length of Request line allowed (default 1024))"
         required: False
     max_query_len:
         description:
-        - "None"
+        - "Max Query length allowed in request (default 1024) (Maximum length of Request query allowed (default 1024))"
         required: False
     sqlia_check_policy_file:
         description:
-        - "None"
+        - "Name of WAF policy list file"
         required: False
     deny_non_ssl_passwords:
         description:
-        - "None"
+        - "Denies any form that has a password field if the form is not sent over an SSL connection"
         required: False
     max_data_parse:
         description:
-        - "None"
+        - "Max data parsed for Web Application Firewall (default 65536) (Maximum data parsed for Web Application Firewall (default 65536))"
         required: False
     max_parameter_total_len:
         description:
-        - "None"
+        - "Max HTML parameter total length in an HTTP request (default 4096) (Maximum HTML parameter total length in an HTTP request (default 4096))"
         required: False
     wsdl_file:
         description:
-        - "None"
+        - "Specify name of WSDL file for verifying XML body contents"
         required: False
     session_check:
         description:
-        - "None"
+        - "Enable session checking via session cookie"
         required: False
     disable:
         description:
-        - "None"
+        - "Disable buffer overflow protection"
         required: False
     filter_resp_hdrs:
         description:
-        - "None"
+        - "Removes web server's identifying headers"
         required: False
     max_cookies:
         description:
-        - "None"
+        - "Maximum number of cookies allowed in request (default 20)"
         required: False
     decode_entities:
         description:
-        - "None"
+        - "Decode entities in internal url"
         required: False
     mask:
         description:
-        - "None"
+        - "Character to mask the matched pattern (default= X)"
         required: False
     referer_domain_list_only:
         description:
-        - "None"
+        - "List of referer domains allowed"
         required: False
     max_attr_value_len:
         description:
-        - "None"
+        - "Maximum length of an attribute text value (default 128)"
         required: False
     pcre_mask:
         description:
-        - "None"
+        - "Mask matched PCRE pattern in response"
         required: False
     soap_format_check:
         description:
-        - "None"
+        - "Check XML document for SOAP format compliance"
         required: False
     xml_schema_file:
         description:
-        - "None"
+        - "Specify name of XML-Schema file for verifying XML body contents"
         required: False
     ssn_mask:
         description:
-        - "None"
+        - "Mask US Social Security numbers in response"
         required: False
     xml_sqlia_check:
         description:
-        - "None"
+        - "Check XML data against SQLIA policy"
         required: False
-
 
 """
 
@@ -536,7 +538,10 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
@@ -660,6 +665,7 @@ def get_argspec():
         ssn_mask=dict(type='bool',),
         xml_sqlia_check=dict(type='bool',)
     ))
+   
 
     return rv
 
@@ -667,6 +673,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/waf/template/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -676,6 +683,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/waf/template/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -698,7 +706,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -717,7 +725,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -728,7 +736,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -763,7 +771,8 @@ def create(module, result):
     payload = build_json("template", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -788,8 +797,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("template", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -809,6 +819,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("template", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -822,9 +848,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -838,6 +865,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

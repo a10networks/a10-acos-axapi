@@ -35,6 +35,9 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     shared_partition:
         description:
         - "Share with a single partition (Partition Name)"
@@ -43,10 +46,10 @@ options:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP LB service; "
         required: False
-    uuid:
+    name:
         description:
-        - "uuid of the object"
-        required: False
+        - "CGNV6 Service Name"
+        required: True
     user_tag:
         description:
         - "Customized tag"
@@ -83,15 +86,18 @@ options:
             name:
                 description:
                 - "Member name"
+    shared:
+        description:
+        - "Share with partition"
+        required: False
     health_check:
         description:
         - "Health Check (Monitor Name)"
         required: False
-    name:
+    uuid:
         description:
-        - "CGNV6 Service Name"
-        required: True
-
+        - "uuid of the object"
+        required: False
 
 """
 
@@ -105,7 +111,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","member_list","name","protocol","sampling_enable","shared_group","shared_partition","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["health_check","member_list","name","protocol","sampling_enable","shared","shared_group","shared_partition","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,14 +141,16 @@ def get_argspec():
     rv.update(dict(
         shared_partition=dict(type='str',),
         protocol=dict(type='str',choices=['tcp','udp']),
-        uuid=dict(type='str',),
+        name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
         shared_group=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn'])),
         member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
+        shared=dict(type='bool',),
         health_check=dict(type='str',),
-        name=dict(type='str',required=True,)
+        uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -150,6 +158,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/cgnv6/service-group/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -159,6 +168,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/cgnv6/service-group/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -181,7 +191,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -200,7 +210,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -211,7 +221,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -246,7 +256,8 @@ def create(module, result):
     payload = build_json("service-group", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -271,8 +282,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("service-group", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -291,6 +303,22 @@ def present(module, result, existing_config):
 
 def absent(module, result):
     return delete(module, result)
+
+def replace(module, result, existing_config):
+    payload = build_json("service-group", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []

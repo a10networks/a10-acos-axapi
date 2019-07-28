@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_aam_authorization_policy
 description:
-    - None
+    - Authorization-policy configuration
 short_description: Configures A10 aam.authorization.policy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,21 +35,63 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
+    jwt_authorization:
+        description:
+        - "Specify JWT authorization template (Specify JWT authorization template name)"
+        required: False
     name:
         description:
-        - "None"
+        - "Specify authorization policy name"
         required: True
     user_tag:
         description:
-        - "None"
+        - "Customized tag"
         required: False
     server:
         description:
-        - "None"
+        - "Specify a LDAP or RADIUS server for authorization (Specify a LDAP or RADIUS server name)"
         required: False
+    jwt_claim_map_list:
+        description:
+        - "Field jwt_claim_map_list"
+        required: False
+        suboptions:
+            claim:
+                description:
+                - "Specify JWT claim name to map to."
+            bool_val:
+                description:
+                - "'true'= True; 'false'= False; "
+            uuid:
+                description:
+                - "uuid of the object"
+            string_type:
+                description:
+                - "Claim type is string"
+            str_val:
+                description:
+                - "Specify JWT claim value."
+            num_val:
+                description:
+                - "Specify JWT claim value."
+            attr_num:
+                description:
+                - "Spcify attribute ID for claim mapping"
+            number_type:
+                description:
+                - "Claim type is number"
+            boolean_type:
+                description:
+                - "Claim type is boolean"
+            ntype:
+                description:
+                - "Specify claim type"
     service_group:
         description:
-        - "None"
+        - "Specify an authentication service group for authorization (Specify authentication service group name)"
         required: False
     attribute_list:
         description:
@@ -58,72 +100,74 @@ options:
         suboptions:
             attribute_name:
                 description:
-                - "None"
-            ip_type:
-                description:
-                - "None"
-            custom_attr_type:
-                description:
-                - "None"
-            uuid:
-                description:
-                - "None"
-            string_type:
-                description:
-                - "None"
-            attr_str_val:
-                description:
-                - "None"
-            attr_ipv4:
-                description:
-                - "None"
-            attr_type:
-                description:
-                - "None"
-            attr_num:
-                description:
-                - "None"
-            a10_dynamic_defined:
-                description:
-                - "None"
-            attr_int:
-                description:
-                - "None"
+                - "Specify attribute name"
             integer_type:
                 description:
-                - "None"
+                - "Attribute type is integer"
+            custom_attr_type:
+                description:
+                - "Specify attribute type"
+            uuid:
+                description:
+                - "uuid of the object"
+            string_type:
+                description:
+                - "Attribute type is string"
+            attr_str_val:
+                description:
+                - "Set attribute value"
+            attr_ipv4:
+                description:
+                - "IPv4 address"
+            attr_type:
+                description:
+                - "Specify attribute type"
+            attr_num:
+                description:
+                - "Set attribute ID for authorization policy"
+            a10_dynamic_defined:
+                description:
+                - "The value of this attribute will depend on AX configuration instead of user configuration"
+            attr_int:
+                description:
+                - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal; 'less-than'= Operation type is less-than; 'more-than'= Operation type is more-than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-equal-to'= Operation type is more-thatn-equal-to; "
+            ip_type:
+                description:
+                - "IP address is transformed into network byte order"
             attr_ip:
                 description:
-                - "None"
+                - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal; "
             A10_AX_AUTH_URI:
                 description:
-                - "None"
+                - "Custom-defined attribute"
             attr_str:
                 description:
-                - "None"
+                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
+            any:
+                description:
+                - "Matched when attribute is present (with any value)."
             custom_attr_str:
                 description:
-                - "None"
+                - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
             attr_int_val:
                 description:
-                - "None"
+                - "Set attribute value"
     extended_filter:
         description:
-        - "None"
+        - "Extended search filter. EX= Check whether user belongs to a nested group. (memberOf=1.2.840.113556.1.4.1941==$GROUP-DN)"
         required: False
     attribute_rule:
         description:
-        - "None"
+        - "Define attribute rule for authorization policy"
         required: False
     forward_policy_authorize_only:
         description:
-        - "None"
+        - "This policy only provides server info for forward policy feature"
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
-
 
 """
 
@@ -137,7 +181,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["attribute_list","attribute_rule","extended_filter","forward_policy_authorize_only","name","server","service_group","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["attribute_list","attribute_rule","extended_filter","forward_policy_authorize_only","jwt_authorization","jwt_claim_map_list","name","server","service_group","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -156,22 +200,28 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        jwt_authorization=dict(type='str',),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
         server=dict(type='str',),
+        jwt_claim_map_list=dict(type='list',claim=dict(type='str',),bool_val=dict(type='str',choices=['true','false']),uuid=dict(type='str',),string_type=dict(type='bool',),str_val=dict(type='str',),num_val=dict(type='int',),attr_num=dict(type='int',required=True,),number_type=dict(type='bool',),boolean_type=dict(type='bool',),ntype=dict(type='bool',)),
         service_group=dict(type='str',),
-        attribute_list=dict(type='list',attribute_name=dict(type='str',),ip_type=dict(type='bool',),custom_attr_type=dict(type='bool',),uuid=dict(type='str',),string_type=dict(type='bool',),attr_str_val=dict(type='str',),attr_ipv4=dict(type='str',),attr_type=dict(type='bool',),attr_num=dict(type='int',required=True,),a10_dynamic_defined=dict(type='bool',),attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),integer_type=dict(type='bool',),attr_ip=dict(type='str',choices=['equal','not-equal']),A10_AX_AUTH_URI=dict(type='bool',),attr_str=dict(type='str',choices=['match','sub-string']),custom_attr_str=dict(type='str',choices=['match','sub-string']),attr_int_val=dict(type='int',)),
+        attribute_list=dict(type='list',attribute_name=dict(type='str',),integer_type=dict(type='bool',),custom_attr_type=dict(type='bool',),uuid=dict(type='str',),string_type=dict(type='bool',),attr_str_val=dict(type='str',),attr_ipv4=dict(type='str',),attr_type=dict(type='bool',),attr_num=dict(type='int',required=True,),a10_dynamic_defined=dict(type='bool',),attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),ip_type=dict(type='bool',),attr_ip=dict(type='str',choices=['equal','not-equal']),A10_AX_AUTH_URI=dict(type='bool',),attr_str=dict(type='str',choices=['match','sub-string']),any=dict(type='bool',),custom_attr_str=dict(type='str',choices=['match','sub-string']),attr_int_val=dict(type='int',)),
         extended_filter=dict(type='str',),
         attribute_rule=dict(type='str',),
         forward_policy_authorize_only=dict(type='bool',),
         uuid=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -179,6 +229,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/aam/authorization/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = ""
 
@@ -188,6 +239,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/aam/authorization/policy/{name}"
+
     f_dict = {}
     f_dict["name"] = module.params["name"]
 
@@ -210,7 +262,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -229,7 +281,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -240,7 +292,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -275,7 +327,8 @@ def create(module, result):
     payload = build_json("policy", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -300,8 +353,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("policy", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -321,6 +375,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("policy", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -334,9 +404,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -350,6 +421,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':

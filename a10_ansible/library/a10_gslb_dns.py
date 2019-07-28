@@ -11,7 +11,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_gslb_dns
 description:
-    - None
+    - DNS Global Options
 short_description: Configures A10 gslb.dns
 author: A10 Networks 2018 
 version_added: 2.4
@@ -35,9 +35,12 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    partition:
+        description:
+        - Destination/target partition for object/command
     action:
         description:
-        - "None"
+        - "'none'= No action (default); 'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
         required: False
     sampling_enable:
         description:
@@ -46,20 +49,19 @@ options:
         suboptions:
             counters1:
                 description:
-                - "None"
+                - "'all'= all; 'total-query'= Total number of DNS queries received; 'total-response'= Total number of DNS replies sent to clients; 'bad-packet-query'= Number of queries with incorrect data length; 'bad-packet-response'= Number of replies with incorrect data length; 'bad-header-query'= Number of queries with incorrect header; 'bad-header-response'= Number of replies with incorrect header; 'bad-format-query'= Number of queries with incorrect format; 'bad-format-response'= Number of replies with incorrect format; 'bad-service-query'= Number of queries with unknown service; 'bad-service-response'= Number of replies with unknown service; 'bad-class-query'= Number of queries with incorrect class; 'bad-class-response'= Number of replies with incorrect class; 'bad-type-query'= Number of queries with incorrect type; 'bad-type-response'= Number of replies with incorrect type; 'no_answer'= Number of replies with unknown server IP; 'metric_health_check'= Metric Health Check Hit; 'metric_weighted_ip'= Metric Weighted IP Hit; 'metric_weighted_site'= Metric Weighted Site Hit; 'metric_capacity'= Metric Capacity Hit; 'metric_active_server'= Metric Active Server Hit; 'metric_easy_rdt'= Metric Easy RDT Hit; 'metric_active_rdt'= Metric Active RDT Hit; 'metric_geographic'= Metric Geographic Hit; 'metric_connection_load'= Metric Connection Load Hit; 'metric_number_of_sessions'= Metric Number of Sessions Hit; 'metric_active_weight'= Metric Active Weight Hit; 'metric_admin_preference'= Metric Admin Preference Hit; 'metric_bandwidth_quality'= Metric Bandwidth Quality Hit; 'metric_bandwidth_cost'= Metric Bandwidth Cost Hit; 'metric_user'= Metric User Hit; 'metric_least_reponse'= Metric Least Reponse Hit; 'metric_admin_ip'= Metric Admin IP Hit; 'metric_round_robin'= Metric Round Robin Hit; "
     logging:
         description:
-        - "None"
+        - "'none'= No logging (default); 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS Query and Response; "
         required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
     template:
         description:
-        - "None"
+        - "Logging template (Logging Template Name)"
         required: False
-
 
 """
 
@@ -92,18 +94,22 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        partition=dict(type='str', required=False)
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         action=dict(type='str',choices=['none','drop','reject','ignore']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-query','total-response','bad-packet-query','bad-packet-response','bad-header-query','bad-header-response','bad-format-query','bad-format-response','bad-service-query','bad-service-response','bad-class-query','bad-class-response','bad-type-query','bad-type-response','no_answer'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-query','total-response','bad-packet-query','bad-packet-response','bad-header-query','bad-header-response','bad-format-query','bad-format-response','bad-service-query','bad-service-response','bad-class-query','bad-class-response','bad-type-query','bad-type-response','no_answer','metric_health_check','metric_weighted_ip','metric_weighted_site','metric_capacity','metric_active_server','metric_easy_rdt','metric_active_rdt','metric_geographic','metric_connection_load','metric_number_of_sessions','metric_active_weight','metric_admin_preference','metric_bandwidth_quality','metric_bandwidth_cost','metric_user','metric_least_reponse','metric_admin_ip','metric_round_robin'])),
         logging=dict(type='str',choices=['none','query','response','both']),
         uuid=dict(type='str',),
         template=dict(type='str',)
     ))
+   
 
     return rv
 
@@ -111,6 +117,7 @@ def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
     url_base = "/axapi/v3/gslb/dns"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -119,6 +126,7 @@ def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
     url_base = "/axapi/v3/gslb/dns"
+
     f_dict = {}
 
     return url_base.format(**f_dict)
@@ -140,7 +148,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -159,7 +167,7 @@ def build_json(title, module):
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -170,7 +178,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params])
     
     errors = []
     marg = []
@@ -205,7 +213,8 @@ def create(module, result):
     payload = build_json("dns", module)
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
     except a10_ex.Exists:
         result["changed"] = False
@@ -230,8 +239,9 @@ def delete(module, result):
 def update(module, result, existing_config):
     payload = build_json("dns", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -251,6 +261,22 @@ def present(module, result, existing_config):
 def absent(module, result):
     return delete(module, result)
 
+def replace(module, result, existing_config):
+    payload = build_json("dns", module)
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def run_command(module):
     run_errors = []
 
@@ -264,9 +290,10 @@ def run_command(module):
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    
+    partition = module.params["partition"]
 
     valid = True
 
@@ -280,6 +307,9 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if partition:
+        module.client.activate_partition(partition)
+
     existing_config = exists(module)
 
     if state == 'present':
