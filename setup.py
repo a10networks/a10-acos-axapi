@@ -11,4 +11,5 @@ setup(name='a10_ansible',
       zip_safe=False,
       # Install scripts for calling this easily.
       # Need to figure out an easy way of making this a script.
-     )
+      install_requires = ['requests']
+      )
