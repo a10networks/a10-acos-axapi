@@ -11,4 +11,3 @@
       a10_protocol: "{{ a10_protocol }}"
       at: 1
       time: "15.00" # Time in HH:MM format
-
