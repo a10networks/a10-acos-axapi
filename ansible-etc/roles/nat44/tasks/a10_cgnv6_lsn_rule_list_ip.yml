@@ -1,0 +1,32 @@
+---
+- debug: msg="Start START a10_cgnv6_lsn_rule_list_ip"
+- name: Create a10_cgnv6_lsn_rule_list_ip instance
+  a10_cgnv6_lsn_rule_list_ip:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      ipv4_addr: "1.2.3.4/32"
+      rule_cfg:
+          - proto: "tcp"
+            tcp-cfg: {
+                    "end-port": 90,
+                    "action-type": "pass-through",
+                    "start-port": 79,
+                    "action-cfg": "action"
+                }
+          - proto: "icmp"
+            icmp-others-cfg: {
+                    "action-cfg": "action",
+                    "action-type": "drop"
+           }
+          - proto: "udp"
+            udp-cfg: {
+                   "action-cfg": "no-action",
+                   "start-port": 0
+            }
+
+- debug: msg="Stop START a10_cgnv6_lsn_rule_list_ip"
+
+

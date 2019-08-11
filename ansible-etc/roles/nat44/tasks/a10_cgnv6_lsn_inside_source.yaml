@@ -1,0 +1,12 @@
+---
+- debug: msg="STOP a10_class_list.py"
+- name: Create a  source class-lsit
+  a10_cgnv6_lsn_inside_source:
+        a10_host: "{{ inventory_hostname }}"
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
+        a10_port: "{{ a10_port }}"
+        a10_protocol: "{{ a10_protocol }}"
+        state: present
+        class_list: "NAT44-ANSIBLE"
+

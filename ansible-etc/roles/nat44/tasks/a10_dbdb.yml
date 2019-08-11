@@ -1,0 +1,20 @@
+---
+- name: Create a10_slb_template_dblb example playbook
+  a10_slb_template_dblb:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      name: my_dblb
+
+- name: Create a10_slb_template_dblb_calc_sha1 example playbook
+  a10_slb_template_dblb_calc_sha1:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      dblb_name: my_dblb
+      sha1_value: AAAA
+

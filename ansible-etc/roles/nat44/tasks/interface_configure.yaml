@@ -6,6 +6,8 @@
         a10_host: "{{ inventory_hostname }}"
         a10_username: "{{ a10_username }}"
         a10_password: "{{ a10_password }}"
+        a10_port: 80
+        a10_protocol: http
         state: present
         ifnum: 2
         name: "Outside Created by Ansible"
@@ -23,6 +25,8 @@
         a10_host: "{{ inventory_hostname }}"
         a10_username: "{{ a10_username }}"
         a10_password: "{{ a10_password }}"
+        a10_port: 80
+        a10_protocol: http
         state: present
         ifnum: 1
         name: "Inside Created by Ansible"

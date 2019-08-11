@@ -19,6 +19,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: 443
+      a10_protocol: "https"
       state: present
       name: "RULE1"
       ip_list:
@@ -36,6 +38,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: 443
+      a10_protocol: "https"
       state: present
       name: "RULE1"
       ipv4_addr: "1.2.3.4/32"
@@ -66,6 +70,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: 443
+      a10_protocol: "https"
       state: present
       name: "RULE1"
       name_domain_list: "DOMAIN1"
@@ -95,6 +101,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: 443
+      a10_protocol: "https"
       state: present
       name: "RULE1"
       name_domain: "www.cnn.com"

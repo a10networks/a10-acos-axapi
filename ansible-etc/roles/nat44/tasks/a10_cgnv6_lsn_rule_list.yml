@@ -1,0 +1,18 @@
+---
+- debug: msg="Start START a10_cgnv6_lsn_rule"
+- name: Create a10_cgnv6_lsn_rule instance
+  a10_cgnv6_lsn_rule_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "RULE1"
+      ip_list:
+            - ipv4-addr: "1.2.3.4/32"
+            - ipv4-addr: "10.0.0.0/24"
+      domain_name_list:
+            - name-domain: "www.cnn.com"
+      domain_list_name_list:
+            - name-domain-list: "DOMAIN1"
+- debug: msg="Stop START a10_cgnv6_lsn_rule"
+

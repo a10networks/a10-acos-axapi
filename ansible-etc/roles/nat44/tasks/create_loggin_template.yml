@@ -5,6 +5,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
       name: "SERVER-ANSIBLE"
       host: "20.17.53.199"
       port_list: [
@@ -23,6 +25,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
       name: "SG-ANSIBLE"
       protocol: "udp"
       member_list: [
@@ -39,6 +43,8 @@
       a10_host: "{{ inventory_hostname }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
       name: "LOG-ANSIBLE"
       format: "compact"
       service_group: "SG-ANSIBLE"

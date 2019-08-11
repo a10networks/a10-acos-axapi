@@ -1,10 +1,11 @@
 ---
+#- import_tasks: a10_cgnv6_shared_service_group_create.yaml
 - import_tasks: system_config.yml
 - import_tasks: interface_configure.yaml
-- import_tasks: routing_configure_ipv4.yaml
-- import_tasks: create_pool.yml
-- import_tasks: create_lsn_rule_list.yml
-- import_tasks: create_lsn.yml
-- import_tasks: class_list.yaml
+#- import_tasks: routing_configure_ipv4.yaml
+- import_tasks: a10_class_list.yaml
+- import_tasks: a10_cgnv6_lsn_inside_source.yaml
+#- import_tasks: create_lsn_rule_list.yml
+- import_tasks: a10_cgnv6_nat_pool.yaml
+- import_tasks: a10_cgnv6_lsn_lid.yaml
 - import_tasks: create_loggin_template.yml
-

@@ -1,0 +1,14 @@
+---
+- debug: msg="Start a10_domain_list"
+- name: Create a10_domain_list instance
+  a10_domain_list:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: "DOMAIN1"
+      domain_name_list:
+            - domain-name: "www.test1.com"
+            - domain-name: "www.test2.com"
+- debug: msg="Stop a10_domain_list"
+

@@ -18,6 +18,6 @@
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
       state: present
-      hostname: "{{ HOSTNAME }}"
+      value: "{{ HOSTNAME }}"
 - debug: msg="Stop a10_hostname"
 

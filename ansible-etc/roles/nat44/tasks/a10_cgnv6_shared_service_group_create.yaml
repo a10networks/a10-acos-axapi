@@ -1,0 +1,9 @@
+---
+- name: Create a10_cgnv6_shared_service_group example playbook
+  a10_cgnv6_shared_service_group:
+      a10_host: "{{ inventory_hostname }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+
