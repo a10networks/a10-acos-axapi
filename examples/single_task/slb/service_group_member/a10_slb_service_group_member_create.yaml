@@ -1,0 +1,15 @@
+- name: Create a10_slb_service_group_member example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_service_group_member instance
+    a10_slb_service_group_member:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      name: my_member
+      port: 0
+      member_state: enable
+      member_priority: 1

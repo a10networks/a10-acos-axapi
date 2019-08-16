@@ -1,0 +1,22 @@
+- name: Delete a10_health_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_health_monitor instance
+    a10_health_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: absent
+      up_retry: 1
+      retry: 1
+      method:
+        tcp:
+          port_send: 'ping'
+          method_tcp: 1
+          port_resp:
+            port_contains: 'ping'
+          tcp-port: 80
+      name: my_monitor
