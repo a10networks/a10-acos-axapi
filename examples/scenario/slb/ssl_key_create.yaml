@@ -1,4 +1,4 @@
-- hosts: all 
+- hosts: all
   connection: local
   name: "My thing"
   tasks:
@@ -7,5 +7,7 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_protocol: "{{ a10_protocol }}"
+      a10_port: "{{ a10_port }}"
       file: myxc
       file_content: "{{lookup('file', '~/certs/new.cert.key')}}"
