@@ -1,0 +1,2 @@
+---
+- include_tasks: virtual_server_test.yml
