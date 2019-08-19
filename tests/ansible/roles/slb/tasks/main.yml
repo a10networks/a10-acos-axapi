@@ -1,2 +1,3 @@
 ---
-- include_tasks: virtual_server_test.yml
+- include_tasks: test_vport_virt_server.yml
+- include_tasks: test_sg_member_server.yml

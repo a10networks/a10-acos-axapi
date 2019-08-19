@@ -1,5 +1,5 @@
 ---
-- name: Create a virtual server 
+- name:  Test creation of a virtual server w/ vport 
   a10_slb_virtual_server:
     a10_host: "{{ a10_host }}"
     a10_username: "{{ a10_username }}"
@@ -21,7 +21,7 @@
       - "virt_resp['virtual-server']['port-list'][0]['protocol'] == 'https'"
       - "virt_resp['virtual-server']['port-list'][0]['port-number'] == 80"
 
-- name: Update vport on virtual server
+- name: Test update of vport on virtual server
   a10_slb_virtual_server:
     a10_host: "{{ a10_host }}"
     a10_username: "{{ a10_username }}"
