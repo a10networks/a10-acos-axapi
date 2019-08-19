@@ -7,6 +7,8 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{a10_protocol }}"
       state: absent
       virtual_server: vs1
       port_number: 80
@@ -17,6 +19,8 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{ a10_protocol }}"
       state: absent
       name: vs1
 
@@ -25,5 +29,7 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{a10_protocol }}"
       state: absent
-      name:  sg1 
+      name:  sg1
