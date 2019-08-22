@@ -1,0 +1,18 @@
+---
+- name: RBA role
+  connection: local
+  hosts: localhost
+  tasks:
+    - name: Create RBA role
+      a10_rba_role:
+      state: "present"
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      name: "role01" #name of RBA role
+      rule_list:
+      - operation: no-access
+        Object: aam
+      user_tag: "custom_tag01" #Tag name
