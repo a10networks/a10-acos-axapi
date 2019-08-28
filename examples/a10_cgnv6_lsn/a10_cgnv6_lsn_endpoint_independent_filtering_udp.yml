@@ -1,0 +1,17 @@
+- name: a10_cgnv6_lsn_endpoint_independent_filtering_udp Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_endpoint_independent_filtering_udp
+    a10_cgnv6_lsn_endpoint_independent_filtering_udp:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      port_list:
+       - port: "8080"
+         port_end: "9000"
+      session_limit: "10"
+

@@ -1,0 +1,16 @@
+- name: a10_cgnv6_lsn_alg_sip Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_alg_sip
+    a10_cgnv6_lsn_alg_sip:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      sampling_enable:
+        - counters1: "all"
+      rtp_stun_timeout: "10"
+      sip_value: "enable"

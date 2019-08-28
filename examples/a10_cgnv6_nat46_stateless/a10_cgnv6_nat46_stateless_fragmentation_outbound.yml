@@ -1,0 +1,17 @@
+- name: a10_cgnv6_nat46_stateless_fragmentation_outbound example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_nat46_stateless_fragmentation_outbound
+    a10_cgnv6_nat46_stateless_fragmentation_outbound:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      uuid: "TestCgnNat46StatelessFragmentationOutbound"
+      action: "drop"
+      count: "1"
+      df_set: "send-icmp"
+         

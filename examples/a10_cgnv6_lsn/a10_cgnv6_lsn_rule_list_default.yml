@@ -1,0 +1,22 @@
+- name: a10_cgnv6_lsn_rule_list Default Parameter Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_rule_list Default parameter
+    a10_cgnv6_lsn_rule_list:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      default:
+        uuid: "CgnLsnDefault"
+        rule_cfg:
+          - icmp_others_cfg: 
+              ipv4_list: "TestList"
+              action_type: "drop"
+        sampling_enable: 
+          - counters: "all"
+      name: "TestRuleListDefault"
+

@@ -1,0 +1,20 @@
+- name: a10_cgnv6_nat64_global example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_nat64_global
+    a10_cgnv6_nat64_global:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      user_quota_prefix_length: "128"
+      sampling_enable:
+        - counters1: "all"
+          counters2: "h323_alg_no_quota"
+          counters3: "nat_pool_force_delete"
+      icmp:
+        send_on_user_quota_exceeded: "host-unreachable"
+        send_on_port_unavailable: "host-unreachable"

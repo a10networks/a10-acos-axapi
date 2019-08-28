@@ -1,0 +1,13 @@
+- name: a10_cgnv6_nat64_user_quota_session example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_nat64_user_quota_session
+    a10_cgnv6_nat64_user_quota_session:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      

@@ -1,0 +1,19 @@
+- name: a10_cgnv6_nat46_stateless_static_dest_mapping example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_nat46_stateless_static_dest_mapping
+    a10_cgnv6_nat46_stateless_static_dest_mapping:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      count: "2"
+      v6_address: "2001:0DB8:0000:000b:0000:0000:0000:0001"
+      to_shared: "false"
+      v4_address: "10.10.10.2"
+      shared: "false"
+      vrid: "0"
+

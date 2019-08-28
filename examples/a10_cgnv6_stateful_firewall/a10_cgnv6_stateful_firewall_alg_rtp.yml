@@ -1,0 +1,13 @@
+- name: a10_cgnv6_stateful_firewall_alg_rtp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_stateful_firewall_alg_rtp
+    a10_cgnv6_stateful_firewall_alg_rtp:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      rtp_stun_timeout: "10"

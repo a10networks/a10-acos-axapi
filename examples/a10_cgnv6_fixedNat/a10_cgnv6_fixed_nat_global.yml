@@ -1,0 +1,18 @@
+- name: a10_cgnv6_fixed_nat_global example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_fixed_nat_global
+    a10_cgnv6_fixed_nat_global:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      create_port_mapping_file: "1"
+      sampling_enable:
+        - counters1: "all"
+          counters2: "nat44-udp-alg-fullcone-freed-shadow"
+          counters3: "fnat44_fwd_egress_pkt_size_range1"
+          #          counters4: "fnatdslite_fwd_ingress_pkt_size_range2"
+      port_mapping_files_count: "0"

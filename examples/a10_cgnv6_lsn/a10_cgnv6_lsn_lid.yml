@@ -1,0 +1,40 @@
+- name: a10_cgnv6_lsn_lid Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_lid
+    a10_cgnv6_lsn_lid:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      user_quota_prefix_length:
+      extended_user_quota:
+        udp:
+          - udp_sessions: "2"
+            udp_service_port: "8090"
+        tcp:
+          - tcp_service_port: "8085"
+            tcp_sessions: "3"
+      lid_number: "11"
+      ds_lite:
+        inside_src_permit_list: "TestClassList"
+      user_quota:
+        quota_udp:
+          udp_reserve: "9000"
+          udp_quota: "1"
+        icmp: "2"
+        session: "2"
+        quota_tcp:
+          tcp_quota: "3"
+          tcp_reserve: "8080"
+      user_tag: "TestTag"
+      name: "TestLsn"
+      respond_to_user_mac: "False"
+      conn_rate_limit: 
+        conn_rate_limit_val: "4"
+      lsn_rule_list:
+        destination: "TestLSNRuleList"
+      override: "none"

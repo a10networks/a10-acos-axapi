@@ -1,0 +1,14 @@
+- name: a10_cgnv6_fixed_nat_alg_mgcp Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_fixed_nat_alg_mgcp
+    a10_cgnv6_fixed_nat_alg_mgcp:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
+      sampling_enable:
+        - counters1: "all"

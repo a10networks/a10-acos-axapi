@@ -1,0 +1,16 @@
+- name: a10_cgnv6_fixed_nat_inside_iplist example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_fixed_nat_inside_iplist
+    a10_cgnv6_fixed_nat_inside_iplist:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      inside_ip_list: "fixed_nat_inside"
+      nat_ip_list: "fixed_nat_public"
+      ports_per_user: "512"
+      vrid: "0"
+      partition: "MyPartition"

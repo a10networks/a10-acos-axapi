@@ -1,0 +1,12 @@
+- name: a10_cgnv6_lsn_system_status Example PlayBook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_system_status
+    a10_cgnv6_lsn_system_status:
+      a10_host: "10.43.12.137"
+      a10_username: "admin"
+      a10_password: "a10"
+      a10_port: "443"
+      a10_protocol: "https"
+      partition: "MyPartition"
