@@ -4,11 +4,11 @@
   tasks:
   - name: Create a10_cgnv6_stateful_firewall_tcp_syn_timeout
     a10_cgnv6_stateful_firewall_tcp_syn_timeout:
-      a10_host: "10.43.12.137"
-      a10_username: "admin"
-      a10_password: "a10"
-      a10_port: "443"
-      a10_protocol: "https"
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
       partition: "MyPartition"
       syn_timeout_val: "3"
 
