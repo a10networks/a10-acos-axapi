@@ -11,4 +11,3 @@
       a10_protocol: "{{ a10_protocol }}"
       partition: "MyPartition"
       syn_timeout_val: "3"
-

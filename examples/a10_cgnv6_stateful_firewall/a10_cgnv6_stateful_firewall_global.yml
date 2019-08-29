@@ -14,4 +14,3 @@
       stateful_firewall_value: "enable"
       sampling_enable: 
         - counters1: "all"
-

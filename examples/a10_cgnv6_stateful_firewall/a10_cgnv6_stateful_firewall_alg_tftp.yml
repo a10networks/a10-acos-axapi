@@ -13,4 +13,3 @@
       tftp_value: "disable"
       sampling_enable: 
         - counters1: "all"
-
