@@ -4,14 +4,14 @@
   tasks:
   - name: Create a10_cgnv6_nptv6_domain
     a10_cgnv6_nptv6_domain:
-      a10_host: "10.43.12.137"
-      a10_username: "admin"
-      a10_password: "a10"
-      a10_port: "443"
-      a10_protocol: "https"
-      partition: "MyPartition"
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
       name: "TestCgnNptv6Domain"
       user_tag: "TestTag"
-      sampling_enable: "all"
+      sampling_enable: 
+        - counters1: "all"
       inside_prefix: "2001:0DB8:0000:000b::/64"
       outside_prefix: "2001:0DB8:0000:000c::/64"
