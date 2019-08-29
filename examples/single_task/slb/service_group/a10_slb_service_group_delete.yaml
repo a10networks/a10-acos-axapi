@@ -1,0 +1,18 @@
+- name: Delete a10_slb_service_group example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_service_group instance
+    a10_slb_service_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: absent
+      protocol: tcp
+        - host: '10.20.42.1'
+          name: 'sg1-member1'
+          port: 443
+      lb_method: dst-ip-hash
+      name: sg1
