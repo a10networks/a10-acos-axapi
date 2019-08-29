@@ -11,6 +11,4 @@
       a10_protocol: "{{ a10_protocol }}"
       partition: "MyPartition"
       frag_action: "drop"
-      df_set: "drop"
-
-       
+      df_set: "drop"       

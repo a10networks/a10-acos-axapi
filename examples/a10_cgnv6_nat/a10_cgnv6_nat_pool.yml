@@ -17,4 +17,3 @@
       partition: "shared"
       max_users_per_ip: "10"
       shared: "true"
-

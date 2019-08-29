@@ -1,15 +1,14 @@
-- name: a10_cgnv6_nat64_fragmentation_inbound example playbook
+- name: a10_cgnv6_nat64_prefix example playbook
   connection: local
   hosts: localhost
   tasks:
-  - name: Create a10_cgnv6_nat64_fragmentation_inbound
-    a10_cgnv6_nat64_fragmentation_inbound:
+  - name: Create a10_cgnv6_nat64_prefix
+    a10_cgnv6_nat64_prefix:
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
       a10_port: "{{ a10_port }}"
       a10_protocol: "{{ a10_protocol }}"
       partition: "MyPartition"
-      frag_action: "drop"
-      df_set: "drop"
-       
+      vrid: "0"
+      prefix_val: "2001:1111:2222:3333::/64"

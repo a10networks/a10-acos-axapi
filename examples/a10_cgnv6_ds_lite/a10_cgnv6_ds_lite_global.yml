@@ -24,4 +24,3 @@
       icmp:
         send_on_user_quota_exceeded: "admin-filtered"
         send_on_port_unavailable: "disable"
-

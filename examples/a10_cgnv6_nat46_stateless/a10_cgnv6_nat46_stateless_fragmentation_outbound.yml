@@ -13,5 +13,4 @@
       uuid: "TestCgnNat46StatelessFragmentationOutbound"
       action: "drop"
       count: "1"
-      df_set: "send-icmp"
-         
+      df_set: "send-icmp"         

@@ -13,4 +13,3 @@
       uuid: "TestCGNV6StatelessNat46Global"
       sampling_enable: 
         - counters1: "all"
-
