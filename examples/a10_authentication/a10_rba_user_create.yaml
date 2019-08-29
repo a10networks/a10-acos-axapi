@@ -1,0 +1,13 @@
+---
+- name: Create a10 rba user
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: a10 rba user
+      a10_rba_user:
+        a10_host: "{{ a10_host }}"
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
+        a10_protocol: "{{ a10_protocol }}"
+        a10_port: "{{ a10_port }}"
+        name: "Test" # Name of a user account
