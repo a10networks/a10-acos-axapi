@@ -23,17 +23,14 @@ options:
         - present
         - absent
         required: True
-    a10_host:
+    
+    a10_protocol:
         description:
-        - Host for AXAPI authentication
+        - HTTP / HTTPS Protocol for AXAPI authentication
         required: True
-    a10_username:
+    a10_port:
         description:
-        - Username for AXAPI authentication
-        required: True
-    a10_password:
-        description:
-        - Password for AXAPI authentication
+        - Port number AXAPI is running on
         required: True
     partition:
         description:

@@ -24,6 +24,14 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    a10_protocol:
+        description:
+        - HTTP / HTTPS Protocol for AXAPI authentication
+        required: True
+    a10_port:
+        description:
+        - Port number AXAPI is running on
+        required: True
     partition:
         description:
         - Destination/target partition for object/command

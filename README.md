@@ -22,6 +22,12 @@ pip install -e a10-ansible/
 pip install a10-ansible
 ~~~
 
+### Custom Module Directory, instead of installing
+~~~
+cd a10-ansible 
+mv a10_ansible /usr/share/ansible/plugins/modules/
+~~~
+
 ## Configuration
 <fill in stuff about site-vars / etc>
 

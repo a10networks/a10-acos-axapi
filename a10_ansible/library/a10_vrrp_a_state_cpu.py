@@ -23,18 +23,7 @@ options:
         - present
         - absent
         required: True
-    a10_host:
-        description:
-        - Host for AXAPI authentication
-        required: True
-    a10_username:
-        description:
-        - Username for AXAPI authentication
-        required: True
-    a10_password:
-        description:
-        - Password for AXAPI authentication
-        required: True
+
     partition:
         description:
         - Destination/target partition for object/command
