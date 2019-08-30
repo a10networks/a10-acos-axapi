@@ -9,6 +9,8 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{a10_protocol }}"
       name: default
       ack_aggressiveness: low
       fin_timeout: 1
@@ -32,6 +34,8 @@
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
       state: present
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{a10_protocol }}"
       name: default
       ack_aggressiveness: low
       fin_timeout: 1
@@ -54,6 +58,8 @@
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol": "{{a10_protocol }}"
       state: absent
       name: default
       ack_aggressiveness: low
