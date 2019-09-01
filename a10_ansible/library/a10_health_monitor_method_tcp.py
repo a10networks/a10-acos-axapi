@@ -226,6 +226,7 @@ def exists(module):
 def create(module, result):
     payload = build_json("tcp", module)
     try:
+        result["JSON_DEBUG"] = payload
         post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
