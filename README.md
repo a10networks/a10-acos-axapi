@@ -22,6 +22,18 @@ pip install -e a10-ansible/
 pip install a10-ansible
 ~~~
 
+### Installtion
+~~~
+git clone https://github.com/a10networks/a10-ansible a10-ansible
+cd a10-ansible 
+chmod +x a10_install.sh
+
+Check the ansible module location then run..
+
+./a10_install.sh
+
+You can now delete the install files 
+
 ## Configuration
 <fill in stuff about site-vars / etc>
 
