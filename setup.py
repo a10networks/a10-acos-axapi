@@ -9,6 +9,7 @@ setup(name='a10_ansible',
       license='MIT',
       packages=['a10_ansible'],
       zip_safe=False,
+      install_requires=['requests']
       # Install scripts for calling this easily.
       # Need to figure out an easy way of making this a script.
      )
