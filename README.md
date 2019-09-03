@@ -10,16 +10,25 @@ a10-ansible is a set of Ansible modules and example playbooks for interacting wi
 <Fill in>
 
 ## Installation
-a10-ansible is distributed as a Python package. It can be installed from the Github repository or PyPi. It is assumed that ansible is already installed and configured.
+a10-ansible is distributed as a Python package. It can be installed from the Github repository. It is assumed that ansible is already installed and configured.
 
-### Github Installation
+### Github Installation - Using Script (Linux) 
+~~~
+git clone https://github.com/a10networks/a10-ansible a10-ansible
+cd a10-ansible 
+chmod +x a10_install.sh
+
+Check the ansible module location then run..
+
+./a10_install.sh
+
+You can now delete the install files 
+~~~
+
+### Github Installation - Pip Install
 ~~~
 git clone https://github.com/a10networks/a10-ansible a10-ansible
 pip install -e a10-ansible/
-~~~
-### PyPi installation
-~~~
-pip install a10-ansible
 ~~~
 
 ## Configuration
