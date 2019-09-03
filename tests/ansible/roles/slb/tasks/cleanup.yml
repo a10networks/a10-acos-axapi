@@ -1,48 +1,50 @@
 ---
-- name: Test service group create
+- name: Cleanup virtual server 
+  a10_slb_virtual_server:
+    a10_host: "{{ a10_host }}"
+    a10_username: "{{ a10_username }}"
+    a10_password: "{{ a10_password }}"
+    a10_port: "{{ a10_port }}"
+    a10_protocol: "{{ a10_protocol }}"
+    state: absent
+    ip_address: 10.0.0.4
+    netmask: 255.255.255.0
+    name: vs1
+    port_list:
+      - port_number: 80
+        protocol: "tcp"
+
+- name: Cleanup service group
   a10_slb_service_group:
     a10_host: "{{ a10_host }}"
     a10_username: "{{ a10_username }}"
     a10_password: "{{ a10_password }}"
     a10_port: "{{ a10_port }}"
     a10_protocol: "{{ a10_protocol }}"
+    state: absent
     name: sg1 
     protocol: tcp
     lb_method: 'weighted-rr'
-  register: sg_resp
-- assert:
-    that:
-      - "sg_resp['service-group']['name'] == 'sg1'"
-      - "sg_resp['service-group']['protocol'] == 'tcp'"
-      - "sg_resp['service-group']['lb-method'] == 'weighted-rr'"
 
-- name: Test server create 
+- name: Cleanup server
   a10_slb_server:
     a10_host: "{{ a10_host }}"
     a10_username: "{{ a10_username }}"
     a10_password: "{{ a10_password }}"
     a10_port: "{{ a10_port }}"
     a10_protocol: "{{ a10_protocol }}"
+    state: absent
     name: sv1
     host: 10.0.0.1
-  register: sv_resp
-- assert:
-    that:
-      - "sv_resp['server']['name'] == 'sv1'"
-      - "sv_resp['server']['host'] == '10.0.0.1'"
 
-- name: Test association of member server
+- name: Cleanup member server
   a10_slb_service_group_member:
     a10_host: "{{ a10_host }}"
     a10_username: "{{ a10_username }}"
     a10_password: "{{ a10_password }}"
     a10_port: "{{ a10_port }}"
     a10_protocol: "{{ a10_protocol }}"
+    state: absent
     service_group_name: sg1
     name: sv1
     port: 80
-  register: mem_resp
-- assert:
-    that:
-      - "mem_resp['member']['name'] == 'sv1'"
-      - "mem_resp['member']['port'] == 80"
