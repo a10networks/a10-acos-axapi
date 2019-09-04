@@ -1,0 +1,18 @@
+- name: a10_cgnv6_nat64_alg_ftp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_nat64_alg_ftp
+    a10_cgnv6_nat64_alg_ftp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      partition: "MyPartition"
+      trans_epsv_to_pasv: "disable"
+      trans_lprt_to_port: "disable"
+      trans_eprt_to_port: "disable"
+      xlat_no_trans_pasv: "enable"
+      ftp_enable: "disable"
+      trans_lpsv_to_pasv: "disable"
