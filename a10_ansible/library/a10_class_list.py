@@ -76,6 +76,9 @@ options:
             glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
+            age:
+                description:
+                - "Specify age in minutes"
             glid_shared:
                 description:
                 - "Use global Limit ID"
@@ -164,6 +167,9 @@ options:
             ipv6_addr:
                 description:
                 - "Specify IPv6 host or subnet"
+            v6_age:
+                description:
+                - "Specify age in minutes"
             v6_glid_shared:
                 description:
                 - "Use global Limit ID"
@@ -176,6 +182,7 @@ options:
             v6_lsn_radius_profile:
                 description:
                 - "LSN RADIUS Profile Index"
+
 
 """
 
@@ -212,7 +219,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -220,14 +227,14 @@ def get_argspec():
     rv.update(dict(
         dns=dict(type='list',dns_match_string=dict(type='str',),dns_glid_shared=dict(type='int',),dns_glid=dict(type='int',),dns_lid=dict(type='int',),shared_partition_dns_glid=dict(type='bool',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
         name=dict(type='str',required=True,),
-        ipv4_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),glid_shared=dict(type='int',),ipv4addr=dict(type='str',),lsn_lid=dict(type='int',),shared_partition_glid=dict(type='bool',),lsn_radius_profile=dict(type='int',)),
+        ipv4_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),age=dict(type='int',),glid_shared=dict(type='int',),ipv4addr=dict(type='str',),lsn_lid=dict(type='int',),shared_partition_glid=dict(type='bool',),lsn_radius_profile=dict(type='int',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         ac_list=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),ac_key_string=dict(type='str',),ac_value=dict(type='str',)),
         str_list=dict(type='list',str_lid=dict(type='int',),shared_partition_str_glid=dict(type='bool',),value_str=dict(type='str',),str_glid_shared=dict(type='int',),str_glid_dummy=dict(type='bool',),str_glid=dict(type='int',),str_lid_dummy=dict(type='bool',),str=dict(type='str',)),
         file=dict(type='bool',),
         ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive']),
-        ipv6_list=dict(type='list',v6_lsn_lid=dict(type='int',),v6_glid=dict(type='int',),ipv6_addr=dict(type='str',),v6_glid_shared=dict(type='int',),v6_lid=dict(type='int',),shared_partition_v6_glid=dict(type='bool',),v6_lsn_radius_profile=dict(type='int',))
+        ipv6_list=dict(type='list',v6_lsn_lid=dict(type='int',),v6_glid=dict(type='int',),ipv6_addr=dict(type='str',),v6_age=dict(type='int',),v6_glid_shared=dict(type='int',),v6_lid=dict(type='int',),shared_partition_v6_glid=dict(type='bool',),v6_lsn_radius_profile=dict(type='int',))
     ))
    
 
@@ -336,10 +343,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("class-list", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["class-list"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["class-list"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["class-list"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -365,8 +387,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("class-list", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -382,10 +403,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("class-list", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -422,7 +446,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -438,7 +461,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -457,7 +480,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

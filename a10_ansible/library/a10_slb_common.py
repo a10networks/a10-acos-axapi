@@ -165,6 +165,10 @@ options:
         description:
         - "Disable L2/L3 trunk LB"
         required: False
+    resolve_port_conflict:
+        description:
+        - "Enable client port service port conflicts"
+        required: False
     sort_res:
         description:
         - "Enable SLB sorting of resource names"
@@ -308,6 +312,7 @@ options:
         - "Software"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -320,7 +325,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["after_disable","auto_nat_no_ip_refresh","buff_thresh","buff_thresh_hw_buff","buff_thresh_relieve_thresh","buff_thresh_sys_buff_high","buff_thresh_sys_buff_low","compress_block_size","conn_rate_limit","ddos_protection","disable_adaptive_resource_check","disable_server_auto_reselect","dns_cache_age","dns_cache_enable","dns_cache_entry_size","dns_response_rate_limiting","dns_vip_stateless","drop_icmp_to_vip_when_vip_down","dsr_health_check_enable","enable_l7_req_acct","entity","exclude_destination","extended_stats","fast_path_disable","gateway_health_check","graceful_shutdown","graceful_shutdown_enable","honor_server_response_ttl","hw_compression","hw_syn_rr","interval","l2l3_trunk_lb_disable","log_for_reset_unknown_conn","low_latency","max_buff_queued_per_conn","max_http_header_count","max_local_rate","max_remote_rate","msl_time","mss_table","no_auto_up_on_aflex","override_port","pkt_rate_for_reset_unknown_conn","player_id_check_enable","range","range_end","range_start","rate_limit_logging","reset_stale_session","response_type","scale_out","snat_gwy_for_l3","snat_on_vip","software","sort_res","ssli_sni_hash_enable","stateless_sg_multi_binding","stats_data_disable","timeout","ttl_threshold","use_mss_tab","uuid",]
+AVAILABLE_PROPERTIES = ["after_disable","auto_nat_no_ip_refresh","buff_thresh","buff_thresh_hw_buff","buff_thresh_relieve_thresh","buff_thresh_sys_buff_high","buff_thresh_sys_buff_low","compress_block_size","conn_rate_limit","ddos_protection","disable_adaptive_resource_check","disable_server_auto_reselect","dns_cache_age","dns_cache_enable","dns_cache_entry_size","dns_response_rate_limiting","dns_vip_stateless","drop_icmp_to_vip_when_vip_down","dsr_health_check_enable","enable_l7_req_acct","entity","exclude_destination","extended_stats","fast_path_disable","gateway_health_check","graceful_shutdown","graceful_shutdown_enable","honor_server_response_ttl","hw_compression","hw_syn_rr","interval","l2l3_trunk_lb_disable","log_for_reset_unknown_conn","low_latency","max_buff_queued_per_conn","max_http_header_count","max_local_rate","max_remote_rate","msl_time","mss_table","no_auto_up_on_aflex","override_port","pkt_rate_for_reset_unknown_conn","player_id_check_enable","range","range_end","range_start","rate_limit_logging","reset_stale_session","resolve_port_conflict","response_type","scale_out","snat_gwy_for_l3","snat_on_vip","software","sort_res","ssli_sni_hash_enable","stateless_sg_multi_binding","stats_data_disable","timeout","ttl_threshold","use_mss_tab","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -343,7 +348,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -379,6 +384,7 @@ def get_argspec():
         dns_cache_age=dict(type='int',),
         max_http_header_count=dict(type='int',),
         l2l3_trunk_lb_disable=dict(type='bool',),
+        resolve_port_conflict=dict(type='bool',),
         sort_res=dict(type='bool',),
         snat_gwy_for_l3=dict(type='bool',),
         buff_thresh_relieve_thresh=dict(type='int',),
@@ -517,10 +523,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("common", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["common"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["common"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["common"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -546,8 +567,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("common", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -563,10 +583,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("common", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -603,7 +626,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -619,7 +641,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -638,7 +660,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

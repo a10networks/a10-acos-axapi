@@ -38,26 +38,31 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
-    ssl_key:
-        description:
-        - "SSL Key File(enter bulk when import an archive file)"
-        required: True
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
-    remote_file:
+    use_mgmt_port:
         description:
-        - "profile name for remote url"
+        - "Use management port as source port"
+        required: False
+    secured:
+        description:
+        - "Mark as non-exportable"
         required: False
     period:
         description:
         - "Specify the period in second"
         required: False
+    remote_file:
+        description:
+        - "profile name for remote url"
+        required: False
+    ssl_key:
+        description:
+        - "SSL Key File(enter bulk when import an archive file)"
+        required: True
+
 
 """
 
@@ -71,7 +76,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["period","remote_file","ssl_key","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["period","remote_file","secured","ssl_key","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -94,17 +99,18 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ssl_key=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
         uuid=dict(type='str',),
+        use_mgmt_port=dict(type='bool',),
+        secured=dict(type='bool',),
+        period=dict(type='int',),
         remote_file=dict(type='str',),
-        period=dict(type='int',)
+        ssl_key=dict(type='str',required=True,)
     ))
    
 
@@ -213,10 +219,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("ssl-key", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["ssl-key"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["ssl-key"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["ssl-key"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -242,8 +263,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("ssl-key", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -259,10 +279,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("ssl-key", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -299,7 +322,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -315,7 +337,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -334,7 +356,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

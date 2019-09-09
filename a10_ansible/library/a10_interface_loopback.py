@@ -159,6 +159,7 @@ options:
         - "Name for the interface"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -194,7 +195,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -316,10 +317,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("loopback", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["loopback"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["loopback"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["loopback"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -345,8 +361,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("loopback", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -362,10 +377,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("loopback", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -402,7 +420,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -418,7 +435,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -437,7 +454,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

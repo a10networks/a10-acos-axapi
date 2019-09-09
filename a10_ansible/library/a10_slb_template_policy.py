@@ -64,6 +64,9 @@ options:
             require_web_category:
                 description:
                 - "Wait for web category to be resolved before taking proxy decision"
+            acos_event_log:
+                description:
+                - "Enable acos event logging"
             source_list:
                 description:
                 - "Field source_list"
@@ -184,6 +187,7 @@ options:
         - "Use overlap mode for geo-location to do longest match"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -219,13 +223,13 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        forward_policy=dict(type='dict',filtering=dict(type='list',ssli_url_filtering=dict(type='str',choices=['bypassed-sni-disable','intercepted-sni-enable','intercepted-http-disable','no-sni-allow'])),uuid=dict(type='str',),local_logging=dict(type='bool',),san_filtering=dict(type='list',ssli_url_filtering_san=dict(type='str',choices=['enable-san','bypassed-san-disable','intercepted-san-enable','no-san-allow'])),action_list=dict(type='list',log=dict(type='bool',),http_status_code=dict(type='str',choices=['301','302']),forward_snat=dict(type='str',),uuid=dict(type='str',),drop_response_code=dict(type='int',),action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),fake_sg=dict(type='str',),user_tag=dict(type='str',),real_sg=dict(type='str',),drop_message=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),fall_back=dict(type='str',),fall_back_snat=dict(type='str',),drop_redirect_url=dict(type='str',),name=dict(type='str',required=True,)),no_client_conn_reuse=dict(type='bool',),require_web_category=dict(type='bool',),source_list=dict(type='list',match_any=dict(type='bool',),name=dict(type='str',required=True,),match_authorize_policy=dict(type='str',),destination=dict(type='dict',class_list_list=dict(type='list',uuid=dict(type='str',),dest_class_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url','ip'])),web_category_list_list=dict(type='list',uuid=dict(type='str',),web_category_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url'])),any=dict(type='dict',action=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',))),user_tag=dict(type='str',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','destination-match-not-found','no-host-info'])),match_class_list=dict(type='str',),uuid=dict(type='str',))),
+        forward_policy=dict(type='dict',filtering=dict(type='list',ssli_url_filtering=dict(type='str',choices=['bypassed-sni-disable','intercepted-sni-enable','intercepted-http-disable','no-sni-allow'])),uuid=dict(type='str',),local_logging=dict(type='bool',),san_filtering=dict(type='list',ssli_url_filtering_san=dict(type='str',choices=['enable-san','bypassed-san-disable','intercepted-san-enable','no-san-allow'])),action_list=dict(type='list',log=dict(type='bool',),http_status_code=dict(type='str',choices=['301','302']),forward_snat=dict(type='str',),uuid=dict(type='str',),drop_response_code=dict(type='int',),action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),fake_sg=dict(type='str',),user_tag=dict(type='str',),real_sg=dict(type='str',),drop_message=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),fall_back=dict(type='str',),fall_back_snat=dict(type='str',),drop_redirect_url=dict(type='str',),name=dict(type='str',required=True,)),no_client_conn_reuse=dict(type='bool',),require_web_category=dict(type='bool',),acos_event_log=dict(type='bool',),source_list=dict(type='list',match_any=dict(type='bool',),name=dict(type='str',required=True,),match_authorize_policy=dict(type='str',),destination=dict(type='dict',class_list_list=dict(type='list',uuid=dict(type='str',),dest_class_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url','ip'])),web_category_list_list=dict(type='list',uuid=dict(type='str',),web_category_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url'])),any=dict(type='dict',action=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',))),user_tag=dict(type='str',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','destination-match-not-found','no-host-info'])),match_class_list=dict(type='str',),uuid=dict(type='str',))),
         use_destination_ip=dict(type='bool',),
         name=dict(type='str',required=True,),
         over_limit=dict(type='bool',),
@@ -351,10 +355,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("policy", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["policy"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["policy"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["policy"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -380,8 +399,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("policy", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -397,10 +415,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("policy", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -437,7 +458,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -453,7 +473,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -472,7 +492,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

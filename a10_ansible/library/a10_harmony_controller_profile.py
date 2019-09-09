@@ -50,9 +50,21 @@ options:
         description:
         - "Use management port for connections"
         required: False
+    auto_restart_action:
+        description:
+        - "'enable'= enable auto analytics bus restart, default behavior is enable; 'disable'= disable auto analytics bus restart; "
+        required: False
     region:
         description:
         - "region of the thunder-device"
+        required: False
+    interval:
+        description:
+        - "auto analytics bus restart time interval in mins, default is 3 mins"
+        required: False
+    host:
+        description:
+        - "Set harmony controller host adddress"
         required: False
     port:
         description:
@@ -69,10 +81,17 @@ options:
             ip_address:
                 description:
                 - "IP address (IPv4 address)"
-    host:
+    re_sync:
         description:
-        - "Set harmony controller host adddress"
+        - "Field re_sync"
         required: False
+        suboptions:
+            analytics_bus:
+                description:
+                - "re-sync analtyics bus connections"
+            schema_registry:
+                description:
+                - "re-sync the schema registry"
     password_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
@@ -94,6 +113,7 @@ options:
         - "availablity zone of the thunder-device"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -106,7 +126,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","availability_zone","host","password_encrypted","port","provider","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
+AVAILABLE_PROPERTIES = ["action","auto_restart_action","availability_zone","host","interval","password_encrypted","port","provider","re_sync","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -129,7 +149,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -138,10 +158,13 @@ def get_argspec():
         user_name=dict(type='str',),
         uuid=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
+        auto_restart_action=dict(type='str',choices=['enable','disable']),
         region=dict(type='str',),
+        interval=dict(type='int',),
+        host=dict(type='str',),
         port=dict(type='int',),
         thunder_mgmt_ip=dict(type='dict',uuid=dict(type='str',),ip_address=dict(type='str',)),
-        host=dict(type='str',),
+        re_sync=dict(type='dict',analytics_bus=dict(type='bool',),schema_registry=dict(type='bool',)),
         password_encrypted=dict(type='str',),
         provider=dict(type='str',),
         action=dict(type='str',choices=['register','deregister']),
@@ -253,10 +276,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("profile", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["profile"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["profile"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["profile"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -282,8 +320,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("profile", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -299,10 +336,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("profile", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -339,7 +379,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -355,7 +394,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -374,7 +413,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

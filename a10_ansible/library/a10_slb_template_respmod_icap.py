@@ -54,9 +54,9 @@ options:
         description:
         - "uuid of the object"
         required: False
-    service_url:
+    source_ip:
         description:
-        - "URL to send to ICAP server (Service URL Name)"
+        - "Source IP persistence template (Source IP persistence template name)"
         required: False
     shared_partition_tcp_proxy_template:
         description:
@@ -117,6 +117,10 @@ options:
         description:
         - "Customized tag"
         required: False
+    x_auth_url:
+        description:
+        - "Use URL format for authentication"
+        required: False
     log_only_allowed_method:
         description:
         - "Only log allowed HTTP method"
@@ -129,10 +133,11 @@ options:
         description:
         - "cylance external server"
         required: False
-    source_ip:
+    service_url:
         description:
-        - "Source IP persistence template (Source IP persistence template name)"
+        - "URL to send to ICAP server (Service URL Name)"
         required: False
+
 
 """
 
@@ -146,7 +151,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","bypass_ip_cfg","cylance","disable_http_server_reset","fail_close","include_protocol_in_uri","log_only_allowed_method","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","shared_partition_persist_source_ip_template","shared_partition_tcp_proxy_template","source_ip","tcp_proxy","template_persist_source_ip_shared","template_tcp_proxy_shared","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","bypass_ip_cfg","cylance","disable_http_server_reset","fail_close","include_protocol_in_uri","log_only_allowed_method","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","shared_partition_persist_source_ip_template","shared_partition_tcp_proxy_template","source_ip","tcp_proxy","template_persist_source_ip_shared","template_tcp_proxy_shared","user_tag","uuid","x_auth_url",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -169,7 +174,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -179,7 +184,7 @@ def get_argspec():
         shared_partition_persist_source_ip_template=dict(type='bool',),
         template_tcp_proxy_shared=dict(type='str',),
         uuid=dict(type='str',),
-        service_url=dict(type='str',),
+        source_ip=dict(type='str',),
         shared_partition_tcp_proxy_template=dict(type='bool',),
         service_group=dict(type='str',),
         tcp_proxy=dict(type='str',),
@@ -193,10 +198,11 @@ def get_argspec():
         logging=dict(type='str',),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
+        x_auth_url=dict(type='bool',),
         log_only_allowed_method=dict(type='bool',),
         action=dict(type='str',choices=['continue','drop','reset']),
         cylance=dict(type='bool',),
-        source_ip=dict(type='str',)
+        service_url=dict(type='str',)
     ))
    
 
@@ -305,10 +311,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("respmod-icap", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["respmod-icap"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["respmod-icap"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["respmod-icap"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -334,8 +355,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("respmod-icap", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -351,10 +371,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("respmod-icap", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -391,7 +414,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -407,7 +429,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -426,7 +448,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

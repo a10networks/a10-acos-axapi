@@ -227,14 +227,14 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    template:
+    ve_mac_scheme:
         description:
-        - "Field template"
+        - "Field ve_mac_scheme"
         required: False
         suboptions:
-            template_policy:
+            ve_mac_scheme_val:
                 description:
-                - "Apply policy template to the whole system (Policy template name)"
+                - "'hash-based'= Hash-based using the VE number; 'round-robin'= Round Robin scheme; 'system-mac'= Use system MAC address; "
             uuid:
                 description:
                 - "uuid of the object"
@@ -372,6 +372,14 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    counter_lib_accounting:
+        description:
+        - "Field counter_lib_accounting"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
     inuse_port_list:
         description:
         - "Field inuse_port_list"
@@ -399,12 +407,15 @@ options:
             complexity:
                 description:
                 - "'Strict'= Strict= Min length=8, Min Lower Case=2, Min Upper Case=2, Min Numbers=2, Min Special Character=1; 'Medium'= Medium= Min length=6, Min Lower Case=2, Min Upper Case=2, Min Numbers=1, Min Special Character=1; 'Simple'= Simple= Min length=4, Min Lower Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=0; "
-            uuid:
-                description:
-                - "uuid of the object"
             history:
                 description:
                 - "'Strict'= Strict= Does not allow upto 5 old passwords; 'Medium'= Medium= Does not allow upto 4 old passwords; 'Simple'= Simple= Does not allow upto 3 old passwords; "
+            uuid:
+                description:
+                - "uuid of the object"
+            min_pswd_len:
+                description:
+                - "Configure custom password length"
     module_ctrl_cpu:
         description:
         - "'high'= high cpu usage; 'low'= low cpu usage; 'medium'= medium cpu usage; "
@@ -436,6 +447,17 @@ options:
             port_index:
                 description:
                 - "port index to be configured (Specify port index)"
+    shared_poll_mode:
+        description:
+        - "Field shared_poll_mode"
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable shared poll mode"
+            disable:
+                description:
+                - "Disable shared poll mode"
     queuing_buffer:
         description:
         - "Field queuing_buffer"
@@ -455,14 +477,22 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    ve_mac_scheme:
+    domain_list_info:
         description:
-        - "Field ve_mac_scheme"
+        - "Field domain_list_info"
         required: False
         suboptions:
-            ve_mac_scheme_val:
+            uuid:
                 description:
-                - "'hash-based'= Hash-based using the VE number; 'round-robin'= Round Robin scheme; 'system-mac'= Use system MAC address; "
+                - "uuid of the object"
+    template:
+        description:
+        - "Field template"
+        required: False
+        suboptions:
+            template_policy:
+                description:
+                - "Apply policy template to the whole system (Policy template name)"
             uuid:
                 description:
                 - "uuid of the object"
@@ -532,6 +562,9 @@ options:
             class_list_ipv6_addr_count:
                 description:
                 - "Total IPv6 addresses for class-list"
+            authz_policy_number:
+                description:
+                - "Specify the maximum number of authorization policies"
             max_aflex_file_size:
                 description:
                 - "Set maximum aFleX file size (Maximum file size in KBytes, default is 32K)"
@@ -559,17 +592,14 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    throughput:
+    syslog_time_msec:
         description:
-        - "Field throughput"
+        - "Field syslog_time_msec"
         required: False
         suboptions:
-            sampling_enable:
+            enable_flag:
                 description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
+                - "Field enable_flag"
     domain_list_hitcount_enable:
         description:
         - "Enable class list hit count"
@@ -729,6 +759,10 @@ options:
             disable:
                 description:
                 - "Disable CPU Hyperthreading"
+    dynamic_service_dns_socket_pool:
+        description:
+        - "Enable socket pool for dynamic-service DNS"
+        required: False
     glid:
         description:
         - "Apply limits to the whole system"
@@ -935,6 +969,17 @@ options:
         description:
         - "Enable Geolocation database hit count"
         required: False
+    throughput:
+        description:
+        - "Field throughput"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
     ipmi_service:
         description:
         - "Field ipmi_service"
@@ -982,6 +1027,14 @@ options:
             application_mempool:
                 description:
                 - "Enable application memory pool"
+    ip_dns_cache:
+        description:
+        - "Field ip_dns_cache"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
     mon_template:
         description:
         - "Field mon_template"
@@ -1029,6 +1082,7 @@ options:
                 description:
                 - "uuid of the object"
 
+
 """
 
 EXAMPLES = """
@@ -1041,7 +1095,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add_cpu_core","add_port","all_vlan_limit","anomaly_log","app_performance","apps_global","attack","attack_log","bandwidth","bfd","class_list_hitcount_enable","cm_update_file_name_ref","control_cpu","core","cosq_show","cosq_stats","cpu_hyper_thread","cpu_list","cpu_load_sharing","cpu_map","data_cpu","ddos_attack","ddos_log","deep_hrxq","del_port","delete_cpu_core","dns","dns_cache","domain_list_hitcount_enable","environment","fw","geo_db_hitcount_enable","geo_location","geoloc","geoloc_list_list","geoloc_name_helper","geolocation_file","glid","guest_file","gui_image_list","hardware","hardware_forward","hrxq_status","icmp","icmp_rate","icmp6","inuse_cpu_list","inuse_port_list","io_cpu","ip_stats","ip6_stats","ipmi","ipmi_service","ipsec","link_capability","log_cpu_interval","memory","mgmt_port","modify_port","module_ctrl_cpu","mon_template","multi_queue_support","ndisc_ra","password_policy","per_vlan_limit","platformtype","port_info","port_list","ports","promiscuous_mode","queuing_buffer","radius","reboot","resource_accounting","resource_usage","session","session_reclaim_limit","shell_privileges","shutdown","sockstress_disable","spe_profile","spe_status","src_ip_hash_enable","ssl_req_q","tcp","tcp_stats","telemetry_log","template","template_bind","throughput","trunk","trunk_hw_hash","trunk_xaui_hw_hash","upgrade_status","uuid","ve_mac_scheme",]
+AVAILABLE_PROPERTIES = ["add_cpu_core","add_port","all_vlan_limit","anomaly_log","app_performance","apps_global","attack","attack_log","bandwidth","bfd","class_list_hitcount_enable","cm_update_file_name_ref","control_cpu","core","cosq_show","cosq_stats","counter_lib_accounting","cpu_hyper_thread","cpu_list","cpu_load_sharing","cpu_map","data_cpu","ddos_attack","ddos_log","deep_hrxq","del_port","delete_cpu_core","dns","dns_cache","domain_list_hitcount_enable","domain_list_info","dynamic_service_dns_socket_pool","environment","fw","geo_db_hitcount_enable","geo_location","geoloc","geoloc_list_list","geoloc_name_helper","geolocation_file","glid","guest_file","gui_image_list","hardware","hardware_forward","hrxq_status","icmp","icmp_rate","icmp6","inuse_cpu_list","inuse_port_list","io_cpu","ip_dns_cache","ip_stats","ip6_stats","ipmi","ipmi_service","ipsec","link_capability","log_cpu_interval","memory","mgmt_port","modify_port","module_ctrl_cpu","mon_template","multi_queue_support","ndisc_ra","password_policy","per_vlan_limit","platformtype","port_info","port_list","ports","promiscuous_mode","queuing_buffer","radius","reboot","resource_accounting","resource_usage","session","session_reclaim_limit","shared_poll_mode","shell_privileges","shutdown","sockstress_disable","spe_profile","spe_status","src_ip_hash_enable","ssl_req_q","syslog_time_msec","tcp","tcp_stats","telemetry_log","template","template_bind","throughput","trunk","trunk_hw_hash","trunk_xaui_hw_hash","upgrade_status","uuid","ve_mac_scheme",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -1064,7 +1118,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -1077,7 +1131,7 @@ def get_argspec():
         ndisc_ra=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','good_recv','periodic_sent','rate_limit','bad_hop_limit','truncated','bad_icmpv6_csum','bad_icmpv6_code','bad_icmpv6_option','l2_addr_and_unspec','no_free_buffers'])),uuid=dict(type='str',)),
         tcp=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','activeopens','passiveopens','attemptfails','estabresets','insegs','outsegs','retranssegs','inerrs','outrsts','sock_alloc','orphan_count','mem_alloc','recv_mem','send_mem','currestab','currsyssnt','currsynrcv','currfinw1','currfinw2','currtimew','currclose','currclsw','currlack','currlstn','currclsg','pawsactiverejected','syn_rcv_rstack','syn_rcv_rst','syn_rcv_ack','ax_rexmit_syn','tcpabortontimeout','noroute','exceedmss','tfo_conns','tfo_actives','tfo_denied'])),uuid=dict(type='str',)),
         bandwidth=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','input-bytes-per-sec','output-bytes-per-sec'])),uuid=dict(type='str',)),
-        session=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_l4_conn','conn_counter','conn_freed_counter','total_l4_packet_count','total_l7_packet_count','total_l4_conn_proxy','total_l7_conn','total_tcp_conn','curr_free_conn','tcp_est_counter','tcp_half_open_counter','tcp_half_close_counter','udp_counter','ip_counter','other_counter','reverse_nat_tcp_counter','reverse_nat_udp_counter','tcp_syn_half_open_counter','conn_smp_alloc_counter','conn_smp_free_counter','conn_smp_aged_counter','ssl_count_curr','ssl_count_total','server_ssl_count_curr','server_ssl_count_total','client_ssl_reuse_total','server_ssl_reuse_total','ssl_failed_total','ssl_failed_ca_verification','ssl_server_cert_error','ssl_client_cert_auth_fail','total_ip_nat_conn','total_l2l3_conn','client_ssl_ctx_malloc_failure','conn_type_0_available','conn_type_1_available','conn_type_2_available','conn_type_3_available','conn_type_4_available','conn_smp_type_0_available','conn_smp_type_1_available','conn_smp_type_2_available','conn_smp_type_3_available','conn_smp_type_4_available','sctp-half-open-counter','sctp-est-counter','nonssl_bypass','ssl_failsafe_total','ssl_forward_proxy_failed_handshake_total','ssl_forward_proxy_failed_tcp_total','ssl_forward_proxy_failed_crypto_total','ssl_forward_proxy_failed_cert_verify_total','ssl_forward_proxy_invalid_ocsp_stapling_total','ssl_forward_proxy_revoked_ocsp_total','ssl_forward_proxy_failed_cert_signing_total','ssl_forward_proxy_failed_ssl_version_total','ssl_forward_proxy_sni_bypass_total','ssl_forward_proxy_client_auth_bypass_total','conn_app_smp_alloc_counter','diameter_conn_counter','diameter_conn_freed_counter','debug_tcp_counter','debug_udp_counter','total_fw_conn','total_local_conn','total_curr_conn','client_ssl_fatal_alert','client_ssl_fin_rst','fp_session_fin_rst','server_ssl_fatal_alert','server_ssl_fin_rst','client_template_int_err','client_template_unknown_err','server_template_int_err','server_template_unknown_err','total_debug_conn','ssl_forward_proxy_failed_aflex_total','ssl_forward_proxy_cert_subject_bypass_total','ssl_forward_proxy_cert_issuer_bypass_total','ssl_forward_proxy_cert_san_bypass_total','ssl_forward_proxy_no_sni_bypass_total','ssl_forward_proxy_no_sni_reset_total','ssl_forward_proxy_username_bypass_total','ssl_forward_proxy_ad_grpup_bypass_total'])),uuid=dict(type='str',)),
+        session=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_l4_conn','conn_counter','conn_freed_counter','total_l4_packet_count','total_l7_packet_count','total_l4_conn_proxy','total_l7_conn','total_tcp_conn','curr_free_conn','tcp_est_counter','tcp_half_open_counter','tcp_half_close_counter','udp_counter','ip_counter','other_counter','reverse_nat_tcp_counter','reverse_nat_udp_counter','tcp_syn_half_open_counter','conn_smp_alloc_counter','conn_smp_free_counter','conn_smp_aged_counter','ssl_count_curr','ssl_count_total','server_ssl_count_curr','server_ssl_count_total','client_ssl_reuse_total','server_ssl_reuse_total','ssl_failed_total','ssl_failed_ca_verification','ssl_server_cert_error','ssl_client_cert_auth_fail','total_ip_nat_conn','total_l2l3_conn','client_ssl_ctx_malloc_failure','conn_type_0_available','conn_type_1_available','conn_type_2_available','conn_type_3_available','conn_type_4_available','conn_smp_type_0_available','conn_smp_type_1_available','conn_smp_type_2_available','conn_smp_type_3_available','conn_smp_type_4_available','sctp-half-open-counter','sctp-est-counter','nonssl_bypass','ssl_failsafe_total','ssl_forward_proxy_failed_handshake_total','ssl_forward_proxy_failed_tcp_total','ssl_forward_proxy_failed_crypto_total','ssl_forward_proxy_failed_cert_verify_total','ssl_forward_proxy_invalid_ocsp_stapling_total','ssl_forward_proxy_revoked_ocsp_total','ssl_forward_proxy_failed_cert_signing_total','ssl_forward_proxy_failed_ssl_version_total','ssl_forward_proxy_sni_bypass_total','ssl_forward_proxy_client_auth_bypass_total','conn_app_smp_alloc_counter','diameter_conn_counter','diameter_conn_freed_counter','debug_tcp_counter','debug_udp_counter','total_fw_conn','total_local_conn','total_curr_conn','client_ssl_fatal_alert','client_ssl_fin_rst','fp_session_fin_rst','server_ssl_fatal_alert','server_ssl_fin_rst','client_template_int_err','client_template_unknown_err','server_template_int_err','server_template_unknown_err','total_debug_conn','ssl_forward_proxy_failed_aflex_total','ssl_forward_proxy_cert_subject_bypass_total','ssl_forward_proxy_cert_issuer_bypass_total','ssl_forward_proxy_cert_san_bypass_total','ssl_forward_proxy_no_sni_bypass_total','ssl_forward_proxy_no_sni_reset_total','ssl_forward_proxy_username_bypass_total','ssl_forward_proxy_ad_grpup_bypass_total','diameter_concurrent_user_sessions_counter'])),uuid=dict(type='str',)),
         session_reclaim_limit=dict(type='dict',scan_freq=dict(type='int',),nscan_limit=dict(type='int',),uuid=dict(type='str',)),
         inuse_cpu_list=dict(type='dict',uuid=dict(type='str',)),
         add_port=dict(type='dict',port_index=dict(type='int',)),
@@ -1088,7 +1142,7 @@ def get_argspec():
         environment=dict(type='dict',uuid=dict(type='str',)),
         port_info=dict(type='dict',uuid=dict(type='str',)),
         trunk_hw_hash=dict(type='dict',mode=dict(type='int',),uuid=dict(type='str',)),
-        template=dict(type='dict',template_policy=dict(type='str',),uuid=dict(type='str',)),
+        ve_mac_scheme=dict(type='dict',ve_mac_scheme_val=dict(type='str',choices=['hash-based','round-robin','system-mac']),uuid=dict(type='str',)),
         template_bind=dict(type='dict',monitor_list=dict(type='list',template_monitor=dict(type='int',required=True,),uuid=dict(type='str',))),
         ipmi=dict(type='dict',reset=dict(type='bool',),ip=dict(type='dict',ipv4_address=dict(type='str',),default_gateway=dict(type='str',),ipv4_netmask=dict(type='str',)),ipsrc=dict(type='dict',dhcp=dict(type='bool',),static=dict(type='bool',)),tool=dict(type='dict',cmd=dict(type='str',)),user=dict(type='dict',administrator=dict(type='bool',),setname=dict(type='str',),newname=dict(type='str',),newpass=dict(type='str',),callback=dict(type='bool',),add=dict(type='str',),disable=dict(type='str',),setpass=dict(type='str',),user=dict(type='bool',),operator=dict(type='bool',),password=dict(type='str',),privilege=dict(type='str',))),
         icmp_rate=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','over_limit_drop','limit_intf_drop','limit_vserver_drop','limit_total_drop','lockup_time_left','curr_rate','v6_over_limit_drop','v6_limit_intf_drop','v6_limit_vserver_drop','v6_limit_total_drop','v6_lockup_time_left','v6_curr_rate'])),uuid=dict(type='str',)),
@@ -1101,24 +1155,27 @@ def get_argspec():
         cpu_map=dict(type='dict',uuid=dict(type='str',)),
         ports=dict(type='dict',link_detection_interval=dict(type='int',),uuid=dict(type='str',)),
         app_performance=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec','fw-conns-per-sec','gifw-conns-per-sec'])),uuid=dict(type='str',)),
+        counter_lib_accounting=dict(type='dict',uuid=dict(type='str',)),
         inuse_port_list=dict(type='dict',uuid=dict(type='str',)),
         control_cpu=dict(type='dict',uuid=dict(type='str',)),
-        password_policy=dict(type='dict',aging=dict(type='str',choices=['Strict','Medium','Simple']),complexity=dict(type='str',choices=['Strict','Medium','Simple']),uuid=dict(type='str',),history=dict(type='str',choices=['Strict','Medium','Simple'])),
+        password_policy=dict(type='dict',aging=dict(type='str',choices=['Strict','Medium','Simple']),complexity=dict(type='str',choices=['Strict','Medium','Simple']),history=dict(type='str',choices=['Strict','Medium','Simple']),uuid=dict(type='str',),min_pswd_len=dict(type='int',)),
         module_ctrl_cpu=dict(type='str',choices=['high','low','medium']),
         radius=dict(type='dict',server=dict(type='dict',accounting_start=dict(type='str',choices=['ignore','append-entry','replace-entry']),attribute_name=dict(type='str',choices=['msisdn','imei','imsi','custom1','custom2','custom3']),vrid=dict(type='int',),remote=dict(type='dict',ip_list=dict(type='list',ip_list_name=dict(type='str',),ip_list_encrypted=dict(type='str',),ip_list_secret_string=dict(type='str',),ip_list_secret=dict(type='bool',))),uuid=dict(type='str',),encrypted=dict(type='str',),disable_reply=dict(type='bool',),accounting_interim_update=dict(type='str',choices=['ignore','append-entry','replace-entry']),secret=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msisdn-received','imei-received','imsi-received','custom-received','radius-request-received','radius-request-dropped','request-bad-secret-dropped','request-no-key-vap-dropped','request-malformed-dropped','request-ignored','radius-table-full','secret-not-configured-dropped','ha-standby-dropped','ipv6-prefix-length-mismatch','invalid-key','smp-created','smp-deleted','smp-mem-allocated','smp-mem-alloc-failed','smp-mem-freed','smp-in-rml','mem-allocated','mem-alloc-failed','mem-freed','ha-sync-create-sent','ha-sync-delete-sent','ha-sync-create-recv','ha-sync-delete-recv','acct-on-filters-full','acct-on-dup-request','ip-mismatch-delete','ip-add-race-drop','ha-sync-no-key-vap-dropped','inter-card-msg-fail-drop'])),accounting_stop=dict(type='str',choices=['ignore','delete-entry','delete-entry-and-sessions']),attribute=dict(type='list',prefix_number=dict(type='int',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),name=dict(type='str',),prefix_vendor=dict(type='int',),number=dict(type='int',),value=dict(type='str',choices=['hexadecimal']),custom_vendor=dict(type='int',),custom_number=dict(type='int',),vendor=dict(type='int',),attribute_value=dict(type='str',choices=['inside-ipv6-prefix','inside-ip','inside-ipv6','imei','imsi','msisdn','custom1','custom2','custom3'])),listen_port=dict(type='int',),accounting_on=dict(type='str',choices=['ignore','delete-entries-using-attribute']),secret_string=dict(type='str',))),
         modify_port=dict(type='dict',port_index=dict(type='int',),port_number=dict(type='int',)),
         del_port=dict(type='dict',port_index=dict(type='int',)),
+        shared_poll_mode=dict(type='dict',enable=dict(type='bool',),disable=dict(type='bool',)),
         queuing_buffer=dict(type='dict',enable=dict(type='bool',),uuid=dict(type='str',)),
         reboot=dict(type='dict',uuid=dict(type='str',)),
-        ve_mac_scheme=dict(type='dict',ve_mac_scheme_val=dict(type='str',choices=['hash-based','round-robin','system-mac']),uuid=dict(type='str',)),
+        domain_list_info=dict(type='dict',uuid=dict(type='str',)),
+        template=dict(type='dict',template_policy=dict(type='str',),uuid=dict(type='str',)),
         anomaly_log=dict(type='bool',),
         core=dict(type='dict',uuid=dict(type='str',)),
         apps_global=dict(type='dict',msl_time=dict(type='int',),uuid=dict(type='str',),log_session_on_established=dict(type='bool',)),
         multi_queue_support=dict(type='dict',enable=dict(type='bool',)),
         trunk=dict(type='dict',load_balance=dict(type='dict',use_l4=dict(type='bool',),uuid=dict(type='str',),use_l3=dict(type='bool',))),
         attack_log=dict(type='bool',),
-        resource_usage=dict(type='dict',l4_session_count=dict(type='int',),nat_pool_addr_count=dict(type='int',),max_aflex_authz_collection_number=dict(type='int',),visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),class_list_ipv6_addr_count=dict(type='int',),max_aflex_file_size=dict(type='int',),class_list_ac_entry_count=dict(type='int',),ssl_dma_memory=dict(type='int',),radius_table_size=dict(type='int',),aflex_table_entry_count=dict(type='int',),ssl_context_memory=dict(type='int',),auth_portal_html_file_size=dict(type='int',),auth_portal_image_file_size=dict(type='int',),uuid=dict(type='str',)),
-        throughput=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','global-system-throughput-bits-per-sec','per-part-throughput-bits-per-sec'])),uuid=dict(type='str',)),
+        resource_usage=dict(type='dict',l4_session_count=dict(type='int',),nat_pool_addr_count=dict(type='int',),max_aflex_authz_collection_number=dict(type='int',),visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),class_list_ipv6_addr_count=dict(type='int',),authz_policy_number=dict(type='int',),max_aflex_file_size=dict(type='int',),class_list_ac_entry_count=dict(type='int',),ssl_dma_memory=dict(type='int',),radius_table_size=dict(type='int',),aflex_table_entry_count=dict(type='int',),ssl_context_memory=dict(type='int',),auth_portal_html_file_size=dict(type='int',),auth_portal_image_file_size=dict(type='int',),uuid=dict(type='str',)),
+        syslog_time_msec=dict(type='dict',enable_flag=dict(type='bool',)),
         domain_list_hitcount_enable=dict(type='bool',),
         cm_update_file_name_ref=dict(type='dict',source_name=dict(type='str',),id=dict(type='int',),dest_name=dict(type='str',)),
         spe_status=dict(type='dict',uuid=dict(type='str',)),
@@ -1134,6 +1191,7 @@ def get_argspec():
         dns=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','slb_req','slb_resp','slb_no_resp','slb_req_rexmit','slb_resp_no_match','slb_no_resource','nat_req','nat_resp','nat_no_resp','nat_req_rexmit','nat_resp_no_match','nat_no_resource','nat_xid_reused'])),uuid=dict(type='str',)),
         memory=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','usage-percentage'])),uuid=dict(type='str',)),
         cpu_hyper_thread=dict(type='dict',enable=dict(type='bool',),disable=dict(type='bool',)),
+        dynamic_service_dns_socket_pool=dict(type='bool',),
         glid=dict(type='int',),
         ddos_log=dict(type='bool',),
         spe_profile=dict(type='dict',action=dict(type='str',choices=['ipv4-only','ipv6-only','ipv4-ipv6'])),
@@ -1157,10 +1215,12 @@ def get_argspec():
         deep_hrxq=dict(type='dict',enable=dict(type='bool',)),
         cosq_show=dict(type='dict',uuid=dict(type='str',)),
         geo_db_hitcount_enable=dict(type='bool',),
+        throughput=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','global-system-throughput-bits-per-sec','per-part-throughput-bits-per-sec'])),uuid=dict(type='str',)),
         ipmi_service=dict(type='dict',disable=dict(type='bool',),uuid=dict(type='str',)),
         data_cpu=dict(type='dict',uuid=dict(type='str',)),
         dns_cache=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_q','total_r','hit','bad_q','encode_q','multiple_q','oversize_q','bad_r','oversize_r','encode_r','multiple_r','answer_r','ttl_r','ageout','bad_answer','ageout_weight','total_log','total_alloc','total_freed','current_allocate','current_data_allocate'])),uuid=dict(type='str',)),
         fw=dict(type='dict',application_flow=dict(type='int',),basic_dpi_enable=dict(type='bool',),uuid=dict(type='str',),application_mempool=dict(type='bool',)),
+        ip_dns_cache=dict(type='dict',uuid=dict(type='str',)),
         mon_template=dict(type='dict',monitor_list=dict(type='list',clear_cfg=dict(type='list',clear_sequence=dict(type='int',),clear_all_sequence=dict(type='int',),sessions=dict(type='str',choices=['all','sequence'])),uuid=dict(type='str',),link_enable_cfg=dict(type='list',ena_sequence=dict(type='int',),enaeth=dict(type='str',)),link_up_cfg=dict(type='list',linkup_ethernet3=dict(type='str',),linkup_ethernet2=dict(type='str',),linkup_ethernet1=dict(type='str',),link_up_sequence1=dict(type='int',),link_up_sequence3=dict(type='int',),link_up_sequence2=dict(type='int',)),link_down_cfg=dict(type='list',link_down_sequence1=dict(type='int',),link_down_sequence2=dict(type='int',),link_down_sequence3=dict(type='int',),linkdown_ethernet2=dict(type='str',),linkdown_ethernet3=dict(type='str',),linkdown_ethernet1=dict(type='str',)),user_tag=dict(type='str',),link_disable_cfg=dict(type='list',dis_sequence=dict(type='int',),diseth=dict(type='str',)),monitor_relation=dict(type='str',choices=['monitor-and','monitor-or']),id=dict(type='int',required=True,))),
         geoloc=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','place-holder'])),uuid=dict(type='str',)),
         upgrade_status=dict(type='dict',uuid=dict(type='str',)),
@@ -1272,10 +1332,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("system", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["system"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["system"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["system"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -1301,8 +1376,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("system", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -1318,10 +1392,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("system", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -1358,7 +1435,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -1374,7 +1450,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -1393,7 +1469,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

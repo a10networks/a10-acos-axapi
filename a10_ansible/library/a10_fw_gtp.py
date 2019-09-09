@@ -45,7 +45,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'create-session-request'= Create Session Request; 'create-session-response'= Create Session Response; 'path-management-message'= Path Management Message; 'delete-session-request'= Delete Session Request; 'delete-session-response'= Delete Session Response; 'reserved-field-set-drop'= Reserved field set drop; 'tunnel-id-flag-drop'= Tunnel ID Flag Incorrect; 'message-filtering-drop'= Message Filtering Drop; 'reserved-information-element-drop'= Resevered Information Element Field Drop; 'mandatory-information-element-drop'= Mandatory Information Element Field Drop; 'filter-list-drop'= APN IMSI Information Filtering Drop; 'invalid-teid-drop'= Invalid TEID Drop; 'out-of-state-drop'= Out Of State Drop; 'message-length-drop'= Message Length Exceeded; 'unsupported-message-type-v2'= GTP v2 message type is not supported; 'fast-conn-setup'= Fast Conn Setup Attempt; 'out-of-session-memory'= Out of Session Memory; 'no-fwd-route'= No Forward Route; 'no-rev-route'= NO Reverse Route; 'invalid-key'= Invalid TEID Field; 'create-session-request-retransmit'= Retransmitted Create Session Request; 'delete-session-request-retransmit'= Retransmitted Delete Session Request; 'response-cause-not-accepted-drop'= Response Cause indicates Request not Accepted; 'invalid-imsi-len-drop'= Invalid IMSI Length Drop; 'invalid-apn-len-drop'= Invalid APN Length Drop; 'create-pdp-context-request-v1'= GTP v1 Create PDP Context Request; 'create-pdp-context-response-v1'= GTP v1 Create PDP Context Response; 'path-management-message-v1'= GTP v1 Path Management Message; 'reserved-field-set-drop-v1'= GTP v1 Reserved field set drop; 'message-filtering-drop-v1'= GTP v1 Message Filtering Drop; 'reserved-information-element-drop-v1'= GTP v1 Reserved Information Element Field Drop; 'mandatory-information-element-drop-v1'= GTP v1 Mandatory Information Element Field Drop; 'filter-list-drop-v1'= GTP v1 APN IMSI Information Filtering Drop; 'invalid-teid-drop-v1'= GTP v1 Invalid TEID Drop; 'message-length-drop-v1'= GTP v1 Message Length Exceeded; 'version-not-supported'= GTP version is not supported; 'unsupported-message-type-v1'= GTP v1 message type is not supported; 'delete-pdp-context-request-v1'= GTP v1 Delete Context PDP Request; 'delete-pdp-context-response-v1'= GTP v1 Delete Context PDP Response; 'create-pdp-context-request-v0'= GTP v0 Create PDP Context Request; 'create-pdp-context-response-v0'= GTP v0 Create PDP Context Response; 'delete-pdp-context-request-v0'= GTP v0 Delete Context PDP Request; 'delete-pdp-context-response-v0'= GTP v0 Delete Context PDP Response; 'path-management-message-v0'= GTP v0 Path Management Message; 'message-filtering-drop-v0'= GTP v0 Message Filtering Drop; 'unsupported-message-type-v0'= GTP v0 message type is not supported; 'invalid-flow-label-drop-v0'= GTP v0 Invalid flow label drop; 'invalid-tid-drop-v0'= GTP v0 Invalid tid drop; 'message-length-drop-v0'= GTP v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0 Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop; "
+                - "'all'= all; 'create-session-request'= Create Session Request; 'create-session-response'= Create Session Response; 'path-management-message'= Path Management Message; 'delete-session-request'= Delete Session Request; 'delete-session-response'= Delete Session Response; 'reserved-field-set-drop'= Reserved field set drop; 'tunnel-id-flag-drop'= Tunnel ID Flag Incorrect; 'message-filtering-drop'= Message Filtering Drop; 'reserved-information-element-drop'= Resevered Information Element Field Drop; 'mandatory-information-element-drop'= Mandatory Information Element Field Drop; 'filter-list-drop'= APN IMSI Information Filtering Drop; 'invalid-teid-drop'= Invalid TEID Drop; 'out-of-state-drop'= Out Of State Drop; 'message-length-drop'= Message Length Exceeded; 'unsupported-message-type-v2'= GTP v2 message type is not supported; 'fast-conn-setup'= Fast Conn Setup Attempt; 'out-of-session-memory'= Out of Session Memory; 'no-fwd-route'= No Forward Route; 'no-rev-route'= NO Reverse Route; 'invalid-key'= Invalid TEID Field; 'create-session-request-retransmit'= Retransmitted Create Session Request; 'delete-session-request-retransmit'= Retransmitted Delete Session Request; 'response-cause-not-accepted'= Response Cause indicates Request not Accepted; 'invalid-imsi-len-drop'= Invalid IMSI Length Drop; 'invalid-apn-len-drop'= Invalid APN Length Drop; 'create-pdp-context-request-v1'= GTP v1 Create PDP Context Request; 'create-pdp-context-response-v1'= GTP v1 Create PDP Context Response; 'path-management-message-v1'= GTP v1 Path Management Message; 'reserved-field-set-drop-v1'= GTP v1 Reserved field set drop; 'message-filtering-drop-v1'= GTP v1 Message Filtering Drop; 'reserved-information-element-drop-v1'= GTP v1 Reserved Information Element Field Drop; 'mandatory-information-element-drop-v1'= GTP v1 Mandatory Information Element Field Drop; 'filter-list-drop-v1'= GTP v1 APN IMSI Information Filtering Drop; 'invalid-teid-drop-v1'= GTP v1 Invalid TEID Drop; 'message-length-drop-v1'= GTP v1 Message Length Exceeded; 'version-not-supported'= GTP version is not supported; 'unsupported-message-type-v1'= GTP v1 message type is not supported; 'delete-pdp-context-request-v1'= GTP v1 Delete Context PDP Request; 'delete-pdp-context-response-v1'= GTP v1 Delete Context PDP Response; 'create-pdp-context-request-v0'= GTP v0 Create PDP Context Request; 'create-pdp-context-response-v0'= GTP v0 Create PDP Context Response; 'delete-pdp-context-request-v0'= GTP v0 Delete Context PDP Request; 'delete-pdp-context-response-v0'= GTP v0 Delete Context PDP Response; 'path-management-message-v0'= GTP v0 Path Management Message; 'message-filtering-drop-v0'= GTP v0 Message Filtering Drop; 'unsupported-message-type-v0'= GTP v0 message type is not supported; 'invalid-flow-label-drop-v0'= GTP v0 Invalid flow label drop; 'invalid-tid-drop-v0'= GTP v0 Invalid tid drop; 'message-length-drop-v0'= GTP v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0 Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop; "
     uuid:
         description:
         - "uuid of the object"
@@ -54,6 +54,7 @@ options:
         description:
         - "'enable'= Enable GTP Inspection; "
         required: False
+
 
 """
 
@@ -90,13 +91,13 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','create-session-request','create-session-response','path-management-message','delete-session-request','delete-session-response','reserved-field-set-drop','tunnel-id-flag-drop','message-filtering-drop','reserved-information-element-drop','mandatory-information-element-drop','filter-list-drop','invalid-teid-drop','out-of-state-drop','message-length-drop','unsupported-message-type-v2','fast-conn-setup','out-of-session-memory','no-fwd-route','no-rev-route','invalid-key','create-session-request-retransmit','delete-session-request-retransmit','response-cause-not-accepted-drop','invalid-imsi-len-drop','invalid-apn-len-drop','create-pdp-context-request-v1','create-pdp-context-response-v1','path-management-message-v1','reserved-field-set-drop-v1','message-filtering-drop-v1','reserved-information-element-drop-v1','mandatory-information-element-drop-v1','filter-list-drop-v1','invalid-teid-drop-v1','message-length-drop-v1','version-not-supported','unsupported-message-type-v1','delete-pdp-context-request-v1','delete-pdp-context-response-v1','create-pdp-context-request-v0','create-pdp-context-response-v0','delete-pdp-context-request-v0','delete-pdp-context-response-v0','path-management-message-v0','message-filtering-drop-v0','unsupported-message-type-v0','invalid-flow-label-drop-v0','invalid-tid-drop-v0','message-length-drop-v0','mandatory-information-element-drop-v0','filter-list-drop-v0','gtp-in-gtp-drop'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','create-session-request','create-session-response','path-management-message','delete-session-request','delete-session-response','reserved-field-set-drop','tunnel-id-flag-drop','message-filtering-drop','reserved-information-element-drop','mandatory-information-element-drop','filter-list-drop','invalid-teid-drop','out-of-state-drop','message-length-drop','unsupported-message-type-v2','fast-conn-setup','out-of-session-memory','no-fwd-route','no-rev-route','invalid-key','create-session-request-retransmit','delete-session-request-retransmit','response-cause-not-accepted','invalid-imsi-len-drop','invalid-apn-len-drop','create-pdp-context-request-v1','create-pdp-context-response-v1','path-management-message-v1','reserved-field-set-drop-v1','message-filtering-drop-v1','reserved-information-element-drop-v1','mandatory-information-element-drop-v1','filter-list-drop-v1','invalid-teid-drop-v1','message-length-drop-v1','version-not-supported','unsupported-message-type-v1','delete-pdp-context-request-v1','delete-pdp-context-response-v1','create-pdp-context-request-v0','create-pdp-context-response-v0','delete-pdp-context-request-v0','delete-pdp-context-response-v0','path-management-message-v0','message-filtering-drop-v0','unsupported-message-type-v0','invalid-flow-label-drop-v0','invalid-tid-drop-v0','message-length-drop-v0','mandatory-information-element-drop-v0','filter-list-drop-v0','gtp-in-gtp-drop'])),
         uuid=dict(type='str',),
         gtp_value=dict(type='str',choices=['enable'])
     ))
@@ -205,10 +206,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("gtp", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["gtp"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["gtp"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["gtp"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -234,8 +250,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("gtp", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -251,10 +266,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("gtp", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -291,7 +309,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -307,7 +324,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -326,7 +343,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

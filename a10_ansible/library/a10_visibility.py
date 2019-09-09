@@ -161,9 +161,15 @@ options:
             sensitivity:
                 description:
                 - "'high'= Highly sensitive anomaly detection. Can lead to false positives; 'low'= Low sensitivity anomaly detection. Can cause delay in detection and might not detect certain attacks. (default); "
+            logging:
+                description:
+                - "'per-entity'= Enable per entity logging; 'per-metric'= Enable per metric logging with threshold details; 'disable'= Disable anomaly notifications (Default); "
             uuid:
                 description:
                 - "uuid of the object"
+            feature_status:
+                description:
+                - "'enable'= Enable anomaly-detection; 'disable'= Disable anomaly detection (default); "
     monitor:
         description:
         - "Field monitor"
@@ -215,6 +221,7 @@ options:
                 description:
                 - "Field agent_list"
 
+
 """
 
 EXAMPLES = """
@@ -250,7 +257,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -260,7 +267,7 @@ def get_argspec():
         resource_usage=dict(type='dict',uuid=dict(type='str',)),
         mon_entity_telemetry_data=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','in_pkts','out_pkts','in_bytes','out_bytes','errors','in_small_pkt','in_frag','out_small_pkt','out_frag','new-conn','concurrent-conn','in_bytes_per_out_bytes','drop_pkts_per_pkts','tcp_in_syn','tcp_out_syn','tcp_in_fin','tcp_out_fin','tcp_in_payload','tcp_out_payload','tcp_in_rexmit','tcp_out_rexmit','tcp_in_rst','tcp_out_rst','tcp_in_empty_ack','tcp_out_empty_ack','tcp_in_zero_wnd','tcp_out_zero_wnd','tcp_fwd_syn_per_fin'])),uuid=dict(type='str',)),
         uuid=dict(type='str',),
-        reporting=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log-transmit-failure','buffer-alloc-failure','notif-jobs-in-queue','enqueue-fail'])),uuid=dict(type='str',),template=dict(type='dict',notification=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),template_name_list=dict(type='list',protocol=dict(type='str',choices=['http','https']),name=dict(type='str',required=True,),use_mgmt_port=dict(type='bool',),https_port=dict(type='int',),debug_mode=dict(type='bool',),relative_uri=dict(type='str',),authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),api_key_encrypted=dict(type='str',),api_key=dict(type='bool',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),api_key_string=dict(type='str',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),host_name=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sent_successful','send_fail','response_fail'])),http_port=dict(type='int',),ipv6_address=dict(type='str',),test_connectivity=dict(type='bool',),ipv4_address=dict(type='str',),action=dict(type='str',choices=['enable','disable']),uuid=dict(type='str',)))),telemetry_export_interval=dict(type='dict',uuid=dict(type='str',),value=dict(type='int',))),
+        reporting=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log-transmit-failure','buffer-alloc-failure','notif-jobs-in-queue','enqueue-fail','enqueue-pass','dequeued'])),uuid=dict(type='str',),template=dict(type='dict',notification=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),template_name_list=dict(type='list',protocol=dict(type='str',choices=['http','https']),name=dict(type='str',required=True,),use_mgmt_port=dict(type='bool',),https_port=dict(type='int',),debug_mode=dict(type='bool',),relative_uri=dict(type='str',),authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),api_key_encrypted=dict(type='str',),api_key=dict(type='bool',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),api_key_string=dict(type='str',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),host_name=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sent_successful','send_fail','response_fail'])),http_port=dict(type='int',),ipv6_address=dict(type='str',),test_connectivity=dict(type='bool',),ipv4_address=dict(type='str',),action=dict(type='str',choices=['enable','disable']),uuid=dict(type='str',)))),telemetry_export_interval=dict(type='dict',uuid=dict(type='str',),value=dict(type='int',))),
         topk=dict(type='dict',sources=dict(type='dict',uuid=dict(type='str',))),
         initial_learning_interval=dict(type='int',),
         monitored_entity=dict(type='dict',detail=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)),sessions=dict(type='dict',uuid=dict(type='str',)),topk=dict(type='dict',sources=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)),uuid=dict(type='str',),secondary=dict(type='dict',topk=dict(type='dict',sources=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)))),
@@ -269,7 +276,7 @@ def get_argspec():
         source_entity_topk=dict(type='bool',),
         file=dict(type='dict',metrics=dict(type='dict',action=dict(type='str',choices=['enable','disable']),uuid=dict(type='str',))),
         granularity=dict(type='int',),
-        anomaly_detection=dict(type='dict',sensitivity=dict(type='str',choices=['high','low']),uuid=dict(type='str',)),
+        anomaly_detection=dict(type='dict',sensitivity=dict(type='str',choices=['high','low']),logging=dict(type='str',choices=['per-entity','per-metric','disable']),uuid=dict(type='str',),feature_status=dict(type='str',choices=['enable','disable'])),
         monitor=dict(type='dict',primary_monitor=dict(type='str',choices=['traffic']),mon_entity_topk=dict(type='bool',),monitor_key=dict(type='str',choices=['source','dest','service','source-nat-ip']),debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),uuid=dict(type='str',),sflow=dict(type='dict',uuid=dict(type='str',),listening_port=dict(type='int',)),delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),index_sessions=dict(type='bool',),source_entity_topk=dict(type='bool',),template=dict(type='dict',notification=dict(type='list',notif_template_name=dict(type='str',))),replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),netflow=dict(type='dict',template_active_timeout=dict(type='int',),uuid=dict(type='str',),listening_port=dict(type='int',)),index_sessions_type=dict(type='str',choices=['per-cpu']),secondary_monitor=dict(type='dict',mon_entity_topk=dict(type='bool',),debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),uuid=dict(type='str',),secondary_monitoring_key=dict(type='str',choices=['service']),delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),source_entity_topk=dict(type='bool',),replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP']))),agent_list=dict(type='list',uuid=dict(type='str',),agent_v4_addr=dict(type='str',),agent_v6_addr=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sflow-packets-received','sflow-samples-received','sflow-samples-bad-len','sflow-samples-non-std','sflow-samples-skipped','sflow-sample-record-bad-len','sflow-samples-sent-for-detection','sflow-sample-record-invalid-layer2','sflow-sample-ipv6-hdr-parse-fail','sflow-disabled','netflow-disabled','netflow-v5-packets-received','netflow-v5-samples-received','netflow-v5-samples-sent-for-detection','netflow-v5-sample-records-bad-len','netflow-v5-max-records-exceed','netflow-v9-packets-received','netflow-v9-samples-received','netflow-v9-samples-sent-for-detection','netflow-v9-sample-records-bad-len','netflow-v9-max-records-exceed','netflow-v10-packets-received','netflow-v10-samples-received','netflow-v10-samples-sent-for-detection','netflow-v10-sample-records-bad-len','netflow-v10-max-records-exceed','netflow-tcp-sample-received','netflow-udp-sample-received','netflow-icmp-sample-received','netflow-other-sample-received','netflow-record-copy-oom-error','netflow-record-rse-invalid','netflow-sample-flow-dur-error'])),agent_name=dict(type='str',required=True,)))
     ))
    
@@ -377,10 +384,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("visibility", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["visibility"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["visibility"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["visibility"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -406,8 +428,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("visibility", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -423,10 +444,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("visibility", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -463,7 +487,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -479,7 +502,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -498,7 +521,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

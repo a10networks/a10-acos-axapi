@@ -71,14 +71,10 @@ options:
             health_check:
                 description:
                 - "Health Check (Monitor Name)"
-    uuid:
+    name:
         description:
-        - "uuid of the object"
-        required: False
-    fqdn_name:
-        description:
-        - "Server hostname"
-        required: False
+        - "Server Name"
+        required: True
     resolve_as:
         description:
         - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as AAAA Query to resolve FQDN; "
@@ -111,10 +107,11 @@ options:
         description:
         - "Health Check Monitor (Health monitor name)"
         required: False
-    name:
+    uuid:
         description:
-        - "Server Name"
-        required: True
+        - "uuid of the object"
+        required: False
+
 
 """
 
@@ -128,7 +125,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","fqdn_name","health_check","health_check_disable","host","name","port_list","resolve_as","sampling_enable","server_ipv6_addr","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","health_check","health_check_disable","host","name","port_list","resolve_as","sampling_enable","server_ipv6_addr","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -151,7 +148,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -159,8 +156,7 @@ def get_argspec():
     rv.update(dict(
         health_check_disable=dict(type='bool',),
         port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent'])),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),health_check=dict(type='str',)),
-        uuid=dict(type='str',),
-        fqdn_name=dict(type='str',),
+        name=dict(type='str',required=True,),
         resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent'])),
         user_tag=dict(type='str',),
@@ -168,7 +164,7 @@ def get_argspec():
         action=dict(type='str',choices=['enable','disable']),
         server_ipv6_addr=dict(type='str',),
         health_check=dict(type='str',),
-        name=dict(type='str',required=True,)
+        uuid=dict(type='str',)
     ))
    
 
@@ -277,10 +273,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("log-server", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["log-server"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["log-server"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["log-server"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -306,8 +317,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("log-server", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -323,10 +333,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("log-server", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -363,7 +376,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -379,7 +391,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -398,7 +410,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

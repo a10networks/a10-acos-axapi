@@ -46,14 +46,19 @@ options:
         description:
         - "'Strict'= Strict= Min length=8, Min Lower Case=2, Min Upper Case=2, Min Numbers=2, Min Special Character=1; 'Medium'= Medium= Min length=6, Min Lower Case=2, Min Upper Case=2, Min Numbers=1, Min Special Character=1; 'Simple'= Simple= Min length=4, Min Lower Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=0; "
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     history:
         description:
         - "'Strict'= Strict= Does not allow upto 5 old passwords; 'Medium'= Medium= Does not allow upto 4 old passwords; 'Simple'= Simple= Does not allow upto 3 old passwords; "
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    min_pswd_len:
+        description:
+        - "Configure custom password length"
+        required: False
+
 
 """
 
@@ -67,7 +72,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aging","complexity","history","uuid",]
+AVAILABLE_PROPERTIES = ["aging","complexity","history","min_pswd_len","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -90,7 +95,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -98,8 +103,9 @@ def get_argspec():
     rv.update(dict(
         aging=dict(type='str',choices=['Strict','Medium','Simple']),
         complexity=dict(type='str',choices=['Strict','Medium','Simple']),
+        history=dict(type='str',choices=['Strict','Medium','Simple']),
         uuid=dict(type='str',),
-        history=dict(type='str',choices=['Strict','Medium','Simple'])
+        min_pswd_len=dict(type='int',)
     ))
    
 
@@ -206,10 +212,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("password-policy", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["password-policy"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["password-policy"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["password-policy"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -235,8 +256,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("password-policy", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -252,10 +272,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("password-policy", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -292,7 +315,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -308,7 +330,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -327,7 +349,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

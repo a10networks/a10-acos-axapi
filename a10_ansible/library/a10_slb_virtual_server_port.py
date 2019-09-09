@@ -49,6 +49,10 @@ options:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP; 'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port; 'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'= [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port; 'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP; 'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port; 'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; "
         required: True
+    cpu_compute:
+        description:
+        - "enable cpu compute on virtual port"
+        required: False
     precedence:
         description:
         - "Set auto NAT pool as higher precedence for source NAT"
@@ -73,6 +77,9 @@ options:
             acl_name_src_nat_pool_shared:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
+            v_acl_name_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
             shared_partition_pool_name:
                 description:
                 - "Policy based Source NAT from shared partition"
@@ -82,10 +89,25 @@ options:
             acl_name:
                 description:
                 - "Apply an access list name (Named Access List)"
+            v_shared_partition_pool_name:
+                description:
+                - "Policy based Source NAT from shared partition"
             acl_name_src_nat_pool:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
+            v_acl_name_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+            acl_name_shared:
+                description:
+                - "Apply an access list name (Named Access List)"
             acl_name_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
+            v_acl_name_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+            v_acl_name_seq_num_shared:
                 description:
                 - "Specify ACL precedence (sequence-number)"
     stats_data_action:
@@ -191,14 +213,14 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'curr_conn'= Current established connections; 'total_l4_conn'= Total L4 connections established; 'total_l7_conn'= Total L7 connections established; 'total_tcp_conn'= Total TCP connections established; 'total_conn'= Total connections established; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_dns_pkts'= Total DNS packets processed; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'loc_permit'= Geo-location Permit count; 'loc_deny'= Geo-location Deny count; 'loc_conn'= Geo-location Connection count; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'backend-time-to-first-byte'= Backend Time from Request to Response First Byte; 'backend-time-to-last-byte'= Backend Time from Request to Response Last Byte; 'in-latency'= Request Latency at Thunder; 'out-latency'= Response Latency at Thunder; 'total_fwd_bytes_out'= Bytes processed in forward direction (outbound); 'total_fwd_pkts_out'= Packets processed in forward direction (outbound); 'total_rev_bytes_out'= Bytes processed in reverse direction (outbound); 'total_rev_pkts_out'= Packets processed in reverse direction (outbound); 'curr_req_rate'= Current request rate; 'curr_resp'= Current response; 'total_resp'= Total response; 'total_resp_succ'= Total successful responses; 'curr_resp_rate'= Current response rate; 'curr_conn_overflow'= Current connection counter overflow count; 'dnsrrl_total_allowed'= DNS Response-Rate-Limiting Total Responses Allowed; 'dnsrrl_total_dropped'= DNS Response-Rate-Limiting Total Responses Dropped; 'dnsrrl_total_slipped'= DNS Response-Rate-Limiting Total Responses Slipped; 'dnsrrl_bad_fqdn'= DNS Response-Rate-Limiting Bad FQDN; "
+                - "'all'= all; 'curr_conn'= Current established connections; 'total_l4_conn'= Total L4 connections established; 'total_l7_conn'= Total L7 connections established; 'total_tcp_conn'= Total TCP connections established; 'total_conn'= Total connections established; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_dns_pkts'= Total DNS packets processed; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'loc_permit'= Geo-location Permit count; 'loc_deny'= Geo-location Deny count; 'loc_conn'= Geo-location Connection count; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'backend-time-to-first-byte'= Backend Time from Request to Response First Byte; 'backend-time-to-last-byte'= Backend Time from Request to Response Last Byte; 'in-latency'= Request Latency at Thunder; 'out-latency'= Response Latency at Thunder; 'total_fwd_bytes_out'= Bytes processed in forward direction (outbound); 'total_fwd_pkts_out'= Packets processed in forward direction (outbound); 'total_rev_bytes_out'= Bytes processed in reverse direction (outbound); 'total_rev_pkts_out'= Packets processed in reverse direction (outbound); 'curr_req_rate'= Current request rate; 'curr_resp'= Current response; 'total_resp'= Total response; 'total_resp_succ'= Total successful responses; 'curr_resp_rate'= Current response rate; 'curr_conn_overflow'= Current connection counter overflow count; 'dnsrrl_total_allowed'= DNS Response-Rate-Limiting Total Responses Allowed; 'dnsrrl_total_dropped'= DNS Response-Rate-Limiting Total Responses Dropped; 'dnsrrl_total_slipped'= DNS Response-Rate-Limiting Total Responses Slipped; 'dnsrrl_bad_fqdn'= DNS Response-Rate-Limiting Bad FQDN; 'throughput-bits-per-sec'= Throughput in bits/sec; 'dynamic-memory-alloc'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory-free'= dynamic memory (bytes) allocated by the vport; 'dynamic-memory'= dynamic memory (bytes) used by the vport(alloc-free); "
     template_ssli:
         description:
         - "SSLi template (SSLi Template Name)"
         required: False
-    shared_partition_persist_cookie_template:
+    memory_compute:
         description:
-        - "Reference a persist cookie template from shared partition"
+        - "enable dynamic memory compute on virtual port"
         required: False
     shared_partition_policy_template:
         description:
@@ -328,6 +350,10 @@ options:
         description:
         - "rtp traffic try to match the real server of sip smp call-id session"
         required: False
+    shared_partition_persist_cookie_template:
+        description:
+        - "Reference a persist cookie template from shared partition"
+        required: False
     template_file_inspection:
         description:
         - "File Inspection service template (file-inspection template name)"
@@ -421,6 +447,9 @@ options:
         - "Field acl_id_list"
         required: False
         suboptions:
+            v_acl_id_seq_num:
+                description:
+                - "Specify ACL precedence (sequence-number)"
             acl_id_seq_num:
                 description:
                 - "Specify ACL precedence (sequence-number)"
@@ -430,15 +459,30 @@ options:
             acl_id_seq_num_shared:
                 description:
                 - "Specify ACL precedence (sequence-number)"
+            v_acl_id_src_nat_pool:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
+            acl_id_shared:
+                description:
+                - "acl id"
+            v_acl_id_src_nat_pool_shared:
+                description:
+                - "Policy based Source NAT (NAT Pool or Pool Group)"
             acl_id:
                 description:
                 - "ACL id VPORT"
-            shared_partition_pool_id:
-                description:
-                - "Policy based Source NAT from shared partition"
             acl_id_src_nat_pool_shared:
                 description:
                 - "Policy based Source NAT (NAT Pool or Pool Group)"
+            v_shared_partition_pool_id:
+                description:
+                - "Policy based Source NAT from shared partition"
+            shared_partition_pool_id:
+                description:
+                - "Policy based Source NAT from shared partition"
+            v_acl_id_seq_num_shared:
+                description:
+                - "Specify ACL precedence (sequence-number)"
     shared_partition_http_template:
         description:
         - "Reference a HTTP template from shared partition"
@@ -663,6 +707,7 @@ options:
         - "Ethernet interface number"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -675,7 +720,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id_list","acl_name_list","action","aflex_scripts","alt_protocol1","alt_protocol2","alternate_port","alternate_port_number","auth_cfg","auto","clientip_sticky_nat","conn_limit","def_selection_if_pref_failed","enable_playerid_check","eth_fwd","eth_rev","expand","extended_stats","force_routing_mode","gslb_enable","ha_conn_mirror","ip_map_list","ipinip","l7_hardware_assist","message_switching","name","no_auto_up_on_aflex","no_dest_nat","no_logging","on_syn","optimization_level","persist_type","pool","pool_shared","port_number","port_translation","precedence","protocol","range","rate","redirect_to_https","req_fail","reset","reset_on_server_selection_fail","rtp_sip_call_id_match","sampling_enable","scaleout_bucket_count","scaleout_device_group","secs","serv_sel_fail","service_group","shared_partition_cache_template","shared_partition_client_ssl_template","shared_partition_connection_reuse_template","shared_partition_diameter_template","shared_partition_dns_template","shared_partition_dynamic_service_template","shared_partition_external_service_template","shared_partition_http_policy_template","shared_partition_http_template","shared_partition_persist_cookie_template","shared_partition_persist_destination_ip_template","shared_partition_persist_source_ip_template","shared_partition_persist_ssl_sid_template","shared_partition_policy_template","shared_partition_pool","shared_partition_server_ssl_template","shared_partition_tcp","shared_partition_tcp_proxy_template","shared_partition_udp","shared_partition_virtual_port_template","skip_rev_hash","snat_on_vip","stats_data_action","support_http2","syn_cookie","template_cache","template_cache_shared","template_client_ssh","template_client_ssl","template_client_ssl_shared","template_connection_reuse","template_connection_reuse_shared","template_dblb","template_diameter","template_diameter_shared","template_dns","template_dns_shared","template_dynamic_service","template_dynamic_service_shared","template_external_service","template_external_service_shared","template_file_inspection","template_fix","template_ftp","template_http","template_http_policy","template_http_policy_shared","template_http_shared","template_imap_pop3","template_persist_cookie","template_persist_cookie_shared","template_persist_destination_ip","template_persist_destination_ip_shared","template_persist_source_ip","template_persist_source_ip_shared","template_persist_ssl_sid","template_persist_ssl_sid_shared","template_policy","template_policy_shared","template_reqmod_icap","template_respmod_icap","template_scaleout","template_server_ssh","template_server_ssl","template_server_ssl_shared","template_sip","template_smpp","template_smtp","template_ssli","template_tcp","template_tcp_proxy","template_tcp_proxy_client","template_tcp_proxy_server","template_tcp_proxy_shared","template_tcp_shared","template_udp","template_udp_shared","template_virtual_port","template_virtual_port_shared","trunk_fwd","trunk_rev","use_alternate_port","use_cgnv6","use_default_if_no_server","use_rcv_hop_for_resp","user_tag","uuid","view","waf_template","when_down","when_down_protocol2",]
+AVAILABLE_PROPERTIES = ["acl_id_list","acl_name_list","action","aflex_scripts","alt_protocol1","alt_protocol2","alternate_port","alternate_port_number","auth_cfg","auto","clientip_sticky_nat","conn_limit","cpu_compute","def_selection_if_pref_failed","enable_playerid_check","eth_fwd","eth_rev","expand","extended_stats","force_routing_mode","gslb_enable","ha_conn_mirror","ip_map_list","ipinip","l7_hardware_assist","memory_compute","message_switching","name","no_auto_up_on_aflex","no_dest_nat","no_logging","on_syn","optimization_level","persist_type","pool","pool_shared","port_number","port_translation","precedence","protocol","range","rate","redirect_to_https","req_fail","reset","reset_on_server_selection_fail","rtp_sip_call_id_match","sampling_enable","scaleout_bucket_count","scaleout_device_group","secs","serv_sel_fail","service_group","shared_partition_cache_template","shared_partition_client_ssl_template","shared_partition_connection_reuse_template","shared_partition_diameter_template","shared_partition_dns_template","shared_partition_dynamic_service_template","shared_partition_external_service_template","shared_partition_http_policy_template","shared_partition_http_template","shared_partition_persist_cookie_template","shared_partition_persist_destination_ip_template","shared_partition_persist_source_ip_template","shared_partition_persist_ssl_sid_template","shared_partition_policy_template","shared_partition_pool","shared_partition_server_ssl_template","shared_partition_tcp","shared_partition_tcp_proxy_template","shared_partition_udp","shared_partition_virtual_port_template","skip_rev_hash","snat_on_vip","stats_data_action","support_http2","syn_cookie","template_cache","template_cache_shared","template_client_ssh","template_client_ssl","template_client_ssl_shared","template_connection_reuse","template_connection_reuse_shared","template_dblb","template_diameter","template_diameter_shared","template_dns","template_dns_shared","template_dynamic_service","template_dynamic_service_shared","template_external_service","template_external_service_shared","template_file_inspection","template_fix","template_ftp","template_http","template_http_policy","template_http_policy_shared","template_http_shared","template_imap_pop3","template_persist_cookie","template_persist_cookie_shared","template_persist_destination_ip","template_persist_destination_ip_shared","template_persist_source_ip","template_persist_source_ip_shared","template_persist_ssl_sid","template_persist_ssl_sid_shared","template_policy","template_policy_shared","template_reqmod_icap","template_respmod_icap","template_scaleout","template_server_ssh","template_server_ssl","template_server_ssl_shared","template_sip","template_smpp","template_smtp","template_ssli","template_tcp","template_tcp_proxy","template_tcp_proxy_client","template_tcp_proxy_server","template_tcp_proxy_shared","template_tcp_shared","template_udp","template_udp_shared","template_virtual_port","template_virtual_port_shared","trunk_fwd","trunk_rev","use_alternate_port","use_cgnv6","use_default_if_no_server","use_rcv_hop_for_resp","user_tag","uuid","view","waf_template","when_down","when_down_protocol2",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -698,7 +743,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -706,11 +751,12 @@ def get_argspec():
     rv.update(dict(
         ha_conn_mirror=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp','others','diameter','dns-tcp','dns-udp','fast-http','fix','ftp','ftp-proxy','http','https','http2','http2s','imap','mlb','mms','mysql','mssql','pop3','radius','rtsp','sip','sip-tcp','sips','smpp-tcp','spdy','spdys','smtp','ssl-proxy','ssli','ssh','tcp-proxy','tftp','fast-fix']),
+        cpu_compute=dict(type='bool',),
         precedence=dict(type='bool',),
         port_translation=dict(type='bool',),
         ip_map_list=dict(type='str',),
         template_reqmod_icap=dict(type='str',),
-        acl_name_list=dict(type='list',acl_name_src_nat_pool_shared=dict(type='str',),shared_partition_pool_name=dict(type='bool',),acl_name_seq_num_shared=dict(type='int',),acl_name=dict(type='str',),acl_name_src_nat_pool=dict(type='str',),acl_name_seq_num=dict(type='int',)),
+        acl_name_list=dict(type='list',acl_name_src_nat_pool_shared=dict(type='str',),v_acl_name_src_nat_pool_shared=dict(type='str',),shared_partition_pool_name=dict(type='bool',),acl_name_seq_num_shared=dict(type='int',),acl_name=dict(type='str',),v_shared_partition_pool_name=dict(type='bool',),acl_name_src_nat_pool=dict(type='str',),v_acl_name_seq_num=dict(type='int',),acl_name_shared=dict(type='str',),acl_name_seq_num=dict(type='int',),v_acl_name_src_nat_pool=dict(type='str',),v_acl_name_seq_num_shared=dict(type='int',)),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         use_default_if_no_server=dict(type='bool',),
         template_connection_reuse=dict(type='str',),
@@ -735,9 +781,9 @@ def get_argspec():
         template_smpp=dict(type='str',),
         user_tag=dict(type='str',),
         template_diameter=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','total_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time','loc_permit','loc_deny','loc_conn','curr_ssl_conn','total_ssl_conn','backend-time-to-first-byte','backend-time-to-last-byte','in-latency','out-latency','total_fwd_bytes_out','total_fwd_pkts_out','total_rev_bytes_out','total_rev_pkts_out','curr_req_rate','curr_resp','total_resp','total_resp_succ','curr_resp_rate','curr_conn_overflow','dnsrrl_total_allowed','dnsrrl_total_dropped','dnsrrl_total_slipped','dnsrrl_bad_fqdn'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','total_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time','loc_permit','loc_deny','loc_conn','curr_ssl_conn','total_ssl_conn','backend-time-to-first-byte','backend-time-to-last-byte','in-latency','out-latency','total_fwd_bytes_out','total_fwd_pkts_out','total_rev_bytes_out','total_rev_pkts_out','curr_req_rate','curr_resp','total_resp','total_resp_succ','curr_resp_rate','curr_conn_overflow','dnsrrl_total_allowed','dnsrrl_total_dropped','dnsrrl_total_slipped','dnsrrl_bad_fqdn','throughput-bits-per-sec','dynamic-memory-alloc','dynamic-memory-free','dynamic-memory'])),
         template_ssli=dict(type='str',),
-        shared_partition_persist_cookie_template=dict(type='bool',),
+        memory_compute=dict(type='bool',),
         shared_partition_policy_template=dict(type='bool',),
         template_policy=dict(type='str',),
         no_logging=dict(type='bool',),
@@ -770,6 +816,7 @@ def get_argspec():
         template_cache=dict(type='str',),
         template_persist_cookie_shared=dict(type='str',),
         rtp_sip_call_id_match=dict(type='bool',),
+        shared_partition_persist_cookie_template=dict(type='bool',),
         template_file_inspection=dict(type='str',),
         template_ftp=dict(type='str',),
         serv_sel_fail=dict(type='bool',),
@@ -792,7 +839,7 @@ def get_argspec():
         snat_on_vip=dict(type='bool',),
         template_connection_reuse_shared=dict(type='str',),
         shared_partition_tcp=dict(type='bool',),
-        acl_id_list=dict(type='list',acl_id_seq_num=dict(type='int',),acl_id_src_nat_pool=dict(type='str',),acl_id_seq_num_shared=dict(type='int',),acl_id=dict(type='int',),shared_partition_pool_id=dict(type='bool',),acl_id_src_nat_pool_shared=dict(type='str',)),
+        acl_id_list=dict(type='list',v_acl_id_seq_num=dict(type='int',),acl_id_seq_num=dict(type='int',),acl_id_src_nat_pool=dict(type='str',),acl_id_seq_num_shared=dict(type='int',),v_acl_id_src_nat_pool=dict(type='str',),acl_id_shared=dict(type='int',),v_acl_id_src_nat_pool_shared=dict(type='str',),acl_id=dict(type='int',),acl_id_src_nat_pool_shared=dict(type='str',),v_shared_partition_pool_id=dict(type='bool',),shared_partition_pool_id=dict(type='bool',),v_acl_id_seq_num_shared=dict(type='int',)),
         shared_partition_http_template=dict(type='bool',),
         template_external_service=dict(type='str',),
         on_syn=dict(type='bool',),
@@ -962,10 +1009,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("port", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["port"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["port"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["port"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -991,8 +1053,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("port", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -1008,10 +1069,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("port", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -1048,7 +1112,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -1064,7 +1127,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -1083,7 +1146,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

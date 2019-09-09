@@ -45,11 +45,12 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'icmp-unknown-type'= ICMP Unknown Type; 'icmp-no-port-info'= ICMP Port Info Not Included; 'icmp-no-session-drop'= ICMP No Matching Session Drop; 'icmpv6-unknown-type'= ICMPv6 Unknown Type; 'icmpv6-no-port-info'= ICMPv6 Port Info Not Included; 'icmpv6-no-session-drop'= ICMPv6 No Matching Session Drop; 'icmp-to-icmp'= ICMP to ICMP Conversion; 'icmp-to-icmpv6'= ICMP to ICMPv6 Conversion; 'icmpv6-to-icmp'= ICMPv6 to ICMP Conversion; 'icmpv6-to-icmpv6'= ICMPv6 to ICMPv6 Conversion; 'icmp-bad-type'= Bad Embedded ICMP Type; 'icmpv6-bad-type'= Bad Embedded ICMPv6 Type; '64-known-drop'= NAT64 Forward Known ICMPv6 Drop; '64-unknown-drop'= NAT64 Forward Unknown ICMPv6 Drop; '64-midpoint-hop'= NAT64 Forward Unknown Source Drop; '46-known-drop'= NAT64 Reverse Known ICMP Drop; '46-unknown-drop'= NAT64 Reverse Known ICMPv6 Drop; '46-no-prefix-for-ipv4'= NAT64 Reverse No Prefix Match for IPv4; '46-bad-encap-ip-header-len'= 4to6 Bad Encapsulated IP Header Length; 'icmp-to-icmp-err'= ICMP to ICMP Conversion Error; 'icmp-to-icmpv6-err'= ICMP to ICMPv6 Conversion Error; 'icmpv6-to-icmp-err'= ICMPv6 to ICMP Conversion Error; 'icmpv6-to-icmpv6-err'= ICMPv6 to ICMPv6 Conversion Error; 'encap-cross-cpu-no-match'= ICMP Embedded Cross CPU No Matching Session; 'encap-cross-cpu-preprocess-err'= ICMP Embedded Cross CPU Preprocess Error; 'icmp-to-icmp-unknown-l4'= ICMP Embedded Unknown L4 Protocol; 'icmp-to-icmpv6-unknown-l4'= ICMP to ICMPv6 Embedded Unknown L4 Protocol; 'icmpv6-to-icmp-unknown-l4'= ICMPv6 to ICMP Embedded Unknown L4 Protocol; 'icmpv6-to-icmpv6-unknown-l4'= ICMPv6 to ICMPv6 Embedded Unknown L4 Protocol; 'static-nat'= ICMP Static NAT; 'echo-to-pool-reply'= Ping to Pool Reply; 'echo-to-pool-drop'= Ping to Pool Drop; 'error-to-pool-drop'= Error to Pool Drop; 'echo-to-pool-reply-v6'= Ping6 to Pool Reply; 'echo-to-pool-drop-v6'= Ping6 to Pool Drop; 'error-to-pool-drop-v6'= Error to IPv6 Pool Drop; "
+                - "'all'= all; 'icmp-unknown-type'= ICMP Unknown Type; 'icmp-no-port-info'= ICMP Port Info Not Included; 'icmp-no-session-drop'= ICMP No Matching Session Drop; 'icmpv6-unknown-type'= ICMPv6 Unknown Type; 'icmpv6-no-port-info'= ICMPv6 Port Info Not Included; 'icmpv6-no-session-drop'= ICMPv6 No Matching Session Drop; 'icmp-to-icmp'= ICMP to ICMP Conversion; 'icmp-to-icmpv6'= ICMP to ICMPv6 Conversion; 'icmpv6-to-icmp'= ICMPv6 to ICMP Conversion; 'icmpv6-to-icmpv6'= ICMPv6 to ICMPv6 Conversion; 'icmp-bad-type'= Bad Embedded ICMP Type; 'icmpv6-bad-type'= Bad Embedded ICMPv6 Type; '64-known-drop'= NAT64 Forward Known ICMPv6 Drop; '64-unknown-drop'= NAT64 Forward Unknown ICMPv6 Drop; '64-midpoint-hop'= NAT64 Forward Unknown Source Drop; '46-known-drop'= NAT64 Reverse Known ICMP Drop; '46-unknown-drop'= NAT64 Reverse Known ICMPv6 Drop; '46-no-prefix-for-ipv4'= NAT64 Reverse No Prefix Match for IPv4; '46-bad-encap-ip-header-len'= 4to6 Bad Encapsulated IP Header Length; 'icmp-to-icmp-err'= ICMP to ICMP Conversion Error; 'icmp-to-icmpv6-err'= ICMP to ICMPv6 Conversion Error; 'icmpv6-to-icmp-err'= ICMPv6 to ICMP Conversion Error; 'icmpv6-to-icmpv6-err'= ICMPv6 to ICMPv6 Conversion Error; 'encap-cross-cpu-no-match'= ICMP Embedded Cross CPU No Matching Session; 'encap-cross-cpu-preprocess-err'= ICMP Embedded Cross CPU Preprocess Error; 'icmp-to-icmp-unknown-l4'= ICMP Embedded Unknown L4 Protocol; 'icmp-to-icmpv6-unknown-l4'= ICMP to ICMPv6 Embedded Unknown L4 Protocol; 'icmpv6-to-icmp-unknown-l4'= ICMPv6 to ICMP Embedded Unknown L4 Protocol; 'icmpv6-to-icmpv6-unknown-l4'= ICMPv6 to ICMPv6 Embedded Unknown L4 Protocol; 'static-nat'= ICMP Static NAT; 'echo-to-pool-reply'= Ping to Pool Reply; 'echo-to-pool-drop'= Ping to Pool Drop; 'error-to-pool-drop'= Error to Pool Drop; 'echo-to-pool-reply-v6'= Ping6 to Pool Reply; 'echo-to-pool-drop-v6'= Ping6 to Pool Drop; 'error-to-pool-drop-v6'= Error to IPv6 Pool Drop; 'error-ip-mismatch'= ICMP IP address mismatch; "
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -86,13 +87,13 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','icmp-unknown-type','icmp-no-port-info','icmp-no-session-drop','icmpv6-unknown-type','icmpv6-no-port-info','icmpv6-no-session-drop','icmp-to-icmp','icmp-to-icmpv6','icmpv6-to-icmp','icmpv6-to-icmpv6','icmp-bad-type','icmpv6-bad-type','64-known-drop','64-unknown-drop','64-midpoint-hop','46-known-drop','46-unknown-drop','46-no-prefix-for-ipv4','46-bad-encap-ip-header-len','icmp-to-icmp-err','icmp-to-icmpv6-err','icmpv6-to-icmp-err','icmpv6-to-icmpv6-err','encap-cross-cpu-no-match','encap-cross-cpu-preprocess-err','icmp-to-icmp-unknown-l4','icmp-to-icmpv6-unknown-l4','icmpv6-to-icmp-unknown-l4','icmpv6-to-icmpv6-unknown-l4','static-nat','echo-to-pool-reply','echo-to-pool-drop','error-to-pool-drop','echo-to-pool-reply-v6','echo-to-pool-drop-v6','error-to-pool-drop-v6'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','icmp-unknown-type','icmp-no-port-info','icmp-no-session-drop','icmpv6-unknown-type','icmpv6-no-port-info','icmpv6-no-session-drop','icmp-to-icmp','icmp-to-icmpv6','icmpv6-to-icmp','icmpv6-to-icmpv6','icmp-bad-type','icmpv6-bad-type','64-known-drop','64-unknown-drop','64-midpoint-hop','46-known-drop','46-unknown-drop','46-no-prefix-for-ipv4','46-bad-encap-ip-header-len','icmp-to-icmp-err','icmp-to-icmpv6-err','icmpv6-to-icmp-err','icmpv6-to-icmpv6-err','encap-cross-cpu-no-match','encap-cross-cpu-preprocess-err','icmp-to-icmp-unknown-l4','icmp-to-icmpv6-unknown-l4','icmpv6-to-icmp-unknown-l4','icmpv6-to-icmpv6-unknown-l4','static-nat','echo-to-pool-reply','echo-to-pool-drop','error-to-pool-drop','echo-to-pool-reply-v6','echo-to-pool-drop-v6','error-to-pool-drop-v6','error-ip-mismatch'])),
         uuid=dict(type='str',)
     ))
    
@@ -200,10 +201,25 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("icmp", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["icmp"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["icmp"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["icmp"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -229,8 +245,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("icmp", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -246,10 +261,13 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("icmp", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
     return delete(module, result)
@@ -286,7 +304,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -302,7 +319,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
+    if partition and not module.check_mode:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
@@ -321,7 +338,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
