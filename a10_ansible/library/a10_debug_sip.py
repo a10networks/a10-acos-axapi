@@ -385,7 +385,7 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition and not module.check_mode:
+    if partition:
         module.client.activate_partition(partition)
 
     existing_config = exists(module)
