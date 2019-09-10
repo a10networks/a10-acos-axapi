@@ -5,10 +5,10 @@
   tasks:
     - name: Create RBA role
       a10_rba_role:
-      state: "absent"
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
-      name: "role01" #name of RBA role
+        a10_host: "{{ a10_host }}"
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
+        a10_port: "{{ a10_port }}"
+        a10_protocol: "{{ a10_protocol }}"
+        name: "role01" #name of RBA role
+        state: "absent"
