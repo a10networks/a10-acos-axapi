@@ -261,7 +261,11 @@ def present(module, result, existing_config):
         return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("top-k-rules", module)
