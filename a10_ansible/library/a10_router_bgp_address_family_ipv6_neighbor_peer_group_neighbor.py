@@ -332,10 +332,10 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module)
+def get_oper(module):
     return module.client.get(oper_url(module))
 
-def get_stats(module)
+def get_stats(module):
     return module.client.get(stats_url(module))
 
 def exists(module):
