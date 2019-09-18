@@ -161,7 +161,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"]),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
