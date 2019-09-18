@@ -45,7 +45,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'pr-acos-harmony-topic'= PR topic counter from acos to harmony; 'avro-device-status-topic'= AVRO device status from acos to harmony; 'avro-partition-metrics-topic'= AVRO partition metrics from acos to harmony; 'avro-generic-sent'= Telemetry exported via avro; 'pr-acos-harmony-topic-enqueue-err'= PR topic to harmony enqueue error; 'pr-acos-harmony-topic-dequeue-err'= PR topic to harmony  dequeue error; 'avro-generic-failed-encoding'= Telemetry exported via avro failed encoding; 'avro-generic-failed-sending'= Telemetry exported via avro failed sending; 'avro-device-status-topic-enqueue-err'= AVRO device status enqueue error; 'avro-device-status-topic-dequeue-err'= AVRO device status dequeue error; 'avro-partition-metrics-topic-enqueue-err'= AVRO partition metrics enqueue error; 'avro-partition-metrics-topic-dequeue-err'= AVRO partition metrics dequeue error; 'kafka-unknown-topic-dequeue-err'= Kafka Unknown topic error; 'kafka-broker-down'= Telemetry drop because kafka broker is down; 'kafka-queue-full-err'= Telemetry drop because kafka Queue is full; 'pr-throttle-drop'= PR drop due to throttling; 'pr-not-allowed-drop'= PR drop because not allowed to log; 'pr-be-ttfb-anomaly'= PR back-end ttfb is negative; 'pr-be-ttlb-anomaly'= PR back-end ttlb is negative; 'pr-in-latency-threshold-exceed'= PR in latency threshold exceeded; 'pr-out-latency-threshold-exceed'= PR out latency threshold exceeded; 'pr-out-latency-anomaly'= PR out latency negative; 'pr-in-latency-anomaly'= PR in latency negative; 'kafka-topic-error'= Telemetry dropped because kafka topic not created; 'pc-encoding-failed'= Telemetry exported via avro failed encoding; 'pc-acos-harmony-topic'= PC topic counter from acos to harmony; 'pc-acos-harmony-topic-dequeue-err'= PC topic to harmony  dequeue error; 'cgn-pc-acos-harmony-topic'= CGN PC topic counter from acos to harmony; 'cgn-pc-acos-harmony-topic-dequeue-err'= CGN PC topic to harmony dequeue error; 'cgn-pe-acos-harmony-topic'= CGN PE topic counter from acos to harmony; 'cgn-pe-acos-harmony-topic-dequeue-err'= CGN PE topic to harmony dequeue error; 'fw-pc-acos-harmony-topic'= FW PC topic counter from acos to harmony; 'fw-pc-acos-harmony-topic-dequeue-err'= FW PC topic to harmony dequeue error; 'fw-deny-pc-acos-harmony-topic'= FW DENY PC topic counter from acos to harmony; 'fw-deny-pc-acos-harmony-topic-dequeue-err'= FW DENY PC topic to harmony dequeue error; 'fw-rst-pc-acos-harmony-topic'= FW RST PC topic counter from acos to harmony; 'fw-rst-pc-acos-harmony-topic-dequeue-err'= FW RST PC topic to harmony dequeue error; 'cgn-summary-error-acos-harmony-topic'= CGN Summary PE topic counter from acos to harmony; 'cgn-summary-error-acos-harmony-topic-dequeue-err'= CGN Summary PE topic to harmony dequeue error; 'pc-throttle-drop'= PC drop due to throttling; 'metrics-dropped-pt-missing'= Partition-Tenant mapping not saved on HC; "
+                - "'all'= all; 'pr-acos-harmony-topic'= PR topic counter from acos to harmony; 'avro-device-status-topic'= AVRO device status from acos to harmony; 'avro-partition-metrics-topic'= AVRO partition metrics from acos to harmony; 'avro-generic-sent'= Telemetry exported via avro; 'pr-acos-harmony-topic-enqueue-err'= PR topic to harmony enqueue error; 'pr-acos-harmony-topic-dequeue-err'= PR topic to harmony  dequeue error; 'avro-generic-failed-encoding'= Telemetry exported via avro failed encoding; 'avro-generic-failed-sending'= Telemetry exported via avro failed sending; 'avro-device-status-topic-enqueue-err'= AVRO device status enqueue error; 'avro-device-status-topic-dequeue-err'= AVRO device status dequeue error; 'avro-partition-metrics-topic-enqueue-err'= Part metrics dropped,enq error on acos queues; 'avro-partition-metrics-topic-dequeue-err'= Part metrics dropped,enq error analytics queues; 'kafka-unknown-topic-dequeue-err'= Unknown type dropped,enq error analytics queues; 'kafka-broker-down'= Telemetry drop because kafka broker is down; 'kafka-queue-full-err'= Telemetry drop because kafka Queue is full; 'pr-throttle-drop'= L7 PR dropped,log throttling; 'pr-not-allowed-drop'= PR drop because not allowed to log; 'pr-be-ttfb-anomaly'= PR back-end ttfb is negative; 'pr-be-ttlb-anomaly'= PR back-end ttlb is negative; 'pr-in-latency-threshold-exceed'= PR in latency threshold exceeded; 'pr-out-latency-threshold-exceed'= PR out latency threshold exceeded; 'pr-out-latency-anomaly'= PR out latency negative; 'pr-in-latency-anomaly'= PR in latency negative; 'kafka-topic-error'= Telemetry dropped because kafka topic not created; 'pc-encoding-failed'= Telemetry exported via avro failed encoding; 'pc-acos-harmony-topic'= PC topic counter from acos to harmony; 'pc-acos-harmony-topic-dequeue-err'= PC topic to harmony  dequeue error; 'cgn-pc-acos-harmony-topic'= CGN PC topic counter from acos to harmony; 'cgn-pc-acos-harmony-topic-dequeue-err'= CGN PC topic to harmony dequeue error; 'cgn-pe-acos-harmony-topic'= CGN PE topic counter from acos to harmony; 'cgn-pe-acos-harmony-topic-dequeue-err'= CGN PE topic to harmony dequeue error; 'fw-pc-acos-harmony-topic'= FW PC topic counter from acos to harmony; 'fw-pc-acos-harmony-topic-dequeue-err'= FW PC topic to harmony dequeue error; 'fw-deny-pc-acos-harmony-topic'= FW DENY PC topic counter from acos to harmony; 'fw-deny-pc-acos-harmony-topic-dequeue-err'= FW DENY PC logs dropped,enq error analytics queues; 'fw-rst-pc-acos-harmony-topic'= FW RST PC topic counter from acos to harmony; 'fw-rst-pc-acos-harmony-topic-dequeue-err'= FW RST PC topic to harmony dequeue error; 'cgn-summary-error-acos-harmony-topic'= CGN Summary PE topic counter from acos to harmony; 'cgn-summary-error-acos-harmony-topic-dequeue-err'= CGN Summary PE topic to harmony dequeue error; 'rule-set-application-metrics-topic'= AppFW metrics from acos to harmony; 'rule-set-application-metrics-topic-dequeue-err'= AppFW metrics dequeue error; 'slb-ssl-stats-metrics-topic'= SSL stats metrics from acos to harmony; 'slb-ssl-stats-metrics-topic-dequeue-err'= SSL stats metrics dequeue error; 'slb-client-ssl-counters-metrics-topic'= Client SSL counters metrics from acos to harmony; 'slb-client-ssl-counters-metrics-topic-dequeue-err'= Cilent SSL metrics dropped,enq error analytics qs; 'slb-server-ssl-counters-metrics-topic'= Server SSL counters metrics from acos to harmony; 'slb-server-ssl-counters-metrics-topic-dequeue-err'= Server SSL metrics dropped,enq error analytics qs; 'pc-throttle-drop'= PC drop due to throttling; 'metrics-dropped-pt-missing'= Partition-Tenant mapping not saved on HC; 'ssli-pc-acos-harmony-topic'= SSLi PC topic counter from acos to harmony; 'ssli-pc-acos-harmony-topic-dequeue-err'= SSLi PC topic to harmony dequeue error; 'ssli-pe-acos-harmony-topic'= SSLi PE topic counter from acos to harmony; 'ssli-pe-acos-harmony-topic-dequeue-err'= SSLi PE topic to harmony dequeue error; 'analytics-bus-restart'= Analytics bus restart count; "
     host_ipv4:
         description:
         - "Set kafka Broker ip address or hostname"
@@ -62,6 +62,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -98,13 +99,13 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pr-acos-harmony-topic','avro-device-status-topic','avro-partition-metrics-topic','avro-generic-sent','pr-acos-harmony-topic-enqueue-err','pr-acos-harmony-topic-dequeue-err','avro-generic-failed-encoding','avro-generic-failed-sending','avro-device-status-topic-enqueue-err','avro-device-status-topic-dequeue-err','avro-partition-metrics-topic-enqueue-err','avro-partition-metrics-topic-dequeue-err','kafka-unknown-topic-dequeue-err','kafka-broker-down','kafka-queue-full-err','pr-throttle-drop','pr-not-allowed-drop','pr-be-ttfb-anomaly','pr-be-ttlb-anomaly','pr-in-latency-threshold-exceed','pr-out-latency-threshold-exceed','pr-out-latency-anomaly','pr-in-latency-anomaly','kafka-topic-error','pc-encoding-failed','pc-acos-harmony-topic','pc-acos-harmony-topic-dequeue-err','cgn-pc-acos-harmony-topic','cgn-pc-acos-harmony-topic-dequeue-err','cgn-pe-acos-harmony-topic','cgn-pe-acos-harmony-topic-dequeue-err','fw-pc-acos-harmony-topic','fw-pc-acos-harmony-topic-dequeue-err','fw-deny-pc-acos-harmony-topic','fw-deny-pc-acos-harmony-topic-dequeue-err','fw-rst-pc-acos-harmony-topic','fw-rst-pc-acos-harmony-topic-dequeue-err','cgn-summary-error-acos-harmony-topic','cgn-summary-error-acos-harmony-topic-dequeue-err','pc-throttle-drop','metrics-dropped-pt-missing'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pr-acos-harmony-topic','avro-device-status-topic','avro-partition-metrics-topic','avro-generic-sent','pr-acos-harmony-topic-enqueue-err','pr-acos-harmony-topic-dequeue-err','avro-generic-failed-encoding','avro-generic-failed-sending','avro-device-status-topic-enqueue-err','avro-device-status-topic-dequeue-err','avro-partition-metrics-topic-enqueue-err','avro-partition-metrics-topic-dequeue-err','kafka-unknown-topic-dequeue-err','kafka-broker-down','kafka-queue-full-err','pr-throttle-drop','pr-not-allowed-drop','pr-be-ttfb-anomaly','pr-be-ttlb-anomaly','pr-in-latency-threshold-exceed','pr-out-latency-threshold-exceed','pr-out-latency-anomaly','pr-in-latency-anomaly','kafka-topic-error','pc-encoding-failed','pc-acos-harmony-topic','pc-acos-harmony-topic-dequeue-err','cgn-pc-acos-harmony-topic','cgn-pc-acos-harmony-topic-dequeue-err','cgn-pe-acos-harmony-topic','cgn-pe-acos-harmony-topic-dequeue-err','fw-pc-acos-harmony-topic','fw-pc-acos-harmony-topic-dequeue-err','fw-deny-pc-acos-harmony-topic','fw-deny-pc-acos-harmony-topic-dequeue-err','fw-rst-pc-acos-harmony-topic','fw-rst-pc-acos-harmony-topic-dequeue-err','cgn-summary-error-acos-harmony-topic','cgn-summary-error-acos-harmony-topic-dequeue-err','rule-set-application-metrics-topic','rule-set-application-metrics-topic-dequeue-err','slb-ssl-stats-metrics-topic','slb-ssl-stats-metrics-topic-dequeue-err','slb-client-ssl-counters-metrics-topic','slb-client-ssl-counters-metrics-topic-dequeue-err','slb-server-ssl-counters-metrics-topic','slb-server-ssl-counters-metrics-topic-dequeue-err','pc-throttle-drop','metrics-dropped-pt-missing','ssli-pc-acos-harmony-topic','ssli-pc-acos-harmony-topic-dequeue-err','ssli-pe-acos-harmony-topic','ssli-pe-acos-harmony-topic-dequeue-err','analytics-bus-restart'])),
         host_ipv4=dict(type='str',),
         port=dict(type='int',),
         use_mgmt_port=dict(type='bool',),
@@ -131,6 +132,16 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -211,14 +222,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module):
+    return module.client.get(oper_url(module))
+
+def get_stats(module):
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("server", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["server"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["server"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["server"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -244,8 +276,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("server", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -261,13 +292,20 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("server", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("server", module)
@@ -301,7 +339,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -333,10 +370,14 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

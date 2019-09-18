@@ -38,6 +38,10 @@ options:
     partition:
         description:
         - Destination/target partition for object/command
+    include_port_block_account:
+        description:
+        - "include bytes accounting information in port-batch-v2 port-mapping and fixed-nat user-ports messages"
+        required: False
     include_inside_user_mac:
         description:
         - "Include the inside user MAC address in logs"
@@ -46,17 +50,26 @@ options:
         description:
         - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3= System daemons; 'security-authorization'= 4= Security/authorization; 'syslog'= 5= Syslog internal; 'line-printer'= 6= Line printer; 'news'= 7= Network news; 'uucp'= 8= UUCP subsystem; 'cron'= 9= Time-related; 'security-authorization-private'= 10= Private security/authorization; 'ftp'= 11= FTP; 'ntp'= 12= NTP; 'audit'= 13= Audit; 'alert'= 14= Alert; 'clock'= 15= Clock-related; 'local0'= 16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2; 'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use 5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7; "
         required: False
-    rule:
+    include_http:
         description:
-        - "Field rule"
+        - "Field include_http"
         required: False
         suboptions:
-            rule_http_requests:
+            header_cfg:
                 description:
-                - "Field rule_http_requests"
-            interim_update_interval:
+                - "Field header_cfg"
+            request_number:
                 description:
-                - "Log interim update of NAT mappings (Interim update interval in minutes)"
+                - "HTTP Request Number"
+            file_extension:
+                description:
+                - "HTTP file extension"
+            method:
+                description:
+                - "Log the HTTP Request Method"
+            l4_session_info:
+                description:
+                - "Log the L4 session information of the HTTP request"
     include_partition_name:
         description:
         - "Include partition name in logging events"
@@ -186,6 +199,17 @@ options:
         description:
         - "Include the destination IP and port in logs"
         required: False
+    rule:
+        description:
+        - "Field rule"
+        required: False
+        suboptions:
+            rule_http_requests:
+                description:
+                - "Field rule_http_requests"
+            interim_update_interval:
+                description:
+                - "Log interim update of NAT mappings (Interim update interval in minutes)"
     include_radius_attribute:
         description:
         - "Field include_radius_attribute"
@@ -218,21 +242,27 @@ options:
         - "Field disable_log_by_destination"
         required: False
         suboptions:
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
             uuid:
                 description:
                 - "uuid of the object"
+            ip_list:
+                description:
+                - "Field ip_list"
             tcp_list:
                 description:
                 - "Field tcp_list"
             others:
                 description:
                 - "Disable logging for other L4 protocols"
+            ip6_list:
+                description:
+                - "Field ip6_list"
+            udp_list:
+                description:
+                - "Field udp_list"
+            icmp:
+                description:
+                - "Disable logging for icmp traffic"
     rfc_custom:
         description:
         - "Field rfc_custom"
@@ -248,26 +278,7 @@ options:
         description:
         - "'seconds'= Logging timestamp resolution in seconds (default); '10-milliseconds'= Logging timestamp resolution in 10s of milli-seconds; "
         required: False
-    include_http:
-        description:
-        - "Field include_http"
-        required: False
-        suboptions:
-            header_cfg:
-                description:
-                - "Field header_cfg"
-            request_number:
-                description:
-                - "HTTP Request Number"
-            file_extension:
-                description:
-                - "HTTP file extension"
-            method:
-                description:
-                - "Log the HTTP Request Method"
-            l4_session_info:
-                description:
-                - "Log the L4 session information of the HTTP request"
+
 
 """
 
@@ -281,7 +292,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["batched_logging_disable","custom","disable_log_by_destination","facility","format","include_destination","include_http","include_inside_user_mac","include_partition_name","include_radius_attribute","include_session_byte_count","log","log_receiver","name","resolution","rfc_custom","rule","service_group","severity","shared","source_address","source_port","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["batched_logging_disable","custom","disable_log_by_destination","facility","format","include_destination","include_http","include_inside_user_mac","include_partition_name","include_port_block_account","include_radius_attribute","include_session_byte_count","log","log_receiver","name","resolution","rfc_custom","rule","service_group","severity","shared","source_address","source_port","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -304,15 +315,16 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        include_port_block_account=dict(type='bool',),
         include_inside_user_mac=dict(type='bool',),
         facility=dict(type='str',choices=['kernel','user','mail','daemon','security-authorization','syslog','line-printer','news','uucp','cron','security-authorization-private','ftp','ntp','audit','alert','clock','local0','local1','local2','local3','local4','local5','local6','local7']),
-        rule=dict(type='dict',rule_http_requests=dict(type='dict',log_every_http_request=dict(type='bool',),disable_sequence_check=dict(type='bool',),include_all_headers=dict(type='bool',),dest_port=dict(type='list',include_byte_count=dict(type='bool',),dest_port_number=dict(type='int',)),max_url_len=dict(type='int',)),interim_update_interval=dict(type='int',)),
+        include_http=dict(type='dict',header_cfg=dict(type='list',custom_max_length=dict(type='int',),http_header=dict(type='str',choices=['cookie','referer','user-agent','header1','header2','header3']),max_length=dict(type='int',),custom_header_name=dict(type='str',)),request_number=dict(type='bool',),file_extension=dict(type='bool',),method=dict(type='bool',),l4_session_info=dict(type='bool',)),
         include_partition_name=dict(type='bool',),
         severity=dict(type='dict',severity_string=dict(type='str',choices=['emergency','alert','critical','error','warning','notice','informational','debug']),severity_val=dict(type='int',)),
         custom=dict(type='dict',custom_header=dict(type='str',choices=['use-syslog-header']),custom_message=dict(type='dict',custom_http_request_got=dict(type='str',),custom_port_batch_v2_allocated=dict(type='str',),custom_fixed_nat_allocated=dict(type='str',),custom_port_batch_v2_freed=dict(type='str',),custom_port_batch_v2_interim_update=dict(type='str',),custom_port_batch_freed=dict(type='str',),custom_fixed_nat_freed=dict(type='str',),custom_port_batch_allocated=dict(type='str',),custom_port_allocated=dict(type='str',),custom_session_deleted=dict(type='str',),custom_fixed_nat_interim_update=dict(type='str',),custom_port_freed=dict(type='str',),custom_session_created=dict(type='str',)),custom_time_stamp_format=dict(type='str',)),
@@ -328,12 +340,12 @@ def get_argspec():
         log_receiver=dict(type='dict',encrypted=dict(type='str',),radius=dict(type='bool',),secret_string=dict(type='str',)),
         name=dict(type='str',required=True,),
         include_destination=dict(type='bool',),
+        rule=dict(type='dict',rule_http_requests=dict(type='dict',log_every_http_request=dict(type='bool',),disable_sequence_check=dict(type='bool',),include_all_headers=dict(type='bool',),dest_port=dict(type='list',include_byte_count=dict(type='bool',),dest_port_number=dict(type='int',)),max_url_len=dict(type='int',)),interim_update_interval=dict(type='int',)),
         include_radius_attribute=dict(type='dict',framed_ipv6_prefix=dict(type='bool',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),insert_if_not_existing=dict(type='bool',),zero_in_custom_attr=dict(type='bool',),no_quote=dict(type='bool',),attr_cfg=dict(type='list',attr_event=dict(type='str',choices=['http-requests','port-mappings','sessions','user-data']),attr=dict(type='str',choices=['imei','imsi','msisdn','custom1','custom2','custom3']))),
         user_tag=dict(type='str',),
-        disable_log_by_destination=dict(type='dict',udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',),uuid=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',)),
+        disable_log_by_destination=dict(type='dict',uuid=dict(type='str',),ip_list=dict(type='list',uuid=dict(type='str',),ipv4_addr=dict(type='str',required=True,),user_tag=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',),udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',)),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',),ip6_list=dict(type='list',uuid=dict(type='str',),ipv6_addr=dict(type='str',required=True,),user_tag=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',),udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',)),udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',)),
         rfc_custom=dict(type='dict',header=dict(type='dict',use_alternate_timestamp=dict(type='bool',)),message=dict(type='dict',session_created=dict(type='str',),http_request_got=dict(type='str',),session_deleted=dict(type='str',),ipv6_tech=dict(type='list',fixed_nat_freed=dict(type='str',),port_batch_freed=dict(type='str',),tech_type=dict(type='str',choices=['lsn','nat64','ds-lite','sixrd-nat64']),fixed_nat_allocated=dict(type='str',),port_allocated=dict(type='str',),port_batch_v2_allocated=dict(type='str',),port_freed=dict(type='str',),port_batch_v2_freed=dict(type='str',),port_batch_allocated=dict(type='str',)))),
-        resolution=dict(type='str',choices=['seconds','10-milliseconds']),
-        include_http=dict(type='dict',header_cfg=dict(type='list',custom_max_length=dict(type='int',),http_header=dict(type='str',choices=['cookie','referer','user-agent','header1','header2','header3']),max_length=dict(type='int',),custom_header_name=dict(type='str',)),request_number=dict(type='bool',),file_extension=dict(type='bool',),method=dict(type='bool',),l4_session_info=dict(type='bool',))
+        resolution=dict(type='str',choices=['seconds','10-milliseconds'])
     ))
    
 
@@ -358,6 +370,16 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -438,14 +460,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module):
+    return module.client.get(oper_url(module))
+
+def get_stats(module):
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("logging", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["logging"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["logging"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["logging"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -471,8 +514,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("logging", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -488,13 +530,20 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("logging", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("logging", module)
@@ -528,7 +577,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -560,10 +608,14 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
