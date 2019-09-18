@@ -58,6 +58,10 @@ options:
         description:
         - "Share with a partition group (Partition Group Name)"
         required: False
+    traffic_replication_mirror_ip_repl:
+        description:
+        - "Replaces IP with server-IP"
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -99,6 +103,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -111,7 +116,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","member_list","name","protocol","sampling_enable","shared","shared_group","shared_partition","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["health_check","member_list","name","protocol","sampling_enable","shared","shared_group","shared_partition","traffic_replication_mirror_ip_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -134,7 +139,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -145,6 +150,7 @@ def get_argspec():
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
         shared_group=dict(type='str',),
+        traffic_replication_mirror_ip_repl=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn'])),
         member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
         shared=dict(type='bool',),
@@ -174,6 +180,16 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -254,14 +270,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module)
+    return module.client.get(oper_url(module))
+
+def get_stats(module)
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("service-group", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["service-group"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["service-group"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["service-group"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -287,8 +324,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("service-group", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -304,13 +340,20 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("service-group", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("service-group", module)
@@ -344,7 +387,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -376,10 +418,14 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

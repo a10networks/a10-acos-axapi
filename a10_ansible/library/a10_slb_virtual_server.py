@@ -49,6 +49,9 @@ options:
             protocol:
                 description:
                 - "'tcp'= TCP LB service; 'udp'= UDP Port; 'others'= for no tcp/udp protocol, do IP load balancing; 'diameter'= diameter port; 'dns-tcp'= DNS service over TCP; 'dns-udp'= DNS service over UDP; 'fast-http'= Fast HTTP Port; 'fix'= FIX Port; 'ftp'= File Transfer Protocol Port; 'ftp-proxy'= ftp proxy port; 'http'= HTTP Port; 'https'= HTTPS port; 'http2'= [Deprecated] HTTP2 Port; 'http2s'= [Deprecated] HTTP2 SSL port; 'imap'= imap proxy port; 'mlb'= Message based load balancing; 'mms'= Microsoft Multimedia Service Port; 'mysql'= mssql port; 'mssql'= mssql; 'pop3'= pop3 proxy port; 'radius'= RADIUS Port; 'rtsp'= Real Time Streaming Protocol Port; 'sip'= Session initiation protocol over UDP; 'sip-tcp'= Session initiation protocol over TCP; 'sips'= Session initiation protocol over TLS; 'smpp-tcp'= SMPP service over TCP; 'spdy'= spdy port; 'spdys'= spdys port; 'smtp'= SMTP Port; 'ssl-proxy'= Generic SSL proxy; 'ssli'= SSL insight; 'ssh'= SSH Port; 'tcp-proxy'= Generic TCP proxy; 'tftp'= TFTP Port; 'fast-fix'= Fast FIX port; "
+            cpu_compute:
+                description:
+                - "enable cpu compute on virtual port"
             precedence:
                 description:
                 - "Set auto NAT pool as higher precedence for source NAT"
@@ -142,9 +145,9 @@ options:
             template_ssli:
                 description:
                 - "SSLi template (SSLi Template Name)"
-            shared_partition_persist_cookie_template:
+            memory_compute:
                 description:
-                - "Reference a persist cookie template from shared partition"
+                - "enable dynamic memory compute on virtual port"
             shared_partition_policy_template:
                 description:
                 - "Reference a policy template from shared partition"
@@ -241,6 +244,9 @@ options:
             rtp_sip_call_id_match:
                 description:
                 - "rtp traffic try to match the real server of sip smp call-id session"
+            shared_partition_persist_cookie_template:
+                description:
+                - "Reference a persist cookie template from shared partition"
             template_file_inspection:
                 description:
                 - "File Inspection service template (file-inspection template name)"
@@ -501,29 +507,14 @@ options:
         description:
         - "IP Address"
         required: False
-    migrate_vip:
+    vport_disable_action:
         description:
-        - "Field migrate_vip"
+        - "'drop-packet'= Drop packet for disabled virtual-port; "
         required: False
-        suboptions:
-            target_data_cpu:
-                description:
-                - "Number of CPUs on the target platform"
-            uuid:
-                description:
-                - "uuid of the object"
-            finish_migration:
-                description:
-                - "Complete the migration"
-            target_floating_ipv6:
-                description:
-                - "Specify IPv6 address"
-            target_floating_ipv4:
-                description:
-                - "Specify IP address"
-            cancel_migration:
-                description:
-                - "Cancel migration"
+    template_logging:
+        description:
+        - "NAT Logging template (NAT Logging template name)"
+        required: False
     use_if_ip:
         description:
         - "Use Interface IP"
@@ -568,10 +559,29 @@ options:
         description:
         - "ipv6 acl name"
         required: False
-    template_logging:
+    migrate_vip:
         description:
-        - "NAT Logging template (NAT Logging template name)"
+        - "Field migrate_vip"
         required: False
+        suboptions:
+            target_data_cpu:
+                description:
+                - "Number of CPUs on the target platform"
+            uuid:
+                description:
+                - "uuid of the object"
+            finish_migration:
+                description:
+                - "Complete the migration"
+            target_floating_ipv6:
+                description:
+                - "Specify IPv6 address"
+            target_floating_ipv4:
+                description:
+                - "Specify IP address"
+            cancel_migration:
+                description:
+                - "Cancel migration"
     extended_stats:
         description:
         - "Enable extended statistics on virtual server"
@@ -613,6 +623,7 @@ options:
         - "acl id"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -625,7 +636,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id","acl_id_shared","acl_name","acl_name_shared","arp_disable","description","disable_vip_adv","enable_disable_action","ethernet","extended_stats","ha_dynamic","ip_address","ipv6_acl","ipv6_acl_shared","ipv6_address","migrate_vip","name","netmask","port_list","redistribute_route_map","redistribution_flagged","shared_partition_policy_template","stats_data_action","template_logging","template_policy","template_policy_shared","template_scaleout","template_virtual_server","use_if_ip","user_tag","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["acl_id","acl_id_shared","acl_name","acl_name_shared","arp_disable","description","disable_vip_adv","enable_disable_action","ethernet","extended_stats","ha_dynamic","ip_address","ipv6_acl","ipv6_acl_shared","ipv6_address","migrate_vip","name","netmask","port_list","redistribute_route_map","redistribution_flagged","shared_partition_policy_template","stats_data_action","template_logging","template_policy","template_policy_shared","template_scaleout","template_virtual_server","use_if_ip","user_tag","uuid","vport_disable_action","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -648,13 +659,13 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_list=dict(type='list',ha_conn_mirror=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp','others','diameter','dns-tcp','dns-udp','fast-http','fix','ftp','ftp-proxy','http','https','http2','http2s','imap','mlb','mms','mysql','mssql','pop3','radius','rtsp','sip','sip-tcp','sips','smpp-tcp','spdy','spdys','smtp','ssl-proxy','ssli','ssh','tcp-proxy','tftp','fast-fix']),precedence=dict(type='bool',),port_translation=dict(type='bool',),ip_map_list=dict(type='str',),template_reqmod_icap=dict(type='str',),acl_name_list=dict(type='list',acl_name_src_nat_pool_shared=dict(type='str',),shared_partition_pool_name=dict(type='bool',),acl_name_seq_num_shared=dict(type='int',),acl_name=dict(type='str',),acl_name_src_nat_pool=dict(type='str',),acl_name_seq_num=dict(type='int',)),stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),use_default_if_no_server=dict(type='bool',),template_connection_reuse=dict(type='str',),uuid=dict(type='str',),template_tcp_shared=dict(type='str',),template_tcp=dict(type='str',),template_persist_cookie=dict(type='str',),shared_partition_dynamic_service_template=dict(type='bool',),shared_partition_connection_reuse_template=dict(type='bool',),when_down=dict(type='bool',),template_client_ssl_shared=dict(type='str',),shared_partition_persist_destination_ip_template=dict(type='bool',),shared_partition_external_service_template=dict(type='bool',),persist_type=dict(type='str',choices=['src-dst-ip-swap-persist','use-src-ip-for-dst-persist','use-dst-ip-for-src-persist']),shared_partition_http_policy_template=dict(type='bool',),use_rcv_hop_for_resp=dict(type='bool',),scaleout_bucket_count=dict(type='int',),optimization_level=dict(type='str',choices=['0','1']),req_fail=dict(type='bool',),no_dest_nat=dict(type='bool',),name=dict(type='str',),template_smpp=dict(type='str',),user_tag=dict(type='str',),template_diameter=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','total_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time','loc_permit','loc_deny','loc_conn','curr_ssl_conn','total_ssl_conn','backend-time-to-first-byte','backend-time-to-last-byte','in-latency','out-latency','total_fwd_bytes_out','total_fwd_pkts_out','total_rev_bytes_out','total_rev_pkts_out','curr_req_rate','curr_resp','total_resp','total_resp_succ','curr_resp_rate','curr_conn_overflow','dnsrrl_total_allowed','dnsrrl_total_dropped','dnsrrl_total_slipped','dnsrrl_bad_fqdn'])),template_ssli=dict(type='str',),shared_partition_persist_cookie_template=dict(type='bool',),shared_partition_policy_template=dict(type='bool',),template_policy=dict(type='str',),no_logging=dict(type='bool',),reset_on_server_selection_fail=dict(type='bool',),waf_template=dict(type='str',),ipinip=dict(type='bool',),no_auto_up_on_aflex=dict(type='bool',),rate=dict(type='int',),gslb_enable=dict(type='bool',),template_dns_shared=dict(type='str',),template_persist_ssl_sid=dict(type='str',),template_dns=dict(type='str',),shared_partition_dns_template=dict(type='bool',),template_sip=dict(type='str',),template_dblb=dict(type='str',),shared_partition_server_ssl_template=dict(type='bool',),template_client_ssl=dict(type='str',),support_http2=dict(type='bool',),template_client_ssh=dict(type='str',),shared_partition_tcp_proxy_template=dict(type='bool',),enable_playerid_check=dict(type='bool',),service_group=dict(type='str',),shared_partition_persist_ssl_sid_template=dict(type='bool',),def_selection_if_pref_failed=dict(type='str',choices=['def-selection-if-pref-failed','def-selection-if-pref-failed-disable']),shared_partition_udp=dict(type='bool',),syn_cookie=dict(type='bool',),alternate_port=dict(type='bool',),alternate_port_number=dict(type='int',),template_persist_source_ip_shared=dict(type='str',),template_cache=dict(type='str',),template_persist_cookie_shared=dict(type='str',),rtp_sip_call_id_match=dict(type='bool',),template_file_inspection=dict(type='str',),template_ftp=dict(type='str',),serv_sel_fail=dict(type='bool',),template_udp=dict(type='str',),template_virtual_port_shared=dict(type='str',),action=dict(type='str',choices=['enable','disable']),template_http=dict(type='str',),view=dict(type='int',),template_persist_source_ip=dict(type='str',),template_dynamic_service=dict(type='str',),shared_partition_virtual_port_template=dict(type='bool',),use_cgnv6=dict(type='bool',),template_persist_destination_ip=dict(type='str',),template_virtual_port=dict(type='str',),conn_limit=dict(type='int',),trunk_fwd=dict(type='str',),template_udp_shared=dict(type='str',),template_http_policy_shared=dict(type='str',),pool=dict(type='str',),snat_on_vip=dict(type='bool',),template_connection_reuse_shared=dict(type='str',),shared_partition_tcp=dict(type='bool',),acl_id_list=dict(type='list',acl_id_seq_num=dict(type='int',),acl_id_src_nat_pool=dict(type='str',),acl_id_seq_num_shared=dict(type='int',),acl_id=dict(type='int',),shared_partition_pool_id=dict(type='bool',),acl_id_src_nat_pool_shared=dict(type='str',)),shared_partition_http_template=dict(type='bool',),template_external_service=dict(type='str',),on_syn=dict(type='bool',),template_persist_ssl_sid_shared=dict(type='str',),force_routing_mode=dict(type='bool',),template_http_policy=dict(type='str',),template_policy_shared=dict(type='str',),template_scaleout=dict(type='str',),when_down_protocol2=dict(type='bool',),template_fix=dict(type='str',),template_smtp=dict(type='str',),redirect_to_https=dict(type='bool',),alt_protocol2=dict(type='str',choices=['tcp']),alt_protocol1=dict(type='str',choices=['http']),message_switching=dict(type='bool',),template_imap_pop3=dict(type='str',),scaleout_device_group=dict(type='int',),shared_partition_persist_source_ip_template=dict(type='bool',),l7_hardware_assist=dict(type='bool',),template_tcp_proxy_shared=dict(type='str',),shared_partition_cache_template=dict(type='bool',),use_alternate_port=dict(type='bool',),template_tcp_proxy_server=dict(type='str',),trunk_rev=dict(type='str',),eth_fwd=dict(type='str',),pool_shared=dict(type='str',),template_respmod_icap=dict(type='str',),range=dict(type='int',),reset=dict(type='bool',),template_external_service_shared=dict(type='str',),auto=dict(type='bool',),template_dynamic_service_shared=dict(type='str',),template_server_ssh=dict(type='str',),aflex_scripts=dict(type='list',aflex=dict(type='str',),aflex_shared=dict(type='str',)),template_http_shared=dict(type='str',),template_server_ssl=dict(type='str',),shared_partition_diameter_template=dict(type='bool',),template_server_ssl_shared=dict(type='str',),template_persist_destination_ip_shared=dict(type='str',),template_cache_shared=dict(type='str',),port_number=dict(type='int',required=True,),template_tcp_proxy_client=dict(type='str',),shared_partition_pool=dict(type='bool',),template_tcp_proxy=dict(type='str',),extended_stats=dict(type='bool',),shared_partition_client_ssl_template=dict(type='bool',),expand=dict(type='bool',),skip_rev_hash=dict(type='bool',),template_diameter_shared=dict(type='str',),clientip_sticky_nat=dict(type='bool',),secs=dict(type='int',),auth_cfg=dict(type='dict',aaa_policy=dict(type='str',)),eth_rev=dict(type='str',)),
+        port_list=dict(type='list',ha_conn_mirror=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp','others','diameter','dns-tcp','dns-udp','fast-http','fix','ftp','ftp-proxy','http','https','http2','http2s','imap','mlb','mms','mysql','mssql','pop3','radius','rtsp','sip','sip-tcp','sips','smpp-tcp','spdy','spdys','smtp','ssl-proxy','ssli','ssh','tcp-proxy','tftp','fast-fix']),cpu_compute=dict(type='bool',),precedence=dict(type='bool',),port_translation=dict(type='bool',),ip_map_list=dict(type='str',),template_reqmod_icap=dict(type='str',),acl_name_list=dict(type='list',acl_name_src_nat_pool_shared=dict(type='str',),v_acl_name_src_nat_pool_shared=dict(type='str',),shared_partition_pool_name=dict(type='bool',),acl_name_seq_num_shared=dict(type='int',),acl_name=dict(type='str',),v_shared_partition_pool_name=dict(type='bool',),acl_name_src_nat_pool=dict(type='str',),v_acl_name_seq_num=dict(type='int',),acl_name_shared=dict(type='str',),acl_name_seq_num=dict(type='int',),v_acl_name_src_nat_pool=dict(type='str',),v_acl_name_seq_num_shared=dict(type='int',)),stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),use_default_if_no_server=dict(type='bool',),template_connection_reuse=dict(type='str',),uuid=dict(type='str',),template_tcp_shared=dict(type='str',),template_tcp=dict(type='str',),template_persist_cookie=dict(type='str',),shared_partition_dynamic_service_template=dict(type='bool',),shared_partition_connection_reuse_template=dict(type='bool',),when_down=dict(type='bool',),template_client_ssl_shared=dict(type='str',),shared_partition_persist_destination_ip_template=dict(type='bool',),shared_partition_external_service_template=dict(type='bool',),persist_type=dict(type='str',choices=['src-dst-ip-swap-persist','use-src-ip-for-dst-persist','use-dst-ip-for-src-persist']),shared_partition_http_policy_template=dict(type='bool',),use_rcv_hop_for_resp=dict(type='bool',),scaleout_bucket_count=dict(type='int',),optimization_level=dict(type='str',choices=['0','1']),req_fail=dict(type='bool',),no_dest_nat=dict(type='bool',),name=dict(type='str',),template_smpp=dict(type='str',),user_tag=dict(type='str',),template_diameter=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','total_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time','loc_permit','loc_deny','loc_conn','curr_ssl_conn','total_ssl_conn','backend-time-to-first-byte','backend-time-to-last-byte','in-latency','out-latency','total_fwd_bytes_out','total_fwd_pkts_out','total_rev_bytes_out','total_rev_pkts_out','curr_req_rate','curr_resp','total_resp','total_resp_succ','curr_resp_rate','curr_conn_overflow','dnsrrl_total_allowed','dnsrrl_total_dropped','dnsrrl_total_slipped','dnsrrl_bad_fqdn','throughput-bits-per-sec','dynamic-memory-alloc','dynamic-memory-free','dynamic-memory'])),template_ssli=dict(type='str',),memory_compute=dict(type='bool',),shared_partition_policy_template=dict(type='bool',),template_policy=dict(type='str',),no_logging=dict(type='bool',),reset_on_server_selection_fail=dict(type='bool',),waf_template=dict(type='str',),ipinip=dict(type='bool',),no_auto_up_on_aflex=dict(type='bool',),rate=dict(type='int',),gslb_enable=dict(type='bool',),template_dns_shared=dict(type='str',),template_persist_ssl_sid=dict(type='str',),template_dns=dict(type='str',),shared_partition_dns_template=dict(type='bool',),template_sip=dict(type='str',),template_dblb=dict(type='str',),shared_partition_server_ssl_template=dict(type='bool',),template_client_ssl=dict(type='str',),support_http2=dict(type='bool',),template_client_ssh=dict(type='str',),shared_partition_tcp_proxy_template=dict(type='bool',),enable_playerid_check=dict(type='bool',),service_group=dict(type='str',),shared_partition_persist_ssl_sid_template=dict(type='bool',),def_selection_if_pref_failed=dict(type='str',choices=['def-selection-if-pref-failed','def-selection-if-pref-failed-disable']),shared_partition_udp=dict(type='bool',),syn_cookie=dict(type='bool',),alternate_port=dict(type='bool',),alternate_port_number=dict(type='int',),template_persist_source_ip_shared=dict(type='str',),template_cache=dict(type='str',),template_persist_cookie_shared=dict(type='str',),rtp_sip_call_id_match=dict(type='bool',),shared_partition_persist_cookie_template=dict(type='bool',),template_file_inspection=dict(type='str',),template_ftp=dict(type='str',),serv_sel_fail=dict(type='bool',),template_udp=dict(type='str',),template_virtual_port_shared=dict(type='str',),action=dict(type='str',choices=['enable','disable']),template_http=dict(type='str',),view=dict(type='int',),template_persist_source_ip=dict(type='str',),template_dynamic_service=dict(type='str',),shared_partition_virtual_port_template=dict(type='bool',),use_cgnv6=dict(type='bool',),template_persist_destination_ip=dict(type='str',),template_virtual_port=dict(type='str',),conn_limit=dict(type='int',),trunk_fwd=dict(type='str',),template_udp_shared=dict(type='str',),template_http_policy_shared=dict(type='str',),pool=dict(type='str',),snat_on_vip=dict(type='bool',),template_connection_reuse_shared=dict(type='str',),shared_partition_tcp=dict(type='bool',),acl_id_list=dict(type='list',v_acl_id_seq_num=dict(type='int',),acl_id_seq_num=dict(type='int',),acl_id_src_nat_pool=dict(type='str',),acl_id_seq_num_shared=dict(type='int',),v_acl_id_src_nat_pool=dict(type='str',),acl_id_shared=dict(type='int',),v_acl_id_src_nat_pool_shared=dict(type='str',),acl_id=dict(type='int',),acl_id_src_nat_pool_shared=dict(type='str',),v_shared_partition_pool_id=dict(type='bool',),shared_partition_pool_id=dict(type='bool',),v_acl_id_seq_num_shared=dict(type='int',)),shared_partition_http_template=dict(type='bool',),template_external_service=dict(type='str',),on_syn=dict(type='bool',),template_persist_ssl_sid_shared=dict(type='str',),force_routing_mode=dict(type='bool',),template_http_policy=dict(type='str',),template_policy_shared=dict(type='str',),template_scaleout=dict(type='str',),when_down_protocol2=dict(type='bool',),template_fix=dict(type='str',),template_smtp=dict(type='str',),redirect_to_https=dict(type='bool',),alt_protocol2=dict(type='str',choices=['tcp']),alt_protocol1=dict(type='str',choices=['http']),message_switching=dict(type='bool',),template_imap_pop3=dict(type='str',),scaleout_device_group=dict(type='int',),shared_partition_persist_source_ip_template=dict(type='bool',),l7_hardware_assist=dict(type='bool',),template_tcp_proxy_shared=dict(type='str',),shared_partition_cache_template=dict(type='bool',),use_alternate_port=dict(type='bool',),template_tcp_proxy_server=dict(type='str',),trunk_rev=dict(type='str',),eth_fwd=dict(type='str',),pool_shared=dict(type='str',),template_respmod_icap=dict(type='str',),range=dict(type='int',),reset=dict(type='bool',),template_external_service_shared=dict(type='str',),auto=dict(type='bool',),template_dynamic_service_shared=dict(type='str',),template_server_ssh=dict(type='str',),aflex_scripts=dict(type='list',aflex=dict(type='str',),aflex_shared=dict(type='str',)),template_http_shared=dict(type='str',),template_server_ssl=dict(type='str',),shared_partition_diameter_template=dict(type='bool',),template_server_ssl_shared=dict(type='str',),template_persist_destination_ip_shared=dict(type='str',),template_cache_shared=dict(type='str',),port_number=dict(type='int',required=True,),template_tcp_proxy_client=dict(type='str',),shared_partition_pool=dict(type='bool',),template_tcp_proxy=dict(type='str',),extended_stats=dict(type='bool',),shared_partition_client_ssl_template=dict(type='bool',),expand=dict(type='bool',),skip_rev_hash=dict(type='bool',),template_diameter_shared=dict(type='str',),clientip_sticky_nat=dict(type='bool',),secs=dict(type='int',),auth_cfg=dict(type='dict',aaa_policy=dict(type='str',)),eth_rev=dict(type='str',)),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         ipv6_acl_shared=dict(type='str',),
         acl_name=dict(type='str',),
@@ -663,7 +674,8 @@ def get_argspec():
         redistribute_route_map=dict(type='str',),
         acl_name_shared=dict(type='str',),
         ip_address=dict(type='str',),
-        migrate_vip=dict(type='dict',target_data_cpu=dict(type='int',),uuid=dict(type='str',),finish_migration=dict(type='bool',),target_floating_ipv6=dict(type='str',),target_floating_ipv4=dict(type='str',),cancel_migration=dict(type='bool',)),
+        vport_disable_action=dict(type='str',choices=['drop-packet']),
+        template_logging=dict(type='str',),
         use_if_ip=dict(type='bool',),
         uuid=dict(type='str',),
         vrid=dict(type='int',),
@@ -675,7 +687,7 @@ def get_argspec():
         netmask=dict(type='str',),
         acl_id=dict(type='int',),
         ipv6_acl=dict(type='str',),
-        template_logging=dict(type='str',),
+        migrate_vip=dict(type='dict',target_data_cpu=dict(type='int',),uuid=dict(type='str',),finish_migration=dict(type='bool',),target_floating_ipv6=dict(type='str',),target_floating_ipv4=dict(type='str',),cancel_migration=dict(type='bool',)),
         extended_stats=dict(type='bool',),
         name=dict(type='str',required=True,),
         template_scaleout=dict(type='str',),
@@ -710,6 +722,16 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -790,14 +812,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module)
+    return module.client.get(oper_url(module))
+
+def get_stats(module)
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("virtual-server", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["virtual-server"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["virtual-server"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["virtual-server"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -823,8 +866,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("virtual-server", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -840,13 +882,20 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("virtual-server", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("virtual-server", module)
@@ -880,7 +929,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -912,10 +960,14 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

@@ -78,6 +78,14 @@ options:
             disable:
                 description:
                 - "disable preemption"
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'associated_vip_count'= Number of vips associated to vrid; 'associated_vport_count'= Number of vports associated to vrid; 'associated_natpool_count'= Number of nat pools associated to vrid; "
     floating_ip:
         description:
         - "Field floating_ip"
@@ -104,6 +112,7 @@ options:
                 description:
                 - "Define a VRRP-A VRID leader"
 
+
 """
 
 EXAMPLES = """
@@ -116,7 +125,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["blade_parameters","floating_ip","follow","preempt_mode","user_tag","uuid","vrid_val",]
+AVAILABLE_PROPERTIES = ["blade_parameters","floating_ip","follow","preempt_mode","sampling_enable","user_tag","uuid","vrid_val",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -139,7 +148,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        get_type=dict(type='str', choices=["single", "list"]),
     )
 
 def get_argspec():
@@ -150,6 +159,7 @@ def get_argspec():
         vrid_val=dict(type='int',required=True,),
         user_tag=dict(type='str',),
         preempt_mode=dict(type='dict',threshold=dict(type='int',),disable=dict(type='bool',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','associated_vip_count','associated_vport_count','associated_natpool_count'])),
         floating_ip=dict(type='dict',ipv6_address_part_cfg=dict(type='list',ethernet=dict(type='str',),ipv6_address_partition=dict(type='str',),ve=dict(type='int',),trunk=dict(type='int',)),ip_address_cfg=dict(type='list',ip_address=dict(type='str',)),ip_address_part_cfg=dict(type='list',ip_address_partition=dict(type='str',)),ipv6_address_cfg=dict(type='list',ipv6_address=dict(type='str',),ethernet=dict(type='str',),ve=dict(type='int',),trunk=dict(type='int',))),
         follow=dict(type='dict',vrid_lead=dict(type='str',))
     ))
@@ -176,6 +186,16 @@ def existing_url(module):
     f_dict["vrid-val"] = module.params["vrid_val"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -256,14 +276,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module)
+    return module.client.get(oper_url(module))
+
+def get_stats(module)
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("vrid", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["vrid"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["vrid"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["vrid"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -289,8 +330,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("vrid", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -306,13 +346,20 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("vrid", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
     else:
-        return update(module, result, existing_config)
+        return update(module, result, existing_config, payload)
 
 def absent(module, result):
-    return delete(module, result)
+    if module.check_mode:
+        result["changed"] = True
+        return result
+    else:
+        return delete(module, result)
 
 def replace(module, result, existing_config):
     payload = build_json("vrid", module)
@@ -346,7 +393,6 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
     partition = module.params["partition"]
 
     valid = True
@@ -378,10 +424,14 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
