@@ -97,8 +97,8 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
-        state: noop
-        get_type: list
+        <b>state: noop</b>
+        <b>get_type: list</b>
 </pre>
 
 ### Getting operational information
@@ -116,8 +116,8 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
-        state: noop
-        get_type: oper
+        <b>state: noop</b>
+        <b>get_type: oper</b>
 </pre>
 
 ### Getting statistic information
@@ -135,8 +135,8 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
-        state: noop
-        get_type: stats
+        <b>state: noop</b>
+        <b>get_type: stats</b>
 </pre>
 
 ### Check Mode
@@ -156,7 +156,7 @@ Check mode can be specified in two ways:
         a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
-        check_mode: yes
+        <b>check_mode: yes</b>
 </pre>
 
 or
