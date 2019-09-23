@@ -7,14 +7,17 @@ This code is now being generated using the SDK generator at https://github.com/a
 This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
 
 ## Installation
-~~~
-git clone https://github.com/a10networks/a10-ansible a10-ansible
-cd a10-ansible 
-chmod +x a10_install.sh
+```bash
+$ git clone https://github.com/a10networks/a10-ansible a10-ansible
+$ cd a10-ansible 
+$ chmod +x a10_install.sh
+```
 
-Check the ansible module location then run..
+Check the ansible module location then run:
 
-./a10_install.sh
+```
+$ ./a10_install.sh
+```
 
 You can now delete the install files 
 
