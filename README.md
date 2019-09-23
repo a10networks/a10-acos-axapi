@@ -65,19 +65,19 @@ Action and module names are formatted based upon their API endpoint. For example
 
 ### Getting information about a single object
 <pre>
-- name: <Description of playbook>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: noop</b>
         <b>get_type: single</b> 
 </pre>
