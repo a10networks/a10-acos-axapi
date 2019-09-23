@@ -47,19 +47,19 @@ Action and module names are formatted based upon their API endpoint. For example
 
 ### Deleting a resource
 <pre>
-- name: <Description of playbook>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: absent</b>
 </pre>
 
@@ -83,81 +83,81 @@ Action and module names are formatted based upon their API endpoint. For example
 </pre>
 
 ### Getting information about a collection
-```
-- name: <Description of playbook>
+<pre>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         state: noop
         get_type: list
-```
+</pre>
 
 ### Getting operational information
-```
-- name: <Description of playbook>
+<pre>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         state: noop
         get_type: oper
-```
+</pre>
 
 ### Getting statistic information
-```
-- name: <Description of playbook>
+<pre>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         state: noop
         get_type: stats
-```
+</pre>
 
 ### Check Mode
 Check mode can be specified in two ways:
- 
-```
-- name: <Description of playbook>
+
+<pre>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         check_mode: yes
-```
+</pre>
 
 or
 
