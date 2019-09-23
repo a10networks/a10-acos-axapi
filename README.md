@@ -46,7 +46,7 @@ Action and module names are formatted based upon their API endpoint. For example
 ```
 
 ### Deleting a resource
-```
+<pre>
 - name: <Description of playbook>
   connection: local
   hosts: <inventory>
@@ -60,11 +60,11 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_protocol: {{ a10_protocol }}
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
-        state: absent
-```
+        <b>state: absent</b>
+</pre>
 
 ### Getting information about a single object
-```
+<pre>
 - name: <Description of playbook>
   connection: local
   hosts: <inventory>
@@ -78,9 +78,9 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_protocol: {{ a10_protocol }}
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
-        state: noop
-        get_type: single 
-```
+        <b>state: noop</b>
+        <b>get_type: single</b> 
+</pre>
 
 ### Getting information about a collection
 ```
