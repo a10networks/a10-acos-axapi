@@ -1,0 +1,51 @@
+- name: a10_vrrp_a_fail_over_policy_template example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: a10_vrrp_a_fail_over_policy_template
+    a10_vrrp_a_fail_over_policy_template:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      vlan_cfg:
+        - vlan: 1
+          timeout: "200"
+          weight: 15
+      name: "FailoverPolicy"
+      route:
+        ipv6_destination_cfg:
+          - ipv6_destination: "2001:0db8:85a3:0000:0000:8a2e:0370:7334/128"
+            distance: 100
+            protocol: "any"
+            weight: 20
+            gatewayv6: "2001:0db8:85a3:0000:0000:8a2e:0370:733e"
+        ip_destination_cfg:
+          - distance: 120
+            protocol: "any"
+            weight: 21
+            mask: "/32"
+            ip_destination: "10.10.10.10" 
+            gateway: "10.10.10.11"
+      bgp:
+        bgp_ipv4_address_cfg:
+          - bgp_ipv4_address: "10.10.10.4"
+            weight: 23
+        bgp_ipv6_address_cfg:
+          - bgp_ipv6_address: "2001:0db8:85a3:0000:0000:8a2e:0370:7335"
+            weight: 24
+      interface:
+        - ethernet: 1
+          weight: 24
+      gateway:
+        gw_ipv4_address_cfg: 
+          - gw_ipv4_address: "10.10.10.6"
+            weight: 25
+        gw_ipv6_address_cfg:
+          - gw_ipv6_address: "2001:0db8:85a3:0000:0000:8a2e:0370:7336"
+            weight: 26
+      trunk_cfg:
+        - per_port_weight: 27
+          weight: 28
+          trunk: 1
