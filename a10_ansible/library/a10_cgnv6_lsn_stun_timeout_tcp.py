@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding: UTF-8 -*-
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -35,9 +35,18 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    partition:
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
         description:
         - Destination/target partition for object/command
+        required: False
     port_start:
         description:
         - "Port Range (Port Range Start)"
@@ -90,7 +99,7 @@ def get_default_argspec():
         state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False),
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
@@ -127,16 +136,6 @@ def existing_url(module):
     f_dict["port-end"] = module.params["port_end"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -216,12 +215,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -334,7 +327,7 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    partition = module.params["partition"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
@@ -349,8 +342,8 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
-        module.client.activate_partition(partition)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
 
     existing_config = exists(module)
 

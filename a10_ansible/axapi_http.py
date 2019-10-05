@@ -201,15 +201,16 @@ class HttpClient(object):
     def delete(self, api_url, params={}, headers=None, **kwargs):
         return self.request("DELETE", api_url, params, headers, **kwargs)
 
-
-    def activate_partition(self, partition_name):
-        if partition_name:
-            url = "/axapi/v3/active-partition/{0}".format(partition_name)
-	    try:
-                self.post(url, {})
-            except Exception as ex:
-		raise Exception("Could not activate {0}".format(partition_name))
-
+    def activate_partition(self, partition):
+        url = "/axapi/v3/active-partition"
+        payload = {
+            "curr_part_name": partition["name"],
+            "shared": partition["shared"]
+        }
+        try:
+            self.post(url, {"active-partition": payload})
+        except Exception as ex:
+            raise Exception("Could not activate due to: {0}".format(ex))
 
 class Session(object):
 
@@ -298,14 +299,16 @@ class A10Client(object):
     def delete(self, url, params={}, **kwargs):
         return self._request('DELETE', url, params, **kwargs)
 
-    def activate_partition(self, partition_name):
-        if partition_name:
-            url = "/axapi/v3/active-partition/{0}".format(partition_name)
+    def activate_partition(self, partition):
+        url = "/axapi/v3/active-partition"
+        payload = { 
+            "curr_part_name": partition["name"],
+            "shared": partition["shared"]
+        }
         try:
-            self.post(url, {})
+            self.post(url, {"active-partition": payload})
         except Exception as ex:
-            raise Exception("Could not activate {0}".format(partition_name))
-    
+            raise Exception("Could not activate due to: {0}".format(ex)) 
 
 def http_factory(host, port, protocol):
     return HttpClient(host, port, protocol)
