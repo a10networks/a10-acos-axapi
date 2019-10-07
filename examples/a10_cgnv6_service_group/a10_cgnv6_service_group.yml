@@ -1,0 +1,27 @@
+- name: a10_cgnv6_service_group Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_service_group
+    a10_cgnv6_service_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      get_type: "single"
+      shared_partition: "MyPartition"
+      protocol: "tcp"
+      name: "MyName"
+      user_tag: "usrtg1"
+      sampling_enable:
+      - counters1: "all"
+      member_list: 
+      - port: 8080
+        sampling_enable:
+        - counters1: "all"
+        user_tag: "usrtg2"
+        name: "s1"
+      shared: "true"
+      health_check: "ping"
