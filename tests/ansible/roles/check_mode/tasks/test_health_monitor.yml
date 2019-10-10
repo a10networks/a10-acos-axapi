@@ -26,6 +26,7 @@
     port_send: "ping"
     port_resp:
       port_contains: "ping"
+    check_mode: yes
   register: hm_tcp
 - assert:
     that:
