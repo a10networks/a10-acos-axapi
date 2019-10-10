@@ -8,6 +8,7 @@
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
       a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}}"
-      partition: "shared"
-      destination: "primary"
+      a10_protocol: "{{ a10_protocol }}"
+      a10_partition: "shared"
+      destination: "primary" # specifics boot image to save in.
+      partition: "all" # write all partitions
