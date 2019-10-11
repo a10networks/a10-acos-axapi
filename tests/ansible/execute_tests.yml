@@ -13,3 +13,4 @@
     - interface
     - network
     - slb
+    - check_mode

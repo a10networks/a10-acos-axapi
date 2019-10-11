@@ -7,12 +7,12 @@
     a10_port: "{{ a10_port }}"
     a10_protocol: "{{ a10_protocol }}"
     name: hm1
-    check_mode: yes
+  check_mode: yes
   register: hm_resp
 - assert:
     that:
       - "hm_resp['monitor']['name'] == 'hm1'"
-
+ 
 - name: Set health monitor method to tcp
   a10_health_monitor_method_tcp:
     a10_host: "{{ a10_host }}"
@@ -26,7 +26,7 @@
     port_send: "ping"
     port_resp:
       port_contains: "ping"
-    check_mode: yes
+  check_mode: yes
   register: hm_tcp
 - assert:
     that:
@@ -34,3 +34,21 @@
       - "hm_tcp['tcp']['port-send'] == 'ping'"
       - "hm_tcp['tcp']['port-resp']['port-contains'] == 'ping'"
       - "hm_tcp['tcp']['tcp-port'] == 80"
+
+- name: Ensure that health monitor doesn't exist
+  block:
+    - name: NotFound error expected
+      a10_health_monitor:
+        a10_host: "{{ a10_host }}"
+        a10_username: "{{ a10_username }}"
+        a10_password: "{{ a10_password }}"
+        a10_port: "{{ a10_port }}"
+        a10_protocol: "{{ a10_protocol }}"
+        name: hm1
+        state: noop
+        get_type: single
+      no_log: True
+  rescue:
+    - assert:
+        that:
+          - "'NotFound' in ansible_failed_result['module_stderr']"
