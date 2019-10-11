@@ -1,0 +1,12 @@
+- name: Example playbook to backup log files 
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Backup log files 
+    a10_backup_log:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      remote_file: "scp://username:password@host:/path/to/file"
