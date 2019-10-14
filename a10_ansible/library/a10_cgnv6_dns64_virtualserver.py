@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -397,10 +398,9 @@ def absent(module, result):
     else:
         return delete(module, result)
 
-def replace(module, result, existing_config):
-    payload = build_json("dns64-virtualserver", module)
+def replace(module, result, existing_config, payload):
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module), payload)
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -411,7 +411,6 @@ def replace(module, result, existing_config):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
-    return result
 
 def run_command(module):
     run_errors = []

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -219,25 +220,10 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
-    if existing_config:
-        for k, v in payload["reboot"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["reboot"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["reboot"][k] = v
-        result.update(**existing_config)
-    else:
-        result.update(**payload)
-    return result
 
-def create(module, result, payload):
+def create(module, result):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
@@ -261,9 +247,9 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
+def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -277,25 +263,17 @@ def update(module, result, existing_config, payload):
     return result
 
 def present(module, result, existing_config):
-    payload = build_json("reboot", module)
-    if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
-    elif not existing_config:
-        return create(module, result, payload)
+    if not existing_config:
+        return create(module, result)
     else:
-        return update(module, result, existing_config, payload)
+        return update(module, result, existing_config)
 
 def absent(module, result):
-    if module.check_mode:
-        result["changed"] = True
-        return result
-    else:
-        return delete(module, result)
+    return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("reboot", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -306,7 +284,6 @@ def replace(module, result, existing_config):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
-    return result
 
 def run_command(module):
     run_errors = []
@@ -362,7 +339,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec())
     result = run_command(module)
     module.exit_json(**result)
 
