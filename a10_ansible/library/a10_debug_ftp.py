@@ -220,7 +220,7 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
+def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
@@ -268,7 +268,7 @@ def update(module, result, existing_config):
 
 def present(module, result, existing_config):
     if module.check_mode:
-        return report_changes(module, result)
+        return report_changes(module, result, existing_config)
     if not existing_config:
         return create(module, result)
     else:
