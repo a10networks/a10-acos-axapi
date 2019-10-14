@@ -300,7 +300,7 @@ def absent(module, result):
 
 def replace(module, result, existing_config, payload):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.put(existing_url(module), payload)
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
