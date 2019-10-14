@@ -329,6 +329,7 @@ def replace(module, result, existing_config, payload):
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
         raise gex
+    return result
 
 def run_command(module):
     run_errors = []
