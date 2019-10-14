@@ -516,10 +516,14 @@ def present(module, result, existing_config):
     else:
         return update(module, result, existing_config, payload)
 
-def absent(module, result):
+def absent(module, result, existing_config):
     if module.check_mode:
-        result["changed"] = True
-        return result
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
     else:
         return delete(module, result)
 
@@ -578,7 +582,7 @@ def run_command(module):
         result = present(module, result, existing_config)
         module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
+        result = absent(module, result, existing_config)
         module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
