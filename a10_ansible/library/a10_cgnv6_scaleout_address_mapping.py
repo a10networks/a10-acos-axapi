@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
+
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -219,25 +220,14 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
+def report_changes(module, result, existing_config):
     if existing_config:
-        for k, v in payload["address-mapping"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["address-mapping"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["address-mapping"][k] = v
-        result.update(**existing_config)
-    else:
-        result.update(**payload)
+        result["changed"] = True
     return result
 
-def create(module, result, payload):
+def create(module, result):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
@@ -261,9 +251,9 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
+def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -277,25 +267,27 @@ def update(module, result, existing_config, payload):
     return result
 
 def present(module, result, existing_config):
-    payload = build_json("address-mapping", module)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
-    elif not existing_config:
-        return create(module, result, payload)
+        return report_changes(module, result, existing_config)
+    if not existing_config:
+        return create(module, result)
     else:
-        return update(module, result, existing_config, payload)
+        return update(module, result, existing_config)
 
-def absent(module, result):
+def absent(module, result, existing_config):
     if module.check_mode:
-        result["changed"] = True
-        return result
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
     else:
         return delete(module, result)
 
 def replace(module, result, existing_config):
-    payload = build_json("address-mapping", module)
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.put(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -348,7 +340,7 @@ def run_command(module):
         result = present(module, result, existing_config)
         module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
+        result = absent(module, result, existing_config)
         module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
