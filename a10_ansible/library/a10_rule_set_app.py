@@ -229,6 +229,10 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        result["changed"] = True
+    return result
 
 def create(module, result):
     try:
@@ -272,6 +276,8 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
+    if module.check_mode:
+        return report_changes(module, result)
     if not existing_config:
         return create(module, result)
     else:
@@ -349,7 +355,7 @@ def run_command(module):
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
