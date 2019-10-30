@@ -153,9 +153,9 @@ Action and module names are formatted based upon their API endpoint. For example
         a10_password: {{ a10_password }}
         a10_port: {{ a10_port }}
         a10_protocol: {{ a10_protocol }}
-        a10_partition:
-          name: {{ partition_name }}
-          shared: 0
+        <b>a10_partition:</b>
+          <b>name: {{ partition_name }}</b>
+          <b>shared: 0</b>
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
 ```
