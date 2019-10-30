@@ -140,14 +140,14 @@ Action and module names are formatted based upon their API endpoint. For example
 </pre>
 
 
-### Configuring On Unique Partition
-```
-- name: <Description of playbook>
+### Configuring Resource On Unique Partition
+<pre>
+- name: &lt;Description of playbook&gt;
   connection: local
-  hosts: <inventory>
+  hosts: &lt;inventory&gt;
   tasks:
-    - name: <Description of task>
-      <action>:
+    - name: &lt;Description of task&gt;
+      &lt;action&gt;:
         a10_host: {{ a10_host }}
         a10_username: {{ a10_username }}
         a10_password: {{ a10_password }}
@@ -156,10 +156,9 @@ Action and module names are formatted based upon their API endpoint. For example
         <b>a10_partition:</b>
           <b>name: {{ partition_name }}</b>
           <b>shared: 0</b>
-        <resource_key>: <resource_val>
-        <another_resource_key>: <another_resource_val>
-```
-
+        &lt;resource_key&gt;: &lt;resource_val&gt;
+        &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
+</pre>
 
 ### Check Mode
 Check mode can be specified in two ways:
