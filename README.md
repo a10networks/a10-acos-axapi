@@ -140,7 +140,7 @@ Action and module names are formatted based upon their API endpoint. For example
 </pre>
 
 
-### Configuring Resource On Unique Partition
+### Configuring a resource on a partition 
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
