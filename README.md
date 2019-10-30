@@ -139,6 +139,28 @@ Action and module names are formatted based upon their API endpoint. For example
         <b>get_type: stats</b>
 </pre>
 
+
+### Configuring On Unique Partition
+```
+- name: <Description of playbook>
+  connection: local
+  hosts: <inventory>
+  tasks:
+    - name: <Description of task>
+      <action>:
+        a10_host: {{ a10_host }}
+        a10_username: {{ a10_username }}
+        a10_password: {{ a10_password }}
+        a10_port: {{ a10_port }}
+        a10_protocol: {{ a10_protocol }}
+        a10_partition:
+          name: {{ partition_name }}
+          shared: 0
+        <resource_key>: <resource_val>
+        <another_resource_key>: <another_resource_val>
+```
+
+
 ### Check Mode
 Check mode can be specified in two ways:
 
