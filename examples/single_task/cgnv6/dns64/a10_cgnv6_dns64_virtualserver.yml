@@ -1,0 +1,34 @@
+- name: a10_cgnv6_dns64_virtualserver Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_dns64_virtualserver
+    a10_cgnv6_dns64_virtualserver:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: "present"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      use_if_ip: "false"
+      name: "vitualServer1"
+      port_list:
+        - protocol: "dns-udp"
+          precedence: "true"
+          auto: "true"
+          template_policy: "TemplatePolicy1"
+          service_group: "s1"
+          port_number: 8080
+          sampling_enable:
+            - counters1: "all"
+          user_tag: "TestTag"
+          template_dns: "templateDns1"
+          action: "enable"
+          pool: "MyPool"
+      template_policy: "TemplatePolicy1"
+      vrid: 1
+      enable_disable_action: "enable"
+      user_tag: "TestTag"
+      netmask: "255.0.0.0"
+      ip_address: "10.10.2.27"
+      policy: "true"

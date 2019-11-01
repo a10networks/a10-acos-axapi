@@ -1,0 +1,20 @@
+- name: a10_cgnv6_lw_4o6_global example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: a10_cgnv6_lw_4o6_global
+    a10_cgnv6_lw_4o6_global:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      no_forward_match:
+        send_icmpv6: "true"
+      nat_prefix_list: "TestClassList"
+      hairpinning: "filter-all"
+      inside_src_access_list: "1"
+      sampling_enable:
+        - counters1: "all"
+      icmp_inbound: "drop"
+      use_binding_table: "TestLwBindingTable1"

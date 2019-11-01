@@ -1,9 +1,9 @@
-- name: a10_cgnv6_lsn_all_sessions example playbook
+- name: a10_cgnv6_lw_4o6_binding_table_files_status example playbook
   connection: local
   hosts: localhost
   tasks:
-  - name: a10_cgnv6_lsn_all_sessions
-    a10_cgnv6_lsn_all_sessions:
+  - name: a10_cgnv6_lw_4o6_binding_table_files_status
+    a10_cgnv6_lw_4o6_binding_table_files_status:
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"

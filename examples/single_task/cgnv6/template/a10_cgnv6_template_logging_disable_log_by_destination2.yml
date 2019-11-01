@@ -1,0 +1,14 @@
+- name: a10_cgnv6_template_logging_disable_log_by_destination Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_logging_disable_log_by_destination
+    a10_cgnv6_template_logging_disable_log_by_destination:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      icmp: "true"
+      logging_name: "LsnTemplate1"

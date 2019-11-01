@@ -1,11 +1,12 @@
-- name: a10_cgnv6_lsn_all_sessions example playbook
-  connection: local
+- name: a10_cgnv6_lsn_user_quota_session Example Playbook
   hosts: localhost
+  connection: local
   tasks:
-  - name: a10_cgnv6_lsn_all_sessions
-    a10_cgnv6_lsn_all_sessions:
+  - name: a10_cgnv6_lsn_user_quota_session
+    a10_cgnv6_lsn_user_quota_session:
       a10_host: "{{ a10_host }}"
       a10_username: "{{ a10_username }}"
       a10_password: "{{ a10_password }}"
       a10_port: "{{ a10_port }}"
+      state: "present"
       a10_protocol: "{{ a10_protocol }}"

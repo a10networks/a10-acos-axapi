@@ -1,0 +1,27 @@
+- name: a10_cgnv6_fixed_nat_inside_iplist Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_fixed_nat_inside_iplist
+    a10_cgnv6_fixed_nat_inside_iplist:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      vrid: 1
+      ports_per_user: 1
+      inside_ip_list: "IpList1"
+      session_quota: 10
+      method: "use-all-nat-ips"
+      dest_rule_list: "RuleList1"
+      nat_ip_list: "IpList1"
+      offset:
+        numeric_offset: 0
+        random: "false"
+      respond_to_user_mac: "false"
+      usable_nat_ports:
+        usable_start_port: 8080
+        usable_end_port: 8090
+      dynamic_pool_size: 0
