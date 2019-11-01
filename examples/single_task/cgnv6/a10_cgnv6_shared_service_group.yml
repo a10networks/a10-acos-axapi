@@ -10,5 +10,4 @@
       a10_port: "{{ a10_port }}"
       a10_protocol: "{{ a10_protocol }}"
       state: "present"
-      get_type: "single"
-      
+      get_type: "single"      

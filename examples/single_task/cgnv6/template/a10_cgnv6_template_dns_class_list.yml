@@ -15,8 +15,6 @@
           lidnum: 12
           over_limit_action: "true"
           log: "true"
-          #per: 1
-          #lockout: 8
           user_tag: "TestTag"
           dns:
             cache_action: "cache-disable"

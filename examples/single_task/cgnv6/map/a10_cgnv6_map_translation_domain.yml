@@ -28,10 +28,8 @@
         withdraw_route: "any-link-failure"
       basic_mapping_rule:
         rule_ipv4_address_port_settings: "single-addr"
-        #port_start: 8080
         prefix_rule_list: 
           - name: "RuleList1"
             ipv4_netmask: "/4"
             rule_ipv4_prefix: "10.10.10.4"
             rule_ipv6_prefix: "2001:0DB8:0000:000b:0000:0000:0000:0003/24"
-#        ea_length: "15"
