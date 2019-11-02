@@ -52,6 +52,77 @@ options:
         description:
         - "IPv6 prefix"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            inbound_icmp_packets_received:
+                description:
+                - "Inbound ICMP packets received"
+            outbound_udp_packets_received:
+                description:
+                - "Outbound UDP packets received"
+            vport_matched:
+                description:
+                - "Traffic match SLB virtual port"
+            inbound_ipv4_dest_unreachable:
+                description:
+                - "Inbound IPv4 destination unreachable"
+            outbound_packets_drop:
+                description:
+                - "Outbound packets dropped"
+            outbound_fragment_ipv6:
+                description:
+                - "Outbound Fragmented IPv6"
+            not_local_ip:
+                description:
+                - "Not local IP"
+            inbound_tcp_packets_received:
+                description:
+                - "Inbound TCP packets received"
+            fragment_error:
+                description:
+                - "Fragment processing errors"
+            other_error:
+                description:
+                - "Other errors"
+            unknown_delegated_prefix:
+                description:
+                - "Unknown 6rd delegated prefix"
+            outbound_tcp_packets_received:
+                description:
+                - "Outbound TCP packets received"
+            outbound_icmp_packets_received:
+                description:
+                - "Outbound ICMP packets received"
+            name:
+                description:
+                - "6rd Domain name"
+            packet_too_big:
+                description:
+                - "Packet too big"
+            inbound_fragment_ipv4:
+                description:
+                - "Inbound Fragmented IPv4"
+            inbound_tunnel_fragment_ipv6:
+                description:
+                - "Inbound Fragmented IPv6 in tunnel"
+            outbound_ipv6_dest_unreachable:
+                description:
+                - "Outbound IPv6 destination unreachable"
+            inbound_packets_drop:
+                description:
+                - "Inbound packets dropped"
+            inbound_other_packets_received:
+                description:
+                - "Inbound other packets received"
+            inbound_udp_packets_received:
+                description:
+                - "Inbound UDP packets received"
+            outbound_other_packets_received:
+                description:
+                - "Outbound other packets received"
     name:
         description:
         - "6rd Domain name"
@@ -102,7 +173,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["br_ipv4_address","ce_ipv4_netmask","ce_ipv4_network","ipv6_prefix","mtu","name","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["br_ipv4_address","ce_ipv4_netmask","ce_ipv4_network","ipv6_prefix","mtu","name","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -132,6 +203,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ipv6_prefix=dict(type='str',),
+        stats=dict(type='dict',inbound_icmp_packets_received=dict(type='str',),outbound_udp_packets_received=dict(type='str',),vport_matched=dict(type='str',),inbound_ipv4_dest_unreachable=dict(type='str',),outbound_packets_drop=dict(type='str',),outbound_fragment_ipv6=dict(type='str',),not_local_ip=dict(type='str',),inbound_tcp_packets_received=dict(type='str',),fragment_error=dict(type='str',),other_error=dict(type='str',),unknown_delegated_prefix=dict(type='str',),outbound_tcp_packets_received=dict(type='str',),outbound_icmp_packets_received=dict(type='str',),name=dict(type='str',required=True,),packet_too_big=dict(type='str',),inbound_fragment_ipv4=dict(type='str',),inbound_tunnel_fragment_ipv6=dict(type='str',),outbound_ipv6_dest_unreachable=dict(type='str',),inbound_packets_drop=dict(type='str',),inbound_other_packets_received=dict(type='str',),inbound_udp_packets_received=dict(type='str',),outbound_other_packets_received=dict(type='str',)),
         name=dict(type='str',required=True,),
         ce_ipv4_network=dict(type='str',),
         user_tag=dict(type='str',),
@@ -164,11 +236,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -254,10 +321,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -405,8 +475,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

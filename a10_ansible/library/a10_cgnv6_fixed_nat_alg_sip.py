@@ -56,6 +56,56 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'method-register'= SIP Method REGISTER; 'method-invite'= SIP Method INVITE; 'method-ack'= SIP Method ACK; 'method-cancel'= SIP Method CANCEL; 'method-bye'= SIP Method BYE; 'method-options'= SIP Method OPTIONS; 'method-prack'= SIP Method PRACK; 'method-subscribe'= SIP Method SUBSCRIBE; 'method-notify'= SIP Method NOTIFY; 'method-publish'= SIP Method PUBLISH; 'method-info'= SIP Method INFO; 'method-refer'= SIP Method REFER; 'method-message'= SIP Method MESSAGE; 'method-update'= SIP Method UPDATE; 'method-unknown'= SIP Method UNKNOWN; 'parse-error'= SIP Message Parse Error; 'req-uri-op-failrue'= SIP Operate Request Uri Failure; 'via-hdr-op-failrue'= SIP Operate Via Header Failure; 'contact-hdr-op-failrue'= SIP Operate Contact Header Failure; 'from-hdr-op-failrue'= SIP Operate From Header Failure; 'to-hdr-op-failrue'= SIP Operate To Header Failure; 'route-hdr-op-failrue'= SIP Operate Route Header Failure; 'record-route-hdr-op-failrue'= SIP Operate Record-Route Header Failure; 'content-length-hdr-op-failrue'= SIP Operate Content-Length Failure; 'third-party-registration'= SIP Third-Party Registration; 'conn-ext-creation-failure'= SIP Create Connection Extension Failure; 'alloc-contact-port-failure'= SIP Alloc Contact Port Failure; 'outside-contact-port-mismatch'= SIP Outside Contact Port Mismatch NAT Port; 'inside-contact-port-mismatch'= SIP Inside Contact Port Mismatch; 'third-party-sdp'= SIP Third-Party SDP; 'sdp-process-candidate-failure'= SIP Operate SDP Media Candidate Attribute Failure; 'sdp-op-failure'= SIP Operate SDP Failure; 'sdp-alloc-port-map-success'= SIP Alloc SDP Port Map Success; 'sdp-alloc-port-map-failure'= SIP Alloc SDP Port Map Failure; 'modify-failure'= SIP Message Modify Failure; 'rewrite-failure'= SIP Message Rewrite Failure; 'tcp-out-of-order-drop'= TCP Out-of-Order Drop; 'smp-conn-alloc-failure'= SMP Helper Conn Alloc Failure; 'helper-found'= SMP Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'= SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed; 'helper-failure'= SMP Helper Failure; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            method_register:
+                description:
+                - "SIP Method REGISTER"
+            method_invite:
+                description:
+                - "SIP Method INVITE"
+            method_publish:
+                description:
+                - "SIP Method PUBLISH"
+            method_unknown:
+                description:
+                - "SIP Method UNKNOWN"
+            method_update:
+                description:
+                - "SIP Method UPDATE"
+            method_subscribe:
+                description:
+                - "SIP Method SUBSCRIBE"
+            method_options:
+                description:
+                - "SIP Method OPTIONS"
+            method_prack:
+                description:
+                - "SIP Method PRACK"
+            method_notify:
+                description:
+                - "SIP Method NOTIFY"
+            method_info:
+                description:
+                - "SIP Method INFO"
+            method_ack:
+                description:
+                - "SIP Method ACK"
+            method_refer:
+                description:
+                - "SIP Method REFER"
+            method_cancel:
+                description:
+                - "SIP Method CANCEL"
+            method_bye:
+                description:
+                - "SIP Method BYE"
+            method_message:
+                description:
+                - "SIP Method MESSAGE"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +124,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +154,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','req-uri-op-failrue','via-hdr-op-failrue','contact-hdr-op-failrue','from-hdr-op-failrue','to-hdr-op-failrue','route-hdr-op-failrue','record-route-hdr-op-failrue','content-length-hdr-op-failrue','third-party-registration','conn-ext-creation-failure','alloc-contact-port-failure','outside-contact-port-mismatch','inside-contact-port-mismatch','third-party-sdp','sdp-process-candidate-failure','sdp-op-failure','sdp-alloc-port-map-success','sdp-alloc-port-map-failure','modify-failure','rewrite-failure','tcp-out-of-order-drop','smp-conn-alloc-failure','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
+        stats=dict(type='dict',method_register=dict(type='str',),method_invite=dict(type='str',),method_publish=dict(type='str',),method_unknown=dict(type='str',),method_update=dict(type='str',),method_subscribe=dict(type='str',),method_options=dict(type='str',),method_prack=dict(type='str',),method_notify=dict(type='str',),method_info=dict(type='str',),method_ack=dict(type='str',),method_refer=dict(type='str',),method_cancel=dict(type='str',),method_bye=dict(type='str',),method_message=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +178,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +263,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +417,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

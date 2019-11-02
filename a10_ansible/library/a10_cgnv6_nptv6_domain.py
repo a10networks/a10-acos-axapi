@@ -52,6 +52,32 @@ options:
         description:
         - "Configure outside network prefix (Outside IPv6 network prefix)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            inbound_packets:
+                description:
+                - "Inbound Packets"
+            name:
+                description:
+                - "Name of NPTv6 domain"
+            hairpin_packets:
+                description:
+                - "Hairpin Packets"
+            inbound_packets_no_map:
+                description:
+                - "Inbound Packets No Map"
+            outbound_packets:
+                description:
+                - "Outbound Packets"
+            address_not_valid_for_translation:
+                description:
+                - "Address Not Valid For Translation"
+            packets_dest_unreachable:
+                description:
+                - "Packets Destination Unreachable"
     name:
         description:
         - "Name of NPTv6 domain"
@@ -90,7 +116,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["inside_prefix","name","outside_prefix","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["inside_prefix","name","outside_prefix","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -120,6 +146,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         outside_prefix=dict(type='str',),
+        stats=dict(type='dict',inbound_packets=dict(type='str',),name=dict(type='str',required=True,),hairpin_packets=dict(type='str',),inbound_packets_no_map=dict(type='str',),outbound_packets=dict(type='str',),address_not_valid_for_translation=dict(type='str',),packets_dest_unreachable=dict(type='str',)),
         name=dict(type='str',required=True,),
         inside_prefix=dict(type='str',),
         user_tag=dict(type='str',),
@@ -149,11 +176,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -239,10 +261,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -390,8 +415,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            fix_cpu_list:
+                description:
+                - "Field fix_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,44 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'curr_proxy'= Current proxy conns; 'total_proxy'= Total proxy conns; 'svrsel_fail'= Server selection failure; 'noroute'= No route failure; 'snat_fail'= Source NAT failure; 'client_err'= Client fail; 'server_err'= Server fail; 'insert_clientip'= Insert client IP; 'default_switching'= Default switching; 'sender_switching'= Sender ID switching; 'target_switching'= Target ID switching; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            svrsel_fail:
+                description:
+                - "Server selection failure"
+            curr_proxy:
+                description:
+                - "Current proxy conns"
+            default_switching:
+                description:
+                - "Default switching"
+            total_proxy:
+                description:
+                - "Total proxy conns"
+            noroute:
+                description:
+                - "No route failure"
+            sender_switching:
+                description:
+                - "Sender ID switching"
+            client_err:
+                description:
+                - "Client fail"
+            target_switching:
+                description:
+                - "Target ID switching"
+            server_err:
+                description:
+                - "Server fail"
+            snat_fail:
+                description:
+                - "Source NAT failure"
+            insert_clientip:
+                description:
+                - "Insert client IP"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +123,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +152,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',fix_cpu_list=dict(type='list',svrsel_fail=dict(type='int',),curr_proxy=dict(type='int',),default_switching=dict(type='int',),total_proxy=dict(type='int',),noroute=dict(type='int',),sender_switching=dict(type='int',),client_err=dict(type='int',),target_switching=dict(type='int',),server_err=dict(type='int',),snat_fail=dict(type='int',),insert_clientip=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','svrsel_fail','noroute','snat_fail','client_err','server_err','insert_clientip','default_switching','sender_switching','target_switching'])),
+        stats=dict(type='dict',svrsel_fail=dict(type='str',),curr_proxy=dict(type='str',),default_switching=dict(type='str',),total_proxy=dict(type='str',),noroute=dict(type='str',),sender_switching=dict(type='str',),client_err=dict(type='str',),target_switching=dict(type='str',),server_err=dict(type='str',),snat_fail=dict(type='str',),insert_clientip=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +269,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

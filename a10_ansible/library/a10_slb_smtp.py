@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            cpu_count:
+                description:
+                - "Field cpu_count"
+            smtp_cpu_list:
+                description:
+                - "Field smtp_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,221 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'curr_proxy'= Current proxy conns; 'total_proxy'= Total proxy conns; 'request'= SMTP requests; 'request_success'= SMTP requests (success); 'no_proxy'= No proxy error; 'client_reset'= Client reset; 'server_reset'= Server reset; 'no_tuple'= No tuple error; 'parse_req_fail'= Parse request failure; 'server_select_fail'= Server selection failure; 'forward_req_fail'= Forward request failure; 'forward_req_data_fail'= Forward REQ data failure; 'req_retran'= Request retransmit; 'req_ofo'= Request pkt out-of-order; 'server_reselect'= Server reselection; 'server_prem_close'= Server premature close; 'new_server_conn'= Server connection made; 'snat_fail'= Source NAT failure; 'tcp_out_reset'= TCP out reset; 'recv_client_command_EHLO'= Recv client EHLO; 'recv_client_command_HELO'= Recv client HELO; 'recv_client_command_MAIL'= Recv client MAIL; 'recv_client_command_RCPT'= Recv client RCPT; 'recv_client_command_DATA'= Recv client DATA; 'recv_client_command_RSET'= Recv client RSET; 'recv_client_command_VRFY'= Recv client VRFY; 'recv_client_command_EXPN'= Recv client EXPN; 'recv_client_command_HELP'= Recv client HELP; 'recv_client_command_NOOP'= Recv client NOOP; 'recv_client_command_QUIT'= Recv client QUIT; 'recv_client_command_STARTTLS'= Recv client STARTTLS; 'recv_client_command_others'= Recv client other cmds; 'recv_server_service_not_ready'= Recv server serv-not-rdy; 'recv_server_unknow_reply_code'= Recv server unknown-code; 'send_client_service_ready'= Sent client serv-rdy; 'send_client_service_not_ready'= Sent client serv-not-rdy; 'send_client_close_connection'= Sent client close-conn; 'send_client_go_ahead'= Sent client go-ahead; 'send_client_start_TLS_first'= Sent client STARTTLS-1st; 'send_client_TLS_not_available'= Sent client TLS-not-aval; 'send_client_no_command'= Sent client no-such-cmd; 'send_server_cmd_reset'= Sent server RSET; 'TLS_established'= SSL session established; 'L4_switch'= L4 switching; 'Aflex_switch'= aFleX switching; 'Aflex_switch_ok'= aFleX switching (succ); 'client_domain_switch'= Client domain switching; 'client_domain_switch_ok'= Client domain sw (succ); 'LB_switch'= LB switching; 'LB_switch_ok'= LB switching (succ); 'read_request_line_fail'= Read request line fail; 'get_all_headers_fail'= Get all headers fail; 'too_many_headers'= Too many headers; 'line_too_long'= Line too long; 'line_across_packet'= Line across packets; 'line_extend'= Line extend; 'line_extend_fail'= Line extend fail; 'line_table_extend'= Table extend; 'line_table_extend_fail'= Table extend fail; 'parse_request_line_fail'= Parse request line fail; 'insert_resonse_line_fail'= Ins response line fail; 'remove_resonse_line_fail'= Del response line fail; 'parse_resonse_line_fail'= Parse response line fail; 'Aflex_lb_reselect'= aFleX lb reselect; 'Aflex_lb_reselect_ok'= aFleX lb reselect (succ); 'server_STARTTLS_init'= Init server side STARTTLS; 'server_STARTTLS_fail'= Server side STARTTLS fail; 'rserver_STARTTLS_disable'= real server not support STARTTLS; 'recv_client_command_TURN'= Recv client TURN; 'recv_client_command_ETRN'= Recv client ETRN; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            request_success:
+                description:
+                - "SMTP requests (success)"
+            recv_client_command_RCPT:
+                description:
+                - "Recv client RCPT"
+            recv_client_command_ETRN:
+                description:
+                - "Recv client ETRN"
+            forward_req_fail:
+                description:
+                - "Forward request failure"
+            recv_server_unknow_reply_code:
+                description:
+                - "Recv server unknown-code"
+            total_proxy:
+                description:
+                - "Total proxy conns"
+            L4_switch:
+                description:
+                - "L4 switching"
+            too_many_headers:
+                description:
+                - "Too many headers"
+            recv_client_command_QUIT:
+                description:
+                - "Recv client QUIT"
+            recv_client_command_NOOP:
+                description:
+                - "Recv client NOOP"
+            new_server_conn:
+                description:
+                - "Server connection made"
+            req_retran:
+                description:
+                - "Request retransmit"
+            server_reselect:
+                description:
+                - "Server reselection"
+            recv_client_command_MAIL:
+                description:
+                - "Recv client MAIL"
+            send_client_start_TLS_first:
+                description:
+                - "Sent client STARTTLS-1st"
+            recv_client_command_VRFY:
+                description:
+                - "Recv client VRFY"
+            server_prem_close:
+                description:
+                - "Server premature close"
+            parse_resonse_line_fail:
+                description:
+                - "Parse response line fail"
+            send_client_close_connection:
+                description:
+                - "Sent client close-conn"
+            forward_req_data_fail:
+                description:
+                - "Forward REQ data failure"
+            recv_client_command_HELO:
+                description:
+                - "Recv client HELO"
+            no_proxy:
+                description:
+                - "No proxy error"
+            client_reset:
+                description:
+                - "Client reset"
+            line_across_packet:
+                description:
+                - "Line across packets"
+            server_STARTTLS_init:
+                description:
+                - "Init server side STARTTLS"
+            recv_client_command_HELP:
+                description:
+                - "Recv client HELP"
+            client_domain_switch_ok:
+                description:
+                - "Client domain sw (succ)"
+            recv_client_command_RSET:
+                description:
+                - "Recv client RSET"
+            recv_client_command_STARTTLS:
+                description:
+                - "Recv client STARTTLS"
+            recv_client_command_others:
+                description:
+                - "Recv client other cmds"
+            recv_client_command_EXPN:
+                description:
+                - "Recv client EXPN"
+            LB_switch:
+                description:
+                - "LB switching"
+            no_tuple:
+                description:
+                - "No tuple error"
+            send_client_no_command:
+                description:
+                - "Sent client no-such-cmd"
+            Aflex_switch_ok:
+                description:
+                - "aFleX switching (succ)"
+            rserver_STARTTLS_disable:
+                description:
+                - "real server not support STARTTLS"
+            server_select_fail:
+                description:
+                - "Server selection failure"
+            tcp_out_reset:
+                description:
+                - "TCP out reset"
+            line_table_extend:
+                description:
+                - "Table extend"
+            send_server_cmd_reset:
+                description:
+                - "Sent server RSET"
+            line_extend_fail:
+                description:
+                - "Line extend fail"
+            recv_client_command_DATA:
+                description:
+                - "Recv client DATA"
+            Aflex_lb_reselect:
+                description:
+                - "aFleX lb reselect"
+            curr_proxy:
+                description:
+                - "Current proxy conns"
+            send_client_service_ready:
+                description:
+                - "Sent client serv-rdy"
+            send_client_go_ahead:
+                description:
+                - "Sent client go-ahead"
+            req_ofo:
+                description:
+                - "Request pkt out-of-order"
+            client_domain_switch:
+                description:
+                - "Client domain switching"
+            server_reset:
+                description:
+                - "Server reset"
+            snat_fail:
+                description:
+                - "Source NAT failure"
+            recv_server_service_not_ready:
+                description:
+                - "Recv server serv-not-rdy"
+            parse_request_line_fail:
+                description:
+                - "Parse request line fail"
+            remove_resonse_line_fail:
+                description:
+                - "Del response line fail"
+            line_table_extend_fail:
+                description:
+                - "Table extend fail"
+            get_all_headers_fail:
+                description:
+                - "Get all headers fail"
+            parse_req_fail:
+                description:
+                - "Parse request failure"
+            LB_switch_ok:
+                description:
+                - "LB switching (succ)"
+            Aflex_switch:
+                description:
+                - "aFleX switching"
+            send_client_service_not_ready:
+                description:
+                - "Sent client serv-not-rdy"
+            line_too_long:
+                description:
+                - "Line too long"
+            request:
+                description:
+                - "SMTP requests"
+            line_extend:
+                description:
+                - "Line extend"
+            Aflex_lb_reselect_ok:
+                description:
+                - "aFleX lb reselect (succ)"
+            server_STARTTLS_fail:
+                description:
+                - "Server side STARTTLS fail"
+            recv_client_command_EHLO:
+                description:
+                - "Recv client EHLO"
+            insert_resonse_line_fail:
+                description:
+                - "Ins response line fail"
+            send_client_TLS_not_available:
+                description:
+                - "Sent client TLS-not-aval"
+            read_request_line_fail:
+                description:
+                - "Read request line fail"
+            recv_client_command_TURN:
+                description:
+                - "Recv client TURN"
+            TLS_established:
+                description:
+                - "SSL session established"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +300,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +329,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',cpu_count=dict(type='int',),smtp_cpu_list=dict(type='list',request_success=dict(type='int',),recv_client_command_RCPT=dict(type='int',),recv_client_command_ETRN=dict(type='int',),forward_req_fail=dict(type='int',),recv_server_unknow_reply_code=dict(type='int',),total_proxy=dict(type='int',),L4_switch=dict(type='int',),too_many_headers=dict(type='int',),recv_client_command_QUIT=dict(type='int',),recv_client_command_NOOP=dict(type='int',),new_server_conn=dict(type='int',),req_retran=dict(type='int',),server_reselect=dict(type='int',),recv_client_command_MAIL=dict(type='int',),send_client_start_TLS_first=dict(type='int',),recv_client_command_VRFY=dict(type='int',),server_prem_close=dict(type='int',),parse_resonse_line_fail=dict(type='int',),send_client_close_connection=dict(type='int',),forward_req_data_fail=dict(type='int',),recv_client_command_HELO=dict(type='int',),no_proxy=dict(type='int',),client_reset=dict(type='int',),line_across_packet=dict(type='int',),server_STARTTLS_init=dict(type='int',),recv_client_command_HELP=dict(type='int',),client_domain_switch_ok=dict(type='int',),recv_client_command_RSET=dict(type='int',),recv_client_command_STARTTLS=dict(type='int',),recv_client_command_others=dict(type='int',),recv_client_command_EXPN=dict(type='int',),LB_switch=dict(type='int',),no_tuple=dict(type='int',),send_client_no_command=dict(type='int',),Aflex_switch_ok=dict(type='int',),rserver_STARTTLS_disable=dict(type='int',),server_select_fail=dict(type='int',),tcp_out_reset=dict(type='int',),line_table_extend=dict(type='int',),send_server_cmd_reset=dict(type='int',),line_extend_fail=dict(type='int',),recv_client_command_DATA=dict(type='int',),Aflex_lb_reselect=dict(type='int',),curr_proxy=dict(type='int',),send_client_service_ready=dict(type='int',),send_client_go_ahead=dict(type='int',),req_ofo=dict(type='int',),client_domain_switch=dict(type='int',),server_reset=dict(type='int',),snat_fail=dict(type='int',),recv_server_service_not_ready=dict(type='int',),parse_request_line_fail=dict(type='int',),remove_resonse_line_fail=dict(type='int',),line_table_extend_fail=dict(type='int',),get_all_headers_fail=dict(type='int',),parse_req_fail=dict(type='int',),LB_switch_ok=dict(type='int',),Aflex_switch=dict(type='int',),send_client_service_not_ready=dict(type='int',),line_too_long=dict(type='int',),request=dict(type='int',),line_extend=dict(type='int',),Aflex_lb_reselect_ok=dict(type='int',),server_STARTTLS_fail=dict(type='int',),recv_client_command_EHLO=dict(type='int',),insert_resonse_line_fail=dict(type='int',),send_client_TLS_not_available=dict(type='int',),read_request_line_fail=dict(type='int',),recv_client_command_TURN=dict(type='int',),TLS_established=dict(type='int',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','request','request_success','no_proxy','client_reset','server_reset','no_tuple','parse_req_fail','server_select_fail','forward_req_fail','forward_req_data_fail','req_retran','req_ofo','server_reselect','server_prem_close','new_server_conn','snat_fail','tcp_out_reset','recv_client_command_EHLO','recv_client_command_HELO','recv_client_command_MAIL','recv_client_command_RCPT','recv_client_command_DATA','recv_client_command_RSET','recv_client_command_VRFY','recv_client_command_EXPN','recv_client_command_HELP','recv_client_command_NOOP','recv_client_command_QUIT','recv_client_command_STARTTLS','recv_client_command_others','recv_server_service_not_ready','recv_server_unknow_reply_code','send_client_service_ready','send_client_service_not_ready','send_client_close_connection','send_client_go_ahead','send_client_start_TLS_first','send_client_TLS_not_available','send_client_no_command','send_server_cmd_reset','TLS_established','L4_switch','Aflex_switch','Aflex_switch_ok','client_domain_switch','client_domain_switch_ok','LB_switch','LB_switch_ok','read_request_line_fail','get_all_headers_fail','too_many_headers','line_too_long','line_across_packet','line_extend','line_extend_fail','line_table_extend','line_table_extend_fail','parse_request_line_fail','insert_resonse_line_fail','remove_resonse_line_fail','parse_resonse_line_fail','Aflex_lb_reselect','Aflex_lb_reselect_ok','server_STARTTLS_init','server_STARTTLS_fail','rserver_STARTTLS_disable','recv_client_command_TURN','recv_client_command_ETRN'])),
+        stats=dict(type='dict',request_success=dict(type='str',),recv_client_command_RCPT=dict(type='str',),recv_client_command_ETRN=dict(type='str',),forward_req_fail=dict(type='str',),recv_server_unknow_reply_code=dict(type='str',),total_proxy=dict(type='str',),L4_switch=dict(type='str',),too_many_headers=dict(type='str',),recv_client_command_QUIT=dict(type='str',),recv_client_command_NOOP=dict(type='str',),new_server_conn=dict(type='str',),req_retran=dict(type='str',),server_reselect=dict(type='str',),recv_client_command_MAIL=dict(type='str',),send_client_start_TLS_first=dict(type='str',),recv_client_command_VRFY=dict(type='str',),server_prem_close=dict(type='str',),parse_resonse_line_fail=dict(type='str',),send_client_close_connection=dict(type='str',),forward_req_data_fail=dict(type='str',),recv_client_command_HELO=dict(type='str',),no_proxy=dict(type='str',),client_reset=dict(type='str',),line_across_packet=dict(type='str',),server_STARTTLS_init=dict(type='str',),recv_client_command_HELP=dict(type='str',),client_domain_switch_ok=dict(type='str',),recv_client_command_RSET=dict(type='str',),recv_client_command_STARTTLS=dict(type='str',),recv_client_command_others=dict(type='str',),recv_client_command_EXPN=dict(type='str',),LB_switch=dict(type='str',),no_tuple=dict(type='str',),send_client_no_command=dict(type='str',),Aflex_switch_ok=dict(type='str',),rserver_STARTTLS_disable=dict(type='str',),server_select_fail=dict(type='str',),tcp_out_reset=dict(type='str',),line_table_extend=dict(type='str',),send_server_cmd_reset=dict(type='str',),line_extend_fail=dict(type='str',),recv_client_command_DATA=dict(type='str',),Aflex_lb_reselect=dict(type='str',),curr_proxy=dict(type='str',),send_client_service_ready=dict(type='str',),send_client_go_ahead=dict(type='str',),req_ofo=dict(type='str',),client_domain_switch=dict(type='str',),server_reset=dict(type='str',),snat_fail=dict(type='str',),recv_server_service_not_ready=dict(type='str',),parse_request_line_fail=dict(type='str',),remove_resonse_line_fail=dict(type='str',),line_table_extend_fail=dict(type='str',),get_all_headers_fail=dict(type='str',),parse_req_fail=dict(type='str',),LB_switch_ok=dict(type='str',),Aflex_switch=dict(type='str',),send_client_service_not_ready=dict(type='str',),line_too_long=dict(type='str',),request=dict(type='str',),line_extend=dict(type='str',),Aflex_lb_reselect_ok=dict(type='str',),server_STARTTLS_fail=dict(type='str',),recv_client_command_EHLO=dict(type='str',),insert_resonse_line_fail=dict(type='str',),send_client_TLS_not_available=dict(type='str',),read_request_line_fail=dict(type='str',),recv_client_command_TURN=dict(type='str',),TLS_established=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +446,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

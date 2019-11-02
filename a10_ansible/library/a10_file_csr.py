@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ssl_csr:
+                description:
+                - "Field ssl_csr"
+            sortby_name:
+                description:
+                - "Field sortby_name"
     dst_file:
         description:
         - "destination file name for copy and rename action"
@@ -86,7 +97,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","size","uuid",]
+AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","oper","size","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -115,6 +126,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ssl_csr=dict(type='list',status=dict(type='str',),name=dict(type='str',),common_name=dict(type='str',),organization=dict(type='str',),ntype=dict(type='str',),subject=dict(type='str',)),sortby_name=dict(type='bool',)),
         dst_file=dict(type='str',),
         uuid=dict(type='str',),
         file=dict(type='str',),
@@ -148,11 +160,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -234,10 +241,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -386,8 +396,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

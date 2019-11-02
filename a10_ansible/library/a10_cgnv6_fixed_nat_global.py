@@ -52,6 +52,656 @@ options:
         description:
         - "Create Port Mapping File"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            standby_drop:
+                description:
+                - "Fixed NAT LID Standby Drop"
+            fnat44_fwd_ingress_pkt_size_range4:
+                description:
+                - "Fixed NAT44 Forward Ingress Packet size between 1551 and 9000"
+            fnat44_fwd_ingress_pkt_size_range1:
+                description:
+                - "Fixed NAT44 Forward Ingress Packet size between 0 and 200"
+            fnat44_fwd_ingress_packets_icmp:
+                description:
+                - "Fixed NAT44 Forward Ingress Packets ICMP"
+            fnat44_fwd_ingress_pkt_size_range2:
+                description:
+                - "Fixed NAT44 Forward Ingress Packet size between 201 and 800"
+            nat44_eim_match:
+                description:
+                - "NAT44 Endpoint-Independent-Mapping Matched"
+            fnatdslite_fwd_ingress_bytes_others:
+                description:
+                - "Fixed DS-Lite Forward Ingress Bytes OTHERS"
+            fnatdslite_rev_ingress_pkt_size_range4:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packet size between 1551 and 9000"
+            fnatdslite_rev_egress_packets_udp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packets UDP"
+            fnatdslite_rev_ingress_pkt_size_range2:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packet size between 201 and 800"
+            fnatdslite_rev_ingress_pkt_size_range3:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packet size between 801 and 1550"
+            total_tcp_freed:
+                description:
+                - "Total TCP Ports Freed"
+            fnatdslite_rev_ingress_pkt_size_range1:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packet size between 0 and 200"
+            fnat64_fwd_ingress_bytes_others:
+                description:
+                - "Fixed NAT64 Forward Ingress Bytes OTHERS"
+            fnat64_rev_ingress_packets_udp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packets UDP"
+            dslite_tcp_fullcone_freed:
+                description:
+                - "DS-Lite TCP Full-Cone Freed"
+            fnat64_rev_egress_bytes_tcp:
+                description:
+                - "Fixed NAT64 Reverse Egress Bytes TCP"
+            fnatdslite_fwd_egress_bytes_udp:
+                description:
+                - "Fixed DS-Lite Forward Egress Bytes UDP"
+            nat44_udp_alg_fullcone_freed:
+                description:
+                - "NAT44 UDP ALG Full-Cone Freed"
+            config_not_found:
+                description:
+                - "Fixed NAT Config not Found"
+            dslite_udp_fullcone_created:
+                description:
+                - "DS-Lite UDP Full-Cone Created"
+            total_tcp_free_overload:
+                description:
+                - "Total TCP ports freed via overload"
+            total_udp_freed:
+                description:
+                - "Total UDP Ports Freed"
+            fnatdslite_rev_ingress_packets_icmp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packets ICMP"
+            fnat44_rev_egress_bytes_udp:
+                description:
+                - "Fixed NAT44 Reverse Egress Bytes UDP"
+            dslite_udp_alg_fullcone_created:
+                description:
+                - "DS-Lite UDP ALG Full-Cone Created"
+            fnat64_fwd_ingress_packets_icmp:
+                description:
+                - "Fixed NAT64 Forward Ingress Packets ICMP"
+            total_tcp_allocated:
+                description:
+                - "Total TCP Ports Allocated"
+            nat64_udp_fullcone_created:
+                description:
+                - "NAT64 UDP Full-Cone Created"
+            dslite_inbound_filtered:
+                description:
+                - "DS-Lite Endpoint-Dependent Filtering Drop"
+            fnatdslite_rev_ingress_bytes_icmp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Bytes ICMP"
+            dslite_tcp_fullcone_created:
+                description:
+                - "DS-Lite TCP Full-Cone Created"
+            nat_port_unavailable_icmp:
+                description:
+                - "ICMP NAT Port Unavailable"
+            dslite_udp_fullcone_freed:
+                description:
+                - "DS-Lite UDP Full-Cone Freed"
+            fnat64_fwd_egress_packets_icmp:
+                description:
+                - "Fixed NAT64 Forward Egress Packets ICMP"
+            nat44_inbound_filtered:
+                description:
+                - "NAT44 Endpoint-Dependent Filtering Drop"
+            fnat64_fwd_ingress_packets_udp:
+                description:
+                - "Fixed NAT64 Forward Ingress Packets UDP"
+            fnat64_fwd_egress_pkt_size_range4:
+                description:
+                - "Fixed NAT64 Forward Egress Packet size between 1551 and 9000"
+            fnat44_rev_egress_packets_tcp:
+                description:
+                - "Fixed NAT44 Reverse Egress Packets TCP"
+            port_overload_failed:
+                description:
+                - "Port overload failed"
+            fnatdslite_rev_egress_bytes_icmp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Bytes ICMP"
+            fnat64_fwd_egress_pkt_size_range1:
+                description:
+                - "Fixed NAT64 Forward Egress Packet size between 0 and 200"
+            fnat64_fwd_egress_pkt_size_range2:
+                description:
+                - "Fixed NAT64 Forward Egress Packet size between 201 and 800"
+            fnat64_fwd_egress_pkt_size_range3:
+                description:
+                - "Fixed NAT64 Forward Egress Packet size between 801 and 1550"
+            fnat64_rev_egress_packets_udp:
+                description:
+                - "Fixed NAT64 Reverse Egress Packets UDP"
+            fnat44_fwd_ingress_bytes_others:
+                description:
+                - "Fixed NAT44 Forward Ingress Bytes OTHERS"
+            dslite_udp_alg_fullcone_freed:
+                description:
+                - "DS-Lite UDP ALG Full-Cone Freed"
+            fnat44_fwd_egress_pkt_size_range2:
+                description:
+                - "Fixed NAT44 Forward Egress Packet size between 201 and 800"
+            fnat44_fwd_egress_pkt_size_range3:
+                description:
+                - "Fixed NAT44 Forward Egress Packet size between 801 and 1550"
+            fnat44_fwd_egress_pkt_size_range1:
+                description:
+                - "Fixed NAT44 Forward Egress Packet size between 0 and 200"
+            dslite_eif_limit_exceeded:
+                description:
+                - "DS-Lite Endpoint-Independent-Filtering Limit Exceeded"
+            fnat44_fwd_ingress_bytes_udp:
+                description:
+                - "Fixed NAT44 Forward Ingress Bytes UDP"
+            fnatdslite_fwd_ingress_packets_others:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packets OTHERS"
+            fnat44_fwd_egress_pkt_size_range4:
+                description:
+                - "Fixed NAT44 Forward Egress Packet size between 1551 and 9000"
+            fnat44_fwd_egress_bytes_tcp:
+                description:
+                - "Fixed NAT44 Forward Egress Bytes TCP"
+            dslite_data_session_freed:
+                description:
+                - "DS-Lite Data Sessions Freed"
+            nat64_hairpin:
+                description:
+                - "NAT64 Hairpin Session Created"
+            nat64_data_session_created:
+                description:
+                - "NAT64 Data Sessions Created"
+            nat64_tcp_fullcone_freed:
+                description:
+                - "NAT64 TCP Full-Cone Freed"
+            nat64_udp_alg_fullcone_created:
+                description:
+                - "NAT64 UDP ALG Full-Cone Created"
+            fnatdslite_fwd_ingress_bytes_tcp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Bytes TCP"
+            fnat44_fwd_ingress_packets_tcp:
+                description:
+                - "Fixed NAT44 Forward Ingress Packets TCP"
+            fnat64_fwd_ingress_packets_tcp:
+                description:
+                - "Fixed NAT64 Forward Ingress Packets TCP"
+            nat44_eif_match:
+                description:
+                - "NAT44 Endpoint-Independent-Filtering Matched"
+            fnatdslite_fwd_egress_packets_others:
+                description:
+                - "Fixed DS-Lite Forward Egress Packets OTHERS"
+            nat44_hairpin:
+                description:
+                - "NAT44 Hairpin Session Created"
+            fnat44_fwd_egress_packets_icmp:
+                description:
+                - "Fixed NAT44 Forward Egress Packets ICMP"
+            fnat44_rev_egress_bytes_icmp:
+                description:
+                - "Fixed NAT44 Reverse Egress Bytes ICMP"
+            total_udp_overload_released:
+                description:
+                - "Total UDP ports released from port overloading"
+            fnat64_fwd_egress_packets_others:
+                description:
+                - "Fixed NAT64 Forward Egress Packets OTHERS"
+            fnat44_fwd_ingress_packets_others:
+                description:
+                - "Fixed NAT44 Forward Ingress Packets OTHERS"
+            fnat44_fwd_ingress_bytes_tcp:
+                description:
+                - "Fixed NAT44 Forward Ingress Bytes TCP"
+            fnat64_rev_ingress_bytes_udp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Bytes UDP"
+            dslite_hairpin:
+                description:
+                - "DS-Lite Hairpin Session Created"
+            nat64_udp_fullcone_freed:
+                description:
+                - "NAT64 UDP Full-Cone Freed"
+            fnatdslite_rev_egress_bytes_others:
+                description:
+                - "Fixed DS-Lite Reverse Egress Bytes OTHERS"
+            nat64_tcp_fullcone_created:
+                description:
+                - "NAT64 TCP Full-Cone Created"
+            fnatdslite_fwd_egress_packets_tcp:
+                description:
+                - "Fixed DS-Lite Forward Egress Packets TCP"
+            fnat44_rev_ingress_bytes_icmp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Bytes ICMP"
+            fnatdslite_rev_egress_pkt_size_range3:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packet size between 801 and 1550"
+            fnatdslite_rev_egress_pkt_size_range2:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packet size between 201 and 800"
+            fnatdslite_rev_egress_pkt_size_range1:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packet size between 0 and 200"
+            nat44_udp_fullcone_created:
+                description:
+                - "NAT44 UDP Full-Cone Created"
+            fnat64_fwd_egress_bytes_udp:
+                description:
+                - "Fixed NAT64 Forward Egress Bytes UDP"
+            total_udp_free_overload:
+                description:
+                - "Total UDP ports freed via overload"
+            fnatdslite_rev_egress_pkt_size_range4:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packet size between 1551 and 9000"
+            fnat44_fwd_egress_bytes_others:
+                description:
+                - "Fixed NAT44 Forward Egress Bytes OTHERS"
+            nat_port_unavailable_tcp:
+                description:
+                - "TCP NAT Port Unavailable"
+            nat64_eif_limit_exceeded:
+                description:
+                - "NAT64 Endpoint-Independent-Filtering Limit Exceeded"
+            fnatdslite_fwd_ingress_bytes_icmp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Bytes ICMP"
+            fnatdslite_fwd_ingress_bytes_udp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Bytes UDP"
+            fnat64_rev_ingress_bytes_others:
+                description:
+                - "Fixed NAT64 Reverse Ingress Bytes OTHERS"
+            fnat64_rev_egress_pkt_size_range2:
+                description:
+                - "Fixed NAT64 Reverse Egress Packet size between 201 and 800"
+            fnat64_rev_egress_pkt_size_range3:
+                description:
+                - "Fixed NAT64 Reverse Egress Packet size between 801 and 1550"
+            fnat64_rev_egress_pkt_size_range4:
+                description:
+                - "Fixed NAT64 Reverse Egress Packet size between 1551 and 9000"
+            fnat64_fwd_egress_packets_udp:
+                description:
+                - "Fixed NAT64 Forward Egress Packets UDP"
+            fnat44_rev_egress_packets_udp:
+                description:
+                - "Fixed NAT44 Reverse Egress Packets UDP"
+            fnatdslite_fwd_egress_bytes_tcp:
+                description:
+                - "Fixed DS-Lite Forward Egress Bytes TCP"
+            nat44_tcp_fullcone_freed:
+                description:
+                - "NAT44 TCP Full-Cone Freed"
+            fnat64_rev_ingress_bytes_tcp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Bytes TCP"
+            fnat64_rev_egress_bytes_udp:
+                description:
+                - "Fixed NAT64 Reverse Egress Bytes UDP"
+            fnat64_fwd_ingress_packets_others:
+                description:
+                - "Fixed NAT64 Forward Ingress Packets OTHERS"
+            fnat44_rev_ingress_packets_tcp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packets TCP"
+            total_udp_alloc_overload:
+                description:
+                - "Total UDP ports allocated via overload"
+            fnat64_rev_ingress_bytes_icmp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Bytes ICMP"
+            fnat64_fwd_ingress_pkt_size_range2:
+                description:
+                - "Fixed NAT64 Forward Ingress Packet size between 201 and 800"
+            fnat64_fwd_ingress_pkt_size_range1:
+                description:
+                - "Fixed NAT64 Forward Ingress Packet size between 0 and 200"
+            dslite_eif_match:
+                description:
+                - "DS-Lite Endpoint-Independent-Filtering Matched"
+            fnat64_rev_egress_packets_tcp:
+                description:
+                - "Fixed NAT64 Reverse Egress Packets TCP"
+            fnatdslite_fwd_egress_packets_icmp:
+                description:
+                - "Fixed DS-Lite Forward Egress Packets ICMP"
+            fnatdslite_fwd_ingress_pkt_size_range4:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packet size between 1551 and 9000"
+            fnatdslite_rev_ingress_packets_others:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packets OTHERS"
+            fnatdslite_fwd_ingress_pkt_size_range2:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packet size between 201 and 800"
+            fnatdslite_fwd_ingress_pkt_size_range3:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packet size between 801 and 1550"
+            fnatdslite_fwd_ingress_pkt_size_range1:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packet size between 0 and 200"
+            total_icmp_freed:
+                description:
+                - "Total ICMP Ports Freed"
+            fnat64_rev_egress_packets_icmp:
+                description:
+                - "Fixed NAT64 Reverse Egress Packets ICMP"
+            fnat44_fwd_egress_packets_udp:
+                description:
+                - "Fixed NAT44 Forward Egress Packets UDP"
+            fnat44_rev_egress_bytes_others:
+                description:
+                - "Fixed NAT44 Reverse Egress Bytes OTHERS"
+            nat44_tcp_fullcone_created:
+                description:
+                - "NAT44 TCP Full-Cone Created"
+            tcp_user_quota_exceeded:
+                description:
+                - "TCP User Quota Exceeded"
+            fnat44_rev_ingress_bytes_others:
+                description:
+                - "Fixed NAT44 Reverse Ingress Bytes OTHERS"
+            fnat64_rev_egress_pkt_size_range1:
+                description:
+                - "Fixed NAT64 Reverse Egress Packet size between 0 and 200"
+            fnatdslite_fwd_egress_pkt_size_range3:
+                description:
+                - "Fixed DS-Lite Forward Egress Packet size between 801 and 1550"
+            fnatdslite_fwd_egress_pkt_size_range2:
+                description:
+                - "Fixed DS-Lite Forward Egress Packet size between 201 and 800"
+            fnatdslite_fwd_egress_pkt_size_range1:
+                description:
+                - "Fixed DS-Lite Forward Egress Packet size between 0 and 200"
+            total_icmp_allocated:
+                description:
+                - "Total ICMP Ports Allocated"
+            total_nat_in_use:
+                description:
+                - "Total NAT Addresses in-use"
+            fnatdslite_fwd_egress_pkt_size_range4:
+                description:
+                - "Fixed DS-Lite Forward Egress Packet size between 1551 and 9000"
+            nat_port_unavailable_udp:
+                description:
+                - "UDP NAT Port Unavailable"
+            fnatdslite_rev_ingress_bytes_tcp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Bytes TCP"
+            nat64_inbound_filtered:
+                description:
+                - "NAT64 Endpoint-Dependent Filtering Drop"
+            sixrd_drop:
+                description:
+                - "Fixed NAT IPv6 in IPv4 Packet Drop"
+            fnat64_fwd_ingress_bytes_tcp:
+                description:
+                - "Fixed NAT64 Forward Ingress Bytes TCP"
+            nat44_udp_alg_fullcone_created:
+                description:
+                - "NAT44 UDP ALG Full-Cone Created"
+            fnat44_fwd_ingress_packets_udp:
+                description:
+                - "Fixed NAT44 Forward Ingress Packets UDP"
+            fnatdslite_rev_ingress_packets_udp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packets UDP"
+            nat64_data_session_freed:
+                description:
+                - "NAT64 Data Sessions Freed"
+            fnat44_rev_ingress_packets_others:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packets OTHERS"
+            dest_rlist_pass_through:
+                description:
+                - "Fixed NAT Dest Rule List Pass-Through"
+            fnat44_fwd_egress_bytes_icmp:
+                description:
+                - "Fixed NAT44 Forward Egress Bytes ICMP"
+            nat64_eif_match:
+                description:
+                - "NAT64 Endpoint-Independent-Filtering Matched"
+            fnatdslite_fwd_ingress_packets_udp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packets UDP"
+            nat44_eif_limit_exceeded:
+                description:
+                - "NAT44 Endpoint-Independent-Filtering Limit Exceeded"
+            icmp_user_quota_exceeded:
+                description:
+                - "ICMP User Quota Exceeded"
+            fnat44_fwd_egress_packets_tcp:
+                description:
+                - "Fixed NAT44 Forward Egress Packets TCP"
+            nat44_data_session_created:
+                description:
+                - "NAT44 Data Sessions Created"
+            total_udp_overload_acquired:
+                description:
+                - "Total UDP ports acquired for port overloading"
+            fnat44_fwd_ingress_pkt_size_range3:
+                description:
+                - "Fixed NAT44 Forward Ingress Packet size between 801 and 1550"
+            dslite_data_session_created:
+                description:
+                - "DS-Lite Data Sessions Created"
+            fnat64_rev_egress_bytes_others:
+                description:
+                - "Fixed NAT64 Reverse Egress Bytes OTHERS"
+            fnat44_fwd_egress_bytes_udp:
+                description:
+                - "Fixed NAT44 Forward Egress Bytes UDP"
+            fnat44_rev_egress_packets_others:
+                description:
+                - "Fixed NAT44 Reverse Egress Packets OTHERS"
+            fnat64_rev_ingress_pkt_size_range3:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packet size between 801 and 1550"
+            fnat64_rev_ingress_pkt_size_range2:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packet size between 201 and 800"
+            fnat64_rev_ingress_pkt_size_range1:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packet size between 0 and 200"
+            fnatdslite_rev_ingress_bytes_others:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Bytes OTHERS"
+            fnat64_rev_ingress_pkt_size_range4:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packet size between 1551 and 9000"
+            total_tcp_overload_acquired:
+                description:
+                - "Total TCP ports acquired for port overloading"
+            fnat44_rev_egress_packets_icmp:
+                description:
+                - "Fixed NAT44 Reverse Egress Packets ICMP"
+            fnat44_rev_egress_pkt_size_range2:
+                description:
+                - "Fixed NAT44 Reverse Egress Packet size between 201 and 800"
+            fnat44_rev_egress_pkt_size_range3:
+                description:
+                - "Fixed NAT44 Reverse Egress Packet size between 801 and 1550"
+            fnat44_rev_egress_pkt_size_range1:
+                description:
+                - "Fixed NAT44 Reverse Egress Packet size between 0 and 200"
+            fnat64_fwd_egress_bytes_tcp:
+                description:
+                - "Fixed NAT64 Forward Egress Bytes TCP"
+            fnat44_rev_egress_pkt_size_range4:
+                description:
+                - "Fixed NAT44 Reverse Egress Packet size between 1551 and 9000"
+            nat44_udp_fullcone_freed:
+                description:
+                - "NAT44 UDP Full-Cone Freed"
+            fnat44_rev_ingress_pkt_size_range1:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packet size between 0 and 200"
+            fnat64_fwd_ingress_bytes_icmp:
+                description:
+                - "Fixed NAT64 Forward Ingress Bytes ICMP"
+            fnat44_rev_ingress_pkt_size_range3:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packet size between 801 and 1550"
+            fnat44_rev_ingress_pkt_size_range2:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packet size between 201 and 800"
+            nat64_eim_match:
+                description:
+                - "NAT64 Endpoint-Independent-Mapping Matched"
+            fnatdslite_rev_egress_packets_icmp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packets ICMP"
+            fullcone_failure:
+                description:
+                - "Full-Cone Session Creation Failed"
+            fnat44_fwd_egress_packets_others:
+                description:
+                - "Fixed NAT44 Forward Egress Packets OTHERS"
+            fnatdslite_fwd_egress_bytes_others:
+                description:
+                - "Fixed DS-Lite Forward Egress Bytes OTHERS"
+            fnat44_rev_ingress_packets_udp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packets UDP"
+            fnat44_rev_ingress_packets_icmp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packets ICMP"
+            fnat44_rev_ingress_pkt_size_range4:
+                description:
+                - "Fixed NAT44 Reverse Ingress Packet size between 1551 and 9000"
+            dest_rlist_snat_drop:
+                description:
+                - "Fixed NAT Dest Rules List Source NAT Drop"
+            fnatdslite_rev_egress_bytes_tcp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Bytes TCP"
+            fnat64_rev_egress_packets_others:
+                description:
+                - "Fixed NAT64 Reverse Egress Packets OTHERS"
+            fnatdslite_fwd_egress_bytes_icmp:
+                description:
+                - "Fixed DS-Lite Forward Egress Bytes ICMP"
+            fnatdslite_rev_egress_packets_others:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packets OTHERS"
+            fnat64_fwd_ingress_pkt_size_range4:
+                description:
+                - "Fixed NAT64 Forward Ingress Packet size between 1551 and 9000"
+            fnat44_rev_ingress_bytes_udp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Bytes UDP"
+            dslite_eim_match:
+                description:
+                - "DS-Lite Endpoint-Independent-Mapping Matched"
+            fnat64_fwd_ingress_pkt_size_range3:
+                description:
+                - "Fixed NAT64 Forward Ingress Packet size between 801 and 1550"
+            fnat64_rev_ingress_packets_tcp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packets TCP"
+            fnat64_fwd_egress_bytes_others:
+                description:
+                - "Fixed NAT64 Forward Egress Bytes OTHERS"
+            ha_session_user_quota_exceeded:
+                description:
+                - "HA Sessions User Quota Exceeded"
+            fnatdslite_rev_egress_bytes_udp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Bytes UDP"
+            fnat44_fwd_ingress_bytes_icmp:
+                description:
+                - "Fixed NAT44 Forward Ingress Bytes ICMP"
+            fnat44_rev_ingress_bytes_tcp:
+                description:
+                - "Fixed NAT44 Reverse Ingress Bytes TCP"
+            fnatdslite_fwd_ingress_packets_tcp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packets TCP"
+            fnat64_rev_egress_bytes_icmp:
+                description:
+                - "Fixed NAT64 Reverse Egress Bytes ICMP"
+            fixed_nat_fullcone_self_hairpinning_drop:
+                description:
+                - "Self-Hairpinning Drop"
+            fnat64_fwd_egress_bytes_icmp:
+                description:
+                - "Fixed NAT64 Forward Egress Bytes ICMP"
+            udp_user_quota_exceeded:
+                description:
+                - "UDP User Quota Exceeded"
+            fnatdslite_fwd_ingress_packets_icmp:
+                description:
+                - "Fixed DS-Lite Forward Ingress Packets ICMP"
+            fnat64_rev_ingress_packets_icmp:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packets ICMP"
+            fnatdslite_rev_ingress_bytes_udp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Bytes UDP"
+            fnat44_rev_egress_bytes_tcp:
+                description:
+                - "Fixed NAT44 Reverse Egress Bytes TCP"
+            total_tcp_alloc_overload:
+                description:
+                - "Total TCP ports allocated via overload"
+            fnatdslite_rev_egress_packets_tcp:
+                description:
+                - "Fixed DS-Lite Reverse Egress Packets TCP"
+            fnat64_rev_ingress_packets_others:
+                description:
+                - "Fixed NAT64 Reverse Ingress Packets OTHERS"
+            dest_rlist_drop:
+                description:
+                - "Fixed NAT Dest Rule List Drop"
+            fnat64_fwd_egress_packets_tcp:
+                description:
+                - "Fixed NAT64 Forward Egress Packets TCP"
+            fnatdslite_rev_ingress_packets_tcp:
+                description:
+                - "Fixed DS-Lite Reverse Ingress Packets TCP"
+            total_udp_allocated:
+                description:
+                - "Total UDP Ports Allocated"
+            nat64_udp_alg_fullcone_freed:
+                description:
+                - "NAT64 UDP ALG Full-Cone Freed"
+            fnat64_fwd_ingress_bytes_udp:
+                description:
+                - "Fixed NAT64 Forward Ingress Bytes UDP"
+            session_user_quota_exceeded:
+                description:
+                - "Sessions User Quota Exceeded"
+            total_tcp_overload_released:
+                description:
+                - "Total TCP ports released from port overloading"
+            fnatdslite_fwd_egress_packets_udp:
+                description:
+                - "Fixed DS-Lite Forward Egress Packets UDP"
+            nat44_data_session_freed:
+                description:
+                - "NAT44 Data Sessions Freed"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -91,7 +741,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["create_port_mapping_file","port_mapping_files_count","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["create_port_mapping_file","port_mapping_files_count","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -121,6 +771,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         create_port_mapping_file=dict(type='bool',),
+        stats=dict(type='dict',standby_drop=dict(type='str',),fnat44_fwd_ingress_pkt_size_range4=dict(type='str',),fnat44_fwd_ingress_pkt_size_range1=dict(type='str',),fnat44_fwd_ingress_packets_icmp=dict(type='str',),fnat44_fwd_ingress_pkt_size_range2=dict(type='str',),nat44_eim_match=dict(type='str',),fnatdslite_fwd_ingress_bytes_others=dict(type='str',),fnatdslite_rev_ingress_pkt_size_range4=dict(type='str',),fnatdslite_rev_egress_packets_udp=dict(type='str',),fnatdslite_rev_ingress_pkt_size_range2=dict(type='str',),fnatdslite_rev_ingress_pkt_size_range3=dict(type='str',),total_tcp_freed=dict(type='str',),fnatdslite_rev_ingress_pkt_size_range1=dict(type='str',),fnat64_fwd_ingress_bytes_others=dict(type='str',),fnat64_rev_ingress_packets_udp=dict(type='str',),dslite_tcp_fullcone_freed=dict(type='str',),fnat64_rev_egress_bytes_tcp=dict(type='str',),fnatdslite_fwd_egress_bytes_udp=dict(type='str',),nat44_udp_alg_fullcone_freed=dict(type='str',),config_not_found=dict(type='str',),dslite_udp_fullcone_created=dict(type='str',),total_tcp_free_overload=dict(type='str',),total_udp_freed=dict(type='str',),fnatdslite_rev_ingress_packets_icmp=dict(type='str',),fnat44_rev_egress_bytes_udp=dict(type='str',),dslite_udp_alg_fullcone_created=dict(type='str',),fnat64_fwd_ingress_packets_icmp=dict(type='str',),total_tcp_allocated=dict(type='str',),nat64_udp_fullcone_created=dict(type='str',),dslite_inbound_filtered=dict(type='str',),fnatdslite_rev_ingress_bytes_icmp=dict(type='str',),dslite_tcp_fullcone_created=dict(type='str',),nat_port_unavailable_icmp=dict(type='str',),dslite_udp_fullcone_freed=dict(type='str',),fnat64_fwd_egress_packets_icmp=dict(type='str',),nat44_inbound_filtered=dict(type='str',),fnat64_fwd_ingress_packets_udp=dict(type='str',),fnat64_fwd_egress_pkt_size_range4=dict(type='str',),fnat44_rev_egress_packets_tcp=dict(type='str',),port_overload_failed=dict(type='str',),fnatdslite_rev_egress_bytes_icmp=dict(type='str',),fnat64_fwd_egress_pkt_size_range1=dict(type='str',),fnat64_fwd_egress_pkt_size_range2=dict(type='str',),fnat64_fwd_egress_pkt_size_range3=dict(type='str',),fnat64_rev_egress_packets_udp=dict(type='str',),fnat44_fwd_ingress_bytes_others=dict(type='str',),dslite_udp_alg_fullcone_freed=dict(type='str',),fnat44_fwd_egress_pkt_size_range2=dict(type='str',),fnat44_fwd_egress_pkt_size_range3=dict(type='str',),fnat44_fwd_egress_pkt_size_range1=dict(type='str',),dslite_eif_limit_exceeded=dict(type='str',),fnat44_fwd_ingress_bytes_udp=dict(type='str',),fnatdslite_fwd_ingress_packets_others=dict(type='str',),fnat44_fwd_egress_pkt_size_range4=dict(type='str',),fnat44_fwd_egress_bytes_tcp=dict(type='str',),dslite_data_session_freed=dict(type='str',),nat64_hairpin=dict(type='str',),nat64_data_session_created=dict(type='str',),nat64_tcp_fullcone_freed=dict(type='str',),nat64_udp_alg_fullcone_created=dict(type='str',),fnatdslite_fwd_ingress_bytes_tcp=dict(type='str',),fnat44_fwd_ingress_packets_tcp=dict(type='str',),fnat64_fwd_ingress_packets_tcp=dict(type='str',),nat44_eif_match=dict(type='str',),fnatdslite_fwd_egress_packets_others=dict(type='str',),nat44_hairpin=dict(type='str',),fnat44_fwd_egress_packets_icmp=dict(type='str',),fnat44_rev_egress_bytes_icmp=dict(type='str',),total_udp_overload_released=dict(type='str',),fnat64_fwd_egress_packets_others=dict(type='str',),fnat44_fwd_ingress_packets_others=dict(type='str',),fnat44_fwd_ingress_bytes_tcp=dict(type='str',),fnat64_rev_ingress_bytes_udp=dict(type='str',),dslite_hairpin=dict(type='str',),nat64_udp_fullcone_freed=dict(type='str',),fnatdslite_rev_egress_bytes_others=dict(type='str',),nat64_tcp_fullcone_created=dict(type='str',),fnatdslite_fwd_egress_packets_tcp=dict(type='str',),fnat44_rev_ingress_bytes_icmp=dict(type='str',),fnatdslite_rev_egress_pkt_size_range3=dict(type='str',),fnatdslite_rev_egress_pkt_size_range2=dict(type='str',),fnatdslite_rev_egress_pkt_size_range1=dict(type='str',),nat44_udp_fullcone_created=dict(type='str',),fnat64_fwd_egress_bytes_udp=dict(type='str',),total_udp_free_overload=dict(type='str',),fnatdslite_rev_egress_pkt_size_range4=dict(type='str',),fnat44_fwd_egress_bytes_others=dict(type='str',),nat_port_unavailable_tcp=dict(type='str',),nat64_eif_limit_exceeded=dict(type='str',),fnatdslite_fwd_ingress_bytes_icmp=dict(type='str',),fnatdslite_fwd_ingress_bytes_udp=dict(type='str',),fnat64_rev_ingress_bytes_others=dict(type='str',),fnat64_rev_egress_pkt_size_range2=dict(type='str',),fnat64_rev_egress_pkt_size_range3=dict(type='str',),fnat64_rev_egress_pkt_size_range4=dict(type='str',),fnat64_fwd_egress_packets_udp=dict(type='str',),fnat44_rev_egress_packets_udp=dict(type='str',),fnatdslite_fwd_egress_bytes_tcp=dict(type='str',),nat44_tcp_fullcone_freed=dict(type='str',),fnat64_rev_ingress_bytes_tcp=dict(type='str',),fnat64_rev_egress_bytes_udp=dict(type='str',),fnat64_fwd_ingress_packets_others=dict(type='str',),fnat44_rev_ingress_packets_tcp=dict(type='str',),total_udp_alloc_overload=dict(type='str',),fnat64_rev_ingress_bytes_icmp=dict(type='str',),fnat64_fwd_ingress_pkt_size_range2=dict(type='str',),fnat64_fwd_ingress_pkt_size_range1=dict(type='str',),dslite_eif_match=dict(type='str',),fnat64_rev_egress_packets_tcp=dict(type='str',),fnatdslite_fwd_egress_packets_icmp=dict(type='str',),fnatdslite_fwd_ingress_pkt_size_range4=dict(type='str',),fnatdslite_rev_ingress_packets_others=dict(type='str',),fnatdslite_fwd_ingress_pkt_size_range2=dict(type='str',),fnatdslite_fwd_ingress_pkt_size_range3=dict(type='str',),fnatdslite_fwd_ingress_pkt_size_range1=dict(type='str',),total_icmp_freed=dict(type='str',),fnat64_rev_egress_packets_icmp=dict(type='str',),fnat44_fwd_egress_packets_udp=dict(type='str',),fnat44_rev_egress_bytes_others=dict(type='str',),nat44_tcp_fullcone_created=dict(type='str',),tcp_user_quota_exceeded=dict(type='str',),fnat44_rev_ingress_bytes_others=dict(type='str',),fnat64_rev_egress_pkt_size_range1=dict(type='str',),fnatdslite_fwd_egress_pkt_size_range3=dict(type='str',),fnatdslite_fwd_egress_pkt_size_range2=dict(type='str',),fnatdslite_fwd_egress_pkt_size_range1=dict(type='str',),total_icmp_allocated=dict(type='str',),total_nat_in_use=dict(type='str',),fnatdslite_fwd_egress_pkt_size_range4=dict(type='str',),nat_port_unavailable_udp=dict(type='str',),fnatdslite_rev_ingress_bytes_tcp=dict(type='str',),nat64_inbound_filtered=dict(type='str',),sixrd_drop=dict(type='str',),fnat64_fwd_ingress_bytes_tcp=dict(type='str',),nat44_udp_alg_fullcone_created=dict(type='str',),fnat44_fwd_ingress_packets_udp=dict(type='str',),fnatdslite_rev_ingress_packets_udp=dict(type='str',),nat64_data_session_freed=dict(type='str',),fnat44_rev_ingress_packets_others=dict(type='str',),dest_rlist_pass_through=dict(type='str',),fnat44_fwd_egress_bytes_icmp=dict(type='str',),nat64_eif_match=dict(type='str',),fnatdslite_fwd_ingress_packets_udp=dict(type='str',),nat44_eif_limit_exceeded=dict(type='str',),icmp_user_quota_exceeded=dict(type='str',),fnat44_fwd_egress_packets_tcp=dict(type='str',),nat44_data_session_created=dict(type='str',),total_udp_overload_acquired=dict(type='str',),fnat44_fwd_ingress_pkt_size_range3=dict(type='str',),dslite_data_session_created=dict(type='str',),fnat64_rev_egress_bytes_others=dict(type='str',),fnat44_fwd_egress_bytes_udp=dict(type='str',),fnat44_rev_egress_packets_others=dict(type='str',),fnat64_rev_ingress_pkt_size_range3=dict(type='str',),fnat64_rev_ingress_pkt_size_range2=dict(type='str',),fnat64_rev_ingress_pkt_size_range1=dict(type='str',),fnatdslite_rev_ingress_bytes_others=dict(type='str',),fnat64_rev_ingress_pkt_size_range4=dict(type='str',),total_tcp_overload_acquired=dict(type='str',),fnat44_rev_egress_packets_icmp=dict(type='str',),fnat44_rev_egress_pkt_size_range2=dict(type='str',),fnat44_rev_egress_pkt_size_range3=dict(type='str',),fnat44_rev_egress_pkt_size_range1=dict(type='str',),fnat64_fwd_egress_bytes_tcp=dict(type='str',),fnat44_rev_egress_pkt_size_range4=dict(type='str',),nat44_udp_fullcone_freed=dict(type='str',),fnat44_rev_ingress_pkt_size_range1=dict(type='str',),fnat64_fwd_ingress_bytes_icmp=dict(type='str',),fnat44_rev_ingress_pkt_size_range3=dict(type='str',),fnat44_rev_ingress_pkt_size_range2=dict(type='str',),nat64_eim_match=dict(type='str',),fnatdslite_rev_egress_packets_icmp=dict(type='str',),fullcone_failure=dict(type='str',),fnat44_fwd_egress_packets_others=dict(type='str',),fnatdslite_fwd_egress_bytes_others=dict(type='str',),fnat44_rev_ingress_packets_udp=dict(type='str',),fnat44_rev_ingress_packets_icmp=dict(type='str',),fnat44_rev_ingress_pkt_size_range4=dict(type='str',),dest_rlist_snat_drop=dict(type='str',),fnatdslite_rev_egress_bytes_tcp=dict(type='str',),fnat64_rev_egress_packets_others=dict(type='str',),fnatdslite_fwd_egress_bytes_icmp=dict(type='str',),fnatdslite_rev_egress_packets_others=dict(type='str',),fnat64_fwd_ingress_pkt_size_range4=dict(type='str',),fnat44_rev_ingress_bytes_udp=dict(type='str',),dslite_eim_match=dict(type='str',),fnat64_fwd_ingress_pkt_size_range3=dict(type='str',),fnat64_rev_ingress_packets_tcp=dict(type='str',),fnat64_fwd_egress_bytes_others=dict(type='str',),ha_session_user_quota_exceeded=dict(type='str',),fnatdslite_rev_egress_bytes_udp=dict(type='str',),fnat44_fwd_ingress_bytes_icmp=dict(type='str',),fnat44_rev_ingress_bytes_tcp=dict(type='str',),fnatdslite_fwd_ingress_packets_tcp=dict(type='str',),fnat64_rev_egress_bytes_icmp=dict(type='str',),fixed_nat_fullcone_self_hairpinning_drop=dict(type='str',),fnat64_fwd_egress_bytes_icmp=dict(type='str',),udp_user_quota_exceeded=dict(type='str',),fnatdslite_fwd_ingress_packets_icmp=dict(type='str',),fnat64_rev_ingress_packets_icmp=dict(type='str',),fnatdslite_rev_ingress_bytes_udp=dict(type='str',),fnat44_rev_egress_bytes_tcp=dict(type='str',),total_tcp_alloc_overload=dict(type='str',),fnatdslite_rev_egress_packets_tcp=dict(type='str',),fnat64_rev_ingress_packets_others=dict(type='str',),dest_rlist_drop=dict(type='str',),fnat64_fwd_egress_packets_tcp=dict(type='str',),fnatdslite_rev_ingress_packets_tcp=dict(type='str',),total_udp_allocated=dict(type='str',),nat64_udp_alg_fullcone_freed=dict(type='str',),fnat64_fwd_ingress_bytes_udp=dict(type='str',),session_user_quota_exceeded=dict(type='str',),total_tcp_overload_released=dict(type='str',),fnatdslite_fwd_egress_packets_udp=dict(type='str',),nat44_data_session_freed=dict(type='str',)),
         sampling_enable=dict(type='list',counters4=dict(type='str',choices=['fnatdslite_fwd_ingress_pkt_size_range2','fnatdslite_fwd_ingress_pkt_size_range3','fnatdslite_fwd_ingress_pkt_size_range4','fnatdslite_fwd_egress_pkt_size_range1','fnatdslite_fwd_egress_pkt_size_range2','fnatdslite_fwd_egress_pkt_size_range3','fnatdslite_fwd_egress_pkt_size_range4','fnatdslite_rev_ingress_pkt_size_range1','fnatdslite_rev_ingress_pkt_size_range2','fnatdslite_rev_ingress_pkt_size_range3','fnatdslite_rev_ingress_pkt_size_range4','fnatdslite_rev_egress_pkt_size_range1','fnatdslite_rev_egress_pkt_size_range2','fnatdslite_rev_egress_pkt_size_range3','fnatdslite_rev_egress_pkt_size_range4']),counters1=dict(type='str',choices=['all','total-nat-in-use','total-tcp-allocated','total-tcp-freed','total-udp-allocated','total-udp-freed','total-icmp-allocated','total-icmp-freed','nat44-data-session-created','nat44-data-session-freed','nat64-data-session-created','nat64-data-session-freed','dslite-data-session-created','dslite-data-session-freed','nat-port-unavailable-tcp','nat-port-unavailable-udp','nat-port-unavailable-icmp','session-user-quota-exceeded','nat44-tcp-fullcone-created','nat44-tcp-fullcone-freed','nat44-udp-fullcone-created','nat44-udp-fullcone-freed','nat44-udp-alg-fullcone-created','nat44-udp-alg-fullcone-freed','nat64-tcp-fullcone-created','nat64-tcp-fullcone-freed','nat64-udp-fullcone-created','nat64-udp-fullcone-freed','nat64-udp-alg-fullcone-created','nat64-udp-alg-fullcone-freed','dslite-tcp-fullcone-created','dslite-tcp-fullcone-freed','dslite-udp-fullcone-created','dslite-udp-fullcone-freed','dslite-udp-alg-fullcone-created','dslite-udp-alg-fullcone-freed','fullcone-failure','nat44-eim-match','nat64-eim-match','dslite-eim-match','nat44-eif-match','nat64-eif-match','dslite-eif-match','nat44-inbound-filtered','nat64-inbound-filtered','dslite-inbound-filtered','nat44-eif-limit-exceeded','nat64-eif-limit-exceeded','dslite-eif-limit-exceeded','nat44-hairpin','nat64-hairpin','dslite-hairpin','standby-drop','fixed-nat-fullcone-self-hairpinning-drop','sixrd-drop','dest-rlist-drop','dest-rlist-pass-through','dest-rlist-snat-drop','cross-cpu-helper-created','cross-cpu-helper-free-retry-lookup','cross-cpu-helper-free-not-found','cross-cpu-helper-free','cross-cpu-rcv','cross-cpu-bad-l3','cross-cpu-bad-l4','cross-cpu-no-session','cross-cpu-helper-deleted','cross-cpu-helper-fixed-nat-lid-standby','cross-cpu-helper-cpu-mismatch','cross-cpu-sent','config-not-found','fullcone-in-del-q','fullcone-overflow','fullcone-inbound-idx-mismatch','fullcone-retry-lookup','fullcone-not-found','fullcone-overflow-eim','fullcone-overflow-eif','ha-config-mismatch','ha-user-quota-exceeded','ha-fullcone-mismatch','ha-dnat-mismatch','ha-nat-port-unavailable','ha-fullcone-failure','ha-endpoint-indep-map-match','udp-alg-eim-mismatch','udp-alg-no-nat-ip','udp-alg-alloc-failure','mtu-exceeded','frag','frag-icmp','periodic-log-msg-alloc','periodic-log-msg-free','disable-log-msg-alloc','disable-log-msg-free','sip-alg-reuse-contact-fullcone','sip-alg-contact-fullcone-mismatch','sip-alg-create-contact-fullcone-failure','sip-alg-single-rtp-fullcone','sip-alg-rtcp-fullcone-mismatch','sip-alg-reuse-rtp-rtcp-fullcone','sip-alg-single-rtcp-fullcone','sip-alg-create-rtp-fullcone-failure','sip-alg-create-rtcp-fullcone-failure','icmp-out-of-state-uqe-admin-filtered-sent','icmp-out-of-state-uqe-host-unreachable-sent','icmp-out-of-state-uqe-dropped','nat-esp-ip-conflicts','total-tcp-allocated-shadow','total-tcp-freed-shadow','total-udp-allocated-shadow','total-udp-freed-shadow','total-icmp-allocated-shadow','total-icmp-freed-shadow','nat44-data-session-created-shadow','nat44-data-session-freed-shadow','nat64-data-session-created-shadow','nat64-data-session-freed-shadow','dslite-data-session-created-shadow','dslite-data-session-freed-shadow','nat44-tcp-fullcone-created-shadow','nat44-tcp-fullcone-freed-shadow','nat44-udp-fullcone-created-shadow','nat44-udp-fullcone-freed-shadow','nat44-udp-alg-fullcone-created-shadow']),counters2=dict(type='str',choices=['nat44-udp-alg-fullcone-freed-shadow','nat64-tcp-fullcone-created-shadow','nat64-tcp-fullcone-freed-shadow','nat64-udp-fullcone-created-shadow','nat64-udp-fullcone-freed-shadow','nat64-udp-alg-fullcone-created-shadow','nat64-udp-alg-fullcone-freed-shadow','dslite-tcp-fullcone-created-shadow','dslite-tcp-fullcone-freed-shadow','dslite-udp-fullcone-created-shadow','dslite-udp-fullcone-freed-shadow','dslite-udp-alg-fullcone-created-shadow','dslite-udp-alg-fullcone-freed-shadow','h323-alg-reuse-fullcone','h323-alg-fullcone-mismatch','h323-alg-create-fullcone-failure','h323-alg-single-rtp-fullcone','h323-alg-rtcp-fullcone-mismatch','h323-alg-reuse-rtp-rtcp-fullcone','h323-alg-single-rtcp-fullcone','h323-alg-create-rtp-fullcone-failure','h323-alg-create-rtcp-fullcone-failure','mgcp-alg-reuse-fullcone','mgcp-alg-fullcone-mismatch','mgcp-alg-create-fullcone-failure','mgcp-alg-single-rtp-fullcone','mgcp-alg-rtcp-fullcone-mismatch','mgcp-alg-reuse-rtp-rtcp-fullcone','mgcp-alg-single-rtcp-fullcone','mgcp-alg-create-rtp-fullcone-failure','mgcp-alg-create-rtcp-fullcone-failure','user-unusable-drop','ipv4-user-unusable','ipv6-user-unusable','ipd-disabled','dslite_tunnel_frag','total-tcp-overload-acquired','total-udp-overload-acquired','total-tcp-overload-released','total-udp-overload-released','total-tcp-alloc-overload','total-udp-alloc-overload','total-tcp-free-overload','total-udp-free-overload','port-overload-smp-delete-scheduled','port-overload-smp-mem-allocated','port-overload-out-of-memory','port-overload-smp-free','port-overload-smp-free-no-lid','port-overload-free-smp-not-found','port-overload-failed','total-tcp-overload-acquired-shadow','total-udp-overload-acquired-shadow','total-tcp-overload-released-shadow','total-udp-overload-released-shadow','total-tcp-alloc-overload-shadow','total-udp-alloc-overload-shadow','total-tcp-free-overload-shadow','total-udp-free-overload-shadow','ha-session-user-quota-exceeded','tcp-user-quota-exceeded','udp-user-quota-exceeded','icmp-user-quota-exceeded','ha-tcp-user-quota-exceeded','ha-udp-user-quota-exceeded','ha-icmp-user-quota-exceeded','ha-nat-port-unavailable-tcp','ha-nat-port-unavailable-udp','ha-nat-port-unavailable-icmp','fnat44_fwd_ingress_packets_tcp','fnat44_fwd_egress_packets_tcp','fnat44_rev_ingress_packets_tcp','fnat44_rev_egress_packets_tcp','fnat44_fwd_ingress_bytes_tcp','fnat44_fwd_egress_bytes_tcp','fnat44_rev_ingress_bytes_tcp','fnat44_rev_egress_bytes_tcp','fnat44_fwd_ingress_packets_udp','fnat44_fwd_egress_packets_udp','fnat44_rev_ingress_packets_udp','fnat44_rev_egress_packets_udp','fnat44_fwd_ingress_bytes_udp','fnat44_fwd_egress_bytes_udp','fnat44_rev_ingress_bytes_udp','fnat44_rev_egress_bytes_udp','fnat44_fwd_ingress_packets_icmp','fnat44_fwd_egress_packets_icmp','fnat44_rev_ingress_packets_icmp','fnat44_rev_egress_packets_icmp','fnat44_fwd_ingress_bytes_icmp','fnat44_fwd_egress_bytes_icmp','fnat44_rev_ingress_bytes_icmp','fnat44_rev_egress_bytes_icmp','fnat44_fwd_ingress_packets_others','fnat44_fwd_egress_packets_others','fnat44_rev_ingress_packets_others','fnat44_rev_egress_packets_others','fnat44_fwd_ingress_bytes_others','fnat44_fwd_egress_bytes_others','fnat44_rev_ingress_bytes_others','fnat44_rev_egress_bytes_others','fnat44_fwd_ingress_pkt_size_range1','fnat44_fwd_ingress_pkt_size_range2','fnat44_fwd_ingress_pkt_size_range3','fnat44_fwd_ingress_pkt_size_range4','fnat44_fwd_egress_pkt_size_range1']),counters3=dict(type='str',choices=['fnat44_fwd_egress_pkt_size_range2','fnat44_fwd_egress_pkt_size_range3','fnat44_fwd_egress_pkt_size_range4','fnat44_rev_ingress_pkt_size_range1','fnat44_rev_ingress_pkt_size_range2','fnat44_rev_ingress_pkt_size_range3','fnat44_rev_ingress_pkt_size_range4','fnat44_rev_egress_pkt_size_range1','fnat44_rev_egress_pkt_size_range2','fnat44_rev_egress_pkt_size_range3','fnat44_rev_egress_pkt_size_range4','fnat64_fwd_ingress_packets_tcp','fnat64_fwd_egress_packets_tcp','fnat64_rev_ingress_packets_tcp','fnat64_rev_egress_packets_tcp','fnat64_fwd_ingress_bytes_tcp','fnat64_fwd_egress_bytes_tcp','fnat64_rev_ingress_bytes_tcp','fnat64_rev_egress_bytes_tcp','fnat64_fwd_ingress_packets_udp','fnat64_fwd_egress_packets_udp','fnat64_rev_ingress_packets_udp','fnat64_rev_egress_packets_udp','fnat64_fwd_ingress_bytes_udp','fnat64_fwd_egress_bytes_udp','fnat64_rev_ingress_bytes_udp','fnat64_rev_egress_bytes_udp','fnat64_fwd_ingress_packets_icmp','fnat64_fwd_egress_packets_icmp','fnat64_rev_ingress_packets_icmp','fnat64_rev_egress_packets_icmp','fnat64_fwd_ingress_bytes_icmp','fnat64_fwd_egress_bytes_icmp','fnat64_rev_ingress_bytes_icmp','fnat64_rev_egress_bytes_icmp','fnat64_fwd_ingress_packets_others','fnat64_fwd_egress_packets_others','fnat64_rev_ingress_packets_others','fnat64_rev_egress_packets_others','fnat64_fwd_ingress_bytes_others','fnat64_fwd_egress_bytes_others','fnat64_rev_ingress_bytes_others','fnat64_rev_egress_bytes_others','fnat64_fwd_ingress_pkt_size_range1','fnat64_fwd_ingress_pkt_size_range2','fnat64_fwd_ingress_pkt_size_range3','fnat64_fwd_ingress_pkt_size_range4','fnat64_fwd_egress_pkt_size_range1','fnat64_fwd_egress_pkt_size_range2','fnat64_fwd_egress_pkt_size_range3','fnat64_fwd_egress_pkt_size_range4','fnat64_rev_ingress_pkt_size_range1','fnat64_rev_ingress_pkt_size_range2','fnat64_rev_ingress_pkt_size_range3','fnat64_rev_ingress_pkt_size_range4','fnat64_rev_egress_pkt_size_range1','fnat64_rev_egress_pkt_size_range2','fnat64_rev_egress_pkt_size_range3','fnat64_rev_egress_pkt_size_range4','fnatdslite_fwd_ingress_packets_tcp','fnatdslite_fwd_egress_packets_tcp','fnatdslite_rev_ingress_packets_tcp','fnatdslite_rev_egress_packets_tcp','fnatdslite_fwd_ingress_bytes_tcp','fnatdslite_fwd_egress_bytes_tcp','fnatdslite_rev_ingress_bytes_tcp','fnatdslite_rev_egress_bytes_tcp','fnatdslite_fwd_ingress_packets_udp','fnatdslite_fwd_egress_packets_udp','fnatdslite_rev_ingress_packets_udp','fnatdslite_rev_egress_packets_udp','fnatdslite_fwd_ingress_bytes_udp','fnatdslite_fwd_egress_bytes_udp','fnatdslite_rev_ingress_bytes_udp','fnatdslite_rev_egress_bytes_udp','fnatdslite_fwd_ingress_packets_icmp','fnatdslite_fwd_egress_packets_icmp','fnatdslite_rev_ingress_packets_icmp','fnatdslite_rev_egress_packets_icmp','fnatdslite_fwd_ingress_bytes_icmp','fnatdslite_fwd_egress_bytes_icmp','fnatdslite_rev_ingress_bytes_icmp','fnatdslite_rev_egress_bytes_icmp','fnatdslite_fwd_ingress_packets_others','fnatdslite_fwd_egress_packets_others','fnatdslite_rev_ingress_packets_others','fnatdslite_rev_egress_packets_others','fnatdslite_fwd_ingress_bytes_others','fnatdslite_fwd_egress_bytes_others','fnatdslite_rev_ingress_bytes_others','fnatdslite_rev_egress_bytes_others','fnatdslite_fwd_ingress_pkt_size_range1'])),
         port_mapping_files_count=dict(type='int',),
         uuid=dict(type='str',)
@@ -146,11 +797,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -236,10 +882,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -387,8 +1036,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

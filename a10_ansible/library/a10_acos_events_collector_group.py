@@ -98,6 +98,23 @@ options:
             name:
                 description:
                 - "Member name"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            msgs_rate_limited:
+                description:
+                - "Number of rate limited log messages"
+            name:
+                description:
+                - "Specify log server group name"
+            msgs_sent:
+                description:
+                - "Number of log messages sent"
+            msgs_dropped:
+                description:
+                - "Number of messages dropped for other reasons"
     health_check:
         description:
         - "Health Check (Monitor Name)"
@@ -120,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility","format","health_check","log_server_list","name","protocol","rate","sampling_enable","use_mgmt_port","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["facility","format","health_check","log_server_list","name","protocol","rate","sampling_enable","stats","use_mgmt_port","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -158,6 +175,7 @@ def get_argspec():
         user_tag=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent','msgs_rate_limited','msgs_dropped'])),
         log_server_list=dict(type='list',port=dict(type='int',required=True,),uuid=dict(type='str',),name=dict(type='str',required=True,)),
+        stats=dict(type='dict',msgs_rate_limited=dict(type='str',),name=dict(type='str',required=True,),msgs_sent=dict(type='str',),msgs_dropped=dict(type='str',)),
         health_check=dict(type='str',),
         uuid=dict(type='str',)
     ))
@@ -184,11 +202,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -274,10 +287,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -425,8 +441,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

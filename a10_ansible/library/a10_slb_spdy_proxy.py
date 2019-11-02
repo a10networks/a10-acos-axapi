@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,263 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'curr_proxy'= Curr Proxy Conns; 'total_proxy'= Total Proxy Conns; 'curr_http_proxy'= Curr HTTP Proxy Conns; 'total_http_proxy'= Total HTTP Proxy Conns; 'total_v2_proxy'= Version 2 Streams; 'total_v3_proxy'= Version 3 Streams; 'curr_stream'= Curr Streams; 'total_stream'= Total Streams; 'total_stream_succ'= Streams(succ); 'client_rst'= client_rst; 'server_rst'= Server RST sent; 'client_goaway'= client_goaway; 'server_goaway'= Server GOAWAY sent; 'tcp_err'= TCP sock error; 'inflate_ctx'= Inflate context; 'deflate_ctx'= Deflate context; 'ping_sent'= PING sent; 'stream_not_found'= STREAM not found; 'client_fin'= Client FIN; 'server_fin'= Server FIN; 'stream_close'= Stream close; 'stream_err'= Stream err; 'session_err'= Session err; 'control_frame'= Control frame received; 'syn_frame'= SYN stream frame received; 'syn_reply_frame'= SYN reply frame received; 'headers_frame'= Headers frame received; 'settings_frame'= Setting frame received; 'window_frame'= Window update frame received; 'ping_frame'= Ping frame received; 'data_frame'= Data frame received; 'data_no_stream'= Data no stream found; 'data_no_stream_no_goaway'= Data no stream and no goaway; 'data_no_stream_goaway_close'= Data no stream and no goaway and close session; 'est_cb_no_tuple'= Est callback no tuple; 'data_cb_no_tuple'= Data callback no tuple; 'ctx_alloc_fail'= Context alloc fail; 'fin_close_session'= FIN close session; 'server_rst_close_stream'= Server RST close stream; 'stream_found'= Stream found; 'close_stream_session_not_found'= Close stream session not found; 'close_stream_stream_not_found'= Close stream stream not found; 'close_stream_already_closed'= Closing closed stream; 'close_stream_session_close'= Stream close session close; 'close_session_already_closed'= Closing closed session; 'max_concurrent_stream_limit'= Max concurrent stream limit; 'stream_alloc_fail'= Stream alloc fail; 'http_conn_alloc_fail'= HTTP connection allocation fail; 'request_header_alloc_fail'= Request/Header allocation fail; 'name_value_total_len_ex'= Name value total length exceeded; 'name_value_zero_len'= Name value zero name length; 'name_value_invalid_http_ver'= Name value invalid http version; 'name_value_connection'= Name value connection; 'name_value_keepalive'= Name value keep alive; 'name_value_proxy_conn'= Name value proxy-connection; 'name_value_trasnfer_encod'= Name value transfer encoding; 'name_value_no_must_have'= Name value no must have; 'decompress_fail'= Decompress fail; 'syn_after_goaway'= SYN after goaway; 'stream_lt_prev'= Stream id less than previous; 'syn_stream_exist_or_even'= Stream already exists; 'syn_unidir'= Unidirectional SYN; 'syn_reply_alr_rcvd'= SYN reply already received; 'client_rst_nostream'= Close RST stream not found; 'window_no_stream'= Window update no stream found; 'invalid_window_size'= Invalid window size; 'unknown_control_frame'= Unknown control frame; 'data_on_closed_stream'= Data on closed stream; 'invalid_frame_size'= Invalid frame size; 'invalid_version'= Invalid version; 'header_after_session_close'= Header after session close; 'compress_ctx_alloc_fail'= Compression context allocation fail; 'header_compress_fail'= Header compress fail; 'http_data_session_close'= HTTP data session close; 'http_data_stream_not_found'= HTTP data stream not found; 'close_stream_not_http_proxy'= Close Stream not http-proxy; 'session_needs_requeue'= Session needs requeue; 'new_stream_session_del'= New Stream after Session delete; 'fin_stream_closed'= HTTP FIN stream already closed; 'http_close_stream_closed'= HTTP close stream already closed; 'http_err_stream_closed'= HTTP error stream already closed; 'http_hdr_stream_close'= HTTP header stream already closed; 'http_data_stream_close'= HTTP data stream already closed; 'session_close'= Session close; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            name_value_total_len_ex:
+                description:
+                - "Name value total length exceeded"
+            data_cb_no_tuple:
+                description:
+                - "Data callback no tuple"
+            server_rst:
+                description:
+                - "Server RST sent"
+            server_fin:
+                description:
+                - "Server FIN"
+            total_proxy:
+                description:
+                - "Total Proxy Conns"
+            curr_http_proxy:
+                description:
+                - "Curr HTTP Proxy Conns"
+            total_v2_proxy:
+                description:
+                - "Version 2 Streams"
+            window_frame:
+                description:
+                - "Window update frame received"
+            close_stream_stream_not_found:
+                description:
+                - "Close stream stream not found"
+            client_rst:
+                description:
+                - "Field client_rst"
+            est_cb_no_tuple:
+                description:
+                - "Est callback no tuple"
+            stream_alloc_fail:
+                description:
+                - "Stream alloc fail"
+            max_concurrent_stream_limit:
+                description:
+                - "Max concurrent stream limit"
+            deflate_ctx:
+                description:
+                - "Deflate context"
+            client_goaway:
+                description:
+                - "Field client_goaway"
+            total_v3_proxy:
+                description:
+                - "Version 3 Streams"
+            compress_ctx_alloc_fail:
+                description:
+                - "Compression context allocation fail"
+            server_goaway:
+                description:
+                - "Server GOAWAY sent"
+            syn_after_goaway:
+                description:
+                - "SYN after goaway"
+            invalid_version:
+                description:
+                - "Invalid version"
+            total_http_proxy:
+                description:
+                - "Total HTTP Proxy Conns"
+            close_stream_session_close:
+                description:
+                - "Stream close session close"
+            decompress_fail:
+                description:
+                - "Decompress fail"
+            ping_frame:
+                description:
+                - "Ping frame received"
+            ping_sent:
+                description:
+                - "PING sent"
+            invalid_frame_size:
+                description:
+                - "Invalid frame size"
+            http_err_stream_closed:
+                description:
+                - "HTTP error stream already closed"
+            header_after_session_close:
+                description:
+                - "Header after session close"
+            http_data_stream_close:
+                description:
+                - "HTTP data stream already closed"
+            control_frame:
+                description:
+                - "Control frame received"
+            stream_not_found:
+                description:
+                - "STREAM not found"
+            fin_stream_closed:
+                description:
+                - "HTTP FIN stream already closed"
+            stream_close:
+                description:
+                - "Stream close"
+            total_stream:
+                description:
+                - "Total Streams"
+            inflate_ctx:
+                description:
+                - "Inflate context"
+            session_needs_requeue:
+                description:
+                - "Session needs requeue"
+            data_no_stream:
+                description:
+                - "Data no stream found"
+            data_no_stream_no_goaway:
+                description:
+                - "Data no stream and no goaway"
+            ctx_alloc_fail:
+                description:
+                - "Context alloc fail"
+            close_stream_session_not_found:
+                description:
+                - "Close stream session not found"
+            stream_found:
+                description:
+                - "Stream found"
+            syn_stream_exist_or_even:
+                description:
+                - "Stream already exists"
+            close_session_already_closed:
+                description:
+                - "Closing closed session"
+            headers_frame:
+                description:
+                - "Headers frame received"
+            syn_reply_alr_rcvd:
+                description:
+                - "SYN reply already received"
+            invalid_window_size:
+                description:
+                - "Invalid window size"
+            header_compress_fail:
+                description:
+                - "Header compress fail"
+            tcp_err:
+                description:
+                - "TCP sock error"
+            curr_proxy:
+                description:
+                - "Curr Proxy Conns"
+            name_value_keepalive:
+                description:
+                - "Name value keep alive"
+            settings_frame:
+                description:
+                - "Setting frame received"
+            syn_frame:
+                description:
+                - "SYN stream frame received"
+            window_no_stream:
+                description:
+                - "Window update no stream found"
+            data_frame:
+                description:
+                - "Data frame received"
+            server_rst_close_stream:
+                description:
+                - "Server RST close stream"
+            new_stream_session_del:
+                description:
+                - "New Stream after Session delete"
+            request_header_alloc_fail:
+                description:
+                - "Request/Header allocation fail"
+            unknown_control_frame:
+                description:
+                - "Unknown control frame"
+            http_data_stream_not_found:
+                description:
+                - "HTTP data stream not found"
+            http_close_stream_closed:
+                description:
+                - "HTTP close stream already closed"
+            curr_stream:
+                description:
+                - "Curr Streams"
+            close_stream_already_closed:
+                description:
+                - "Closing closed stream"
+            name_value_zero_len:
+                description:
+                - "Name value zero name length"
+            data_on_closed_stream:
+                description:
+                - "Data on closed stream"
+            name_value_trasnfer_encod:
+                description:
+                - "Name value transfer encoding"
+            http_conn_alloc_fail:
+                description:
+                - "HTTP connection allocation fail"
+            fin_close_session:
+                description:
+                - "FIN close session"
+            name_value_no_must_have:
+                description:
+                - "Name value no must have"
+            name_value_proxy_conn:
+                description:
+                - "Name value proxy-connection"
+            syn_reply_frame:
+                description:
+                - "SYN reply frame received"
+            name_value_invalid_http_ver:
+                description:
+                - "Name value invalid http version"
+            session_err:
+                description:
+                - "Session err"
+            client_rst_nostream:
+                description:
+                - "Close RST stream not found"
+            http_hdr_stream_close:
+                description:
+                - "HTTP header stream already closed"
+            name_value_connection:
+                description:
+                - "Name value connection"
+            client_fin:
+                description:
+                - "Client FIN"
+            data_no_stream_goaway_close:
+                description:
+                - "Data no stream and no goaway and close session"
+            total_stream_succ:
+                description:
+                - "Streams(succ)"
+            syn_unidir:
+                description:
+                - "Unidirectional SYN"
+            http_data_session_close:
+                description:
+                - "HTTP data session close"
+            stream_lt_prev:
+                description:
+                - "Stream id less than previous"
+            close_stream_not_http_proxy:
+                description:
+                - "Close Stream not http-proxy"
+            stream_err:
+                description:
+                - "Stream err"
+            session_close:
+                description:
+                - "Session close"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +342,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +371,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',name_value_total_len_ex=dict(type='int',),data_cb_no_tuple=dict(type='int',),server_rst=dict(type='int',),server_fin=dict(type='int',),total_proxy=dict(type='int',),curr_http_proxy=dict(type='int',),total_v2_proxy=dict(type='int',),window_frame=dict(type='int',),close_stream_stream_not_found=dict(type='int',),client_rst=dict(type='int',),est_cb_no_tuple=dict(type='int',),stream_alloc_fail=dict(type='int',),max_concurrent_stream_limit=dict(type='int',),deflate_ctx=dict(type='int',),client_goaway=dict(type='int',),total_v3_proxy=dict(type='int',),compress_ctx_alloc_fail=dict(type='int',),server_goaway=dict(type='int',),syn_after_goaway=dict(type='int',),invalid_version=dict(type='int',),total_http_proxy=dict(type='int',),close_stream_session_close=dict(type='int',),decompress_fail=dict(type='int',),ping_frame=dict(type='int',),ping_sent=dict(type='int',),invalid_frame_size=dict(type='int',),http_err_stream_closed=dict(type='int',),header_after_session_close=dict(type='int',),http_data_stream_close=dict(type='int',),control_frame=dict(type='int',),stream_not_found=dict(type='int',),fin_stream_closed=dict(type='int',),stream_close=dict(type='int',),total_stream=dict(type='int',),inflate_ctx=dict(type='int',),session_needs_requeue=dict(type='int',),data_no_stream=dict(type='int',),data_no_stream_no_goaway=dict(type='int',),ctx_alloc_fail=dict(type='int',),close_stream_session_not_found=dict(type='int',),stream_found=dict(type='int',),syn_stream_exist_or_even=dict(type='int',),close_session_already_closed=dict(type='int',),headers_frame=dict(type='int',),syn_reply_alr_rcvd=dict(type='int',),invalid_window_size=dict(type='int',),header_compress_fail=dict(type='int',),tcp_err=dict(type='int',),curr_proxy=dict(type='int',),name_value_keepalive=dict(type='int',),settings_frame=dict(type='int',),syn_frame=dict(type='int',),window_no_stream=dict(type='int',),data_frame=dict(type='int',),server_rst_close_stream=dict(type='int',),new_stream_session_del=dict(type='int',),request_header_alloc_fail=dict(type='int',),unknown_control_frame=dict(type='int',),http_data_stream_not_found=dict(type='int',),http_close_stream_closed=dict(type='int',),curr_stream=dict(type='int',),close_stream_already_closed=dict(type='int',),name_value_zero_len=dict(type='int',),data_on_closed_stream=dict(type='int',),name_value_trasnfer_encod=dict(type='int',),http_conn_alloc_fail=dict(type='int',),fin_close_session=dict(type='int',),name_value_no_must_have=dict(type='int',),name_value_proxy_conn=dict(type='int',),syn_reply_frame=dict(type='int',),name_value_invalid_http_ver=dict(type='int',),session_err=dict(type='int',),client_rst_nostream=dict(type='int',),http_hdr_stream_close=dict(type='int',),name_value_connection=dict(type='int',),client_fin=dict(type='int',),data_no_stream_goaway_close=dict(type='int',),total_stream_succ=dict(type='int',),syn_unidir=dict(type='int',),http_data_session_close=dict(type='int',),stream_lt_prev=dict(type='int',),close_stream_not_http_proxy=dict(type='int',),stream_err=dict(type='int',),session_close=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','curr_http_proxy','total_http_proxy','total_v2_proxy','total_v3_proxy','curr_stream','total_stream','total_stream_succ','client_rst','server_rst','client_goaway','server_goaway','tcp_err','inflate_ctx','deflate_ctx','ping_sent','stream_not_found','client_fin','server_fin','stream_close','stream_err','session_err','control_frame','syn_frame','syn_reply_frame','headers_frame','settings_frame','window_frame','ping_frame','data_frame','data_no_stream','data_no_stream_no_goaway','data_no_stream_goaway_close','est_cb_no_tuple','data_cb_no_tuple','ctx_alloc_fail','fin_close_session','server_rst_close_stream','stream_found','close_stream_session_not_found','close_stream_stream_not_found','close_stream_already_closed','close_stream_session_close','close_session_already_closed','max_concurrent_stream_limit','stream_alloc_fail','http_conn_alloc_fail','request_header_alloc_fail','name_value_total_len_ex','name_value_zero_len','name_value_invalid_http_ver','name_value_connection','name_value_keepalive','name_value_proxy_conn','name_value_trasnfer_encod','name_value_no_must_have','decompress_fail','syn_after_goaway','stream_lt_prev','syn_stream_exist_or_even','syn_unidir','syn_reply_alr_rcvd','client_rst_nostream','window_no_stream','invalid_window_size','unknown_control_frame','data_on_closed_stream','invalid_frame_size','invalid_version','header_after_session_close','compress_ctx_alloc_fail','header_compress_fail','http_data_session_close','http_data_stream_not_found','close_stream_not_http_proxy','session_needs_requeue','new_stream_session_del','fin_stream_closed','http_close_stream_closed','http_err_stream_closed','http_hdr_stream_close','http_data_stream_close','session_close'])),
+        stats=dict(type='dict',name_value_total_len_ex=dict(type='str',),data_cb_no_tuple=dict(type='str',),server_rst=dict(type='str',),server_fin=dict(type='str',),total_proxy=dict(type='str',),curr_http_proxy=dict(type='str',),total_v2_proxy=dict(type='str',),window_frame=dict(type='str',),close_stream_stream_not_found=dict(type='str',),client_rst=dict(type='str',),est_cb_no_tuple=dict(type='str',),stream_alloc_fail=dict(type='str',),max_concurrent_stream_limit=dict(type='str',),deflate_ctx=dict(type='str',),client_goaway=dict(type='str',),total_v3_proxy=dict(type='str',),compress_ctx_alloc_fail=dict(type='str',),server_goaway=dict(type='str',),syn_after_goaway=dict(type='str',),invalid_version=dict(type='str',),total_http_proxy=dict(type='str',),close_stream_session_close=dict(type='str',),decompress_fail=dict(type='str',),ping_frame=dict(type='str',),ping_sent=dict(type='str',),invalid_frame_size=dict(type='str',),http_err_stream_closed=dict(type='str',),header_after_session_close=dict(type='str',),http_data_stream_close=dict(type='str',),control_frame=dict(type='str',),stream_not_found=dict(type='str',),fin_stream_closed=dict(type='str',),stream_close=dict(type='str',),total_stream=dict(type='str',),inflate_ctx=dict(type='str',),session_needs_requeue=dict(type='str',),data_no_stream=dict(type='str',),data_no_stream_no_goaway=dict(type='str',),ctx_alloc_fail=dict(type='str',),close_stream_session_not_found=dict(type='str',),stream_found=dict(type='str',),syn_stream_exist_or_even=dict(type='str',),close_session_already_closed=dict(type='str',),headers_frame=dict(type='str',),syn_reply_alr_rcvd=dict(type='str',),invalid_window_size=dict(type='str',),header_compress_fail=dict(type='str',),tcp_err=dict(type='str',),curr_proxy=dict(type='str',),name_value_keepalive=dict(type='str',),settings_frame=dict(type='str',),syn_frame=dict(type='str',),window_no_stream=dict(type='str',),data_frame=dict(type='str',),server_rst_close_stream=dict(type='str',),new_stream_session_del=dict(type='str',),request_header_alloc_fail=dict(type='str',),unknown_control_frame=dict(type='str',),http_data_stream_not_found=dict(type='str',),http_close_stream_closed=dict(type='str',),curr_stream=dict(type='str',),close_stream_already_closed=dict(type='str',),name_value_zero_len=dict(type='str',),data_on_closed_stream=dict(type='str',),name_value_trasnfer_encod=dict(type='str',),http_conn_alloc_fail=dict(type='str',),fin_close_session=dict(type='str',),name_value_no_must_have=dict(type='str',),name_value_proxy_conn=dict(type='str',),syn_reply_frame=dict(type='str',),name_value_invalid_http_ver=dict(type='str',),session_err=dict(type='str',),client_rst_nostream=dict(type='str',),http_hdr_stream_close=dict(type='str',),name_value_connection=dict(type='str',),client_fin=dict(type='str',),data_no_stream_goaway_close=dict(type='str',),total_stream_succ=dict(type='str',),syn_unidir=dict(type='str',),http_data_session_close=dict(type='str',),stream_lt_prev=dict(type='str',),close_stream_not_http_proxy=dict(type='str',),stream_err=dict(type='str',),session_close=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +488,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

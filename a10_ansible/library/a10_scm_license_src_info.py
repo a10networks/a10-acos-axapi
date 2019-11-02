@@ -48,6 +48,50 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            source2:
+                description:
+                - "Field source2"
+            product:
+                description:
+                - "Field product"
+            source3_module_list:
+                description:
+                - "Field source3_module_list"
+            billing_serial:
+                description:
+                - "Field billing_serial"
+            uuid:
+                description:
+                - "Field uuid"
+            usb_uuid:
+                description:
+                - "Field usb_uuid"
+            platform:
+                description:
+                - "Field platform"
+            source2_module_list:
+                description:
+                - "Field source2_module_list"
+            source3:
+                description:
+                - "Field source3"
+            token:
+                description:
+                - "Field token"
+            source1:
+                description:
+                - "Field source1"
+            glm_ping_interval:
+                description:
+                - "Field glm_ping_interval"
+            source1_module_list:
+                description:
+                - "Field source1_module_list"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +110,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +139,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',source2=dict(type='str',),product=dict(type='str',),source3_module_list=dict(type='list',source3_module=dict(type='str',),source3_notes=dict(type='str',),source3_expiry=dict(type='str',)),billing_serial=dict(type='str',),uuid=dict(type='str',),usb_uuid=dict(type='str',),platform=dict(type='str',),source2_module_list=dict(type='list',source2_notes=dict(type='str',),source2_module=dict(type='str',),source2_expiry=dict(type='str',)),source3=dict(type='str',),token=dict(type='str',),source1=dict(type='str',),glm_ping_interval=dict(type='int',),source1_module_list=dict(type='list',source1_module=dict(type='str',),source1_notes=dict(type='str',),source1_expiry=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +168,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -209,10 +249,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -349,8 +392,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

@@ -65,6 +65,17 @@ options:
         description:
         - "Return this Service-IP when enable ip-replace"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of times the record has been used"
+            svrname:
+                description:
+                - "Specify name"
     uuid:
         description:
         - "uuid of the object"
@@ -119,7 +130,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["admin_ip","as_backup","as_replace","disable","no_resp","sampling_enable","static","svrname","ttl","uuid","weight",]
+AVAILABLE_PROPERTIES = ["admin_ip","as_backup","as_replace","disable","no_resp","sampling_enable","static","stats","svrname","ttl","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -150,6 +161,7 @@ def get_argspec():
     rv.update(dict(
         as_backup=dict(type='bool',),
         as_replace=dict(type='bool',),
+        stats=dict(type='dict',hits=dict(type='str',),svrname=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         weight=dict(type='int',),
         svrname=dict(type='str',required=True,),
@@ -195,11 +207,6 @@ def existing_url(module):
     f_dict["zone_name"] = module.params["zone_name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -285,10 +292,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -436,8 +446,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

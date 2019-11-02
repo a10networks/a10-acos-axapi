@@ -56,6 +56,92 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'num'= Total number; 'inmsgs'= In Messages; 'inerrors'= In Errors; 'indestunreachs'= In Destination Unreachable; 'intimeexcds'= In TTL Exceeds; 'inparmprobs'= In Parameter Problem; 'insrcquenchs'= In Source Quench Error; 'inredirects'= In Redirects; 'inechos'= In Echo requests; 'inechoreps'= In Echo replies; 'intimestamps'= In Timestamp; 'intimestampreps'= In Timestamp Rep; 'inaddrmasks'= In Address Masks; 'inaddrmaskreps'= In Address Mask Rep; 'outmsgs'= Out Message; 'outerrors'= Out Errors; 'outdestunreachs'= Out Destination Unreachable; 'outtimeexcds'= Out TTL Exceeds; 'outparmprobs'= Out Parameter Problem; 'outsrcquenchs'= Out Source Quench Error; 'outredirects'= Out Redirects; 'outechos'= Out Echo Requests; 'outechoreps'= Out Echo Replies; 'outtimestamps'= Out Time Stamp; 'outtimestampreps'= Out Time Stamp Rep; 'outaddrmasks'= Out Address Mask; 'outaddrmaskreps'= Out Address Mask Rep; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            inechoreps:
+                description:
+                - "In Echo replies"
+            outaddrmaskreps:
+                description:
+                - "Out Address Mask Rep"
+            outtimestampreps:
+                description:
+                - "Out Time Stamp Rep"
+            inechos:
+                description:
+                - "In Echo requests"
+            num:
+                description:
+                - "Total number"
+            intimestampreps:
+                description:
+                - "In Timestamp Rep"
+            outechos:
+                description:
+                - "Out Echo Requests"
+            inaddrmasks:
+                description:
+                - "In Address Masks"
+            outsrcquenchs:
+                description:
+                - "Out Source Quench Error"
+            inerrors:
+                description:
+                - "In Errors"
+            inaddrmaskreps:
+                description:
+                - "In Address Mask Rep"
+            outmsgs:
+                description:
+                - "Out Message"
+            outtimestamps:
+                description:
+                - "Out Time Stamp"
+            outaddrmasks:
+                description:
+                - "Out Address Mask"
+            inparmprobs:
+                description:
+                - "In Parameter Problem"
+            insrcquenchs:
+                description:
+                - "In Source Quench Error"
+            inredirects:
+                description:
+                - "In Redirects"
+            outerrors:
+                description:
+                - "Out Errors"
+            inmsgs:
+                description:
+                - "In Messages"
+            outtimeexcds:
+                description:
+                - "Out TTL Exceeds"
+            outredirects:
+                description:
+                - "Out Redirects"
+            indestunreachs:
+                description:
+                - "In Destination Unreachable"
+            intimeexcds:
+                description:
+                - "In TTL Exceeds"
+            outparmprobs:
+                description:
+                - "Out Parameter Problem"
+            intimestamps:
+                description:
+                - "In Timestamp"
+            outechoreps:
+                description:
+                - "Out Echo Replies"
+            outdestunreachs:
+                description:
+                - "Out Destination Unreachable"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +160,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +190,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num','inmsgs','inerrors','indestunreachs','intimeexcds','inparmprobs','insrcquenchs','inredirects','inechos','inechoreps','intimestamps','intimestampreps','inaddrmasks','inaddrmaskreps','outmsgs','outerrors','outdestunreachs','outtimeexcds','outparmprobs','outsrcquenchs','outredirects','outechos','outechoreps','outtimestamps','outtimestampreps','outaddrmasks','outaddrmaskreps'])),
+        stats=dict(type='dict',inechoreps=dict(type='str',),outaddrmaskreps=dict(type='str',),outtimestampreps=dict(type='str',),inechos=dict(type='str',),num=dict(type='str',),intimestampreps=dict(type='str',),outechos=dict(type='str',),inaddrmasks=dict(type='str',),outsrcquenchs=dict(type='str',),inerrors=dict(type='str',),inaddrmaskreps=dict(type='str',),outmsgs=dict(type='str',),outtimestamps=dict(type='str',),outaddrmasks=dict(type='str',),inparmprobs=dict(type='str',),insrcquenchs=dict(type='str',),inredirects=dict(type='str',),outerrors=dict(type='str',),inmsgs=dict(type='str',),outtimeexcds=dict(type='str',),outredirects=dict(type='str',),indestunreachs=dict(type='str',),intimeexcds=dict(type='str',),outparmprobs=dict(type='str',),intimestamps=dict(type='str',),outechoreps=dict(type='str',),outdestunreachs=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +214,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +299,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +453,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

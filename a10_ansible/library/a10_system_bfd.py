@@ -56,6 +56,77 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'ip_checksum_error'= IP packet checksum errors; 'udp_checksum_error'= UDP packet checksum errors; 'session_not_found'= Session not found; 'multihop_mismatch'= Multihop session or packet mismatch; 'version_mismatch'= BFD version mismatch; 'length_too_small'= Packets too small; 'data_is_short'= Packet data length too short; 'invalid_detect_mult'= Invalid detect multiplier; 'invalid_multipoint'= Invalid multipoint setting; 'invalid_my_disc'= Invalid my descriptor; 'invalid_ttl'= Invalid TTL; 'auth_length_invalid'= Invalid authentication length; 'auth_mismatch'= Authentication mismatch; 'auth_type_mismatch'= Authentication type mismatch; 'auth_key_id_mismatch'= Authentication key-id mismatch; 'auth_key_mismatch'= Authentication key mismatch; 'auth_seqnum_invalid'= Invalid authentication sequence number; 'auth_failed'= Authentication failures; 'local_state_admin_down'= Local admin down session state; 'dest_unreachable'= Destination unreachable; 'no_ipv6_enable'= No IPv6 enable; 'other_error'= Other errors; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            no_ipv6_enable:
+                description:
+                - "No IPv6 enable"
+            auth_length_invalid:
+                description:
+                - "Invalid authentication length"
+            auth_key_mismatch:
+                description:
+                - "Authentication key mismatch"
+            version_mismatch:
+                description:
+                - "BFD version mismatch"
+            auth_mismatch:
+                description:
+                - "Authentication mismatch"
+            invalid_ttl:
+                description:
+                - "Invalid TTL"
+            auth_key_id_mismatch:
+                description:
+                - "Authentication key-id mismatch"
+            dest_unreachable:
+                description:
+                - "Destination unreachable"
+            udp_checksum_error:
+                description:
+                - "UDP packet checksum errors"
+            other_error:
+                description:
+                - "Other errors"
+            invalid_my_disc:
+                description:
+                - "Invalid my descriptor"
+            auth_failed:
+                description:
+                - "Authentication failures"
+            invalid_detect_mult:
+                description:
+                - "Invalid detect multiplier"
+            invalid_multipoint:
+                description:
+                - "Invalid multipoint setting"
+            session_not_found:
+                description:
+                - "Session not found"
+            local_state_admin_down:
+                description:
+                - "Local admin down session state"
+            ip_checksum_error:
+                description:
+                - "IP packet checksum errors"
+            length_too_small:
+                description:
+                - "Packets too small"
+            multihop_mismatch:
+                description:
+                - "Multihop session or packet mismatch"
+            auth_type_mismatch:
+                description:
+                - "Authentication type mismatch"
+            data_is_short:
+                description:
+                - "Packet data length too short"
+            auth_seqnum_invalid:
+                description:
+                - "Invalid authentication sequence number"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +145,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +175,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','ip_checksum_error','udp_checksum_error','session_not_found','multihop_mismatch','version_mismatch','length_too_small','data_is_short','invalid_detect_mult','invalid_multipoint','invalid_my_disc','invalid_ttl','auth_length_invalid','auth_mismatch','auth_type_mismatch','auth_key_id_mismatch','auth_key_mismatch','auth_seqnum_invalid','auth_failed','local_state_admin_down','dest_unreachable','no_ipv6_enable','other_error'])),
+        stats=dict(type='dict',no_ipv6_enable=dict(type='str',),auth_length_invalid=dict(type='str',),auth_key_mismatch=dict(type='str',),version_mismatch=dict(type='str',),auth_mismatch=dict(type='str',),invalid_ttl=dict(type='str',),auth_key_id_mismatch=dict(type='str',),dest_unreachable=dict(type='str',),udp_checksum_error=dict(type='str',),other_error=dict(type='str',),invalid_my_disc=dict(type='str',),auth_failed=dict(type='str',),invalid_detect_mult=dict(type='str',),invalid_multipoint=dict(type='str',),session_not_found=dict(type='str',),local_state_admin_down=dict(type='str',),ip_checksum_error=dict(type='str',),length_too_small=dict(type='str',),multihop_mismatch=dict(type='str',),auth_type_mismatch=dict(type='str',),data_is_short=dict(type='str',),auth_seqnum_invalid=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +199,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +284,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +438,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

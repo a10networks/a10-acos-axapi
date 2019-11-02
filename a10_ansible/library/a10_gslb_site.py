@@ -62,6 +62,49 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ip_server_list:
+                description:
+                - "Field ip_server_list"
+            state:
+                description:
+                - "Field state"
+            gslb_site:
+                description:
+                - "Field gslb_site"
+            client_ldns_list:
+                description:
+                - "Field client_ldns_list"
+            site_name:
+                description:
+                - "Specify GSLB site name"
+            type_last:
+                description:
+                - "Field type_last"
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            ip_server_list:
+                description:
+                - "Field ip_server_list"
+            hits:
+                description:
+                - "Number of times the site was selected"
+            slb_dev_list:
+                description:
+                - "Field slb_dev_list"
+            site_name:
+                description:
+                - "Specify GSLB site name"
     uuid:
         description:
         - "uuid of the object"
@@ -256,7 +299,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["active_rdt","auto_map","bw_cost","controller","disable","easy_rdt","ip_server_list","limit","multiple_geo_locations","sampling_enable","site_name","slb_dev_list","template","threshold","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["active_rdt","auto_map","bw_cost","controller","disable","easy_rdt","ip_server_list","limit","multiple_geo_locations","oper","sampling_enable","site_name","slb_dev_list","stats","template","threshold","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -286,6 +329,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ip_server_list=dict(type='list',ip_server_name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',)),
+        oper=dict(type='dict',ip_server_list=dict(type='list',oper=dict(type='dict',state=dict(type='str',),ip_server=dict(type='str',),ip_server_port=dict(type='list',vport=dict(type='int',),vport_state=dict(type='str',)),ip_address=dict(type='str',)),ip_server_name=dict(type='str',required=True,)),state=dict(type='str',),gslb_site=dict(type='str',),client_ldns_list=dict(type='list',client_ip=dict(type='str',),age=dict(type='int',),rdt_sample1=dict(type='int',),rdt_sample2=dict(type='int',),rdt_sample3=dict(type='int',),rdt_sample4=dict(type='int',),rdt_sample5=dict(type='int',),rdt_sample6=dict(type='int',),rdt_sample7=dict(type='int',),rdt_sample8=dict(type='int',),ntype=dict(type='str',)),site_name=dict(type='str',required=True,),type_last=dict(type='list',ntype=dict(type='str',),last=dict(type='str',)),slb_dev_list=dict(type='list',oper=dict(type='dict',dev_gw_state=dict(type='str',),dev_name=dict(type='str',),dev_ip_cnt=dict(type='int',),dev_attr=dict(type='str',),dev_ip=dict(type='str',),dev_state=dict(type='str',),dev_session_num=dict(type='int',),dev_admin_preference=dict(type='int',),client_ldns_list=dict(type='list',client_ip=dict(type='str',),age=dict(type='int',),rdt_sample1=dict(type='int',),rdt_sample2=dict(type='int',),rdt_sample3=dict(type='int',),rdt_sample4=dict(type='int',),rdt_sample5=dict(type='int',),rdt_sample6=dict(type='int',),rdt_sample7=dict(type='int',),rdt_sample8=dict(type='int',),ntype=dict(type='str',)),dev_session_util=dict(type='int',)),device_name=dict(type='str',required=True,),vip_server=dict(type='dict',oper=dict(type='dict',),vip_server_v4_list=dict(type='list',oper=dict(type='dict',dev_vip_addr=dict(type='str',),dev_vip_state=dict(type='str',),dev_vip_port_list=dict(type='list',dev_vip_port_num=dict(type='int',),dev_vip_port_state=dict(type='str',))),ipv4=dict(type='str',required=True,)),vip_server_v6_list=dict(type='list',oper=dict(type='dict',dev_vip_addr=dict(type='str',),dev_vip_state=dict(type='str',),dev_vip_port_list=dict(type='list',dev_vip_port_num=dict(type='int',),dev_vip_port_state=dict(type='str',))),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',oper=dict(type='dict',dev_vip_addr=dict(type='str',),dev_vip_state=dict(type='str',),dev_vip_port_list=dict(type='list',dev_vip_port_num=dict(type='int',),dev_vip_port_state=dict(type='str',))),vip_name=dict(type='str',required=True,))))),
+        stats=dict(type='dict',ip_server_list=dict(type='list',ip_server_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),hits=dict(type='str',),slb_dev_list=dict(type='list',),site_name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         weight=dict(type='int',),
         site_name=dict(type='str',required=True,),
@@ -417,9 +462,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

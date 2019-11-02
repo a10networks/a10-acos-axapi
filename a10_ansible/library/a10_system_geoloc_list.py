@@ -48,6 +48,34 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            geoloc_list:
+                description:
+                - "Field geoloc_list"
+            name:
+                description:
+                - "Specify name of Geolocation list"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_geoloc:
+                description:
+                - "Field total_geoloc"
+            total_active:
+                description:
+                - "Field total_active"
+            hit_count:
+                description:
+                - "Field hit_count"
+            name:
+                description:
+                - "Specify name of Geolocation list"
     uuid:
         description:
         - "uuid of the object"
@@ -102,7 +130,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["exclude_geoloc_name_list","include_geoloc_name_list","name","sampling_enable","shared","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["exclude_geoloc_name_list","include_geoloc_name_list","name","oper","sampling_enable","shared","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -131,6 +159,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',geoloc_list=dict(type='list',active=dict(type='int',),ntype=dict(type='str',),geoloc_name=dict(type='str',),hit_count=dict(type='int',)),name=dict(type='str',required=True,)),
+        stats=dict(type='dict',total_geoloc=dict(type='str',),total_active=dict(type='str',),hit_count=dict(type='str',),name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,),
@@ -253,9 +283,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

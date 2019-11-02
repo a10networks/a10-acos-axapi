@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            nat_ip_list:
+                description:
+                - "Field nat_ip_list"
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
     all:
         description:
         - "Share with all partitions"
@@ -84,6 +95,80 @@ options:
         description:
         - "End Port of Usable NAT Ports"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            udp_hit_full:
+                description:
+                - "UDP Hit Full"
+            ip_free:
+                description:
+                - "IP Free"
+            ip_used:
+                description:
+                - "IP Used"
+            tcp:
+                description:
+                - "TCP"
+            udp_rsvd:
+                description:
+                - "UDP Reserved"
+            icmp_freed:
+                description:
+                - "ICMP Freed"
+            icmp_hit_full:
+                description:
+                - "ICMP Hit Full"
+            icmp_total:
+                description:
+                - "ICMP Total"
+            tcp_peak:
+                description:
+                - "TCP Peak"
+            icmp_rsvd:
+                description:
+                - "ICMP Reserved"
+            udp_freed:
+                description:
+                - "UDP Freed"
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
+            tcp_freed:
+                description:
+                - "TCP Freed"
+            udp:
+                description:
+                - "UDP"
+            users:
+                description:
+                - "Users"
+            tcp_hit_full:
+                description:
+                - "TCP Hit Full"
+            tcp_rsvd:
+                description:
+                - "TCP Reserved"
+            icmp:
+                description:
+                - "ICMP"
+            udp_peak:
+                description:
+                - "UDP Peak"
+            udp_total:
+                description:
+                - "UDP Total"
+            icmp_peak:
+                description:
+                - "ICMP Peak"
+            ip_total:
+                description:
+                - "IP Total"
+            tcp_total:
+                description:
+                - "TCP total"
     partition:
         description:
         - "Share with a single partition (Partition Name)"
@@ -145,7 +230,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","end_address","exclude_ip","group","max_users_per_ip","netmask","partition","per_batch_port_usage_warning_threshold","pool_name","port_batch_v2_size","shared","simultaneous_batch_allocation","start_address","tcp_time_wait_interval","usable_nat_ports","usable_nat_ports_end","usable_nat_ports_start","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["all","end_address","exclude_ip","group","max_users_per_ip","netmask","oper","partition","per_batch_port_usage_warning_threshold","pool_name","port_batch_v2_size","shared","simultaneous_batch_allocation","start_address","stats","tcp_time_wait_interval","usable_nat_ports","usable_nat_ports_end","usable_nat_ports_start","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -174,6 +259,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',nat_ip_list=dict(type='list',udp_used=dict(type='int',),udp_hit_full=dict(type='int',),rtsp_used=dict(type='int',),ip_address=dict(type='str',),icmp_freed=dict(type='int',),icmp_hit_full=dict(type='int',),icmp_total=dict(type='int',),tcp_peak=dict(type='int',),icmp_reserved=dict(type='int',),udp_freed=dict(type='int',),udp_reserved=dict(type='int',),tcp_freed=dict(type='int',),users=dict(type='int',),tcp_hit_full=dict(type='int',),obsoleted=dict(type='int',),udp_peak=dict(type='int',),udp_total=dict(type='int',),icmp_peak=dict(type='int',),tcp_reserved=dict(type='int',),tcp_used=dict(type='int',),tcp_total=dict(type='int',),icmp_used=dict(type='int',)),pool_name=dict(type='str',required=True,)),
         all=dict(type='bool',),
         tcp_time_wait_interval=dict(type='int',),
         group=dict(type='str',),
@@ -183,6 +269,7 @@ def get_argspec():
         vrid=dict(type='int',),
         usable_nat_ports_start=dict(type='int',),
         usable_nat_ports_end=dict(type='int',),
+        stats=dict(type='dict',udp_hit_full=dict(type='str',),ip_free=dict(type='str',),ip_used=dict(type='str',),tcp=dict(type='str',),udp_rsvd=dict(type='str',),icmp_freed=dict(type='str',),icmp_hit_full=dict(type='str',),icmp_total=dict(type='str',),tcp_peak=dict(type='str',),icmp_rsvd=dict(type='str',),udp_freed=dict(type='str',),pool_name=dict(type='str',required=True,),tcp_freed=dict(type='str',),udp=dict(type='str',),users=dict(type='str',),tcp_hit_full=dict(type='str',),tcp_rsvd=dict(type='str',),icmp=dict(type='str',),udp_peak=dict(type='str',),udp_total=dict(type='str',),icmp_peak=dict(type='str',),ip_total=dict(type='str',),tcp_total=dict(type='str',)),
         partition=dict(type='str',),
         netmask=dict(type='str',),
         max_users_per_ip=dict(type='int',),
@@ -308,9 +395,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

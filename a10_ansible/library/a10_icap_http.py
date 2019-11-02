@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,200 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'status_200'= Status code 200; 'status_201'= Status code 201; 'status_202'= Status code 202; 'status_203'= Status code 203; 'status_204'= Status code 204; 'status_205'= Status code 205; 'status_206'= Status code 206; 'status_207'= Status code 207; 'status_100'= Status code 100; 'status_101'= Status code 101; 'status_102'= Status code 102; 'status_300'= Status code 300; 'status_301'= Status code 301; 'status_302'= Status code 302; 'status_303'= Status code 303; 'status_304'= Status code 304; 'status_305'= Status code 305; 'status_306'= Status code 306; 'status_307'= Status code 307; 'status_400'= Status code 400; 'status_401'= Status code 401; 'status_402'= Status code 402; 'status_403'= Status code 403; 'status_404'= Status code 404; 'status_405'= Status code 405; 'status_406'= Status code 406; 'status_407'= Status code 407; 'status_408'= Status code 408; 'status_409'= Status code 409; 'status_410'= Status code 410; 'status_411'= Status code 411; 'status_412'= Status code 412; 'status_413'= Status code 413; 'status_414'= Status code 414; 'status_415'= Status code 415; 'status_416'= Status code 416; 'status_417'= Status code 417; 'status_418'= Status code 418; 'status_422'= Status code 422; 'status_423'= Status code 423; 'status_424'= Status code 424; 'status_425'= Status code 425; 'status_426'= Status code 426; 'status_449'= Status code 449; 'status_450'= Status code 450; 'status_500'= Status code 500; 'status_501'= Status code 501; 'status_502'= Status code 502; 'status_503'= Status code 503; 'status_504'= Status code 504; 'status_505'= Status code 505; 'status_506'= Status code 506; 'status_507'= Status code 507; 'status_508'= Status code 508; 'status_509'= Status code 509; 'status_510'= Status code 510; 'status_1xx'= status code 1XX; 'status_2xx'= status code 2XX; 'status_3xx'= status code 3XX; 'status_4xx'= status code 4XX; 'status_5xx'= status code 5XX; 'status_6xx'= status code 6XX; 'status_unknown'= Status code unknown; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            status_503:
+                description:
+                - "Status code 503"
+            status_306:
+                description:
+                - "Status code 306"
+            status_500:
+                description:
+                - "Status code 500"
+            status_307:
+                description:
+                - "Status code 307"
+            status_1xx:
+                description:
+                - "status code 1XX"
+            status_450:
+                description:
+                - "Status code 450"
+            status_412:
+                description:
+                - "Status code 412"
+            status_413:
+                description:
+                - "Status code 413"
+            status_410:
+                description:
+                - "Status code 410"
+            status_411:
+                description:
+                - "Status code 411"
+            status_416:
+                description:
+                - "Status code 416"
+            status_417:
+                description:
+                - "Status code 417"
+            status_414:
+                description:
+                - "Status code 414"
+            status_415:
+                description:
+                - "Status code 415"
+            status_418:
+                description:
+                - "Status code 418"
+            status_unknown:
+                description:
+                - "Status code unknown"
+            status_100:
+                description:
+                - "Status code 100"
+            status_101:
+                description:
+                - "Status code 101"
+            status_102:
+                description:
+                - "Status code 102"
+            status_510:
+                description:
+                - "Status code 510"
+            status_303:
+                description:
+                - "Status code 303"
+            status_300:
+                description:
+                - "Status code 300"
+            status_301:
+                description:
+                - "Status code 301"
+            status_401:
+                description:
+                - "Status code 401"
+            status_400:
+                description:
+                - "Status code 400"
+            status_207:
+                description:
+                - "Status code 207"
+            status_206:
+                description:
+                - "Status code 206"
+            status_205:
+                description:
+                - "Status code 205"
+            status_204:
+                description:
+                - "Status code 204"
+            status_203:
+                description:
+                - "Status code 203"
+            status_202:
+                description:
+                - "Status code 202"
+            status_201:
+                description:
+                - "Status code 201"
+            status_200:
+                description:
+                - "Status code 200"
+            status_423:
+                description:
+                - "Status code 423"
+            status_422:
+                description:
+                - "Status code 422"
+            status_304:
+                description:
+                - "Status code 304"
+            status_305:
+                description:
+                - "Status code 305"
+            status_302:
+                description:
+                - "Status code 302"
+            status_426:
+                description:
+                - "Status code 426"
+            status_425:
+                description:
+                - "Status code 425"
+            status_424:
+                description:
+                - "Status code 424"
+            status_508:
+                description:
+                - "Status code 508"
+            status_509:
+                description:
+                - "Status code 509"
+            status_403:
+                description:
+                - "Status code 403"
+            status_402:
+                description:
+                - "Status code 402"
+            status_405:
+                description:
+                - "Status code 405"
+            status_404:
+                description:
+                - "Status code 404"
+            status_407:
+                description:
+                - "Status code 407"
+            status_2xx:
+                description:
+                - "status code 2XX"
+            status_409:
+                description:
+                - "Status code 409"
+            status_408:
+                description:
+                - "Status code 408"
+            status_502:
+                description:
+                - "Status code 502"
+            status_406:
+                description:
+                - "Status code 406"
+            status_504:
+                description:
+                - "Status code 504"
+            status_505:
+                description:
+                - "Status code 505"
+            status_506:
+                description:
+                - "Status code 506"
+            status_507:
+                description:
+                - "Status code 507"
+            status_4xx:
+                description:
+                - "status code 4XX"
+            status_6xx:
+                description:
+                - "status code 6XX"
+            status_501:
+                description:
+                - "Status code 501"
+            status_449:
+                description:
+                - "Status code 449"
+            status_5xx:
+                description:
+                - "status code 5XX"
+            status_3xx:
+                description:
+                - "status code 3XX"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +279,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +308,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',status_306=dict(type='int',),status_307=dict(type='int',),status_1xx=dict(type='int',),status_450=dict(type='int',),status_412=dict(type='int',),status_413=dict(type='int',),status_410=dict(type='int',),status_411=dict(type='int',),status_416=dict(type='int',),status_417=dict(type='int',),status_414=dict(type='int',),status_415=dict(type='int',),status_418=dict(type='int',),status_6xx=dict(type='int',),status_100=dict(type='int',),status_101=dict(type='int',),status_102=dict(type='int',),status_510=dict(type='int',),status_303=dict(type='int',),status_300=dict(type='int',),status_301=dict(type='int',),status_401=dict(type='int',),status_400=dict(type='int',),status_4xx=dict(type='int',),status_207=dict(type='int',),status_206=dict(type='int',),status_205=dict(type='int',),status_204=dict(type='int',),status_203=dict(type='int',),status_202=dict(type='int',),status_201=dict(type='int',),status_200=dict(type='int',),status_423=dict(type='int',),status_422=dict(type='int',),status_304=dict(type='int',),status_305=dict(type='int',),status_302=dict(type='int',),status_426=dict(type='int',),status_425=dict(type='int',),status_424=dict(type='int',),status_508=dict(type='int',),status_509=dict(type='int',),status_403=dict(type='int',),status_402=dict(type='int',),status_405=dict(type='int',),status_404=dict(type='int',),status_407=dict(type='int',),status_2xx=dict(type='int',),status_500=dict(type='int',),status_408=dict(type='int',),status_502=dict(type='int',),status_503=dict(type='int',),status_504=dict(type='int',),status_505=dict(type='int',),status_506=dict(type='int',),status_507=dict(type='int',),status_409=dict(type='int',),status_406=dict(type='int',),status_501=dict(type='int',),status_449=dict(type='int',),status_5xx=dict(type='int',),status_3xx=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','status_200','status_201','status_202','status_203','status_204','status_205','status_206','status_207','status_100','status_101','status_102','status_300','status_301','status_302','status_303','status_304','status_305','status_306','status_307','status_400','status_401','status_402','status_403','status_404','status_405','status_406','status_407','status_408','status_409','status_410','status_411','status_412','status_413','status_414','status_415','status_416','status_417','status_418','status_422','status_423','status_424','status_425','status_426','status_449','status_450','status_500','status_501','status_502','status_503','status_504','status_505','status_506','status_507','status_508','status_509','status_510','status_1xx','status_2xx','status_3xx','status_4xx','status_5xx','status_6xx','status_unknown'])),
+        stats=dict(type='dict',status_503=dict(type='str',),status_306=dict(type='str',),status_500=dict(type='str',),status_307=dict(type='str',),status_1xx=dict(type='str',),status_450=dict(type='str',),status_412=dict(type='str',),status_413=dict(type='str',),status_410=dict(type='str',),status_411=dict(type='str',),status_416=dict(type='str',),status_417=dict(type='str',),status_414=dict(type='str',),status_415=dict(type='str',),status_418=dict(type='str',),status_unknown=dict(type='str',),status_100=dict(type='str',),status_101=dict(type='str',),status_102=dict(type='str',),status_510=dict(type='str',),status_303=dict(type='str',),status_300=dict(type='str',),status_301=dict(type='str',),status_401=dict(type='str',),status_400=dict(type='str',),status_207=dict(type='str',),status_206=dict(type='str',),status_205=dict(type='str',),status_204=dict(type='str',),status_203=dict(type='str',),status_202=dict(type='str',),status_201=dict(type='str',),status_200=dict(type='str',),status_423=dict(type='str',),status_422=dict(type='str',),status_304=dict(type='str',),status_305=dict(type='str',),status_302=dict(type='str',),status_426=dict(type='str',),status_425=dict(type='str',),status_424=dict(type='str',),status_508=dict(type='str',),status_509=dict(type='str',),status_403=dict(type='str',),status_402=dict(type='str',),status_405=dict(type='str',),status_404=dict(type='str',),status_407=dict(type='str',),status_2xx=dict(type='str',),status_409=dict(type='str',),status_408=dict(type='str',),status_502=dict(type='str',),status_406=dict(type='str',),status_504=dict(type='str',),status_505=dict(type='str',),status_506=dict(type='str',),status_507=dict(type='str',),status_4xx=dict(type='str',),status_6xx=dict(type='str',),status_501=dict(type='str',),status_449=dict(type='str',),status_5xx=dict(type='str',),status_3xx=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +425,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

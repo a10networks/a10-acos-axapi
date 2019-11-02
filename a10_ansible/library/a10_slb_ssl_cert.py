@@ -48,6 +48,34 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            exact_match:
+                description:
+                - "Field exact_match"
+            sortby_exp:
+                description:
+                - "Field sortby_exp"
+            ssl_certs:
+                description:
+                - "Field ssl_certs"
+            sortby_name:
+                description:
+                - "Field sortby_name"
+            partition:
+                description:
+                - "Field partition"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +94,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +123,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',exact_match=dict(type='bool',),sortby_exp=dict(type='bool',),ssl_certs=dict(type='list',status=dict(type='str',),name=dict(type='str',),notbefore=dict(type='str',),notafter_number=dict(type='int',),notafter=dict(type='str',),keysize=dict(type='int',),common_name=dict(type='str',),organization=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),ntype=dict(type='str',),issuer=dict(type='str',)),sortby_name=dict(type='bool',),partition=dict(type='str',)),
+        stats=dict(type='str',required=false,uuid=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -209,9 +239,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

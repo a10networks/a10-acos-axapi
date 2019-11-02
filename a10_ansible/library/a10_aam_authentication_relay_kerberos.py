@@ -56,6 +56,53 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'request-send'= Total Request Send; 'response-get'= Total Response Get; 'timeout-error'= Total Timeout; 'other-error'= Total Other Error; 'request-normal'= Total Normal Request; 'request-dropped'= Total Dropped Request; 'response-success'= Total Success Response; 'response-failure'= Total Failure Response; 'response-error'= Total Error Response; 'response-timeout'= Total Timeout Response; 'response-other'= Total Other Response; 'job-start-error'= Total Job Start Error; 'polling-control-error'= Total Polling Control Error; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            request_send:
+                description:
+                - "Total Request Send"
+            request_normal:
+                description:
+                - "Total Normal Request"
+            response_success:
+                description:
+                - "Total Success Response"
+            timeout_error:
+                description:
+                - "Total Timeout"
+            instance_list:
+                description:
+                - "Field instance_list"
+            response_other:
+                description:
+                - "Total Other Response"
+            response_failure:
+                description:
+                - "Total Failure Response"
+            polling_control_error:
+                description:
+                - "Total Polling Control Error"
+            other_error:
+                description:
+                - "Total Other Error"
+            request_dropped:
+                description:
+                - "Total Dropped Request"
+            response_get:
+                description:
+                - "Total Response Get"
+            response_timeout:
+                description:
+                - "Total Timeout Response"
+            job_start_error:
+                description:
+                - "Total Job Start Error"
+            response_error:
+                description:
+                - "Total Error Response"
     uuid:
         description:
         - "uuid of the object"
@@ -115,7 +162,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["instance_list","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["instance_list","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -145,6 +192,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request-send','response-get','timeout-error','other-error','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error'])),
+        stats=dict(type='dict',request_send=dict(type='str',),request_normal=dict(type='str',),response_success=dict(type='str',),timeout_error=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',current_requests_of_user=dict(type='str',),response_receive=dict(type='str',),request_send=dict(type='str',),tickets=dict(type='str',)),name=dict(type='str',required=True,)),response_other=dict(type='str',),response_failure=dict(type='str',),polling_control_error=dict(type='str',),other_error=dict(type='str',),request_dropped=dict(type='str',),response_get=dict(type='str',),response_timeout=dict(type='str',),job_start_error=dict(type='str',),response_error=dict(type='str',)),
         uuid=dict(type='str',),
         instance_list=dict(type='list',kerberos_account=dict(type='str',),uuid=dict(type='str',),encrypted=dict(type='str',),kerberos_realm=dict(type='str',),kerberos_kdc_service_group=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request-send','response-receive','current-requests-of-user','tickets'])),timeout=dict(type='int',),password=dict(type='bool',),kerberos_kdc=dict(type='str',),port=dict(type='int',),secret_string=dict(type='str',),name=dict(type='str',required=True,))
     ))
@@ -169,11 +217,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -259,10 +302,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -410,8 +456,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

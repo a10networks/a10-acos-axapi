@@ -48,6 +48,200 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            fan4a_value:
+                description:
+                - "Field fan4a_value"
+            physical_temperature2:
+                description:
+                - "Field physical_temperature2"
+            fan3a_report:
+                description:
+                - "Field fan3a_report"
+            fan6a_value:
+                description:
+                - "Field fan6a_value"
+            fan2b_value:
+                description:
+                - "Field fan2b_value"
+            fan5a_report:
+                description:
+                - "Field fan5a_report"
+            power_unit3:
+                description:
+                - "Field power_unit3"
+            power_unit2:
+                description:
+                - "Field power_unit2"
+            fan8a_report:
+                description:
+                - "Field fan8a_report"
+            voltage_label_17:
+                description:
+                - "Field voltage_label_17"
+            voltage_label_16:
+                description:
+                - "Field voltage_label_16"
+            voltage_label_15:
+                description:
+                - "Field voltage_label_15"
+            voltage_label_14:
+                description:
+                - "Field voltage_label_14"
+            voltage_label_13:
+                description:
+                - "Field voltage_label_13"
+            voltage_label_12:
+                description:
+                - "Field voltage_label_12"
+            voltage_label_11:
+                description:
+                - "Field voltage_label_11"
+            voltage_label_10:
+                description:
+                - "Field voltage_label_10"
+            fan7b_value:
+                description:
+                - "Field fan7b_value"
+            fan6b_report:
+                description:
+                - "Field fan6b_report"
+            fan9a_report:
+                description:
+                - "Field fan9a_report"
+            physical_temperature:
+                description:
+                - "Field physical_temperature"
+            fan9a_value:
+                description:
+                - "Field fan9a_value"
+            fan10a_value:
+                description:
+                - "Field fan10a_value"
+            fan2a_value:
+                description:
+                - "Field fan2a_value"
+            fan3a_value:
+                description:
+                - "Field fan3a_value"
+            fan8b_report:
+                description:
+                - "Field fan8b_report"
+            power_unit1:
+                description:
+                - "Field power_unit1"
+            fan2a_report:
+                description:
+                - "Field fan2a_report"
+            fan6b_value:
+                description:
+                - "Field fan6b_value"
+            fan7a_value:
+                description:
+                - "Field fan7a_value"
+            fan5b_report:
+                description:
+                - "Field fan5b_report"
+            fan5a_value:
+                description:
+                - "Field fan5a_value"
+            fan10b_report:
+                description:
+                - "Field fan10b_report"
+            fan5b_value:
+                description:
+                - "Field fan5b_value"
+            fan7b_report:
+                description:
+                - "Field fan7b_report"
+            fan1b_value:
+                description:
+                - "Field fan1b_value"
+            fan4b_value:
+                description:
+                - "Field fan4b_value"
+            fan8a_value:
+                description:
+                - "Field fan8a_value"
+            fan6a_report:
+                description:
+                - "Field fan6a_report"
+            fan9b_report:
+                description:
+                - "Field fan9b_report"
+            power_unit4:
+                description:
+                - "Field power_unit4"
+            fan1b_report:
+                description:
+                - "Field fan1b_report"
+            fan3b_value:
+                description:
+                - "Field fan3b_value"
+            fan10b_value:
+                description:
+                - "Field fan10b_value"
+            fan7a_report:
+                description:
+                - "Field fan7a_report"
+            fan1a_value:
+                description:
+                - "Field fan1a_value"
+            fan10a_report:
+                description:
+                - "Field fan10a_report"
+            fan8b_value:
+                description:
+                - "Field fan8b_value"
+            fan2b_report:
+                description:
+                - "Field fan2b_report"
+            fan4b_report:
+                description:
+                - "Field fan4b_report"
+            fan9b_value:
+                description:
+                - "Field fan9b_value"
+            voltage_label_3:
+                description:
+                - "Field voltage_label_3"
+            voltage_label_2:
+                description:
+                - "Field voltage_label_2"
+            voltage_label_1:
+                description:
+                - "Field voltage_label_1"
+            voltage_label_7:
+                description:
+                - "Field voltage_label_7"
+            voltage_label_6:
+                description:
+                - "Field voltage_label_6"
+            voltage_label_5:
+                description:
+                - "Field voltage_label_5"
+            voltage_label_4:
+                description:
+                - "Field voltage_label_4"
+            fan1a_report:
+                description:
+                - "Field fan1a_report"
+            fan4a_report:
+                description:
+                - "Field fan4a_report"
+            voltage_label_9:
+                description:
+                - "Field voltage_label_9"
+            voltage_label_8:
+                description:
+                - "Field voltage_label_8"
+            fan3b_report:
+                description:
+                - "Field fan3b_report"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +260,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +289,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',fan4a_value=dict(type='int',),physical_temperature2=dict(type='str',),fan3a_report=dict(type='str',),fan6a_value=dict(type='int',),fan2b_value=dict(type='int',),fan5a_report=dict(type='str',),power_unit3=dict(type='str',),power_unit2=dict(type='str',),fan8a_report=dict(type='str',),voltage_label_17=dict(type='str',),voltage_label_16=dict(type='str',),voltage_label_15=dict(type='str',),voltage_label_14=dict(type='str',),voltage_label_13=dict(type='str',),voltage_label_12=dict(type='str',),voltage_label_11=dict(type='str',),voltage_label_10=dict(type='str',),fan7b_value=dict(type='int',),fan6b_report=dict(type='str',),fan9a_report=dict(type='str',),physical_temperature=dict(type='str',),fan9a_value=dict(type='int',),fan10a_value=dict(type='int',),fan2a_value=dict(type='int',),fan3a_value=dict(type='int',),fan8b_report=dict(type='str',),power_unit1=dict(type='str',),fan2a_report=dict(type='str',),fan6b_value=dict(type='int',),fan7a_value=dict(type='int',),fan5b_report=dict(type='str',),fan5a_value=dict(type='int',),fan10b_report=dict(type='str',),fan5b_value=dict(type='int',),fan7b_report=dict(type='str',),fan1b_value=dict(type='int',),fan4b_value=dict(type='int',),fan8a_value=dict(type='int',),fan6a_report=dict(type='str',),fan9b_report=dict(type='str',),power_unit4=dict(type='str',),fan1b_report=dict(type='str',),fan3b_value=dict(type='int',),fan10b_value=dict(type='int',),fan7a_report=dict(type='str',),fan1a_value=dict(type='int',),fan10a_report=dict(type='str',),fan8b_value=dict(type='int',),fan2b_report=dict(type='str',),fan4b_report=dict(type='str',),fan9b_value=dict(type='int',),voltage_label_3=dict(type='str',),voltage_label_2=dict(type='str',),voltage_label_1=dict(type='str',),voltage_label_7=dict(type='str',),voltage_label_6=dict(type='str',),voltage_label_5=dict(type='str',),voltage_label_4=dict(type='str',),fan1a_report=dict(type='str',),fan4a_report=dict(type='str',),voltage_label_9=dict(type='str',),voltage_label_8=dict(type='str',),fan3b_report=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +318,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -209,10 +399,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -349,8 +542,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

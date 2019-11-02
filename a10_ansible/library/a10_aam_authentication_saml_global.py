@@ -56,6 +56,53 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'requests-to-a10saml'= Total Request to A10 SAML Service; 'responses-from-a10saml'= Total Response from A10 SAML Service; 'sp-metadata-export-req'= Total Metadata Export Request; 'sp-metadata-export-success'= Toal Metadata Export Success; 'login-auth-req'= Total Login Authentication Request; 'login-auth-resp'= Total Login Authentication Response; 'acs-req'= Total SAML Single-Sign-On Request; 'acs-success'= Total SAML Single-Sign-On Success; 'acs-authz-fail'= Total SAML Single-Sign-On Authorization Fail; 'acs-error'= Total SAML Single-Sign-On Error; 'slo-req'= Total Single Logout Request; 'slo-success'= Total Single Logout Success; 'slo-error'= Total Single Logout Error; 'other-error'= Total Other Error; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            responses_from_a10saml:
+                description:
+                - "Total Response from A10 SAML Service"
+            login_auth_req:
+                description:
+                - "Total Login Authentication Request"
+            slo_error:
+                description:
+                - "Total Single Logout Error"
+            requests_to_a10saml:
+                description:
+                - "Total Request to A10 SAML Service"
+            sp_metadata_export_success:
+                description:
+                - "Toal Metadata Export Success"
+            acs_authz_fail:
+                description:
+                - "Total SAML Single-Sign-On Authorization Fail"
+            slo_req:
+                description:
+                - "Total Single Logout Request"
+            login_auth_resp:
+                description:
+                - "Total Login Authentication Response"
+            slo_success:
+                description:
+                - "Total Single Logout Success"
+            acs_success:
+                description:
+                - "Total SAML Single-Sign-On Success"
+            acs_error:
+                description:
+                - "Total SAML Single-Sign-On Error"
+            other_error:
+                description:
+                - "Total Other Error"
+            acs_req:
+                description:
+                - "Total SAML Single-Sign-On Request"
+            sp_metadata_export_req:
+                description:
+                - "Total Metadata Export Request"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +121,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +151,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','requests-to-a10saml','responses-from-a10saml','sp-metadata-export-req','sp-metadata-export-success','login-auth-req','login-auth-resp','acs-req','acs-success','acs-authz-fail','acs-error','slo-req','slo-success','slo-error','other-error'])),
+        stats=dict(type='dict',responses_from_a10saml=dict(type='str',),login_auth_req=dict(type='str',),slo_error=dict(type='str',),requests_to_a10saml=dict(type='str',),sp_metadata_export_success=dict(type='str',),acs_authz_fail=dict(type='str',),slo_req=dict(type='str',),login_auth_resp=dict(type='str',),slo_success=dict(type='str',),acs_success=dict(type='str',),acs_error=dict(type='str',),other_error=dict(type='str',),acs_req=dict(type='str',),sp_metadata_export_req=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +175,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +260,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +414,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

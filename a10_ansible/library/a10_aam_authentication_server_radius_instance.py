@@ -119,6 +119,47 @@ options:
             hostip:
                 description:
                 - "Server's hostname(Length 1-31) or IP address"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            authorize_failure:
+                description:
+                - "Authorization Failure"
+            accounting_request_sent:
+                description:
+                - "Accounting-Request Sent"
+            other_error:
+                description:
+                - "Other Error"
+            request:
+                description:
+                - "Request"
+            accounting_success:
+                description:
+                - "Accounting Success"
+            accounting_failure:
+                description:
+                - "Accounting Failure"
+            authen_success:
+                description:
+                - "Authentication Success"
+            access_challenge:
+                description:
+                - "Access-Challenge Message Receive"
+            authen_failure:
+                description:
+                - "Authentication Failure"
+            timeout_error:
+                description:
+                - "Timeout"
+            authorize_success:
+                description:
+                - "Authorization Success"
+            name:
+                description:
+                - "Specify RADIUS authentication server name"
     health_check_disable:
         description:
         - "Disable configured health check configuration"
@@ -149,7 +190,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accounting_port","acct_port_hm","acct_port_hm_disable","auth_type","encrypted","health_check","health_check_disable","health_check_string","host","interval","name","port","port_hm","port_hm_disable","retry","sampling_enable","secret","secret_string","uuid",]
+AVAILABLE_PROPERTIES = ["accounting_port","acct_port_hm","acct_port_hm_disable","auth_type","encrypted","health_check","health_check_disable","health_check_string","host","interval","name","port","port_hm","port_hm_disable","retry","sampling_enable","secret","secret_string","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -193,6 +234,7 @@ def get_argspec():
         secret=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),
         host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),
+        stats=dict(type='dict',authorize_failure=dict(type='str',),accounting_request_sent=dict(type='str',),other_error=dict(type='str',),request=dict(type='str',),accounting_success=dict(type='str',),accounting_failure=dict(type='str',),authen_success=dict(type='str',),access_challenge=dict(type='str',),authen_failure=dict(type='str',),timeout_error=dict(type='str',),authorize_success=dict(type='str',),name=dict(type='str',required=True,)),
         health_check_disable=dict(type='bool',),
         secret_string=dict(type='str',),
         acct_port_hm=dict(type='str',),
@@ -221,11 +263,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -311,10 +348,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -462,8 +502,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

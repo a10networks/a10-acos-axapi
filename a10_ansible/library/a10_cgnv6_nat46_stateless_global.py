@@ -56,6 +56,68 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'outbound_ipv4_received'= Outbound IPv4 packets received; 'outbound_ipv4_drop'= Outbound IPv4 packets dropped; 'outbound_ipv4_fragment_received'= Outbound IPv4 fragment packets received; 'outbound_ipv6_unreachable'= Outbound IPv6 destination unreachable; 'outbound_ipv6_fragmented'= Outbound IPv6 packets fragmented; 'inbound_ipv6_received'= Inbound IPv6 packets received; 'inbound_ipv6_drop'= Inbound IPv6 packets dropped; 'inbound_ipv6_fragment_received'= Inbound IPv6 fragment packets received; 'inbound_ipv4_unreachable'= Inbound IPv4 destination unreachable; 'inbound_ipv4_fragmented'= Inbound IPv4 packets fragmented; 'packet_too_big'= Packet too big; 'fragment_error'= Fragment processing errors; 'icmpv6_to_icmp'= ICMPv6 to ICMP; 'icmpv6_to_icmp_error'= ICMPv6 to ICMP errors; 'icmp_to_icmpv6'= ICMP to ICMPv6; 'icmp_to_icmpv6_error'= ICMP to ICMPv6 errors; 'ha_standby'= HA is standby; 'other_error'= Other errors; 'conn_count'= conn count; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            inbound_ipv4_unreachable:
+                description:
+                - "Inbound IPv4 destination unreachable"
+            outbound_ipv6_unreachable:
+                description:
+                - "Outbound IPv6 destination unreachable"
+            outbound_ipv4_received:
+                description:
+                - "Outbound IPv4 packets received"
+            outbound_ipv6_fragmented:
+                description:
+                - "Outbound IPv6 packets fragmented"
+            ha_standby:
+                description:
+                - "HA is standby"
+            packet_too_big:
+                description:
+                - "Packet too big"
+            inbound_ipv6_received:
+                description:
+                - "Inbound IPv6 packets received"
+            icmp_to_icmpv6:
+                description:
+                - "ICMP to ICMPv6"
+            inbound_ipv6_drop:
+                description:
+                - "Inbound IPv6 packets dropped"
+            fragment_error:
+                description:
+                - "Fragment processing errors"
+            inbound_ipv6_fragment_received:
+                description:
+                - "Inbound IPv6 fragment packets received"
+            icmpv6_to_icmp_error:
+                description:
+                - "ICMPv6 to ICMP errors"
+            inbound_ipv4_fragmented:
+                description:
+                - "Inbound IPv4 packets fragmented"
+            outbound_ipv4_fragment_received:
+                description:
+                - "Outbound IPv4 fragment packets received"
+            outbound_ipv4_drop:
+                description:
+                - "Outbound IPv4 packets dropped"
+            conn_count:
+                description:
+                - "conn count"
+            icmpv6_to_icmp:
+                description:
+                - "ICMPv6 to ICMP"
+            other_error:
+                description:
+                - "Other errors"
+            icmp_to_icmpv6_error:
+                description:
+                - "ICMP to ICMPv6 errors"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +136,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +166,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','outbound_ipv4_received','outbound_ipv4_drop','outbound_ipv4_fragment_received','outbound_ipv6_unreachable','outbound_ipv6_fragmented','inbound_ipv6_received','inbound_ipv6_drop','inbound_ipv6_fragment_received','inbound_ipv4_unreachable','inbound_ipv4_fragmented','packet_too_big','fragment_error','icmpv6_to_icmp','icmpv6_to_icmp_error','icmp_to_icmpv6','icmp_to_icmpv6_error','ha_standby','other_error','conn_count'])),
+        stats=dict(type='dict',inbound_ipv4_unreachable=dict(type='str',),outbound_ipv6_unreachable=dict(type='str',),outbound_ipv4_received=dict(type='str',),outbound_ipv6_fragmented=dict(type='str',),ha_standby=dict(type='str',),packet_too_big=dict(type='str',),inbound_ipv6_received=dict(type='str',),icmp_to_icmpv6=dict(type='str',),inbound_ipv6_drop=dict(type='str',),fragment_error=dict(type='str',),inbound_ipv6_fragment_received=dict(type='str',),icmpv6_to_icmp_error=dict(type='str',),inbound_ipv4_fragmented=dict(type='str',),outbound_ipv4_fragment_received=dict(type='str',),outbound_ipv4_drop=dict(type='str',),conn_count=dict(type='str',),icmpv6_to_icmp=dict(type='str',),other_error=dict(type='str',),icmp_to_icmpv6_error=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +190,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +275,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +429,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

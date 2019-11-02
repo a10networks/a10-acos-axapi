@@ -56,6 +56,38 @@ options:
         description:
         - "Specify secret for verify JWT token signature"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            jwt_request:
+                description:
+                - "JWT Request"
+            jwt_authorize_success:
+                description:
+                - "JWT Authorize Success"
+            jwt_token_expired:
+                description:
+                - "JWT Token Expired"
+            jwt_authorize_failure:
+                description:
+                - "JWT Authorize Failure"
+            jwt_missing_claim:
+                description:
+                - "JWT Missing Claim"
+            jwt_signature_failure:
+                description:
+                - "JWT Signature Failure"
+            name:
+                description:
+                - "Specify JWT authorization template name"
+            jwt_other_error:
+                description:
+                - "JWT Other Error"
+            jwt_missing_token:
+                description:
+                - "JWT Missing Token"
     name:
         description:
         - "Specify JWT authorization template name"
@@ -118,7 +150,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypted","exp_claim_requried","jwt_cache_enable","jwt_exp_default","jwt_forwarding","log_level","name","sampling_enable","user_tag","uuid","verification_cert","verification_jwks","verification_secret",]
+AVAILABLE_PROPERTIES = ["encrypted","exp_claim_requried","jwt_cache_enable","jwt_exp_default","jwt_forwarding","log_level","name","sampling_enable","stats","user_tag","uuid","verification_cert","verification_jwks","verification_secret",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -149,6 +181,7 @@ def get_argspec():
     rv.update(dict(
         verification_jwks=dict(type='str',),
         verification_secret=dict(type='str',),
+        stats=dict(type='dict',jwt_request=dict(type='str',),jwt_authorize_success=dict(type='str',),jwt_token_expired=dict(type='str',),jwt_authorize_failure=dict(type='str',),jwt_missing_claim=dict(type='str',),jwt_signature_failure=dict(type='str',),name=dict(type='str',required=True,),jwt_other_error=dict(type='str',),jwt_missing_token=dict(type='str',)),
         name=dict(type='str',required=True,),
         encrypted=dict(type='str',),
         jwt_cache_enable=dict(type='bool',),
@@ -184,11 +217,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -274,10 +302,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -425,8 +456,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

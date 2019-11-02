@@ -48,6 +48,14 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            trunk:
+                description:
+                - "Field trunk"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +74,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',trunk=dict(type='list',trunk_member_status=dict(type='list',oper_status=dict(type='str',choices=['Blocked','Up','Dn']),cfg_status=dict(type='str',choices=['Enb','Dis']),members=dict(type='int',)),member_count=dict(type='int',),trunk_name=dict(type='str',),trunk_type=dict(type='str',choices=['Dynamic-LACP','Static']),timer=dict(type='int',),trunk_status=dict(type='str',choices=['Up','Down']),ports_threshold_block=dict(type='str',choices=['Yes','No']),admin_key=dict(type='int',),timer_running=dict(type='str',choices=['Yes','No']),ports_threshold=dict(type='int',),trunk_id=dict(type='int',),working_lead=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +132,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -209,10 +213,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -349,8 +356,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

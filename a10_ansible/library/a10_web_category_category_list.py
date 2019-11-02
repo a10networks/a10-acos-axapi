@@ -148,6 +148,266 @@ options:
         description:
         - "Category Gross"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            philosophy_and_politics:
+                description:
+                - "philosophy and politics category"
+            stock_advice_and_tools:
+                description:
+                - "stock advice and tools category"
+            news_and_media:
+                description:
+                - "news and media category"
+            business_and_economy:
+                description:
+                - "business and economy category"
+            peer_to_peer:
+                description:
+                - "peer to peer category"
+            phishing_and_other_fraud:
+                description:
+                - "phishing and other fraud category"
+            nudity:
+                description:
+                - "nudity category"
+            weapons:
+                description:
+                - "weapons category"
+            CDNs:
+                description:
+                - "content delivery networks category"
+            marijuana:
+                description:
+                - "marijuana category"
+            home_and_garden:
+                description:
+                - "home and garden category"
+            cult_and_occult:
+                description:
+                - "cult and occult category"
+            society:
+                description:
+                - "society category"
+            unconfirmed_SPAM_sources:
+                description:
+                - "unconfirmed SPAM sources category"
+            personal_storage:
+                description:
+                - "personal storage category"
+            computer_and_internet_security:
+                description:
+                - "computer and internet security category"
+            food_and_dining:
+                description:
+                - "food and dining category"
+            motor_vehicles:
+                description:
+                - "motor vehicles category"
+            swimsuits_and_intimate_apparel:
+                description:
+                - "swimsuits and intimate apparel category"
+            dead_sites:
+                description:
+                - "dead sites category"
+            translation:
+                description:
+                - "translation category"
+            proxy_avoid_and_anonymizers:
+                description:
+                - "proxy avoid and anonymizers category"
+            financial_services:
+                description:
+                - "financial services category"
+            gross:
+                description:
+                - "gross category"
+            cheating:
+                description:
+                - "cheating category"
+            entertainment_and_arts:
+                description:
+                - "entertainment and arts category"
+            sex_education:
+                description:
+                - "sex education category"
+            illegal:
+                description:
+                - "illegal category"
+            travel:
+                description:
+                - "travel category"
+            local_information:
+                description:
+                - "local information category"
+            legal:
+                description:
+                - "legal category"
+            sports:
+                description:
+                - "sports category"
+            bot_nets:
+                description:
+                - "bot nets category"
+            religion:
+                description:
+                - "religion category"
+            private_IP_addresses:
+                description:
+                - "private IP addresses category"
+            music:
+                description:
+                - "music category"
+            hate_and_racism:
+                description:
+                - "hate and racism category"
+            open_HTTP_proxies:
+                description:
+                - "open HTTP proxies category"
+            internet_communications:
+                description:
+                - "internet communications category"
+            shareware_and_freeware:
+                description:
+                - "shareware and freeware category"
+            dating:
+                description:
+                - "dating category"
+            spyware_and_adware:
+                description:
+                - "spyware and adware category"
+            uncategorized:
+                description:
+                - "uncategorized category"
+            questionable:
+                description:
+                - "questionable category"
+            reference_and_research:
+                description:
+                - "reference and research category"
+            web_advertisements:
+                description:
+                - "web advertisements category"
+            streaming_media:
+                description:
+                - "streaming media category"
+            social_network:
+                description:
+                - "social network category"
+            government:
+                description:
+                - "government category"
+            drugs:
+                description:
+                - "drugs category"
+            web_hosting_sites:
+                description:
+                - "web hosting sites category"
+            malware_sites:
+                description:
+                - "malware sites category"
+            name:
+                description:
+                - "Web Category List name"
+            pay_to_surf:
+                description:
+                - "pay to surf category"
+            kids:
+                description:
+                - "kids category"
+            gambling:
+                description:
+                - "gambling category"
+            online_greeting_cards:
+                description:
+                - "online greeting cards category"
+            health_and_medicine:
+                description:
+                - "health and medicine category"
+            SPAM_URLs:
+                description:
+                - "SPAM URLs category"
+            image_and_video_search:
+                description:
+                - "image and video search category"
+            educational_institutions:
+                description:
+                - "educational institutions category"
+            keyloggers_and_monitoring:
+                description:
+                - "keyloggers and monitoring category"
+            hunting_and_fishing:
+                description:
+                - "hunting and fishing category"
+            search_engines:
+                description:
+                - "search engines category"
+            fashion_and_beauty:
+                description:
+                - "fashion and beauty category"
+            dynamic_comment:
+                description:
+                - "dynamic comment category"
+            computer_and_internet_info:
+                description:
+                - "computer and internet info category"
+            real_estate:
+                description:
+                - "real estate category"
+            internet_portals:
+                description:
+                - "internet portals category"
+            shopping:
+                description:
+                - "shopping category"
+            violence:
+                description:
+                - "violence category"
+            abortion:
+                description:
+                - "abortion category"
+            hacking:
+                description:
+                - "hacking category"
+            training_and_tools:
+                description:
+                - "training and tools category"
+            web_based_email:
+                description:
+                - "web based email category"
+            personal_sites_and_blogs:
+                description:
+                - "personal sites and blogs category"
+            games:
+                description:
+                - "games category"
+            parked_domains:
+                description:
+                - "parked domains category"
+            auctions:
+                description:
+                - "auctions category"
+            job_search:
+                description:
+                - "job search category"
+            recreation_and_hobbies:
+                description:
+                - "recreation and hobbies category"
+            confirmed_SPAM_sources:
+                description:
+                - "confirmed SPAM sources category"
+            alcohol_and_tobacco:
+                description:
+                - "alcohol and tobacco category"
+            adult_and_pornography:
+                description:
+                - "adult and pornography category"
+            military:
+                description:
+                - "military category"
     legal:
         description:
         - "Category Legal"
@@ -418,7 +678,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["abortion","adult_and_pornography","alcohol_and_tobacco","auctions","bot_nets","business_and_economy","cdns","cheating","computer_and_internet_info","computer_and_internet_security","confirmed_spam_sources","cult_and_occult","dating","dead_sites","drugs","dynamic_comment","educational_institutions","entertainment_and_arts","fashion_and_beauty","financial_services","food_and_dining","gambling","games","government","gross","hacking","hate_and_racism","health_and_medicine","home_and_garden","hunting_and_fishing","illegal","image_and_video_search","internet_communications","internet_portals","job_search","keyloggers_and_monitoring","kids","legal","local_information","malware_sites","marijuana","military","motor_vehicles","music","name","news_and_media","nudity","online_greeting_cards","open_http_proxies","parked_domains","pay_to_surf","peer_to_peer","personal_sites_and_blogs","personal_storage","philosophy_and_politics","phishing_and_other_fraud","private_ip_addresses","proxy_avoid_and_anonymizers","questionable","real_estate","recreation_and_hobbies","reference_and_research","religion","sampling_enable","search_engines","sex_education","shareware_and_freeware","shopping","social_network","society","spam_urls","sports","spyware_and_adware","stock_advice_and_tools","streaming_media","swimsuits_and_intimate_apparel","training_and_tools","translation","travel","uncategorized","unconfirmed_spam_sources","user_tag","uuid","violence","weapons","web_advertisements","web_based_email","web_hosting_sites",]
+AVAILABLE_PROPERTIES = ["abortion","adult_and_pornography","alcohol_and_tobacco","auctions","bot_nets","business_and_economy","cdns","cheating","computer_and_internet_info","computer_and_internet_security","confirmed_spam_sources","cult_and_occult","dating","dead_sites","drugs","dynamic_comment","educational_institutions","entertainment_and_arts","fashion_and_beauty","financial_services","food_and_dining","gambling","games","government","gross","hacking","hate_and_racism","health_and_medicine","home_and_garden","hunting_and_fishing","illegal","image_and_video_search","internet_communications","internet_portals","job_search","keyloggers_and_monitoring","kids","legal","local_information","malware_sites","marijuana","military","motor_vehicles","music","name","news_and_media","nudity","online_greeting_cards","open_http_proxies","parked_domains","pay_to_surf","peer_to_peer","personal_sites_and_blogs","personal_storage","philosophy_and_politics","phishing_and_other_fraud","private_ip_addresses","proxy_avoid_and_anonymizers","questionable","real_estate","recreation_and_hobbies","reference_and_research","religion","sampling_enable","search_engines","sex_education","shareware_and_freeware","shopping","social_network","society","spam_urls","sports","spyware_and_adware","stats","stock_advice_and_tools","streaming_media","swimsuits_and_intimate_apparel","training_and_tools","translation","travel","uncategorized","unconfirmed_spam_sources","user_tag","uuid","violence","weapons","web_advertisements","web_based_email","web_hosting_sites",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -471,6 +731,7 @@ def get_argspec():
         motor_vehicles=dict(type='bool',),
         proxy_avoid_and_anonymizers=dict(type='bool',),
         gross=dict(type='bool',),
+        stats=dict(type='dict',philosophy_and_politics=dict(type='str',),stock_advice_and_tools=dict(type='str',),news_and_media=dict(type='str',),business_and_economy=dict(type='str',),peer_to_peer=dict(type='str',),phishing_and_other_fraud=dict(type='str',),nudity=dict(type='str',),weapons=dict(type='str',),CDNs=dict(type='str',),marijuana=dict(type='str',),home_and_garden=dict(type='str',),cult_and_occult=dict(type='str',),society=dict(type='str',),unconfirmed_SPAM_sources=dict(type='str',),personal_storage=dict(type='str',),computer_and_internet_security=dict(type='str',),food_and_dining=dict(type='str',),motor_vehicles=dict(type='str',),swimsuits_and_intimate_apparel=dict(type='str',),dead_sites=dict(type='str',),translation=dict(type='str',),proxy_avoid_and_anonymizers=dict(type='str',),financial_services=dict(type='str',),gross=dict(type='str',),cheating=dict(type='str',),entertainment_and_arts=dict(type='str',),sex_education=dict(type='str',),illegal=dict(type='str',),travel=dict(type='str',),local_information=dict(type='str',),legal=dict(type='str',),sports=dict(type='str',),bot_nets=dict(type='str',),religion=dict(type='str',),private_IP_addresses=dict(type='str',),music=dict(type='str',),hate_and_racism=dict(type='str',),open_HTTP_proxies=dict(type='str',),internet_communications=dict(type='str',),shareware_and_freeware=dict(type='str',),dating=dict(type='str',),spyware_and_adware=dict(type='str',),uncategorized=dict(type='str',),questionable=dict(type='str',),reference_and_research=dict(type='str',),web_advertisements=dict(type='str',),streaming_media=dict(type='str',),social_network=dict(type='str',),government=dict(type='str',),drugs=dict(type='str',),web_hosting_sites=dict(type='str',),malware_sites=dict(type='str',),name=dict(type='str',required=True,),pay_to_surf=dict(type='str',),kids=dict(type='str',),gambling=dict(type='str',),online_greeting_cards=dict(type='str',),health_and_medicine=dict(type='str',),SPAM_URLs=dict(type='str',),image_and_video_search=dict(type='str',),educational_institutions=dict(type='str',),keyloggers_and_monitoring=dict(type='str',),hunting_and_fishing=dict(type='str',),search_engines=dict(type='str',),fashion_and_beauty=dict(type='str',),dynamic_comment=dict(type='str',),computer_and_internet_info=dict(type='str',),real_estate=dict(type='str',),internet_portals=dict(type='str',),shopping=dict(type='str',),violence=dict(type='str',),abortion=dict(type='str',),hacking=dict(type='str',),training_and_tools=dict(type='str',),web_based_email=dict(type='str',),personal_sites_and_blogs=dict(type='str',),games=dict(type='str',),parked_domains=dict(type='str',),auctions=dict(type='str',),job_search=dict(type='str',),recreation_and_hobbies=dict(type='str',),confirmed_SPAM_sources=dict(type='str',),alcohol_and_tobacco=dict(type='str',),adult_and_pornography=dict(type='str',),military=dict(type='str',)),
         legal=dict(type='bool',),
         bot_nets=dict(type='bool',),
         religion=dict(type='bool',),
@@ -560,11 +821,6 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
@@ -649,10 +905,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -800,8 +1059,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

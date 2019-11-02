@@ -56,6 +56,32 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'calls-established'= Calls Established; 'mismatched-pns-call-id'= Mismatched PNS Call ID; 'gre-sessions-created'= GRE Sessions Created; 'gre-sessions-freed'= GRE Sessions Freed; 'no-gre-session-match'= No Matching GRE Session; 'smp-sessions-created'= SMP Sessions Created; 'smp-sessions-freed'= SMP Sessions Freed; 'smp-session-creation-failure'= SMP Session Creation Failures; 'extension-creation-failure'= Extension Creation Failures; 'ha-sent'= HA Info Sent; 'ha-rcv'= HA Info Received; 'ha-no-mem'= HA Memory Allocation Failure; 'ha-conflict'= HA Call ID Conflicts; 'ha-overwrite'= HA Call ID Overwrites; 'ha-call-sent'= HA Call Sent; 'ha-call-rcv'= HA Call Received; 'ha-smp-conflict'= HA SMP Conflicts; 'ha-smp-in-del-q'= HA SMP Deleted; 'smp-app-type-mismatch'= SMP ALG App Type Mismatch; 'call-req-pns-call-id-mismatch'= Call ID Mismatch on Call Request; 'call-reply-pns-call-id-mismatch'= Call ID Mismatch on Call Reply; 'call-req-retransmit'= Call Request Retransmit; 'call-req-new'= Call Request New; 'call-req-ext-alloc-failure'= Call Request Ext Alloc Failure; 'call-reply-call-id-unknown'= Call Reply Unknown Client Call ID; 'call-reply-retransmit'= Call Reply Retransmit; 'call-reply-retransmit-wrong-control'= Call Reply Retransmit Wrong Control; 'call-reply-retransmit-acquired'= Call Reply Retransmit Acquired; 'call-reply-ext-alloc-failure'= Call Request Ext Alloc Failure; 'smp-client-call-id-mismatch'= SMP Client Call ID Mismatch; 'smp-alloc-failure'= SMP Session Alloc Failure; 'gre-conn-creation-failure'= GRE Conn Alloc Failure; 'gre-conn-ext-creation-failure'= GRE Conn Ext Alloc Failure; 'gre-no-fwd-route'= GRE No Fwd Route; 'gre-no-rev-route'= GRE No Rev Route; 'gre-no-control-conn'= GRE No Control Conn; 'gre-conn-already-exists'= GRE Conn Already Exists; 'gre-free-no-ext'= GRE Free No Ext; 'gre-free-no-smp'= GRE Free No SMP; 'gre-free-smp-app-type-mismatch'= GRE Free SMP App Type Mismatch; 'control-freed'= Control Session Freed; 'control-free-no-ext'= Control Free No Ext; 'control-free-no-smp'= Control Free No SMP; 'control-free-smp-app-type-mismatch'= Control Free SMP App Type Mismatch; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            gre_sessions_created:
+                description:
+                - "GRE Sessions Created"
+            mismatched_pns_call_id:
+                description:
+                - "Mismatched PNS Call ID"
+            call_reply_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Reply"
+            calls_established:
+                description:
+                - "Calls Established"
+            no_gre_session_match:
+                description:
+                - "No Matching GRE Session"
+            call_req_pns_call_id_mismatch:
+                description:
+                - "Call ID Mismatch on Call Request"
+            gre_sessions_freed:
+                description:
+                - "GRE Sessions Freed"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +100,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +130,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','calls-established','mismatched-pns-call-id','gre-sessions-created','gre-sessions-freed','no-gre-session-match','smp-sessions-created','smp-sessions-freed','smp-session-creation-failure','extension-creation-failure','ha-sent','ha-rcv','ha-no-mem','ha-conflict','ha-overwrite','ha-call-sent','ha-call-rcv','ha-smp-conflict','ha-smp-in-del-q','smp-app-type-mismatch','call-req-pns-call-id-mismatch','call-reply-pns-call-id-mismatch','call-req-retransmit','call-req-new','call-req-ext-alloc-failure','call-reply-call-id-unknown','call-reply-retransmit','call-reply-retransmit-wrong-control','call-reply-retransmit-acquired','call-reply-ext-alloc-failure','smp-client-call-id-mismatch','smp-alloc-failure','gre-conn-creation-failure','gre-conn-ext-creation-failure','gre-no-fwd-route','gre-no-rev-route','gre-no-control-conn','gre-conn-already-exists','gre-free-no-ext','gre-free-no-smp','gre-free-smp-app-type-mismatch','control-freed','control-free-no-ext','control-free-no-smp','control-free-smp-app-type-mismatch'])),
+        stats=dict(type='dict',gre_sessions_created=dict(type='str',),mismatched_pns_call_id=dict(type='str',),call_reply_pns_call_id_mismatch=dict(type='str',),calls_established=dict(type='str',),no_gre_session_match=dict(type='str',),call_req_pns_call_id_mismatch=dict(type='str',),gre_sessions_freed=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +154,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +239,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +393,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

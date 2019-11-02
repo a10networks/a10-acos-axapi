@@ -52,6 +52,185 @@ options:
         description:
         - "'honor-rule-set'= Honors firewall rule-sets (Default); 'override-rule-set'= Override firewall rule-sets; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+            rev_egress_pkt_size_range1:
+                description:
+                - "Reverse Egress Packet size between 0 and 200"
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Freed"
+            fwd_ingress_bytes_others:
+                description:
+                - "Forward Ingress Bytes OTHERS"
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Freed"
+            fwd_ingress_packets_others:
+                description:
+                - "Forward Ingress Packets OTHERS"
+            fwd_ingress_packets_udp:
+                description:
+                - "Forward Ingress Packets UDP"
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+            fwd_egress_packets_others:
+                description:
+                - "Forward Egress Packets OTHERS"
+            fwd_ingress_bytes_tcp:
+                description:
+                - "Forward Ingress Bytes TCP"
+            fwd_egress_packets_tcp:
+                description:
+                - "Forward Egress Packets TCP"
+            fullcone_creation_failure:
+                description:
+                - "Full-Cone Creation Failure"
+            rev_egress_bytes_tcp:
+                description:
+                - "Reverse Egress Bytes TCP"
+            fwd_egress_bytes_others:
+                description:
+                - "Forward Egress Bytes OTHERS"
+            fwd_egress_bytes_udp:
+                description:
+                - "Forward Egress Bytes UDP"
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Created"
+            active_fullcone_session:
+                description:
+                - "Total Active Full-cone sessions"
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+            fwd_egress_bytes_icmp:
+                description:
+                - "Forward Egress Bytes ICMP"
+            rev_ingress_packets_tcp:
+                description:
+                - "Reverse Ingress Packets TCP"
+            rev_ingress_packets_udp:
+                description:
+                - "Reverse Ingress Packets UDP"
+            rev_egress_bytes_icmp:
+                description:
+                - "Reverse Egress Bytes ICMP"
+            rev_egress_bytes_udp:
+                description:
+                - "Reverse Egress Bytes UDP"
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+            rev_ingress_packets_others:
+                description:
+                - "Reverse Ingress Packets OTHERS"
+            fwd_egress_pkt_size_range3:
+                description:
+                - "Forward Egress Packet size between 801 and 1550"
+            fwd_egress_pkt_size_range2:
+                description:
+                - "Forward Egress Packet size between 201 and 800"
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+            fwd_egress_packets_icmp:
+                description:
+                - "Forward Egress Packets ICMP"
+            limit_entry_created:
+                description:
+                - "Limit Entry Created"
+            fwd_ingress_packets_tcp:
+                description:
+                - "Forward Ingress Packets TCP"
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+            rev_egress_packets_icmp:
+                description:
+                - "Reverse Egress Packets ICMP"
+            fwd_ingress_pkt_size_range3:
+                description:
+                - "Forward Ingress Packet size between 801 and 1550"
+            rev_egress_pkt_size_range4:
+                description:
+                - "Reverse Egress Packet size between 1551 and 9000"
+            rev_egress_pkt_size_range3:
+                description:
+                - "Reverse Egress Packet size between 801 and 1550"
+            rev_egress_pkt_size_range2:
+                description:
+                - "Reverse Egress Packet size between 201 and 800"
+            fwd_ingress_pkt_size_range4:
+                description:
+                - "Forward Ingress Packet size between 1551 and 9000"
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Created"
+            fwd_egress_bytes_tcp:
+                description:
+                - "Forward Egress Bytes TCP"
+            rev_egress_packets_others:
+                description:
+                - "Reverse Egress Packets OTHERS"
+            fwd_ingress_pkt_size_range2:
+                description:
+                - "Forward Ingress Packet size between 201 and 800"
+            fwd_ingress_pkt_size_range1:
+                description:
+                - "Forward Ingress Packet size between 0 and 200"
+            data_session_created:
+                description:
+                - "Data Session Created"
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+            rev_ingress_pkt_size_range4:
+                description:
+                - "Reverse Ingress Packet size between 1551 and 9000"
+            rev_egress_packets_tcp:
+                description:
+                - "Reverse Egress Packets TCP"
+            rev_ingress_pkt_size_range2:
+                description:
+                - "Reverse Ingress Packet size between 201 and 800"
+            rev_ingress_pkt_size_range3:
+                description:
+                - "Reverse Ingress Packet size between 801 and 1550"
+            rev_ingress_pkt_size_range1:
+                description:
+                - "Reverse Ingress Packet size between 0 and 200"
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+            limit_entry_marked_deleted:
+                description:
+                - "Limit Entry Marked Deleted"
+            rev_ingress_bytes_tcp:
+                description:
+                - "Reverse Ingress Bytes TCP"
+            fwd_ingress_packets_icmp:
+                description:
+                - "Forward Ingress Packets ICMP"
+            rev_ingress_bytes_others:
+                description:
+                - "Reverse Ingress Bytes OTHERS"
+            fwd_egress_packets_udp:
+                description:
+                - "Forward Egress Packets UDP"
     uuid:
         description:
         - "uuid of the object"
@@ -113,7 +292,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alg_processing","disable_app_list","disable_ip_fw_sessions","extended_matching","listen_on_port_timeout","natip_ddos_protection","permit_default_action","respond_to_user_mac","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["alg_processing","disable_app_list","disable_ip_fw_sessions","extended_matching","listen_on_port_timeout","natip_ddos_protection","permit_default_action","respond_to_user_mac","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,6 +322,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         alg_processing=dict(type='str',choices=['honor-rule-set','override-rule-set']),
+        stats=dict(type='dict',data_session_freed=dict(type='str',),rev_egress_pkt_size_range1=dict(type='str',),udp_fullcone_freed=dict(type='str',),fwd_ingress_bytes_others=dict(type='str',),tcp_fullcone_freed=dict(type='str',),fwd_ingress_packets_others=dict(type='str',),fwd_ingress_packets_udp=dict(type='str',),rev_ingress_bytes_icmp=dict(type='str',),fwd_egress_packets_others=dict(type='str',),fwd_ingress_bytes_tcp=dict(type='str',),fwd_egress_packets_tcp=dict(type='str',),fullcone_creation_failure=dict(type='str',),rev_egress_bytes_tcp=dict(type='str',),fwd_egress_bytes_others=dict(type='str',),fwd_egress_bytes_udp=dict(type='str',),rev_egress_bytes_others=dict(type='str',),udp_fullcone_created=dict(type='str',),active_fullcone_session=dict(type='str',),rev_egress_packets_udp=dict(type='str',),fwd_egress_bytes_icmp=dict(type='str',),rev_ingress_packets_tcp=dict(type='str',),rev_ingress_packets_udp=dict(type='str',),rev_egress_bytes_icmp=dict(type='str',),rev_egress_bytes_udp=dict(type='str',),fwd_ingress_bytes_icmp=dict(type='str',),rev_ingress_packets_icmp=dict(type='str',),rev_ingress_packets_others=dict(type='str',),fwd_egress_pkt_size_range3=dict(type='str',),fwd_egress_pkt_size_range2=dict(type='str',),fwd_egress_pkt_size_range1=dict(type='str',),fwd_egress_packets_icmp=dict(type='str',),limit_entry_created=dict(type='str',),fwd_ingress_packets_tcp=dict(type='str',),fwd_egress_pkt_size_range4=dict(type='str',),rev_egress_packets_icmp=dict(type='str',),fwd_ingress_pkt_size_range3=dict(type='str',),rev_egress_pkt_size_range4=dict(type='str',),rev_egress_pkt_size_range3=dict(type='str',),rev_egress_pkt_size_range2=dict(type='str',),fwd_ingress_pkt_size_range4=dict(type='str',),tcp_fullcone_created=dict(type='str',),fwd_egress_bytes_tcp=dict(type='str',),rev_egress_packets_others=dict(type='str',),fwd_ingress_pkt_size_range2=dict(type='str',),fwd_ingress_pkt_size_range1=dict(type='str',),data_session_created=dict(type='str',),rev_ingress_bytes_udp=dict(type='str',),rev_ingress_pkt_size_range4=dict(type='str',),rev_egress_packets_tcp=dict(type='str',),rev_ingress_pkt_size_range2=dict(type='str',),rev_ingress_pkt_size_range3=dict(type='str',),rev_ingress_pkt_size_range1=dict(type='str',),fwd_ingress_bytes_udp=dict(type='str',),limit_entry_marked_deleted=dict(type='str',),rev_ingress_bytes_tcp=dict(type='str',),fwd_ingress_packets_icmp=dict(type='str',),rev_ingress_bytes_others=dict(type='str',),fwd_egress_packets_udp=dict(type='str',)),
         uuid=dict(type='str',),
         listen_on_port_timeout=dict(type='int',),
         disable_ip_fw_sessions=dict(type='bool',),
@@ -174,11 +354,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -264,10 +439,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -415,8 +593,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

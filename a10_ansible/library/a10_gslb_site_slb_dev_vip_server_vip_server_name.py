@@ -54,6 +54,23 @@ options:
     site_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            dev_vip_addr:
+                description:
+                - "Field dev_vip_addr"
+            vip_name:
+                description:
+                - "Specify a VIP name for the SLB device"
+            dev_vip_state:
+                description:
+                - "Field dev_vip_state"
+            dev_vip_port_list:
+                description:
+                - "Field dev_vip_port_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -66,6 +83,17 @@ options:
         description:
         - "Specify a VIP name for the SLB device"
         required: True
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            vip_name:
+                description:
+                - "Specify a VIP name for the SLB device"
+            dev_vip_hits:
+                description:
+                - "Number of times the service-ip was selected"
     uuid:
         description:
         - "uuid of the object"
@@ -84,7 +112,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid","vip_name",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid","vip_name",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -113,8 +141,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',dev_vip_addr=dict(type='str',),vip_name=dict(type='str',required=True,),dev_vip_state=dict(type='str',),dev_vip_port_list=dict(type='list',dev_vip_port_num=dict(type='int',),dev_vip_port_state=dict(type='str',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),
         vip_name=dict(type='str',required=True,),
+        stats=dict(type='dict',vip_name=dict(type='str',required=True,),dev_vip_hits=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -240,9 +270,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

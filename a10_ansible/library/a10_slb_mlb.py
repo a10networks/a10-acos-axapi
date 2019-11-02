@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,56 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'client_msg_sent'= Client message sent; 'server_msg_received'= Server message received; 'server_conn_created'= Server connection created; 'server_conn_rst'= Server connection reset; 'server_conn_failed'= Server connection failed; 'server_conn_closed'= Server connection closed; 'client_conn_created'= Client connection created; 'client_conn_closed'= Client connection closed; 'client_conn_not_found'= Client connection not found; 'msg_dropped'= Message dropped; 'mlb_dcmsg_sent'= Dcmsg sent; 'mlb_dcmsg_received'= Dcmsg received; 'mlb_dcmsg_error'= Dcmsg error; 'mlb_dcmsg_alloc'= Dcmsg alloc; 'mlb_dcmsg_free'= Dcmsg free; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            server_conn_closed:
+                description:
+                - "Server connection closed"
+            msg_dropped:
+                description:
+                - "Message dropped"
+            server_conn_created:
+                description:
+                - "Server connection created"
+            mlb_dcmsg_alloc:
+                description:
+                - "Dcmsg alloc"
+            client_conn_not_found:
+                description:
+                - "Client connection not found"
+            server_conn_rst:
+                description:
+                - "Server connection reset"
+            mlb_dcmsg_received:
+                description:
+                - "Dcmsg received"
+            server_conn_failed:
+                description:
+                - "Server connection failed"
+            client_msg_sent:
+                description:
+                - "Client message sent"
+            mlb_dcmsg_error:
+                description:
+                - "Dcmsg error"
+            client_conn_created:
+                description:
+                - "Client connection created"
+            mlb_dcmsg_free:
+                description:
+                - "Dcmsg free"
+            server_msg_received:
+                description:
+                - "Server message received"
+            client_conn_closed:
+                description:
+                - "Client connection closed"
+            mlb_dcmsg_sent:
+                description:
+                - "Dcmsg sent"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +135,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +164,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',server_conn_closed=dict(type='int',),msg_dropped=dict(type='int',),server_conn_created=dict(type='int',),mlb_dcmsg_alloc=dict(type='int',),client_conn_not_found=dict(type='int',),server_conn_rst=dict(type='int',),mlb_dcmsg_received=dict(type='int',),server_conn_failed=dict(type='int',),client_msg_sent=dict(type='int',),mlb_dcmsg_error=dict(type='int',),client_conn_created=dict(type='int',),mlb_dcmsg_free=dict(type='int',),server_msg_received=dict(type='int',),client_conn_closed=dict(type='int',),mlb_dcmsg_sent=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','client_msg_sent','server_msg_received','server_conn_created','server_conn_rst','server_conn_failed','server_conn_closed','client_conn_created','client_conn_closed','client_conn_not_found','msg_dropped','mlb_dcmsg_sent','mlb_dcmsg_received','mlb_dcmsg_error','mlb_dcmsg_alloc','mlb_dcmsg_free'])),
+        stats=dict(type='dict',server_conn_closed=dict(type='str',),msg_dropped=dict(type='str',),server_conn_created=dict(type='str',),mlb_dcmsg_alloc=dict(type='str',),client_conn_not_found=dict(type='str',),server_conn_rst=dict(type='str',),mlb_dcmsg_received=dict(type='str',),server_conn_failed=dict(type='str',),client_msg_sent=dict(type='str',),mlb_dcmsg_error=dict(type='str',),client_conn_created=dict(type='str',),mlb_dcmsg_free=dict(type='str',),server_msg_received=dict(type='str',),client_conn_closed=dict(type='str',),mlb_dcmsg_sent=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +281,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

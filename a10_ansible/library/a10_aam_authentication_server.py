@@ -48,34 +48,32 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    windows:
+    oper:
         description:
-        - "Field windows"
+        - "Field oper"
         required: False
         suboptions:
-            sampling_enable:
+            rserver_count:
                 description:
-                - "Field sampling_enable"
-            uuid:
+                - "Field rserver_count"
+            name:
                 description:
-                - "uuid of the object"
-            instance_list:
+                - "Field name"
+            get_count:
                 description:
-                - "Field instance_list"
-    ldap:
-        description:
-        - "Field ldap"
-        required: False
-        suboptions:
-            sampling_enable:
+                - "Field get_count"
+            part_id:
                 description:
-                - "Field sampling_enable"
-            uuid:
+                - "Field part_id"
+            rport_count:
                 description:
-                - "uuid of the object"
-            instance_list:
+                - "Field rport_count"
+            ldap:
                 description:
-                - "Field instance_list"
+                - "Field ldap"
+            rserver_list:
+                description:
+                - "Field rserver_list"
     radius:
         description:
         - "Field radius"
@@ -94,6 +92,34 @@ options:
         description:
         - "uuid of the object"
         required: False
+    ldap:
+        description:
+        - "Field ldap"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+            instance_list:
+                description:
+                - "Field instance_list"
+    windows:
+        description:
+        - "Field windows"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+            instance_list:
+                description:
+                - "Field instance_list"
     ocsp:
         description:
         - "Field ocsp"
@@ -122,7 +148,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ldap","ocsp","radius","uuid","windows",]
+AVAILABLE_PROPERTIES = ["ldap","ocsp","oper","radius","uuid","windows",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -151,10 +177,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        windows=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','kerberos-request-send','kerberos-response-get','kerberos-timeout-error','kerberos-other-error','ntlm-authentication-success','ntlm-authentication-failure','ntlm-proto-negotiation-success','ntlm-proto-negotiation-failure','ntlm-session-setup-success','ntlm-session-setup-failed','kerberos-request-normal','kerberos-request-dropped','kerberos-response-success','kerberos-response-failure','kerberos-response-error','kerberos-response-timeout','kerberos-response-other','kerberos-job-start-error','kerberos-polling-control-error','ntlm-prepare-req-success','ntlm-prepare-req-failed','ntlm-timeout-error','ntlm-other-error','ntlm-request-normal','ntlm-request-dropped','ntlm-response-success','ntlm-response-failure','ntlm-response-error','ntlm-response-timeout','ntlm-response-other','ntlm-job-start-error','ntlm-polling-control-error','kerberos-pw-expiry','kerberos-pw-change-success','kerberos-pw-change-failure'])),uuid=dict(type='str',),instance_list=dict(type='list',health_check_string=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),timeout=dict(type='int',),auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),health_check_disable=dict(type='bool',),support_apacheds_kdc=dict(type='bool',),health_check=dict(type='bool',),uuid=dict(type='str',))),
-        ldap=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error','ssl-session-created','ssl-session-failure','ldaps-idle-conn-num','ldaps-inuse-conn-num','pw-expiry','pw-change-success','pw-change-failure'])),uuid=dict(type='str',),instance_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',choices=['ldap','ldaps','starttls']),encrypted=dict(type='str',),port=dict(type='int',),ldaps_conn_reuse_idle_timeout=dict(type='int',),port_hm=dict(type='str',),uuid=dict(type='str',),admin_dn=dict(type='str',),default_domain=dict(type='str',),auth_type=dict(type='str',choices=['ad','open-ldap']),admin_secret=dict(type='bool',),pwdmaxage=dict(type='int',),health_check_string=dict(type='str',),derive_bind_dn=dict(type='dict',username_attr=dict(type='str',)),prompt_pw_change_before_exp=dict(type='int',),base=dict(type='str',),secret_string=dict(type='str',),name=dict(type='str',required=True,),port_hm_disable=dict(type='bool',),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),ca_cert=dict(type='str',),bind_with_dn=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','ssl-session-created','ssl-session-failure','pw_expiry','pw_change_success','pw_change_failure'])),dn_attribute=dict(type='str',),timeout=dict(type='int',),health_check=dict(type='bool',))),
+        oper=dict(type='dict',rserver_count=dict(type='int',),name=dict(type='str',),get_count=dict(type='str',),part_id=dict(type='int',),rport_count=dict(type='int',),ldap=dict(type='dict',oper=dict(type='dict',ldaps_server_list=dict(type='list',ldaps_idle_conn_num=dict(type='int',),ldaps_inuse_conn_num=dict(type='int',),ldaps_inuse_conn_fd_list=dict(type='str',),ldaps_idle_conn_fd_list=dict(type='str',),ldap_uri=dict(type='str',)))),rserver_list=dict(type='list',status=dict(type='str',),max_conn=dict(type='int',),weight=dict(type='int',),server_name=dict(type='str',),ip=dict(type='str',),rport_list=dict(type='list',protocol=dict(type='str',),port_state=dict(type='str',),port_status=dict(type='str',),port_max_conn=dict(type='int',),port_weight=dict(type='int',),port_hm=dict(type='str',),sg_list=dict(type='list',sg_state=dict(type='str',),sg_name=dict(type='str',)),port=dict(type='int',)),host=dict(type='str',),hm=dict(type='str',))),
         radius=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error','accounting-request-sent','accounting-success','accounting-failure'])),uuid=dict(type='str',),instance_list=dict(type='list',auth_type=dict(type='str',choices=['pap','mschapv2','mschapv2-pap']),health_check_string=dict(type='str',),retry=dict(type='int',),port_hm=dict(type='str',),name=dict(type='str',required=True,),port_hm_disable=dict(type='bool',),encrypted=dict(type='str',),interval=dict(type='int',),accounting_port=dict(type='int',),port=dict(type='int',),health_check=dict(type='bool',),acct_port_hm_disable=dict(type='bool',),secret=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),health_check_disable=dict(type='bool',),secret_string=dict(type='str',),acct_port_hm=dict(type='str',),uuid=dict(type='str',))),
         uuid=dict(type='str',),
+        ldap=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error','ssl-session-created','ssl-session-failure','ldaps-idle-conn-num','ldaps-inuse-conn-num','pw-expiry','pw-change-success','pw-change-failure'])),uuid=dict(type='str',),instance_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',choices=['ldap','ldaps','starttls']),encrypted=dict(type='str',),port=dict(type='int',),ldaps_conn_reuse_idle_timeout=dict(type='int',),port_hm=dict(type='str',),uuid=dict(type='str',),admin_dn=dict(type='str',),default_domain=dict(type='str',),auth_type=dict(type='str',choices=['ad','open-ldap']),admin_secret=dict(type='bool',),pwdmaxage=dict(type='int',),health_check_string=dict(type='str',),derive_bind_dn=dict(type='dict',username_attr=dict(type='str',)),prompt_pw_change_before_exp=dict(type='int',),base=dict(type='str',),secret_string=dict(type='str',),name=dict(type='str',required=True,),port_hm_disable=dict(type='bool',),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),ca_cert=dict(type='str',),bind_with_dn=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','ssl-session-created','ssl-session-failure','pw_expiry','pw_change_success','pw_change_failure'])),dn_attribute=dict(type='str',),timeout=dict(type='int',),health_check=dict(type='bool',))),
+        windows=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','kerberos-request-send','kerberos-response-get','kerberos-timeout-error','kerberos-other-error','ntlm-authentication-success','ntlm-authentication-failure','ntlm-proto-negotiation-success','ntlm-proto-negotiation-failure','ntlm-session-setup-success','ntlm-session-setup-failed','kerberos-request-normal','kerberos-request-dropped','kerberos-response-success','kerberos-response-failure','kerberos-response-error','kerberos-response-timeout','kerberos-response-other','kerberos-job-start-error','kerberos-polling-control-error','ntlm-prepare-req-success','ntlm-prepare-req-failed','ntlm-timeout-error','ntlm-other-error','ntlm-request-normal','ntlm-request-dropped','ntlm-response-success','ntlm-response-failure','ntlm-response-error','ntlm-response-timeout','ntlm-response-other','ntlm-job-start-error','ntlm-polling-control-error','kerberos-pw-expiry','kerberos-pw-change-success','kerberos-pw-change-failure'])),uuid=dict(type='str',),instance_list=dict(type='list',health_check_string=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),timeout=dict(type='int',),auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),health_check_disable=dict(type='bool',),support_apacheds_kdc=dict(type='bool',),health_check=dict(type='bool',),uuid=dict(type='str',))),
         ocsp=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-request-normal','stapling-request-dropped','stapling-response-success','stapling-response-failure','stapling-response-error','stapling-response-timeout','stapling-response-other','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error'])),uuid=dict(type='str',),instance_list=dict(type='list',health_check_string=dict(type='str',),responder_ca=dict(type='str',),name=dict(type='str',required=True,),url=dict(type='str',),responder_cert=dict(type='str',),health_check_disable=dict(type='bool',),http_version=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request','certificate-good','certificate-revoked','certificate-unknown','timeout','fail','stapling-request','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-timeout','stapling-fail'])),version_type=dict(type='str',choices=['1.1']),port_health_check_disable=dict(type='bool',),port_health_check=dict(type='str',),health_check=dict(type='bool',),uuid=dict(type='str',)))
     ))
    
@@ -183,11 +210,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -269,10 +291,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -421,8 +446,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

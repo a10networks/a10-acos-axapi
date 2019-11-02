@@ -56,6 +56,41 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'good_recv'= Good Router Solicitations (R.S.) Received; 'periodic_sent'= Periodic Router Advertisements (R.A.) Sent; 'rate_limit'= R.S. Rate Limited; 'bad_hop_limit'= R.S. Bad Hop Limit; 'truncated'= R.S. Truncated; 'bad_icmpv6_csum'= R.S. Bad ICMPv6 Checksum; 'bad_icmpv6_code'= R.S. Unknown ICMPv6 Code; 'bad_icmpv6_option'= R.S. Bad ICMPv6 Option; 'l2_addr_and_unspec'= R.S. Src Link-Layer Option and Unspecified Address; 'no_free_buffers'= No Free Buffers to send R.A.; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            bad_hop_limit:
+                description:
+                - "R.S. Bad Hop Limit"
+            bad_icmpv6_code:
+                description:
+                - "R.S. Unknown ICMPv6 Code"
+            no_free_buffers:
+                description:
+                - "No Free Buffers to send R.A."
+            truncated:
+                description:
+                - "R.S. Truncated"
+            rate_limit:
+                description:
+                - "R.S. Rate Limited"
+            l2_addr_and_unspec:
+                description:
+                - "R.S. Src Link-Layer Option and Unspecified Address"
+            bad_icmpv6_option:
+                description:
+                - "R.S. Bad ICMPv6 Option"
+            periodic_sent:
+                description:
+                - "Periodic Router Advertisements (R.A.) Sent"
+            good_recv:
+                description:
+                - "Good Router Solicitations (R.S.) Received"
+            bad_icmpv6_csum:
+                description:
+                - "R.S. Bad ICMPv6 Checksum"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +109,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +139,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','good_recv','periodic_sent','rate_limit','bad_hop_limit','truncated','bad_icmpv6_csum','bad_icmpv6_code','bad_icmpv6_option','l2_addr_and_unspec','no_free_buffers'])),
+        stats=dict(type='dict',bad_hop_limit=dict(type='str',),bad_icmpv6_code=dict(type='str',),no_free_buffers=dict(type='str',),truncated=dict(type='str',),rate_limit=dict(type='str',),l2_addr_and_unspec=dict(type='str',),bad_icmpv6_option=dict(type='str',),periodic_sent=dict(type='str',),good_recv=dict(type='str',),bad_icmpv6_csum=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +163,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +248,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +402,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

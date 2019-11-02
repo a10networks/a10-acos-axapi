@@ -48,6 +48,122 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_bytes_rx:
+                description:
+                - "Total packet bytes in"
+            dropped_pkt_rx:
+                description:
+                - "Dropped received packets"
+            pkts_out:
+                description:
+                - "Packets out"
+            unhandled_pkt_rx:
+                description:
+                - "Unhandled packets in"
+            unknown_encap_tx_pkt:
+                description:
+                - "Encap miss tx pkts"
+            reassembled_pkts_rx:
+                description:
+                - "Reassembled packets in"
+            id:
+                description:
+                - "VTEP Identifier"
+            frag_pkts_tx:
+                description:
+                - "Frag packets out"
+            dropped_pkts_tx:
+                description:
+                - "Dropped packets out"
+            mcast_pkt_tx:
+                description:
+                - "Multicast packets out"
+            large_pkts_rx:
+                description:
+                - "Too large packets in"
+            invalid_lif_tx:
+                description:
+                - "Invalid Lif pkts out"
+            total_bytes_tx:
+                description:
+                - "Packet bytes out"
+            invalid_lif_rx:
+                description:
+                - "Invalid Lif pkts in"
+            unicast_pkt_rx:
+                description:
+                - "Total unicast packets in"
+            dot1q_pkts_rx:
+                description:
+                - "Dot1q packets in"
+            vtep_host_learned:
+                description:
+                - "Hosts learned"
+            unhandled_pkt_tx:
+                description:
+                - "Unhandled packets out"
+            unknown_vtep_rx:
+                description:
+                - "Vtep Unkown rx"
+            encap_miss_pkts_rx:
+                description:
+                - "Encap missed in received packets"
+            unknown_encap_rx_pkt:
+                description:
+                - "Encap miss rx pkts"
+            bad_chksum_pks_rx:
+                description:
+                - "Bad checksum in received packets"
+            encap_unresolved_count:
+                description:
+                - "Encap unresolved failures"
+            bad_inner_ipv6_len_rx:
+                description:
+                - "Bad inner ipv6 packet len"
+            cfg_err_count:
+                description:
+                - "Config errors"
+            unknown_vtep_tx:
+                description:
+                - "Vtep unknown tx"
+            flooded_pkt_count:
+                description:
+                - "Flooded packet count"
+            total_pkts_rx:
+                description:
+                - "Total packets out"
+            vtep_host_learn_error:
+                description:
+                - "Host learn error"
+            requeue_pkts_in:
+                description:
+                - "Requeued packets in"
+            lif_un_init_rx:
+                description:
+                - "Lif uninitialized packets in"
+            mcast_pkt_rx:
+                description:
+                - "Total multicast packets in"
+            bcast_pkt_tx:
+                description:
+                - "Broadcast packets out"
+            bcast_pkt_rx:
+                description:
+                - "Total broadcast packets in"
+            unicast_pkt_tx:
+                description:
+                - "Unicast packets out"
+            bad_inner_ipv4_len_rx:
+                description:
+                - "bad inner ipv4 packet len"
+            arp_req_sent:
+                description:
+                - "Arp request sent"
     uuid:
         description:
         - "uuid of the object"
@@ -140,7 +256,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["destination_ip_address_list","encap","host_list","id","sampling_enable","source_ip_address","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["destination_ip_address_list","encap","host_list","id","sampling_enable","source_ip_address","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -169,6 +285,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',total_bytes_rx=dict(type='str',),dropped_pkt_rx=dict(type='str',),pkts_out=dict(type='str',),unhandled_pkt_rx=dict(type='str',),unknown_encap_tx_pkt=dict(type='str',),reassembled_pkts_rx=dict(type='str',),id=dict(type='int',required=True,),frag_pkts_tx=dict(type='str',),dropped_pkts_tx=dict(type='str',),mcast_pkt_tx=dict(type='str',),large_pkts_rx=dict(type='str',),invalid_lif_tx=dict(type='str',),total_bytes_tx=dict(type='str',),invalid_lif_rx=dict(type='str',),unicast_pkt_rx=dict(type='str',),dot1q_pkts_rx=dict(type='str',),vtep_host_learned=dict(type='str',),unhandled_pkt_tx=dict(type='str',),unknown_vtep_rx=dict(type='str',),encap_miss_pkts_rx=dict(type='str',),unknown_encap_rx_pkt=dict(type='str',),bad_chksum_pks_rx=dict(type='str',),encap_unresolved_count=dict(type='str',),bad_inner_ipv6_len_rx=dict(type='str',),cfg_err_count=dict(type='str',),unknown_vtep_tx=dict(type='str',),flooded_pkt_count=dict(type='str',),total_pkts_rx=dict(type='str',),vtep_host_learn_error=dict(type='str',),requeue_pkts_in=dict(type='str',),lif_un_init_rx=dict(type='str',),mcast_pkt_rx=dict(type='str',),bcast_pkt_tx=dict(type='str',),bcast_pkt_rx=dict(type='str',),unicast_pkt_tx=dict(type='str',),bad_inner_ipv4_len_rx=dict(type='str',),arp_req_sent=dict(type='str',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cfg_err_count','flooded_pkt_count','encap_unresolved_count','unknown_encap_rx_pkt','unknown_encap_tx_pkt','arp_req_sent','vtep_host_learned','vtep_host_learn_error','invalid_lif_rx','invalid_lif_tx','unknown_vtep_tx','unknown_vtep_rx','unhandled_pkt_rx','unhandled_pkt_tx','total_pkts_rx','total_bytes_rx','unicast_pkt_rx','bcast_pkt_rx','mcast_pkt_rx','dropped_pkt_rx','encap_miss_pkts_rx','bad_chksum_pks_rx','requeue_pkts_in','pkts_out','total_bytes_tx','unicast_pkt_tx','bcast_pkt_tx','mcast_pkt_tx','dropped_pkts_tx','large_pkts_rx','dot1q_pkts_rx','frag_pkts_tx','reassembled_pkts_rx','bad_inner_ipv4_len_rx','bad_inner_ipv6_len_rx','lif_un_init_rx'])),
@@ -201,11 +318,6 @@ def existing_url(module):
     f_dict["id"] = module.params["id"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -291,10 +403,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -442,8 +557,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

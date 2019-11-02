@@ -83,6 +83,20 @@ options:
         description:
         - "'enable'= enable; 'disable'= disable; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            port_number:
+                description:
+                - "Port Number"
+            msgs_sent:
+                description:
+                - "Number of log messages sent"
     health_check:
         description:
         - "Health Check (Monitor Name)"
@@ -101,7 +115,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","health_check","health_check_disable","port_number","protocol","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","health_check","health_check_disable","port_number","protocol","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -137,6 +151,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent'])),
         port_number=dict(type='int',required=True,),
         action=dict(type='str',choices=['enable','disable']),
+        stats=dict(type='dict',protocol=dict(type='str',required=True,choices=['tcp','udp']),port_number=dict(type='int',required=True,),msgs_sent=dict(type='str',)),
         health_check=dict(type='str',)
     ))
    
@@ -170,11 +185,6 @@ def existing_url(module):
     f_dict["log_server_name"] = module.params["log_server_name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -260,10 +270,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -411,8 +424,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

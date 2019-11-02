@@ -56,6 +56,50 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'total-throughput-bits-per-sec'= Total Throughput in bits/sec; 'l4-conns-per-sec'= L4 Connections/sec; 'l7-conns-per-sec'= L7 Connections/sec; 'l7-trans-per-sec'= L7 Transactions/sec; 'ssl-conns-per-sec'= SSL Connections/sec; 'ip-nat-conns-per-sec'= IP NAT Connections/sec; 'total-new-conns-per-sec'= Total New Connections Established/sec; 'total-curr-conns'= Total Current Established Connections; 'l4-bandwidth'= L4 Bandwidth in bits/sec; 'l7-bandwidth'= L7 Bandwidth in bits/sec; 'serv-ssl-conns-per-sec'= Server SSL Connections/sec; 'fw-conns-per-sec'= FW Connections/sec; 'gifw-conns-per-sec'= GiFW Connections/sec; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            l7_trans_per_sec:
+                description:
+                - "L7 Transactions/sec"
+            l7_conns_per_sec:
+                description:
+                - "L7 Connections/sec"
+            total_curr_conns:
+                description:
+                - "Total Current Established Connections"
+            ssl_conns_per_sec:
+                description:
+                - "SSL Connections/sec"
+            l4_bandwidth:
+                description:
+                - "L4 Bandwidth in bits/sec"
+            serv_ssl_conns_per_sec:
+                description:
+                - "Server SSL Connections/sec"
+            gifw_conns_per_sec:
+                description:
+                - "GiFW Connections/sec"
+            total_new_conns_per_sec:
+                description:
+                - "Total New Connections Established/sec"
+            total_throughput_bits_per_sec:
+                description:
+                - "Total Throughput in bits/sec"
+            l4_conns_per_sec:
+                description:
+                - "L4 Connections/sec"
+            l7_bandwidth:
+                description:
+                - "L7 Bandwidth in bits/sec"
+            ip_nat_conns_per_sec:
+                description:
+                - "IP NAT Connections/sec"
+            fw_conns_per_sec:
+                description:
+                - "FW Connections/sec"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +118,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +148,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec','fw-conns-per-sec','gifw-conns-per-sec'])),
+        stats=dict(type='dict',l7_trans_per_sec=dict(type='str',),l7_conns_per_sec=dict(type='str',),total_curr_conns=dict(type='str',),ssl_conns_per_sec=dict(type='str',),l4_bandwidth=dict(type='str',),serv_ssl_conns_per_sec=dict(type='str',),gifw_conns_per_sec=dict(type='str',),total_new_conns_per_sec=dict(type='str',),total_throughput_bits_per_sec=dict(type='str',),l4_conns_per_sec=dict(type='str',),l7_bandwidth=dict(type='str',),ip_nat_conns_per_sec=dict(type='str',),fw_conns_per_sec=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +172,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +257,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +411,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

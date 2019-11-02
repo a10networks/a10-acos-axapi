@@ -56,6 +56,308 @@ options:
         description:
         - "All packet sizes"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            rev_egress_pkt_size_range1:
+                description:
+                - "Reverse Egress Packet size between 0 and 200"
+            endpoint_indep_filter_match:
+                description:
+                - "Endpoint-Independent Filtering Matched"
+            hairpin:
+                description:
+                - "Hairpin Session Created"
+            fwd_ingress_packets_udp:
+                description:
+                - "Forward Ingress Packets UDP"
+            fwd_egress_packets_tcp:
+                description:
+                - "Forward Egress Packets TCP"
+            rev_egress_bytes_tcp:
+                description:
+                - "Reverse Egress Bytes TCP"
+            fwd_egress_bytes_others:
+                description:
+                - "Forward Egress Bytes OTHERS"
+            fwd_egress_bytes_udp:
+                description:
+                - "Forward Egress Bytes UDP"
+            ha_nat_pool_unusable:
+                description:
+                - "HA NAT Pool Unusable"
+            tcp_user_quota_exceeded:
+                description:
+                - "TCP User-Quota Exceeded"
+            rev_ingress_packets_udp:
+                description:
+                - "Reverse Ingress Packets UDP"
+            rev_egress_bytes_icmp:
+                description:
+                - "Reverse Egress Bytes ICMP"
+            ha_nat_pool_batch_type_mismatch:
+                description:
+                - "HA NAT Pool Batch Type Mismatch"
+            rev_ingress_packets_others:
+                description:
+                - "Reverse Ingress Packets OTHERS"
+            user_quota_unusable_drop:
+                description:
+                - "User-Quota Unusable Drop"
+            fwd_egress_packets_icmp:
+                description:
+                - "Forward Egress Packets ICMP"
+            fullcone_failure:
+                description:
+                - "Full-cone Session Creation Failed"
+            fwd_ingress_pkt_size_range2:
+                description:
+                - "Forward Ingress Packet size between 201 and 800"
+            fwd_ingress_pkt_size_range3:
+                description:
+                - "Forward Ingress Packet size between 801 and 1550"
+            fwd_ingress_pkt_size_range1:
+                description:
+                - "Forward Ingress Packet size between 0 and 200"
+            data_sesn_user_quota_exceeded:
+                description:
+                - "Data Session User-Quota Exceeded"
+            lid_drop:
+                description:
+                - "LSN LID Drop"
+            fwd_ingress_pkt_size_range4:
+                description:
+                - "Forward Ingress Packet size between 1551 and 9000"
+            fwd_egress_bytes_tcp:
+                description:
+                - "Forward Egress Bytes TCP"
+            user_quota_put_in_del_q:
+                description:
+                - "User-Quota Freed"
+            rev_ingress_packets_tcp:
+                description:
+                - "Reverse Ingress Packets TCP"
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Session Freed"
+            l3:
+                description:
+                - "Layer 3 Forwarded Packets"
+            total_tcp_freed:
+                description:
+                - "Total TCP Ports Freed"
+            lid_pass_through:
+                description:
+                - "LSN LID Pass-through"
+            user_quota_unusable:
+                description:
+                - "User-Quota Marked Unusable"
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Session Created"
+            fwd_egress_packets_others:
+                description:
+                - "Forward Egress Packets OTHERS"
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Session Created"
+            icmp_user_quota_exceeded:
+                description:
+                - "ICMP User-Quota Exceeded"
+            total_tcp_allocated:
+                description:
+                - "Total TCP Ports Allocated"
+            prefix_quota_mismatch:
+                description:
+                - "Prefix Quota NAT IP Mismatch"
+            rev_egress_bytes_udp:
+                description:
+                - "Reverse Egress Bytes UDP"
+            user_quota_failure:
+                description:
+                - "User-Quota Creation Failed"
+            user_quota_created:
+                description:
+                - "User-Quota Created"
+            rev_egress_packets_icmp:
+                description:
+                - "Reverse Egress Packets ICMP"
+            source_matches_prefix:
+                description:
+                - "Source Address Prefix Match Drop"
+            data_sesn_rate_user_quota_exceeded:
+                description:
+                - "Conn Rate User-Quota Exceeded"
+            fullcone_self_hairpinning_drop:
+                description:
+                - "Self-Hairpinning Drop"
+            new_user_resource_unavailable:
+                description:
+                - "New User NAT Resource Unavailable"
+            total_udp_allocated:
+                description:
+                - "Total UDP Ports Allocated"
+            data_session_created:
+                description:
+                - "Data Session Created"
+            rev_ingress_bytes_tcp:
+                description:
+                - "Reverse Ingress Bytes TCP"
+            fwd_ingress_bytes_others:
+                description:
+                - "Forward Ingress Bytes OTHERS"
+            rev_ingress_bytes_others:
+                description:
+                - "Reverse Ingress Bytes OTHERS"
+            rev_egress_packets_tcp:
+                description:
+                - "Reverse Egress Packets TCP"
+            fwd_ingress_bytes_tcp:
+                description:
+                - "Forward Ingress Bytes TCP"
+            nat_port_unavailable_icmp:
+                description:
+                - "ICMP NAT Port Unavailable"
+            extended_quota_matched:
+                description:
+                - "Extended User-Quota Matched"
+            fwd_egress_packets_udp:
+                description:
+                - "Forward Egress Packets UDP"
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Session Freed"
+            fwd_egress_bytes_icmp:
+                description:
+                - "Forward Egress Bytes ICMP"
+            eif_limit_exceeded:
+                description:
+                - "Endpoint-Independent Filtering Inbound Limit Exceeded"
+            port_overloading_smp_inserted_udp:
+                description:
+                - "UDP Port Overloading Session Created"
+            total_udp_freed:
+                description:
+                - "Total UDP Ports Freed"
+            fwd_egress_pkt_size_range3:
+                description:
+                - "Forward Egress Packet size between 801 and 1550"
+            fwd_egress_pkt_size_range2:
+                description:
+                - "Forward Egress Packet size between 201 and 800"
+            nat_port_unavailable_tcp:
+                description:
+                - "TCP NAT Port Unavailable"
+            total_tcp_overloaded:
+                description:
+                - "TCP Port Overloaded"
+            fwd_ingress_packets_tcp:
+                description:
+                - "Forward Ingress Packets TCP"
+            total_icmp_freed:
+                description:
+                - "Total ICMP Ports Freed"
+            fwd_ingress_packets_others:
+                description:
+                - "Forward Ingress Packets OTHERS"
+            rev_egress_packets_others:
+                description:
+                - "Reverse Egress Packets OTHERS"
+            no_radius_profile_match:
+                description:
+                - "No RADIUS Profile Match"
+            endpoint_indep_map_match:
+                description:
+                - "Endpoint-Independent Mapping Matched"
+            rev_ingress_pkt_size_range4:
+                description:
+                - "Reverse Ingress Packet size between 1551 and 9000"
+            rev_ingress_pkt_size_range2:
+                description:
+                - "Reverse Ingress Packet size between 201 and 800"
+            rev_ingress_pkt_size_range3:
+                description:
+                - "Reverse Ingress Packet size between 801 and 1550"
+            rev_ingress_pkt_size_range1:
+                description:
+                - "Reverse Ingress Packet size between 0 and 200"
+            total_icmp_allocated:
+                description:
+                - "Total ICMP Ports Allocated"
+            no_class_list_match:
+                description:
+                - "No Class-List Match"
+            inbound_filtered:
+                description:
+                - "Endpoint-Dependent Filtering Drop"
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+            total_udp_overloaded:
+                description:
+                - "UDP Port Overloaded"
+            port_overloading_smp_inserted_tcp:
+                description:
+                - "TCP Port Overloading Session Created"
+            nat_pool_unusable:
+                description:
+                - "NAT Pool Unusable"
+            nat_port_unavailable_udp:
+                description:
+                - "UDP NAT Port Unavailable"
+            port_overloading_smp_free_tcp:
+                description:
+                - "TCP Port Overloading Session Freed"
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+            port_overloading_smp_free_udp:
+                description:
+                - "UDP Port Overloading Session Freed"
+            udp_user_quota_exceeded:
+                description:
+                - "UDP User-Quota Exceeded"
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+            extended_quota_exceeded:
+                description:
+                - "Extended User-Quota Exceeded"
+            rev_egress_pkt_size_range4:
+                description:
+                - "Reverse Egress Packet size between 1551 and 9000"
+            rev_egress_pkt_size_range3:
+                description:
+                - "Reverse Egress Packet size between 801 and 1550"
+            fwd_ingress_packets_icmp:
+                description:
+                - "Forward Ingress Packets ICMP"
+            rev_egress_pkt_size_range2:
+                description:
+                - "Reverse Egress Packet size between 201 and 800"
     uuid:
         description:
         - "uuid of the object"
@@ -122,7 +424,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","force_non_zero_ipv4_id","icmp","inside","sampling_enable","tcp","user_quota_prefix_length","uuid",]
+AVAILABLE_PROPERTIES = ["all","force_non_zero_ipv4_id","icmp","inside","sampling_enable","stats","tcp","user_quota_prefix_length","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -153,6 +455,7 @@ def get_argspec():
     rv.update(dict(
         user_quota_prefix_length=dict(type='int',),
         all=dict(type='bool',),
+        stats=dict(type='dict',rev_egress_pkt_size_range1=dict(type='str',),endpoint_indep_filter_match=dict(type='str',),hairpin=dict(type='str',),fwd_ingress_packets_udp=dict(type='str',),fwd_egress_packets_tcp=dict(type='str',),rev_egress_bytes_tcp=dict(type='str',),fwd_egress_bytes_others=dict(type='str',),fwd_egress_bytes_udp=dict(type='str',),ha_nat_pool_unusable=dict(type='str',),tcp_user_quota_exceeded=dict(type='str',),rev_ingress_packets_udp=dict(type='str',),rev_egress_bytes_icmp=dict(type='str',),ha_nat_pool_batch_type_mismatch=dict(type='str',),rev_ingress_packets_others=dict(type='str',),user_quota_unusable_drop=dict(type='str',),fwd_egress_packets_icmp=dict(type='str',),fullcone_failure=dict(type='str',),fwd_ingress_pkt_size_range2=dict(type='str',),fwd_ingress_pkt_size_range3=dict(type='str',),fwd_ingress_pkt_size_range1=dict(type='str',),data_sesn_user_quota_exceeded=dict(type='str',),lid_drop=dict(type='str',),fwd_ingress_pkt_size_range4=dict(type='str',),fwd_egress_bytes_tcp=dict(type='str',),user_quota_put_in_del_q=dict(type='str',),rev_ingress_packets_tcp=dict(type='str',),tcp_fullcone_freed=dict(type='str',),l3=dict(type='str',),total_tcp_freed=dict(type='str',),lid_pass_through=dict(type='str',),user_quota_unusable=dict(type='str',),tcp_fullcone_created=dict(type='str',),fwd_egress_packets_others=dict(type='str',),udp_fullcone_created=dict(type='str',),icmp_user_quota_exceeded=dict(type='str',),total_tcp_allocated=dict(type='str',),prefix_quota_mismatch=dict(type='str',),rev_egress_bytes_udp=dict(type='str',),user_quota_failure=dict(type='str',),user_quota_created=dict(type='str',),rev_egress_packets_icmp=dict(type='str',),source_matches_prefix=dict(type='str',),data_sesn_rate_user_quota_exceeded=dict(type='str',),fullcone_self_hairpinning_drop=dict(type='str',),new_user_resource_unavailable=dict(type='str',),total_udp_allocated=dict(type='str',),data_session_created=dict(type='str',),rev_ingress_bytes_tcp=dict(type='str',),fwd_ingress_bytes_others=dict(type='str',),rev_ingress_bytes_others=dict(type='str',),rev_egress_packets_tcp=dict(type='str',),fwd_ingress_bytes_tcp=dict(type='str',),nat_port_unavailable_icmp=dict(type='str',),extended_quota_matched=dict(type='str',),fwd_egress_packets_udp=dict(type='str',),udp_fullcone_freed=dict(type='str',),fwd_egress_bytes_icmp=dict(type='str',),eif_limit_exceeded=dict(type='str',),port_overloading_smp_inserted_udp=dict(type='str',),total_udp_freed=dict(type='str',),fwd_egress_pkt_size_range3=dict(type='str',),fwd_egress_pkt_size_range2=dict(type='str',),nat_port_unavailable_tcp=dict(type='str',),total_tcp_overloaded=dict(type='str',),fwd_ingress_packets_tcp=dict(type='str',),total_icmp_freed=dict(type='str',),fwd_ingress_packets_others=dict(type='str',),rev_egress_packets_others=dict(type='str',),no_radius_profile_match=dict(type='str',),endpoint_indep_map_match=dict(type='str',),rev_ingress_pkt_size_range4=dict(type='str',),rev_ingress_pkt_size_range2=dict(type='str',),rev_ingress_pkt_size_range3=dict(type='str',),rev_ingress_pkt_size_range1=dict(type='str',),total_icmp_allocated=dict(type='str',),no_class_list_match=dict(type='str',),inbound_filtered=dict(type='str',),data_session_freed=dict(type='str',),total_udp_overloaded=dict(type='str',),port_overloading_smp_inserted_tcp=dict(type='str',),nat_pool_unusable=dict(type='str',),nat_port_unavailable_udp=dict(type='str',),port_overloading_smp_free_tcp=dict(type='str',),rev_ingress_bytes_udp=dict(type='str',),rev_ingress_bytes_icmp=dict(type='str',),rev_egress_bytes_others=dict(type='str',),port_overloading_smp_free_udp=dict(type='str',),udp_user_quota_exceeded=dict(type='str',),fwd_ingress_bytes_icmp=dict(type='str',),fwd_egress_pkt_size_range1=dict(type='str',),rev_ingress_packets_icmp=dict(type='str',),rev_egress_packets_udp=dict(type='str',),fwd_ingress_bytes_udp=dict(type='str',),fwd_egress_pkt_size_range4=dict(type='str',),extended_quota_exceeded=dict(type='str',),rev_egress_pkt_size_range4=dict(type='str',),rev_egress_pkt_size_range3=dict(type='str',),fwd_ingress_packets_icmp=dict(type='str',),rev_egress_pkt_size_range2=dict(type='str',)),
         uuid=dict(type='str',),
         inside=dict(type='dict',source=dict(type='dict',class_list=dict(type='str',))),
         force_non_zero_ipv4_id=dict(type='bool',),
@@ -181,11 +484,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -271,10 +569,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -422,8 +723,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

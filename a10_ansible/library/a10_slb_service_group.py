@@ -159,6 +159,53 @@ options:
         description:
         - "Period that trigger condition consistently happens(seconds)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            service_resp_2xx:
+                description:
+                - "Service Group response 2xx count"
+            member_list:
+                description:
+                - "Field member_list"
+            service_unhealthy_host:
+                description:
+                - "Service Group unhealthy host count"
+            service_curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+            name:
+                description:
+                - "SLB Service Name"
+            server_selection_fail_drop:
+                description:
+                - "Drops due to Service selection failure"
+            service_healthy_host:
+                description:
+                - "Service Group healthy host count"
+            service_resp_count:
+                description:
+                - "Service Group response count"
+            service_req_count:
+                description:
+                - "Service Group request count"
+            service_resp_4xx:
+                description:
+                - "Service Group response 4xx count"
+            service_peak_conn:
+                description:
+                - "Peak connection count for the Service Group"
+            server_selection_fail_reset:
+                description:
+                - "Resets sent out for Service selection failure"
+            service_resp_3xx:
+                description:
+                - "Service Group response 3xx count"
+            service_resp_5xx:
+                description:
+                - "Service Group response 5xx count"
     uuid:
         description:
         - "uuid of the object"
@@ -235,6 +282,50 @@ options:
         description:
         - "strict selection"
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            pri_affinity_priority:
+                description:
+                - "Field pri_affinity_priority"
+            name:
+                description:
+                - "SLB Service Name"
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+            servers_down:
+                description:
+                - "Field servers_down"
+            stateless_state:
+                description:
+                - "Field stateless_state"
+            servers_disable:
+                description:
+                - "Field servers_disable"
+            stateless_type:
+                description:
+                - "Field stateless_type"
+            servers_total:
+                description:
+                - "Field servers_total"
+            state:
+                description:
+                - "Field state"
+            member_list:
+                description:
+                - "Field member_list"
+            servers_up:
+                description:
+                - "Field servers_up"
+            stateless_current_usage:
+                description:
+                - "Field stateless_current_usage"
+            hm_dsr_enable_all_vip:
+                description:
+                - "Field hm_dsr_enable_all_vip"
     name:
         description:
         - "SLB Service Name"
@@ -333,7 +424,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","shared_partition_policy_template","shared_partition_svcgrp_health_check","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats_data_action","strict_select","svcgrp_health_check_shared","template_policy","template_policy_shared","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","oper","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","shared_partition_policy_template","shared_partition_svcgrp_health_check","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats","stats_data_action","strict_select","svcgrp_health_check_shared","template_policy","template_policy_shared","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -378,6 +469,7 @@ def get_argspec():
         template_port=dict(type='str',),
         conn_rate_grace_period=dict(type='int',),
         l4_session_usage_duration=dict(type='int',),
+        stats=dict(type='dict',service_resp_2xx=dict(type='str',),member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),state_flaps=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),curr_conn_overflow=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),service_unhealthy_host=dict(type='str',),service_curr_conn_overflow=dict(type='str',),name=dict(type='str',required=True,),server_selection_fail_drop=dict(type='str',),service_healthy_host=dict(type='str',),service_resp_count=dict(type='str',),service_req_count=dict(type='str',),service_resp_4xx=dict(type='str',),service_peak_conn=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_resp_3xx=dict(type='str',),service_resp_5xx=dict(type='str',)),
         uuid=dict(type='str',),
         backup_server_event_log=dict(type='bool',),
         lc_method=dict(type='str',choices=['least-connection','service-least-connection','weighted-least-connection','service-weighted-least-connection']),
@@ -397,6 +489,7 @@ def get_argspec():
         extended_stats=dict(type='bool',),
         conn_rate_revert_duration=dict(type='int',),
         strict_select=dict(type='bool',),
+        oper=dict(type='dict',pri_affinity_priority=dict(type='int',),name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),member_list=dict(type='list',oper=dict(type='dict',hm_key=dict(type='int',),alt_list=dict(type='list',alt_state=dict(type='str',),alt_rev_pkts=dict(type='int',),alt_port=dict(type='int',),alt_peak_conn=dict(type='int',),alt_curr_conn=dict(type='int',),alt_fwd_pkts=dict(type='int',),alt_total_conn=dict(type='int',),alt_name=dict(type='str',)),hm_index=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),drs_list=dict(type='list',drs_fwd_bts=dict(type='int',),drs_fwd_pkts=dict(type='int',),drs_rev_bts=dict(type='int',),drs_port=dict(type='int',),drs_curr_req=dict(type='int',),drs_name=dict(type='str',),drs_pers_conn=dict(type='int',),drs_priority=dict(type='int',),drs_total_req_succ=dict(type='int',),drs_hm_key=dict(type='int',),drs_hm_index=dict(type='int',),drs_rev_pkts=dict(type='int',),drs_total_conn=dict(type='int',),drs_state=dict(type='str',),drs_frsp_time=dict(type='int',),drs_peak_conn=dict(type='int',),drs_curr_conn=dict(type='int',),drs_rsp_time=dict(type='int',),drs_total_req=dict(type='int',),drs_srsp_time=dict(type='int',))),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
         name=dict(type='str',required=True,),
         reset=dict(type='dict',auto_switch=dict(type='bool',)),
         traffic_replication_mirror_sa_repl=dict(type='bool',),
@@ -531,9 +624,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

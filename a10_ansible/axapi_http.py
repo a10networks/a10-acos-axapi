@@ -100,7 +100,6 @@ class HttpClient(object):
                 file_name=None, file_content=None, axapi_args=None, **kwargs):
         LOG.debug("axapi_http: full url = %s", self.url_base + api_url)
         LOG.debug("axapi_http: %s url = %s", method, api_url)
-        # LOG.debug("axapi_http: params = %s", json.dumps(logutils.clean(params), indent=4))
 
         # Update params with axapi_args for currently unsupported configuration of objects
         if axapi_args is not None:
@@ -117,16 +116,10 @@ class HttpClient(object):
         if headers:
             hdrs.update(headers)
 
-        if params:
+        payload = None
+        if params and method != "GET":
             params_copy = params.copy()
-            # params_copy.update(extra_params)
-            # LOG.debug("axapi_http: params_all = %s", logutils.clean(params_copy))
-
             payload = json.dumps(params_copy, encoding='utf-8')
-        else:
-            payload = None
-
-        # LOG.debug("axapi_http: headers = %s", json.dumps(logutils.clean(hdrs), indent=4))
 
         if file_name is not None:
             files = {
@@ -140,15 +133,17 @@ class HttpClient(object):
         last_e = None
 
         try:
-            last_e = None
             if file_name is not None:
                 z = requests.request(method, self.url_base + api_url, verify=False,
                                         files=files, headers=hdrs)
             else:
-                z = requests.request(method, self.url_base + api_url, verify=False,
-                                        data=payload, headers=hdrs)
+                if method == "GET":
+                    z = requests.request(method, self.url_base + api_url, verify=False,
+                                         params=params, headers=hdrs)
+                else:
+                    z = requests.request(method, self.url_base + api_url, verify=False,
+                                         data=payload, headers=hdrs)
         except (socket.error, requests.exceptions.ConnectionError) as e:
-            # This needs to return an error response.
             raise e
 
         if z.status_code == 204:

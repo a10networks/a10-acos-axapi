@@ -116,6 +116,62 @@ options:
         description:
         - "Specify the LDAP server's search base"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            bind_failure:
+                description:
+                - "User Bind Failure"
+            authorize_failure:
+                description:
+                - "Authorization Failure"
+            admin_bind_failure:
+                description:
+                - "Admin Bind Failure"
+            search_failure:
+                description:
+                - "Search Failure"
+            authorize_success:
+                description:
+                - "Authorization Success"
+            pw_change_success:
+                description:
+                - "Password change success"
+            timeout_error:
+                description:
+                - "Timeout"
+            request:
+                description:
+                - "Request"
+            pw_expiry:
+                description:
+                - "Password expiry"
+            name:
+                description:
+                - "Specify LDAP authentication server name"
+            admin_bind_success:
+                description:
+                - "Admin Bind Success"
+            search_success:
+                description:
+                - "Search Success"
+            other_error:
+                description:
+                - "Other Error"
+            ssl_session_created:
+                description:
+                - "TLS/SSL Session Created"
+            pw_change_failure:
+                description:
+                - "Password change failure"
+            ssl_session_failure:
+                description:
+                - "TLS/SSL Session Failure"
+            bind_success:
+                description:
+                - "User Bind Success"
     secret_string:
         description:
         - "secret password"
@@ -181,7 +237,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["admin_dn","admin_secret","auth_type","base","bind_with_dn","ca_cert","default_domain","derive_bind_dn","dn_attribute","encrypted","health_check","health_check_disable","health_check_string","host","ldaps_conn_reuse_idle_timeout","name","port","port_hm","port_hm_disable","prompt_pw_change_before_exp","protocol","pwdmaxage","sampling_enable","secret_string","timeout","uuid",]
+AVAILABLE_PROPERTIES = ["admin_dn","admin_secret","auth_type","base","bind_with_dn","ca_cert","default_domain","derive_bind_dn","dn_attribute","encrypted","health_check","health_check_disable","health_check_string","host","ldaps_conn_reuse_idle_timeout","name","port","port_hm","port_hm_disable","prompt_pw_change_before_exp","protocol","pwdmaxage","sampling_enable","secret_string","stats","timeout","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -226,6 +282,7 @@ def get_argspec():
         derive_bind_dn=dict(type='dict',username_attr=dict(type='str',)),
         prompt_pw_change_before_exp=dict(type='int',),
         base=dict(type='str',),
+        stats=dict(type='dict',bind_failure=dict(type='str',),authorize_failure=dict(type='str',),admin_bind_failure=dict(type='str',),search_failure=dict(type='str',),authorize_success=dict(type='str',),pw_change_success=dict(type='str',),timeout_error=dict(type='str',),request=dict(type='str',),pw_expiry=dict(type='str',),name=dict(type='str',required=True,),admin_bind_success=dict(type='str',),search_success=dict(type='str',),other_error=dict(type='str',),ssl_session_created=dict(type='str',),pw_change_failure=dict(type='str',),ssl_session_failure=dict(type='str',),bind_success=dict(type='str',)),
         secret_string=dict(type='str',),
         name=dict(type='str',required=True,),
         port_hm_disable=dict(type='bool',),
@@ -260,11 +317,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -350,10 +402,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -501,8 +556,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

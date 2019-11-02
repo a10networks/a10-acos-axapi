@@ -56,6 +56,329 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'sync_pkt_tx_counter'= Conn Sync Sent counter; 'sync_pkt_rcv_counter'= Conn Sync Received counter; 'sync_rx_create_counter'= Conn Sync Create Session Received counter; 'sync_rx_del_counter'= Conn Sync Del Session Received counter; 'sync_rx_update_age_counter'= Conn Sync Update Age Received counter; 'sync_tx_create_counter'= Conn Sync Create Session Sent counter; 'sync_tx_del_counter'= Conn Sync Del Session Sent counter; 'sync_tx_update_age_counter'= Conn Sync Update Age Sent counter; 'sync_rx_persist_create_counter'= Conn Sync Create Persist Session Pkts Received counter; 'sync_rx_persist_del_counter'= Conn Sync Delete Persist Session Pkts Received counter; 'sync_rx_persist_update_age_counter'= Conn Sync Update Persist Age Pkts Received counter; 'sync_tx_persist_create_counter'= Conn Sync Create Persist Session Pkts Sent counter; 'sync_tx_persist_del_counter'= Conn Sync Delete Persist Session Pkts Sent counter; 'sync_tx_persist_update_age_counter'= Conn Sync Update Persist Age Pkts Sent counter; 'query_pkt_tx_counter'= Conn Query sent counter; 'query_pkt_rcv_counter'= Conn Query Received counter; 'sync_tx_smp_radius_table_counter'= Conn Sync Update LSN RADIUS Sent counter; 'sync_rx_smp_radius_table_counter'= Conn Sync Update LSN RADIUS Received counter; 'query_tx_max_packed'= Max Query Msg Per Packet; 'query_tx_min_packed'= Min Query Msg Per Packet; 'query_pkt_invalid_idx_counter'= Conn Query Invalid Interface; 'query_tx_get_buff_failed'= Conn Query Get Buff Failure; 'query_rx_zero_info_counter'= Conn Query Packet Empty; 'query_rx_full_info_counter'= Conn Query Packet Full; 'query_rx_unk_counter'= Conn Query Unknown Type; 'sync_pkt_invalid_idx_counter'= Conn Sync Invalid Interface; 'sync_tx_get_buff_failed'= Conn Sync Get Buff Failure; 'sync_tx_total_info_counter'= Conn Sync Total Info Pkts Sent counter; 'sync_tx_create_ext_bit_counter'= Conn Sync Create with Ext Sent counter; 'sync_tx_update_seqnos_counter'= Conn Sync Update Seq Num Sent counter; 'sync_tx_min_packed'= Max Sync Msg Per Packet; 'sync_tx_max_packed'= Min Sync Msg Per Packet; 'sync_rx_len_invalid'= Conn Sync Length Invalid; 'sync_persist_rx_len_invalid'= Persist Conn Sync Length Invalid; 'sync_persist_rx_proto_not_supported'= Persist Conn Sync Protocol Invalid; 'sync_persist_rx_type_invalid'= Persist Conn Sync Type Invalid; 'sync_persist_rx_cannot_process_mandatory'= Persist Conn Sync Process Mandatory Invalid; 'sync_persist_rx_ext_bit_process_error'= Persist Conn Sync Proc Ext Bit Failure; 'sync_persist_rx_no_such_vport'= Persist Conn Sync Virt Port Not Found; 'sync_persist_rx_vporttype_not_supported'= Persist Conn Sync Virt Port Type Invalid; 'sync_persist_rx_no_such_rport'= Persist Conn Sync Real Port Not Found; 'sync_persist_rx_no_such_sg_group'= Persist Conn Sync No Service Group Found; 'sync_persist_rx_no_sg_group_info'= Persist Conn Sync No Service Group Info Found; 'sync_persist_rx_conn_get_failed'= Persist Conn Sync Get Conn Failure; 'sync_rx_no_such_vport'= Conn Sync Virt Port Not Found; 'sync_rx_no_such_rport'= Conn Sync Real Port Not Found; 'sync_rx_cannot_process_mandatory'= Conn Sync Process Mandatory Invalid; 'sync_rx_ext_bit_process_error'= Conn Sync Proc Ext Bit Failure; 'sync_rx_create_ext_bit_counter'= Conn Sync Create with Ext Received counter; 'sync_rx_conn_exists'= Conn Sync Create Conn Exists; 'sync_rx_conn_get_failed'= Conn Sync Get Conn Failure; 'sync_rx_proto_not_supported'= Conn Sync Protocol Invalid; 'sync_rx_no_dst_for_vport_inline'= Conn Sync 'dst' not found for vport inline; 'sync_rx_no_such_nat_pool'= Conn Sync NAT Pool Error; 'sync_rx_no_such_sg_node'= Conn Sync no SG node found; 'sync_rx_del_no_such_session'= Conn Sync Del Conn not Found; 'sync_rx_type_invalid'= Conn Sync Type Invalid; 'sync_rx_zero_info_counter'= Conn Sync Packet Empty; 'sync_rx_dcmsg_counter'= Conn Sync forward CPU; 'sync_rx_total_info_counter'= Conn Sync Total Info Pkts Received counter; 'sync_rx_update_seqnos_counter'= Conn Sync Update Seq Num Received counter; 'sync_rx_unk_counter'= Conn Sync Unknown Type; 'sync_rx_apptype_not_supported'= Conn Sync App Type Invalid; 'sync_query_dcmsg_counter'= Conn Sync query forward CPU; 'sync_get_buff_failed_rt'= Conn Sync Get Buff Failure No Route; 'sync_get_buff_failed_port'= Conn Sync Get Buff Failure Wrong Port; 'sync_rx_lsn_create_sby'= Conn Sync LSN Create Standby; 'sync_rx_nat_create_sby'= Conn Sync NAT Create Standby; 'sync_rx_nat_alloc_sby'= Conn Sync NAT Alloc Standby; 'sync_rx_insert_tuple'= Conn Sync Insert Tuple; 'sync_rx_sfw'= Conn Sync SFW; 'sync_rx_create_static_sby'= Conn Sync Create Static Standby; 'sync_rx_ext_pptp'= Conn Sync Ext PPTP; 'sync_rx_ext_rtsp'= Conn Sync Ext RTSP; 'sync_rx_reserve_ha'= Conn Sync Reserve HA Conn; 'sync_rx_seq_deltas'= Conn Sync Seq Deltas Failure; 'sync_rx_ftp_control'= Conn Sync FTP Control Failure; 'sync_rx_ext_lsn_acl'= Conn Sync LSN ACL Failure; 'sync_rx_ext_lsn_ac_idle_timeout'= Conn Sync LSN ACL Idle Timeout Failure; 'sync_rx_ext_sip_alg'= Conn Sync SIP TCP ALG Failure; 'sync_rx_ext_h323_alg'= Conn Sync H323 TCP ALG Failure; 'sync_rx_ext_nat_mac'= Conn Sync NAT MAC Failure; 'sync_tx_lsn_fullcone'= Conn Sync Update LSN Fullcone Sent counter; 'sync_rx_lsn_fullcone'= Conn Sync Update LSN Fullcone Received counter; 'sync_err_lsn_fullcone'= Conn Sync LSN Fullcone Failure; 'sync_tx_update_sctp_conn_addr'= Update SCTP Addresses Sent; 'sync_rx_update_sctp_conn_addr'= Update SCTP Addresses Received; 'sync_rx_ext_nat_alg_tcp_info'= Conn Sync NAT ALG TCP Information; 'sync_rx_ext_dcfw_rule_id'= Conn Sync FIREWALL session rule ID information Failure; 'sync_rx_ext_dcfw_log'= Conn Sync FIREWALL session logging information Failure; 'sync_rx_estab_counter'= Conn Sync rcv established state; 'sync_tx_estab_counter'= Conn Sync send established state; 'sync_rx_zone_failure_counter'= Conn Sync Zone Failure; 'sync_rx_ext_fw_http_logging'= FW HTTP Logging Sync Failures; 'sync_rx_ext_dcfw_rule_idle_timeout'= Conn Sync FIREWALL session rule idle timeout information Failure; 'sync_rx_ext_fw_gtp_info'= FW GTP Info Received; 'sync_rx_not_expect_sync_pkt'= unexpected session sync packets; 'sync_rx_ext_fw_apps'= Conn Sync FIREWALL application information Failure; 'sync_tx_mon_entity'= Acos Monitoring Entities Sync Messages Sent; 'sync_rx_mon_entity'= Acos monitoring Entities Sync Messages Received; 'sync_rx_ext_fw_gtp_log_info'= FW GTP Log Info Received; 'sync_rx_ddos_drop_counter'= Conn Sync receive ddos protect packet; 'sync_rx_invalid_sync_packet_counter'= Conn Sync receive invalid packet; 'sync_rx_bad_protocol_counter'= Conn Sync receive packet with bad protocol; 'sync_rx_no_vgrp_counter'= Conn Sync receive packet with non-existing group; 'sync_rx_by_inactive_peer_counter'= Conn Sync receive packet by inactive peer; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            sync_rx_nat_create_sby:
+                description:
+                - "Conn Sync NAT Create Standby"
+            sync_rx_type_invalid:
+                description:
+                - "Conn Sync Type Invalid"
+            sync_rx_ext_lsn_acl:
+                description:
+                - "Conn Sync LSN ACL Failure"
+            sync_rx_ddos_drop_counter:
+                description:
+                - "Conn Sync receive ddos protect packet"
+            sync_rx_conn_exists:
+                description:
+                - "Conn Sync Create Conn Exists"
+            sync_get_buff_failed_port:
+                description:
+                - "Conn Sync Get Buff Failure Wrong Port"
+            sync_tx_smp_radius_table_counter:
+                description:
+                - "Conn Sync Update LSN RADIUS Sent counter"
+            sync_tx_total_info_counter:
+                description:
+                - "Conn Sync Total Info Pkts Sent counter"
+            sync_rx_nat_alloc_sby:
+                description:
+                - "Conn Sync NAT Alloc Standby"
+            query_tx_min_packed:
+                description:
+                - "Min Query Msg Per Packet"
+            sync_rx_ext_bit_process_error:
+                description:
+                - "Conn Sync Proc Ext Bit Failure"
+            sync_rx_ext_nat_mac:
+                description:
+                - "Conn Sync NAT MAC Failure"
+            sync_rx_lsn_fullcone:
+                description:
+                - "Conn Sync Update LSN Fullcone Received counter"
+            query_pkt_tx_counter:
+                description:
+                - "Conn Query sent counter"
+            sync_rx_ext_nat_alg_tcp_info:
+                description:
+                - "Conn Sync NAT ALG TCP Information"
+            sync_rx_estab_counter:
+                description:
+                - "Conn Sync rcv established state"
+            sync_rx_dcmsg_counter:
+                description:
+                - "Conn Sync forward CPU"
+            sync_rx_unk_counter:
+                description:
+                - "Conn Sync Unknown Type"
+            sync_tx_create_counter:
+                description:
+                - "Conn Sync Create Session Sent counter"
+            sync_rx_zone_failure_counter:
+                description:
+                - "Conn Sync Zone Failure"
+            sync_persist_rx_len_invalid:
+                description:
+                - "Persist Conn Sync Length Invalid"
+            sync_rx_mon_entity:
+                description:
+                - "Acos monitoring Entities Sync Messages Received"
+            sync_rx_create_counter:
+                description:
+                - "Conn Sync Create Session Received counter"
+            sync_pkt_rcv_counter:
+                description:
+                - "Conn Sync Received counter"
+            sync_rx_len_invalid:
+                description:
+                - "Conn Sync Length Invalid"
+            sync_tx_update_seqnos_counter:
+                description:
+                - "Conn Sync Update Seq Num Sent counter"
+            sync_rx_persist_create_counter:
+                description:
+                - "Conn Sync Create Persist Session Pkts Received counter"
+            sync_persist_rx_no_such_sg_group:
+                description:
+                - "Persist Conn Sync No Service Group Found"
+            sync_rx_ext_rtsp:
+                description:
+                - "Conn Sync Ext RTSP"
+            sync_rx_update_seqnos_counter:
+                description:
+                - "Conn Sync Update Seq Num Received counter"
+            sync_rx_ext_fw_gtp_log_info:
+                description:
+                - "FW GTP Log Info Received"
+            sync_rx_conn_get_failed:
+                description:
+                - "Conn Sync Get Conn Failure"
+            sync_tx_persist_del_counter:
+                description:
+                - "Conn Sync Delete Persist Session Pkts Sent counter"
+            sync_query_dcmsg_counter:
+                description:
+                - "Conn Sync query forward CPU"
+            sync_rx_ext_fw_gtp_info:
+                description:
+                - "FW GTP Info Received"
+            sync_pkt_invalid_idx_counter:
+                description:
+                - "Conn Sync Invalid Interface"
+            sync_tx_persist_update_age_counter:
+                description:
+                - "Conn Sync Update Persist Age Pkts Sent counter"
+            sync_persist_rx_vporttype_not_supported:
+                description:
+                - "Persist Conn Sync Virt Port Type Invalid"
+            sync_tx_update_sctp_conn_addr:
+                description:
+                - "Update SCTP Addresses Sent"
+            sync_rx_ext_fw_http_logging:
+                description:
+                - "FW HTTP Logging Sync Failures"
+            sync_rx_not_expect_sync_pkt:
+                description:
+                - "unexpected session sync packets"
+            sync_rx_del_no_such_session:
+                description:
+                - "Conn Sync Del Conn not Found"
+            sync_rx_ftp_control:
+                description:
+                - "Conn Sync FTP Control Failure"
+            sync_tx_persist_create_counter:
+                description:
+                - "Conn Sync Create Persist Session Pkts Sent counter"
+            sync_rx_smp_radius_table_counter:
+                description:
+                - "Conn Sync Update LSN RADIUS Received counter"
+            sync_rx_no_such_sg_node:
+                description:
+                - "Conn Sync no SG node found"
+            sync_rx_proto_not_supported:
+                description:
+                - "Conn Sync Protocol Invalid"
+            sync_tx_get_buff_failed:
+                description:
+                - "Conn Sync Get Buff Failure"
+            sync_tx_estab_counter:
+                description:
+                - "Conn Sync send established state"
+            sync_rx_create_ext_bit_counter:
+                description:
+                - "Conn Sync Create with Ext Received counter"
+            sync_tx_update_age_counter:
+                description:
+                - "Conn Sync Update Age Sent counter"
+            sync_rx_lsn_create_sby:
+                description:
+                - "Conn Sync LSN Create Standby"
+            sync_get_buff_failed_rt:
+                description:
+                - "Conn Sync Get Buff Failure No Route"
+            sync_tx_create_ext_bit_counter:
+                description:
+                - "Conn Sync Create with Ext Sent counter"
+            sync_tx_max_packed:
+                description:
+                - "Min Sync Msg Per Packet"
+            sync_rx_persist_update_age_counter:
+                description:
+                - "Conn Sync Update Persist Age Pkts Received counter"
+            sync_rx_sfw:
+                description:
+                - "Conn Sync SFW"
+            sync_rx_bad_protocol_counter:
+                description:
+                - "Conn Sync receive packet with bad protocol"
+            sync_rx_seq_deltas:
+                description:
+                - "Conn Sync Seq Deltas Failure"
+            sync_rx_ext_dcfw_rule_id:
+                description:
+                - "Conn Sync FIREWALL session rule ID information Failure"
+            sync_rx_total_info_counter:
+                description:
+                - "Conn Sync Total Info Pkts Received counter"
+            query_pkt_invalid_idx_counter:
+                description:
+                - "Conn Query Invalid Interface"
+            sync_rx_create_static_sby:
+                description:
+                - "Conn Sync Create Static Standby"
+            sync_rx_persist_del_counter:
+                description:
+                - "Conn Sync Delete Persist Session Pkts Received counter"
+            sync_rx_update_age_counter:
+                description:
+                - "Conn Sync Update Age Received counter"
+            query_tx_max_packed:
+                description:
+                - "Max Query Msg Per Packet"
+            sync_persist_rx_ext_bit_process_error:
+                description:
+                - "Persist Conn Sync Proc Ext Bit Failure"
+            query_pkt_rcv_counter:
+                description:
+                - "Conn Query Received counter"
+            sync_rx_zero_info_counter:
+                description:
+                - "Conn Sync Packet Empty"
+            sync_pkt_tx_counter:
+                description:
+                - "Conn Sync Sent counter"
+            sync_rx_ext_sip_alg:
+                description:
+                - "Conn Sync SIP TCP ALG Failure"
+            sync_rx_no_vgrp_counter:
+                description:
+                - "Conn Sync receive packet with non-existing group"
+            sync_rx_reserve_ha:
+                description:
+                - "Conn Sync Reserve HA Conn"
+            sync_rx_ext_pptp:
+                description:
+                - "Conn Sync Ext PPTP"
+            sync_persist_rx_type_invalid:
+                description:
+                - "Persist Conn Sync Type Invalid"
+            sync_rx_insert_tuple:
+                description:
+                - "Conn Sync Insert Tuple"
+            sync_rx_no_such_nat_pool:
+                description:
+                - "Conn Sync NAT Pool Error"
+            sync_tx_del_counter:
+                description:
+                - "Conn Sync Del Session Sent counter"
+            sync_tx_lsn_fullcone:
+                description:
+                - "Conn Sync Update LSN Fullcone Sent counter"
+            sync_rx_apptype_not_supported:
+                description:
+                - "Conn Sync App Type Invalid"
+            query_rx_zero_info_counter:
+                description:
+                - "Conn Query Packet Empty"
+            sync_persist_rx_no_such_rport:
+                description:
+                - "Persist Conn Sync Real Port Not Found"
+            sync_rx_by_inactive_peer_counter:
+                description:
+                - "Conn Sync receive packet by inactive peer"
+            sync_persist_rx_no_such_vport:
+                description:
+                - "Persist Conn Sync Virt Port Not Found"
+            query_tx_get_buff_failed:
+                description:
+                - "Conn Query Get Buff Failure"
+            sync_rx_ext_h323_alg:
+                description:
+                - "Conn Sync H323 TCP ALG Failure"
+            sync_rx_ext_fw_apps:
+                description:
+                - "Conn Sync FIREWALL application information Failure"
+            sync_persist_rx_cannot_process_mandatory:
+                description:
+                - "Persist Conn Sync Process Mandatory Invalid"
+            sync_rx_ext_dcfw_log:
+                description:
+                - "Conn Sync FIREWALL session logging information Failure"
+            sync_rx_invalid_sync_packet_counter:
+                description:
+                - "Conn Sync receive invalid packet"
+            sync_persist_rx_proto_not_supported:
+                description:
+                - "Persist Conn Sync Protocol Invalid"
+            sync_persist_rx_conn_get_failed:
+                description:
+                - "Persist Conn Sync Get Conn Failure"
+            sync_rx_ext_lsn_ac_idle_timeout:
+                description:
+                - "Conn Sync LSN ACL Idle Timeout Failure"
+            sync_err_lsn_fullcone:
+                description:
+                - "Conn Sync LSN Fullcone Failure"
+            sync_tx_min_packed:
+                description:
+                - "Max Sync Msg Per Packet"
+            query_rx_unk_counter:
+                description:
+                - "Conn Query Unknown Type"
+            sync_rx_update_sctp_conn_addr:
+                description:
+                - "Update SCTP Addresses Received"
+            sync_tx_mon_entity:
+                description:
+                - "Acos Monitoring Entities Sync Messages Sent"
+            sync_persist_rx_no_sg_group_info:
+                description:
+                - "Persist Conn Sync No Service Group Info Found"
+            sync_rx_no_such_vport:
+                description:
+                - "Conn Sync Virt Port Not Found"
+            sync_rx_no_such_rport:
+                description:
+                - "Conn Sync Real Port Not Found"
+            sync_rx_ext_dcfw_rule_idle_timeout:
+                description:
+                - "Conn Sync FIREWALL session rule idle timeout information Failure"
+            sync_rx_del_counter:
+                description:
+                - "Conn Sync Del Session Received counter"
+            query_rx_full_info_counter:
+                description:
+                - "Conn Query Packet Full"
+            sync_rx_cannot_process_mandatory:
+                description:
+                - "Conn Sync Process Mandatory Invalid"
+            sync_rx_no_dst_for_vport_inline:
+                description:
+                - "Conn Sync 'dst' not found for vport inline"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +397,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +427,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sync_pkt_tx_counter','sync_pkt_rcv_counter','sync_rx_create_counter','sync_rx_del_counter','sync_rx_update_age_counter','sync_tx_create_counter','sync_tx_del_counter','sync_tx_update_age_counter','sync_rx_persist_create_counter','sync_rx_persist_del_counter','sync_rx_persist_update_age_counter','sync_tx_persist_create_counter','sync_tx_persist_del_counter','sync_tx_persist_update_age_counter','query_pkt_tx_counter','query_pkt_rcv_counter','sync_tx_smp_radius_table_counter','sync_rx_smp_radius_table_counter','query_tx_max_packed','query_tx_min_packed','query_pkt_invalid_idx_counter','query_tx_get_buff_failed','query_rx_zero_info_counter','query_rx_full_info_counter','query_rx_unk_counter','sync_pkt_invalid_idx_counter','sync_tx_get_buff_failed','sync_tx_total_info_counter','sync_tx_create_ext_bit_counter','sync_tx_update_seqnos_counter','sync_tx_min_packed','sync_tx_max_packed','sync_rx_len_invalid','sync_persist_rx_len_invalid','sync_persist_rx_proto_not_supported','sync_persist_rx_type_invalid','sync_persist_rx_cannot_process_mandatory','sync_persist_rx_ext_bit_process_error','sync_persist_rx_no_such_vport','sync_persist_rx_vporttype_not_supported','sync_persist_rx_no_such_rport','sync_persist_rx_no_such_sg_group','sync_persist_rx_no_sg_group_info','sync_persist_rx_conn_get_failed','sync_rx_no_such_vport','sync_rx_no_such_rport','sync_rx_cannot_process_mandatory','sync_rx_ext_bit_process_error','sync_rx_create_ext_bit_counter','sync_rx_conn_exists','sync_rx_conn_get_failed','sync_rx_proto_not_supported','sync_rx_no_dst_for_vport_inline','sync_rx_no_such_nat_pool','sync_rx_no_such_sg_node','sync_rx_del_no_such_session','sync_rx_type_invalid','sync_rx_zero_info_counter','sync_rx_dcmsg_counter','sync_rx_total_info_counter','sync_rx_update_seqnos_counter','sync_rx_unk_counter','sync_rx_apptype_not_supported','sync_query_dcmsg_counter','sync_get_buff_failed_rt','sync_get_buff_failed_port','sync_rx_lsn_create_sby','sync_rx_nat_create_sby','sync_rx_nat_alloc_sby','sync_rx_insert_tuple','sync_rx_sfw','sync_rx_create_static_sby','sync_rx_ext_pptp','sync_rx_ext_rtsp','sync_rx_reserve_ha','sync_rx_seq_deltas','sync_rx_ftp_control','sync_rx_ext_lsn_acl','sync_rx_ext_lsn_ac_idle_timeout','sync_rx_ext_sip_alg','sync_rx_ext_h323_alg','sync_rx_ext_nat_mac','sync_tx_lsn_fullcone','sync_rx_lsn_fullcone','sync_err_lsn_fullcone','sync_tx_update_sctp_conn_addr','sync_rx_update_sctp_conn_addr','sync_rx_ext_nat_alg_tcp_info','sync_rx_ext_dcfw_rule_id','sync_rx_ext_dcfw_log','sync_rx_estab_counter','sync_tx_estab_counter','sync_rx_zone_failure_counter','sync_rx_ext_fw_http_logging','sync_rx_ext_dcfw_rule_idle_timeout','sync_rx_ext_fw_gtp_info','sync_rx_not_expect_sync_pkt','sync_rx_ext_fw_apps','sync_tx_mon_entity','sync_rx_mon_entity','sync_rx_ext_fw_gtp_log_info','sync_rx_ddos_drop_counter','sync_rx_invalid_sync_packet_counter','sync_rx_bad_protocol_counter','sync_rx_no_vgrp_counter','sync_rx_by_inactive_peer_counter'])),
+        stats=dict(type='dict',sync_rx_nat_create_sby=dict(type='str',),sync_rx_type_invalid=dict(type='str',),sync_rx_ext_lsn_acl=dict(type='str',),sync_rx_ddos_drop_counter=dict(type='str',),sync_rx_conn_exists=dict(type='str',),sync_get_buff_failed_port=dict(type='str',),sync_tx_smp_radius_table_counter=dict(type='str',),sync_tx_total_info_counter=dict(type='str',),sync_rx_nat_alloc_sby=dict(type='str',),query_tx_min_packed=dict(type='str',),sync_rx_ext_bit_process_error=dict(type='str',),sync_rx_ext_nat_mac=dict(type='str',),sync_rx_lsn_fullcone=dict(type='str',),query_pkt_tx_counter=dict(type='str',),sync_rx_ext_nat_alg_tcp_info=dict(type='str',),sync_rx_estab_counter=dict(type='str',),sync_rx_dcmsg_counter=dict(type='str',),sync_rx_unk_counter=dict(type='str',),sync_tx_create_counter=dict(type='str',),sync_rx_zone_failure_counter=dict(type='str',),sync_persist_rx_len_invalid=dict(type='str',),sync_rx_mon_entity=dict(type='str',),sync_rx_create_counter=dict(type='str',),sync_pkt_rcv_counter=dict(type='str',),sync_rx_len_invalid=dict(type='str',),sync_tx_update_seqnos_counter=dict(type='str',),sync_rx_persist_create_counter=dict(type='str',),sync_persist_rx_no_such_sg_group=dict(type='str',),sync_rx_ext_rtsp=dict(type='str',),sync_rx_update_seqnos_counter=dict(type='str',),sync_rx_ext_fw_gtp_log_info=dict(type='str',),sync_rx_conn_get_failed=dict(type='str',),sync_tx_persist_del_counter=dict(type='str',),sync_query_dcmsg_counter=dict(type='str',),sync_rx_ext_fw_gtp_info=dict(type='str',),sync_pkt_invalid_idx_counter=dict(type='str',),sync_tx_persist_update_age_counter=dict(type='str',),sync_persist_rx_vporttype_not_supported=dict(type='str',),sync_tx_update_sctp_conn_addr=dict(type='str',),sync_rx_ext_fw_http_logging=dict(type='str',),sync_rx_not_expect_sync_pkt=dict(type='str',),sync_rx_del_no_such_session=dict(type='str',),sync_rx_ftp_control=dict(type='str',),sync_tx_persist_create_counter=dict(type='str',),sync_rx_smp_radius_table_counter=dict(type='str',),sync_rx_no_such_sg_node=dict(type='str',),sync_rx_proto_not_supported=dict(type='str',),sync_tx_get_buff_failed=dict(type='str',),sync_tx_estab_counter=dict(type='str',),sync_rx_create_ext_bit_counter=dict(type='str',),sync_tx_update_age_counter=dict(type='str',),sync_rx_lsn_create_sby=dict(type='str',),sync_get_buff_failed_rt=dict(type='str',),sync_tx_create_ext_bit_counter=dict(type='str',),sync_tx_max_packed=dict(type='str',),sync_rx_persist_update_age_counter=dict(type='str',),sync_rx_sfw=dict(type='str',),sync_rx_bad_protocol_counter=dict(type='str',),sync_rx_seq_deltas=dict(type='str',),sync_rx_ext_dcfw_rule_id=dict(type='str',),sync_rx_total_info_counter=dict(type='str',),query_pkt_invalid_idx_counter=dict(type='str',),sync_rx_create_static_sby=dict(type='str',),sync_rx_persist_del_counter=dict(type='str',),sync_rx_update_age_counter=dict(type='str',),query_tx_max_packed=dict(type='str',),sync_persist_rx_ext_bit_process_error=dict(type='str',),query_pkt_rcv_counter=dict(type='str',),sync_rx_zero_info_counter=dict(type='str',),sync_pkt_tx_counter=dict(type='str',),sync_rx_ext_sip_alg=dict(type='str',),sync_rx_no_vgrp_counter=dict(type='str',),sync_rx_reserve_ha=dict(type='str',),sync_rx_ext_pptp=dict(type='str',),sync_persist_rx_type_invalid=dict(type='str',),sync_rx_insert_tuple=dict(type='str',),sync_rx_no_such_nat_pool=dict(type='str',),sync_tx_del_counter=dict(type='str',),sync_tx_lsn_fullcone=dict(type='str',),sync_rx_apptype_not_supported=dict(type='str',),query_rx_zero_info_counter=dict(type='str',),sync_persist_rx_no_such_rport=dict(type='str',),sync_rx_by_inactive_peer_counter=dict(type='str',),sync_persist_rx_no_such_vport=dict(type='str',),query_tx_get_buff_failed=dict(type='str',),sync_rx_ext_h323_alg=dict(type='str',),sync_rx_ext_fw_apps=dict(type='str',),sync_persist_rx_cannot_process_mandatory=dict(type='str',),sync_rx_ext_dcfw_log=dict(type='str',),sync_rx_invalid_sync_packet_counter=dict(type='str',),sync_persist_rx_proto_not_supported=dict(type='str',),sync_persist_rx_conn_get_failed=dict(type='str',),sync_rx_ext_lsn_ac_idle_timeout=dict(type='str',),sync_err_lsn_fullcone=dict(type='str',),sync_tx_min_packed=dict(type='str',),query_rx_unk_counter=dict(type='str',),sync_rx_update_sctp_conn_addr=dict(type='str',),sync_tx_mon_entity=dict(type='str',),sync_persist_rx_no_sg_group_info=dict(type='str',),sync_rx_no_such_vport=dict(type='str',),sync_rx_no_such_rport=dict(type='str',),sync_rx_ext_dcfw_rule_idle_timeout=dict(type='str',),sync_rx_del_counter=dict(type='str',),query_rx_full_info_counter=dict(type='str',),sync_rx_cannot_process_mandatory=dict(type='str',),sync_rx_no_dst_for_vport_inline=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +451,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +536,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +690,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result
