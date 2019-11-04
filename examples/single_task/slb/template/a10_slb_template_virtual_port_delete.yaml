@@ -11,6 +11,3 @@
       a10_protocol: "{{ a10_protocol }}"
       state: absent
       name: default
-      conn_limit: 1
-      rate_interval: second
-      pkt_rate_interval: second
