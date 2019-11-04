@@ -1,0 +1,15 @@
+- name: Delete a10_slb_template_udp example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_udp instance
+    a10_slb_template_udp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: absent
+      name: default
+      idle_timeout: 1
+      stateless_conn_timeout: 5

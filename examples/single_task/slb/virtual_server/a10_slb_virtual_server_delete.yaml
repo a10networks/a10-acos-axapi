@@ -11,7 +11,7 @@
       a10_protocol: "{{ a10_protocol }}"
       state: absent
       name: vs1
-      ip_address: 10.0.0.1
+      ip_address: 10.10.0.1
       netmask: 255.255.255.0
       enable_disable_action: enable
       stats_data_action: stats-data-enable
