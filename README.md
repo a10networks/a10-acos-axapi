@@ -7,19 +7,26 @@ This code is now being generated using the SDK generator at https://github.com/a
 This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
 
 ## Installation
-```bash
-$ git clone https://github.com/a10networks/a10-ansible a10-ansible
-$ cd a10-ansible 
-$ chmod +x a10_install.sh
-```
+a10-ansible is distributed as a Python package. It can be installed from the Github repository. It is assumed that ansible is already installed and configured.
 
-Check the ansible module location then run:
+### Github Installation - Using Script (Linux) 
+~~~
+git clone https://github.com/a10networks/a10-ansible a10-ansible
+cd a10-ansible 
+chmod +x a10_install.sh
 
-```
-$ ./a10_install.sh
-```
+Check the ansible module location then run..
+
+./a10_install.sh
 
 You can now delete the install files 
+~~~
+
+### Github Installation - Pip Install
+~~~
+git clone https://github.com/a10networks/a10-ansible a10-ansible
+pip install -e a10-ansible/
+~~~
 
 ## Usage Information
 All actions are required to have `a10_host`, `a10_username`, `a10_password`, `a10_port`, and `a10_protocol` specified. Note that `a10_host` refers to the ip address of the Thunder device.
@@ -81,6 +88,7 @@ Action and module names are formatted based upon their API endpoint. For example
         <b>state: noop</b>
         <b>get_type: single</b> 
 </pre>
+
 
 ### Getting information about a collection
 <pre>
