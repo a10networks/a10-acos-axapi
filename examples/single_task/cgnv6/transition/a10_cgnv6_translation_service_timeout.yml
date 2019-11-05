@@ -1,0 +1,17 @@
+- name: a10_cgnv6_translation_service_timeout Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_translation_service_timeout
+    a10_cgnv6_translation_service_timeout:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      service_type: "tcp"
+      timeout_val: 3
+      port_end: 8080
+      fast: "false"
+      port: 8085

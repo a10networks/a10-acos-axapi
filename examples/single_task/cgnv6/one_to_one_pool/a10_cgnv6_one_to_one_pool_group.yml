@@ -1,0 +1,17 @@
+- name: a10_cgnv6_one_to_one_pool_group Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_one_to_one_pool_group
+    a10_cgnv6_one_to_one_pool_group:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      get_type: "single"
+      member_list:
+      - pool_name: "MyPool"
+      pool_group_name: "MyPoolGroup" 
+      user_tag: "usrtag1"

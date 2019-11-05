@@ -1,0 +1,25 @@
+- name: a10_cgnv6_server Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_server
+    a10_cgnv6_server.py:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      health_check_disable: "false"
+      port_list:
+      - health_check_disable: "true"
+        protocol: "tcp"
+        port_number: 8080
+        sampling_enable:
+        - counters1: "all"
+        action: "enable"
+      sampling_enable: 
+      - counters1: "all"
+      host: "10.10.10.16"
+      action: "enable"
+      name: "s1"

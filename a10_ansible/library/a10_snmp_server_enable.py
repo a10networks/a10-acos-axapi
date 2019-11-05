@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -35,9 +36,18 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    partition:
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
         description:
         - Destination/target partition for object/command
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -94,6 +104,7 @@ options:
                 description:
                 - "Field network"
 
+
 """
 
 EXAMPLES = """
@@ -128,8 +139,8 @@ def get_default_argspec():
         state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
@@ -137,7 +148,7 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str',),
         service=dict(type='bool',),
-        traps=dict(type='dict',lldp=dict(type='bool',),all=dict(type='bool',),slb_change=dict(type='dict',all=dict(type='bool',),resource_usage_warning=dict(type='bool',),uuid=dict(type='str',),ssl_cert_change=dict(type='bool',),ssl_cert_expire=dict(type='bool',),system_threshold=dict(type='bool',),server=dict(type='bool',),vip=dict(type='bool',),connection_resource_event=dict(type='bool',),server_port=dict(type='bool',),vip_port=dict(type='bool',)),uuid=dict(type='str',),lsn=dict(type='dict',all=dict(type='bool',),fixed_nat_port_mapping_file_change=dict(type='bool',),per_ip_port_usage_threshold=dict(type='bool',),uuid=dict(type='str',),total_port_usage_threshold=dict(type='bool',),max_port_threshold=dict(type='int',),max_ipport_threshold=dict(type='int',),traffic_exceeded=dict(type='bool',)),vrrp_a=dict(type='dict',active=dict(type='bool',),standby=dict(type='bool',),all=dict(type='bool',),uuid=dict(type='str',)),snmp=dict(type='dict',linkup=dict(type='bool',),all=dict(type='bool',),linkdown=dict(type='bool',),uuid=dict(type='str',)),system=dict(type='dict',all=dict(type='bool',),data_cpu_high=dict(type='bool',),uuid=dict(type='str',),power=dict(type='bool',),high_disk_use=dict(type='bool',),high_memory_use=dict(type='bool',),control_cpu_high=dict(type='bool',),file_sys_read_only=dict(type='bool',),low_temp=dict(type='bool',),high_temp=dict(type='bool',),sec_disk=dict(type='bool',),start=dict(type='bool',),fan=dict(type='bool',),shutdown=dict(type='bool',),pri_disk=dict(type='bool',),license_management=dict(type='bool',),tacacs_server_up_down=dict(type='bool',),smp_resource_event=dict(type='bool',),restart=dict(type='bool',),packet_drop=dict(type='bool',)),ssl=dict(type='dict',server_certificate_error=dict(type='bool',),uuid=dict(type='str',)),vcs=dict(type='dict',state_change=dict(type='bool',),uuid=dict(type='str',)),routing=dict(type='dict',bgp=dict(type='dict',bgpEstablishedNotification=dict(type='bool',),uuid=dict(type='str',),bgpBackwardTransNotification=dict(type='bool',)),isis=dict(type='dict',isisAuthenticationFailure=dict(type='bool',),uuid=dict(type='str',),isisProtocolsSupportedMismatch=dict(type='bool',),isisRejectedAdjacency=dict(type='bool',),isisMaxAreaAddressesMismatch=dict(type='bool',),isisCorruptedLSPDetected=dict(type='bool',),isisOriginatingLSPBufferSizeMismatch=dict(type='bool',),isisAreaMismatch=dict(type='bool',),isisLSPTooLargeToPropagate=dict(type='bool',),isisOwnLSPPurge=dict(type='bool',),isisSequenceNumberSkip=dict(type='bool',),isisDatabaseOverload=dict(type='bool',),isisAttemptToExceedMaxSequence=dict(type='bool',),isisIDLenMismatch=dict(type='bool',),isisAuthenticationTypeFailure=dict(type='bool',),isisVersionSkew=dict(type='bool',),isisManualAddressDrops=dict(type='bool',),isisAdjacencyChange=dict(type='bool',)),ospf=dict(type='dict',ospfLsdbOverflow=dict(type='bool',),uuid=dict(type='str',),ospfNbrStateChange=dict(type='bool',),ospfIfStateChange=dict(type='bool',),ospfVirtNbrStateChange=dict(type='bool',),ospfLsdbApproachingOverflow=dict(type='bool',),ospfIfAuthFailure=dict(type='bool',),ospfVirtIfAuthFailure=dict(type='bool',),ospfVirtIfConfigError=dict(type='bool',),ospfVirtIfRxBadPacket=dict(type='bool',),ospfTxRetransmit=dict(type='bool',),ospfVirtIfStateChange=dict(type='bool',),ospfIfConfigError=dict(type='bool',),ospfMaxAgeLsa=dict(type='bool',),ospfIfRxBadPacket=dict(type='bool',),ospfVirtIfTxRetransmit=dict(type='bool',),ospfOriginateLsa=dict(type='bool',))),gslb=dict(type='dict',all=dict(type='bool',),group=dict(type='bool',),uuid=dict(type='str',),zone=dict(type='bool',),site=dict(type='bool',),service_ip=dict(type='bool',)),slb=dict(type='dict',all=dict(type='bool',),server_down=dict(type='bool',),vip_port_connratelimit=dict(type='bool',),server_selection_failure=dict(type='bool',),service_group_down=dict(type='bool',),server_conn_limit=dict(type='bool',),service_group_member_up=dict(type='bool',),uuid=dict(type='str',),server_conn_resume=dict(type='bool',),service_up=dict(type='bool',),service_conn_limit=dict(type='bool',),gateway_up=dict(type='bool',),service_group_up=dict(type='bool',),application_buffer_limit=dict(type='bool',),vip_connratelimit=dict(type='bool',),vip_connlimit=dict(type='bool',),service_group_member_down=dict(type='bool',),service_down=dict(type='bool',),bw_rate_limit_exceed=dict(type='bool',),server_disabled=dict(type='bool',),server_up=dict(type='bool',),vip_port_connlimit=dict(type='bool',),vip_port_down=dict(type='bool',),bw_rate_limit_resume=dict(type='bool',),gateway_down=dict(type='bool',),vip_up=dict(type='bool',),vip_port_up=dict(type='bool',),vip_down=dict(type='bool',),service_conn_resume=dict(type='bool',)),network=dict(type='dict',trunk_port_threshold=dict(type='bool',),uuid=dict(type='str',)))
+        traps=dict(type='dict',lldp=dict(type='bool',),all=dict(type='bool',),slb_change=dict(type='dict',all=dict(type='bool',),resource_usage_warning=dict(type='bool',),uuid=dict(type='str',),ssl_cert_change=dict(type='bool',),ssl_cert_expire=dict(type='bool',),system_threshold=dict(type='bool',),server=dict(type='bool',),vip=dict(type='bool',),connection_resource_event=dict(type='bool',),server_port=dict(type='bool',),vip_port=dict(type='bool',)),uuid=dict(type='str',),lsn=dict(type='dict',all=dict(type='bool',),fixed_nat_port_mapping_file_change=dict(type='bool',),per_ip_port_usage_threshold=dict(type='bool',),uuid=dict(type='str',),total_port_usage_threshold=dict(type='bool',),max_port_threshold=dict(type='int',),max_ipport_threshold=dict(type='int',),traffic_exceeded=dict(type='bool',)),vrrp_a=dict(type='dict',active=dict(type='bool',),standby=dict(type='bool',),all=dict(type='bool',),uuid=dict(type='str',)),snmp=dict(type='dict',linkup=dict(type='bool',),all=dict(type='bool',),linkdown=dict(type='bool',),uuid=dict(type='str',)),system=dict(type='dict',all=dict(type='bool',),data_cpu_high=dict(type='bool',),uuid=dict(type='str',),power=dict(type='bool',),high_disk_use=dict(type='bool',),high_memory_use=dict(type='bool',),control_cpu_high=dict(type='bool',),file_sys_read_only=dict(type='bool',),low_temp=dict(type='bool',),high_temp=dict(type='bool',),sec_disk=dict(type='bool',),license_management=dict(type='bool',),start=dict(type='bool',),fan=dict(type='bool',),shutdown=dict(type='bool',),pri_disk=dict(type='bool',),syslog_severity_one=dict(type='bool',),tacacs_server_up_down=dict(type='bool',),smp_resource_event=dict(type='bool',),restart=dict(type='bool',),packet_drop=dict(type='bool',)),ssl=dict(type='dict',server_certificate_error=dict(type='bool',),uuid=dict(type='str',)),vcs=dict(type='dict',state_change=dict(type='bool',),uuid=dict(type='str',)),routing=dict(type='dict',bgp=dict(type='dict',bgpEstablishedNotification=dict(type='bool',),uuid=dict(type='str',),bgpBackwardTransNotification=dict(type='bool',)),isis=dict(type='dict',isisAuthenticationFailure=dict(type='bool',),uuid=dict(type='str',),isisProtocolsSupportedMismatch=dict(type='bool',),isisRejectedAdjacency=dict(type='bool',),isisMaxAreaAddressesMismatch=dict(type='bool',),isisCorruptedLSPDetected=dict(type='bool',),isisOriginatingLSPBufferSizeMismatch=dict(type='bool',),isisAreaMismatch=dict(type='bool',),isisLSPTooLargeToPropagate=dict(type='bool',),isisOwnLSPPurge=dict(type='bool',),isisSequenceNumberSkip=dict(type='bool',),isisDatabaseOverload=dict(type='bool',),isisAttemptToExceedMaxSequence=dict(type='bool',),isisIDLenMismatch=dict(type='bool',),isisAuthenticationTypeFailure=dict(type='bool',),isisVersionSkew=dict(type='bool',),isisManualAddressDrops=dict(type='bool',),isisAdjacencyChange=dict(type='bool',)),ospf=dict(type='dict',ospfLsdbOverflow=dict(type='bool',),uuid=dict(type='str',),ospfNbrStateChange=dict(type='bool',),ospfIfStateChange=dict(type='bool',),ospfVirtNbrStateChange=dict(type='bool',),ospfLsdbApproachingOverflow=dict(type='bool',),ospfIfAuthFailure=dict(type='bool',),ospfVirtIfAuthFailure=dict(type='bool',),ospfVirtIfConfigError=dict(type='bool',),ospfVirtIfRxBadPacket=dict(type='bool',),ospfTxRetransmit=dict(type='bool',),ospfVirtIfStateChange=dict(type='bool',),ospfIfConfigError=dict(type='bool',),ospfMaxAgeLsa=dict(type='bool',),ospfIfRxBadPacket=dict(type='bool',),ospfVirtIfTxRetransmit=dict(type='bool',),ospfOriginateLsa=dict(type='bool',))),gslb=dict(type='dict',all=dict(type='bool',),group=dict(type='bool',),uuid=dict(type='str',),zone=dict(type='bool',),site=dict(type='bool',),service_ip=dict(type='bool',)),slb=dict(type='dict',all=dict(type='bool',),server_down=dict(type='bool',),vip_port_connratelimit=dict(type='bool',),server_selection_failure=dict(type='bool',),service_group_down=dict(type='bool',),server_conn_limit=dict(type='bool',),service_group_member_up=dict(type='bool',),uuid=dict(type='str',),server_conn_resume=dict(type='bool',),service_up=dict(type='bool',),service_conn_limit=dict(type='bool',),gateway_up=dict(type='bool',),service_group_up=dict(type='bool',),application_buffer_limit=dict(type='bool',),vip_connratelimit=dict(type='bool',),vip_connlimit=dict(type='bool',),service_group_member_down=dict(type='bool',),service_down=dict(type='bool',),bw_rate_limit_exceed=dict(type='bool',),server_disabled=dict(type='bool',),server_up=dict(type='bool',),vip_port_connlimit=dict(type='bool',),vip_port_down=dict(type='bool',),bw_rate_limit_resume=dict(type='bool',),gateway_down=dict(type='bool',),vip_up=dict(type='bool',),vip_port_up=dict(type='bool',),vip_down=dict(type='bool',),service_conn_resume=dict(type='bool',)),network=dict(type='dict',trunk_port_threshold=dict(type='bool',),uuid=dict(type='str',)))
     ))
    
 
@@ -160,6 +171,16 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -240,14 +261,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module):
+    return module.client.get(oper_url(module))
+
+def get_stats(module):
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("enable", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["enable"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["enable"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["enable"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -273,8 +315,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("enable", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -290,16 +331,26 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
-    else:
-        return update(module, result, existing_config)
-
-def absent(module, result):
-    return delete(module, result)
-
-def replace(module, result, existing_config):
     payload = build_json("enable", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
+    else:
+        return update(module, result, existing_config, payload)
+
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
+
+def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
@@ -330,8 +381,7 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
-    partition = module.params["partition"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
@@ -346,8 +396,8 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
-        module.client.activate_partition(partition)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
 
     existing_config = exists(module)
 
@@ -355,17 +405,21 @@ def run_command(module):
         result = present(module, result, existing_config)
         module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
+        result = absent(module, result, existing_config)
         module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

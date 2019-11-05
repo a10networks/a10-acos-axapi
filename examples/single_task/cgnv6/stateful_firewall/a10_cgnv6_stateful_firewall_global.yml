@@ -1,0 +1,16 @@
+- name: a10_cgnv6_stateful_firewall_global example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_stateful_firewall_global
+    a10_cgnv6_stateful_firewall_global:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      partition: "MyPartition"
+      respond_to_user_mac: "false"
+      stateful_firewall_value: "enable"
+      sampling_enable: 
+        - counters1: "all"

@@ -10,4 +10,4 @@
       a10_protocol: "{{ a10_protocol }}"
       a10_port: "{{ a10_port }}"
       ssl_cert: "ssl_cert_filename"
-      remote_url: "scp://username:password@host:/path/to/file"
+      remote_file: "scp://username:password@host:/path/to/file"

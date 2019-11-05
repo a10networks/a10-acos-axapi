@@ -1,0 +1,16 @@
+---
+- name: Execute Test Suite 
+  connection: local
+  hosts: localhost
+  vars:
+    a10_host: "{{ host }}"
+    a10_username: "{{ user }}"
+    a10_password: "{{ pass }}"
+    a10_port: "{{ port }}"
+    a10_protocol: "{{ protocol }}"
+  roles:
+    - health
+    - interface
+    - network
+    - slb
+    - check_mode

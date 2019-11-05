@@ -17,6 +17,6 @@
       def_selection_if_pref_failed: def-selection-if-pref-failed
       stats_data_action: stats-data-enable
       scaleout_bucket_count: 1
-      template_udp: default
       template_tcp: default
       template_virtual_port: default
+      virtual_server_name: "vserver1"

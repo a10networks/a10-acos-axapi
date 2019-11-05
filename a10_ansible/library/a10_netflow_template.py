@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -35,9 +36,18 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    partition:
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
         description:
         - Destination/target partition for object/command
+        required: False
     information_element_blk:
         description:
         - "Field information_element_blk"
@@ -45,7 +55,7 @@ options:
         suboptions:
             information_element:
                 description:
-                - "'fwd-tuple-vnp-id'= Session forward tuple partition id (ID= 33028); 'rev-tuple-vnp-id'= Session reverse tuple partition id (ID= 33029); 'source-ipv4-address'= IPv4 source address in the IP packet header (ID= 8); 'dest-ipv4-address'= IPv4 destination address in the IP packet header (ID= 12); 'source-ipv6-address'= IPv6 source address in the IP packet header (ID= 27); 'dest-ipv6-address'= IPv6 destination address in the IP packet header (ID=28); 'post-nat-source-ipv4-address'= IPv4 natted source address (ID= 225); 'post-nat-dest-ipv4-address'= IPv4 natted destination address(ID= 226); 'post-nat-source-ipv6-address'= IPv6 natted source address (ID= 281); 'post-nat-dest-ipv6-address'= IPv6 natted destination address (ID= 282); 'source-port'= Source port identifier in the transport header (ID= 7); 'dest-port'= Destination port identifier in the transport header (ID= 11); 'post-nat-source-port'= L4 natted source port(ID= 227); 'post-nat-dest-port'= L4 natted destination port (ID= 228); 'fwd-tuple-type'= Session forward tuple type (ID= 33024); 'rev-tuple-type'= Session reverse tuple type (ID= 33025); 'ip-proto'= Value of the protocol number in the IP packet header (ID= 4); 'flow-direction'= Flow direction= 0=inbound(To an outside interface)/1=outbound(To an inside interface) (ID= 61); 'tcp-control-bits'= Cumulative of all the TCP flags seen for this flow (ID= 6); 'fwd-bytes'= Incoming bytes associated with an IP Flow (ID= 1); 'fwd-packets'= Incoming packets associated with an IP Flow (ID= 2); 'rev-bytes'= Delta bytes in reverse direction of bidirectional flow record (ID= 32769); 'rev-packets'= Delta packets in reverse direction of bidirectional flow record (ID= 32770); 'in-port'= Incoming interface port (ID= 10); 'out-port'= Outcoming interface port (ID= 14); 'in-interface'= Incoming interface name e.g. ethernet 0 (ID= 82); 'out-interface'= Outcoming interface name e.g. ethernet 0 (ID= 32850); 'port-range-start'= Port number identifying the start of a range of ports (ID= 361); 'port-range-end'= Port number identifying the end of a range of ports (ID= 362); 'port-range-step-size'= Step size in a port range (ID= 363); 'port-range-num-ports'= Number of ports in a port range (ID= 364); 'rule-name'= Rule Name (ID= 33034); 'rule-set-name'= Rule-Set Name (ID= 33035); 'fw-source-zone'= Firewall Source Zone Name (ID= 33036); 'fw-dest-zone'= Firewall Dest Zone Name (ID= 33037); 'application-id'= Application ID (ID= 95); 'radius-imsi'= Radius Attribute IMSI (ID= 455); 'radius-msisdn'= Radius Attribute MSISDN (ID= 456); 'radius-imei'= Radius Attribute IMEI (ID= 33030); 'radius-custom1'= Radius Attribute Custom 1 (ID= 33031); 'radius-custom2'= Radius Attribute Custom 2(ID= 33032); 'radius-custom3'= Radius Attribute Custom 3 (ID=33033); 'flow-start-msec'= The absolute timestamp of the first packet of the flow (ID= 152); 'flow-duration-msec'= Difference in time between the first observed packet of this flow and the last observed packet of this flow (4 bytes) (ID= 161); 'flow-duration-msec-64'= Difference in time between the first observed packet of this flow and the last observed packet of this flow (8 bytes) (ID= 33039); 'nat-event'= Indicates a NAT event (ID= 230); 'fw-event'= Indicates a FW session event(ID= 233); 'fw-deny-reset-event'= Indicates a FW deny/reset event (ID= 33038); 'cgn-flow-direction'= Flow direction= 0=inbound(To an outside interface)/1=outbound(To an inside interface)/2=hairpin(From an inside interface to an inside interface) (ID= 33040); "
+                - "'fwd-tuple-vnp-id'= Session forward tuple partition id (ID= 33028); 'rev-tuple-vnp-id'= Session reverse tuple partition id (ID= 33029); 'source-ipv4-address'= IPv4 source address in the IP packet header (ID= 8); 'dest-ipv4-address'= IPv4 destination address in the IP packet header (ID= 12); 'source-ipv6-address'= IPv6 source address in the IP packet header (ID= 27); 'dest-ipv6-address'= IPv6 destination address in the IP packet header (ID=28); 'post-nat-source-ipv4-address'= IPv4 natted source address (ID= 225); 'post-nat-dest-ipv4-address'= IPv4 natted destination address(ID= 226); 'post-nat-source-ipv6-address'= IPv6 natted source address (ID= 281); 'post-nat-dest-ipv6-address'= IPv6 natted destination address (ID= 282); 'source-port'= Source port identifier in the transport header (ID= 7); 'dest-port'= Destination port identifier in the transport header (ID= 11); 'post-nat-source-port'= L4 natted source port(ID= 227); 'post-nat-dest-port'= L4 natted destination port (ID= 228); 'fwd-tuple-type'= Session forward tuple type (ID= 33024); 'rev-tuple-type'= Session reverse tuple type (ID= 33025); 'ip-proto'= Value of the protocol number in the IP packet header (ID= 4); 'flow-direction'= Flow direction= 0=inbound(To an outside interface)/1=outbound(To an inside interface) (ID= 61); 'tcp-control-bits'= Cumulative of all the TCP flags seen for this flow (ID= 6); 'fwd-bytes'= Incoming bytes associated with an IP Flow (ID= 1); 'fwd-packets'= Incoming packets associated with an IP Flow (ID= 2); 'rev-bytes'= Delta bytes in reverse direction of bidirectional flow record (ID= 32769); 'rev-packets'= Delta packets in reverse direction of bidirectional flow record (ID= 32770); 'in-port'= Incoming interface port (ID= 10); 'out-port'= Outcoming interface port (ID= 14); 'in-interface'= Incoming interface name e.g. ethernet 0 (ID= 82); 'out-interface'= Outcoming interface name e.g. ethernet 0 (ID= 32850); 'port-range-start'= Port number identifying the start of a range of ports (ID= 361); 'port-range-end'= Port number identifying the end of a range of ports (ID= 362); 'port-range-step-size'= Step size in a port range (ID= 363); 'port-range-num-ports'= Number of ports in a port range (ID= 364); 'rule-name'= Rule Name (ID= 33034); 'rule-set-name'= Rule-Set Name (ID= 33035); 'fw-source-zone'= Firewall Source Zone Name (ID= 33036); 'fw-dest-zone'= Firewall Dest Zone Name (ID= 33037); 'application-id'= Application ID (ID= 95); 'radius-imsi'= Radius Attribute IMSI (ID= 455); 'radius-msisdn'= Radius Attribute MSISDN (ID= 456); 'radius-imei'= Radius Attribute IMEI (ID= 33030); 'radius-custom1'= Radius Attribute Custom 1 (ID= 33031); 'radius-custom2'= Radius Attribute Custom 2(ID= 33032); 'radius-custom3'= Radius Attribute Custom 3 (ID=33033); 'flow-start-msec'= The absolute timestamp of the first packet of the flow (ID= 152); 'flow-duration-msec'= Difference in time between the first observed packet of this flow and the last observed packet of this flow (4 bytes) (ID= 161); 'flow-duration-msec-64'= Difference in time between the first observed packet of this flow and the last observed packet of this flow (8 bytes) (ID= 33039); 'nat-event'= Indicates a NAT event (ID= 230); 'fw-event'= Indicates a FW session event(ID= 233); 'fw-deny-reset-event'= Indicates a FW deny/reset event (ID= 33038); 'cgn-flow-direction'= Flow direction= 0=inbound(To an outside interface)/1=outbound(To an inside interface)/2=hairpin(From an inside interface to an inside interface) (ID= 33040); 'fw-dest-fqdn'= Firewall matched fqdn(ID= 33041); 'flow-end-reason'= A10 flow end reason(ID= 33042); 'event-time-msec'= The absolute time in milliseconds of an event observation(ID= 323); "
     ipfix_template_id:
         description:
         - "Custom IPFIX Template ID"
@@ -62,6 +72,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -97,14 +108,14 @@ def get_default_argspec():
         state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        information_element_blk=dict(type='list',information_element=dict(type='str',choices=['fwd-tuple-vnp-id','rev-tuple-vnp-id','source-ipv4-address','dest-ipv4-address','source-ipv6-address','dest-ipv6-address','post-nat-source-ipv4-address','post-nat-dest-ipv4-address','post-nat-source-ipv6-address','post-nat-dest-ipv6-address','source-port','dest-port','post-nat-source-port','post-nat-dest-port','fwd-tuple-type','rev-tuple-type','ip-proto','flow-direction','tcp-control-bits','fwd-bytes','fwd-packets','rev-bytes','rev-packets','in-port','out-port','in-interface','out-interface','port-range-start','port-range-end','port-range-step-size','port-range-num-ports','rule-name','rule-set-name','fw-source-zone','fw-dest-zone','application-id','radius-imsi','radius-msisdn','radius-imei','radius-custom1','radius-custom2','radius-custom3','flow-start-msec','flow-duration-msec','flow-duration-msec-64','nat-event','fw-event','fw-deny-reset-event','cgn-flow-direction'])),
+        information_element_blk=dict(type='list',information_element=dict(type='str',choices=['fwd-tuple-vnp-id','rev-tuple-vnp-id','source-ipv4-address','dest-ipv4-address','source-ipv6-address','dest-ipv6-address','post-nat-source-ipv4-address','post-nat-dest-ipv4-address','post-nat-source-ipv6-address','post-nat-dest-ipv6-address','source-port','dest-port','post-nat-source-port','post-nat-dest-port','fwd-tuple-type','rev-tuple-type','ip-proto','flow-direction','tcp-control-bits','fwd-bytes','fwd-packets','rev-bytes','rev-packets','in-port','out-port','in-interface','out-interface','port-range-start','port-range-end','port-range-step-size','port-range-num-ports','rule-name','rule-set-name','fw-source-zone','fw-dest-zone','application-id','radius-imsi','radius-msisdn','radius-imei','radius-custom1','radius-custom2','radius-custom3','flow-start-msec','flow-duration-msec','flow-duration-msec-64','nat-event','fw-event','fw-deny-reset-event','cgn-flow-direction','fw-dest-fqdn','flow-end-reason','event-time-msec'])),
         ipfix_template_id=dict(type='int',),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
@@ -133,6 +144,16 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -213,14 +234,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module):
+    return module.client.get(oper_url(module))
+
+def get_stats(module):
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("template", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["template"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["template"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["template"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -246,8 +288,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("template", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -263,16 +304,26 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
-    else:
-        return update(module, result, existing_config)
-
-def absent(module, result):
-    return delete(module, result)
-
-def replace(module, result, existing_config):
     payload = build_json("template", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
+    else:
+        return update(module, result, existing_config, payload)
+
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
+
+def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
@@ -303,8 +354,7 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
-    partition = module.params["partition"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
@@ -319,8 +369,8 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
-        module.client.activate_partition(partition)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
 
     existing_config = exists(module)
 
@@ -328,17 +378,21 @@ def run_command(module):
         result = present(module, result, existing_config)
         module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
+        result = absent(module, result, existing_config)
         module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

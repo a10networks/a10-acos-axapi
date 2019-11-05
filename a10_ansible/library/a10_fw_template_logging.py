@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -35,9 +36,18 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    partition:
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
         description:
         - Destination/target partition for object/command
+        required: False
     include_http:
         description:
         - "Field include_http"
@@ -96,6 +106,10 @@ options:
         description:
         - "'emergency'= 0= Emergency; 'alert'= 1= Alert; 'critical'= 2= Critical; 'error'= 3= Error; 'warning'= 4= Warning; 'notice'= 5= Notice; 'informational'= 6= Informational; 'debug'= 7= Debug; "
         required: False
+    include_dest_fqdn:
+        description:
+        - "Include destination FQDN string"
+        required: False
     facility:
         description:
         - "'kernel'= 0= Kernel; 'user'= 1= User-level; 'mail'= 2= Mail; 'daemon'= 3= System daemons; 'security-authorization'= 4= Security/authorization; 'syslog'= 5= Syslog internal; 'line-printer'= 6= Line printer; 'news'= 7= Network news; 'uucp'= 8= UUCP subsystem; 'cron'= 9= Time-related; 'security-authorization-private'= 10= Private security/authorization; 'ftp'= 11= FTP; 'ntp'= 12= NTP; 'audit'= 13= Audit; 'alert'= 14= Alert; 'clock'= 15= Clock-related; 'local0'= 16= Local use 0; 'local1'= 17= Local use 1; 'local2'= 18= Local use 2; 'local3'= 19= Local use 3; 'local4'= 20= Local use 4; 'local5'= 21= Local use 5; 'local6'= 22= Local use 6; 'local7'= 23= Local use 7; "
@@ -148,6 +162,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -160,7 +175,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["facility","format","include_http","include_radius_attribute","log","merged_style","name","resolution","rule","service_group","severity","source_address","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["facility","format","include_dest_fqdn","include_http","include_radius_attribute","log","merged_style","name","resolution","rule","service_group","severity","source_address","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -182,8 +197,8 @@ def get_default_argspec():
         state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
@@ -196,6 +211,7 @@ def get_argspec():
         format=dict(type='str',choices=['ascii','cef']),
         log=dict(type='dict',http_requests=dict(type='str',choices=['host','url'])),
         severity=dict(type='str',choices=['emergency','alert','critical','error','warning','notice','informational','debug']),
+        include_dest_fqdn=dict(type='bool',),
         facility=dict(type='str',choices=['kernel','user','mail','daemon','security-authorization','syslog','line-printer','news','uucp','cron','security-authorization-private','ftp','ntp','audit','alert','clock','local0','local1','local2','local3','local4','local5','local6','local7']),
         include_radius_attribute=dict(type='dict',framed_ipv6_prefix=dict(type='bool',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),insert_if_not_existing=dict(type='bool',),zero_in_custom_attr=dict(type='bool',),no_quote=dict(type='bool',),attr_cfg=dict(type='list',attr_event=dict(type='str',choices=['http-requests','sessions']),attr=dict(type='str',choices=['imei','imsi','msisdn','custom1','custom2','custom3']))),
         rule=dict(type='dict',rule_http_requests=dict(type='dict',log_every_http_request=dict(type='bool',),disable_sequence_check=dict(type='bool',),include_all_headers=dict(type='bool',),dest_port=dict(type='list',include_byte_count=dict(type='bool',),dest_port_number=dict(type='int',)),max_url_len=dict(type='int',))),
@@ -227,6 +243,16 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
+
+def stats_url(module):
+    """Return the URL for statistical data of and existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -307,14 +333,35 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
+def get_oper(module):
+    return module.client.get(oper_url(module))
+
+def get_stats(module):
+    return module.client.get(stats_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("logging", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["logging"].items():
+            if v.lower() == "true":
+                v = 1
+            elif v.lower() == "false":
+                v = 0
+            if existing_config["logging"][k] != v:
+                if result["changed"] != True:
+                    result["changed"] = True
+                existing_config["logging"][k] = v
+        result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
@@ -340,8 +387,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("logging", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -357,16 +403,26 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
-    else:
-        return update(module, result, existing_config)
-
-def absent(module, result):
-    return delete(module, result)
-
-def replace(module, result, existing_config):
     payload = build_json("logging", module)
+    if module.check_mode:
+        return report_changes(module, result, existing_config, payload)
+    elif not existing_config:
+        return create(module, result, payload)
+    else:
+        return update(module, result, existing_config, payload)
+
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
+
+def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
@@ -397,8 +453,7 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
-    partition = module.params["partition"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
@@ -413,8 +468,8 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
-        module.client.activate_partition(partition)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
 
     existing_config = exists(module)
 
@@ -422,17 +477,21 @@ def run_command(module):
         result = present(module, result, existing_config)
         module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
+        result = absent(module, result, existing_config)
         module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
+        elif module.params.get("get_type") == "stats":
+            result["result"] = get_stats(module)
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

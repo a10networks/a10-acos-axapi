@@ -1,0 +1,41 @@
+---
+- name:  Test creation of a virtual server w/ vport 
+  a10_slb_virtual_server:
+    a10_host: "{{ a10_host }}"
+    a10_username: "{{ a10_username }}"
+    a10_password: "{{ a10_password }}"
+    a10_port: "{{ a10_port }}"
+    a10_protocol: "{{ a10_protocol }}"
+    ip_address: 10.0.0.4
+    netmask: 255.255.255.0
+    name: vs1
+    port_list:
+      - port_number: 80
+        protocol: "tcp"
+  register: virt_resp
+- assert:
+    that:
+      - "virt_resp['virtual-server']['name'] == 'vs1'"
+      - "virt_resp['virtual-server']['ip-address'] == '10.0.0.4'"
+      - "virt_resp['virtual-server']['netmask'] == '/24'"
+      - "virt_resp['virtual-server']['port-list'][0]['protocol'] == 'tcp'"
+      - "virt_resp['virtual-server']['port-list'][0]['port-number'] == 80"
+
+- name: Test update of vport on virtual server
+  a10_slb_virtual_server:
+    a10_host: "{{ a10_host }}"
+    a10_username: "{{ a10_username }}"
+    a10_password: "{{ a10_password }}"
+    a10_port: "{{ a10_port }}"
+    a10_protocol: "{{ a10_protocol }}"
+    ip_address: 10.0.0.4
+    netmask: 255.255.255.0
+    name: vs1
+    port_list:
+      - port_number: 80
+        protocol: "tcp"
+        action: "disable"
+  register: port_resp
+- assert:
+    that:
+      - "port_resp['virtual-server']['port-list'][0]['action'] == 'disable'"
