@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            aflow_cpu_list:
+                description:
+                - "Field aflow_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,44 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'pause_conn'= Pause connection; 'pause_conn_fail'= Pause connection fail; 'resume_conn'= Resume connection; 'event_resume_conn'= Resume conn by event; 'timer_resume_conn'= Resume conn by timer; 'try_to_resume_conn'= Resume conn by trying; 'retry_resume_conn'= Resume conn by retry; 'error_resume_conn'= Resume conn by error; 'open_new_server_conn'= Open new server conn; 'reuse_server_idle_conn'= Reuse idle server conn; 'inc_aflow_limit'= Inc aFlow limit; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            open_new_server_conn:
+                description:
+                - "Open new server conn"
+            reuse_server_idle_conn:
+                description:
+                - "Reuse idle server conn"
+            inc_aflow_limit:
+                description:
+                - "Inc aFlow limit"
+            pause_conn:
+                description:
+                - "Pause connection"
+            pause_conn_fail:
+                description:
+                - "Pause connection fail"
+            event_resume_conn:
+                description:
+                - "Resume conn by event"
+            try_to_resume_conn:
+                description:
+                - "Resume conn by trying"
+            resume_conn:
+                description:
+                - "Resume connection"
+            retry_resume_conn:
+                description:
+                - "Resume conn by retry"
+            error_resume_conn:
+                description:
+                - "Resume conn by error"
+            timer_resume_conn:
+                description:
+                - "Resume conn by timer"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +123,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +152,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',aflow_cpu_list=dict(type='list',open_new_server_conn=dict(type='int',),reuse_server_idle_conn=dict(type='int',),inc_aflow_limit=dict(type='int',),pause_conn=dict(type='int',),pause_conn_fail=dict(type='int',),event_resume_conn=dict(type='int',),try_to_resume_conn=dict(type='int',),resume_conn=dict(type='int',),retry_resume_conn=dict(type='int',),error_resume_conn=dict(type='int',),timer_resume_conn=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pause_conn','pause_conn_fail','resume_conn','event_resume_conn','timer_resume_conn','try_to_resume_conn','retry_resume_conn','error_resume_conn','open_new_server_conn','reuse_server_idle_conn','inc_aflow_limit'])),
+        stats=dict(type='dict',open_new_server_conn=dict(type='str',),reuse_server_idle_conn=dict(type='str',),inc_aflow_limit=dict(type='str',),pause_conn=dict(type='str',),pause_conn_fail=dict(type='str',),event_resume_conn=dict(type='str',),try_to_resume_conn=dict(type='str',),resume_conn=dict(type='str',),retry_resume_conn=dict(type='str',),error_resume_conn=dict(type='str',),timer_resume_conn=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +269,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

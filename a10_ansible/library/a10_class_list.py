@@ -48,6 +48,59 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            file_or_string:
+                description:
+                - "Field file_or_string"
+            ac_total_entries:
+                description:
+                - "Field ac_total_entries"
+            ipv6_total_subnet:
+                description:
+                - "Field ipv6_total_subnet"
+            dns_total_entries:
+                description:
+                - "Field dns_total_entries"
+            ipv4_total_subnet:
+                description:
+                - "Field ipv4_total_subnet"
+            dns_entries:
+                description:
+                - "Field dns_entries"
+            ipv4_entries:
+                description:
+                - "Field ipv4_entries"
+            ipv4_total_single_ip:
+                description:
+                - "Field ipv4_total_single_ip"
+            user_tag:
+                description:
+                - "Field user_tag"
+            name:
+                description:
+                - "Specify name of the class list"
+            ipv6_entries:
+                description:
+                - "Field ipv6_entries"
+            string_total_entries:
+                description:
+                - "Field string_total_entries"
+            ac_entries:
+                description:
+                - "Field ac_entries"
+            ntype:
+                description:
+                - "Field type"
+            string_entries:
+                description:
+                - "Field string_entries"
+            ipv6_total_single_ip:
+                description:
+                - "Field ipv6_total_single_ip"
     dns:
         description:
         - "Field dns"
@@ -206,7 +259,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ac_list","dns","file","ipv4_list","ipv6_list","name","str_list","ntype","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["ac_list","dns","file","ipv4_list","ipv6_list","name","oper","str_list","ntype","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -235,6 +288,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',file_or_string=dict(type='str',choices=['file','config']),ac_total_entries=dict(type='int',),ipv6_total_subnet=dict(type='int',),dns_total_entries=dict(type='int',),ipv4_total_subnet=dict(type='int',),dns_entries=dict(type='list',dns_glid=dict(type='int',),dns_hit_count=dict(type='int',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with']),dns_match_string=dict(type='str',),dns_lid=dict(type='int',)),ipv4_entries=dict(type='list',ipv4_lsn_lid=dict(type='int',),ipv4_addr=dict(type='str',),ipv4_lid=dict(type='int',),ipv4_age=dict(type='int',),ipv4_lsn_radius_profile=dict(type='int',),ipv4_hit_count=dict(type='int',),ipv4_glid=dict(type='int',)),ipv4_total_single_ip=dict(type='int',),user_tag=dict(type='str',),name=dict(type='str',required=True,),ipv6_entries=dict(type='list',ipv6_lid=dict(type='int',),ipv6_hit_count=dict(type='int',),ipv6_lsn_radius_profile=dict(type='int',),ipv6_lsn_lid=dict(type='int',),ipv6_glid=dict(type='int',),ipv6addr=dict(type='str',),ipv6_age=dict(type='int',)),string_total_entries=dict(type='int',),ac_entries=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','starts-with','equals']),ac_match_string=dict(type='str',),ac_match_value=dict(type='str',),ac_hit_count=dict(type='int',)),ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive','[ipv4]','[ipv6]','[dns]','[dns, ipv4]','[dns, ipv6]']),string_entries=dict(type='list',string_lid=dict(type='int',),string_hit_count=dict(type='int',),string_key=dict(type='str',),string_glid=dict(type='int',),string_value=dict(type='str',)),ipv6_total_single_ip=dict(type='int',)),
         dns=dict(type='list',dns_match_string=dict(type='str',),dns_glid_shared=dict(type='int',),dns_glid=dict(type='int',),dns_lid=dict(type='int',),shared_partition_dns_glid=dict(type='bool',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
         name=dict(type='str',required=True,),
         ipv4_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),age=dict(type='int',),glid_shared=dict(type='int',),ipv4addr=dict(type='str',),lsn_lid=dict(type='int',),shared_partition_glid=dict(type='bool',),lsn_radius_profile=dict(type='int',)),
@@ -274,11 +328,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -360,10 +409,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -512,8 +564,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

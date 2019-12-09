@@ -48,10 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    action:
-        description:
-        - "'none'= No action (default); 'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
-        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -72,6 +68,114 @@ options:
         description:
         - "Logging template (Logging Template Name)"
         required: False
+    action:
+        description:
+        - "'none'= No action (default); 'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
+        required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            metric_capacity:
+                description:
+                - "Metric Capacity Hit"
+            metric_admin_ip:
+                description:
+                - "Metric Admin IP Hit"
+            no_answer:
+                description:
+                - "Number of replies with unknown server IP"
+            bad_format_query:
+                description:
+                - "Number of queries with incorrect format"
+            metric_active_server:
+                description:
+                - "Metric Active Server Hit"
+            metric_active_rdt:
+                description:
+                - "Metric Active RDT Hit"
+            metric_connection_load:
+                description:
+                - "Metric Connection Load Hit"
+            bad_service_response:
+                description:
+                - "Number of replies with unknown service"
+            metric_user:
+                description:
+                - "Metric User Hit"
+            bad_packet_query:
+                description:
+                - "Number of queries with incorrect data length"
+            total_query:
+                description:
+                - "Total number of DNS queries received"
+            metric_bandwidth_cost:
+                description:
+                - "Metric Bandwidth Cost Hit"
+            bad_class_query:
+                description:
+                - "Number of queries with incorrect class"
+            metric_bandwidth_quality:
+                description:
+                - "Metric Bandwidth Quality Hit"
+            bad_service_query:
+                description:
+                - "Number of queries with unknown service"
+            bad_header_response:
+                description:
+                - "Number of replies with incorrect header"
+            metric_least_reponse:
+                description:
+                - "Metric Least Reponse Hit"
+            metric_weighted_site:
+                description:
+                - "Metric Weighted Site Hit"
+            total_response:
+                description:
+                - "Total number of DNS replies sent to clients"
+            metric_health_check:
+                description:
+                - "Metric Health Check Hit"
+            metric_round_robin:
+                description:
+                - "Metric Round Robin Hit"
+            metric_easy_rdt:
+                description:
+                - "Metric Easy RDT Hit"
+            bad_type_query:
+                description:
+                - "Number of queries with incorrect type"
+            bad_packet_response:
+                description:
+                - "Number of replies with incorrect data length"
+            metric_weighted_ip:
+                description:
+                - "Metric Weighted IP Hit"
+            bad_class_response:
+                description:
+                - "Number of replies with incorrect class"
+            bad_format_response:
+                description:
+                - "Number of replies with incorrect format"
+            metric_geographic:
+                description:
+                - "Metric Geographic Hit"
+            bad_header_query:
+                description:
+                - "Number of queries with incorrect header"
+            metric_active_weight:
+                description:
+                - "Metric Active Weight Hit"
+            metric_admin_preference:
+                description:
+                - "Metric Admin Preference Hit"
+            metric_number_of_sessions:
+                description:
+                - "Metric Number of Sessions Hit"
+            bad_type_response:
+                description:
+                - "Number of replies with incorrect type"
 
 
 """
@@ -86,7 +190,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","logging","sampling_enable","template","uuid",]
+AVAILABLE_PROPERTIES = ["action","logging","sampling_enable","stats","template","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -115,11 +219,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['none','drop','reject','ignore']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-query','total-response','bad-packet-query','bad-packet-response','bad-header-query','bad-header-response','bad-format-query','bad-format-response','bad-service-query','bad-service-response','bad-class-query','bad-class-response','bad-type-query','bad-type-response','no_answer','metric_health_check','metric_weighted_ip','metric_weighted_site','metric_capacity','metric_active_server','metric_easy_rdt','metric_active_rdt','metric_geographic','metric_connection_load','metric_number_of_sessions','metric_active_weight','metric_admin_preference','metric_bandwidth_quality','metric_bandwidth_cost','metric_user','metric_least_reponse','metric_admin_ip','metric_round_robin'])),
         logging=dict(type='str',choices=['none','query','response','both']),
         uuid=dict(type='str',),
-        template=dict(type='str',)
+        template=dict(type='str',),
+        action=dict(type='str',choices=['none','drop','reject','ignore']),
+        stats=dict(type='dict',metric_capacity=dict(type='str',),metric_admin_ip=dict(type='str',),no_answer=dict(type='str',),bad_format_query=dict(type='str',),metric_active_server=dict(type='str',),metric_active_rdt=dict(type='str',),metric_connection_load=dict(type='str',),bad_service_response=dict(type='str',),metric_user=dict(type='str',),bad_packet_query=dict(type='str',),total_query=dict(type='str',),metric_bandwidth_cost=dict(type='str',),bad_class_query=dict(type='str',),metric_bandwidth_quality=dict(type='str',),bad_service_query=dict(type='str',),bad_header_response=dict(type='str',),metric_least_reponse=dict(type='str',),metric_weighted_site=dict(type='str',),total_response=dict(type='str',),metric_health_check=dict(type='str',),metric_round_robin=dict(type='str',),metric_easy_rdt=dict(type='str',),bad_type_query=dict(type='str',),bad_packet_response=dict(type='str',),metric_weighted_ip=dict(type='str',),bad_class_response=dict(type='str',),bad_format_response=dict(type='str',),metric_geographic=dict(type='str',),bad_header_query=dict(type='str',),metric_active_weight=dict(type='str',),metric_admin_preference=dict(type='str',),metric_number_of_sessions=dict(type='str',),bad_type_response=dict(type='str',))
     ))
    
 
@@ -142,11 +247,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -232,10 +332,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -383,8 +486,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

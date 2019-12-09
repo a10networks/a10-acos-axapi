@@ -56,6 +56,101 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Cache Hits; 'miss'= Cache Misses; 'bytes_served'= Bytes Served; 'total_req'= Total Requests; 'caching_req'= Cacheable Requests; 'nc_req_header'= No-cache Request; 'nc_res_header'= Not cacheable; 'rv_success'= Revalidation Successes; 'rv_failure'= Revalidation Failures; 'ims_request'= IMS Requests; 'nm_response'= Responses from cache 304 Not Modified; 'rsp_type_CL'= Responses from server 200 OK - Cont Len; 'rsp_type_CE'= Responses from server 200 OK - Chnk Enc; 'rsp_type_304'= Responses from server 304 Not Modified; 'rsp_type_other'= Responses from server 200 OK - Other; 'rsp_no_compress'= Responses from cache 200 OK - No Comp; 'rsp_gzip'= Responses from cache 200 OK - Gzip; 'rsp_deflate'= Responses from cache 200 OK - Deflate; 'rsp_other'= Responses from cache Other; 'nocache_match'= Policy URI nocache; 'match'= Policy URI cache; 'invalidate_match'= Policy URI invalidate; 'content_toobig'= Policy Content Too Big; 'content_toosmall'= Policy Content Too Small; 'entry_create_failures'= Entry Create failures; 'mem_size'= Memory Used; 'entry_num'= Entry Cached; 'replaced_entry'= Entry Replaced; 'aging_entry'= Entry Aged Out; 'cleaned_entry'= Entry Cleaned; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            nm_response:
+                description:
+                - "Responses from cache 304 Not Modified"
+            rsp_type_304:
+                description:
+                - "Responses from server 304 Not Modified"
+            rsp_other:
+                description:
+                - "Responses from cache Other"
+            content_toosmall:
+                description:
+                - "Policy Content Too Small"
+            entry_create_failures:
+                description:
+                - "Entry Create failures"
+            nocache_match:
+                description:
+                - "Policy URI nocache"
+            content_toobig:
+                description:
+                - "Policy Content Too Big"
+            replaced_entry:
+                description:
+                - "Entry Replaced"
+            miss:
+                description:
+                - "Cache Misses"
+            nc_req_header:
+                description:
+                - "No-cache Request"
+            aging_entry:
+                description:
+                - "Entry Aged Out"
+            mem_size:
+                description:
+                - "Memory Used"
+            rsp_deflate:
+                description:
+                - "Responses from cache 200 OK - Deflate"
+            invalidate_match:
+                description:
+                - "Policy URI invalidate"
+            match:
+                description:
+                - "Policy URI cache"
+            cleaned_entry:
+                description:
+                - "Entry Cleaned"
+            entry_num:
+                description:
+                - "Entry Cached"
+            total_req:
+                description:
+                - "Total Requests"
+            bytes_served:
+                description:
+                - "Bytes Served"
+            rv_success:
+                description:
+                - "Revalidation Successes"
+            rv_failure:
+                description:
+                - "Revalidation Failures"
+            rsp_gzip:
+                description:
+                - "Responses from cache 200 OK - Gzip"
+            hits:
+                description:
+                - "Cache Hits"
+            rsp_type_other:
+                description:
+                - "Responses from server 200 OK - Other"
+            rsp_type_CE:
+                description:
+                - "Responses from server 200 OK - Chnk Enc"
+            rsp_type_CL:
+                description:
+                - "Responses from server 200 OK - Cont Len"
+            rsp_no_compress:
+                description:
+                - "Responses from cache 200 OK - No Comp"
+            nc_res_header:
+                description:
+                - "Not cacheable"
+            caching_req:
+                description:
+                - "Cacheable Requests"
+            ims_request:
+                description:
+                - "IMS Requests"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +169,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +199,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','miss','bytes_served','total_req','caching_req','nc_req_header','nc_res_header','rv_success','rv_failure','ims_request','nm_response','rsp_type_CL','rsp_type_CE','rsp_type_304','rsp_type_other','rsp_no_compress','rsp_gzip','rsp_deflate','rsp_other','nocache_match','match','invalidate_match','content_toobig','content_toosmall','entry_create_failures','mem_size','entry_num','replaced_entry','aging_entry','cleaned_entry'])),
+        stats=dict(type='dict',nm_response=dict(type='str',),rsp_type_304=dict(type='str',),rsp_other=dict(type='str',),content_toosmall=dict(type='str',),entry_create_failures=dict(type='str',),nocache_match=dict(type='str',),content_toobig=dict(type='str',),replaced_entry=dict(type='str',),miss=dict(type='str',),nc_req_header=dict(type='str',),aging_entry=dict(type='str',),mem_size=dict(type='str',),rsp_deflate=dict(type='str',),invalidate_match=dict(type='str',),match=dict(type='str',),cleaned_entry=dict(type='str',),entry_num=dict(type='str',),total_req=dict(type='str',),bytes_served=dict(type='str',),rv_success=dict(type='str',),rv_failure=dict(type='str',),rsp_gzip=dict(type='str',),hits=dict(type='str',),rsp_type_other=dict(type='str',),rsp_type_CE=dict(type='str',),rsp_type_CL=dict(type='str',),rsp_no_compress=dict(type='str',),nc_res_header=dict(type='str',),caching_req=dict(type='str',),ims_request=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +223,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +308,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +462,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,6 +48,119 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            visibility_mon_entity_default:
+                description:
+                - "Field visibility_mon_entity_default"
+            nat_pool_addr_min:
+                description:
+                - "Field nat_pool_addr_min"
+            radius_table_size_max:
+                description:
+                - "Field radius_table_size_max"
+            radius_table_size_default:
+                description:
+                - "Field radius_table_size_default"
+            auth_portal_image_file_size_default:
+                description:
+                - "Field auth_portal_image_file_size_default"
+            auth_portal_html_file_size_max:
+                description:
+                - "Field auth_portal_html_file_size_max"
+            aflex_table_entry_count_min:
+                description:
+                - "Field aflex_table_entry_count_min"
+            aflex_table_entry_count_max:
+                description:
+                - "Field aflex_table_entry_count_max"
+            visibility_mon_entity_min:
+                description:
+                - "Field visibility_mon_entity_min"
+            authz_policy_number_default:
+                description:
+                - "Field authz_policy_number_default"
+            auth_portal_image_file_size_max:
+                description:
+                - "Field auth_portal_image_file_size_max"
+            aflex_table_entry_count_default:
+                description:
+                - "Field aflex_table_entry_count_default"
+            l4_session_count_max:
+                description:
+                - "Field l4_session_count_max"
+            aflex_file_size_default:
+                description:
+                - "Field aflex_file_size_default"
+            l4_session_count_default:
+                description:
+                - "Field l4_session_count_default"
+            radius_table_size_min:
+                description:
+                - "Field radius_table_size_min"
+            nat_pool_addr_default:
+                description:
+                - "Field nat_pool_addr_default"
+            class_list_ac_min:
+                description:
+                - "Field class_list_ac_min"
+            class_list_ac_max:
+                description:
+                - "Field class_list_ac_max"
+            visibility_mon_entity_max:
+                description:
+                - "Field visibility_mon_entity_max"
+            class_list_ipv6_addr_default:
+                description:
+                - "Field class_list_ipv6_addr_default"
+            l4_session_count_min:
+                description:
+                - "Field l4_session_count_min"
+            auth_portal_image_file_size_min:
+                description:
+                - "Field auth_portal_image_file_size_min"
+            class_list_ipv6_addr_max:
+                description:
+                - "Field class_list_ipv6_addr_max"
+            aflex_file_size_min:
+                description:
+                - "Field aflex_file_size_min"
+            aflex_authz_collection_number_default:
+                description:
+                - "Field aflex_authz_collection_number_default"
+            authz_policy_number_max:
+                description:
+                - "Field authz_policy_number_max"
+            authz_policy_number_min:
+                description:
+                - "Field authz_policy_number_min"
+            class_list_ipv6_addr_min:
+                description:
+                - "Field class_list_ipv6_addr_min"
+            aflex_file_size_max:
+                description:
+                - "Field aflex_file_size_max"
+            auth_portal_html_file_size_default:
+                description:
+                - "Field auth_portal_html_file_size_default"
+            aflex_authz_collection_number_min:
+                description:
+                - "Field aflex_authz_collection_number_min"
+            nat_pool_addr_max:
+                description:
+                - "Field nat_pool_addr_max"
+            aflex_authz_collection_number_max:
+                description:
+                - "Field aflex_authz_collection_number_max"
+            auth_portal_html_file_size_min:
+                description:
+                - "Field auth_portal_html_file_size_min"
+            class_list_ac_default:
+                description:
+                - "Field class_list_ac_default"
     l4_session_count:
         description:
         - "Total Sessions in the System"
@@ -129,7 +242,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","authz_policy_number","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
+AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","authz_policy_number","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","oper","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -158,6 +271,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',visibility_mon_entity_default=dict(type='int',),nat_pool_addr_min=dict(type='int',),radius_table_size_max=dict(type='int',),radius_table_size_default=dict(type='int',),auth_portal_image_file_size_default=dict(type='int',),auth_portal_html_file_size_max=dict(type='int',),aflex_table_entry_count_min=dict(type='int',),aflex_table_entry_count_max=dict(type='int',),visibility_mon_entity_min=dict(type='int',),authz_policy_number_default=dict(type='int',),auth_portal_image_file_size_max=dict(type='int',),aflex_table_entry_count_default=dict(type='int',),l4_session_count_max=dict(type='int',),aflex_file_size_default=dict(type='int',),l4_session_count_default=dict(type='int',),radius_table_size_min=dict(type='int',),nat_pool_addr_default=dict(type='int',),class_list_ac_min=dict(type='int',),class_list_ac_max=dict(type='int',),visibility_mon_entity_max=dict(type='int',),class_list_ipv6_addr_default=dict(type='int',),l4_session_count_min=dict(type='int',),auth_portal_image_file_size_min=dict(type='int',),class_list_ipv6_addr_max=dict(type='int',),aflex_file_size_min=dict(type='int',),aflex_authz_collection_number_default=dict(type='int',),authz_policy_number_max=dict(type='int',),authz_policy_number_min=dict(type='int',),class_list_ipv6_addr_min=dict(type='int',),aflex_file_size_max=dict(type='int',),auth_portal_html_file_size_default=dict(type='int',),aflex_authz_collection_number_min=dict(type='int',),nat_pool_addr_max=dict(type='int',),aflex_authz_collection_number_max=dict(type='int',),auth_portal_html_file_size_min=dict(type='int',),class_list_ac_default=dict(type='int',)),
         l4_session_count=dict(type='int',),
         nat_pool_addr_count=dict(type='int',),
         max_aflex_authz_collection_number=dict(type='int',),
@@ -200,11 +314,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -286,10 +395,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -438,8 +550,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

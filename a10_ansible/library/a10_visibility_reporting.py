@@ -56,6 +56,32 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'log-transmit-failure'= Total log transmit failures; 'buffer-alloc-failure'= Total reporting buffer allocation failures; 'notif-jobs-in-queue'= Total notification jobs in queue; 'enqueue-fail'= Total enqueue jobs failed; 'enqueue-pass'= Total enqueue jobs passed; 'dequeued'= Total jobs dequeued; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            buffer_alloc_failure:
+                description:
+                - "Total reporting buffer allocation failures"
+            dequeued:
+                description:
+                - "Total jobs dequeued"
+            enqueue_pass:
+                description:
+                - "Total enqueue jobs passed"
+            template:
+                description:
+                - "Field template"
+            notif_jobs_in_queue:
+                description:
+                - "Total notification jobs in queue"
+            enqueue_fail:
+                description:
+                - "Total enqueue jobs failed"
+            log_transmit_failure:
+                description:
+                - "Total log transmit failures"
     uuid:
         description:
         - "uuid of the object"
@@ -93,7 +119,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","telemetry_export_interval","template","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","telemetry_export_interval","template","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -123,6 +149,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log-transmit-failure','buffer-alloc-failure','notif-jobs-in-queue','enqueue-fail','enqueue-pass','dequeued'])),
+        stats=dict(type='dict',buffer_alloc_failure=dict(type='str',),dequeued=dict(type='str',),enqueue_pass=dict(type='str',),template=dict(type='dict',),notif_jobs_in_queue=dict(type='str',),enqueue_fail=dict(type='str',),log_transmit_failure=dict(type='str',)),
         uuid=dict(type='str',),
         template=dict(type='dict',notification=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),template_name_list=dict(type='list',protocol=dict(type='str',choices=['http','https']),name=dict(type='str',required=True,),use_mgmt_port=dict(type='bool',),https_port=dict(type='int',),debug_mode=dict(type='bool',),relative_uri=dict(type='str',),authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),api_key_encrypted=dict(type='str',),api_key=dict(type='bool',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),api_key_string=dict(type='str',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),host_name=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sent_successful','send_fail','response_fail'])),http_port=dict(type='int',),ipv6_address=dict(type='str',),test_connectivity=dict(type='bool',),ipv4_address=dict(type='str',),action=dict(type='str',choices=['enable','disable']),uuid=dict(type='str',)))),
         telemetry_export_interval=dict(type='dict',uuid=dict(type='str',),value=dict(type='int',))
@@ -148,11 +175,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -238,10 +260,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -389,8 +414,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

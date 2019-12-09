@@ -48,6 +48,32 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            total_req_processed:
+                description:
+                - "Field total_req_processed"
+            num_dplane_threads:
+                description:
+                - "Field num_dplane_threads"
+            num_lookup_threads:
+                description:
+                - "Field num_lookup_threads"
+            total_req_dropped:
+                description:
+                - "Field total_req_dropped"
+            total_req_queue:
+                description:
+                - "Field total_req_queue"
+            per_cpu_list:
+                description:
+                - "Field per_cpu_list"
+            total_req_lookup_processed:
+                description:
+                - "Field total_req_lookup_processed"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +82,35 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'db-lookup'= db-lookup; 'cloud-cache-lookup'= cloud-cache-lookup; 'cloud-lookup'= cloud-lookup; 'rtu-lookup'= rtu-lookup; 'lookup-latency'= lookup-latency; 'db-mem'= db-mem; 'rtu-cache-mem'= rtu-cache-mem; 'lookup-cache-mem'= lookup-cache-mem; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            db_lookup:
+                description:
+                - "Field db_lookup"
+            lookup_latency:
+                description:
+                - "Field lookup_latency"
+            rtu_cache_mem:
+                description:
+                - "Field rtu_cache_mem"
+            lookup_cache_mem:
+                description:
+                - "Field lookup_cache_mem"
+            cloud_cache_lookup:
+                description:
+                - "Field cloud_cache_lookup"
+            db_mem:
+                description:
+                - "Field db_mem"
+            cloud_lookup:
+                description:
+                - "Field cloud_lookup"
+            rtu_lookup:
+                description:
+                - "Field rtu_lookup"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +129,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +158,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',total_req_processed=dict(type='int',),num_dplane_threads=dict(type='int',),num_lookup_threads=dict(type='int',),total_req_dropped=dict(type='int',),total_req_queue=dict(type='int',),per_cpu_list=dict(type='list',req_dropped=dict(type='int',),req_queue=dict(type='int',),req_lookup_processed=dict(type='int',),req_processed=dict(type='int',)),total_req_lookup_processed=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','db-lookup','cloud-cache-lookup','cloud-lookup','rtu-lookup','lookup-latency','db-mem','rtu-cache-mem','lookup-cache-mem'])),
+        stats=dict(type='dict',db_lookup=dict(type='str',),lookup_latency=dict(type='str',),rtu_cache_mem=dict(type='str',),lookup_cache_mem=dict(type='str',),cloud_cache_lookup=dict(type='str',),db_mem=dict(type='str',),cloud_lookup=dict(type='str',),rtu_lookup=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +275,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

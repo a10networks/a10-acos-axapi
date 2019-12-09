@@ -48,6 +48,47 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            fixed_nat_ip_addr_count_max:
+                description:
+                - "Field fixed_nat_ip_addr_count_max"
+            fixed_nat_ip_addr_count_default:
+                description:
+                - "Field fixed_nat_ip_addr_count_default"
+            lsn_nat_addr_count_min:
+                description:
+                - "Field lsn_nat_addr_count_min"
+            radius_table_size_max:
+                description:
+                - "Field radius_table_size_max"
+            radius_table_size_default:
+                description:
+                - "Field radius_table_size_default"
+            fixed_nat_inside_user_count_default:
+                description:
+                - "Field fixed_nat_inside_user_count_default"
+            fixed_nat_inside_user_count_min:
+                description:
+                - "Field fixed_nat_inside_user_count_min"
+            radius_table_size_min:
+                description:
+                - "Field radius_table_size_min"
+            lsn_nat_addr_count_max:
+                description:
+                - "Field lsn_nat_addr_count_max"
+            lsn_nat_addr_count_default:
+                description:
+                - "Field lsn_nat_addr_count_default"
+            fixed_nat_ip_addr_count_min:
+                description:
+                - "Field fixed_nat_ip_addr_count_min"
+            fixed_nat_inside_user_count_max:
+                description:
+                - "Field fixed_nat_inside_user_count_max"
     uuid:
         description:
         - "uuid of the object"
@@ -93,7 +134,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fixed_nat_inside_user_count","fixed_nat_ip_addr_count","lsn_nat_addr_count","radius_table_size","stateless_entries","uuid",]
+AVAILABLE_PROPERTIES = ["fixed_nat_inside_user_count","fixed_nat_ip_addr_count","lsn_nat_addr_count","oper","radius_table_size","stateless_entries","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -122,6 +163,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',fixed_nat_ip_addr_count_max=dict(type='int',),fixed_nat_ip_addr_count_default=dict(type='int',),lsn_nat_addr_count_min=dict(type='int',),radius_table_size_max=dict(type='int',),radius_table_size_default=dict(type='int',),fixed_nat_inside_user_count_default=dict(type='int',),fixed_nat_inside_user_count_min=dict(type='int',),radius_table_size_min=dict(type='int',),lsn_nat_addr_count_max=dict(type='int',),lsn_nat_addr_count_default=dict(type='int',),fixed_nat_ip_addr_count_min=dict(type='int',),fixed_nat_inside_user_count_max=dict(type='int',)),
         uuid=dict(type='str',),
         fixed_nat_inside_user_count=dict(type='int',),
         lsn_nat_addr_count=dict(type='int',),
@@ -155,11 +197,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -241,10 +278,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -393,8 +433,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

@@ -48,6 +48,74 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            status:
+                description:
+                - "Field status"
+            web_attacks:
+                description:
+                - "Field web_attacks"
+            botnets:
+                description:
+                - "Field botnets"
+            name:
+                description:
+                - "Field name"
+            spam_sources:
+                description:
+                - "Field spam_sources"
+            windows_exploits:
+                description:
+                - "Field windows_exploits"
+            last_update_time:
+                description:
+                - "Field last_update_time"
+            dos_attacks:
+                description:
+                - "Field dos_attacks"
+            next_update_time:
+                description:
+                - "Field next_update_time"
+            connection_status:
+                description:
+                - "Field connection_status"
+            mobile_threats:
+                description:
+                - "Field mobile_threats"
+            phishing:
+                description:
+                - "Field phishing"
+            last_successful_connection:
+                description:
+                - "Field last_successful_connection"
+            version:
+                description:
+                - "Field version"
+            reputation:
+                description:
+                - "Field reputation"
+            proxy:
+                description:
+                - "Field proxy"
+            tor_proxy:
+                description:
+                - "Field tor_proxy"
+            size:
+                description:
+                - "Field size"
+            total_entries:
+                description:
+                - "Field total_entries"
+            scanners:
+                description:
+                - "Field scanners"
+            failure_reason:
+                description:
+                - "Field failure_reason"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +134,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +163,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',status=dict(type='str',),web_attacks=dict(type='int',),botnets=dict(type='int',),name=dict(type='str',),spam_sources=dict(type='int',),windows_exploits=dict(type='int',),last_update_time=dict(type='str',),dos_attacks=dict(type='int',),next_update_time=dict(type='str',),connection_status=dict(type='str',),mobile_threats=dict(type='int',),phishing=dict(type='int',),last_successful_connection=dict(type='str',),version=dict(type='int',),reputation=dict(type='int',),proxy=dict(type='int',),tor_proxy=dict(type='int',),size=dict(type='str',),total_entries=dict(type='int',),scanners=dict(type='int',),failure_reason=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +192,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -209,10 +273,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -349,8 +416,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

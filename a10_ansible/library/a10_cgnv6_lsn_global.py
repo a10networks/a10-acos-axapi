@@ -125,6 +125,305 @@ options:
             counters3:
                 description:
                 - "'specific_port_allocated_from_quota_partition'= Specific Port Allocated from Quota Partition; 'specific_port_allocated_from_quota_pool_port_batch'= Specific Port Allocated from Quota Pool Port Batch; 'port_batch_container_alloc_failure'= Port Batch Container Alloc Out of Memory; 'port_batch_container_alloc_race_free'= Port Batch Container Race Free; 'port_overloading_destination_conflict'= Port Overloading Destination Conflict; 'port_overloading_out_of_memory'= Port Overloading Out of Memory; 'port_overloading_assign_user'= Port Overloading Port Assign User; 'port_overloading_assign_user_port_batch'= Port Overloading Port Assign User Port Batch; 'port_overloading_inc'= Port Overloading Port Increment; 'port_overloading_dec_on_conflict'= Port Overloading Port Decrement on Conflict; 'port_overloading_dec_on_free'= Port Overloading Port Decrement on Free; 'port_overloading_free_port_on_conflict'= Port Overloading Free Port on Conflict; 'port_overloading_free_port_batch_on_conflict'= Port Overloading Free Port Batch on Conflict; 'port_overloading_inc_overflow'= Port Overloading Inc Overflow; 'port_overloading_attempt_consecutive_ports'= Port Overloading on Consecutive Ports; 'port_overloading_attempt_same_partition'= Port Overloading on Same Partition; 'port_overloading_attempt_diff_partition'= Port Overloading on Different Partition; 'port_overloading_attempt_failed'= Port Overloading Attempt Failed; 'port_overloading_conn_free_retry_lookup'= Port Overloading Conn Free Retry Lookup; 'port_overloading_conn_free_not_found'= Port Overloading Conn Free Not Found; 'port_overloading_smp_mem_allocated'= Port Overloading SMP Session Allocated; 'port_overloading_smp_mem_freed'= Port Overloading SMP Session Freed; 'port_overloading_smp_inserted'= Port Overloading SMP Inserted; 'port_overloading_smp_inserted_tcp_shadow'= Total Port Overloading SMP TCP Inserted; 'port_overloading_smp_inserted_udp_shadow'= Total Port Overloading SMP UDP Inserted; 'port_overloading_smp_free_tcp_shadow'= Total Port Overloading SMP TCP Freed; 'port_overloading_smp_free_udp_shadow'= Total Port Overloading SMP UDP Freed; 'port_overloading_smp_put_in_del_q_from_conn'= Port Overloading SMP Free From Conn; 'port_overloading_smp_free_dec_failure'= Port Overloading SMP Free Dec Failure; 'port_overloading_smp_free_no_quota'= Port Overloading SMP Free No Quota; 'port_overloading_smp_free_port'= Port Overloading SMP Free Port; 'port_overloading_smp_free_port_from_quota'= Port Overloading SMP Free Port From Quota; 'port_overloading_for_no_ports'= Port Overloading for No Ports; 'port_overloading_for_no_ports_success'= Port Overloading for No Ports Success; 'port_overloading_for_quota_exceeded'= Port Overloading for Quota Exceeded; 'port_overloading_for_quota_exceeded_success'= Port Overloading for Quota Exceeded Success; 'port_overloading_for_quota_exceeded_race'= Port Overloading for Quota Exceeded Race; 'port_overloading_for_quota_exceeded_race_success'= Port Overloading for Quota Exceeded Race Success; 'port_overloading_for_new_user'= Port Overloading for New User; 'port_overloading_for_new_user_success'= Port Overloading for New User Success; 'ha_port_overloading_attempt_failed'= HA Port Overloading Attempt Failed; 'ha_port_overloading_for_no_ports'= HA Port Overloading for No Ports; 'ha_port_overloading_for_no_ports_success'= HA Port Overloading for No Ports Success; 'ha_port_overloading_for_quota_exceeded'= HA Port Overloading for Quota Exceeded; 'ha_port_overloading_for_quota_exceeded_success'= HA Port Overloading for Quota Exceeded Success; 'ha_port_overloading_for_quota_exceeded_race'= HA Port Overloading for Quota Exceeded Race; 'ha_port_overloading_for_quota_exceeded_race_success'= HA Port Overloading for Quota Exceeded Race Success; 'ha_port_overloading_for_new_user'= HA Port Overloading for New User; 'ha_port_overloading_for_new_user_success'= HA Port Overloading for New User Success; 'nat_pool_force_delete'= NAT Pool Force Delete; 'quota_ext_too_many'= Quota Ext Too Many; 'nat_pool_not_found_on_free'= NAT Pool Not Found on Free; 'fullcone_ext_mem_freed'= LSN Fullcone Extension Memory Freed; 'fullcone_ext_mem_allocated'= LSN Fullcone Extension Memory Allocated; 'fullcone_ext_mem_alloc_failure'= LSN Fullcone Extension Memory Allocate Failure; 'fullcone_ext_mem_alloc_init_faulure'= LSN Fullcone Extension Initialization Failure; 'fullcone_ext_added'= LSN Fullcone Extension Added; 'fullcone_ext_too_many'= LSN Fullcone Extension Too Many; 'nat_pool_attempt_adding_multiple_free_batches'= Attempt Adding Multiple Free Batches to Quota; 'nat_pool_add_free_batch_failed'= Add Batch to Quota Failed; 'mgcp_alg_no_quota'= MGCP ALG User-Quota Not Found; 'mgcp_alg_quota_inc_failure'= MGCP ALG User-Quota Exceeded; 'mgcp_alg_no_nat_ip'= MGCP ALG Unknown NAT IP; 'mgcp_alg_reuse_fullcone'= MGCP ALG Reuse Full-cone Session; 'mgcp_alg_fullcone_mismatch'= MGCP ALG Full-cone Session Mismatch; 'mgcp_alg_alloc_port_failure'= MGCP ALG Alloc NAT Port Failure; 'mgcp_alg_create_fullcone_failure'= MGCP ALG Create Full-cone Session Failure; 'mgcp_alg_release_port_failure'= MGCP ALG Release NAT Port Failure; 'mgcp_alg_single_rtp_fullcone'= MGCP ALG Single RTP Full-cone Found; 'mgcp_alg_single_rtcp_fullcone'= MGCP ALG Single RTCP Full-cone Found; 'mgcp_alg_rtcp_fullcone_mismatch'= MGCP ALG RTCP Full-cone NAT Port Mismatch; 'mgcp_alg_reuse_rtp_rtcp_fullcone'= MGCP ALG Reuse RTP/RTCP Full-cone Session; 'mgcp_alg_alloc_rtp_rtcp_port_failure'= MGCP ALG Alloc RTP/RTCP NAT Ports Failure; 'mgcp_alg_alloc_single_port_failure'= MGCP ALG Alloc Single RTP or RTCP NAT Port Failure; 'mgcp_alg_create_single_fullcone_failure'= MGCP ALG Create Single RTP or RTCP Full-cone Session Failure; 'mgcp_alg_create_rtp_fullcone_failure'= MGCP ALG Create RTP Full-cone Session Failure; 'mgcp_alg_create_rtcp_fullcone_failure'= MGCP ALG Create RTCP Full-cone Session Failure; 'mgcp_alg_port_pair_alloc_from_consecutive'= MGCP ALG Port Pair Allocated From Consecutive; 'mgcp_alg_port_pair_alloc_from_partition'= MGCP ALG Port Pair Allocated From Partition; 'mgcp_alg_port_pair_alloc_from_pool_port_batch'= MGCP ALG Port Pair Allocated From Pool Port Batch; 'mgcp_alg_port_pair_alloc_from_quota_consecutive'= MGCP ALG Port Pair Allocated From Quota Consecutive; 'mgcp_alg_port_pair_alloc_from_quota_partition'= MGCP ALG Port Pair Allocated From Quota Partition; 'mgcp_alg_port_pair_alloc_from_quota_partition_error'= MGCP ALG Port Pair Allocated From Quota Partition Error; 'mgcp_alg_port_pair_alloc_from_quota_pool_port_batch'= MGCP ALG Port Pair Allocated From Quota Pool Port Batch; 'user_quota_unusable_drop'= User-Quota Unusable Drop; 'user_quota_unusable'= User-Quota Marked Unusable; 'nat_pool_same_port_batch_udp_failed'= Simultaneous Batch Allocation UDP Port Allocation Failed; 'cross_cpu_helper_created_eim'= EIM Cross CPU Session Helper Created; 'cross_cpu_helper_created_eif'= EIF Cross CPU Session Helper Created; 'cross_cpu_helper_created_udp'= UDP Cross CPU Session Helper Created; 'cross_cpu_helper_created_tcp'= TCP Cross CPU Session Helper Created; 'cross_cpu_helper_created_icmp'= ICMP Cross CPU Session Helper Created; 'cross_cpu_helper_created_ip'= IP Cross CPU Session Helper Created; 'cross_cpu_helper_free_not_found_ip'= IP Cross CPU Helper Free Not Found; 'cross_cpu_helper_free_not_found_icmp'= ICMP Cross CPU Helper Free Not Found; 'cross_cpu_helper_free_not_found_tcp'= TCP Cross CPU Helper Free Not Found; 'cross_cpu_helper_free_not_found_udp'= UDP Cross CPU Helper Free Not Found; 'adc_port_allocation_failed'= ADC Port Allocation Failed; 'adc_port_allocation_ineligible'= ADC Port Allocation Not Allowed; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            rev_egress_pkt_size_range1:
+                description:
+                - "Reverse Egress Packet size between 0 and 200"
+            endpoint_indep_filter_match:
+                description:
+                - "Endpoint-Independent Filtering Matched"
+            hairpin:
+                description:
+                - "Hairpin Session Created"
+            fwd_ingress_packets_udp:
+                description:
+                - "Forward Ingress Packets UDP"
+            fwd_egress_packets_tcp:
+                description:
+                - "Forward Egress Packets TCP"
+            rev_egress_bytes_tcp:
+                description:
+                - "Reverse Egress Bytes TCP"
+            fwd_egress_bytes_others:
+                description:
+                - "Forward Egress Bytes OTHERS"
+            fwd_egress_bytes_udp:
+                description:
+                - "Forward Egress Bytes UDP"
+            ha_nat_pool_unusable:
+                description:
+                - "HA NAT Pool Unusable"
+            tcp_user_quota_exceeded:
+                description:
+                - "TCP User-Quota Exceeded"
+            rev_ingress_packets_udp:
+                description:
+                - "Reverse Ingress Packets UDP"
+            rev_egress_bytes_icmp:
+                description:
+                - "Reverse Egress Bytes ICMP"
+            ha_nat_pool_batch_type_mismatch:
+                description:
+                - "HA NAT Pool Batch Type Mismatch"
+            rev_ingress_packets_others:
+                description:
+                - "Reverse Ingress Packets OTHERS"
+            user_quota_unusable_drop:
+                description:
+                - "User-Quota Unusable Drop"
+            fwd_egress_packets_icmp:
+                description:
+                - "Forward Egress Packets ICMP"
+            fullcone_failure:
+                description:
+                - "Full-cone Session Creation Failed"
+            fwd_ingress_pkt_size_range2:
+                description:
+                - "Forward Ingress Packet size between 201 and 800"
+            fwd_ingress_pkt_size_range3:
+                description:
+                - "Forward Ingress Packet size between 801 and 1550"
+            fwd_ingress_pkt_size_range1:
+                description:
+                - "Forward Ingress Packet size between 0 and 200"
+            data_sesn_user_quota_exceeded:
+                description:
+                - "Data Session User-Quota Exceeded"
+            lid_drop:
+                description:
+                - "LSN LID Drop"
+            fwd_ingress_pkt_size_range4:
+                description:
+                - "Forward Ingress Packet size between 1551 and 9000"
+            fwd_egress_bytes_tcp:
+                description:
+                - "Forward Egress Bytes TCP"
+            user_quota_put_in_del_q:
+                description:
+                - "User-Quota Freed"
+            rev_ingress_packets_tcp:
+                description:
+                - "Reverse Ingress Packets TCP"
+            udp_user_quota_exceeded:
+                description:
+                - "UDP User-Quota Exceeded"
+            total_tcp_freed:
+                description:
+                - "Total TCP Ports Freed"
+            lid_pass_through:
+                description:
+                - "LSN LID Pass-through"
+            user_quota_unusable:
+                description:
+                - "User-Quota Marked Unusable"
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Session Created"
+            fwd_egress_packets_others:
+                description:
+                - "Forward Egress Packets OTHERS"
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Session Created"
+            icmp_user_quota_exceeded:
+                description:
+                - "ICMP User-Quota Exceeded"
+            total_tcp_allocated:
+                description:
+                - "Total TCP Ports Allocated"
+            rev_egress_bytes_udp:
+                description:
+                - "Reverse Egress Bytes UDP"
+            user_quota_failure:
+                description:
+                - "User-Quota Creation Failed"
+            user_quota_created:
+                description:
+                - "User-Quota Created"
+            rev_egress_packets_icmp:
+                description:
+                - "Reverse Egress Packets ICMP"
+            data_sesn_rate_user_quota_exceeded:
+                description:
+                - "Conn Rate User-Quota Exceeded"
+            fullcone_self_hairpinning_drop:
+                description:
+                - "Self-Hairpinning Drop"
+            new_user_resource_unavailable:
+                description:
+                - "New User NAT Resource Unavailable"
+            total_udp_allocated:
+                description:
+                - "Total UDP Ports Allocated"
+            data_session_created:
+                description:
+                - "Data Session Created"
+            rev_ingress_bytes_tcp:
+                description:
+                - "Reverse Ingress Bytes TCP"
+            fwd_ingress_bytes_others:
+                description:
+                - "Forward Ingress Bytes OTHERS"
+            rev_ingress_bytes_others:
+                description:
+                - "Reverse Ingress Bytes OTHERS"
+            rev_egress_packets_tcp:
+                description:
+                - "Reverse Egress Packets TCP"
+            fwd_ingress_bytes_tcp:
+                description:
+                - "Forward Ingress Bytes TCP"
+            nat_port_unavailable_icmp:
+                description:
+                - "ICMP NAT Port Unavailable"
+            extended_quota_matched:
+                description:
+                - "Extended User-Quota Matched"
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Session Freed"
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Session Freed"
+            fwd_egress_bytes_icmp:
+                description:
+                - "Forward Egress Bytes ICMP"
+            eif_limit_exceeded:
+                description:
+                - "Endpoint-Independent Filtering Inbound Limit Exceeded"
+            port_overloading_smp_inserted_udp:
+                description:
+                - "UDP Port Overloading Session Created"
+            total_udp_freed:
+                description:
+                - "Total UDP Ports Freed"
+            fwd_egress_pkt_size_range3:
+                description:
+                - "Forward Egress Packet size between 801 and 1550"
+            fwd_egress_pkt_size_range2:
+                description:
+                - "Forward Egress Packet size between 201 and 800"
+            nat_port_unavailable_tcp:
+                description:
+                - "TCP NAT Port Unavailable"
+            total_tcp_overloaded:
+                description:
+                - "TCP Port Overloaded"
+            fwd_ingress_packets_tcp:
+                description:
+                - "Forward Ingress Packets TCP"
+            total_icmp_freed:
+                description:
+                - "Total ICMP Ports Freed"
+            nat_ip_max_udp_ports_allocated:
+                description:
+                - "NAT IP UDP Max Ports Allocated"
+            fwd_ingress_packets_others:
+                description:
+                - "Forward Ingress Packets OTHERS"
+            rev_egress_packets_others:
+                description:
+                - "Reverse Egress Packets OTHERS"
+            no_radius_profile_match:
+                description:
+                - "No RADIUS Profile Match"
+            endpoint_indep_map_match:
+                description:
+                - "Endpoint-Independent Mapping Matched"
+            rev_ingress_pkt_size_range4:
+                description:
+                - "Reverse Ingress Packet size between 1551 and 9000"
+            rev_ingress_pkt_size_range2:
+                description:
+                - "Reverse Ingress Packet size between 201 and 800"
+            rev_ingress_pkt_size_range3:
+                description:
+                - "Reverse Ingress Packet size between 801 and 1550"
+            rev_ingress_pkt_size_range1:
+                description:
+                - "Reverse Ingress Packet size between 0 and 200"
+            total_icmp_allocated:
+                description:
+                - "Total ICMP Ports Allocated"
+            no_class_list_match:
+                description:
+                - "No Class-List Match"
+            inbound_filtered:
+                description:
+                - "Endpoint-Dependent Filtering Drop"
+            fwd_egress_packets_udp:
+                description:
+                - "Forward Egress Packets UDP"
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+            total_udp_overloaded:
+                description:
+                - "UDP Port Overloaded"
+            port_overloading_smp_inserted_tcp:
+                description:
+                - "TCP Port Overloading Session Created"
+            nat_pool_unusable:
+                description:
+                - "NAT Pool Unusable"
+            nat_port_unavailable_udp:
+                description:
+                - "UDP NAT Port Unavailable"
+            port_overloading_smp_free_tcp:
+                description:
+                - "TCP Port Overloading Session Freed"
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+            port_overloading_smp_free_udp:
+                description:
+                - "UDP Port Overloading Session Freed"
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+            nat_ip_max_tcp_ports_allocated:
+                description:
+                - "NAT IP TCP Max Ports Allocated"
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+            extended_quota_exceeded:
+                description:
+                - "Extended User-Quota Exceeded"
+            rev_egress_pkt_size_range4:
+                description:
+                - "Reverse Egress Packet size between 1551 and 9000"
+            rev_egress_pkt_size_range3:
+                description:
+                - "Reverse Egress Packet size between 801 and 1550"
+            fwd_ingress_packets_icmp:
+                description:
+                - "Forward Ingress Packets ICMP"
+            rev_egress_pkt_size_range2:
+                description:
+                - "Reverse Egress Packet size between 201 and 800"
     enhanced_user_tracking:
         description:
         - "Enable enhanced user tracking and visibility (default= disabled)"
@@ -154,7 +453,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["attempt_port_preservation","enhanced_user_tracking","hairpinning","half_close_timeout","icmp","inbound_refresh","ip_selection","logging","port_batching","sampling_enable","strictly_sticky_nat","syn_timeout","uuid",]
+AVAILABLE_PROPERTIES = ["attempt_port_preservation","enhanced_user_tracking","hairpinning","half_close_timeout","icmp","inbound_refresh","ip_selection","logging","port_batching","sampling_enable","stats","strictly_sticky_nat","syn_timeout","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -194,6 +493,7 @@ def get_argspec():
         ip_selection=dict(type='str',choices=['random','round-robin','least-used-strict','least-udp-used-strict','least-tcp-used-strict','least-reserved-strict','least-udp-reserved-strict','least-tcp-reserved-strict','least-users-strict']),
         syn_timeout=dict(type='int',),
         sampling_enable=dict(type='list',counters4=dict(type='str',choices=['acl_http_domain_node_exceeded','fwd_ingress_packets_tcp','fwd_egress_packets_tcp','rev_ingress_packets_tcp','rev_egress_packets_tcp','fwd_ingress_bytes_tcp','fwd_egress_bytes_tcp','rev_ingress_bytes_tcp','rev_egress_bytes_tcp','fwd_ingress_packets_udp','fwd_egress_packets_udp','rev_ingress_packets_udp','rev_egress_packets_udp','fwd_ingress_bytes_udp','fwd_egress_bytes_udp','rev_ingress_bytes_udp','rev_egress_bytes_udp','fwd_ingress_packets_icmp','fwd_egress_packets_icmp','rev_ingress_packets_icmp','rev_egress_packets_icmp','fwd_ingress_bytes_icmp','fwd_egress_bytes_icmp','rev_ingress_bytes_icmp','rev_egress_bytes_icmp','fwd_ingress_packets_others','fwd_egress_packets_others','rev_ingress_packets_others','rev_egress_packets_others','fwd_ingress_bytes_others','fwd_egress_bytes_others','rev_ingress_bytes_others','rev_egress_bytes_others','fwd_ingress_pkt_size_range1','fwd_ingress_pkt_size_range2','fwd_ingress_pkt_size_range3','fwd_ingress_pkt_size_range4','fwd_egress_pkt_size_range1','fwd_egress_pkt_size_range2','fwd_egress_pkt_size_range3','fwd_egress_pkt_size_range4','rev_ingress_pkt_size_range1','rev_ingress_pkt_size_range2','rev_ingress_pkt_size_range3','rev_ingress_pkt_size_range4','rev_egress_pkt_size_range1','rev_egress_pkt_size_range2','rev_egress_pkt_size_range3','rev_egress_pkt_size_range4']),counters1=dict(type='str',choices=['all','total_tcp_allocated','total_tcp_freed','total_udp_allocated','total_udp_freed','total_icmp_allocated','total_icmp_freed','data_session_created','data_session_freed','user_quota_created','user_quota_put_in_del_q','user_quota_failure','nat_port_unavailable_tcp','nat_port_unavailable_udp','nat_port_unavailable_icmp','new_user_resource_unavailable','tcp_user_quota_exceeded','udp_user_quota_exceeded','icmp_user_quota_exceeded','extended_quota_matched','extended_quota_exceeded','data_sesn_user_quota_exceeded','data_sesn_rate_user_quota_exceeded','tcp_fullcone_created','tcp_fullcone_freed','udp_fullcone_created','udp_fullcone_freed','fullcone_failure','hairpin','fullcone_self_hairpinning_drop','endpoint_indep_map_match','endpoint_indep_filter_match','inbound_filtered','eif_limit_exceeded','total_tcp_overloaded','total_udp_overloaded','port_overloading_smp_inserted_tcp','port_overloading_smp_inserted_udp','port_overloading_smp_free_tcp','port_overloading_smp_free_udp','nat_pool_unusable','ha_nat_pool_unusable','ha_nat_pool_batch_type_mismatch','no_radius_profile_match','nat_ip_max_tcp_ports_allocated','nat_ip_max_udp_ports_allocated','no_class_list_match','lid_drop','lid_pass_through','fullcone_in_del_q','fullcone_retry_lookup','fullcone_not_found','nat_port_double_free','nat_port_chunk_freed_from_cpu','nat_port_freed_from_diff_cpu','nat_pool_deleted','nat_esp_ip_conflicts','nat_esp_no_control_sesn','esp_user_quota_exceeded','udp_alg_user_quota_exceeded','gre_user_quota_exceeded','ha_classlist_mismatch','ha_user_quota_mismatch','ha_fullcone_mismatch','ha_port_mismatch','ha_dnat_mismatch','ha_nat_port_unavailable','ha_unknown_nat_ip','ha_fullcone_failure','ha_fullcone_create_race_failure','ha_endpoint_indep_map_match','standby_class_list_drop','bad_tuple_nat_ip','bad_smp_tuple_nat_ip','fullcone_inbound_nat_pool_mismatch','fullcone_overflow_eim','fullcone_overflow_eif','cross_cpu_helper_created','cross_cpu_sent','cross_cpu_rcv','cross_cpu_bad_l3','cross_cpu_bad_l4','cross_cpu_no_session','cross_cpu_helper_free','cross_cpu_helper_free_retry_lookup','cross_cpu_helper_free_not_found','cross_cpu_helper_deleted','cross_cpu_helper_cpu_mismatch','cross_cpu_helper_nat_pool_standby','cross_cpu_helper_double_add','mtu_exceeded','frag','dslite_tunnel_frag','sixrd_tunnel_frag','frag_icmp','frag_tunnel_icmp','quota_ext_mem_allocated','quota_ext_mem_alloc_failure','quota_ext_mem_freed','quota_ext_put_in_del_q','port_batch_num_mismatch','port_batch_interval_mismatch','port_pair_alloc_bad_math','free_port_from_quota_no_container','free_port_from_quota_no_port_info','static_nat_cross_cpu_helper_created','static_nat_cross_cpu_helper_deleted','static_nat_cross_cpu_helper_standby','static_nat_cross_cpu_helper_cpu_mismatch','static_nat_cross_cpu_sent','static_nat_cross_cpu_rcv','static_nat_cross_cpu_bad_l3','static_nat_cross_cpu_bad_l4','static_nat_cross_cpu_no_session','static_nat_cross_cpu_helper_free','static_nat_cross_cpu_helper_free_retry_lookup','static_nat_cross_cpu_helper_free_not_found','static_nat_ha_map_mismatch','ip_slb_cross_cpu_sent','fullcone_force_deleted','user_quota_mem_allocated','user_quota_mem_freed','user_quota_created_shadow','quota_marked_deleted','quota_delete_not_in_bucket','user_quota_put_in_del_q_shadow','tcp_out_of_state_rst_sent','tcp_out_of_state_rst_dropped','icmp_out_of_state_uqe_admin_filtered_sent','icmp_out_of_state_uqe_host_unreachable_sent','icmp_out_of_state_uqe_dropped']),counters2=dict(type='str',choices=['user_quota_not_found','tcp_fullcone_created_shadow','tcp_fullcone_freed_shadow','udp_fullcone_created_shadow','udp_fullcone_freed_shadow','udp_alg_fullcone_created','udp_alg_fullcone_freed','fullcone_created','fullcone_freed','data_session_created_shadow','data_session_freed_shadow','data_session_user_quota_mismatch','extended_quota_mismatched','nat_port_unavailable_other','nat_port_unavailable','new_user_resource_unavailable_tcp','new_user_resource_unavailable_udp','new_user_resource_unavailable_icmp','new_user_resource_unavailable_other','total_tcp_allocated_shadow','total_tcp_freed_shadow','total_udp_allocated_shadow','total_udp_freed_shadow','total_icmp_allocated_shadow','total_icmp_freed_shadow','udp_alg_no_quota','udp_alg_eim_mismatch','udp_alg_no_nat_ip','udp_alg_alloc_failure','sip_alg_no_quota','sip_alg_quota_inc_failure','sip_alg_no_nat_ip','sip_alg_reuse_contact_fullcone','sip_alg_contact_fullcone_mismatch','sip_alg_alloc_contact_port_failure','sip_alg_create_contact_fullcone_failure','sip_alg_release_contact_port_failure','sip_alg_single_rtp_fullcone','sip_alg_single_rtcp_fullcone','sip_alg_rtcp_fullcone_mismatch','sip_alg_reuse_rtp_rtcp_fullcone','sip_alg_alloc_rtp_rtcp_port_failure','sip_alg_alloc_single_port_failure','sip_alg_create_single_fullcone_failure','sip_alg_create_rtp_fullcone_failure','sip_alg_create_rtcp_fullcone_failure','sip_alg_port_pair_alloc_from_consecutive','sip_alg_port_pair_alloc_from_partition','sip_alg_port_pair_alloc_from_pool_port_batch','sip_alg_port_pair_alloc_from_quota_consecutive','sip_alg_port_pair_alloc_from_quota_partition','sip_alg_port_pair_alloc_from_quota_partition_error','sip_alg_port_pair_alloc_from_quota_pool_port_batch','sip_alg_port_pair_alloc_from_quota_pool_port_batch_with_frag','h323_alg_no_quota','h323_alg_quota_inc_failure','h323_alg_no_nat_ip','h323_alg_reuse_fullcone','h323_alg_fullcone_mismatch','h323_alg_alloc_port_failure','h323_alg_create_fullcone_failure','h323_alg_release_port_failure','h323_alg_single_rtp_fullcone','h323_alg_single_rtcp_fullcone','h323_alg_rtcp_fullcone_mismatch','h323_alg_reuse_rtp_rtcp_fullcone','h323_alg_alloc_rtp_rtcp_port_failure','h323_alg_alloc_single_port_failure','h323_alg_create_single_fullcone_failure','h323_alg_create_rtp_fullcone_failure','h323_alg_create_rtcp_fullcone_failure','h323_alg_port_pair_alloc_from_consecutive','h323_alg_port_pair_alloc_from_partition','h323_alg_port_pair_alloc_from_pool_port_batch','h323_alg_port_pair_alloc_from_quota_consecutive','h323_alg_port_pair_alloc_from_quota_partition','h323_alg_port_pair_alloc_from_quota_partition_error','h323_alg_port_pair_alloc_from_quota_pool_port_batch','port_batch_quota_extension_alloc_failure','port_batch_free_quota_not_found','port_batch_free_port_not_found','port_batch_free_wrong_partition','radius_query_quota_ext_alloc_failure','radius_query_quota_ext_alloc_race_free','quota_extension_added','quota_extension_removed','quota_extension_remove_not_found','ha_sync_port_batch_sent','ha_sync_port_batch_rcv','ha_send_port_batch_not_found','ha_rcv_port_not_in_port_batch','bad_port_to_free','consecutive_port_free','partition_port_free','pool_port_batch_port_free','port_allocated_from_quota_consecutive','port_allocated_from_quota_partition','port_allocated_from_quota_pool_port_batch','port_freed_from_quota_consecutive','port_freed_from_quota_partition','port_freed_from_quota_pool_port_batch','port_batch_allocated_to_quota','port_batch_freed_from_quota','specific_port_allocated_from_quota_consecutive']),counters3=dict(type='str',choices=['specific_port_allocated_from_quota_partition','specific_port_allocated_from_quota_pool_port_batch','port_batch_container_alloc_failure','port_batch_container_alloc_race_free','port_overloading_destination_conflict','port_overloading_out_of_memory','port_overloading_assign_user','port_overloading_assign_user_port_batch','port_overloading_inc','port_overloading_dec_on_conflict','port_overloading_dec_on_free','port_overloading_free_port_on_conflict','port_overloading_free_port_batch_on_conflict','port_overloading_inc_overflow','port_overloading_attempt_consecutive_ports','port_overloading_attempt_same_partition','port_overloading_attempt_diff_partition','port_overloading_attempt_failed','port_overloading_conn_free_retry_lookup','port_overloading_conn_free_not_found','port_overloading_smp_mem_allocated','port_overloading_smp_mem_freed','port_overloading_smp_inserted','port_overloading_smp_inserted_tcp_shadow','port_overloading_smp_inserted_udp_shadow','port_overloading_smp_free_tcp_shadow','port_overloading_smp_free_udp_shadow','port_overloading_smp_put_in_del_q_from_conn','port_overloading_smp_free_dec_failure','port_overloading_smp_free_no_quota','port_overloading_smp_free_port','port_overloading_smp_free_port_from_quota','port_overloading_for_no_ports','port_overloading_for_no_ports_success','port_overloading_for_quota_exceeded','port_overloading_for_quota_exceeded_success','port_overloading_for_quota_exceeded_race','port_overloading_for_quota_exceeded_race_success','port_overloading_for_new_user','port_overloading_for_new_user_success','ha_port_overloading_attempt_failed','ha_port_overloading_for_no_ports','ha_port_overloading_for_no_ports_success','ha_port_overloading_for_quota_exceeded','ha_port_overloading_for_quota_exceeded_success','ha_port_overloading_for_quota_exceeded_race','ha_port_overloading_for_quota_exceeded_race_success','ha_port_overloading_for_new_user','ha_port_overloading_for_new_user_success','nat_pool_force_delete','quota_ext_too_many','nat_pool_not_found_on_free','fullcone_ext_mem_freed','fullcone_ext_mem_allocated','fullcone_ext_mem_alloc_failure','fullcone_ext_mem_alloc_init_faulure','fullcone_ext_added','fullcone_ext_too_many','nat_pool_attempt_adding_multiple_free_batches','nat_pool_add_free_batch_failed','mgcp_alg_no_quota','mgcp_alg_quota_inc_failure','mgcp_alg_no_nat_ip','mgcp_alg_reuse_fullcone','mgcp_alg_fullcone_mismatch','mgcp_alg_alloc_port_failure','mgcp_alg_create_fullcone_failure','mgcp_alg_release_port_failure','mgcp_alg_single_rtp_fullcone','mgcp_alg_single_rtcp_fullcone','mgcp_alg_rtcp_fullcone_mismatch','mgcp_alg_reuse_rtp_rtcp_fullcone','mgcp_alg_alloc_rtp_rtcp_port_failure','mgcp_alg_alloc_single_port_failure','mgcp_alg_create_single_fullcone_failure','mgcp_alg_create_rtp_fullcone_failure','mgcp_alg_create_rtcp_fullcone_failure','mgcp_alg_port_pair_alloc_from_consecutive','mgcp_alg_port_pair_alloc_from_partition','mgcp_alg_port_pair_alloc_from_pool_port_batch','mgcp_alg_port_pair_alloc_from_quota_consecutive','mgcp_alg_port_pair_alloc_from_quota_partition','mgcp_alg_port_pair_alloc_from_quota_partition_error','mgcp_alg_port_pair_alloc_from_quota_pool_port_batch','user_quota_unusable_drop','user_quota_unusable','nat_pool_same_port_batch_udp_failed','cross_cpu_helper_created_eim','cross_cpu_helper_created_eif','cross_cpu_helper_created_udp','cross_cpu_helper_created_tcp','cross_cpu_helper_created_icmp','cross_cpu_helper_created_ip','cross_cpu_helper_free_not_found_ip','cross_cpu_helper_free_not_found_icmp','cross_cpu_helper_free_not_found_tcp','cross_cpu_helper_free_not_found_udp','adc_port_allocation_failed','adc_port_allocation_ineligible'])),
+        stats=dict(type='dict',rev_egress_pkt_size_range1=dict(type='str',),endpoint_indep_filter_match=dict(type='str',),hairpin=dict(type='str',),fwd_ingress_packets_udp=dict(type='str',),fwd_egress_packets_tcp=dict(type='str',),rev_egress_bytes_tcp=dict(type='str',),fwd_egress_bytes_others=dict(type='str',),fwd_egress_bytes_udp=dict(type='str',),ha_nat_pool_unusable=dict(type='str',),tcp_user_quota_exceeded=dict(type='str',),rev_ingress_packets_udp=dict(type='str',),rev_egress_bytes_icmp=dict(type='str',),ha_nat_pool_batch_type_mismatch=dict(type='str',),rev_ingress_packets_others=dict(type='str',),user_quota_unusable_drop=dict(type='str',),fwd_egress_packets_icmp=dict(type='str',),fullcone_failure=dict(type='str',),fwd_ingress_pkt_size_range2=dict(type='str',),fwd_ingress_pkt_size_range3=dict(type='str',),fwd_ingress_pkt_size_range1=dict(type='str',),data_sesn_user_quota_exceeded=dict(type='str',),lid_drop=dict(type='str',),fwd_ingress_pkt_size_range4=dict(type='str',),fwd_egress_bytes_tcp=dict(type='str',),user_quota_put_in_del_q=dict(type='str',),rev_ingress_packets_tcp=dict(type='str',),udp_user_quota_exceeded=dict(type='str',),total_tcp_freed=dict(type='str',),lid_pass_through=dict(type='str',),user_quota_unusable=dict(type='str',),tcp_fullcone_created=dict(type='str',),fwd_egress_packets_others=dict(type='str',),udp_fullcone_created=dict(type='str',),icmp_user_quota_exceeded=dict(type='str',),total_tcp_allocated=dict(type='str',),rev_egress_bytes_udp=dict(type='str',),user_quota_failure=dict(type='str',),user_quota_created=dict(type='str',),rev_egress_packets_icmp=dict(type='str',),data_sesn_rate_user_quota_exceeded=dict(type='str',),fullcone_self_hairpinning_drop=dict(type='str',),new_user_resource_unavailable=dict(type='str',),total_udp_allocated=dict(type='str',),data_session_created=dict(type='str',),rev_ingress_bytes_tcp=dict(type='str',),fwd_ingress_bytes_others=dict(type='str',),rev_ingress_bytes_others=dict(type='str',),rev_egress_packets_tcp=dict(type='str',),fwd_ingress_bytes_tcp=dict(type='str',),nat_port_unavailable_icmp=dict(type='str',),extended_quota_matched=dict(type='str',),tcp_fullcone_freed=dict(type='str',),udp_fullcone_freed=dict(type='str',),fwd_egress_bytes_icmp=dict(type='str',),eif_limit_exceeded=dict(type='str',),port_overloading_smp_inserted_udp=dict(type='str',),total_udp_freed=dict(type='str',),fwd_egress_pkt_size_range3=dict(type='str',),fwd_egress_pkt_size_range2=dict(type='str',),nat_port_unavailable_tcp=dict(type='str',),total_tcp_overloaded=dict(type='str',),fwd_ingress_packets_tcp=dict(type='str',),total_icmp_freed=dict(type='str',),nat_ip_max_udp_ports_allocated=dict(type='str',),fwd_ingress_packets_others=dict(type='str',),rev_egress_packets_others=dict(type='str',),no_radius_profile_match=dict(type='str',),endpoint_indep_map_match=dict(type='str',),rev_ingress_pkt_size_range4=dict(type='str',),rev_ingress_pkt_size_range2=dict(type='str',),rev_ingress_pkt_size_range3=dict(type='str',),rev_ingress_pkt_size_range1=dict(type='str',),total_icmp_allocated=dict(type='str',),no_class_list_match=dict(type='str',),inbound_filtered=dict(type='str',),fwd_egress_packets_udp=dict(type='str',),data_session_freed=dict(type='str',),total_udp_overloaded=dict(type='str',),port_overloading_smp_inserted_tcp=dict(type='str',),nat_pool_unusable=dict(type='str',),nat_port_unavailable_udp=dict(type='str',),port_overloading_smp_free_tcp=dict(type='str',),rev_ingress_bytes_udp=dict(type='str',),rev_ingress_bytes_icmp=dict(type='str',),rev_egress_bytes_others=dict(type='str',),port_overloading_smp_free_udp=dict(type='str',),fwd_ingress_bytes_icmp=dict(type='str',),fwd_egress_pkt_size_range1=dict(type='str',),rev_ingress_packets_icmp=dict(type='str',),rev_egress_packets_udp=dict(type='str',),fwd_ingress_bytes_udp=dict(type='str',),nat_ip_max_tcp_ports_allocated=dict(type='str',),fwd_egress_pkt_size_range4=dict(type='str',),extended_quota_exceeded=dict(type='str',),rev_egress_pkt_size_range4=dict(type='str',),rev_egress_pkt_size_range3=dict(type='str',),fwd_ingress_packets_icmp=dict(type='str',),rev_egress_pkt_size_range2=dict(type='str',)),
         enhanced_user_tracking=dict(type='bool',),
         icmp=dict(type='dict',send_on_user_quota_exceeded=dict(type='str',choices=['host-unreachable','admin-filtered','disable']),send_on_port_unavailable=dict(type='str',choices=['host-unreachable','admin-filtered','disable']))
     ))
@@ -218,11 +518,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -308,10 +603,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -459,8 +757,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

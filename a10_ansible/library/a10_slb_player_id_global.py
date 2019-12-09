@@ -52,6 +52,46 @@ options:
         description:
         - "Minimum record expiration value (default 1 min) (Min record expiration time in minutes, default 1)"
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            time_to_active:
+                description:
+                - "Field time_to_active"
+            state:
+                description:
+                - "Field state"
+            table_count:
+                description:
+                - "Field table_count"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_playerids_deleted:
+                description:
+                - "Playerid records deleted"
+            total_invalid_playerid_drops:
+                description:
+                - "Invalid playerid packet drops"
+            total_playerids_created:
+                description:
+                - "Playerid records created"
+            total_pkt_activity_age_outs:
+                description:
+                - "Playerid records idle timeout"
+            total_abs_max_age_outs:
+                description:
+                - "Playerid records max time aged out"
+            total_valid_playerid_pkts:
+                description:
+                - "Valid playerid packets"
+            total_invalid_playerid_pkts:
+                description:
+                - "Invalid playerid packets"
     uuid:
         description:
         - "uuid of the object"
@@ -98,7 +138,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["abs_max_expiration","enable_64bit_player_id","enforcement_timer","force_passive","min_expiration","pkt_activity_expiration","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["abs_max_expiration","enable_64bit_player_id","enforcement_timer","force_passive","min_expiration","oper","pkt_activity_expiration","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -128,6 +168,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         min_expiration=dict(type='int',),
+        oper=dict(type='dict',time_to_active=dict(type='int',),state=dict(type='str',choices=['Active','Passive','Forced Passive']),table_count=dict(type='int',)),
+        stats=dict(type='dict',total_playerids_deleted=dict(type='str',),total_invalid_playerid_drops=dict(type='str',),total_playerids_created=dict(type='str',),total_pkt_activity_age_outs=dict(type='str',),total_abs_max_age_outs=dict(type='str',),total_valid_playerid_pkts=dict(type='str',),total_invalid_playerid_pkts=dict(type='str',)),
         uuid=dict(type='str',),
         pkt_activity_expiration=dict(type='int',),
         force_passive=dict(type='bool',),
@@ -248,9 +290,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

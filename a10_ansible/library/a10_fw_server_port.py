@@ -51,6 +51,44 @@ options:
     server_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            vrid:
+                description:
+                - "Field vrid"
+            ha_group_id:
+                description:
+                - "Field ha_group_id"
+            alloc_failed:
+                description:
+                - "Field alloc_failed"
+            ports_consumed:
+                description:
+                - "Field ports_consumed"
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            ipv6:
+                description:
+                - "Field ipv6"
+            state:
+                description:
+                - "Field state"
+            port_number:
+                description:
+                - "Port Number"
+            ip:
+                description:
+                - "Field ip"
+            ports_freed_total:
+                description:
+                - "Field ports_freed_total"
+            ports_consumed_total:
+                description:
+                - "Field ports_consumed_total"
     health_check_disable:
         description:
         - "Disable health check"
@@ -83,6 +121,89 @@ options:
         description:
         - "'enable'= enable; 'disable'= disable; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            es_resp_invalid_http:
+                description:
+                - "Total non-http response"
+            curr_req:
+                description:
+                - "Current requests"
+            protocol:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            total_rev_pkts_inspected_good_status_code:
+                description:
+                - "Total reverse packets with good status code inspected"
+            es_resp_count:
+                description:
+                - "Total proxy Response"
+            total_fwd_bytes:
+                description:
+                - "Forward bytes"
+            es_resp_other:
+                description:
+                - "Response status other"
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+            total_fwd_pkts:
+                description:
+                - "Forward packets"
+            es_req_count:
+                description:
+                - "Total proxy request"
+            es_resp_500:
+                description:
+                - "Response status 500"
+            peak_conn:
+                description:
+                - "Peak connections"
+            total_req:
+                description:
+                - "Total requests"
+            es_resp_400:
+                description:
+                - "Response status 400"
+            es_resp_300:
+                description:
+                - "Response status 300"
+            curr_conn:
+                description:
+                - "Current connections"
+            port_number:
+                description:
+                - "Port Number"
+            es_resp_200:
+                description:
+                - "Response status 200"
+            total_rev_bytes:
+                description:
+                - "Reverse bytes"
+            response_time:
+                description:
+                - "Response time"
+            total_conn:
+                description:
+                - "Total connections"
+            total_rev_pkts:
+                description:
+                - "Reverse packets"
+            total_req_succ:
+                description:
+                - "Total request success"
+            last_total_conn:
+                description:
+                - "Last total connections"
+            total_rev_pkts_inspected:
+                description:
+                - "Total reverse packets inspected"
+            slowest_rsp_time:
+                description:
+                - "Slowest response time"
     health_check:
         description:
         - "Health Check (Monitor Name)"
@@ -101,7 +222,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","health_check","health_check_disable","port_number","protocol","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","health_check","health_check_disable","oper","port_number","protocol","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -130,6 +251,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',vrid=dict(type='int',),ha_group_id=dict(type='int',),alloc_failed=dict(type='int',),ports_consumed=dict(type='int',),protocol=dict(type='str',required=True,choices=['tcp','udp']),ipv6=dict(type='str',),state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),port_number=dict(type='int',required=True,),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',)),
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp']),
         uuid=dict(type='str',),
@@ -137,6 +259,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time'])),
         port_number=dict(type='int',required=True,),
         action=dict(type='str',choices=['enable','disable']),
+        stats=dict(type='dict',es_resp_invalid_http=dict(type='str',),curr_req=dict(type='str',),protocol=dict(type='str',required=True,choices=['tcp','udp']),total_rev_pkts_inspected_good_status_code=dict(type='str',),es_resp_count=dict(type='str',),total_fwd_bytes=dict(type='str',),es_resp_other=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),es_req_count=dict(type='str',),es_resp_500=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),es_resp_400=dict(type='str',),es_resp_300=dict(type='str',),curr_conn=dict(type='str',),port_number=dict(type='int',required=True,),es_resp_200=dict(type='str',),total_rev_bytes=dict(type='str',),response_time=dict(type='str',),total_conn=dict(type='str',),total_rev_pkts=dict(type='str',),total_req_succ=dict(type='str',),last_total_conn=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),slowest_rsp_time=dict(type='str',)),
         health_check=dict(type='str',)
     ))
    
@@ -261,9 +384,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

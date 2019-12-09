@@ -52,6 +52,29 @@ options:
         description:
         - "'ignore'= Ignore; 'append-entry'= Append the AVPs to existing entry (default); 'replace-entry'= Replace the AVPs of existing entry; "
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            radius_table_entries_list:
+                description:
+                - "Field radius_table_entries_list"
+            custom_attr_value:
+                description:
+                - "Field custom_attr_value"
+            starts_with:
+                description:
+                - "Field starts_with"
+            custom_attr_name:
+                description:
+                - "Field custom_attr_name"
+            case_insensitive:
+                description:
+                - "Field case_insensitive"
+            total_entries:
+                description:
+                - "Field total_entries"
     attribute_name:
         description:
         - "'msisdn'= Clear using MSISDN; 'imei'= Clear using IMEI; 'imsi'= Clear using IMSI; "
@@ -84,6 +107,62 @@ options:
         description:
         - "Configure shared secret"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            secret_not_configured_dropped:
+                description:
+                - "RADIUS Secret Not Configured Dropped"
+            smp_created:
+                description:
+                - "RADIUS SMP Created"
+            radius_request_dropped:
+                description:
+                - "RADIUS Request Dropped (Malformed Packet)"
+            imsi_received:
+                description:
+                - "IMSI Received"
+            invalid_key:
+                description:
+                - "Radius Request has Invalid Key Field"
+            request_bad_secret_dropped:
+                description:
+                - "RADIUS Request Bad Secret Dropped"
+            ha_standby_dropped:
+                description:
+                - "HA Standby Dropped"
+            custom_received:
+                description:
+                - "Custom attribute Received"
+            radius_request_received:
+                description:
+                - "RADIUS Request Received"
+            imei_received:
+                description:
+                - "IMEI Received"
+            request_no_key_vap_dropped:
+                description:
+                - "RADIUS Request No Key Attribute Dropped"
+            smp_deleted:
+                description:
+                - "RADIUS SMP Deleted"
+            radius_table_full:
+                description:
+                - "RADIUS Request Dropped (Table Full)"
+            msisdn_received:
+                description:
+                - "MSISDN Received"
+            request_ignored:
+                description:
+                - "RADIUS Request Table Full Dropped"
+            ipv6_prefix_length_mismatch:
+                description:
+                - "Framed IPV6 Prefix Length Mismatch"
+            request_malformed_dropped:
+                description:
+                - "RADIUS Request Malformed Dropped"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -161,7 +240,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accounting_interim_update","accounting_on","accounting_start","accounting_stop","attribute","attribute_name","custom_attribute_name","encrypted","listen_port","remote","sampling_enable","secret","secret_string","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["accounting_interim_update","accounting_on","accounting_start","accounting_stop","attribute","attribute_name","custom_attribute_name","encrypted","listen_port","oper","remote","sampling_enable","secret","secret_string","stats","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -191,6 +270,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         accounting_start=dict(type='str',choices=['ignore','append-entry','replace-entry']),
+        oper=dict(type='dict',radius_table_entries_list=dict(type='list',msisdn=dict(type='str',),is_obsolete=dict(type='bool',),prefix_len=dict(type='int',),custom2_attr_value=dict(type='str',),custom3_attr_value=dict(type='str',),inside_ip=dict(type='str',),inside_ipv6=dict(type='str',),imei=dict(type='str',),custom1_attr_value=dict(type='str',),imsi=dict(type='str',)),custom_attr_value=dict(type='str',),starts_with=dict(type='bool',),custom_attr_name=dict(type='str',),case_insensitive=dict(type='bool',),total_entries=dict(type='int',)),
         attribute_name=dict(type='str',choices=['msisdn','imei','imsi']),
         vrid=dict(type='int',),
         remote=dict(type='dict',ip_list=dict(type='list',ip_list_name=dict(type='str',),ip_list_encrypted=dict(type='str',),ip_list_secret_string=dict(type='str',),ip_list_secret=dict(type='bool',))),
@@ -198,6 +278,7 @@ def get_argspec():
         encrypted=dict(type='str',),
         accounting_interim_update=dict(type='str',choices=['ignore','append-entry','replace-entry']),
         secret=dict(type='bool',),
+        stats=dict(type='dict',secret_not_configured_dropped=dict(type='str',),smp_created=dict(type='str',),radius_request_dropped=dict(type='str',),imsi_received=dict(type='str',),invalid_key=dict(type='str',),request_bad_secret_dropped=dict(type='str',),ha_standby_dropped=dict(type='str',),custom_received=dict(type='str',),radius_request_received=dict(type='str',),imei_received=dict(type='str',),request_no_key_vap_dropped=dict(type='str',),smp_deleted=dict(type='str',),radius_table_full=dict(type='str',),msisdn_received=dict(type='str',),request_ignored=dict(type='str',),ipv6_prefix_length_mismatch=dict(type='str',),request_malformed_dropped=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msisdn-received','imei-received','imsi-received','custom-received','radius-request-received','radius-request-dropped','request-bad-secret-dropped','request-no-key-vap-dropped','request-malformed-dropped','request-ignored','radius-table-full','secret-not-configured-dropped','ha-standby-dropped','ipv6-prefix-length-mismatch','invalid-key','smp-mem-allocated','smp-mem-alloc-failed','smp-mem-freed','smp-created','smp-in-rml','smp-deleted','mem-allocated','mem-alloc-failed','mem-freed','ha-sync-create-sent','ha-sync-delete-sent','ha-sync-create-recv','ha-sync-delete-recv','acct-on-filters-full','acct-on-dup-request','ip-mismatch-delete','ip-add-race-drop','ha-sync-no-key-vap-dropped','inter-card-msg-fail-drop'])),
         accounting_stop=dict(type='str',choices=['ignore','delete-entry']),
         custom_attribute_name=dict(type='str',),
@@ -318,9 +399,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

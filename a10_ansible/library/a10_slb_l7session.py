@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l7_cpu_list:
+                description:
+                - "Field l7_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,62 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'start_server_conn_succ'= Start Server Conn Success; 'conn_not_exist'= Conn does not exist; 'data_event'= Data event from TCP; 'client_fin'= FIN from client; 'server_fin'= FIN from server; 'wbuf_event'= Wbuf event from TCP; 'wbuf_cb_failed'= Wbuf event callback failed; 'err_event'= Err event from TCP; 'err_cb_failed'= Err event callback failed; 'server_conn_failed'= Server connection failed; 'client_rst'= RST from client; 'server_rst'= RST from server; 'client_rst_req'= RST from client - request; 'client_rst_connecting'= RST from client - connecting; 'client_rst_connected'= RST from client - connected; 'client_rst_rsp'= RST from client - response; 'server_rst_req'= RST from server - request; 'server_rst_connecting'= RST from server - connecting; 'server_rst_connected'= RST from server - connected; 'server_rst_rsp'= RST from server - response; 'proxy_v1_connection'= counter for Proxy v1 connection; 'proxy_v2_connection'= counter for Proxy v2 connection; 'curr_proxy'= Curr proxy conn; 'curr_proxy_client'= Curr proxy conn - client; 'curr_proxy_server'= Curr proxy conn - server; 'curr_proxy_es'= Curr proxy conn - ES; 'total_proxy'= Total proxy conn; 'total_proxy_client'= Total proxy conn - client; 'total_proxy_server'= Total proxy conn - server; 'total_proxy_es'= Total proxy conn - ES; 'server_select_fail'= Server selection fail; 'est_event'= Est event from TCP; 'est_cb_failed'= Est event callback fail; 'data_cb_failed'= Data event callback fail; 'hps_fwdreq_fail'= Fwd req fail; 'hps_fwdreq_fail_buff'= Fwd req fail - buff; 'hps_fwdreq_fail_rport'= Fwd req fail - rport; 'hps_fwdreq_fail_route'= Fwd req fail - route; 'hps_fwdreq_fail_persist'= Fwd req fail - persist; 'hps_fwdreq_fail_server'= Fwd req fail - server; 'hps_fwdreq_fail_tuple'= Fwd req fail - tuple; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            server_fin:
+                description:
+                - "FIN from server"
+            data_cb_failed:
+                description:
+                - "Data event callback fail"
+            server_rst:
+                description:
+                - "RST from server"
+            err_event:
+                description:
+                - "Err event from TCP"
+            total_proxy:
+                description:
+                - "Total proxy conn"
+            start_server_conn_succ:
+                description:
+                - "Start Server Conn Success"
+            curr_proxy:
+                description:
+                - "Curr proxy conn"
+            wbuf_event:
+                description:
+                - "Wbuf event from TCP"
+            data_event:
+                description:
+                - "Data event from TCP"
+            wbuf_cb_failed:
+                description:
+                - "Wbuf event callback failed"
+            client_rst:
+                description:
+                - "RST from client"
+            err_cb_failed:
+                description:
+                - "Err event callback failed"
+            client_fin:
+                description:
+                - "FIN from client"
+            server_select_fail:
+                description:
+                - "Server selection fail"
+            server_conn_failed:
+                description:
+                - "Server connection failed"
+            hps_fwdreq_fail:
+                description:
+                - "Fwd req fail"
+            conn_not_exist:
+                description:
+                - "Conn does not exist"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +141,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +170,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l7_cpu_list=dict(type='list',curr_proxy_client=dict(type='int',),proxy_v2_connection=dict(type='int',),total_proxy=dict(type='int',),hps_fwdreq_fail_rport=dict(type='int',),hps_fwdreq_fail_persist=dict(type='int',),hps_fwdreq_fail_server=dict(type='int',),client_rst_rsp=dict(type='int',),client_rst=dict(type='int',),hps_fwdreq_fail=dict(type='int',),total_proxy_server=dict(type='int',),est_event=dict(type='int',),hps_fwdreq_fail_buff=dict(type='int',),start_server_conn_succ=dict(type='int',),wbuf_event=dict(type='int',),data_event=dict(type='int',),client_rst_req=dict(type='int',),err_cb_failed=dict(type='int',),hps_fwdreq_fail_tuple=dict(type='int',),client_fin=dict(type='int',),est_cb_failed=dict(type='int',),server_rst=dict(type='int',),total_proxy_es=dict(type='int',),curr_proxy=dict(type='int',),hps_fwdreq_fail_route=dict(type='int',),client_rst_connected=dict(type='int',),total_proxy_client=dict(type='int',),server_fin=dict(type='int',),err_event=dict(type='int',),server_rst_rsp=dict(type='int',),server_rst_req=dict(type='int',),server_rst_connecting=dict(type='int',),curr_proxy_es=dict(type='int',),wbuf_cb_failed=dict(type='int',),server_rst_connected=dict(type='int',),server_conn_failed=dict(type='int',),client_rst_connecting=dict(type='int',),server_select_fail=dict(type='int',),proxy_v1_connection=dict(type='int',),curr_proxy_server=dict(type='int',),data_cb_failed=dict(type='int',),conn_not_exist=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','start_server_conn_succ','conn_not_exist','data_event','client_fin','server_fin','wbuf_event','wbuf_cb_failed','err_event','err_cb_failed','server_conn_failed','client_rst','server_rst','client_rst_req','client_rst_connecting','client_rst_connected','client_rst_rsp','server_rst_req','server_rst_connecting','server_rst_connected','server_rst_rsp','proxy_v1_connection','proxy_v2_connection','curr_proxy','curr_proxy_client','curr_proxy_server','curr_proxy_es','total_proxy','total_proxy_client','total_proxy_server','total_proxy_es','server_select_fail','est_event','est_cb_failed','data_cb_failed','hps_fwdreq_fail','hps_fwdreq_fail_buff','hps_fwdreq_fail_rport','hps_fwdreq_fail_route','hps_fwdreq_fail_persist','hps_fwdreq_fail_server','hps_fwdreq_fail_tuple'])),
+        stats=dict(type='dict',server_fin=dict(type='str',),data_cb_failed=dict(type='str',),server_rst=dict(type='str',),err_event=dict(type='str',),total_proxy=dict(type='str',),start_server_conn_succ=dict(type='str',),curr_proxy=dict(type='str',),wbuf_event=dict(type='str',),data_event=dict(type='str',),wbuf_cb_failed=dict(type='str',),client_rst=dict(type='str',),err_cb_failed=dict(type='str',),client_fin=dict(type='str',),server_select_fail=dict(type='str',),server_conn_failed=dict(type='str',),hps_fwdreq_fail=dict(type='str',),conn_not_exist=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +287,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

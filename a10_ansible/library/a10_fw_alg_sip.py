@@ -52,6 +52,62 @@ options:
         description:
         - "'default-port-disable'= Disable SIP ALG default port 5060; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            method_register:
+                description:
+                - "Method REGISTER"
+            stat_request:
+                description:
+                - "Request Received"
+            method_publish:
+                description:
+                - "Method PUBLISH"
+            method_cancel:
+                description:
+                - "Method CANCEL"
+            method_unknown:
+                description:
+                - "Method Unknown"
+            method_update:
+                description:
+                - "Method UPDATE"
+            method_subscribe:
+                description:
+                - "Method SUBSCRIBE"
+            method_invite:
+                description:
+                - "Method INVITE"
+            method_options:
+                description:
+                - "Method OPTIONS"
+            method_prack:
+                description:
+                - "Method PRACK"
+            method_notify:
+                description:
+                - "Method NOTIFY"
+            method_info:
+                description:
+                - "Method INFO"
+            method_ack:
+                description:
+                - "Method ACK"
+            method_refer:
+                description:
+                - "Method REFER"
+            stat_response:
+                description:
+                - "Response Received"
+            method_bye:
+                description:
+                - "Method BYE"
+            method_message:
+                description:
+                - "Method MESSAGE"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -78,7 +134,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["default_port_disable","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["default_port_disable","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -108,6 +164,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         default_port_disable=dict(type='str',choices=['default-port-disable']),
+        stats=dict(type='dict',method_register=dict(type='str',),stat_request=dict(type='str',),method_publish=dict(type='str',),method_cancel=dict(type='str',),method_unknown=dict(type='str',),method_update=dict(type='str',),method_subscribe=dict(type='str',),method_invite=dict(type='str',),method_options=dict(type='str',),method_prack=dict(type='str',),method_notify=dict(type='str',),method_info=dict(type='str',),method_ack=dict(type='str',),method_refer=dict(type='str',),stat_response=dict(type='str',),method_bye=dict(type='str',),method_message=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
         uuid=dict(type='str',)
     ))
@@ -132,11 +189,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -222,10 +274,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -373,8 +428,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

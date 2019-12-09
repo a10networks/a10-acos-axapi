@@ -48,10 +48,41 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            nat_pool_addr_list:
+                description:
+                - "Field nat_pool_addr_list"
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
     use_if_ip:
         description:
         - "Use Interface IP"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            Failed:
+                description:
+                - "Field Failed"
+            Total_Used:
+                description:
+                - "Field Total_Used"
+            Total_Freed:
+                description:
+                - "Field Total_Freed"
+            Port_Usage:
+                description:
+                - "Field Port_Usage"
+            pool_name:
+                description:
+                - "Specify pool name or pool group"
     uuid:
         description:
         - "uuid of the object"
@@ -106,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["end_address","ethernet","gateway","ip_rr","netmask","pool_name","scaleout_device_id","start_address","use_if_ip","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["end_address","ethernet","gateway","ip_rr","netmask","oper","pool_name","scaleout_device_id","start_address","stats","use_if_ip","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,7 +166,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',nat_pool_addr_list=dict(type='list',Failed=dict(type='int',),Total_Used=dict(type='int',),Total_Freed=dict(type='int',),Port_Usage=dict(type='int',),Address=dict(type='str',)),pool_name=dict(type='str',required=True,)),
         use_if_ip=dict(type='bool',),
+        stats=dict(type='dict',Failed=dict(type='str',),Total_Used=dict(type='str',),Total_Freed=dict(type='str',),Port_Usage=dict(type='str',),pool_name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         start_address=dict(type='str',),
         vrid=dict(type='int',),
@@ -261,9 +294,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

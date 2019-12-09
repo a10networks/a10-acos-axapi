@@ -48,6 +48,23 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            category:
+                description:
+                - "Field category"
+            group_list:
+                description:
+                - "Field group_list"
+            contains:
+                description:
+                - "Field contains"
+            related:
+                description:
+                - "Field related"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +73,14 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'dummy'= Entry for a10countergen; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            dummy:
+                description:
+                - "Entry for a10countergen"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +99,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +128,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',category=dict(type='str',),group_list=dict(type='list',category_name=dict(type='str',),app_name=dict(type='str',),app_desc=dict(type='str',)),contains=dict(type='str',),related=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dummy'])),
+        stats=dict(type='dict',dummy=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +245,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

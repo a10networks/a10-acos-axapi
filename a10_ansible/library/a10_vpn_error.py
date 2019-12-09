@@ -48,6 +48,125 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            bad_opcode:
+                description:
+                - "Field bad_opcode"
+            bad_sg_write_len:
+                description:
+                - "Field bad_sg_write_len"
+            ipv6_rh_length_error:
+                description:
+                - "Field ipv6_rh_length_error"
+            ah_not_supported_with_gcm_gmac_sha2:
+                description:
+                - "Field ah_not_supported_with_gcm_gmac_sha2"
+            bad_auth_type:
+                description:
+                - "Field bad_auth_type"
+            bad_gre_protocol:
+                description:
+                - "Field bad_gre_protocol"
+            ipv6_outbound_rh_copy_addr_error:
+                description:
+                - "Field ipv6_outbound_rh_copy_addr_error"
+            bad_ip_payload_type:
+                description:
+                - "Field bad_ip_payload_type"
+            ipv6_extension_headers_too_big:
+                description:
+                - "Field ipv6_extension_headers_too_big"
+            bad_encrypt_type:
+                description:
+                - "Field bad_encrypt_type"
+            bad_checksum:
+                description:
+                - "Field bad_checksum"
+            bad_gre_header:
+                description:
+                - "Field bad_gre_header"
+            bad_ipsec_context:
+                description:
+                - "Field bad_ipsec_context"
+            bad_min_frag_size_auth_sha384_512:
+                description:
+                - "Field bad_min_frag_size_auth_sha384_512"
+            bad_ipsec_padding:
+                description:
+                - "Field bad_ipsec_padding"
+            bad_inline_data:
+                description:
+                - "Field bad_inline_data"
+            dummy_payload:
+                description:
+                - "Field dummy_payload"
+            bad_ip_version:
+                description:
+                - "Field bad_ip_version"
+            bad_encrypt_type_ctr_gcm:
+                description:
+                - "Field bad_encrypt_type_ctr_gcm"
+            bad_fragment_size:
+                description:
+                - "Field bad_fragment_size"
+            bad_esp_next_header:
+                description:
+                - "Field bad_esp_next_header"
+            ipv6_hop_by_hop_error:
+                description:
+                - "Field ipv6_hop_by_hop_error"
+            error_ipv6_decrypt_rh_segs_left_error:
+                description:
+                - "Field error_ipv6_decrypt_rh_segs_left_error"
+            bad_ipsec_spi:
+                description:
+                - "Field bad_ipsec_spi"
+            bad_ipsec_context_flag_mismatch:
+                description:
+                - "Field bad_ipsec_context_flag_mismatch"
+            error_IPv6_extension_header_bad:
+                description:
+                - "Field error_IPv6_extension_header_bad"
+            bad_ipsec_protocol:
+                description:
+                - "Field bad_ipsec_protocol"
+            bad_frag_size_configuration:
+                description:
+                - "Field bad_frag_size_configuration"
+            bad_ipsec_auth:
+                description:
+                - "Field bad_ipsec_auth"
+            bad_ipcomp_configuration:
+                description:
+                - "Field bad_ipcomp_configuration"
+            bad_len:
+                description:
+                - "Field bad_len"
+            bad_ipsec_context_direction:
+                description:
+                - "Field bad_ipsec_context_direction"
+            bad_ipsec_unknown:
+                description:
+                - "Field bad_ipsec_unknown"
+            ipcomp_payload:
+                description:
+                - "Field ipcomp_payload"
+            bad_srtp_auth_tag:
+                description:
+                - "Field bad_srtp_auth_tag"
+            tfc_padding_with_prefrag_not_supported:
+                description:
+                - "Field tfc_padding_with_prefrag_not_supported"
+            dsiv_incorrect_param:
+                description:
+                - "Field dsiv_incorrect_param"
+            bad_selector_match:
+                description:
+                - "Field bad_selector_match"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +185,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +214,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',bad_opcode=dict(type='str',),bad_sg_write_len=dict(type='str',),ipv6_rh_length_error=dict(type='str',),ah_not_supported_with_gcm_gmac_sha2=dict(type='str',),bad_auth_type=dict(type='str',),bad_gre_protocol=dict(type='str',),ipv6_outbound_rh_copy_addr_error=dict(type='str',),bad_ip_payload_type=dict(type='str',),ipv6_extension_headers_too_big=dict(type='str',),bad_encrypt_type=dict(type='str',),bad_checksum=dict(type='str',),bad_gre_header=dict(type='str',),bad_ipsec_context=dict(type='str',),bad_min_frag_size_auth_sha384_512=dict(type='str',),bad_ipsec_padding=dict(type='str',),bad_inline_data=dict(type='str',),dummy_payload=dict(type='str',),bad_ip_version=dict(type='str',),bad_encrypt_type_ctr_gcm=dict(type='str',),bad_fragment_size=dict(type='str',),bad_esp_next_header=dict(type='str',),ipv6_hop_by_hop_error=dict(type='str',),error_ipv6_decrypt_rh_segs_left_error=dict(type='str',),bad_ipsec_spi=dict(type='str',),bad_ipsec_context_flag_mismatch=dict(type='str',),error_IPv6_extension_header_bad=dict(type='str',),bad_ipsec_protocol=dict(type='str',),bad_frag_size_configuration=dict(type='str',),bad_ipsec_auth=dict(type='str',),bad_ipcomp_configuration=dict(type='str',),bad_len=dict(type='str',),bad_ipsec_context_direction=dict(type='str',),bad_ipsec_unknown=dict(type='str',),ipcomp_payload=dict(type='str',),bad_srtp_auth_tag=dict(type='str',),tfc_padding_with_prefrag_not_supported=dict(type='str',),dsiv_incorrect_param=dict(type='str',),bad_selector_match=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -118,11 +238,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -208,10 +323,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -347,8 +465,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -60,6 +60,38 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'request'= Request; 'invalid_srv_rsp'= Invalid Server Response; 'post_fail'= POST Failed; 'invalid_cred'= Invalid Credential; 'bad_req'= Bad Request; 'not_fnd'= Not Found; 'error'= Internal Server Error; 'other_error'= Other Error; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            invalid_cred:
+                description:
+                - "Invalid Credential"
+            bad_req:
+                description:
+                - "Bad Request"
+            name:
+                description:
+                - "Specify form-based authentication relay name"
+            other_error:
+                description:
+                - "Other Error"
+            request:
+                description:
+                - "Request"
+            invalid_srv_rsp:
+                description:
+                - "Invalid Server Response"
+            post_fail:
+                description:
+                - "POST Failed"
+            error:
+                description:
+                - "Internal Server Error"
+            not_fnd:
+                description:
+                - "Not Found"
     name:
         description:
         - "Specify form-based authentication relay name"
@@ -116,7 +148,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name","request_uri_list","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["name","request_uri_list","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -147,6 +179,7 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request','invalid_srv_rsp','post_fail','invalid_cred','bad_req','not_fnd','error','other_error'])),
+        stats=dict(type='dict',invalid_cred=dict(type='str',),bad_req=dict(type='str',),name=dict(type='str',required=True,),other_error=dict(type='str',),request=dict(type='str',),invalid_srv_rsp=dict(type='str',),post_fail=dict(type='str',),error=dict(type='str',),not_fnd=dict(type='str',)),
         name=dict(type='str',required=True,),
         request_uri_list=dict(type='list',other_variables=dict(type='str',),max_packet_collect_size=dict(type='int',),action_uri=dict(type='str',),uri=dict(type='str',required=True,),user_tag=dict(type='str',),cookie=dict(type='dict',cookie_value=dict(type='dict',cookie_value=dict(type='str',))),user_variable=dict(type='str',),domain_variable=dict(type='str',),password_variable=dict(type='str',),match_type=dict(type='str',required=True,choices=['equals','contains','starts-with','ends-with']),uuid=dict(type='str',))
     ))
@@ -173,11 +206,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -263,10 +291,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -414,8 +445,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

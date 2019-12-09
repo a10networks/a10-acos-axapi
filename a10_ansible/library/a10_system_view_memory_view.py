@@ -48,6 +48,62 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            N2_memory:
+                description:
+                - "Field N2_memory"
+            Used:
+                description:
+                - "Field Used"
+            ssl_memory_counts:
+                description:
+                - "Field ssl_memory_counts"
+            Cached:
+                description:
+                - "Field Cached"
+            TCP_memory:
+                description:
+                - "Field TCP_memory"
+            system_memory_counts:
+                description:
+                - "Field system_memory_counts"
+            Free:
+                description:
+                - "Field Free"
+            aFleX_memory:
+                description:
+                - "Field aFleX_memory"
+            tcp_memory_counts:
+                description:
+                - "Field tcp_memory_counts"
+            System_memory:
+                description:
+                - "Field System_memory"
+            n2_memory_counts:
+                description:
+                - "Field n2_memory_counts"
+            Shared:
+                description:
+                - "Field Shared"
+            Usage:
+                description:
+                - "Field Usage"
+            SSL_memory:
+                description:
+                - "Field SSL_memory"
+            Total:
+                description:
+                - "Field Total"
+            aflex_memory_counts:
+                description:
+                - "Field aflex_memory_counts"
+            Buffers:
+                description:
+                - "Field Buffers"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +112,14 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'usage-percentage'= Usage percentage; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            usage_percentage:
+                description:
+                - "Usage percentage"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +138,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +167,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',N2_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Used=dict(type='int',),ssl_memory_counts=dict(type='int',),Cached=dict(type='int',),TCP_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),system_memory_counts=dict(type='int',),Free=dict(type='int',),aFleX_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),tcp_memory_counts=dict(type='int',),System_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),n2_memory_counts=dict(type='int',),Shared=dict(type='int',),Usage=dict(type='str',),SSL_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Total=dict(type='int',),aflex_memory_counts=dict(type='int',),Buffers=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','usage-percentage'])),
+        stats=dict(type='dict',usage_percentage=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +284,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

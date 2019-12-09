@@ -48,6 +48,104 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            nm_response:
+                description:
+                - "Field nm_response"
+            rsp_type_304:
+                description:
+                - "Field rsp_type_304"
+            rsp_other:
+                description:
+                - "Field rsp_other"
+            content_toosmall:
+                description:
+                - "Field content_toosmall"
+            entry_create_failures:
+                description:
+                - "Field entry_create_failures"
+            nocache_match:
+                description:
+                - "Field nocache_match"
+            content_toobig:
+                description:
+                - "Field content_toobig"
+            replaced_entry:
+                description:
+                - "Field replaced_entry"
+            miss:
+                description:
+                - "Cache misses"
+            nc_req_header:
+                description:
+                - "Field nc_req_header"
+            aging_entry:
+                description:
+                - "Field aging_entry"
+            mem_size:
+                description:
+                - "Field mem_size"
+            rsp_deflate:
+                description:
+                - "Field rsp_deflate"
+            invalidate_match:
+                description:
+                - "Field invalidate_match"
+            match:
+                description:
+                - "Field match"
+            cleaned_entry:
+                description:
+                - "Field cleaned_entry"
+            entry_num:
+                description:
+                - "Field entry_num"
+            total_req:
+                description:
+                - "Total requests received"
+            bytes_served:
+                description:
+                - "Bytes served from cache"
+            rv_success:
+                description:
+                - "Field rv_success"
+            rv_failure:
+                description:
+                - "Field rv_failure"
+            rsp_gzip:
+                description:
+                - "Field rsp_gzip"
+            hits:
+                description:
+                - "Cache hits"
+            rsp_type_other:
+                description:
+                - "Field rsp_type_other"
+            name:
+                description:
+                - "Specify cache template name"
+            rsp_type_CE:
+                description:
+                - "Field rsp_type_CE"
+            rsp_type_CL:
+                description:
+                - "Field rsp_type_CL"
+            rsp_no_compress:
+                description:
+                - "Field rsp_no_compress"
+            nc_res_header:
+                description:
+                - "Field nc_res_header"
+            caching_req:
+                description:
+                - "Total requests to cache"
+            ims_request:
+                description:
+                - "Field ims_request"
     accept_reload_req:
         description:
         - "Accept reload requests via cache-control directives in HTTP headers"
@@ -155,7 +253,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accept_reload_req","age","default_policy_nocache","disable_insert_age","disable_insert_via","local_uri_policy","logging","max_cache_size","max_content_size","min_content_size","name","remove_cookies","replacement_policy","sampling_enable","uri_policy","user_tag","uuid","verify_host",]
+AVAILABLE_PROPERTIES = ["accept_reload_req","age","default_policy_nocache","disable_insert_age","disable_insert_via","local_uri_policy","logging","max_cache_size","max_content_size","min_content_size","name","remove_cookies","replacement_policy","sampling_enable","stats","uri_policy","user_tag","uuid","verify_host",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -184,6 +282,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',nm_response=dict(type='str',),rsp_type_304=dict(type='str',),rsp_other=dict(type='str',),content_toosmall=dict(type='str',),entry_create_failures=dict(type='str',),nocache_match=dict(type='str',),content_toobig=dict(type='str',),replaced_entry=dict(type='str',),miss=dict(type='str',),nc_req_header=dict(type='str',),aging_entry=dict(type='str',),mem_size=dict(type='str',),rsp_deflate=dict(type='str',),invalidate_match=dict(type='str',),match=dict(type='str',),cleaned_entry=dict(type='str',),entry_num=dict(type='str',),total_req=dict(type='str',),bytes_served=dict(type='str',),rv_success=dict(type='str',),rv_failure=dict(type='str',),rsp_gzip=dict(type='str',),hits=dict(type='str',),rsp_type_other=dict(type='str',),name=dict(type='str',required=True,),rsp_type_CE=dict(type='str',),rsp_type_CL=dict(type='str',),rsp_no_compress=dict(type='str',),nc_res_header=dict(type='str',),caching_req=dict(type='str',),ims_request=dict(type='str',)),
         accept_reload_req=dict(type='bool',),
         name=dict(type='str',required=True,),
         default_policy_nocache=dict(type='bool',),
@@ -226,11 +325,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -316,10 +410,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -467,8 +564,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

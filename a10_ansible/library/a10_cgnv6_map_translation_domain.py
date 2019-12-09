@@ -59,6 +59,56 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            interface_not_configured:
+                description:
+                - "Interfaces not Configured Dropped"
+            inbound_packet_received:
+                description:
+                - "Inbound IPv4 Packets Received"
+            name:
+                description:
+                - "MAP-T domain name"
+            outbound_dest_unreachable:
+                description:
+                - "Outbound IPv4 Destination Address Unreachable"
+            outbound_packet_received:
+                description:
+                - "Outbound IPv6 Packets Received"
+            inbound_dest_unreachable:
+                description:
+                - "Inbound IPv6 Destination Address Unreachable"
+            inbound_rev_lookup_failed:
+                description:
+                - "Inbound IPv4 Reverse Route Lookup Failed"
+            bmr_prefixrules_configured:
+                description:
+                - "BMR prefix rules configured"
+            outbound_frag_packet_received:
+                description:
+                - "Outbound IPv6 Fragment Packets Received"
+            outbound_addr_validation_failed:
+                description:
+                - "Outbound IPv6 Source Address Validation Failed"
+            packet_mtu_exceeded:
+                description:
+                - "Packet Exceeded MTU"
+            inbound_addr_port_validation_failed:
+                description:
+                - "Inbound IPv4 Destination Address Port Validation Failed"
+            frag_icmp_sent:
+                description:
+                - "ICMP Packet Too Big Sent"
+            inbound_frag_packet_received:
+                description:
+                - "Inbound IPv4 Fragment Packets Received"
+            outbound_rev_lookup_failed:
+                description:
+                - "Outbound IPv6 Reverse Route Lookup Failed"
     uuid:
         description:
         - "uuid of the object"
@@ -149,7 +199,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["basic_mapping_rule","default_mapping_rule","description","health_check_gateway","mtu","name","sampling_enable","tcp","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["basic_mapping_rule","default_mapping_rule","description","health_check_gateway","mtu","name","sampling_enable","stats","tcp","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -179,6 +229,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         default_mapping_rule=dict(type='dict',rule_ipv6_prefix=dict(type='str',),uuid=dict(type='str',)),
+        stats=dict(type='dict',interface_not_configured=dict(type='str',),inbound_packet_received=dict(type='str',),name=dict(type='str',required=True,),outbound_dest_unreachable=dict(type='str',),outbound_packet_received=dict(type='str',),inbound_dest_unreachable=dict(type='str',),inbound_rev_lookup_failed=dict(type='str',),bmr_prefixrules_configured=dict(type='str',),outbound_frag_packet_received=dict(type='str',),outbound_addr_validation_failed=dict(type='str',),packet_mtu_exceeded=dict(type='str',),inbound_addr_port_validation_failed=dict(type='str',),frag_icmp_sent=dict(type='str',),inbound_frag_packet_received=dict(type='str',),outbound_rev_lookup_failed=dict(type='str',)),
         uuid=dict(type='str',),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
@@ -212,11 +263,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -302,10 +348,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -453,8 +502,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

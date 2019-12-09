@@ -48,25 +48,32 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    detail:
+    oper:
         description:
-        - "Field detail"
+        - "Field oper"
         required: False
         suboptions:
-            debug:
+            topk:
                 description:
-                - "Field debug"
-            uuid:
+                - "Field topk"
+            sessions:
                 description:
-                - "uuid of the object"
-    sessions:
-        description:
-        - "Field sessions"
-        required: False
-        suboptions:
-            uuid:
+                - "Field sessions"
+            all_keys:
                 description:
-                - "uuid of the object"
+                - "Field all_keys"
+            secondary:
+                description:
+                - "Field secondary"
+            mon_entity_list:
+                description:
+                - "Field mon_entity_list"
+            detail:
+                description:
+                - "Field detail"
+            primary_keys:
+                description:
+                - "Field primary_keys"
     topk:
         description:
         - "Field topk"
@@ -82,6 +89,25 @@ options:
         description:
         - "uuid of the object"
         required: False
+    sessions:
+        description:
+        - "Field sessions"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    detail:
+        description:
+        - "Field detail"
+        required: False
+        suboptions:
+            debug:
+                description:
+                - "Field debug"
+            uuid:
+                description:
+                - "uuid of the object"
     secondary:
         description:
         - "Field secondary"
@@ -104,7 +130,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["detail","secondary","sessions","topk","uuid",]
+AVAILABLE_PROPERTIES = ["detail","oper","secondary","sessions","topk","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -133,10 +159,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        detail=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)),
-        sessions=dict(type='dict',uuid=dict(type='str',)),
+        oper=dict(type='dict',topk=dict(type='dict',oper=dict(type='dict',metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',protocol=dict(type='str',),ip_addr=dict(type='str',),metric_value=dict(type='str',),port=dict(type='int',)))),sources=dict(type='dict',oper=dict(type='dict',l4_proto=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',ip_addr=dict(type='str',),metric_value=dict(type='str',))),l4_port=dict(type='int',)))),sessions=dict(type='dict',oper=dict(type='dict',mon_entity_list=dict(type='list',l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),session_list=dict(type='list',rev_src_ip=dict(type='str',),fwd_src_ip=dict(type='str',),fwd_src_port=dict(type='int',),proto=dict(type='str',),rev_src_port=dict(type='int',),fwd_dst_port=dict(type='int',),rev_dst_port=dict(type='int',),rev_dst_ip=dict(type='str',),fwd_dst_ip=dict(type='str',)),l4_proto=dict(type='str',),sec_entity_list=dict(type='list',l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),session_list=dict(type='list',rev_src_ip=dict(type='str',),fwd_src_ip=dict(type='str',),fwd_src_port=dict(type='int',),proto=dict(type='str',),rev_src_port=dict(type='int',),fwd_dst_port=dict(type='int',),rev_dst_port=dict(type='int',),rev_dst_ip=dict(type='str',),fwd_dst_ip=dict(type='str',)),l4_proto=dict(type='str',))))),all_keys=dict(type='bool',),secondary=dict(type='dict',oper=dict(type='dict',),topk=dict(type='dict',oper=dict(type='dict',l4_proto=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',protocol=dict(type='str',),ip_addr=dict(type='str',),metric_value=dict(type='str',),port=dict(type='int',))),l4_port=dict(type='int',)),sources=dict(type='dict',oper=dict(type='dict',l4_proto=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',ip_addr=dict(type='str',),metric_value=dict(type='str',))),l4_port=dict(type='int',))))),mon_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),sec_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),ha_state=dict(type='str',)),ha_state=dict(type='str',)),detail=dict(type='dict',oper=dict(type='dict',all_keys=dict(type='bool',),mon_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',current=dict(type='str',),threshold=dict(type='str',),metric_name=dict(type='str',),anomaly=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),sec_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',current=dict(type='str',),threshold=dict(type='str',),metric_name=dict(type='str',),anomaly=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),ha_state=dict(type='str',)),ha_state=dict(type='str',)),primary_keys=dict(type='bool',)),debug=dict(type='dict',oper=dict(type='dict',all_keys=dict(type='bool',),mon_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',std_dev=dict(type='str',),min=dict(type='str',),max=dict(type='str',),metric_name=dict(type='str',),current=dict(type='str',),threshold=dict(type='str',),anomaly=dict(type='str',),mean=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),sec_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',std_dev=dict(type='str',),min=dict(type='str',),max=dict(type='str',),metric_name=dict(type='str',),current=dict(type='str',),threshold=dict(type='str',),anomaly=dict(type='str',),mean=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),ha_state=dict(type='str',)),ha_state=dict(type='str',)),primary_keys=dict(type='bool',)))),primary_keys=dict(type='bool',)),
         topk=dict(type='dict',sources=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)),
         uuid=dict(type='str',),
+        sessions=dict(type='dict',uuid=dict(type='str',)),
+        detail=dict(type='dict',debug=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)),
         secondary=dict(type='dict',topk=dict(type='dict',sources=dict(type='dict',uuid=dict(type='str',)),uuid=dict(type='str',)))
     ))
    
@@ -165,11 +192,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -251,10 +273,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -403,8 +428,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

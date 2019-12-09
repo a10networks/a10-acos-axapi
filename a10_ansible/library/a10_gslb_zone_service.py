@@ -51,165 +51,38 @@ options:
     zone_name:
         description:
         - Key to identify parent object
-    dns_a_record:
+    oper:
         description:
-        - "Field dns_a_record"
+        - "Field oper"
         required: False
         suboptions:
-            dns_a_record_ipv6_list:
+            cache_list:
                 description:
-                - "Field dns_a_record_ipv6_list"
-            dns_a_record_ipv4_list:
+                - "Field cache_list"
+            dns_ns_record_list:
                 description:
-                - "Field dns_a_record_ipv4_list"
-            dns_a_record_srv_list:
+                - "Field dns_ns_record_list"
+            total_sessions:
                 description:
-                - "Field dns_a_record_srv_list"
-    forward_type:
-        description:
-        - "'both'= Forward both query and response; 'query'= Forward query; 'response'= Forward response; "
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    health_check_port:
-        description:
-        - "Field health_check_port"
-        required: False
-        suboptions:
-            health_check_port:
+                - "Field total_sessions"
+            service_port:
                 description:
-                - "Check Related Port Status (Port Number)"
-    dns_txt_record_list:
-        description:
-        - "Field dns_txt_record_list"
-        required: False
-        suboptions:
-            record_name:
+                - "Port number of the service"
+            dns_mx_record_list:
                 description:
-                - "Specify the Object Name for TXT Data"
-            ttl:
+                - "Field dns_mx_record_list"
+            state:
                 description:
-                - "Specify TTL"
-            sampling_enable:
+                - "Field state"
+            session_list:
                 description:
-                - "Field sampling_enable"
-            uuid:
+                - "Field session_list"
+            service_name:
                 description:
-                - "uuid of the object"
-            txt_data:
+                - "Specify the service name for the zone, * for wildcard"
+            matched:
                 description:
-                - "Specify TXT Data"
-    service_port:
-        description:
-        - "Port number of the service"
-        required: True
-    dns_mx_record_list:
-        description:
-        - "Field dns_mx_record_list"
-        required: False
-        suboptions:
-            priority:
-                description:
-                - "Specify Priority"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-            mx_name:
-                description:
-                - "Specify Domain Name"
-            ttl:
-                description:
-                - "Specify TTL"
-    dns_record_list:
-        description:
-        - "Field dns_record_list"
-        required: False
-        suboptions:
-            ntype:
-                description:
-                - "Specify DNS Type"
-            data:
-                description:
-                - "Specify DNS Data"
-            uuid:
-                description:
-                - "uuid of the object"
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    dns_ns_record_list:
-        description:
-        - "Field dns_ns_record_list"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            ns_name:
-                description:
-                - "Specify Domain Name"
-            uuid:
-                description:
-                - "uuid of the object"
-            ttl:
-                description:
-                - "Specify TTL"
-    health_check_gateway:
-        description:
-        - "'enable'= Enable Gateway Status Check; 'disable'= Disable Gateway Status Check; "
-        required: False
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'received-query'= Number of DNS queries received for the service; 'sent-response'= Number of DNS replies sent to clients for the service; 'proxy-mode-response'= Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the service; 'cache-mode-response'= Number of cached DNS replies sent to clients by the ACOS device for the service. (This statistic applies only if the DNS cache; 'server-mode-response'= Number of DNS replies sent to clients by the ACOS device as a DNS server for the service. (This statistic applies only if the D; 'sticky-mode-response'= Number of DNS replies sent to clients by the ACOS device to keep the clients on the same site. (This statistic applies only if; 'backup-mode-response'= help Number of DNS replies sent to clients by the ACOS device in backup mode; "
-    disable:
-        description:
-        - "Disable"
-        required: False
-    dns_srv_record_list:
-        description:
-        - "Field dns_srv_record_list"
-        required: False
-        suboptions:
-            srv_name:
-                description:
-                - "Specify Domain Name"
-            uuid:
-                description:
-                - "uuid of the object"
-            weight:
-                description:
-                - "Specify Weight, default is 10"
-            priority:
-                description:
-                - "Specify Priority"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            ttl:
-                description:
-                - "Specify TTL"
-            port:
-                description:
-                - "Specify Port (Port Number)"
-    service_name:
-        description:
-        - "Specify the service name for the zone, * for wildcard"
-        required: True
-    policy:
-        description:
-        - "Specify policy for this service (Specify policy name)"
-        required: False
+                - "Field matched"
     dns_ptr_record_list:
         description:
         - "Field dns_ptr_record_list"
@@ -227,33 +100,32 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-    dns_cname_record_list:
+    health_check_port:
         description:
-        - "Field dns_cname_record_list"
+        - "Field health_check_port"
         required: False
         suboptions:
-            alias_name:
+            health_check_port:
                 description:
-                - "Specify the alias name"
+                - "Check Related Port Status (Port Number)"
+    service_port:
+        description:
+        - "Port number of the service"
+        required: True
+    dns_record_list:
+        description:
+        - "Field dns_record_list"
+        required: False
+        suboptions:
+            ntype:
+                description:
+                - "Specify DNS Type"
+            data:
+                description:
+                - "Specify DNS Data"
             uuid:
                 description:
                 - "uuid of the object"
-            as_backup:
-                description:
-                - "As backup when fail"
-            weight:
-                description:
-                - "Specify Weight, default is 1"
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            admin_preference:
-                description:
-                - "Specify Administrative Preference, default is 100"
-    action:
-        description:
-        - "'drop'= Drop query; 'forward'= Forward packet; 'ignore'= Send empty response; 'reject'= Send refuse response; "
-        required: False
     geo_location_list:
         description:
         - "Field geo_location_list"
@@ -283,6 +155,222 @@ options:
             action:
                 description:
                 - "Action for this geo-location"
+    action:
+        description:
+        - "'drop'= Drop query; 'forward'= Forward packet; 'ignore'= Send empty response; 'reject'= Send refuse response; "
+        required: False
+    disable:
+        description:
+        - "Disable"
+        required: False
+    service_name:
+        description:
+        - "Specify the service name for the zone, * for wildcard"
+        required: True
+    health_check_gateway:
+        description:
+        - "'enable'= Enable Gateway Status Check; 'disable'= Disable Gateway Status Check; "
+        required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            dns_a_record:
+                description:
+                - "Field dns_a_record"
+            received_query:
+                description:
+                - "Number of DNS queries received for the service"
+            dns_cname_record_list:
+                description:
+                - "Field dns_cname_record_list"
+            dns_ns_record_list:
+                description:
+                - "Field dns_ns_record_list"
+            dns_txt_record_list:
+                description:
+                - "Field dns_txt_record_list"
+            sent_response:
+                description:
+                - "Number of DNS replies sent to clients for the service"
+            dns_mx_record_list:
+                description:
+                - "Field dns_mx_record_list"
+            sticky_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device to keep the clients on the same site. (This statistic applies only if "
+            server_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device as a DNS server for the service. (This statistic applies only if the D"
+            cache_mode_response:
+                description:
+                - "Number of cached DNS replies sent to clients by the ACOS device for the service. (This statistic applies only if the DNS cache "
+            service_port:
+                description:
+                - "Port number of the service"
+            dns_srv_record_list:
+                description:
+                - "Field dns_srv_record_list"
+            service_name:
+                description:
+                - "Specify the service name for the zone, * for wildcard"
+            dns_ptr_record_list:
+                description:
+                - "Field dns_ptr_record_list"
+            backup_mode_response:
+                description:
+                - "help Number of DNS replies sent to clients by the ACOS device in backup mode"
+            dns_naptr_record_list:
+                description:
+                - "Field dns_naptr_record_list"
+            proxy_mode_response:
+                description:
+                - "Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the service"
+    dns_cname_record_list:
+        description:
+        - "Field dns_cname_record_list"
+        required: False
+        suboptions:
+            alias_name:
+                description:
+                - "Specify the alias name"
+            uuid:
+                description:
+                - "uuid of the object"
+            as_backup:
+                description:
+                - "As backup when fail"
+            weight:
+                description:
+                - "Specify Weight, default is 1"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            admin_preference:
+                description:
+                - "Specify Administrative Preference, default is 100"
+    dns_a_record:
+        description:
+        - "Field dns_a_record"
+        required: False
+        suboptions:
+            dns_a_record_ipv6_list:
+                description:
+                - "Field dns_a_record_ipv6_list"
+            dns_a_record_ipv4_list:
+                description:
+                - "Field dns_a_record_ipv4_list"
+            dns_a_record_srv_list:
+                description:
+                - "Field dns_a_record_srv_list"
+    forward_type:
+        description:
+        - "'both'= Forward both query and response; 'query'= Forward query; 'response'= Forward response; "
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    dns_ns_record_list:
+        description:
+        - "Field dns_ns_record_list"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            ns_name:
+                description:
+                - "Specify Domain Name"
+            uuid:
+                description:
+                - "uuid of the object"
+            ttl:
+                description:
+                - "Specify TTL"
+    dns_txt_record_list:
+        description:
+        - "Field dns_txt_record_list"
+        required: False
+        suboptions:
+            record_name:
+                description:
+                - "Specify the Object Name for TXT Data"
+            ttl:
+                description:
+                - "Specify TTL"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+            txt_data:
+                description:
+                - "Specify TXT Data"
+    dns_mx_record_list:
+        description:
+        - "Field dns_mx_record_list"
+        required: False
+        suboptions:
+            priority:
+                description:
+                - "Specify Priority"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+            mx_name:
+                description:
+                - "Specify Domain Name"
+            ttl:
+                description:
+                - "Specify TTL"
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'received-query'= Number of DNS queries received for the service; 'sent-response'= Number of DNS replies sent to clients for the service; 'proxy-mode-response'= Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the service; 'cache-mode-response'= Number of cached DNS replies sent to clients by the ACOS device for the service. (This statistic applies only if the DNS cache; 'server-mode-response'= Number of DNS replies sent to clients by the ACOS device as a DNS server for the service. (This statistic applies only if the D; 'sticky-mode-response'= Number of DNS replies sent to clients by the ACOS device to keep the clients on the same site. (This statistic applies only if; 'backup-mode-response'= help Number of DNS replies sent to clients by the ACOS device in backup mode; "
+    dns_srv_record_list:
+        description:
+        - "Field dns_srv_record_list"
+        required: False
+        suboptions:
+            srv_name:
+                description:
+                - "Specify Domain Name"
+            uuid:
+                description:
+                - "uuid of the object"
+            weight:
+                description:
+                - "Specify Weight, default is 10"
+            priority:
+                description:
+                - "Specify Priority"
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            ttl:
+                description:
+                - "Specify TTL"
+            port:
+                description:
+                - "Specify Port (Port Number)"
+    policy:
+        description:
+        - "Specify policy for this service (Specify policy name)"
+        required: False
     dns_naptr_record_list:
         description:
         - "Field dns_naptr_record_list"
@@ -329,7 +417,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","disable","dns_a_record","dns_cname_record_list","dns_mx_record_list","dns_naptr_record_list","dns_ns_record_list","dns_ptr_record_list","dns_record_list","dns_srv_record_list","dns_txt_record_list","forward_type","geo_location_list","health_check_gateway","health_check_port","policy","sampling_enable","service_name","service_port","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","disable","dns_a_record","dns_cname_record_list","dns_mx_record_list","dns_naptr_record_list","dns_ns_record_list","dns_ptr_record_list","dns_record_list","dns_srv_record_list","dns_txt_record_list","forward_type","geo_location_list","health_check_gateway","health_check_port","oper","policy","sampling_enable","service_name","service_port","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -358,26 +446,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',cache_list=dict(type='list',cache_ttl=dict(type='int',),additional_records=dict(type='int',),answer_records=dict(type='int',),cache_dns_flag=dict(type='str',),question_records=dict(type='int',),alias=dict(type='str',),cache_length=dict(type='int',),authority_records=dict(type='int',)),dns_ns_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),ns_name=dict(type='str',required=True,)),total_sessions=dict(type='int',),service_port=dict(type='int',required=True,),dns_mx_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),mx_name=dict(type='str',required=True,)),state=dict(type='str',),session_list=dict(type='list',aging=dict(type='int',),hits=dict(type='int',),update=dict(type='int',),client=dict(type='str',),last_second_hits=dict(type='int',),mode=dict(type='str',),ttl=dict(type='str',),best=dict(type='str',)),service_name=dict(type='str',required=True,),matched=dict(type='int',)),
+        dns_ptr_record_list=dict(type='list',ptr_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',)),
+        health_check_port=dict(type='list',health_check_port=dict(type='int',)),
+        service_port=dict(type='int',required=True,),
+        dns_record_list=dict(type='list',ntype=dict(type='int',required=True,),data=dict(type='str',),uuid=dict(type='str',)),
+        geo_location_list=dict(type='list',action_type=dict(type='str',choices=['allow','drop','forward','ignore','reject']),uuid=dict(type='str',),user_tag=dict(type='str',),alias=dict(type='list',alias=dict(type='str',)),geo_name=dict(type='str',required=True,),policy=dict(type='str',),forward_type=dict(type='str',choices=['both','query','response']),action=dict(type='bool',)),
+        action=dict(type='str',choices=['drop','forward','ignore','reject']),
+        disable=dict(type='bool',),
+        service_name=dict(type='str',required=True,),
+        health_check_gateway=dict(type='str',choices=['enable','disable']),
+        stats=dict(type='dict',dns_a_record=dict(type='dict',),received_query=dict(type='str',),dns_cname_record_list=dict(type='list',alias_name=dict(type='str',required=True,),stats=dict(type='dict',cname_hits=dict(type='str',))),dns_ns_record_list=dict(type='list',ns_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),dns_txt_record_list=dict(type='list',record_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),sent_response=dict(type='str',),dns_mx_record_list=dict(type='list',stats=dict(type='dict',hits=dict(type='str',)),mx_name=dict(type='str',required=True,)),sticky_mode_response=dict(type='str',),server_mode_response=dict(type='str',),cache_mode_response=dict(type='str',),service_port=dict(type='int',required=True,),dns_srv_record_list=dict(type='list',srv_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',)),port=dict(type='int',required=True,)),service_name=dict(type='str',required=True,),dns_ptr_record_list=dict(type='list',ptr_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),backup_mode_response=dict(type='str',),dns_naptr_record_list=dict(type='list',flag=dict(type='str',required=True,),stats=dict(type='dict',naptr_hits=dict(type='str',)),service_proto=dict(type='str',required=True,),naptr_target=dict(type='str',required=True,)),proxy_mode_response=dict(type='str',)),
+        dns_cname_record_list=dict(type='list',alias_name=dict(type='str',required=True,),uuid=dict(type='str',),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cname-hits'])),admin_preference=dict(type='int',)),
         dns_a_record=dict(type='dict',dns_a_record_ipv6_list=dict(type='list',as_replace=dict(type='bool',),dns_a_record_ipv6=dict(type='str',required=True,),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),no_resp=dict(type='bool',),admin_ip=dict(type='int',),uuid=dict(type='str',)),dns_a_record_ipv4_list=dict(type='list',as_replace=dict(type='bool',),dns_a_record_ip=dict(type='str',required=True,),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),no_resp=dict(type='bool',),admin_ip=dict(type='int',),uuid=dict(type='str',)),dns_a_record_srv_list=dict(type='list',as_backup=dict(type='bool',),as_replace=dict(type='bool',),uuid=dict(type='str',),weight=dict(type='int',),svrname=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),disable=dict(type='bool',),static=dict(type='bool',),ttl=dict(type='int',),admin_ip=dict(type='int',),no_resp=dict(type='bool',))),
         forward_type=dict(type='str',choices=['both','query','response']),
         uuid=dict(type='str',),
-        health_check_port=dict(type='list',health_check_port=dict(type='int',)),
-        dns_txt_record_list=dict(type='list',record_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),txt_data=dict(type='str',)),
-        service_port=dict(type='int',required=True,),
-        dns_mx_record_list=dict(type='list',priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),mx_name=dict(type='str',required=True,),ttl=dict(type='int',)),
-        dns_record_list=dict(type='list',ntype=dict(type='int',required=True,),data=dict(type='str',),uuid=dict(type='str',)),
-        user_tag=dict(type='str',),
         dns_ns_record_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),ns_name=dict(type='str',required=True,),uuid=dict(type='str',),ttl=dict(type='int',)),
-        health_check_gateway=dict(type='str',choices=['enable','disable']),
+        dns_txt_record_list=dict(type='list',record_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),txt_data=dict(type='str',)),
+        dns_mx_record_list=dict(type='list',priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),mx_name=dict(type='str',required=True,),ttl=dict(type='int',)),
+        user_tag=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','received-query','sent-response','proxy-mode-response','cache-mode-response','server-mode-response','sticky-mode-response','backup-mode-response'])),
-        disable=dict(type='bool',),
         dns_srv_record_list=dict(type='list',srv_name=dict(type='str',required=True,),uuid=dict(type='str',),weight=dict(type='int',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),ttl=dict(type='int',),port=dict(type='int',required=True,)),
-        service_name=dict(type='str',required=True,),
         policy=dict(type='str',),
-        dns_ptr_record_list=dict(type='list',ptr_name=dict(type='str',required=True,),ttl=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',)),
-        dns_cname_record_list=dict(type='list',alias_name=dict(type='str',required=True,),uuid=dict(type='str',),as_backup=dict(type='bool',),weight=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cname-hits'])),admin_preference=dict(type='int',)),
-        action=dict(type='str',choices=['drop','forward','ignore','reject']),
-        geo_location_list=dict(type='list',action_type=dict(type='str',choices=['allow','drop','forward','ignore','reject']),uuid=dict(type='str',),user_tag=dict(type='str',),alias=dict(type='list',alias=dict(type='str',)),geo_name=dict(type='str',required=True,),policy=dict(type='str',),forward_type=dict(type='str',choices=['both','query','response']),action=dict(type='bool',)),
         dns_naptr_record_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','naptr-hits'])),naptr_target=dict(type='str',required=True,),service_proto=dict(type='str',required=True,),flag=dict(type='str',required=True,),preference=dict(type='int',),ttl=dict(type='int',),regexp=dict(type='bool',),order=dict(type='int',),uuid=dict(type='str',))
     ))
    
@@ -502,9 +592,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

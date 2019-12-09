@@ -48,6 +48,47 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ipv6rangestrt:
+                description:
+                - "Field ipv6rangestrt"
+            pol_name:
+                description:
+                - "Field pol_name"
+            total_geolocs:
+                description:
+                - "Field total_geolocs"
+            iprangestrt:
+                description:
+                - "Field iprangestrt"
+            filter4:
+                description:
+                - "Field filter4"
+            depth:
+                description:
+                - "Field depth"
+            iprangeend:
+                description:
+                - "Field iprangeend"
+            filter1:
+                description:
+                - "Field filter1"
+            filter3:
+                description:
+                - "Field filter3"
+            filter2:
+                description:
+                - "Field filter2"
+            geo_name:
+                description:
+                - "Field geo_name"
+            geoloc_list:
+                description:
+                - "Field geoloc_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +97,10 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'place-holder'= place-holder; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +119,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +148,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ipv6rangestrt=dict(type='str',),pol_name=dict(type='str',),total_geolocs=dict(type='int',),iprangestrt=dict(type='str',),filter4=dict(type='str',choices=['ip','ipv6','ipstat','ipv6stat']),depth=dict(type='int',),iprangeend=dict(type='str',),filter1=dict(type='str',choices=['directory','statistics','global']),filter3=dict(type='str',choices=['directory','statistics','global']),filter2=dict(type='str',choices=['directory','statistics','global']),geo_name=dict(type='str',),geoloc_list=dict(type='list',tomask=dict(type='str',),hits=dict(type='int',),from=dict(type='str',),subcnt=dict(type='int',),last=dict(type='str',),ntype=dict(type='str',),name=dict(type='str',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','place-holder'])),
+        stats=dict(type='dict',),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +265,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

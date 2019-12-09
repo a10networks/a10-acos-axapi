@@ -51,6 +51,14 @@ options:
     lsn_rule_list_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ip_list:
+                description:
+                - "Field ip_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -59,6 +67,10 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'placeholder'= placeholder; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -77,7 +89,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -106,7 +118,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ip_list=dict(type='list',domain=dict(type='str',),domain_list=dict(type='str',),ip_address=dict(type='str',),ttl=dict(type='int',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder'])),
+        stats=dict(type='dict',),
         uuid=dict(type='str',)
     ))
    
@@ -227,9 +241,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

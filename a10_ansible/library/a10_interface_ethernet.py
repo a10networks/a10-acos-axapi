@@ -48,6 +48,140 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            line_protocol:
+                description:
+                - "Field line_protocol"
+            icmp6_rate_over_limit_drop:
+                description:
+                - "Field icmp6_rate_over_limit_drop"
+            outgoing_pkts_mirrored:
+                description:
+                - "Field outgoing_pkts_mirrored"
+            rate_byte_sent:
+                description:
+                - "Field rate_byte_sent"
+            ipv6_link_local_type:
+                description:
+                - "Field ipv6_link_local_type"
+            vlan_id:
+                description:
+                - "Field vlan_id"
+            outgoing_pkts_monitored:
+                description:
+                - "Field outgoing_pkts_monitored"
+            ipv4_address:
+                description:
+                - "IP address"
+            icmp6_rate_limit_current:
+                description:
+                - "Field icmp6_rate_limit_current"
+            config_speed:
+                description:
+                - "Field config_speed"
+            ipv4_netmask:
+                description:
+                - "IP subnet mask"
+            output_utilization:
+                description:
+                - "Field output_utilization"
+            incoming_pkts_mirrored:
+                description:
+                - "Field incoming_pkts_mirrored"
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
+            state:
+                description:
+                - "Field state"
+            icmp_rate_limit_current:
+                description:
+                - "Field icmp_rate_limit_current"
+            is_device_transparent:
+                description:
+                - "Field is_device_transparent"
+            media_type:
+                description:
+                - "Field media_type"
+            link_type:
+                description:
+                - "Field link_type"
+            rate_pkt_rcvd:
+                description:
+                - "Field rate_pkt_rcvd"
+            current_vnp_id:
+                description:
+                - "Field current_vnp_id"
+            igmp_query_sent:
+                description:
+                - "Field igmp_query_sent"
+            ipv4_addr_count:
+                description:
+                - "Field ipv4_addr_count"
+            port_vnp_id:
+                description:
+                - "Field port_vnp_id"
+            ipv6_link_local_scope:
+                description:
+                - "Field ipv6_link_local_scope"
+            actual_duplexity:
+                description:
+                - "Field actual_duplexity"
+            icmp_rate_over_limit_drop:
+                description:
+                - "Field icmp_rate_over_limit_drop"
+            incoming_pkts_monitored:
+                description:
+                - "Field incoming_pkts_monitored"
+            rate_byte_rcvd:
+                description:
+                - "Field rate_byte_rcvd"
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+            is_lead_member:
+                description:
+                - "Field is_lead_member"
+            ipv6_link_local:
+                description:
+                - "Field ipv6_link_local"
+            mac:
+                description:
+                - "Field mac"
+            actual_speed:
+                description:
+                - "Field actual_speed"
+            ipv6_link_local_prefix:
+                description:
+                - "Field ipv6_link_local_prefix"
+            input_utilization:
+                description:
+                - "Field input_utilization"
+            is_pristine:
+                description:
+                - "Field is_pristine"
+            ifnum:
+                description:
+                - "Ethernet interface number"
+            tagged_vlan_list:
+                description:
+                - "Field tagged_vlan_list"
+            is_tagged:
+                description:
+                - "Field is_tagged"
+            rate_pkt_sent:
+                description:
+                - "Field rate_pkt_sent"
+            ipv6_addr_count:
+                description:
+                - "Field ipv6_addr_count"
+            config_duplexity:
+                description:
+                - "Field config_duplexity"
     fec_forced_on:
         description:
         - "turn on the FEC"
@@ -175,6 +309,83 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            frame:
+                description:
+                - "Frames"
+            rate_byte_sent:
+                description:
+                - "Byte sent rate bits/sec"
+            runts:
+                description:
+                - "Runts"
+            bytes_output:
+                description:
+                - "Output bytes"
+            input_errors:
+                description:
+                - "Input errors"
+            bytes_input:
+                description:
+                - "Input bytes"
+            load_interval:
+                description:
+                - "Load Interval"
+            transmitted_multicasts:
+                description:
+                - "Transmitted multicasts"
+            packets_input:
+                description:
+                - "Input packets"
+            received_multicasts:
+                description:
+                - "Received multicasts"
+            received_broadcasts:
+                description:
+                - "Received broadcasts"
+            transmitted_unicasts:
+                description:
+                - "Transmitted unicasts"
+            collisions:
+                description:
+                - "Collisions"
+            received_unicasts:
+                description:
+                - "Received unicasts"
+            rate_pkt_sent:
+                description:
+                - "Packet sent rate packets/sec"
+            giants:
+                description:
+                - "Giants"
+            packets_output:
+                description:
+                - "Output packets"
+            rate_byte_rcvd:
+                description:
+                - "Byte received rate bits/sec"
+            rate_pkt_rcvd:
+                description:
+                - "Packet received rate packets/sec"
+            transmitted_broadcasts:
+                description:
+                - "Transmitted broadcasts"
+            crc:
+                description:
+                - "CRC"
+            ifnum:
+                description:
+                - "Ethernet interface number"
+            giants_output:
+                description:
+                - "Output Giants"
+            output_errors:
+                description:
+                - "Output errors"
     uuid:
         description:
         - "uuid of the object"
@@ -494,7 +705,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","auto_neg_enable","bfd","cpu_process","cpu_process_dir","ddos","duplexity","fec_forced_off","fec_forced_on","flow_control","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lldp","load_interval","lw_4o6","map","media_type_copper","monitor_list","mtu","name","nptv6","remove_vlan_tag","sampling_enable","speed","speed_forced_40g","traffic_distribution_mode","trap_source","trunk_group_list","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","auto_neg_enable","bfd","cpu_process","cpu_process_dir","ddos","duplexity","fec_forced_off","fec_forced_on","flow_control","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lldp","load_interval","lw_4o6","map","media_type_copper","monitor_list","mtu","name","nptv6","oper","remove_vlan_tag","sampling_enable","speed","speed_forced_40g","stats","traffic_distribution_mode","trap_source","trunk_group_list","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -523,6 +734,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',line_protocol=dict(type='str',choices=['up','down']),icmp6_rate_over_limit_drop=dict(type='int',),outgoing_pkts_mirrored=dict(type='int',),rate_byte_sent=dict(type='int',),ipv6_link_local_type=dict(type='str',),vlan_id=dict(type='int',),outgoing_pkts_monitored=dict(type='int',),ipv4_address=dict(type='str',),icmp6_rate_limit_current=dict(type='int',),config_speed=dict(type='str',choices=['10Mbit','100Mbit','1Gbit','10Gbit','40Gbit','auto']),ipv4_netmask=dict(type='str',),output_utilization=dict(type='int',),incoming_pkts_mirrored=dict(type='int',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',)),state=dict(type='str',choices=['up','disabled','down']),icmp_rate_limit_current=dict(type='int',),is_device_transparent=dict(type='int',),media_type=dict(type='str',choices=['Copper','Fiber']),link_type=dict(type='str',choices=['GigabitEthernet','10Gig','40Gig']),rate_pkt_rcvd=dict(type='int',),current_vnp_id=dict(type='int',),igmp_query_sent=dict(type='int',),ipv4_addr_count=dict(type='int',),port_vnp_id=dict(type='int',),ipv6_link_local_scope=dict(type='str',),actual_duplexity=dict(type='str',choices=['Full','fdx','Half','hdx','auto']),icmp_rate_over_limit_drop=dict(type='int',),incoming_pkts_monitored=dict(type='int',),rate_byte_rcvd=dict(type='int',),ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),is_lead_member=dict(type='int',),ipv6_link_local=dict(type='str',),mac=dict(type='str',),actual_speed=dict(type='str',choices=['10Mbit','100Mbit','1Gbit','10Gbit','40Gbit','unknown']),ipv6_link_local_prefix=dict(type='str',),input_utilization=dict(type='int',),is_pristine=dict(type='int',),ifnum=dict(type='str',required=True,),tagged_vlan_list=dict(type='str',),is_tagged=dict(type='int',),rate_pkt_sent=dict(type='int',),ipv6_addr_count=dict(type='int',),config_duplexity=dict(type='str',choices=['Full','fdx','Half','hdx','auto'])),
         fec_forced_on=dict(type='bool',),
         trap_source=dict(type='bool',),
         ip=dict(type='dict',uuid=dict(type='str',),address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),generate_membership_query=dict(type='bool',),cache_spoofing_port=dict(type='bool',),inside=dict(type='bool',),allow_promiscuous_vip=dict(type='bool',),client=dict(type='bool',),max_resp_time=dict(type='int',),query_interval=dict(type='int',),outside=dict(type='bool',),helper_address_list=dict(type='list',helper_address=dict(type='str',)),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),ttl_ignore=dict(type='bool',),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),dhcp=dict(type='bool',),server=dict(type='bool',),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),slb_partition_redirect=dict(type='bool',)),
@@ -532,6 +744,7 @@ def get_argspec():
         speed=dict(type='str',choices=['10','100','1000','auto']),
         speed_forced_40g=dict(type='bool',),
         lldp=dict(type='dict',tx_dot1_cfg=dict(type='dict',link_aggregation=dict(type='bool',),vlan=dict(type='bool',),tx_dot1_tlvs=dict(type='bool',)),notification_cfg=dict(type='dict',notification=dict(type='bool',),notif_enable=dict(type='bool',)),enable_cfg=dict(type='dict',rx=dict(type='bool',),tx=dict(type='bool',),rt_enable=dict(type='bool',)),tx_tlvs_cfg=dict(type='dict',system_capabilities=dict(type='bool',),system_description=dict(type='bool',),management_address=dict(type='bool',),tx_tlvs=dict(type='bool',),exclude=dict(type='bool',),port_description=dict(type='bool',),system_name=dict(type='bool',)),uuid=dict(type='str',)),
+        stats=dict(type='dict',frame=dict(type='str',),rate_byte_sent=dict(type='str',),runts=dict(type='str',),bytes_output=dict(type='str',),input_errors=dict(type='str',),bytes_input=dict(type='str',),load_interval=dict(type='str',),transmitted_multicasts=dict(type='str',),packets_input=dict(type='str',),received_multicasts=dict(type='str',),received_broadcasts=dict(type='str',),transmitted_unicasts=dict(type='str',),collisions=dict(type='str',),received_unicasts=dict(type='str',),rate_pkt_sent=dict(type='str',),giants=dict(type='str',),packets_output=dict(type='str',),rate_byte_rcvd=dict(type='str',),rate_pkt_rcvd=dict(type='str',),transmitted_broadcasts=dict(type='str',),crc=dict(type='str',),ifnum=dict(type='str',required=True,),giants_output=dict(type='str',),output_errors=dict(type='str',)),
         uuid=dict(type='str',),
         bfd=dict(type='dict',interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),authentication=dict(type='dict',encrypted=dict(type='str',),password=dict(type='str',),method=dict(type='str',choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int',)),echo=dict(type='bool',),uuid=dict(type='str',),demand=dict(type='bool',)),
         media_type_copper=dict(type='bool',),
@@ -674,9 +887,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

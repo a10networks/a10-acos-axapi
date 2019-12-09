@@ -84,6 +84,47 @@ options:
         description:
         - "Use destination IP to match the policy"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            forward_policy:
+                description:
+                - "Field forward_policy"
+            fwd_policy_dns_unresolved:
+                description:
+                - "Forward-policy unresolved DNS queries"
+            fwd_policy_hits:
+                description:
+                - "Number of forward-policy requests for this policy template"
+            fwd_policy_policy_drop:
+                description:
+                - "Number of forward-policy requests dropped"
+            name:
+                description:
+                - "Policy template name"
+            fwd_policy_forward_to_service_group:
+                description:
+                - "Number of forward-policy requests forwarded to service group"
+            fwd_policy_forward_to_internet:
+                description:
+                - "Number of forward-policy requests forwarded to internet"
+            fwd_policy_dns_outstanding:
+                description:
+                - "Forward-policy current DNS outstanding requests"
+            fwd_policy_source_match_not_found:
+                description:
+                - "Forward-policy requests without matching source rule"
+            fwd_policy_snat_fail:
+                description:
+                - "Forward-policy source-nat translation failure"
+            exp_client_hello_not_found:
+                description:
+                - "Expected Client HELLO requests not found"
+            fwd_policy_forward_to_proxy:
+                description:
+                - "Number of forward-policy requests forwarded to proxy"
     name:
         description:
         - "Policy template name"
@@ -210,7 +251,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bw_list_id","bw_list_name","class_list","forward_policy","full_domain_tree","interval","name","over_limit","over_limit_lockup","over_limit_logging","over_limit_reset","overlap","sampling_enable","share","timeout","use_destination_ip","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["bw_list_id","bw_list_name","class_list","forward_policy","full_domain_tree","interval","name","over_limit","over_limit_lockup","over_limit_logging","over_limit_reset","overlap","sampling_enable","share","stats","timeout","use_destination_ip","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -241,6 +282,7 @@ def get_argspec():
     rv.update(dict(
         forward_policy=dict(type='dict',filtering=dict(type='list',ssli_url_filtering=dict(type='str',choices=['bypassed-sni-disable','intercepted-sni-enable','intercepted-http-disable','no-sni-allow'])),uuid=dict(type='str',),local_logging=dict(type='bool',),san_filtering=dict(type='list',ssli_url_filtering_san=dict(type='str',choices=['enable-san','bypassed-san-disable','intercepted-san-enable','no-san-allow'])),action_list=dict(type='list',log=dict(type='bool',),http_status_code=dict(type='str',choices=['301','302']),forward_snat=dict(type='str',),uuid=dict(type='str',),drop_response_code=dict(type='int',),action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),fake_sg=dict(type='str',),user_tag=dict(type='str',),real_sg=dict(type='str',),drop_message=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),fall_back=dict(type='str',),fall_back_snat=dict(type='str',),drop_redirect_url=dict(type='str',),name=dict(type='str',required=True,)),no_client_conn_reuse=dict(type='bool',),require_web_category=dict(type='bool',),acos_event_log=dict(type='bool',),source_list=dict(type='list',match_any=dict(type='bool',),name=dict(type='str',required=True,),match_authorize_policy=dict(type='str',),destination=dict(type='dict',class_list_list=dict(type='list',uuid=dict(type='str',),dest_class_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url','ip'])),web_category_list_list=dict(type='list',uuid=dict(type='str',),web_category_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url'])),any=dict(type='dict',action=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',))),user_tag=dict(type='str',),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','destination-match-not-found','no-host-info'])),match_class_list=dict(type='str',),uuid=dict(type='str',))),
         use_destination_ip=dict(type='bool',),
+        stats=dict(type='dict',forward_policy=dict(type='dict',),fwd_policy_dns_unresolved=dict(type='str',),fwd_policy_hits=dict(type='str',),fwd_policy_policy_drop=dict(type='str',),name=dict(type='str',required=True,),fwd_policy_forward_to_service_group=dict(type='str',),fwd_policy_forward_to_internet=dict(type='str',),fwd_policy_dns_outstanding=dict(type='str',),fwd_policy_source_match_not_found=dict(type='str',),fwd_policy_snat_fail=dict(type='str',),exp_client_hello_not_found=dict(type='str',),fwd_policy_forward_to_proxy=dict(type='str',)),
         name=dict(type='str',required=True,),
         over_limit=dict(type='bool',),
         class_list=dict(type='dict',header_name=dict(type='str',),lid_list=dict(type='list',request_rate_limit=dict(type='int',),action_value=dict(type='str',choices=['forward','reset']),request_per=dict(type='int',),bw_rate_limit=dict(type='int',),conn_limit=dict(type='int',),log=dict(type='bool',),direct_action_value=dict(type='str',choices=['drop','reset']),conn_per=dict(type='int',),direct_fail=dict(type='bool',),conn_rate_limit=dict(type='int',),direct_pbslb_logging=dict(type='bool',),dns64=dict(type='dict',prefix=dict(type='str',),exclusive_answer=dict(type='bool',),disable=dict(type='bool',)),lidnum=dict(type='int',required=True,),over_limit_action=dict(type='bool',),response_code_rate_limit=dict(type='list',threshold=dict(type='int',),code_range_end=dict(type='int',),code_range_start=dict(type='int',),period=dict(type='int',)),direct_service_group=dict(type='str',),uuid=dict(type='str',),request_limit=dict(type='int',),direct_action_interval=dict(type='int',),bw_per=dict(type='int',),interval=dict(type='int',),user_tag=dict(type='str',),direct_action=dict(type='bool',),lockout=dict(type='int',),direct_logging_drp_rst=dict(type='bool',),direct_pbslb_interval=dict(type='int',)),name=dict(type='str',),client_ip_l3_dest=dict(type='bool',),client_ip_l7_header=dict(type='bool',),uuid=dict(type='str',)),
@@ -281,11 +323,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -371,10 +408,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -522,8 +562,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

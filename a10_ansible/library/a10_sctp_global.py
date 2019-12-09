@@ -56,6 +56,83 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'sctp-static-nat-session-created'= SCTP Static NAT Session Created; 'sctp-static-nat-session-deleted'= SCTP Static NAT Session Deleted; 'sctp-fw-session-created'= SCTP Firewall Session Created; 'sctp-fw-session-deleted'= SCTP Firewall Session Deleted; 'pkt-err-drop'= Packet Error Drop; 'bad-csum'= Bad Checksum; 'bad-payload-drop'= Bad Payload Drop; 'bad-alignment-drop'= Bad Alignment Drop; 'oos-pkt-drop'= Out-of-state Packet Drop; 'max-multi-home-drop'= Maximum Multi-homing IP Addresses Drop; 'multi-home-remove-ip-skip'= Multi-homing Remove IP Parameter Skip; 'multi-home-addr-not-found-drop'= Multi-homing IP Address Not Found Drop; 'static-nat-cfg-not-found'= Static NAT Config Not Found Drop; 'cfg-err-drop'= Configuration Error Drop; 'vrrp-standby-drop'= NAT Resource VRRP-A Standby Drop; 'invalid-frag-chunk-drop'= Invalid Fragmented Chunks Drop; 'disallowed-chunk-filtered'= Disallowed Chunk Filtered; 'disallowed-pkt-drop'= Disallowed Packet Drop; 'rate-limit-drop'= Rate-limit Drop; 'sby-session-created'= Standby Session Created; 'sby-session-create-fail'= Standby Session Create Failed; 'sby-session-updated'= Standby Session Updated; 'sby-session-update-fail'= Standby Session Update Failed; 'sby-static-nat-cfg-not-found'= Static NAT Config Not Found on Standby; 'sctp-out-of-system-memory'= Out of System Memory; 'conn_ext_size_max'= Max Conn Extension Size; 'bad-csum-shadow'= Bad Checksum Shadow; 'bad-payload-drop-shadow'= Bad Packet Payload Drop Shadow; 'bad-alignment-drop-shadow'= Bad Packet Alignment Drop Shadow; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            sctp_static_nat_session_deleted:
+                description:
+                - "SCTP Static NAT Session Deleted"
+            oos_pkt_drop:
+                description:
+                - "Out-of-state Packet Drop"
+            sctp_fw_session_deleted:
+                description:
+                - "SCTP Firewall Session Deleted"
+            sctp_static_nat_session_created:
+                description:
+                - "SCTP Static NAT Session Created"
+            sby_session_update_fail:
+                description:
+                - "Standby Session Update Failed"
+            bad_csum:
+                description:
+                - "Bad Checksum"
+            max_multi_home_drop:
+                description:
+                - "Maximum Multi-homing IP Addresses Drop"
+            vrrp_standby_drop:
+                description:
+                - "NAT Resource VRRP-A Standby Drop"
+            sby_session_create_fail:
+                description:
+                - "Standby Session Create Failed"
+            disallowed_chunk_filtered:
+                description:
+                - "Disallowed Chunk Filtered"
+            sby_session_created:
+                description:
+                - "Standby Session Created"
+            rate_limit_drop:
+                description:
+                - "Rate-limit Drop"
+            sby_static_nat_cfg_not_found:
+                description:
+                - "Static NAT Config Not Found on Standby"
+            sctp_fw_session_created:
+                description:
+                - "SCTP Firewall Session Created"
+            bad_payload_drop:
+                description:
+                - "Bad Payload Drop"
+            pkt_err_drop:
+                description:
+                - "Packet Error Drop"
+            invalid_frag_chunk_drop:
+                description:
+                - "Invalid Fragmented Chunks Drop"
+            cfg_err_drop:
+                description:
+                - "Configuration Error Drop"
+            bad_alignment_drop:
+                description:
+                - "Bad Alignment Drop"
+            static_nat_cfg_not_found:
+                description:
+                - "Static NAT Config Not Found Drop"
+            multi_home_addr_not_found_drop:
+                description:
+                - "Multi-homing IP Address Not Found Drop"
+            multi_home_remove_ip_skip:
+                description:
+                - "Multi-homing Remove IP Parameter Skip"
+            sby_session_updated:
+                description:
+                - "Standby Session Updated"
+            disallowed_pkt_drop:
+                description:
+                - "Disallowed Packet Drop"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +151,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +181,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sctp-static-nat-session-created','sctp-static-nat-session-deleted','sctp-fw-session-created','sctp-fw-session-deleted','pkt-err-drop','bad-csum','bad-payload-drop','bad-alignment-drop','oos-pkt-drop','max-multi-home-drop','multi-home-remove-ip-skip','multi-home-addr-not-found-drop','static-nat-cfg-not-found','cfg-err-drop','vrrp-standby-drop','invalid-frag-chunk-drop','disallowed-chunk-filtered','disallowed-pkt-drop','rate-limit-drop','sby-session-created','sby-session-create-fail','sby-session-updated','sby-session-update-fail','sby-static-nat-cfg-not-found','sctp-out-of-system-memory','conn_ext_size_max','bad-csum-shadow','bad-payload-drop-shadow','bad-alignment-drop-shadow'])),
+        stats=dict(type='dict',sctp_static_nat_session_deleted=dict(type='str',),oos_pkt_drop=dict(type='str',),sctp_fw_session_deleted=dict(type='str',),sctp_static_nat_session_created=dict(type='str',),sby_session_update_fail=dict(type='str',),bad_csum=dict(type='str',),max_multi_home_drop=dict(type='str',),vrrp_standby_drop=dict(type='str',),sby_session_create_fail=dict(type='str',),disallowed_chunk_filtered=dict(type='str',),sby_session_created=dict(type='str',),rate_limit_drop=dict(type='str',),sby_static_nat_cfg_not_found=dict(type='str',),sctp_fw_session_created=dict(type='str',),bad_payload_drop=dict(type='str',),pkt_err_drop=dict(type='str',),invalid_frag_chunk_drop=dict(type='str',),cfg_err_drop=dict(type='str',),bad_alignment_drop=dict(type='str',),static_nat_cfg_not_found=dict(type='str',),multi_home_addr_not_found_drop=dict(type='str',),multi_home_remove_ip_skip=dict(type='str',),sby_session_updated=dict(type='str',),disallowed_pkt_drop=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +205,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +290,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +444,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

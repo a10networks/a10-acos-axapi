@@ -56,6 +56,71 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'stapling-certificate-good'= Total OCSP Stapling Good Certificate Response; 'stapling-certificate-revoked'= Total OCSP Stapling Revoked Certificate Response; 'stapling-certificate-unknown'= Total OCSP Stapling Unknown Certificate Response; 'stapling-request-normal'= Total OSCP Stapling Normal Request; 'stapling-request-dropped'= Total OCSP Stapling Dropped Request; 'stapling-response-success'= Total OCSP Stapling Success Response; 'stapling-response-failure'= Total OCSP Stapling Failure Response; 'stapling-response-error'= Total OCSP Stapling Error Response; 'stapling-response-timeout'= Total OCSP Stapling Timeout Response; 'stapling-response-other'= Total OCSP Stapling Other Response; 'request-normal'= Total OSCP Normal Request; 'request-dropped'= Total OCSP Dropped Request; 'response-success'= Total OCSP Success Response; 'response-failure'= Total OCSP Failure Response; 'response-error'= Total OCSP Error Response; 'response-timeout'= Total OCSP Timeout Response; 'response-other'= Total OCSP Other Response; 'job-start-error'= Total OCSP Job Start Error; 'polling-control-error'= Total OCSP Polling Control Error; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            stapling_request_normal:
+                description:
+                - "Total OSCP Stapling Normal Request"
+            request_normal:
+                description:
+                - "Total OSCP Normal Request"
+            stapling_request_dropped:
+                description:
+                - "Total OCSP Stapling Dropped Request"
+            response_success:
+                description:
+                - "Total OCSP Success Response"
+            instance_list:
+                description:
+                - "Field instance_list"
+            stapling_response_other:
+                description:
+                - "Total OCSP Stapling Other Response"
+            stapling_certificate_revoked:
+                description:
+                - "Total OCSP Stapling Revoked Certificate Response"
+            stapling_response_failure:
+                description:
+                - "Total OCSP Stapling Failure Response"
+            stapling_response_timeout:
+                description:
+                - "Total OCSP Stapling Timeout Response"
+            stapling_response_error:
+                description:
+                - "Total OCSP Stapling Error Response"
+            stapling_certificate_unknown:
+                description:
+                - "Total OCSP Stapling Unknown Certificate Response"
+            response_other:
+                description:
+                - "Total OCSP Other Response"
+            stapling_certificate_good:
+                description:
+                - "Total OCSP Stapling Good Certificate Response"
+            response_failure:
+                description:
+                - "Total OCSP Failure Response"
+            polling_control_error:
+                description:
+                - "Total OCSP Polling Control Error"
+            request_dropped:
+                description:
+                - "Total OCSP Dropped Request"
+            response_timeout:
+                description:
+                - "Total OCSP Timeout Response"
+            job_start_error:
+                description:
+                - "Total OCSP Job Start Error"
+            response_error:
+                description:
+                - "Total OCSP Error Response"
+            stapling_response_success:
+                description:
+                - "Total OCSP Stapling Success Response"
     uuid:
         description:
         - "uuid of the object"
@@ -118,7 +183,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["instance_list","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["instance_list","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -148,6 +213,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-request-normal','stapling-request-dropped','stapling-response-success','stapling-response-failure','stapling-response-error','stapling-response-timeout','stapling-response-other','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error'])),
+        stats=dict(type='dict',stapling_request_normal=dict(type='str',),request_normal=dict(type='str',),stapling_request_dropped=dict(type='str',),response_success=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',stapling_timeout=dict(type='str',),stapling_fail=dict(type='str',),certificate_revoked=dict(type='str',),request=dict(type='str',),stapling_certificate_revoked=dict(type='str',),certificate_unknown=dict(type='str',),stapling_certificate_unknown=dict(type='str',),stapling_certificate_good=dict(type='str',),timeout=dict(type='str',),fail=dict(type='str',),certificate_good=dict(type='str',),stapling_request=dict(type='str',)),name=dict(type='str',required=True,)),stapling_response_other=dict(type='str',),stapling_certificate_revoked=dict(type='str',),stapling_response_failure=dict(type='str',),stapling_response_timeout=dict(type='str',),stapling_response_error=dict(type='str',),stapling_certificate_unknown=dict(type='str',),response_other=dict(type='str',),stapling_certificate_good=dict(type='str',),response_failure=dict(type='str',),polling_control_error=dict(type='str',),request_dropped=dict(type='str',),response_timeout=dict(type='str',),job_start_error=dict(type='str',),response_error=dict(type='str',),stapling_response_success=dict(type='str',)),
         uuid=dict(type='str',),
         instance_list=dict(type='list',health_check_string=dict(type='str',),responder_ca=dict(type='str',),name=dict(type='str',required=True,),url=dict(type='str',),responder_cert=dict(type='str',),health_check_disable=dict(type='bool',),http_version=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request','certificate-good','certificate-revoked','certificate-unknown','timeout','fail','stapling-request','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-timeout','stapling-fail'])),version_type=dict(type='str',choices=['1.1']),port_health_check_disable=dict(type='bool',),port_health_check=dict(type='str',),health_check=dict(type='bool',),uuid=dict(type='str',))
     ))
@@ -172,11 +238,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -262,10 +323,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -413,8 +477,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

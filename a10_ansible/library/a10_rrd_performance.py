@@ -48,6 +48,20 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            end_time:
+                description:
+                - "Field end_time"
+            start_time:
+                description:
+                - "Field start_time"
+            performance_data:
+                description:
+                - "Field performance_data"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +80,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',end_time=dict(type='int',),start_time=dict(type='int',),performance_data=dict(type='list',lsn_cps=dict(type='int',),ov_ip_cur_conns=dict(type='int',),ov_l7_req=dict(type='int',),lsn_udp_port_avail=dict(type='int',),rus_s_conns_act=dict(type='int',),ov_new_conn_srv_ssl=dict(type='int',),syn_recv=dict(type='int',),ov_udp_cur_conns=dict(type='int',),ov_cur_conns=dict(type='int',),ov_new_conn_l7=dict(type='int',),ov_new_conn_l4=dict(type='int',),ov_new_conn_tot=dict(type='int',),lsn_tcp_port_used=dict(type='int',),lsn_avail_sess=dict(type='int',),lsn_used_sess=dict(type='int',),syn_fail=dict(type='int',),rus_s_conns_tot=dict(type='int',),ov_new_conn_ssl=dict(type='int',),lsn_tcp_port_avail=dict(type='int',),ov_puts=dict(type='int',),rus_c_conns_cur=dict(type='int',),ov_sctp_cur_conns=dict(type='int',),ov_tcp_cur_conns=dict(type='int',),rus_c_conns_tot=dict(type='int',),ov_new_conn_ipnat=dict(type='int',),time=dict(type='int',),rus_s_conns_cur=dict(type='int',),lsn_udp_port_used=dict(type='int',),ov_other_cur_conns=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +138,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -209,10 +219,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -349,8 +362,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

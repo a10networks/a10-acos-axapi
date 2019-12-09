@@ -60,6 +60,26 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'transport-inserted'= Transport Created; 'transport-freed'= Transport Freed; 'transport-alloc-failure'= Transport Alloc Failure; 'data-session-created'= Data Session Created; 'data-session-freed'= Data Session Freed; 'ext-creation-failure'= Extension Creation Failure; 'transport-add-to-ext'= Transport Added to Extension; 'transport-removed-from-ext'= Transport Removed from Extension; 'transport-too-many'= Too Many Transports for Control Conn; 'transport-already-in-ext'= Transport Already in Extension; 'transport-exists'= Transport Already Exists; 'transport-link-ext-failure-control'= Transport Link to Extension Failure Control; 'transport-link-ext-data'= Transport Link to Extension Data; 'transport-link-ext-failure-data'= Transport Link to Extension Failure Data; 'transport-inserted-shadow'= Transport Inserted Shadow; 'transport-creation-race'= Transport Create Race; 'transport-alloc-failure-shadow'= Transport Alloc Failure Shadow; 'transport-put-in-del-q'= Transport Put in Delete Queue; 'transport-freed-shadow'= Transport Freed Shadow; 'transport-acquired-from-control'= Transport Acquired Control; 'transport-found-from-prev-control'= Transport Found From Prev Control; 'transport-acquire-failure-from-control'= Transport Acquire Failure Control; 'transport-released-from-control'= Transport Released Control; 'transport-double-release-from-control'= Transport Double Release Control; 'transport-acquired-from-data'= Transport Acquired Data; 'transport-acquire-failure-from-data'= Transport Acquire Failure Data; 'transport-released-from-data'= Transport Released Data; 'transport-double-release-from-data'= Transport Double Release Data; 'transport-retry-lookup-on-data-free'= Transport Retry Lookup Data; 'transport-not-found-on-data-free'= Transport Not Found Data; 'data-session-created-shadow'= Data Session Created Shadow; 'data-session-freed-shadow'= Data Session Freed Shadow; 'ha-control-ext-creation-failure'= HA Control Extension Creation Failure; 'ha-control-session-created'= HA Control Session Created; 'ha-data-session-created'= HA Data Session Created; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            data_session_created:
+                description:
+                - "Data Session Created"
+            transport_alloc_failure:
+                description:
+                - "Transport Alloc Failure"
+            data_session_freed:
+                description:
+                - "Data Session Freed"
+            transport_freed:
+                description:
+                - "Transport Freed"
+            transport_inserted:
+                description:
+                - "Transport Created"
     uuid:
         description:
         - "uuid of the object"
@@ -78,7 +98,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["rtsp_value","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["rtsp_value","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -109,6 +129,7 @@ def get_argspec():
     rv.update(dict(
         rtsp_value=dict(type='str',choices=['disable']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','transport-inserted','transport-freed','transport-alloc-failure','data-session-created','data-session-freed','ext-creation-failure','transport-add-to-ext','transport-removed-from-ext','transport-too-many','transport-already-in-ext','transport-exists','transport-link-ext-failure-control','transport-link-ext-data','transport-link-ext-failure-data','transport-inserted-shadow','transport-creation-race','transport-alloc-failure-shadow','transport-put-in-del-q','transport-freed-shadow','transport-acquired-from-control','transport-found-from-prev-control','transport-acquire-failure-from-control','transport-released-from-control','transport-double-release-from-control','transport-acquired-from-data','transport-acquire-failure-from-data','transport-released-from-data','transport-double-release-from-data','transport-retry-lookup-on-data-free','transport-not-found-on-data-free','data-session-created-shadow','data-session-freed-shadow','ha-control-ext-creation-failure','ha-control-session-created','ha-data-session-created'])),
+        stats=dict(type='dict',data_session_created=dict(type='str',),transport_alloc_failure=dict(type='str',),data_session_freed=dict(type='str',),transport_freed=dict(type='str',),transport_inserted=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -132,11 +153,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -222,10 +238,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -373,8 +392,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

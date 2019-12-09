@@ -56,6 +56,95 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'in_pkts'= Monitored Entity telemetry Metric IN pkts; 'out_pkts'= Monitored Entity telemetry Metric OUT pkts; 'in_bytes'= Monitored Entity telemetry Metric IN bytes; 'out_bytes'= Monitored Entity telemetry Metric OUT bytes; 'errors'= Monitored Entity telemetry Metric ERRORS; 'in_small_pkt'= Monitored Entity telemetry Metric IN SMALL pkt; 'in_frag'= Monitored Entity telemetry Metric IN frag; 'out_small_pkt'= Monitored Entity telemetry Metric OUT SMALL pkt; 'out_frag'= Monitored Entity telemetry Metric OUT frag; 'new-conn'= Monitored Entity telemetry Metric New Sessions; 'concurrent-conn'= concurrent-conn; 'in_bytes_per_out_bytes'= Monitored Entity telemetry Metric IN bytes per OUT bytes; 'drop_pkts_per_pkts'= Monitored Entity telemetry Metric Drop pkts per pkts; 'tcp_in_syn'= Monitored Entity telemetry Metric TCP IN syn; 'tcp_out_syn'= Monitored Entity telemetry Metric TCP OUT syn; 'tcp_in_fin'= Monitored Entity telemetry Metric TCP IN fin; 'tcp_out_fin'= Monitored Entity telemetry Metric TCP OUT fin; 'tcp_in_payload'= Monitored Entity telemetry Metric TCP IN payload; 'tcp_out_payload'= Monitored Entity telemetry Metric TCP OUT payload; 'tcp_in_rexmit'= Monitored Entity telemetry Metric TCP IN rexmit; 'tcp_out_rexmit'= Monitored Entity telemetry Metric TCP OUT rexmit; 'tcp_in_rst'= Monitored Entity telemetry Metric TCP IN rst; 'tcp_out_rst'= Monitored Entity telemetry Metric TCP OUT rst; 'tcp_in_empty_ack'= Monitored Entity telemetry Metric TCP_IN EMPTY ack; 'tcp_out_empty_ack'= Monitored Entity telemetry Metric TCP OUT EMPTY ack; 'tcp_in_zero_wnd'= Monitored Entity telemetry Metric TCP IN ZERO wnd; 'tcp_out_zero_wnd'= Monitored Entity telemetry Metric TCP OUT ZERO wnd; 'tcp_fwd_syn_per_fin'= Monitored Entity telemetry Metric TCP FWD SYN per FIN; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            in_bytes:
+                description:
+                - "Monitored Entity telemetry Metric IN bytes"
+            tcp_in_empty_ack:
+                description:
+                - "Monitored Entity telemetry Metric TCP_IN EMPTY ack"
+            in_small_pkt:
+                description:
+                - "Monitored Entity telemetry Metric IN SMALL pkt"
+            tcp_out_empty_ack:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT EMPTY ack"
+            concurrent_conn:
+                description:
+                - "Field concurrent_conn"
+            out_frag:
+                description:
+                - "Monitored Entity telemetry Metric OUT frag"
+            tcp_out_rst:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT rst"
+            tcp_out_zero_wnd:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT ZERO wnd"
+            errors:
+                description:
+                - "Monitored Entity telemetry Metric ERRORS"
+            out_small_pkt:
+                description:
+                - "Monitored Entity telemetry Metric OUT SMALL pkt"
+            tcp_in_rexmit:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN rexmit"
+            tcp_out_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT fin"
+            in_bytes_per_out_bytes:
+                description:
+                - "Monitored Entity telemetry Metric IN bytes per OUT bytes"
+            tcp_in_payload:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN payload"
+            tcp_out_syn:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT syn"
+            tcp_out_rexmit:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT rexmit"
+            tcp_in_zero_wnd:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN ZERO wnd"
+            tcp_in_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN fin"
+            out_pkts:
+                description:
+                - "Monitored Entity telemetry Metric OUT pkts"
+            tcp_fwd_syn_per_fin:
+                description:
+                - "Monitored Entity telemetry Metric TCP FWD SYN per FIN"
+            in_pkts:
+                description:
+                - "Monitored Entity telemetry Metric IN pkts"
+            out_bytes:
+                description:
+                - "Monitored Entity telemetry Metric OUT bytes"
+            in_frag:
+                description:
+                - "Monitored Entity telemetry Metric IN frag"
+            drop_pkts_per_pkts:
+                description:
+                - "Monitored Entity telemetry Metric Drop pkts per pkts"
+            tcp_in_syn:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN syn"
+            tcp_out_payload:
+                description:
+                - "Monitored Entity telemetry Metric TCP OUT payload"
+            new_conn:
+                description:
+                - "Monitored Entity telemetry Metric New Sessions"
+            tcp_in_rst:
+                description:
+                - "Monitored Entity telemetry Metric TCP IN rst"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +163,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +193,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','in_pkts','out_pkts','in_bytes','out_bytes','errors','in_small_pkt','in_frag','out_small_pkt','out_frag','new-conn','concurrent-conn','in_bytes_per_out_bytes','drop_pkts_per_pkts','tcp_in_syn','tcp_out_syn','tcp_in_fin','tcp_out_fin','tcp_in_payload','tcp_out_payload','tcp_in_rexmit','tcp_out_rexmit','tcp_in_rst','tcp_out_rst','tcp_in_empty_ack','tcp_out_empty_ack','tcp_in_zero_wnd','tcp_out_zero_wnd','tcp_fwd_syn_per_fin'])),
+        stats=dict(type='dict',in_bytes=dict(type='str',),tcp_in_empty_ack=dict(type='str',),in_small_pkt=dict(type='str',),tcp_out_empty_ack=dict(type='str',),concurrent_conn=dict(type='str',),out_frag=dict(type='str',),tcp_out_rst=dict(type='str',),tcp_out_zero_wnd=dict(type='str',),errors=dict(type='str',),out_small_pkt=dict(type='str',),tcp_in_rexmit=dict(type='str',),tcp_out_fin=dict(type='str',),in_bytes_per_out_bytes=dict(type='str',),tcp_in_payload=dict(type='str',),tcp_out_syn=dict(type='str',),tcp_out_rexmit=dict(type='str',),tcp_in_zero_wnd=dict(type='str',),tcp_in_fin=dict(type='str',),out_pkts=dict(type='str',),tcp_fwd_syn_per_fin=dict(type='str',),in_pkts=dict(type='str',),out_bytes=dict(type='str',),in_frag=dict(type='str',),drop_pkts_per_pkts=dict(type='str',),tcp_in_syn=dict(type='str',),tcp_out_payload=dict(type='str',),new_conn=dict(type='str',),tcp_in_rst=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +217,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +302,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +456,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

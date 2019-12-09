@@ -60,6 +60,56 @@ options:
         description:
         - "RTP/RTCP STUN timeout in minutes (Default is 5 minutes)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            method_register:
+                description:
+                - "SIP Method REGISTER"
+            method_invite:
+                description:
+                - "SIP Method INVITE"
+            method_publish:
+                description:
+                - "SIP Method PUBLISH"
+            method_unknown:
+                description:
+                - "SIP Method UNKNOWN"
+            method_update:
+                description:
+                - "SIP Method UPDATE"
+            method_subscribe:
+                description:
+                - "SIP Method SUBSCRIBE"
+            method_options:
+                description:
+                - "SIP Method OPTIONS"
+            method_prack:
+                description:
+                - "SIP Method PRACK"
+            method_notify:
+                description:
+                - "SIP Method NOTIFY"
+            method_info:
+                description:
+                - "SIP Method INFO"
+            method_ack:
+                description:
+                - "SIP Method ACK"
+            method_refer:
+                description:
+                - "SIP Method REFER"
+            method_cancel:
+                description:
+                - "SIP Method CANCEL"
+            method_bye:
+                description:
+                - "SIP Method BYE"
+            method_message:
+                description:
+                - "SIP Method MESSAGE"
     uuid:
         description:
         - "uuid of the object"
@@ -82,7 +132,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["rtp_stun_timeout","sampling_enable","sip_value","uuid",]
+AVAILABLE_PROPERTIES = ["rtp_stun_timeout","sampling_enable","sip_value","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -113,6 +163,7 @@ def get_argspec():
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','req-uri-op-failrue','via-hdr-op-failrue','contact-hdr-op-failrue','from-hdr-op-failrue','to-hdr-op-failrue','route-hdr-op-failrue','record-route-hdr-op-failrue','content-length-hdr-op-failrue','third-party-registration','conn-ext-creation-failure','alloc-contact-port-failure','outside-contact-port-mismatch','inside-contact-port-mismatch','third-party-sdp','sdp-process-candidate-failure','sdp-op-failure','sdp-alloc-port-map-success','sdp-alloc-port-map-failure','modify-failure','rewrite-failure','tcp-out-of-order-drop','smp-conn-alloc-failure','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
         rtp_stun_timeout=dict(type='int',),
+        stats=dict(type='dict',method_register=dict(type='str',),method_invite=dict(type='str',),method_publish=dict(type='str',),method_unknown=dict(type='str',),method_update=dict(type='str',),method_subscribe=dict(type='str',),method_options=dict(type='str',),method_prack=dict(type='str',),method_notify=dict(type='str',),method_info=dict(type='str',),method_ack=dict(type='str',),method_refer=dict(type='str',),method_cancel=dict(type='str',),method_bye=dict(type='str',),method_message=dict(type='str',)),
         uuid=dict(type='str',),
         sip_value=dict(type='str',choices=['enable'])
     ))
@@ -137,11 +188,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -227,10 +273,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -378,8 +427,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

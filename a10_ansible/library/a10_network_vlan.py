@@ -48,10 +48,65 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ve_num:
+                description:
+                - "Field ve_num"
+            vlan_name:
+                description:
+                - "Field vlan_name"
+            un_tagg_logical_ports:
+                description:
+                - "Field un_tagg_logical_ports"
+            tagg_logical_ports:
+                description:
+                - "Field tagg_logical_ports"
+            vlan_num:
+                description:
+                - "VLAN number"
+            tagg_eth_ports:
+                description:
+                - "Field tagg_eth_ports"
+            is_shared_vlan:
+                description:
+                - "Field is_shared_vlan"
+            un_tagg_eth_ports:
+                description:
+                - "Field un_tagg_eth_ports"
     traffic_distribution_mode:
         description:
         - "'sip'= sip; 'dip'= dip; 'primary'= primary; 'blade'= blade; 'l4-src-port'= l4-src-port; 'l4-dst-port'= l4-dst-port; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            shared_vlan_partition_switched_counter:
+                description:
+                - "SVLAN Partition switched counter"
+            unknown_unicast_count:
+                description:
+                - "Unknown Unicast counter"
+            broadcast_count:
+                description:
+                - "Broadcast counter"
+            mac_movement_count:
+                description:
+                - "Mac Movement counter"
+            vlan_num:
+                description:
+                - "VLAN number"
+            multicast_count:
+                description:
+                - "Multicast counter"
+            ip_multicast_count:
+                description:
+                - "IP Multicast counter"
     uuid:
         description:
         - "uuid of the object"
@@ -146,7 +201,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name","sampling_enable","shared_vlan","tagged_eth_list","tagged_trunk_list","traffic_distribution_mode","untagged_eth_list","untagged_lif","untagged_trunk_list","user_tag","uuid","ve","vlan_num",]
+AVAILABLE_PROPERTIES = ["name","oper","sampling_enable","shared_vlan","stats","tagged_eth_list","tagged_trunk_list","traffic_distribution_mode","untagged_eth_list","untagged_lif","untagged_trunk_list","user_tag","uuid","ve","vlan_num",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -175,7 +230,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ve_num=dict(type='int',),vlan_name=dict(type='str',),un_tagg_logical_ports=dict(type='dict',ports=dict(type='int',)),tagg_logical_ports=dict(type='dict',ports=dict(type='int',)),vlan_num=dict(type='int',required=True,),tagg_eth_ports=dict(type='dict',ports=dict(type='int',)),is_shared_vlan=dict(type='str',),un_tagg_eth_ports=dict(type='dict',ports=dict(type='int',))),
         traffic_distribution_mode=dict(type='str',choices=['sip','dip','primary','blade','l4-src-port','l4-dst-port']),
+        stats=dict(type='dict',shared_vlan_partition_switched_counter=dict(type='str',),unknown_unicast_count=dict(type='str',),broadcast_count=dict(type='str',),mac_movement_count=dict(type='str',),vlan_num=dict(type='int',required=True,),multicast_count=dict(type='str',),ip_multicast_count=dict(type='str',)),
         uuid=dict(type='str',),
         untagged_trunk_list=dict(type='list',untagged_trunk_start=dict(type='int',),untagged_trunk_end=dict(type='int',)),
         untagged_lif=dict(type='int',),
@@ -303,9 +360,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

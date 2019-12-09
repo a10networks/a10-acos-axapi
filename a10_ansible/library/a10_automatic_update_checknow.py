@@ -48,6 +48,25 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            feature_name:
+                description:
+                - "Field feature_name"
+            result:
+                description:
+                - "Field result"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            dummy:
+                description:
+                - "Entry for a10countergen"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +85,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +114,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',feature_name=dict(type='str',),result=dict(type='str',)),
+        stats=dict(type='dict',dummy=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -209,9 +230,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

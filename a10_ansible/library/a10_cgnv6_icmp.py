@@ -56,6 +56,65 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'icmp-unknown-type'= ICMP Unknown Type; 'icmp-no-port-info'= ICMP Port Info Not Included; 'icmp-no-session-drop'= ICMP No Matching Session Drop; 'icmpv6-unknown-type'= ICMPv6 Unknown Type; 'icmpv6-no-port-info'= ICMPv6 Port Info Not Included; 'icmpv6-no-session-drop'= ICMPv6 No Matching Session Drop; 'icmp-to-icmp'= ICMP to ICMP Conversion; 'icmp-to-icmpv6'= ICMP to ICMPv6 Conversion; 'icmpv6-to-icmp'= ICMPv6 to ICMP Conversion; 'icmpv6-to-icmpv6'= ICMPv6 to ICMPv6 Conversion; 'icmp-bad-type'= Bad Embedded ICMP Type; 'icmpv6-bad-type'= Bad Embedded ICMPv6 Type; '64-known-drop'= NAT64 Forward Known ICMPv6 Drop; '64-unknown-drop'= NAT64 Forward Unknown ICMPv6 Drop; '64-midpoint-hop'= NAT64 Forward Unknown Source Drop; '46-known-drop'= NAT64 Reverse Known ICMP Drop; '46-unknown-drop'= NAT64 Reverse Known ICMPv6 Drop; '46-no-prefix-for-ipv4'= NAT64 Reverse No Prefix Match for IPv4; '46-bad-encap-ip-header-len'= 4to6 Bad Encapsulated IP Header Length; 'icmp-to-icmp-err'= ICMP to ICMP Conversion Error; 'icmp-to-icmpv6-err'= ICMP to ICMPv6 Conversion Error; 'icmpv6-to-icmp-err'= ICMPv6 to ICMP Conversion Error; 'icmpv6-to-icmpv6-err'= ICMPv6 to ICMPv6 Conversion Error; 'encap-cross-cpu-no-match'= ICMP Embedded Cross CPU No Matching Session; 'encap-cross-cpu-preprocess-err'= ICMP Embedded Cross CPU Preprocess Error; 'icmp-to-icmp-unknown-l4'= ICMP Embedded Unknown L4 Protocol; 'icmp-to-icmpv6-unknown-l4'= ICMP to ICMPv6 Embedded Unknown L4 Protocol; 'icmpv6-to-icmp-unknown-l4'= ICMPv6 to ICMP Embedded Unknown L4 Protocol; 'icmpv6-to-icmpv6-unknown-l4'= ICMPv6 to ICMPv6 Embedded Unknown L4 Protocol; 'static-nat'= ICMP Static NAT; 'echo-to-pool-reply'= Ping to Pool Reply; 'echo-to-pool-drop'= Ping to Pool Drop; 'error-to-pool-drop'= Error to Pool Drop; 'echo-to-pool-reply-v6'= Ping6 to Pool Reply; 'echo-to-pool-drop-v6'= Ping6 to Pool Drop; 'error-to-pool-drop-v6'= Error to IPv6 Pool Drop; 'error-ip-mismatch'= ICMP IP address mismatch; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            46_no_prefix_for_ipv4:
+                description:
+                - "NAT64 Reverse No Prefix Match for IPv4"
+            icmp_bad_type:
+                description:
+                - "Bad Embedded ICMP Type"
+            icmpv6_unknown_type:
+                description:
+                - "ICMPv6 Unknown Type"
+            icmp_to_icmp:
+                description:
+                - "ICMP to ICMP Conversion"
+            icmpv6_bad_type:
+                description:
+                - "Bad Embedded ICMPv6 Type"
+            64_known_drop:
+                description:
+                - "NAT64 Forward Known ICMPv6 Drop"
+            icmp_to_icmpv6:
+                description:
+                - "ICMP to ICMPv6 Conversion"
+            icmpv6_to_icmp:
+                description:
+                - "ICMPv6 to ICMP Conversion"
+            icmp_no_session_drop:
+                description:
+                - "ICMP No Matching Session Drop"
+            icmpv6_no_port_info:
+                description:
+                - "ICMPv6 Port Info Not Included"
+            64_unknown_drop:
+                description:
+                - "NAT64 Forward Unknown ICMPv6 Drop"
+            64_midpoint_hop:
+                description:
+                - "NAT64 Forward Unknown Source Drop"
+            46_unknown_drop:
+                description:
+                - "NAT64 Reverse Known ICMPv6 Drop"
+            icmp_no_port_info:
+                description:
+                - "ICMP Port Info Not Included"
+            icmpv6_no_session_drop:
+                description:
+                - "ICMPv6 No Matching Session Drop"
+            46_known_drop:
+                description:
+                - "NAT64 Reverse Known ICMP Drop"
+            icmpv6_to_icmpv6:
+                description:
+                - "ICMPv6 to ICMPv6 Conversion"
+            icmp_unknown_type:
+                description:
+                - "ICMP Unknown Type"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +133,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +163,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','icmp-unknown-type','icmp-no-port-info','icmp-no-session-drop','icmpv6-unknown-type','icmpv6-no-port-info','icmpv6-no-session-drop','icmp-to-icmp','icmp-to-icmpv6','icmpv6-to-icmp','icmpv6-to-icmpv6','icmp-bad-type','icmpv6-bad-type','64-known-drop','64-unknown-drop','64-midpoint-hop','46-known-drop','46-unknown-drop','46-no-prefix-for-ipv4','46-bad-encap-ip-header-len','icmp-to-icmp-err','icmp-to-icmpv6-err','icmpv6-to-icmp-err','icmpv6-to-icmpv6-err','encap-cross-cpu-no-match','encap-cross-cpu-preprocess-err','icmp-to-icmp-unknown-l4','icmp-to-icmpv6-unknown-l4','icmpv6-to-icmp-unknown-l4','icmpv6-to-icmpv6-unknown-l4','static-nat','echo-to-pool-reply','echo-to-pool-drop','error-to-pool-drop','echo-to-pool-reply-v6','echo-to-pool-drop-v6','error-to-pool-drop-v6','error-ip-mismatch'])),
+        stats=dict(type='dict',46_no_prefix_for_ipv4=dict(type='str',),icmp_bad_type=dict(type='str',),icmpv6_unknown_type=dict(type='str',),icmp_to_icmp=dict(type='str',),icmpv6_bad_type=dict(type='str',),64_known_drop=dict(type='str',),icmp_to_icmpv6=dict(type='str',),icmpv6_to_icmp=dict(type='str',),icmp_no_session_drop=dict(type='str',),icmpv6_no_port_info=dict(type='str',),64_unknown_drop=dict(type='str',),64_midpoint_hop=dict(type='str',),46_unknown_drop=dict(type='str',),icmp_no_port_info=dict(type='str',),icmpv6_no_session_drop=dict(type='str',),46_known_drop=dict(type='str',),icmpv6_to_icmpv6=dict(type='str',),icmp_unknown_type=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +187,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +272,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +426,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

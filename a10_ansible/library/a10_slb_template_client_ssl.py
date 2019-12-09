@@ -88,6 +88,17 @@ options:
         description:
         - "'bypass'= bypass SSLi processing; 'drop'= close the connection; "
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Client SSL Template Name"
+            cert_status_list:
+                description:
+                - "Field cert_status_list"
     fp_cert_fetch_autonat:
         description:
         - "'auto'= Configure auto NAT for server certificate fetching; "
@@ -824,6 +835,269 @@ options:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            stock_advice_and_tools:
+                description:
+                - "stock advice and tools category"
+            news_and_media:
+                description:
+                - "news and media category"
+            CDNs:
+                description:
+                - "content delivery networks category"
+            cult_and_occult:
+                description:
+                - "cult and occult category"
+            fashion_and_beauty:
+                description:
+                - "fashion and beauty category"
+            food_and_dining:
+                description:
+                - "food and dining category"
+            SPAM_URLs:
+                description:
+                - "SPAM URLs category"
+            streaming_media:
+                description:
+                - "streaming media category"
+            bot_nets:
+                description:
+                - "bot nets category"
+            cheating:
+                description:
+                - "cheating category"
+            entertainment_and_arts:
+                description:
+                - "entertainment and arts category"
+            illegal:
+                description:
+                - "illegal category"
+            local_information:
+                description:
+                - "local information category"
+            sports:
+                description:
+                - "sports category"
+            confirmed_SPAM_sources:
+                description:
+                - "confirmed SPAM sources category"
+            private_IP_addresses:
+                description:
+                - "private IP addresses category"
+            music:
+                description:
+                - "music category"
+            open_HTTP_proxies:
+                description:
+                - "open HTTP proxies category"
+            shareware_and_freeware:
+                description:
+                - "shareware and freeware category"
+            spyware_and_adware:
+                description:
+                - "spyware and adware category"
+            questionable:
+                description:
+                - "questionable category"
+            financial_services:
+                description:
+                - "financial services category"
+            social_network:
+                description:
+                - "social network category"
+            government:
+                description:
+                - "government category"
+            drugs:
+                description:
+                - "drugs category"
+            web_hosting_sites:
+                description:
+                - "web hosting sites category"
+            web_advertisements:
+                description:
+                - "web advertisements category"
+            educational_institutions:
+                description:
+                - "educational institutions category"
+            dynamic_comment:
+                description:
+                - "dynamic comment category"
+            translation:
+                description:
+                - "translation category"
+            job_search:
+                description:
+                - "job search category"
+            hunting_and_fishing:
+                description:
+                - "hunting and fishing category"
+            search_engines:
+                description:
+                - "search engines category"
+            peer_to_peer:
+                description:
+                - "peer to peer category"
+            computer_and_internet_security:
+                description:
+                - "computer and internet security category"
+            real_estate:
+                description:
+                - "real estate category"
+            computer_and_internet_info:
+                description:
+                - "computer and internet info category"
+            internet_portals:
+                description:
+                - "internet portals category"
+            shopping:
+                description:
+                - "shopping category"
+            philosophy_and_politics:
+                description:
+                - "philosophy and politics category"
+            web_based_email:
+                description:
+                - "web based email category"
+            recreation_and_hobbies:
+                description:
+                - "recreation and hobbies category"
+            hacking:
+                description:
+                - "hacking category"
+            adult_and_pornography:
+                description:
+                - "adult and pornography category"
+            business_and_economy:
+                description:
+                - "business and economy category"
+            phishing_and_other_fraud:
+                description:
+                - "phishing and other fraud category"
+            nudity:
+                description:
+                - "nudity category"
+            health_and_medicine:
+                description:
+                - "health and medicine category"
+            marijuana:
+                description:
+                - "marijuana category"
+            home_and_garden:
+                description:
+                - "home and garden category"
+            society:
+                description:
+                - "society category"
+            unconfirmed_SPAM_sources:
+                description:
+                - "unconfirmed SPAM sources category"
+            personal_storage:
+                description:
+                - "personal storage category"
+            motor_vehicles:
+                description:
+                - "motor vehicles category"
+            swimsuits_and_intimate_apparel:
+                description:
+                - "swimsuits and intimate apparel category"
+            dead_sites:
+                description:
+                - "dead sites category"
+            other_category:
+                description:
+                - "other category"
+            proxy_avoid_and_anonymizers:
+                description:
+                - "proxy avoid and anonymizers category"
+            gross:
+                description:
+                - "gross category"
+            uncategorised:
+                description:
+                - "uncategorised"
+            travel:
+                description:
+                - "travel category"
+            legal:
+                description:
+                - "legal category"
+            weapons:
+                description:
+                - "weapons category"
+            religion:
+                description:
+                - "religion category"
+            hate_and_racism:
+                description:
+                - "hate and racism category"
+            internet_communications:
+                description:
+                - "internet communications category"
+            gambling:
+                description:
+                - "gambling category"
+            dating:
+                description:
+                - "dating category"
+            malware_sites:
+                description:
+                - "malware sites category"
+            name:
+                description:
+                - "Client SSL Template Name"
+            pay_to_surf:
+                description:
+                - "pay to surf category"
+            military:
+                description:
+                - "military category"
+            image_and_video_search:
+                description:
+                - "image and video search category"
+            reference_and_research:
+                description:
+                - "reference and research category"
+            keyloggers_and_monitoring:
+                description:
+                - "keyloggers and monitoring category"
+            kids:
+                description:
+                - "kids category"
+            online_greeting_cards:
+                description:
+                - "online greeting cards category"
+            violence:
+                description:
+                - "violence category"
+            training_and_tools:
+                description:
+                - "training and tools category"
+            sex_education:
+                description:
+                - "sex education category"
+            personal_sites_and_blogs:
+                description:
+                - "personal sites and blogs category"
+            games:
+                description:
+                - "games category"
+            parked_domains:
+                description:
+                - "parked domains category"
+            auctions:
+                description:
+                - "auctions category"
+            abortion:
+                description:
+                - "abortion category"
+            alcohol_and_tobacco:
+                description:
+                - "alcohol and tobacco category"
     sni_enable_log:
         description:
         - "Enable logging of sni-auto-map failures. Disable by default"
@@ -1187,7 +1461,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ad_group_list","alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","bypass_cert_issuer_class_list_name","bypass_cert_issuer_multi_class_list","bypass_cert_san_class_list_name","bypass_cert_san_multi_class_list","bypass_cert_subject_class_list_name","bypass_cert_subject_multi_class_list","ca_certs","cache_persistence_list_name","case_insensitive","cert_alternate","cert_revoke_action","cert_shared_str","cert_str","cert_unknown_action","certificate_issuer_contains_list","certificate_issuer_ends_with_list","certificate_issuer_equals_list","certificate_issuer_starts_with_list","certificate_san_contains_list","certificate_san_ends_with_list","certificate_san_equals_list","certificate_san_starts_with_list","certificate_subject_contains_list","certificate_subject_ends_with_list","certificate_subject_equals_list","certificate_subject_starts_with_list","chain_cert","chain_cert_shared_str","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","direct_client_server_auth","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_ad_group_list","exception_certificate_issuer_cl_name","exception_certificate_san_cl_name","exception_certificate_subject_cl_name","exception_sni_cl_name","exception_user_name_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_block_message","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_no_shared_cipher_action","forward_proxy_no_sni_action","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_name_shared","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_certificate_issuer_cl_name","inspect_certificate_san_cl_name","inspect_certificate_subject_cl_name","inspect_list_name","key_alt_encrypted","key_alt_passphrase","key_alternate","key_encrypted","key_passphrase","key_shared_encrypted","key_shared_passphrase","key_shared_str","key_str","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","no_shared_cipher_action","non_ssl_bypass_l4session","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","require_web_category","sampling_enable","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","shared_partition_pool","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","template_cipher","template_cipher_shared","template_hsm","user_name_list","user_tag","uuid","verify_cert_fail_action","version","web_category",]
+AVAILABLE_PROPERTIES = ["ad_group_list","alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","bypass_cert_issuer_class_list_name","bypass_cert_issuer_multi_class_list","bypass_cert_san_class_list_name","bypass_cert_san_multi_class_list","bypass_cert_subject_class_list_name","bypass_cert_subject_multi_class_list","ca_certs","cache_persistence_list_name","case_insensitive","cert_alternate","cert_revoke_action","cert_shared_str","cert_str","cert_unknown_action","certificate_issuer_contains_list","certificate_issuer_ends_with_list","certificate_issuer_equals_list","certificate_issuer_starts_with_list","certificate_san_contains_list","certificate_san_ends_with_list","certificate_san_equals_list","certificate_san_starts_with_list","certificate_subject_contains_list","certificate_subject_ends_with_list","certificate_subject_equals_list","certificate_subject_starts_with_list","chain_cert","chain_cert_shared_str","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","direct_client_server_auth","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_ad_group_list","exception_certificate_issuer_cl_name","exception_certificate_san_cl_name","exception_certificate_subject_cl_name","exception_sni_cl_name","exception_user_name_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_block_message","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_no_shared_cipher_action","forward_proxy_no_sni_action","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_name_shared","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_certificate_issuer_cl_name","inspect_certificate_san_cl_name","inspect_certificate_subject_cl_name","inspect_list_name","key_alt_encrypted","key_alt_passphrase","key_alternate","key_encrypted","key_passphrase","key_shared_encrypted","key_shared_passphrase","key_shared_str","key_str","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","no_shared_cipher_action","non_ssl_bypass_l4session","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","oper","renegotiation_disable","req_ca_lists","require_web_category","sampling_enable","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","shared_partition_pool","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","stats","template_cipher","template_cipher_shared","template_hsm","user_name_list","user_tag","uuid","verify_cert_fail_action","version","web_category",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -1224,6 +1498,7 @@ def get_argspec():
         direct_client_server_auth=dict(type='bool',),
         ocspst_sg_hours=dict(type='int',),
         no_shared_cipher_action=dict(type='str',choices=['bypass','drop']),
+        oper=dict(type='dict',name=dict(type='str',required=True,),cert_status_list=dict(type='list',cert_status_responder=dict(type='str',),cert_status_status=dict(type='str',),cert_status_age=dict(type='int',),cert_status_next_update=dict(type='str',),cert_status_name=dict(type='str',))),
         fp_cert_fetch_autonat=dict(type='str',choices=['auto']),
         equals_list=dict(type='list',equals=dict(type='str',)),
         exception_certificate_subject_cl_name=dict(type='str',),
@@ -1323,6 +1598,7 @@ def get_argspec():
         ocsp_stapling=dict(type='bool',),
         notbeforeyear=dict(type='int',),
         forward_encrypted=dict(type='str',),
+        stats=dict(type='dict',stock_advice_and_tools=dict(type='str',),news_and_media=dict(type='str',),CDNs=dict(type='str',),cult_and_occult=dict(type='str',),fashion_and_beauty=dict(type='str',),food_and_dining=dict(type='str',),SPAM_URLs=dict(type='str',),streaming_media=dict(type='str',),bot_nets=dict(type='str',),cheating=dict(type='str',),entertainment_and_arts=dict(type='str',),illegal=dict(type='str',),local_information=dict(type='str',),sports=dict(type='str',),confirmed_SPAM_sources=dict(type='str',),private_IP_addresses=dict(type='str',),music=dict(type='str',),open_HTTP_proxies=dict(type='str',),shareware_and_freeware=dict(type='str',),spyware_and_adware=dict(type='str',),questionable=dict(type='str',),financial_services=dict(type='str',),social_network=dict(type='str',),government=dict(type='str',),drugs=dict(type='str',),web_hosting_sites=dict(type='str',),web_advertisements=dict(type='str',),educational_institutions=dict(type='str',),dynamic_comment=dict(type='str',),translation=dict(type='str',),job_search=dict(type='str',),hunting_and_fishing=dict(type='str',),search_engines=dict(type='str',),peer_to_peer=dict(type='str',),computer_and_internet_security=dict(type='str',),real_estate=dict(type='str',),computer_and_internet_info=dict(type='str',),internet_portals=dict(type='str',),shopping=dict(type='str',),philosophy_and_politics=dict(type='str',),web_based_email=dict(type='str',),recreation_and_hobbies=dict(type='str',),hacking=dict(type='str',),adult_and_pornography=dict(type='str',),business_and_economy=dict(type='str',),phishing_and_other_fraud=dict(type='str',),nudity=dict(type='str',),health_and_medicine=dict(type='str',),marijuana=dict(type='str',),home_and_garden=dict(type='str',),society=dict(type='str',),unconfirmed_SPAM_sources=dict(type='str',),personal_storage=dict(type='str',),motor_vehicles=dict(type='str',),swimsuits_and_intimate_apparel=dict(type='str',),dead_sites=dict(type='str',),other_category=dict(type='str',),proxy_avoid_and_anonymizers=dict(type='str',),gross=dict(type='str',),uncategorised=dict(type='str',),travel=dict(type='str',),legal=dict(type='str',),weapons=dict(type='str',),religion=dict(type='str',),hate_and_racism=dict(type='str',),internet_communications=dict(type='str',),gambling=dict(type='str',),dating=dict(type='str',),malware_sites=dict(type='str',),name=dict(type='str',required=True,),pay_to_surf=dict(type='str',),military=dict(type='str',),image_and_video_search=dict(type='str',),reference_and_research=dict(type='str',),keyloggers_and_monitoring=dict(type='str',),kids=dict(type='str',),online_greeting_cards=dict(type='str',),violence=dict(type='str',),training_and_tools=dict(type='str',),sex_education=dict(type='str',),personal_sites_and_blogs=dict(type='str',),games=dict(type='str',),parked_domains=dict(type='str',),auctions=dict(type='str',),abortion=dict(type='str',),alcohol_and_tobacco=dict(type='str',)),
         sni_enable_log=dict(type='bool',),
         key_shared_str=dict(type='str',),
         notaftermonth=dict(type='int',),
@@ -1502,9 +1778,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

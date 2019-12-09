@@ -48,6 +48,62 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_memblocks_free_avro:
+                description:
+                - "Total memory blocks freed by avro lib"
+            total_ctr_alloc:
+                description:
+                - "Total counters allocated"
+            total_blocks_in_rml_hash:
+                description:
+                - "Total blocks in rml in hash table"
+            total_ctr_in_rml:
+                description:
+                - "Total counters put in rml queue"
+            total_oper_alloc:
+                description:
+                - "Total oper blocks allocated"
+            total_nodes_free:
+                description:
+                - "Total nodes freed(sflow/history/telemetry/cpu-compute)"
+            total_memblocks_alloc_avro:
+                description:
+                - "Total memory blocks allocated by avro lib"
+            total_blocks_in_hash:
+                description:
+                - "Total blocks in hash table"
+            total_nodes_unlink_failed:
+                description:
+                - "Total nodes unlink failed"
+            total_ctr_in_system:
+                description:
+                - "Total counters currently allocated in system"
+            total_nodes_free_failed:
+                description:
+                - "Total nodes free failed"
+            total_nodes_alloc:
+                description:
+                - "Total nodes allocated(sflow/history/telemetry/cpu-compute)"
+            total_oper_free:
+                description:
+                - "Total oper blocks freed"
+            total_nodes_in_rml:
+                description:
+                - "Total nodes put in rml queue"
+            total_memblocks_realloc_avro:
+                description:
+                - "Total memory blocks realloc by avro lib"
+            total_nodes_in_system:
+                description:
+                - "Total nodes currently allocated in system"
+            total_ctr_freed:
+                description:
+                - "Total counters actually freed"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +122,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +151,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',total_memblocks_free_avro=dict(type='str',),total_ctr_alloc=dict(type='str',),total_blocks_in_rml_hash=dict(type='str',),total_ctr_in_rml=dict(type='str',),total_oper_alloc=dict(type='str',),total_nodes_free=dict(type='str',),total_memblocks_alloc_avro=dict(type='str',),total_blocks_in_hash=dict(type='str',),total_nodes_unlink_failed=dict(type='str',),total_ctr_in_system=dict(type='str',),total_nodes_free_failed=dict(type='str',),total_nodes_alloc=dict(type='str',),total_oper_free=dict(type='str',),total_nodes_in_rml=dict(type='str',),total_memblocks_realloc_avro=dict(type='str',),total_nodes_in_system=dict(type='str',),total_ctr_freed=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -118,11 +175,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -208,10 +260,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -347,8 +402,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,6 +48,206 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            cpu_14:
+                description:
+                - "Control CPU-14"
+            cpu_49:
+                description:
+                - "Control CPU-49"
+            cpu_48:
+                description:
+                - "Control CPU-48"
+            cpu_23:
+                description:
+                - "Control CPU-23"
+            cpu_22:
+                description:
+                - "Control CPU-22"
+            cpu_21:
+                description:
+                - "Control CPU-21"
+            cpu_20:
+                description:
+                - "Control CPU-20"
+            cpu_27:
+                description:
+                - "Control CPU-27"
+            cpu_26:
+                description:
+                - "Control CPU-26"
+            cpu_25:
+                description:
+                - "Control CPU-25"
+            cpu_24:
+                description:
+                - "Control CPU-24"
+            cpu_29:
+                description:
+                - "Control CPU-29"
+            cpu_28:
+                description:
+                - "Control CPU-28"
+            cpu_45:
+                description:
+                - "Control CPU-45"
+            cpu_44:
+                description:
+                - "Control CPU-44"
+            cpu_47:
+                description:
+                - "Control CPU-47"
+            cpu_46:
+                description:
+                - "Control CPU-46"
+            cpu_41:
+                description:
+                - "Control CPU-41"
+            cpu_40:
+                description:
+                - "Control CPU-40"
+            cpu_43:
+                description:
+                - "Control CPU-43"
+            cpu_42:
+                description:
+                - "Control CPU-42"
+            cpu_64:
+                description:
+                - "Control CPU-64"
+            cpu_63:
+                description:
+                - "Control CPU-63"
+            cpu_62:
+                description:
+                - "Control CPU-62"
+            cpu_61:
+                description:
+                - "Control CPU-61"
+            cpu_60:
+                description:
+                - "Control CPU-60"
+            cpu_18:
+                description:
+                - "Control CPU-18"
+            cpu_19:
+                description:
+                - "Control CPU-19"
+            cpu_34:
+                description:
+                - "Control CPU-34"
+            cpu_35:
+                description:
+                - "Control CPU-35"
+            cpu_36:
+                description:
+                - "Control CPU-36"
+            cpu_37:
+                description:
+                - "Control CPU-37"
+            cpu_30:
+                description:
+                - "Control CPU-30"
+            cpu_31:
+                description:
+                - "Control CPU-31"
+            cpu_32:
+                description:
+                - "Control CPU-32"
+            cpu_33:
+                description:
+                - "Control CPU-33"
+            cpu_38:
+                description:
+                - "Control CPU-38"
+            cpu_39:
+                description:
+                - "Control CPU-39"
+            cpu_56:
+                description:
+                - "Control CPU-56"
+            cpu_57:
+                description:
+                - "Control CPU-57"
+            cpu_54:
+                description:
+                - "Control CPU-54"
+            cpu_55:
+                description:
+                - "Control CPU-55"
+            cpu_52:
+                description:
+                - "Control CPU-52"
+            cpu_53:
+                description:
+                - "Control CPU-53"
+            cpu_50:
+                description:
+                - "Control CPU-50"
+            cpu_51:
+                description:
+                - "Control CPU-51"
+            cpu_12:
+                description:
+                - "Control CPU-12"
+            cpu_13:
+                description:
+                - "Control CPU-13"
+            cpu_10:
+                description:
+                - "Control CPU-10"
+            cpu_11:
+                description:
+                - "Control CPU-11"
+            cpu_16:
+                description:
+                - "Control CPU-16"
+            cpu_17:
+                description:
+                - "Control CPU-17"
+            cpu_58:
+                description:
+                - "Control CPU-58"
+            cpu_15:
+                description:
+                - "Control CPU-15"
+            cpu_1:
+                description:
+                - "Control CPU-1"
+            cpu_2:
+                description:
+                - "Control CPU-2"
+            cpu_3:
+                description:
+                - "Control CPU-3"
+            cpu_4:
+                description:
+                - "Control CPU-4"
+            cpu_5:
+                description:
+                - "Control CPU-5"
+            cpu_6:
+                description:
+                - "Control CPU-6"
+            cpu_7:
+                description:
+                - "Control CPU-7"
+            cpu_8:
+                description:
+                - "Control CPU-8"
+            cpu_9:
+                description:
+                - "Control CPU-9"
+            ctrl_cpu_number:
+                description:
+                - "Number of ctrl cpus"
+            cpu_59:
+                description:
+                - "Control CPU-59"
     uuid:
         description:
         - "uuid of the object"
@@ -66,7 +266,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +295,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',cpu_14=dict(type='str',),cpu_49=dict(type='str',),cpu_48=dict(type='str',),cpu_23=dict(type='str',),cpu_22=dict(type='str',),cpu_21=dict(type='str',),cpu_20=dict(type='str',),cpu_27=dict(type='str',),cpu_26=dict(type='str',),cpu_25=dict(type='str',),cpu_24=dict(type='str',),cpu_29=dict(type='str',),cpu_28=dict(type='str',),cpu_45=dict(type='str',),cpu_44=dict(type='str',),cpu_47=dict(type='str',),cpu_46=dict(type='str',),cpu_41=dict(type='str',),cpu_40=dict(type='str',),cpu_43=dict(type='str',),cpu_42=dict(type='str',),cpu_64=dict(type='str',),cpu_63=dict(type='str',),cpu_62=dict(type='str',),cpu_61=dict(type='str',),cpu_60=dict(type='str',),cpu_18=dict(type='str',),cpu_19=dict(type='str',),cpu_34=dict(type='str',),cpu_35=dict(type='str',),cpu_36=dict(type='str',),cpu_37=dict(type='str',),cpu_30=dict(type='str',),cpu_31=dict(type='str',),cpu_32=dict(type='str',),cpu_33=dict(type='str',),cpu_38=dict(type='str',),cpu_39=dict(type='str',),cpu_56=dict(type='str',),cpu_57=dict(type='str',),cpu_54=dict(type='str',),cpu_55=dict(type='str',),cpu_52=dict(type='str',),cpu_53=dict(type='str',),cpu_50=dict(type='str',),cpu_51=dict(type='str',),cpu_12=dict(type='str',),cpu_13=dict(type='str',),cpu_10=dict(type='str',),cpu_11=dict(type='str',),cpu_16=dict(type='str',),cpu_17=dict(type='str',),cpu_58=dict(type='str',),cpu_15=dict(type='str',),cpu_1=dict(type='str',),cpu_2=dict(type='str',),cpu_3=dict(type='str',),cpu_4=dict(type='str',),cpu_5=dict(type='str',),cpu_6=dict(type='str',),cpu_7=dict(type='str',),cpu_8=dict(type='str',),cpu_9=dict(type='str',),ctrl_cpu_number=dict(type='str',),cpu_59=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -118,11 +319,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -208,10 +404,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -347,8 +546,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

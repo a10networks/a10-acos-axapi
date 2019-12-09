@@ -56,6 +56,125 @@ options:
         description:
         - "out of sequence packet threshold (threshold value)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            tcp_frg_hdr:
+                description:
+                - "Field tcp_frg_hdr"
+            tcp_null_frg:
+                description:
+                - "Field tcp_null_frg"
+            over_ip_payload:
+                description:
+                - "Field over_ip_payload"
+            udp_bad_csum:
+                description:
+                - "Field udp_bad_csum"
+            nvgre_err:
+                description:
+                - "Field nvgre_err"
+            tcp_syn_fin:
+                description:
+                - "Field tcp_syn_fin"
+            udp_kerb_frg:
+                description:
+                - "Field udp_kerb_frg"
+            tcp_syn_frg:
+                description:
+                - "Field tcp_syn_frg"
+            tcp_bad_iplen:
+                description:
+                - "Field tcp_bad_iplen"
+            ipip_tnl_err:
+                description:
+                - "Field ipip_tnl_err"
+            csum:
+                description:
+                - "Field csum"
+            tcp_xmas:
+                description:
+                - "Field tcp_xmas"
+            pod:
+                description:
+                - "Field pod"
+            tcp_bad_csum:
+                description:
+                - "Field tcp_bad_csum"
+            emp_frg:
+                description:
+                - "Field emp_frg"
+            frg:
+                description:
+                - "Field frg"
+            bad_ip_ttl:
+                description:
+                - "Field bad_ip_ttl"
+            bad_ip_frg_offset:
+                description:
+                - "Field bad_ip_frg_offset"
+            tcp_sht_hdr:
+                description:
+                - "Field tcp_sht_hdr"
+            tcp_xmas_scan:
+                description:
+                - "Field tcp_xmas_scan"
+            no_ip_payload:
+                description:
+                - "Field no_ip_payload"
+            udp_bad_len:
+                description:
+                - "Field udp_bad_len"
+            opt:
+                description:
+                - "Field opt"
+            vxlan_err:
+                description:
+                - "Field vxlan_err"
+            bad_ip_payload_len:
+                description:
+                - "Field bad_ip_payload_len"
+            runt_ip_hdr:
+                description:
+                - "Field runt_ip_hdr"
+            runt_tcp_udp_hdr:
+                description:
+                - "Field runt_tcp_udp_hdr"
+            emp_mic_frg:
+                description:
+                - "Field emp_mic_frg"
+            bad_ip_hdrlen:
+                description:
+                - "Field bad_ip_hdrlen"
+            tcp_null_scan:
+                description:
+                - "Field tcp_null_scan"
+            land:
+                description:
+                - "Field land"
+            tcp_opt_err:
+                description:
+                - "Field tcp_opt_err"
+            bad_ip_flg:
+                description:
+                - "Field bad_ip_flg"
+            udp_srt_hdr:
+                description:
+                - "Field udp_srt_hdr"
+            udp_port_lb:
+                description:
+                - "Field udp_port_lb"
+            bad_tcp_urg_offset:
+                description:
+                - "Field bad_tcp_urg_offset"
+            gre_pptp_err:
+                description:
+                - "Field gre_pptp_err"
+            ipip_tnl_msmtch:
+                description:
+                - "Field ipip_tnl_msmtch"
     uuid:
         description:
         - "uuid of the object"
@@ -140,7 +259,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bad_content","drop_all","frag","ip_option","land_attack","out_of_sequence","packet_deformity","ping_of_death","sampling_enable","security_attack","tcp_no_flag","tcp_syn_fin","tcp_syn_frag","uuid","zero_window",]
+AVAILABLE_PROPERTIES = ["bad_content","drop_all","frag","ip_option","land_attack","out_of_sequence","packet_deformity","ping_of_death","sampling_enable","security_attack","stats","tcp_no_flag","tcp_syn_fin","tcp_syn_frag","uuid","zero_window",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -171,6 +290,7 @@ def get_argspec():
     rv.update(dict(
         frag=dict(type='bool',),
         out_of_sequence=dict(type='int',),
+        stats=dict(type='dict',tcp_frg_hdr=dict(type='str',),tcp_null_frg=dict(type='str',),over_ip_payload=dict(type='str',),udp_bad_csum=dict(type='str',),nvgre_err=dict(type='str',),tcp_syn_fin=dict(type='str',),udp_kerb_frg=dict(type='str',),tcp_syn_frg=dict(type='str',),tcp_bad_iplen=dict(type='str',),ipip_tnl_err=dict(type='str',),csum=dict(type='str',),tcp_xmas=dict(type='str',),pod=dict(type='str',),tcp_bad_csum=dict(type='str',),emp_frg=dict(type='str',),frg=dict(type='str',),bad_ip_ttl=dict(type='str',),bad_ip_frg_offset=dict(type='str',),tcp_sht_hdr=dict(type='str',),tcp_xmas_scan=dict(type='str',),no_ip_payload=dict(type='str',),udp_bad_len=dict(type='str',),opt=dict(type='str',),vxlan_err=dict(type='str',),bad_ip_payload_len=dict(type='str',),runt_ip_hdr=dict(type='str',),runt_tcp_udp_hdr=dict(type='str',),emp_mic_frg=dict(type='str',),bad_ip_hdrlen=dict(type='str',),tcp_null_scan=dict(type='str',),land=dict(type='str',),tcp_opt_err=dict(type='str',),bad_ip_flg=dict(type='str',),udp_srt_hdr=dict(type='str',),udp_port_lb=dict(type='str',),bad_tcp_urg_offset=dict(type='str',),gre_pptp_err=dict(type='str',),ipip_tnl_msmtch=dict(type='str',)),
         uuid=dict(type='str',),
         tcp_syn_fin=dict(type='bool',),
         drop_all=dict(type='bool',),
@@ -206,11 +326,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -296,10 +411,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -447,8 +565,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

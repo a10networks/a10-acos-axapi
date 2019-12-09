@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            cpu_count:
+                description:
+                - "Field cpu_count"
+            connection_reuse_cpu_list:
+                description:
+                - "Field connection_reuse_cpu_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,6 +67,56 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'current_open'= Open persist; 'current_active'= Active persist; 'nbind'= Total bind; 'nunbind'= Total unbind; 'nestab'= Total established; 'ntermi'= Total terminated; 'ntermi_err'= Total terminated by err; 'delay_unbind'= Delayed unbind; 'long_resp'= Long resp; 'miss_resp'= Missed resp; 'unbound_data_rcv'= Unbound data rcvd; 'pause_conn'= Pause request; 'pause_conn_fail'= Pause request fail; 'resume_conn'= Resume request; 'not_remove_from_rport'= Not remove from list; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            miss_resp:
+                description:
+                - "Missed resp"
+            nunbind:
+                description:
+                - "Total unbind"
+            ntermi_err:
+                description:
+                - "Total terminated by err"
+            nbind:
+                description:
+                - "Total bind"
+            current_active:
+                description:
+                - "Active persist"
+            pause_conn_fail:
+                description:
+                - "Pause request fail"
+            delay_unbind:
+                description:
+                - "Delayed unbind"
+            long_resp:
+                description:
+                - "Long resp"
+            ntermi:
+                description:
+                - "Total terminated"
+            pause_conn:
+                description:
+                - "Pause request"
+            unbound_data_rcv:
+                description:
+                - "Unbound data rcvd"
+            resume_conn:
+                description:
+                - "Resume request"
+            current_open:
+                description:
+                - "Open persist"
+            not_remove_from_rport:
+                description:
+                - "Not remove from list"
+            nestab:
+                description:
+                - "Total established"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +135,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +164,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',cpu_count=dict(type='int',),connection_reuse_cpu_list=dict(type='list',miss_resp=dict(type='int',),nunbind=dict(type='int',),ntermi_err=dict(type='int',),nbind=dict(type='int',),current_active=dict(type='int',),pause_conn_fail=dict(type='int',),delay_unbind=dict(type='int',),long_resp=dict(type='int',),ntermi=dict(type='int',),pause_conn=dict(type='int',),unbound_data_rcv=dict(type='int',),resume_conn=dict(type='int',),current_open=dict(type='int',),not_remove_from_rport=dict(type='int',),nestab=dict(type='int',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','current_open','current_active','nbind','nunbind','nestab','ntermi','ntermi_err','delay_unbind','long_resp','miss_resp','unbound_data_rcv','pause_conn','pause_conn_fail','resume_conn','not_remove_from_rport'])),
+        stats=dict(type='dict',miss_resp=dict(type='str',),nunbind=dict(type='str',),ntermi_err=dict(type='str',),nbind=dict(type='str',),current_active=dict(type='str',),pause_conn_fail=dict(type='str',),delay_unbind=dict(type='str',),long_resp=dict(type='str',),ntermi=dict(type='str',),pause_conn=dict(type='str',),unbound_data_rcv=dict(type='str',),resume_conn=dict(type='str',),current_open=dict(type='str',),not_remove_from_rport=dict(type='str',),nestab=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -218,9 +281,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):

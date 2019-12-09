@@ -52,6 +52,56 @@ options:
         description:
         - "Interval to check for real time updates if enabled in mins(default 60)"
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            web_cat_connection_status:
+                description:
+                - "Field web_cat_connection_status"
+            web_cat_last_update_time:
+                description:
+                - "Field web_cat_last_update_time"
+            bypassed_urls:
+                description:
+                - "Field bypassed_urls"
+            intercepted_urls:
+                description:
+                - "Field intercepted_urls"
+            license:
+                description:
+                - "Field license"
+            url:
+                description:
+                - "Field url"
+            web_cat_version:
+                description:
+                - "Field web_cat_version"
+            web_cat_database_version:
+                description:
+                - "Field web_cat_database_version"
+            web_cat_database_size:
+                description:
+                - "Field web_cat_database_size"
+            statistics:
+                description:
+                - "Field statistics"
+            web_cat_next_update_time:
+                description:
+                - "Field web_cat_next_update_time"
+            web_cat_database_status:
+                description:
+                - "Field web_cat_database_status"
+            web_cat_database_name:
+                description:
+                - "Field web_cat_database_name"
+            web_cat_last_successful_connection:
+                description:
+                - "Field web_cat_last_successful_connection"
+            web_cat_failure_reason:
+                description:
+                - "Field web_cat_failure_reason"
     database_server:
         description:
         - "BrightCloud Database Server"
@@ -469,7 +519,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bypassed_urls","category_list_list","cloud_query_cache_size","cloud_query_disable","database_server","db_update_time","enable","intercepted_urls","license","port","proxy_server","remote_syslog_enable","rtu_cache_size","rtu_update_disable","rtu_update_interval","server","server_timeout","ssl_port","statistics","url","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["bypassed_urls","category_list_list","cloud_query_cache_size","cloud_query_disable","database_server","db_update_time","enable","intercepted_urls","license","oper","port","proxy_server","remote_syslog_enable","rtu_cache_size","rtu_update_disable","rtu_update_interval","server","server_timeout","ssl_port","statistics","url","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -499,6 +549,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         rtu_update_interval=dict(type='int',),
+        oper=dict(type='dict',web_cat_connection_status=dict(type='str',),web_cat_last_update_time=dict(type='str',),bypassed_urls=dict(type='dict',oper=dict(type='dict',all_urls=dict(type='str',choices=['true']),url_list=dict(type='list',url_name=dict(type='str',)),number_of_urls=dict(type='int',),url_name=dict(type='str',))),intercepted_urls=dict(type='dict',oper=dict(type='dict',all_urls=dict(type='str',choices=['true']),url_list=dict(type='list',url_name=dict(type='str',)),number_of_urls=dict(type='int',),url_name=dict(type='str',))),license=dict(type='dict',oper=dict(type='dict',license_status=dict(type='str',),grace_period=dict(type='str',),is_grace=dict(type='str',),license_expiry=dict(type='str',),serial_number=dict(type='str',),remaining_period=dict(type='str',),license_type=dict(type='str',),module_status=dict(type='str',))),url=dict(type='dict',oper=dict(type='dict',category_list=dict(type='list',category=dict(type='str',)),name=dict(type='str',),local_db_only=dict(type='int',))),web_cat_version=dict(type='str',),web_cat_database_version=dict(type='int',),web_cat_database_size=dict(type='str',),statistics=dict(type='dict',oper=dict(type='dict',total_req_processed=dict(type='int',),num_dplane_threads=dict(type='int',),num_lookup_threads=dict(type='int',),total_req_dropped=dict(type='int',),total_req_queue=dict(type='int',),per_cpu_list=dict(type='list',req_dropped=dict(type='int',),req_queue=dict(type='int',),req_lookup_processed=dict(type='int',),req_processed=dict(type='int',)),total_req_lookup_processed=dict(type='int',))),web_cat_next_update_time=dict(type='str',),web_cat_database_status=dict(type='str',),web_cat_database_name=dict(type='str',),web_cat_last_successful_connection=dict(type='str',),web_cat_failure_reason=dict(type='str',)),
         database_server=dict(type='str',),
         port=dict(type='int',),
         statistics=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','db-lookup','cloud-cache-lookup','cloud-lookup','rtu-lookup','lookup-latency','db-mem','rtu-cache-mem','lookup-cache-mem'])),uuid=dict(type='str',)),
@@ -547,11 +598,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -633,10 +679,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -785,8 +834,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

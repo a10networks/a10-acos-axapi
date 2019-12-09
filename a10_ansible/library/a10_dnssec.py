@@ -48,6 +48,143 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ptr_memory:
+                description:
+                - "Field ptr_memory"
+            total_memory:
+                description:
+                - "Field total_memory"
+            reference_objects:
+                description:
+                - "Field reference_objects"
+            cname_memory:
+                description:
+                - "Field cname_memory"
+            ds_objects:
+                description:
+                - "Field ds_objects"
+            nsec_objects:
+                description:
+                - "Field nsec_objects"
+            array_memory:
+                description:
+                - "Field array_memory"
+            nsec3param_objects:
+                description:
+                - "Field nsec3param_objects"
+            srv_memory:
+                description:
+                - "Field srv_memory"
+            reference_memory:
+                description:
+                - "Field reference_memory"
+            a_memory:
+                description:
+                - "Field a_memory"
+            table_memory:
+                description:
+                - "Field table_memory"
+            a_objects:
+                description:
+                - "Field a_objects"
+            ns_memory:
+                description:
+                - "Field ns_memory"
+            aaaa_memory:
+                description:
+                - "Field aaaa_memory"
+            zone_objects:
+                description:
+                - "Field zone_objects"
+            table_objects:
+                description:
+                - "Field table_objects"
+            mx_memory:
+                description:
+                - "Field mx_memory"
+            soa_memory:
+                description:
+                - "Field soa_memory"
+            domain_objects:
+                description:
+                - "Field domain_objects"
+            nsec_memory:
+                description:
+                - "Field nsec_memory"
+            nsec3_objects:
+                description:
+                - "Field nsec3_objects"
+            srv_objects:
+                description:
+                - "Field srv_objects"
+            array_objects:
+                description:
+                - "Field array_objects"
+            ns_objects:
+                description:
+                - "Field ns_objects"
+            soa_objects:
+                description:
+                - "Field soa_objects"
+            ds_memory:
+                description:
+                - "Field ds_memory"
+            cname_objects:
+                description:
+                - "Field cname_objects"
+            domain_memory:
+                description:
+                - "Field domain_memory"
+            nsec3param_memory:
+                description:
+                - "Field nsec3param_memory"
+            txt_memory:
+                description:
+                - "Field txt_memory"
+            dnskey_memory:
+                description:
+                - "Field dnskey_memory"
+            total_objects:
+                description:
+                - "Field total_objects"
+            ptr_objects:
+                description:
+                - "Field ptr_objects"
+            aaaa_objects:
+                description:
+                - "Field aaaa_objects"
+            mx_objects:
+                description:
+                - "Field mx_objects"
+            txt_objects:
+                description:
+                - "Field txt_objects"
+            rrsig_objects:
+                description:
+                - "Field rrsig_objects"
+            rrsig2_memory:
+                description:
+                - "Field rrsig2_memory"
+            nsec3_memory:
+                description:
+                - "Field nsec3_memory"
+            zone_memory:
+                description:
+                - "Field zone_memory"
+            rrsig2_objects:
+                description:
+                - "Field rrsig2_objects"
+            rrsig_memory:
+                description:
+                - "Field rrsig_memory"
+            dnskey_objects:
+                description:
+                - "Field dnskey_objects"
     key_rollover:
         description:
         - "Field key_rollover"
@@ -167,7 +304,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dnskey","ds","key_rollover","sign_zone_now","standalone","template_list","uuid",]
+AVAILABLE_PROPERTIES = ["dnskey","ds","key_rollover","oper","sign_zone_now","standalone","template_list","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -196,6 +333,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ptr_memory=dict(type='int',),total_memory=dict(type='int',),reference_objects=dict(type='int',),cname_memory=dict(type='int',),ds_objects=dict(type='int',),nsec_objects=dict(type='int',),array_memory=dict(type='int',),nsec3param_objects=dict(type='int',),srv_memory=dict(type='int',),reference_memory=dict(type='int',),a_memory=dict(type='int',),table_memory=dict(type='int',),a_objects=dict(type='int',),ns_memory=dict(type='int',),aaaa_memory=dict(type='int',),zone_objects=dict(type='int',),table_objects=dict(type='int',),mx_memory=dict(type='int',),soa_memory=dict(type='int',),domain_objects=dict(type='int',),nsec_memory=dict(type='int',),nsec3_objects=dict(type='int',),srv_objects=dict(type='int',),array_objects=dict(type='int',),ns_objects=dict(type='int',),soa_objects=dict(type='int',),ds_memory=dict(type='int',),cname_objects=dict(type='int',),domain_memory=dict(type='int',),nsec3param_memory=dict(type='int',),txt_memory=dict(type='int',),dnskey_memory=dict(type='int',),total_objects=dict(type='int',),ptr_objects=dict(type='int',),aaaa_objects=dict(type='int',),mx_objects=dict(type='int',),txt_objects=dict(type='int',),rrsig_objects=dict(type='int',),rrsig2_memory=dict(type='int',),nsec3_memory=dict(type='int',),zone_memory=dict(type='int',),rrsig2_objects=dict(type='int',),rrsig_memory=dict(type='int',),dnskey_objects=dict(type='int',)),
         key_rollover=dict(type='dict',dnssec_key_type=dict(type='str',choices=['ZSK','KSK']),zsk_start=dict(type='bool',),ksk_start=dict(type='bool',),ds_ready_in_parent_zone=dict(type='bool',),zone_name=dict(type='str',)),
         standalone=dict(type='bool',),
         sign_zone_now=dict(type='dict',zone_name=dict(type='str',)),
@@ -230,11 +368,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -316,10 +449,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -468,8 +604,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

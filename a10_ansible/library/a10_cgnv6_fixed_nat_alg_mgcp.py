@@ -56,6 +56,38 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'auep'= MGCP AUEP; 'aucx'= MGCP AUCX; 'crcx'= MGCP CRCX; 'dlcx'= MGCP DLCX; 'epcf'= MGCP EPCF; 'mdcx'= MGCP MDCX; 'ntfy'= MGCP NTFY; 'rqnt'= MGCP RQNT; 'rsip'= MGCP RSIP; 'parse-error'= MGCP Message Parse Error; 'conn-ext-creation-failure'= MGCP Create Connection Extension Failure; 'third-party-sdp'= MGCP Third-Party SDP; 'sdp-process-candidate-failure'= MGCP Operate SDP Media Candidate Attribute Failure; 'sdp-op-failure'= MGCP Operate SDP Failure; 'sdp-alloc-port-map-success'= MGCP Alloc SDP Port Map Success; 'sdp-alloc-port-map-failure'= MGCP Alloc SDP Port Map Failure; 'modify-failure'= MGCP Message Modify Failure; 'rewrite-failure'= MGCP Message Rewrite Failure; 'tcp-out-of-order-drop'= TCP Out-of-Order Drop; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            auep:
+                description:
+                - "MGCP AUEP"
+            mdcx:
+                description:
+                - "MGCP MDCX"
+            rsip:
+                description:
+                - "MGCP RSIP"
+            rqnt:
+                description:
+                - "MGCP RQNT"
+            ntfy:
+                description:
+                - "MGCP NTFY"
+            crcx:
+                description:
+                - "MGCP CRCX"
+            dlcx:
+                description:
+                - "MGCP DLCX"
+            epcf:
+                description:
+                - "MGCP EPCF"
+            aucx:
+                description:
+                - "MGCP AUCX"
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +106,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +136,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','auep','aucx','crcx','dlcx','epcf','mdcx','ntfy','rqnt','rsip','parse-error','conn-ext-creation-failure','third-party-sdp','sdp-process-candidate-failure','sdp-op-failure','sdp-alloc-port-map-success','sdp-alloc-port-map-failure','modify-failure','rewrite-failure','tcp-out-of-order-drop'])),
+        stats=dict(type='dict',auep=dict(type='str',),mdcx=dict(type='str',),rsip=dict(type='str',),rqnt=dict(type='str',),ntfy=dict(type='str',),crcx=dict(type='str',),dlcx=dict(type='str',),epcf=dict(type='str',),aucx=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +160,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -217,10 +245,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -368,8 +399,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result
