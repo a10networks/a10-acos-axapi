@@ -56,11 +56,39 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'sessions_num'= Total Control Sessions; 'alg_pkts_num'= Total ALG packets; 'alg_pkts_xmitted_num'= ALG packets rexmitted; 'alg_port_helper_created'= Total PORT helper sessions; 'alg_pasv_helper_created'= Total PASV helper sessions; 'alg_port_helper_freed_unused'= PORT helper freed unused; 'alg_pasv_helper_freed_unused'= PASV helper freed unused; 'alg_port_helper_nat_free'= PORT helper NAT free; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            alg_pkts_xmitted_num:
+                description:
+                - "ALG packets rexmitted"
+            alg_pasv_helper_freed_unused:
+                description:
+                - "PASV helper freed unused"
+            alg_pasv_helper_created:
+                description:
+                - "Total PASV helper sessions"
+            alg_port_helper_created:
+                description:
+                - "Total PORT helper sessions"
+            sessions_num:
+                description:
+                - "Total Control Sessions"
+            alg_port_helper_nat_free:
+                description:
+                - "PORT helper NAT free"
+            alg_port_helper_freed_unused:
+                description:
+                - "PORT helper freed unused"
+            alg_pkts_num:
+                description:
+                - "Total ALG packets"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +102,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +132,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_num','alg_pkts_num','alg_pkts_xmitted_num','alg_port_helper_created','alg_pasv_helper_created','alg_port_helper_freed_unused','alg_pasv_helper_freed_unused','alg_port_helper_nat_free'])),
+        stats=dict(type='dict',alg_pkts_xmitted_num=dict(type='str',),alg_pasv_helper_freed_unused=dict(type='str',),alg_pasv_helper_created=dict(type='str',),alg_port_helper_created=dict(type='str',),sessions_num=dict(type='str',),alg_port_helper_nat_free=dict(type='str',),alg_port_helper_freed_unused=dict(type='str',),alg_pkts_num=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +156,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +196,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +241,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +259,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ftp-ctl"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["ftp-ctl"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["ftp-ctl"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["ftp-ctl"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["ftp-ctl"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +283,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +318,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("ftp-ctl", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +402,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

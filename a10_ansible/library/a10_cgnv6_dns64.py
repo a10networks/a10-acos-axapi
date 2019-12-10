@@ -56,11 +56,60 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'query'= Query; 'query-bad-pkt'= Query Bad Packet; 'query-chg'= Query Changed; 'query-parallel'= Query Parallel; 'query-passive'= Query Passive; 'resp'= Response; 'resp-bad-pkt'= Response Bad Packet; 'resp-bad-qr'= Response Bad Query; 'resp-chg'= Response Changed; 'resp-err'= Response Error; 'resp-empty'= Response Empty; 'resp-local'= Response Local; 'adjust'= Translated; 'cache'= Cache; 'drop'= Dropped; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            query_passive:
+                description:
+                - "Query Passive"
+            resp_local:
+                description:
+                - "Response Local"
+            drop:
+                description:
+                - "Dropped"
+            query_bad_pkt:
+                description:
+                - "Query Bad Packet"
+            resp:
+                description:
+                - "Response"
+            cache:
+                description:
+                - "Cache"
+            resp_empty:
+                description:
+                - "Response Empty"
+            resp_chg:
+                description:
+                - "Response Changed"
+            query_parallel:
+                description:
+                - "Query Parallel"
+            adjust:
+                description:
+                - "Translated"
+            resp_bad_qr:
+                description:
+                - "Response Bad Query"
+            query:
+                description:
+                - "Query"
+            resp_err:
+                description:
+                - "Response Error"
+            resp_bad_pkt:
+                description:
+                - "Response Bad Packet"
+            query_chg:
+                description:
+                - "Query Changed"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +123,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +153,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','query','query-bad-pkt','query-chg','query-parallel','query-passive','resp','resp-bad-pkt','resp-bad-qr','resp-chg','resp-err','resp-empty','resp-local','adjust','cache','drop'])),
+        stats=dict(type='dict',query_passive=dict(type='str',),resp_local=dict(type='str',),drop=dict(type='str',),query_bad_pkt=dict(type='str',),resp=dict(type='str',),cache=dict(type='str',),resp_empty=dict(type='str',),resp_chg=dict(type='str',),query_parallel=dict(type='str',),adjust=dict(type='str',),resp_bad_qr=dict(type='str',),query=dict(type='str',),resp_err=dict(type='str',),resp_bad_pkt=dict(type='str',),query_chg=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +177,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +217,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +262,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +280,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns64"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["dns64"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["dns64"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["dns64"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["dns64"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +304,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +339,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("dns64", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +423,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -56,11 +56,30 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'h225ras-message'= H323 H225 RAS Message; 'h225cs-message'= H323 H225 Call Signaling Message; 'h245ctl-message'= H323 H245 Media Control Message; 'h245-tunneled'= H323 H245 Tunnelled Message; 'fast-start'= H323 FastStart; 'parse-error'= Message Parse Error; 'message-cross-multi-packets'= H323 Message Cross Multiple Packets; 'conn-ext-creation-failure'= H323 Packet Rewrite Failure; 'rewrite-failure'= H323 Message Rewrite Failure; 'tcp-out-of-order-drop'= TCP Out-of-Order Drop; 'h245-dynamic-addr-exceed'= H323 H245 Dynamic Address Exceed; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            h225ras_message:
+                description:
+                - "H323 H225 RAS Message"
+            h245_tunneled:
+                description:
+                - "H323 H245 Tunnelled Message"
+            fast_start:
+                description:
+                - "H323 FastStart"
+            h225cs_message:
+                description:
+                - "H323 H225 Call Signaling Message"
+            h245ctl_message:
+                description:
+                - "H323 H245 Media Control Message"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +93,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +123,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','h225ras-message','h225cs-message','h245ctl-message','h245-tunneled','fast-start','parse-error','message-cross-multi-packets','conn-ext-creation-failure','rewrite-failure','tcp-out-of-order-drop','h245-dynamic-addr-exceed'])),
+        stats=dict(type='dict',h225ras_message=dict(type='str',),h245_tunneled=dict(type='str',),fast_start=dict(type='str',),h225cs_message=dict(type='str',),h245ctl_message=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +147,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +187,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +232,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +250,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["h323"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["h323"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["h323"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["h323"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["h323"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +274,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +309,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("h323", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +393,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

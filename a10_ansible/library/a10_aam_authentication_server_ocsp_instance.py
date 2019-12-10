@@ -56,6 +56,50 @@ options:
         description:
         - "Specify the trusted OCSP responder's CA cert filename"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            stapling_timeout:
+                description:
+                - "OCSP Stapling Timeout"
+            name:
+                description:
+                - "Specify OCSP authentication server name"
+            stapling_fail:
+                description:
+                - "Handle OCSP response failed"
+            certificate_revoked:
+                description:
+                - "Revoked Certificate Response"
+            request:
+                description:
+                - "Request"
+            stapling_certificate_revoked:
+                description:
+                - "OCSP Stapling Revoked Certificate Response"
+            certificate_unknown:
+                description:
+                - "Unknown Certificate Response"
+            stapling_certificate_unknown:
+                description:
+                - "OCSP Stapling Unknown Certificate Response"
+            stapling_certificate_good:
+                description:
+                - "OCSP Stapling Good Certificate Response"
+            timeout:
+                description:
+                - "Timeout"
+            fail:
+                description:
+                - "Handle OCSP response failed"
+            certificate_good:
+                description:
+                - "Good Certificate Response"
+            stapling_request:
+                description:
+                - "OCSP Stapling Request Send"
     name:
         description:
         - "Specify OCSP authentication server name"
@@ -105,7 +149,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -118,7 +161,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","health_check_disable","health_check_string","http_version","name","port_health_check","port_health_check_disable","responder_ca","responder_cert","sampling_enable","url","uuid","version_type",]
+AVAILABLE_PROPERTIES = ["health_check","health_check_disable","health_check_string","http_version","name","port_health_check","port_health_check_disable","responder_ca","responder_cert","sampling_enable","stats","url","uuid","version_type",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -149,6 +192,7 @@ def get_argspec():
     rv.update(dict(
         health_check_string=dict(type='str',),
         responder_ca=dict(type='str',),
+        stats=dict(type='dict',stapling_timeout=dict(type='str',),name=dict(type='str',required=True,),stapling_fail=dict(type='str',),certificate_revoked=dict(type='str',),request=dict(type='str',),stapling_certificate_revoked=dict(type='str',),certificate_unknown=dict(type='str',),stapling_certificate_unknown=dict(type='str',),stapling_certificate_good=dict(type='str',),timeout=dict(type='str',),fail=dict(type='str',),certificate_good=dict(type='str',),stapling_request=dict(type='str',)),
         name=dict(type='str',required=True,),
         url=dict(type='str',),
         responder_cert=dict(type='str',),
@@ -184,11 +228,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -229,7 +268,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -274,10 +313,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -289,15 +331,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["instance"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["instance"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["instance"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["instance"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["instance"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -308,8 +355,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -345,12 +390,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("instance", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -425,8 +474,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

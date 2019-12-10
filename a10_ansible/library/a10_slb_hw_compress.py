@@ -48,6 +48,20 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
+            hw_compress_disabled:
+                description:
+                - "Field hw_compress_disabled"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +70,39 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'request_count'= Total request count; 'submit_count'= Total submit count; 'response_count'= Total response count; 'failure_count'= Total failure count; 'failure_code'= Last failure code; 'ring_full_count'= Compression queue full; 'max_outstanding_request_count'= Max queued request count; 'max_outstanding_submit_count'= Max queued submit count; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            max_outstanding_request_count:
+                description:
+                - "Max queued request count"
+            failure_count:
+                description:
+                - "Total failure count"
+            response_count:
+                description:
+                - "Total response count"
+            ring_full_count:
+                description:
+                - "Compression queue full"
+            submit_count:
+                description:
+                - "Total submit count"
+            request_count:
+                description:
+                - "Total request count"
+            max_outstanding_submit_count:
+                description:
+                - "Max queued submit count"
+            failure_code:
+                description:
+                - "Last failure code"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +116,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +145,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',max_outstanding_request_count=dict(type='int',),failure_count=dict(type='int',),response_count=dict(type='int',),ring_full_count=dict(type='int',),submit_count=dict(type='int',),request_count=dict(type='int',),max_outstanding_submit_count=dict(type='int',),failure_code=dict(type='int',)),cpu_count=dict(type='int',),hw_compress_disabled=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request_count','submit_count','response_count','failure_count','failure_code','ring_full_count','max_outstanding_request_count','max_outstanding_submit_count'])),
+        stats=dict(type='dict',max_outstanding_request_count=dict(type='str',),failure_count=dict(type='str',),response_count=dict(type='str',),ring_full_count=dict(type='str',),submit_count=dict(type='str',),request_count=dict(type='str',),max_outstanding_submit_count=dict(type='str',),failure_code=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +216,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +262,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +288,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["hw-compress"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["hw-compress"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["hw-compress"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["hw-compress"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["hw-compress"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +312,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +347,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("hw-compress", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

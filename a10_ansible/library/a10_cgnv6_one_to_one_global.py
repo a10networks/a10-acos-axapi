@@ -60,11 +60,24 @@ options:
         description:
         - "Configure timeout for the one-to-one NAT mapping (Timeout in minutes (default= 10 minutes))"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_map_freed:
+                description:
+                - "Total One-to-One Address Mapping Freed"
+            map_alloc_failure:
+                description:
+                - "One-to-One Address Mapping Allocation Failure"
+            total_map_allocated:
+                description:
+                - "Total One-to-One Address Mapping Allocated"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -78,7 +91,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["mapping_timeout","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["mapping_timeout","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -109,6 +122,7 @@ def get_argspec():
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-map-allocated','total-map-freed','map-alloc-failure','map-dbl-free','alloc-map-race','map-not-found','ha-map-mismatch','ha-select-addr-failure','ha-alloc-map-conflicts'])),
         mapping_timeout=dict(type='int',),
+        stats=dict(type='dict',total_map_freed=dict(type='str',),map_alloc_failure=dict(type='str',),total_map_allocated=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -132,11 +146,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -177,7 +186,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -222,10 +231,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -237,15 +249,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["global"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["global"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["global"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["global"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["global"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -256,8 +273,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -293,12 +308,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("global", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -373,8 +392,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

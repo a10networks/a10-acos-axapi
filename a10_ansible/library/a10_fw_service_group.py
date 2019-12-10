@@ -48,6 +48,47 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            name:
+                description:
+                - "FW Service Name"
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+            servers_down:
+                description:
+                - "Field servers_down"
+            stateless_state:
+                description:
+                - "Field stateless_state"
+            servers_disable:
+                description:
+                - "Field servers_disable"
+            stateless_type:
+                description:
+                - "Field stateless_type"
+            servers_total:
+                description:
+                - "Field servers_total"
+            state:
+                description:
+                - "Field state"
+            member_list:
+                description:
+                - "Field member_list"
+            servers_up:
+                description:
+                - "Field servers_up"
+            stateless_current_usage:
+                description:
+                - "Field stateless_current_usage"
+            hm_dsr_enable_all_vip:
+                description:
+                - "Field hm_dsr_enable_all_vip"
     protocol:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP LB service; "
@@ -92,6 +133,26 @@ options:
             name:
                 description:
                 - "Member name"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            member_list:
+                description:
+                - "Field member_list"
+            server_selection_fail_drop:
+                description:
+                - "Service selection fail drop"
+            server_selection_fail_reset:
+                description:
+                - "Service selection fail reset"
+            service_peak_conn:
+                description:
+                - "Service peak connection"
+            name:
+                description:
+                - "FW Service Name"
     health_check:
         description:
         - "Health Check (Monitor Name)"
@@ -100,7 +161,6 @@ options:
         description:
         - "FW Service Name"
         required: True
-
 
 """
 
@@ -114,7 +174,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","member_list","name","protocol","sampling_enable","traffic_replication_mirror_ip_repl","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["health_check","member_list","name","oper","protocol","sampling_enable","stats","traffic_replication_mirror_ip_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,12 +203,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Partial Up','Down','Disabled','Unknown']),member_list=dict(type='list',oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','MAINTENANCE'])),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
         protocol=dict(type='str',choices=['tcp','udp']),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         traffic_replication_mirror_ip_repl=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn'])),
         member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
+        stats=dict(type='dict',member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),server_selection_fail_drop=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_peak_conn=dict(type='str',),name=dict(type='str',required=True,)),
         health_check=dict(type='str',),
         name=dict(type='str',required=True,)
     ))
@@ -220,7 +282,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -266,9 +328,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -280,15 +354,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["service-group"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["service-group"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["service-group"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["service-group"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["service-group"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -299,8 +378,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -336,12 +413,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("service-group", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

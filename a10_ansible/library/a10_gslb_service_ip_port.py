@@ -51,10 +51,65 @@ options:
     service_ip_node_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+            port_num:
+                description:
+                - "Port Number"
+            service_port:
+                description:
+                - "Field service_port"
+            dynamic:
+                description:
+                - "Field dynamic"
+            tcp:
+                description:
+                - "Field tcp"
+            disabled:
+                description:
+                - "Field disabled"
+            state:
+                description:
+                - "Field state"
+            local_protocol:
+                description:
+                - "Field local_protocol"
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
     port_proto:
         description:
         - "'tcp'= TCP Port; 'udp'= UDP Port; "
         required: True
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            active:
+                description:
+                - "Active Servers"
+            current:
+                description:
+                - "Current Connections"
+            port_proto:
+                description:
+                - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            port_num:
+                description:
+                - "Port Number"
     uuid:
         description:
         - "uuid of the object"
@@ -100,7 +155,6 @@ options:
         - "Health Check Monitor (Monitor Name)"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -113,7 +167,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","health_check_protocol_disable","port_num","port_proto","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","follow_port_protocol","health_check","health_check_disable","health_check_follow_port","health_check_protocol_disable","oper","port_num","port_proto","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -142,7 +196,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',use_gslb_state=dict(type='int',),port_proto=dict(type='str',required=True,choices=['tcp','udp']),gslb_protocol=dict(type='int',),port_num=dict(type='int',required=True,),service_port=dict(type='int',),dynamic=dict(type='int',),tcp=dict(type='int',),disabled=dict(type='int',),state=dict(type='str',),local_protocol=dict(type='int',),manually_health_check=dict(type='int',)),
         port_proto=dict(type='str',required=True,choices=['tcp','udp']),
+        stats=dict(type='dict',active=dict(type='str',),current=dict(type='str',),port_proto=dict(type='str',required=True,choices=['tcp','udp']),port_num=dict(type='int',required=True,)),
         uuid=dict(type='str',),
         port_num=dict(type='int',required=True,),
         health_check_disable=dict(type='bool',),
@@ -230,7 +286,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -276,9 +332,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -290,15 +358,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["port"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["port"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["port"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["port"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["port"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -309,8 +382,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -346,12 +417,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("port", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

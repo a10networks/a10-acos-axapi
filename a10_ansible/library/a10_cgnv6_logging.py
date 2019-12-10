@@ -56,6 +56,152 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            tcp_port_overloading_allocated:
+                description:
+                - "TCP Port Overloading Allocated"
+            tcp_session_deleted:
+                description:
+                - "TCP Session Deleted"
+            gre_session_created:
+                description:
+                - "GRE Session Created"
+            icmpv6_resource_freed:
+                description:
+                - "ICMPV6 Resource Freed"
+            icmpv6_session_created:
+                description:
+                - "ICMPV6 Session Created"
+            tcp_port_allocated:
+                description:
+                - "TCP Port Allocated"
+            udp_port_overloading_freed:
+                description:
+                - "UDP Port Overloading Freed"
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+            log_sent:
+                description:
+                - "Log Packets Sent"
+            udp_port_allocated:
+                description:
+                - "UDP Port Allocated"
+            fixed_nat_periodic_config_logged:
+                description:
+                - "Fixed NAT Disabled Config Logs Sent"
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+            gre_resource_allocated:
+                description:
+                - "GRE Resource Allocated"
+            udp_port_batch_freed:
+                description:
+                - "UDP Port Batch Freed"
+            esp_session_deleted:
+                description:
+                - "ESP Session Deleted"
+            fixed_nat_disable_config_logged:
+                description:
+                - "Fixed NAT Periodic Configs Logged"
+            esp_resource_allocated:
+                description:
+                - "ESP Resource Allocated"
+            fixed_nat_periodic_config_logs_sent:
+                description:
+                - "Fixed NAT Disabled Configs Logged"
+            http_request_logged:
+                description:
+                - "HTTP Request Logged"
+            enhanced_user_log:
+                description:
+                - "Enhanced User Log"
+            icmp_resource_allocated:
+                description:
+                - "ICMP Resource Allocated"
+            esp_session_created:
+                description:
+                - "ESP Session Created"
+            icmp_resource_freed:
+                description:
+                - "ICMP Resource Freed"
+            fixed_nat_interim_updated:
+                description:
+                - "Fixed NAT Interim Updated"
+            icmpv6_session_deleted:
+                description:
+                - "ICMPV6 Session Deleted"
+            udp_port_batch_interim_updated:
+                description:
+                - "UDP Port Batch Interim Updated"
+            tcp_port_overloading_freed:
+                description:
+                - "TCP Port Overloading Freed"
+            icmp_session_deleted:
+                description:
+                - "ICMP Session Deleted"
+            gre_resource_freed:
+                description:
+                - "GRE Resource Freed"
+            gre_session_deleted:
+                description:
+                - "GRE Session Deleted"
+            udp_port_overloading_allocated:
+                description:
+                - "UDP Port Overloading Allocated"
+            fixed_nat_user_ports:
+                description:
+                - "Fixed NAT Inside User Port Mapping"
+            tcp_port_freed:
+                description:
+                - "TCP Port Freed"
+            esp_resource_freed:
+                description:
+                - "ESP Resource Freed"
+            reduced_logs_by_destination:
+                description:
+                - "Reduced Logs by Destination Protocol and Port"
+            icmp_session_created:
+                description:
+                - "ICMP Session Created"
+            conn_tcp_established:
+                description:
+                - "TCP Connection Established"
+            fixed_nat_disable_config_logs_sent:
+                description:
+                - "Fixed NAT Periodic Config Logs Sent"
+            udp_port_batch_allocated:
+                description:
+                - "UDP Port Batch Allocated"
+            udp_port_freed:
+                description:
+                - "UDP Port Freed"
+            conn_tcp_dropped:
+                description:
+                - "TCP Connection Lost"
+            tcp_port_batch_freed:
+                description:
+                - "TCP Port Batch Freed"
+            log_dropped:
+                description:
+                - "Log Packets Dropped"
+            icmpv6_resource_allocated:
+                description:
+                - "ICMPV6 Resource Allocated"
+            tcp_port_batch_interim_updated:
+                description:
+                - "TCP Port Batch Interim Updated"
+            udp_session_deleted:
+                description:
+                - "UDP Session Deleted"
+            tcp_port_batch_allocated:
+                description:
+                - "TCP Port Batch Allocated"
     uuid:
         description:
         - "uuid of the object"
@@ -99,7 +245,6 @@ options:
                 description:
                 - "'warning'= Log level Warning; 'critical'= Log level Critical (Default); 'notice'= Log level Notice; "
 
-
 """
 
 EXAMPLES = """
@@ -112,7 +257,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["nat_quota_exceeded","nat_resource_exhausted","sampling_enable","source_address","tcp_svr_status","uuid",]
+AVAILABLE_PROPERTIES = ["nat_quota_exceeded","nat_resource_exhausted","sampling_enable","source_address","stats","tcp_svr_status","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -142,6 +287,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         tcp_svr_status=dict(type='dict',uuid=dict(type='str',)),
+        stats=dict(type='dict',tcp_port_overloading_allocated=dict(type='str',),tcp_session_deleted=dict(type='str',),gre_session_created=dict(type='str',),icmpv6_resource_freed=dict(type='str',),icmpv6_session_created=dict(type='str',),tcp_port_allocated=dict(type='str',),udp_port_overloading_freed=dict(type='str',),tcp_session_created=dict(type='str',),log_sent=dict(type='str',),udp_port_allocated=dict(type='str',),fixed_nat_periodic_config_logged=dict(type='str',),udp_session_created=dict(type='str',),gre_resource_allocated=dict(type='str',),udp_port_batch_freed=dict(type='str',),esp_session_deleted=dict(type='str',),fixed_nat_disable_config_logged=dict(type='str',),esp_resource_allocated=dict(type='str',),fixed_nat_periodic_config_logs_sent=dict(type='str',),http_request_logged=dict(type='str',),enhanced_user_log=dict(type='str',),icmp_resource_allocated=dict(type='str',),esp_session_created=dict(type='str',),icmp_resource_freed=dict(type='str',),fixed_nat_interim_updated=dict(type='str',),icmpv6_session_deleted=dict(type='str',),udp_port_batch_interim_updated=dict(type='str',),tcp_port_overloading_freed=dict(type='str',),icmp_session_deleted=dict(type='str',),gre_resource_freed=dict(type='str',),gre_session_deleted=dict(type='str',),udp_port_overloading_allocated=dict(type='str',),fixed_nat_user_ports=dict(type='str',),tcp_port_freed=dict(type='str',),esp_resource_freed=dict(type='str',),reduced_logs_by_destination=dict(type='str',),icmp_session_created=dict(type='str',),conn_tcp_established=dict(type='str',),fixed_nat_disable_config_logs_sent=dict(type='str',),udp_port_batch_allocated=dict(type='str',),udp_port_freed=dict(type='str',),conn_tcp_dropped=dict(type='str',),tcp_port_batch_freed=dict(type='str',),log_dropped=dict(type='str',),icmpv6_resource_allocated=dict(type='str',),tcp_port_batch_interim_updated=dict(type='str',),udp_session_deleted=dict(type='str',),tcp_port_batch_allocated=dict(type='str',)),
         uuid=dict(type='str',),
         source_address=dict(type='dict',uuid=dict(type='str',)),
         nat_quota_exceeded=dict(type='dict',uuid=dict(type='str',),level=dict(type='str',choices=['warning','critical','notice'])),
@@ -169,11 +315,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -214,7 +355,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -259,10 +400,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -274,15 +418,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["logging"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["logging"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["logging"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["logging"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["logging"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -293,8 +442,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -330,12 +477,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("logging", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -410,8 +561,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

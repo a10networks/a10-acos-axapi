@@ -48,11 +48,57 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            shared_partition:
+                description:
+                - "Field shared_partition"
+            all_partitions:
+                description:
+                - "Field all_partitions"
+            inside_addr_end:
+                description:
+                - "Field inside_addr_end"
+            inside_addr_start:
+                description:
+                - "Field inside_addr_start"
+            partition_name:
+                description:
+                - "Field partition_name"
+            nat_addr_val:
+                description:
+                - "Field nat_addr_val"
+            nat_addr_start:
+                description:
+                - "Field nat_addr_start"
+            nat_addr_end:
+                description:
+                - "Field nat_addr_end"
+            inside_address_ipv6:
+                description:
+                - "Field inside_address_ipv6"
+            inside_address_ipv4:
+                description:
+                - "Field inside_address_ipv4"
+            shared_pool_name:
+                description:
+                - "Field shared_pool_name"
+            session_mapping_list:
+                description:
+                - "Field session_mapping_list"
+            total:
+                description:
+                - "Field total"
+            pool_name:
+                description:
+                - "Field pool_name"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +112,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +141,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',shared_partition=dict(type='bool',),all_partitions=dict(type='bool',),inside_addr_end=dict(type='str',),inside_addr_start=dict(type='str',),partition_name=dict(type='str',),nat_addr_val=dict(type='str',),nat_addr_start=dict(type='str',),nat_addr_end=dict(type='str',),inside_address_ipv6=dict(type='str',),inside_address_ipv4=dict(type='str',),shared_pool_name=dict(type='str',),session_mapping_list=dict(type='list',sessions=dict(type='int',),age=dict(type='str',),inside_ipv6_address=dict(type='str',),nat_address=dict(type='str',),inside_ipv4_address=dict(type='str',),pool=dict(type='str',)),total=dict(type='int',),pool_name=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +170,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +205,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +251,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +269,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +391,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

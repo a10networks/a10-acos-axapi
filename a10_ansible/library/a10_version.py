@@ -48,11 +48,108 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            sys_poll_mode:
+                description:
+                - "Field sys_poll_mode"
+            hw_code:
+                description:
+                - "Field hw_code"
+            hd_pri:
+                description:
+                - "Field hd_pri"
+            axapi_version:
+                description:
+                - "Field axapi_version"
+            serial_number:
+                description:
+                - "Field serial_number"
+            up_time:
+                description:
+                - "Field up_time"
+            firmware_version:
+                description:
+                - "Field firmware_version"
+            hd_sec:
+                description:
+                - "Field hd_sec"
+            pri_gui_version:
+                description:
+                - "Field pri_gui_version"
+            copyright:
+                description:
+                - "Field copyright"
+            io_buff_enabled:
+                description:
+                - "Field io_buff_enabled"
+            series_name:
+                description:
+                - "Field series_name"
+            hostname:
+                description:
+                - "Field hostname"
+            cots_sys_ver:
+                description:
+                - "Field cots_sys_ver"
+            hw_platform:
+                description:
+                - "Field hw_platform"
+            last_config_saved_time:
+                description:
+                - "Field last_config_saved_time"
+            sw_version:
+                description:
+                - "Field sw_version"
+            cf_pri:
+                description:
+                - "Field cf_pri"
+            build_type:
+                description:
+                - "Field build_type"
+            cf_sec:
+                description:
+                - "Field cf_sec"
+            current_time:
+                description:
+                - "Field current_time"
+            nun_ctrl_cpus:
+                description:
+                - "Field nun_ctrl_cpus"
+            sec_gui_version:
+                description:
+                - "Field sec_gui_version"
+            cylance_version:
+                description:
+                - "Field cylance_version"
+            buff_size:
+                description:
+                - "Field buff_size"
+            virtualization_type:
+                description:
+                - "Field virtualization_type"
+            boot_from:
+                description:
+                - "Field boot_from"
+            plat_features:
+                description:
+                - "Field plat_features"
+            aflex_version:
+                description:
+                - "Field aflex_version"
+            cots_sys_name:
+                description:
+                - "Field cots_sys_name"
+            cots_sys_mfg:
+                description:
+                - "Field cots_sys_mfg"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +163,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +192,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',sys_poll_mode=dict(type='str',),hw_code=dict(type='str',),hd_pri=dict(type='str',),axapi_version=dict(type='str',),serial_number=dict(type='str',),up_time=dict(type='str',),firmware_version=dict(type='str',),hd_sec=dict(type='str',),pri_gui_version=dict(type='str',),copyright=dict(type='str',),io_buff_enabled=dict(type='str',),series_name=dict(type='str',),hostname=dict(type='str',),cots_sys_ver=dict(type='str',),hw_platform=dict(type='str',),last_config_saved_time=dict(type='str',),sw_version=dict(type='str',),cf_pri=dict(type='str',),build_type=dict(type='str',),cf_sec=dict(type='str',),current_time=dict(type='str',),nun_ctrl_cpus=dict(type='int',),sec_gui_version=dict(type='str',),cylance_version=dict(type='str',),buff_size=dict(type='int',),virtualization_type=dict(type='str',),boot_from=dict(type='str',),plat_features=dict(type='str',),aflex_version=dict(type='str',),cots_sys_name=dict(type='str',),cots_sys_mfg=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +221,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +256,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +302,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +320,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +442,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

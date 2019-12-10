@@ -56,6 +56,167 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'create-session-request'= Create Session Request; 'create-session-response'= Create Session Response; 'path-management-message'= Path Management Message; 'delete-session-request'= Delete Session Request; 'delete-session-response'= Delete Session Response; 'reserved-field-set-drop'= Reserved field set drop; 'tunnel-id-flag-drop'= Tunnel ID Flag Incorrect; 'message-filtering-drop'= Message Filtering Drop; 'reserved-information-element-drop'= Resevered Information Element Field Drop; 'mandatory-information-element-drop'= Mandatory Information Element Field Drop; 'filter-list-drop'= APN IMSI Information Filtering Drop; 'invalid-teid-drop'= Invalid TEID Drop; 'out-of-state-drop'= Out Of State Drop; 'message-length-drop'= Message Length Exceeded; 'unsupported-message-type-v2'= GTP v2 message type is not supported; 'fast-conn-setup'= Fast Conn Setup Attempt; 'out-of-session-memory'= Out of Session Memory; 'no-fwd-route'= No Forward Route; 'no-rev-route'= NO Reverse Route; 'invalid-key'= Invalid TEID Field; 'create-session-request-retransmit'= Retransmitted Create Session Request; 'delete-session-request-retransmit'= Retransmitted Delete Session Request; 'response-cause-not-accepted'= Response Cause indicates Request not Accepted; 'invalid-imsi-len-drop'= Invalid IMSI Length Drop; 'invalid-apn-len-drop'= Invalid APN Length Drop; 'create-pdp-context-request-v1'= GTP v1 Create PDP Context Request; 'create-pdp-context-response-v1'= GTP v1 Create PDP Context Response; 'path-management-message-v1'= GTP v1 Path Management Message; 'reserved-field-set-drop-v1'= GTP v1 Reserved field set drop; 'message-filtering-drop-v1'= GTP v1 Message Filtering Drop; 'reserved-information-element-drop-v1'= GTP v1 Reserved Information Element Field Drop; 'mandatory-information-element-drop-v1'= GTP v1 Mandatory Information Element Field Drop; 'filter-list-drop-v1'= GTP v1 APN IMSI Information Filtering Drop; 'invalid-teid-drop-v1'= GTP v1 Invalid TEID Drop; 'message-length-drop-v1'= GTP v1 Message Length Exceeded; 'version-not-supported'= GTP version is not supported; 'unsupported-message-type-v1'= GTP v1 message type is not supported; 'delete-pdp-context-request-v1'= GTP v1 Delete Context PDP Request; 'delete-pdp-context-response-v1'= GTP v1 Delete Context PDP Response; 'create-pdp-context-request-v0'= GTP v0 Create PDP Context Request; 'create-pdp-context-response-v0'= GTP v0 Create PDP Context Response; 'delete-pdp-context-request-v0'= GTP v0 Delete Context PDP Request; 'delete-pdp-context-response-v0'= GTP v0 Delete Context PDP Response; 'path-management-message-v0'= GTP v0 Path Management Message; 'message-filtering-drop-v0'= GTP v0 Message Filtering Drop; 'unsupported-message-type-v0'= GTP v0 message type is not supported; 'invalid-flow-label-drop-v0'= GTP v0 Invalid flow label drop; 'invalid-tid-drop-v0'= GTP v0 Invalid tid drop; 'message-length-drop-v0'= GTP v0 Message Length Exceeded; 'mandatory-information-element-drop-v0'= GTP v0 Mandatory Information Element Field Drop; 'filter-list-drop-v0'= GTP v0 APN IMSI Information Filtering Drop; 'gtp-in-gtp-drop'= GTP in GTP Filtering Drop; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            invalid_apn_len_drop:
+                description:
+                - "Invalid APN Length Drop"
+            reserved_field_set_drop:
+                description:
+                - "Reserved field set drop"
+            message_length_drop:
+                description:
+                - "Message Length Exceeded"
+            out_of_session_memory:
+                description:
+                - "Out of Session Memory"
+            reserved_information_element_drop:
+                description:
+                - "Resevered Information Element Field Drop"
+            path_management_message_v0:
+                description:
+                - "GTP v0 Path Management Message"
+            out_of_state_drop:
+                description:
+                - "Out Of State Drop"
+            delete_session_response:
+                description:
+                - "Delete Session Response"
+            invalid_flow_label_drop_v0:
+                description:
+                - "GTP v0 Invalid flow label drop"
+            invalid_imsi_len_drop:
+                description:
+                - "Invalid IMSI Length Drop"
+            filter_list_drop:
+                description:
+                - "APN IMSI Information Filtering Drop"
+            response_cause_not_accepted:
+                description:
+                - "Response Cause indicates Request not Accepted"
+            mandatory_information_element_drop:
+                description:
+                - "Mandatory Information Element Field Drop"
+            unsupported_message_type_v0:
+                description:
+                - "GTP v0 message type is not supported"
+            unsupported_message_type_v1:
+                description:
+                - "GTP v1 message type is not supported"
+            unsupported_message_type_v2:
+                description:
+                - "GTP v2 message type is not supported"
+            invalid_teid_drop:
+                description:
+                - "Invalid TEID Drop"
+            message_filtering_drop:
+                description:
+                - "Message Filtering Drop"
+            no_fwd_route:
+                description:
+                - "No Forward Route"
+            create_pdp_context_request_v1:
+                description:
+                - "GTP v1 Create PDP Context Request"
+            fast_conn_setup:
+                description:
+                - "Fast Conn Setup Attempt"
+            path_management_message_v1:
+                description:
+                - "GTP v1 Path Management Message"
+            create_session_request_retransmit:
+                description:
+                - "Retransmitted Create Session Request"
+            create_session_request:
+                description:
+                - "Create Session Request"
+            no_rev_route:
+                description:
+                - "NO Reverse Route"
+            gtp_in_gtp_drop:
+                description:
+                - "GTP in GTP Filtering Drop"
+            mandatory_information_element_drop_v1:
+                description:
+                - "GTP v1 Mandatory Information Element Field Drop"
+            mandatory_information_element_drop_v0:
+                description:
+                - "GTP v0 Mandatory Information Element Field Drop"
+            message_filtering_drop_v0:
+                description:
+                - "GTP v0 Message Filtering Drop"
+            message_filtering_drop_v1:
+                description:
+                - "GTP v1 Message Filtering Drop"
+            reserved_information_element_drop_v1:
+                description:
+                - "GTP v1 Reserved Information Element Field Drop"
+            version_not_supported:
+                description:
+                - "GTP version is not supported"
+            invalid_teid_drop_v1:
+                description:
+                - "GTP v1 Invalid TEID Drop"
+            filter_list_drop_v0:
+                description:
+                - "GTP v0 APN IMSI Information Filtering Drop"
+            reserved_field_set_drop_v1:
+                description:
+                - "GTP v1 Reserved field set drop"
+            tunnel_id_flag_drop:
+                description:
+                - "Tunnel ID Flag Incorrect"
+            filter_list_drop_v1:
+                description:
+                - "GTP v1 APN IMSI Information Filtering Drop"
+            create_pdp_context_request_v0:
+                description:
+                - "GTP v0 Create PDP Context Request"
+            message_length_drop_v1:
+                description:
+                - "GTP v1 Message Length Exceeded"
+            message_length_drop_v0:
+                description:
+                - "GTP v0 Message Length Exceeded"
+            delete_pdp_context_request_v0:
+                description:
+                - "GTP v0 Delete Context PDP Request"
+            delete_pdp_context_request_v1:
+                description:
+                - "GTP v1 Delete Context PDP Request"
+            delete_session_request_retransmit:
+                description:
+                - "Retransmitted Delete Session Request"
+            create_session_response:
+                description:
+                - "Create Session Response"
+            invalid_key:
+                description:
+                - "Invalid TEID Field"
+            path_management_message:
+                description:
+                - "Path Management Message"
+            delete_pdp_context_response_v1:
+                description:
+                - "GTP v1 Delete Context PDP Response"
+            delete_pdp_context_response_v0:
+                description:
+                - "GTP v0 Delete Context PDP Response"
+            delete_session_request:
+                description:
+                - "Delete Session Request"
+            invalid_tid_drop_v0:
+                description:
+                - "GTP v0 Invalid tid drop"
+            create_pdp_context_response_v0:
+                description:
+                - "GTP v0 Create PDP Context Response"
+            create_pdp_context_response_v1:
+                description:
+                - "GTP v1 Create PDP Context Response"
     uuid:
         description:
         - "uuid of the object"
@@ -64,7 +225,6 @@ options:
         description:
         - "'enable'= Enable GTP Inspection; "
         required: False
-
 
 """
 
@@ -78,7 +238,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["gtp_value","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["gtp_value","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -108,6 +268,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','create-session-request','create-session-response','path-management-message','delete-session-request','delete-session-response','reserved-field-set-drop','tunnel-id-flag-drop','message-filtering-drop','reserved-information-element-drop','mandatory-information-element-drop','filter-list-drop','invalid-teid-drop','out-of-state-drop','message-length-drop','unsupported-message-type-v2','fast-conn-setup','out-of-session-memory','no-fwd-route','no-rev-route','invalid-key','create-session-request-retransmit','delete-session-request-retransmit','response-cause-not-accepted','invalid-imsi-len-drop','invalid-apn-len-drop','create-pdp-context-request-v1','create-pdp-context-response-v1','path-management-message-v1','reserved-field-set-drop-v1','message-filtering-drop-v1','reserved-information-element-drop-v1','mandatory-information-element-drop-v1','filter-list-drop-v1','invalid-teid-drop-v1','message-length-drop-v1','version-not-supported','unsupported-message-type-v1','delete-pdp-context-request-v1','delete-pdp-context-response-v1','create-pdp-context-request-v0','create-pdp-context-response-v0','delete-pdp-context-request-v0','delete-pdp-context-response-v0','path-management-message-v0','message-filtering-drop-v0','unsupported-message-type-v0','invalid-flow-label-drop-v0','invalid-tid-drop-v0','message-length-drop-v0','mandatory-information-element-drop-v0','filter-list-drop-v0','gtp-in-gtp-drop'])),
+        stats=dict(type='dict',invalid_apn_len_drop=dict(type='str',),reserved_field_set_drop=dict(type='str',),message_length_drop=dict(type='str',),out_of_session_memory=dict(type='str',),reserved_information_element_drop=dict(type='str',),path_management_message_v0=dict(type='str',),out_of_state_drop=dict(type='str',),delete_session_response=dict(type='str',),invalid_flow_label_drop_v0=dict(type='str',),invalid_imsi_len_drop=dict(type='str',),filter_list_drop=dict(type='str',),response_cause_not_accepted=dict(type='str',),mandatory_information_element_drop=dict(type='str',),unsupported_message_type_v0=dict(type='str',),unsupported_message_type_v1=dict(type='str',),unsupported_message_type_v2=dict(type='str',),invalid_teid_drop=dict(type='str',),message_filtering_drop=dict(type='str',),no_fwd_route=dict(type='str',),create_pdp_context_request_v1=dict(type='str',),fast_conn_setup=dict(type='str',),path_management_message_v1=dict(type='str',),create_session_request_retransmit=dict(type='str',),create_session_request=dict(type='str',),no_rev_route=dict(type='str',),gtp_in_gtp_drop=dict(type='str',),mandatory_information_element_drop_v1=dict(type='str',),mandatory_information_element_drop_v0=dict(type='str',),message_filtering_drop_v0=dict(type='str',),message_filtering_drop_v1=dict(type='str',),reserved_information_element_drop_v1=dict(type='str',),version_not_supported=dict(type='str',),invalid_teid_drop_v1=dict(type='str',),filter_list_drop_v0=dict(type='str',),reserved_field_set_drop_v1=dict(type='str',),tunnel_id_flag_drop=dict(type='str',),filter_list_drop_v1=dict(type='str',),create_pdp_context_request_v0=dict(type='str',),message_length_drop_v1=dict(type='str',),message_length_drop_v0=dict(type='str',),delete_pdp_context_request_v0=dict(type='str',),delete_pdp_context_request_v1=dict(type='str',),delete_session_request_retransmit=dict(type='str',),create_session_response=dict(type='str',),invalid_key=dict(type='str',),path_management_message=dict(type='str',),delete_pdp_context_response_v1=dict(type='str',),delete_pdp_context_response_v0=dict(type='str',),delete_session_request=dict(type='str',),invalid_tid_drop_v0=dict(type='str',),create_pdp_context_response_v0=dict(type='str',),create_pdp_context_response_v1=dict(type='str',)),
         uuid=dict(type='str',),
         gtp_value=dict(type='str',choices=['enable'])
     ))
@@ -132,11 +293,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -177,7 +333,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -222,10 +378,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -237,15 +396,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["gtp"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["gtp"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["gtp"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["gtp"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["gtp"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -256,8 +420,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -293,12 +455,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("gtp", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -373,8 +539,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

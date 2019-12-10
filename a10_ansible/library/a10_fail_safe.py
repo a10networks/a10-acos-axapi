@@ -48,6 +48,50 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            total_system_memory:
+                description:
+                - "Field total_system_memory"
+            fpga_stats_iochan:
+                description:
+                - "Field fpga_stats_iochan"
+            total_free_fpga_buff:
+                description:
+                - "Field total_free_fpga_buff"
+            total_fpga_buffers:
+                description:
+                - "Field total_fpga_buffers"
+            free_fpga_buffers:
+                description:
+                - "Field free_fpga_buffers"
+            config:
+                description:
+                - "Field config"
+            fpga_stats_num_cntrs:
+                description:
+                - "Field fpga_stats_num_cntrs"
+            free_session_memory:
+                description:
+                - "Field free_session_memory"
+            avail_fpga_buff_domain1:
+                description:
+                - "Field avail_fpga_buff_domain1"
+            avail_fpga_buff_domain2:
+                description:
+                - "Field avail_fpga_buff_domain2"
+            total_session_memory:
+                description:
+                - "Field total_session_memory"
+            fpga_buff_recovery_threshold:
+                description:
+                - "Field fpga_buff_recovery_threshold"
+            sess_mem_recovery_threshold:
+                description:
+                - "Field sess_mem_recovery_threshold"
     session_mem_recovery_threshold:
         description:
         - "Session memory recovery threshold (percentage) (Percentage of available session memory (default 30%))"
@@ -124,7 +168,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -137,7 +180,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["config","disable_failsafe","fpga_buff_recovery_threshold","fpga_monitor_enable","fpga_monitor_forced_reboot","fpga_monitor_interval","fpga_monitor_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
+AVAILABLE_PROPERTIES = ["config","disable_failsafe","fpga_buff_recovery_threshold","fpga_monitor_enable","fpga_monitor_forced_reboot","fpga_monitor_interval","fpga_monitor_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","oper","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -166,6 +209,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',total_system_memory=dict(type='int',),fpga_stats_iochan=dict(type='list',fpga_stats_iochan_tx=dict(type='int',),fpga_stats_iochan_rx=dict(type='int',),fpga_stats_iochan_id=dict(type='int',)),total_free_fpga_buff=dict(type='int',),total_fpga_buffers=dict(type='int',),free_fpga_buffers=dict(type='int',),config=dict(type='dict',oper=dict(type='dict',fpga_mon_threshold=dict(type='str',),sw_error_mon=dict(type='str',),sw_recovery_timeout=dict(type='str',),hw_recovery_timeout=dict(type='str',),fpga_mon_interval=dict(type='str',),fpga_mon_forced_reboot=dict(type='str',),fpga_mon_enable=dict(type='str',),mem_mon=dict(type='str',),hw_error_mon=dict(type='str',))),fpga_stats_num_cntrs=dict(type='int',),free_session_memory=dict(type='int',),avail_fpga_buff_domain1=dict(type='int',),avail_fpga_buff_domain2=dict(type='int',),total_session_memory=dict(type='int',),fpga_buff_recovery_threshold=dict(type='int',),sess_mem_recovery_threshold=dict(type='int',)),
         session_mem_recovery_threshold=dict(type='int',),
         log=dict(type='bool',),
         fpga_buff_recovery_threshold=dict(type='int',),
@@ -210,11 +254,6 @@ def oper_url(module):
     partial_url = existing_url(module)
     return partial_url + "/oper"
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
@@ -249,7 +288,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -295,10 +334,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -309,15 +351,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["fail-safe"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["fail-safe"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["fail-safe"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["fail-safe"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["fail-safe"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -328,8 +375,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -365,12 +410,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("fail-safe", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -447,8 +496,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

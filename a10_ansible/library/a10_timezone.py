@@ -48,6 +48,23 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            dst_name:
+                description:
+                - "Field dst_name"
+            deny_dst:
+                description:
+                - "Field deny_dst"
+            std_name:
+                description:
+                - "Field std_name"
+            location:
+                description:
+                - "Field location"
     timezone_index_cfg:
         description:
         - "Field timezone_index_cfg"
@@ -64,7 +81,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -77,7 +93,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["timezone_index_cfg","uuid",]
+AVAILABLE_PROPERTIES = ["oper","timezone_index_cfg","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -106,6 +122,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',dst_name=dict(type='str',),deny_dst=dict(type='str',),std_name=dict(type='str',),location=dict(type='str',)),
         timezone_index_cfg=dict(type='dict',timezone_index=dict(type='str',choices=['UTC','Pacific/Midway','Pacific/Honolulu','America/Anchorage','America/Tijuana','America/Los_Angeles','America/Vancouver','America/Phoenix','America/Shiprock','America/Chicago','America/Mexico_City','America/Regina','America/Swift_Current','America/Kentucky/Monticello','America/Indiana/Marengo','America/Montreal','America/New_York','America/Toronto','America/Caracas','America/Halifax','America/Santiago','America/St_Johns','America/Buenos_Aires','America/Godthab','America/Brasilia','Atlantic/South_Georgia','Atlantic/Azores','Atlantic/Cape_Verde','Europe/Dublin','Africa/Algiers','Europe/Amsterdam','Europe/Belgrade','Europe/Brussels','Europe/Sarajevo','Europe/Bucharest','Africa/Cairo','Europe/Athens','Africa/Harare','Asia/Jerusalem','Europe/Helsinki','Africa/Nairobi','Asia/Baghdad','Asia/Kuwait','Europe/Moscow','Asia/Tehran','Asia/Baku','Asia/Muscat','Asia/Kabul','Asia/Karachi','Asia/Yekaterinburg','Asia/Calcutta','Asia/Katmandu','Asia/Almaty','Asia/Dhaka','Indian/Chagos','Asia/Rangoon','Asia/Bangkok','Asia/Krasnoyarsk','Asia/Irkutsk','Asia/Kuala_Lumpur','Asia/Shanghai','Asia/Taipei','Australia/Perth','Asia/Seoul','Asia/Tokyo','Asia/Yakutsk','Australia/Adelaide','Australia/Darwin','Australia/Hobart','Australia/Brisbane','Asia/Vladivostok','Australia/Sydney','Pacific/Guam','Asia/Magadan','Pacific/Auckland','Pacific/Fiji','Pacific/Kwajalein','Pacific/Enderbury']),nodst=dict(type='bool',)),
         uuid=dict(type='str',)
     ))
@@ -135,11 +152,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -175,7 +187,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -221,10 +233,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -235,15 +250,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["timezone"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["timezone"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["timezone"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["timezone"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["timezone"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -254,8 +274,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -291,12 +309,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("timezone", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -373,8 +395,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

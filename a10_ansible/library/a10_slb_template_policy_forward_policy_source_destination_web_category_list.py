@@ -54,6 +54,17 @@ options:
     policy_name:
         description:
         - Key to identify parent object
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            web_category_list:
+                description:
+                - "Destination Web Category List Name"
+            hits:
+                description:
+                - "Number of requests matching this destination rule"
     uuid:
         description:
         - "uuid of the object"
@@ -83,7 +94,6 @@ options:
         - "'host'= Match hostname; 'url'= match URL; "
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -96,7 +106,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","priority","sampling_enable","ntype","uuid","web_category_list",]
+AVAILABLE_PROPERTIES = ["action","priority","sampling_enable","stats","ntype","uuid","web_category_list",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -125,6 +135,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',web_category_list=dict(type='str',required=True,),hits=dict(type='str',)),
         uuid=dict(type='str',),
         web_category_list=dict(type='str',required=True,),
         priority=dict(type='int',),
@@ -165,11 +176,6 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
@@ -209,7 +215,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -254,10 +260,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -269,15 +278,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["web-category-list"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["web-category-list"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["web-category-list"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["web-category-list"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["web-category-list"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -288,8 +302,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -325,12 +337,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("web-category-list", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -405,8 +421,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

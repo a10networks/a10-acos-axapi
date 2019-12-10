@@ -48,6 +48,50 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            use_gslb_state:
+                description:
+                - "Field use_gslb_state"
+            port_list:
+                description:
+                - "Field port_list"
+            gslb_protocol:
+                description:
+                - "Field gslb_protocol"
+            virtual_server:
+                description:
+                - "Field virtual_server"
+            ip:
+                description:
+                - "Field ip"
+            dynamic:
+                description:
+                - "Field dynamic"
+            disabled:
+                description:
+                - "Field disabled"
+            node_name:
+                description:
+                - "Service-IP Name"
+            state:
+                description:
+                - "Field state"
+            service_ip:
+                description:
+                - "Field service_ip"
+            port_count:
+                description:
+                - "Field port_count"
+            local_protocol:
+                description:
+                - "Field local_protocol"
+            manually_health_check:
+                description:
+                - "Field manually_health_check"
     health_check_disable:
         description:
         - "Disable Health Check Monitor"
@@ -90,6 +134,23 @@ options:
             health_check:
                 description:
                 - "Health Check Monitor (Monitor Name)"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            node_name:
+                description:
+                - "Service-IP Name"
+            hits:
+                description:
+                - "Number of times the service IP has been selected"
+            port_list:
+                description:
+                - "Field port_list"
+            recent:
+                description:
+                - "Recent hits"
     uuid:
         description:
         - "uuid of the object"
@@ -139,7 +200,6 @@ options:
         - "Health Check Monitor (Monitor Name)"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -152,7 +212,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","external_ip","health_check","health_check_disable","health_check_protocol_disable","ip_address","ipv6","ipv6_address","node_name","port_list","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","external_ip","health_check","health_check_disable","health_check_protocol_disable","ip_address","ipv6","ipv6_address","node_name","oper","port_list","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -181,8 +241,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',use_gslb_state=dict(type='int',),port_list=dict(type='list',oper=dict(type='dict',use_gslb_state=dict(type='int',),gslb_protocol=dict(type='int',),service_port=dict(type='int',),dynamic=dict(type='int',),tcp=dict(type='int',),disabled=dict(type='int',),state=dict(type='str',),local_protocol=dict(type='int',),manually_health_check=dict(type='int',)),port_proto=dict(type='str',required=True,choices=['tcp','udp']),port_num=dict(type='int',required=True,)),gslb_protocol=dict(type='int',),virtual_server=dict(type='int',),ip=dict(type='str',),dynamic=dict(type='int',),disabled=dict(type='int',),node_name=dict(type='str',required=True,),state=dict(type='str',),service_ip=dict(type='str',),port_count=dict(type='int',),local_protocol=dict(type='int',),manually_health_check=dict(type='int',)),
         health_check_disable=dict(type='bool',),
         port_list=dict(type='list',port_proto=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),port_num=dict(type='int',required=True,),health_check_disable=dict(type='bool',),user_tag=dict(type='str',),follow_port_protocol=dict(type='str',choices=['tcp','udp']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','active','current'])),action=dict(type='str',choices=['enable','disable']),health_check_follow_port=dict(type='int',),health_check_protocol_disable=dict(type='bool',),health_check=dict(type='str',)),
+        stats=dict(type='dict',node_name=dict(type='str',required=True,),hits=dict(type='str',),port_list=dict(type='list',port_proto=dict(type='str',required=True,choices=['tcp','udp']),stats=dict(type='dict',active=dict(type='str',),current=dict(type='str',)),port_num=dict(type='int',required=True,)),recent=dict(type='str',)),
         uuid=dict(type='str',),
         external_ip=dict(type='str',),
         node_name=dict(type='str',required=True,),
@@ -263,7 +325,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -309,9 +371,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -323,15 +397,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["service-ip"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["service-ip"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["service-ip"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["service-ip"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["service-ip"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -342,8 +421,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -379,12 +456,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("service-ip", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

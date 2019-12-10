@@ -48,11 +48,96 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            fw_ip_range_total_count:
+                description:
+                - "Field fw_ip_range_total_count"
+            clause_per_obj_grp:
+                description:
+                - "Field clause_per_obj_grp"
+            fw_rule_set_total_count:
+                description:
+                - "Field fw_rule_set_total_count"
+            fw_zone_total_count:
+                description:
+                - "Field fw_zone_total_count"
+            fw_helper_sessions_total_count:
+                description:
+                - "Field fw_helper_sessions_total_count"
+            fw_rule_total_count:
+                description:
+                - "Field fw_rule_total_count"
+            fw_helper_sessions_current_count:
+                description:
+                - "Field fw_helper_sessions_current_count"
+            fw_ip_range_current_count:
+                description:
+                - "Field fw_ip_range_current_count"
+            zone:
+                description:
+                - "Field zone"
+            clause_per_obj_grp_total_count:
+                description:
+                - "Field clause_per_obj_grp_total_count"
+            fw_object_group_total_count:
+                description:
+                - "Field fw_object_group_total_count"
+            fw_object_total_count:
+                description:
+                - "Field fw_object_total_count"
+            fw_rule_set_current_count:
+                description:
+                - "Field fw_rule_set_current_count"
+            ip_range:
+                description:
+                - "Field ip_range"
+            fw_object_group_current_count:
+                description:
+                - "Field fw_object_group_current_count"
+            object:
+                description:
+                - "Field object"
+            rule_set:
+                description:
+                - "Field rule_set"
+            radius_table_total_count:
+                description:
+                - "Field radius_table_total_count"
+            clause_per_obj_grp_current_count:
+                description:
+                - "Field clause_per_obj_grp_current_count"
+            fw_rule_current_count:
+                description:
+                - "Field fw_rule_current_count"
+            radius_table_size:
+                description:
+                - "Field radius_table_size"
+            radius_table_current_count:
+                description:
+                - "Field radius_table_current_count"
+            helper_sessions:
+                description:
+                - "Field helper_sessions"
+            rule:
+                description:
+                - "Field rule"
+            fw_object_current_count:
+                description:
+                - "Field fw_object_current_count"
+            object_group:
+                description:
+                - "Field object_group"
+            fw_zone_current_count:
+                description:
+                - "Field fw_zone_current_count"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +151,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +180,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',fw_ip_range_total_count=dict(type='int',),clause_per_obj_grp=dict(type='bool',),fw_rule_set_total_count=dict(type='int',),fw_zone_total_count=dict(type='int',),fw_helper_sessions_total_count=dict(type='int',),fw_rule_total_count=dict(type='int',),fw_helper_sessions_current_count=dict(type='int',),fw_ip_range_current_count=dict(type='int',),zone=dict(type='bool',),clause_per_obj_grp_total_count=dict(type='int',),fw_object_group_total_count=dict(type='int',),fw_object_total_count=dict(type='int',),fw_rule_set_current_count=dict(type='int',),ip_range=dict(type='bool',),fw_object_group_current_count=dict(type='int',),object=dict(type='bool',),rule_set=dict(type='bool',),radius_table_total_count=dict(type='int',),clause_per_obj_grp_current_count=dict(type='str',),fw_rule_current_count=dict(type='int',),radius_table_size=dict(type='bool',),radius_table_current_count=dict(type='int',),helper_sessions=dict(type='bool',),rule=dict(type='bool',),fw_object_current_count=dict(type='int',),object_group=dict(type='bool',),fw_zone_current_count=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +209,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +244,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +290,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +308,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +430,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

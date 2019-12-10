@@ -56,11 +56,105 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'num'= Num; 'tcp_event'= TCP stack event; 'est_event'= Connection established; 'data_event'= Data received; 'client_fin'= Client FIN; 'server_fin'= Server FIN; 'wbuf_event'= Ready to send data; 'err_event'= Error occured; 'no_mem'= No memory; 'client_rst'= Client RST; 'server_rst'= Server RST; 'queue_depth_over_limit'= Queue depth over limit; 'event_failed'= Event failed; 'conn_not_exist'= Conn not exist; 'service_alloc_cb'= Service alloc callback; 'service_alloc_cb_failed'= Service alloc callback failed; 'service_free_cb'= Service free callback; 'service_free_cb_failed'= Service free callback failed; 'est_cb_failed'= App EST callback failed; 'data_cb_failed'= App DATA callback failed; 'wbuf_cb_failed'= App WBUF callback failed; 'err_cb_failed'= App ERR callback failed; 'start_server_conn'= Start server conn; 'start_server_conn_succ'= Success; 'start_server_conn_no_route'= No route to server; 'start_server_conn_fail_mem'= No memory; 'start_server_conn_fail_snat'= Failed Source NAT; 'start_server_conn_fail_persist'= Fail Persistence; 'start_server_conn_fail_server'= Fail Server issue; 'start_server_conn_fail_tuple'= Fail Tuple Issue; 'line_too_long'= Line too long; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            queue_depth_over_limit:
+                description:
+                - "Queue depth over limit"
+            server_fin:
+                description:
+                - "Server FIN"
+            start_server_conn_fail_tuple:
+                description:
+                - "Fail Tuple Issue"
+            client_rst:
+                description:
+                - "Client RST"
+            err_cb_failed:
+                description:
+                - "App ERR callback failed"
+            start_server_conn:
+                description:
+                - "Start server conn"
+            start_server_conn_fail_server:
+                description:
+                - "Fail Server issue"
+            service_free_cb_failed:
+                description:
+                - "Service free callback failed"
+            est_event:
+                description:
+                - "Connection established"
+            service_free_cb:
+                description:
+                - "Service free callback"
+            data_cb_failed:
+                description:
+                - "App DATA callback failed"
+            wbuf_event:
+                description:
+                - "Ready to send data"
+            data_event:
+                description:
+                - "Data received"
+            tcp_event:
+                description:
+                - "TCP stack event"
+            start_server_conn_fail_persist:
+                description:
+                - "Fail Persistence"
+            service_alloc_cb:
+                description:
+                - "Service alloc callback"
+            server_rst:
+                description:
+                - "Server RST"
+            start_server_conn_fail_snat:
+                description:
+                - "Failed Source NAT"
+            start_server_conn_no_route:
+                description:
+                - "No route to server"
+            start_server_conn_succ:
+                description:
+                - "Success"
+            no_mem:
+                description:
+                - "No memory"
+            event_failed:
+                description:
+                - "Event failed"
+            err_event:
+                description:
+                - "Error occured"
+            line_too_long:
+                description:
+                - "Line too long"
+            wbuf_cb_failed:
+                description:
+                - "App WBUF callback failed"
+            service_alloc_cb_failed:
+                description:
+                - "Service alloc callback failed"
+            client_fin:
+                description:
+                - "Client FIN"
+            est_cb_failed:
+                description:
+                - "App EST callback failed"
+            start_server_conn_fail_mem:
+                description:
+                - "No memory"
+            conn_not_exist:
+                description:
+                - "Conn not exist"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +168,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +198,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num','tcp_event','est_event','data_event','client_fin','server_fin','wbuf_event','err_event','no_mem','client_rst','server_rst','queue_depth_over_limit','event_failed','conn_not_exist','service_alloc_cb','service_alloc_cb_failed','service_free_cb','service_free_cb_failed','est_cb_failed','data_cb_failed','wbuf_cb_failed','err_cb_failed','start_server_conn','start_server_conn_succ','start_server_conn_no_route','start_server_conn_fail_mem','start_server_conn_fail_snat','start_server_conn_fail_persist','start_server_conn_fail_server','start_server_conn_fail_tuple','line_too_long'])),
+        stats=dict(type='dict',queue_depth_over_limit=dict(type='str',),server_fin=dict(type='str',),start_server_conn_fail_tuple=dict(type='str',),client_rst=dict(type='str',),err_cb_failed=dict(type='str',),start_server_conn=dict(type='str',),start_server_conn_fail_server=dict(type='str',),service_free_cb_failed=dict(type='str',),est_event=dict(type='str',),service_free_cb=dict(type='str',),data_cb_failed=dict(type='str',),wbuf_event=dict(type='str',),data_event=dict(type='str',),tcp_event=dict(type='str',),start_server_conn_fail_persist=dict(type='str',),service_alloc_cb=dict(type='str',),server_rst=dict(type='str',),start_server_conn_fail_snat=dict(type='str',),start_server_conn_no_route=dict(type='str',),start_server_conn_succ=dict(type='str',),no_mem=dict(type='str',),event_failed=dict(type='str',),err_event=dict(type='str',),line_too_long=dict(type='str',),wbuf_cb_failed=dict(type='str',),service_alloc_cb_failed=dict(type='str',),client_fin=dict(type='str',),est_cb_failed=dict(type='str',),start_server_conn_fail_mem=dict(type='str',),conn_not_exist=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +222,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +262,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +307,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +325,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["proxy"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["proxy"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["proxy"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["proxy"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["proxy"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +349,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +384,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("proxy", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +468,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

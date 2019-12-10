@@ -56,6 +56,146 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'session-inserted'= Session Inserted; 'session-expired'= Session Expired; 'icmp-rcv'= ICMP Received; 'icmpv6-rcv'= ICMPv6 Received; 'udp-rcv'= UDP Received; 'tcp-rcv'= TCP Received; 'ipip-rcv'= IP-in-IP Received; 'ipv6ip-rcv'= IPv6-in-IP Received; 'other-rcv'= Other Received; 'icmp-dropped'= ICMP Dropped; 'icmpv6-dropped'= ICMPv6 Dropped; 'udp-dropped'= UDP Dropped; 'tcp-dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'= IPv6-in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'= Overlapping Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'= Fragment Too Small Drop; 'first-tcp-too-small'= First TCP Fragment Too Small Drop; 'first-l4-too-small'= First L4 Fragment Too Small Drop; 'total-sessions-exceeded'= Total Sessions Exceeded Drop; 'no-session-memory'= Out of Session Memory; 'fast-aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'= Fragmentation Fast Aging Unset; 'fragment-queue-success'= Fragment Queue Success; 'unaligned-len'= Payload Length Unaligned; 'exceeded-len'= Payload Length Out of Bounds; 'duplicate-first-frag'= Duplicate First Fragment; 'duplicate-last-frag'= Duplicate Last Fragment; 'total-fragments-exceeded'= Total Queued Fragments Exceeded; 'fragment-queue-failure'= Fragment Queue Failure; 'reassembly-success'= Fragment Reassembly Success; 'max-len-exceeded'= Fragment Max Data Length Exceeded; 'reassembly-failure'= Fragment Reassembly Failure; 'policy-drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment Processing Drop; 'high-cpu-threshold'= High CPU Threshold Reached; 'low-cpu-threshold'= Low CPU Threshold Reached; 'cpu-threshold-drop'= High CPU Drop; 'ipd-entry-drop'= DDoS Protection Drop; 'max-packets-exceeded'= Too Many Packets Per Reassembly Drop; 'session-packets-exceeded'= Session Max Packets Exceeded; 'frag-session-count'= Fragmentation Session Count; 'sctp-rcv'= SCTP Received; 'sctp-dropped'= SCTP Dropped; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            cpu_threshold_drop:
+                description:
+                - "High CPU Drop"
+            tcp_rcv:
+                description:
+                - "TCP Received"
+            other_rcv:
+                description:
+                - "Other Received"
+            udp_dropped:
+                description:
+                - "UDP Dropped"
+            bad_ip_len:
+                description:
+                - "Bad IP Length"
+            first_l4_too_small:
+                description:
+                - "First L4 Fragment Too Small Drop"
+            no_session_memory:
+                description:
+                - "Out of Session Memory"
+            unaligned_len:
+                description:
+                - "Payload Length Unaligned"
+            icmp_dropped:
+                description:
+                - "ICMP Dropped"
+            udp_rcv:
+                description:
+                - "UDP Received"
+            exceeded_len:
+                description:
+                - "Payload Length Out of Bounds"
+            fragment_queue_success:
+                description:
+                - "Fragment Queue Success"
+            fragment_queue_failure:
+                description:
+                - "Fragment Queue Failure"
+            tcp_dropped:
+                description:
+                - "TCP Dropped"
+            low_cpu_threshold:
+                description:
+                - "Low CPU Threshold Reached"
+            ipip_dropped:
+                description:
+                - "IP-in-IP Dropped"
+            total_sessions_exceeded:
+                description:
+                - "Total Sessions Exceeded Drop"
+            error_drop:
+                description:
+                - "Fragment Processing Drop"
+            icmp_rcv:
+                description:
+                - "ICMP Received"
+            ipv6ip_rcv:
+                description:
+                - "IPv6-in-IP Received"
+            total_fragments_exceeded:
+                description:
+                - "Total Queued Fragments Exceeded"
+            icmpv6_rcv:
+                description:
+                - "ICMPv6 Received"
+            sctp_rcv:
+                description:
+                - "SCTP Received"
+            policy_drop:
+                description:
+                - "MTU Exceeded Policy Drop"
+            overlap_error:
+                description:
+                - "Overlapping Fragment Dropped"
+            session_packets_exceeded:
+                description:
+                - "Session Max Packets Exceeded"
+            duplicate_first_frag:
+                description:
+                - "Duplicate First Fragment"
+            reassembly_success:
+                description:
+                - "Fragment Reassembly Success"
+            sctp_dropped:
+                description:
+                - "SCTP Dropped"
+            ipd_entry_drop:
+                description:
+                - "DDoS Protection Drop"
+            too_small:
+                description:
+                - "Fragment Too Small Drop"
+            session_expired:
+                description:
+                - "Session Expired"
+            session_inserted:
+                description:
+                - "Session Inserted"
+            max_len_exceeded:
+                description:
+                - "Fragment Max Data Length Exceeded"
+            max_packets_exceeded:
+                description:
+                - "Too Many Packets Per Reassembly Drop"
+            other_dropped:
+                description:
+                - "Other Dropped"
+            ipv6ip_dropped:
+                description:
+                - "IPv6-in-IP Dropped"
+            first_tcp_too_small:
+                description:
+                - "First TCP Fragment Too Small Drop"
+            high_cpu_threshold:
+                description:
+                - "High CPU Threshold Reached"
+            fast_aging_set:
+                description:
+                - "Fragmentation Fast Aging Set"
+            ipip_rcv:
+                description:
+                - "IP-in-IP Received"
+            icmpv6_dropped:
+                description:
+                - "ICMPv6 Dropped"
+            fast_aging_unset:
+                description:
+                - "Fragmentation Fast Aging Unset"
+            reassembly_failure:
+                description:
+                - "Fragment Reassembly Failure"
+            duplicate_last_frag:
+                description:
+                - "Duplicate Last Fragment"
     uuid:
         description:
         - "uuid of the object"
@@ -64,7 +204,6 @@ options:
         description:
         - "in milliseconds 4 - 16000 (default is 1000)"
         required: False
-
 
 """
 
@@ -78,7 +217,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["frag_timeout","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["frag_timeout","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -108,6 +247,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','session-inserted','session-expired','icmp-rcv','icmpv6-rcv','udp-rcv','tcp-rcv','ipip-rcv','ipv6ip-rcv','other-rcv','icmp-dropped','icmpv6-dropped','udp-dropped','tcp-dropped','ipip-dropped','ipv6ip-dropped','other-dropped','overlap-error','bad-ip-len','too-small','first-tcp-too-small','first-l4-too-small','total-sessions-exceeded','no-session-memory','fast-aging-set','fast-aging-unset','fragment-queue-success','unaligned-len','exceeded-len','duplicate-first-frag','duplicate-last-frag','total-fragments-exceeded','fragment-queue-failure','reassembly-success','max-len-exceeded','reassembly-failure','policy-drop','error-drop','high-cpu-threshold','low-cpu-threshold','cpu-threshold-drop','ipd-entry-drop','max-packets-exceeded','session-packets-exceeded','frag-session-count','sctp-rcv','sctp-dropped'])),
+        stats=dict(type='dict',cpu_threshold_drop=dict(type='str',),tcp_rcv=dict(type='str',),other_rcv=dict(type='str',),udp_dropped=dict(type='str',),bad_ip_len=dict(type='str',),first_l4_too_small=dict(type='str',),no_session_memory=dict(type='str',),unaligned_len=dict(type='str',),icmp_dropped=dict(type='str',),udp_rcv=dict(type='str',),exceeded_len=dict(type='str',),fragment_queue_success=dict(type='str',),fragment_queue_failure=dict(type='str',),tcp_dropped=dict(type='str',),low_cpu_threshold=dict(type='str',),ipip_dropped=dict(type='str',),total_sessions_exceeded=dict(type='str',),error_drop=dict(type='str',),icmp_rcv=dict(type='str',),ipv6ip_rcv=dict(type='str',),total_fragments_exceeded=dict(type='str',),icmpv6_rcv=dict(type='str',),sctp_rcv=dict(type='str',),policy_drop=dict(type='str',),overlap_error=dict(type='str',),session_packets_exceeded=dict(type='str',),duplicate_first_frag=dict(type='str',),reassembly_success=dict(type='str',),sctp_dropped=dict(type='str',),ipd_entry_drop=dict(type='str',),too_small=dict(type='str',),session_expired=dict(type='str',),session_inserted=dict(type='str',),max_len_exceeded=dict(type='str',),max_packets_exceeded=dict(type='str',),other_dropped=dict(type='str',),ipv6ip_dropped=dict(type='str',),first_tcp_too_small=dict(type='str',),high_cpu_threshold=dict(type='str',),fast_aging_set=dict(type='str',),ipip_rcv=dict(type='str',),icmpv6_dropped=dict(type='str',),fast_aging_unset=dict(type='str',),reassembly_failure=dict(type='str',),duplicate_last_frag=dict(type='str',)),
         uuid=dict(type='str',),
         frag_timeout=dict(type='int',)
     ))
@@ -132,11 +272,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -177,7 +312,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -222,10 +357,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -237,15 +375,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["frag"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["frag"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["frag"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["frag"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["frag"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -256,8 +399,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -293,12 +434,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("frag", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -373,8 +518,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,10 +48,47 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ticket_cache:
+                description:
+                - "Field ticket_cache"
+            default_principal:
+                description:
+                - "Field default_principal"
+            name:
+                description:
+                - "Specify Kerberos authentication relay name"
+            item_list:
+                description:
+                - "Field item_list"
     kerberos_account:
         description:
         - "Specify the kerberos account name"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            current_requests_of_user:
+                description:
+                - "Current Pending Requests of User"
+            response_receive:
+                description:
+                - "Response Receive"
+            request_send:
+                description:
+                - "Request Send"
+            name:
+                description:
+                - "Specify Kerberos authentication relay name"
+            tickets:
+                description:
+                - "Tickets"
     uuid:
         description:
         - "uuid of the object"
@@ -101,7 +138,6 @@ options:
         - "Specify Kerberos authentication relay name"
         required: True
 
-
 """
 
 EXAMPLES = """
@@ -114,7 +150,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypted","kerberos_account","kerberos_kdc","kerberos_kdc_service_group","kerberos_realm","name","password","port","sampling_enable","secret_string","timeout","uuid",]
+AVAILABLE_PROPERTIES = ["encrypted","kerberos_account","kerberos_kdc","kerberos_kdc_service_group","kerberos_realm","name","oper","password","port","sampling_enable","secret_string","stats","timeout","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -143,7 +179,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ticket_cache=dict(type='str',),default_principal=dict(type='str',),name=dict(type='str',required=True,),item_list=dict(type='list',client_principal=dict(type='str',),end_time=dict(type='str',),start_time=dict(type='str',),service_principal=dict(type='str',),renew_time=dict(type='str',),flags=dict(type='str',))),
         kerberos_account=dict(type='str',),
+        stats=dict(type='dict',current_requests_of_user=dict(type='str',),response_receive=dict(type='str',),request_send=dict(type='str',),name=dict(type='str',required=True,),tickets=dict(type='str',)),
         uuid=dict(type='str',),
         encrypted=dict(type='str',),
         kerberos_realm=dict(type='str',),
@@ -224,7 +262,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -270,9 +308,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -284,15 +334,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["instance"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["instance"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["instance"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["instance"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["instance"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -303,8 +358,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -340,12 +393,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("instance", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

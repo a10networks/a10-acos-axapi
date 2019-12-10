@@ -23,6 +23,10 @@ class ACOSException(Exception):
         return "%d %s" % (self.code, self.msg)
 
 
+class ACOSIpAddressExists(ACOSException):
+    pass
+
+
 class ACOSUnsupportedVersion(ACOSException):
     pass
 

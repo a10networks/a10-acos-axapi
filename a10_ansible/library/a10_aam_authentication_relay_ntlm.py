@@ -52,6 +52,80 @@ options:
         description:
         - "Specify NTLM domain, default is null"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            parse_header_fail:
+                description:
+                - "Parse Header Failure"
+            ntlm_auth_skipped:
+                description:
+                - "Requests for which NTLM relay is skipped"
+            head_negotiate_request_sent:
+                description:
+                - "HEAD requests sent with NEGOTIATE header"
+            http_code_other:
+                description:
+                - "Other HTTP Response"
+            internal_error:
+                description:
+                - "Internal Error"
+            buffer_alloc_fail:
+                description:
+                - "Buffer Allocation Failure"
+            failure:
+                description:
+                - "Failure"
+            http_code_400:
+                description:
+                - "HTTP 400 Bad Request"
+            http_code_401:
+                description:
+                - "HTTP 401 Unauthorized"
+            http_code_403:
+                description:
+                - "HTTP 403 Forbidden"
+            http_code_404:
+                description:
+                - "HTTP 404 Not Found"
+            http_code_500:
+                description:
+                - "HTTP 500 Internal Server Error"
+            http_code_503:
+                description:
+                - "HTTP 503 Service Unavailable"
+            large_request_processing:
+                description:
+                - "Requests invoking large request processing"
+            response:
+                description:
+                - "Response"
+            head_auth_request_sent:
+                description:
+                - "HEAD requests sent with AUTH header"
+            name:
+                description:
+                - "Specify NTLM authentication relay name"
+            http_code_200:
+                description:
+                - "HTTP 200 OK"
+            success:
+                description:
+                - "Success"
+            encoding_fail:
+                description:
+                - "Encoding Failure"
+            request:
+                description:
+                - "Request"
+            large_request_flushed:
+                description:
+                - "Large requests sent to server"
+            insert_header_fail:
+                description:
+                - "Insert Header Failure"
     name:
         description:
         - "Specify NTLM authentication relay name"
@@ -77,7 +151,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -90,7 +163,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["domain","name","sampling_enable","user_tag","uuid","version",]
+AVAILABLE_PROPERTIES = ["domain","name","sampling_enable","stats","user_tag","uuid","version",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -120,6 +193,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         domain=dict(type='str',),
+        stats=dict(type='dict',parse_header_fail=dict(type='str',),ntlm_auth_skipped=dict(type='str',),head_negotiate_request_sent=dict(type='str',),http_code_other=dict(type='str',),internal_error=dict(type='str',),buffer_alloc_fail=dict(type='str',),failure=dict(type='str',),http_code_400=dict(type='str',),http_code_401=dict(type='str',),http_code_403=dict(type='str',),http_code_404=dict(type='str',),http_code_500=dict(type='str',),http_code_503=dict(type='str',),large_request_processing=dict(type='str',),response=dict(type='str',),head_auth_request_sent=dict(type='str',),name=dict(type='str',required=True,),http_code_200=dict(type='str',),success=dict(type='str',),encoding_fail=dict(type='str',),request=dict(type='str',),large_request_flushed=dict(type='str',),insert_header_fail=dict(type='str',)),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','success','failure','request','response','http-code-200','http-code-400','http-code-401','http-code-403','http-code-404','http-code-500','http-code-503','http-code-other','buffer-alloc-fail','encoding-fail','insert-header-fail','parse-header-fail','internal-error','ntlm-auth-skipped','large-request-processing','large-request-flushed','head-negotiate-request-sent','head-auth-request-sent'])),
@@ -149,11 +223,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -194,7 +263,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -239,10 +308,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -254,15 +326,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ntlm"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["ntlm"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["ntlm"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["ntlm"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["ntlm"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -273,8 +350,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -310,12 +385,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("ntlm", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -390,8 +469,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

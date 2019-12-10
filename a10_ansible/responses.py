@@ -237,5 +237,4 @@ def raise_axapi_ex(response, method, api_url):
                 return
 
         raise ae.ACOSException(code, response['response']['err']['msg'])
-
     raise ae.ACOSException()

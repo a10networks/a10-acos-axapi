@@ -48,11 +48,66 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            data_cpu:
+                description:
+                - "Field data_cpu"
+            buff_drop:
+                description:
+                - "Field buff_drop"
+            mem_value:
+                description:
+                - "Field mem_value"
+            disk_value:
+                description:
+                - "Field disk_value"
+            ctrl_cpu:
+                description:
+                - "Field ctrl_cpu"
+            spm4:
+                description:
+                - "Field spm4"
+            warn_temp:
+                description:
+                - "Field warn_temp"
+            smp0:
+                description:
+                - "Field smp0"
+            smp1:
+                description:
+                - "Field smp1"
+            smp2:
+                description:
+                - "Field smp2"
+            smp3:
+                description:
+                - "Field smp3"
+            spm2:
+                description:
+                - "Field spm2"
+            buff_value:
+                description:
+                - "Field buff_value"
+            spm0:
+                description:
+                - "Field spm0"
+            spm1:
+                description:
+                - "Field spm1"
+            smp4:
+                description:
+                - "Field smp4"
+            spm3:
+                description:
+                - "Field spm3"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +121,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +150,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',data_cpu=dict(type='int',),buff_drop=dict(type='int',),mem_value=dict(type='int',),disk_value=dict(type='int',),ctrl_cpu=dict(type='int',),spm4=dict(type='int',),warn_temp=dict(type='int',),smp0=dict(type='int',),smp1=dict(type='int',),smp2=dict(type='int',),smp3=dict(type='int',),spm2=dict(type='int',),buff_value=dict(type='int',),spm0=dict(type='int',),spm1=dict(type='int',),smp4=dict(type='int',),spm3=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +179,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +214,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +260,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +278,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +400,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

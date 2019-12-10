@@ -60,11 +60,60 @@ options:
         description:
         - "vBlade-id"
         required: True
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            slave_recv_bytes:
+                description:
+                - "vBlade Received Bytes counter of aVCS election"
+            slave_cfg_upd_r_fail:
+                description:
+                - "vBlade Remote Configuration Update Errors counter of aVCS election"
+            slave_cfg_upd_result_err:
+                description:
+                - "vBlade Configuration Update Result Errors counter of aVCS election"
+            slave_cfg_upd:
+                description:
+                - "vBlade Received Configuration Updates counter of aVCS election"
+            slave_msg_inval:
+                description:
+                - "vBlade Invalid Messages counter of aVCS election"
+            slave_n_recv:
+                description:
+                - "vBlade Received Messages counter of aVCS election"
+            slave_cfg_upd_notif_err:
+                description:
+                - "vBlade Configuration Update Notif Errors counter of aVCS election"
+            slave_keepalive:
+                description:
+                - "vBlade Received Keepalives counter of aVCS election"
+            slave_recv_err:
+                description:
+                - "vBlade Receive Errors counter of aVCS election"
+            slave_n_sent:
+                description:
+                - "vBlade Sent Messages counter of aVCS election"
+            vblade_id:
+                description:
+                - "vBlade-id"
+            slave_send_err:
+                description:
+                - "vBlade Send Errors counter of aVCS election"
+            slave_cfg_upd_l1_fail:
+                description:
+                - "vBlade Local Configuration Update Errors (1) counter of aVCS election"
+            slave_cfg_upd_l2_fail:
+                description:
+                - "vBlade Local Configuration Update Errors (2) counter of aVCS election"
+            slave_sent_bytes:
+                description:
+                - "vBlade Sent Bytes counter of aVCS election"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -78,7 +127,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid","vblade_id",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid","vblade_id",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -109,6 +158,7 @@ def get_argspec():
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','slave_recv_err','slave_send_err','slave_recv_bytes','slave_sent_bytes','slave_n_recv','slave_n_sent','slave_msg_inval','slave_keepalive','slave_cfg_upd','slave_cfg_upd_l1_fail','slave_cfg_upd_r_fail','slave_cfg_upd_l2_fail','slave_cfg_upd_notif_err','slave_cfg_upd_result_err'])),
         vblade_id=dict(type='int',required=True,),
+        stats=dict(type='dict',slave_recv_bytes=dict(type='str',),slave_cfg_upd_r_fail=dict(type='str',),slave_cfg_upd_result_err=dict(type='str',),slave_cfg_upd=dict(type='str',),slave_msg_inval=dict(type='str',),slave_n_recv=dict(type='str',),slave_cfg_upd_notif_err=dict(type='str',),slave_keepalive=dict(type='str',),slave_recv_err=dict(type='str',),slave_n_sent=dict(type='str',),vblade_id=dict(type='int',required=True,),slave_send_err=dict(type='str',),slave_cfg_upd_l1_fail=dict(type='str',),slave_cfg_upd_l2_fail=dict(type='str',),slave_sent_bytes=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -134,11 +184,6 @@ def existing_url(module):
     f_dict["vblade-id"] = module.params["vblade_id"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -179,7 +224,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -224,10 +269,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -239,15 +287,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["stat"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["stat"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["stat"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["stat"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["stat"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -258,20 +311,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-def delete(module, result):
-    try:
-        module.client.delete(existing_url(module))
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -295,12 +334,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("stat", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -375,8 +418,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

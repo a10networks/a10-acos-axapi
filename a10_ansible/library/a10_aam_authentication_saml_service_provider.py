@@ -48,6 +48,50 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            login_auth_req:
+                description:
+                - "Login Authentication Request"
+            slo_error:
+                description:
+                - "Single Logout Error"
+            name:
+                description:
+                - "Specify SAML authentication service provider name"
+            sp_metadata_export_success:
+                description:
+                - "Metadata Export Success"
+            acs_authz_fail:
+                description:
+                - "SAML Single-Sign-On Authorization Fail"
+            slo_req:
+                description:
+                - "Single Logout Request"
+            login_auth_resp:
+                description:
+                - "Login Authentication Response"
+            slo_success:
+                description:
+                - "Single Logout Success"
+            acs_success:
+                description:
+                - "SAML Single-Sign-On Success"
+            acs_error:
+                description:
+                - "SAML Single-Sign-On Error"
+            other_error:
+                description:
+                - "Other Error"
+            acs_req:
+                description:
+                - "SAML Single-Sign-On Request"
+            sp_metadata_export_req:
+                description:
+                - "Metadata Export Request"
     name:
         description:
         - "Specify SAML authentication service provider name"
@@ -171,7 +215,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -184,7 +227,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acs_uri_bypass","adfs_ws_federation","artifact_resolution_service","assertion_consuming_service","certificate","entity_id","metadata_export_service","name","require_assertion_signed","saml_request_signed","sampling_enable","service_url","signature_algorithm","single_logout_service","soap_tls_certificate_validate","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["acs_uri_bypass","adfs_ws_federation","artifact_resolution_service","assertion_consuming_service","certificate","entity_id","metadata_export_service","name","require_assertion_signed","saml_request_signed","sampling_enable","service_url","signature_algorithm","single_logout_service","soap_tls_certificate_validate","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -213,6 +256,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',login_auth_req=dict(type='str',),slo_error=dict(type='str',),name=dict(type='str',required=True,),sp_metadata_export_success=dict(type='str',),acs_authz_fail=dict(type='str',),slo_req=dict(type='str',),login_auth_resp=dict(type='str',),slo_success=dict(type='str',),acs_success=dict(type='str',),acs_error=dict(type='str',),other_error=dict(type='str',),acs_req=dict(type='str',),sp_metadata_export_req=dict(type='str',)),
         name=dict(type='str',required=True,),
         certificate=dict(type='str',),
         require_assertion_signed=dict(type='dict',require_assertion_signed_enable=dict(type='bool',)),
@@ -255,11 +299,6 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
@@ -299,7 +338,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -344,10 +383,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -359,15 +401,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["service-provider"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["service-provider"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["service-provider"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["service-provider"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["service-provider"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -378,8 +425,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -415,12 +460,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("service-provider", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -495,8 +544,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

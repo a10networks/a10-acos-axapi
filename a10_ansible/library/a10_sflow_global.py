@@ -48,6 +48,14 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            if_stats_list:
+                description:
+                - "Field if_stats_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +64,24 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'total-packet-sample-records'= Total packet sample records; 'total-counter-sample-records'= Total counter sample records; 'total-sflow-packets-sent'= Total sflow packets sent; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_packet_sample_records:
+                description:
+                - "Total packet sample records"
+            total_counter_sample_records:
+                description:
+                - "Total counter sample records"
+            total_sflow_packets_sent:
+                description:
+                - "Total sflow packets sent"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +95,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +124,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',if_stats_list=dict(type='list',if_num=dict(type='int',),packet_sample_records=dict(type='int',),counter_sample_records=dict(type='int',),if_type=dict(type='str',choices=['Ethernet','VE']))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-packet-sample-records','total-counter-sample-records','total-sflow-packets-sent'])),
+        stats=dict(type='dict',total_packet_sample_records=dict(type='str',),total_counter_sample_records=dict(type='str',),total_sflow_packets_sent=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +195,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +241,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +267,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["global"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["global"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["global"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["global"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["global"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +291,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +326,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("global", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

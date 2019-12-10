@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            persist_cpu_list:
+                description:
+                - "Field persist_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +67,174 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'hash_tbl_trylock_fail'= Hash tbl lock fail; 'hash_tbl_create_ok'= Hash tbl create ok; 'hash_tbl_create_fail'= Hash tbl create fail; 'hash_tbl_free'= Hash tbl free; 'hash_tbl_rst_updown'= Hash tbl reset (up/down); 'hash_tbl_rst_adddel'= Hash tbl reset (add/del); 'url_hash_pri'= URL hash persist (pri); 'url_hash_enqueue'= URL hash persist (enQ); 'url_hash_sec'= URL hash persist (sec); 'url_hash_fail'= URL hash persist fail; 'header_hash_pri'= Header hash persist(pri); 'header_hash_enqueue'= Header hash persist(enQ); 'header_hash_sec'= Header hash persist(sec); 'header_hash_fail'= Header hash persist fail; 'src_ip'= SRC IP persist ok; 'src_ip_enqueue'= SRC IP persist enqueue; 'src_ip_fail'= SRC IP persist fail; 'src_ip_new_sess_cache'= SRC IP new sess (cache); 'src_ip_new_sess_cache_fail'= SRC IP new sess fail (c); 'src_ip_new_sess_sel'= SRC IP new sess (select); 'src_ip_new_sess_sel_fail'= SRC IP new sess fail (s); 'src_ip_hash_pri'= SRC IP hash persist(pri); 'src_ip_hash_enqueue'= SRC IP hash persist(enQ); 'src_ip_hash_sec'= SRC IP hash persist(sec); 'src_ip_hash_fail'= SRC IP hash persist fail; 'src_ip_enforce'= Enforce higher priority; 'dst_ip'= DST IP persist ok; 'dst_ip_enqueue'= DST IP persist enqueue; 'dst_ip_fail'= DST IP persist fail; 'dst_ip_new_sess_cache'= DST IP new sess (cache); 'dst_ip_new_sess_cache_fail'= DST IP new sess fail (c); 'dst_ip_new_sess_sel'= DST IP new sess (select); 'dst_ip_new_sess_sel_fail'= DST IP new sess fail (s); 'dst_ip_hash_pri'= DST IP hash persist(pri); 'dst_ip_hash_enqueue'= DST IP hash persist(enQ); 'dst_ip_hash_sec'= DST IP hash persist(sec); 'dst_ip_hash_fail'= DST IP hash persist fail; 'cssl_sid_not_found'= Client SSL SID not found; 'cssl_sid_match'= Client SSL SID match; 'cssl_sid_not_match'= Client SSL SID not match; 'sssl_sid_not_found'= Server SSL SID not found; 'sssl_sid_reset'= Server SSL SID reset; 'sssl_sid_match'= Server SSL SID match; 'sssl_sid_not_match'= Server SSL SID not match; 'ssl_sid_persist_ok'= SSL SID persist ok; 'ssl_sid_persist_fail'= SSL SID persist fail; 'ssl_sid_session_ok'= Create SSL SID ok; 'ssl_sid_session_fail'= Create SSL SID fail; 'cookie_persist_ok'= Cookie persist ok; 'cookie_persist_fail'= Cookie persist fail; 'cookie_not_found'= Persist cookie not found; 'cookie_pass_thru'= Persist cookie Pass-thru; 'cookie_invalid'= Invalid persist cookie; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            ssl_sid_session_ok:
+                description:
+                - "Create SSL SID ok"
+            sssl_sid_not_match:
+                description:
+                - "Server SSL SID not match"
+            src_ip_enforce:
+                description:
+                - "Enforce higher priority"
+            cookie_persist_fail:
+                description:
+                - "Cookie persist fail"
+            url_hash_sec:
+                description:
+                - "URL hash persist (sec)"
+            header_hash_pri:
+                description:
+                - "Header hash persist(pri)"
+            header_hash_enqueue:
+                description:
+                - "Header hash persist(enQ)"
+            src_ip_hash_pri:
+                description:
+                - "SRC IP hash persist(pri)"
+            url_hash_pri:
+                description:
+                - "URL hash persist (pri)"
+            src_ip_new_sess_sel_fail:
+                description:
+                - "SRC IP new sess fail (s)"
+            sssl_sid_match:
+                description:
+                - "Server SSL SID match"
+            dst_ip_hash_sec:
+                description:
+                - "DST IP hash persist(sec)"
+            src_ip_hash_sec:
+                description:
+                - "SRC IP hash persist(sec)"
+            cookie_not_found:
+                description:
+                - "Persist cookie not found"
+            src_ip_enqueue:
+                description:
+                - "SRC IP persist enqueue"
+            dst_ip_new_sess_cache:
+                description:
+                - "DST IP new sess (cache)"
+            cssl_sid_match:
+                description:
+                - "Client SSL SID match"
+            hash_tbl_create_fail:
+                description:
+                - "Hash tbl create fail"
+            cookie_invalid:
+                description:
+                - "Invalid persist cookie"
+            ssl_sid_persist_fail:
+                description:
+                - "SSL SID persist fail"
+            cssl_sid_not_found:
+                description:
+                - "Client SSL SID not found"
+            cssl_sid_not_match:
+                description:
+                - "Client SSL SID not match"
+            ssl_sid_session_fail:
+                description:
+                - "Create SSL SID fail"
+            url_hash_enqueue:
+                description:
+                - "URL hash persist (enQ)"
+            hash_tbl_create_ok:
+                description:
+                - "Hash tbl create ok"
+            cookie_pass_thru:
+                description:
+                - "Persist cookie Pass-thru"
+            sssl_sid_reset:
+                description:
+                - "Server SSL SID reset"
+            src_ip_new_sess_cache_fail:
+                description:
+                - "SRC IP new sess fail (c)"
+            dst_ip_new_sess_sel_fail:
+                description:
+                - "DST IP new sess fail (s)"
+            src_ip_new_sess_cache:
+                description:
+                - "SRC IP new sess (cache)"
+            url_hash_fail:
+                description:
+                - "URL hash persist fail"
+            dst_ip_hash_fail:
+                description:
+                - "DST IP hash persist fail"
+            dst_ip_hash_pri:
+                description:
+                - "DST IP hash persist(pri)"
+            hash_tbl_rst_updown:
+                description:
+                - "Hash tbl reset (up/down)"
+            hash_tbl_trylock_fail:
+                description:
+                - "Hash tbl lock fail"
+            dst_ip_hash_enqueue:
+                description:
+                - "DST IP hash persist(enQ)"
+            header_hash_sec:
+                description:
+                - "Header hash persist(sec)"
+            sssl_sid_not_found:
+                description:
+                - "Server SSL SID not found"
+            src_ip_new_sess_sel:
+                description:
+                - "SRC IP new sess (select)"
+            header_hash_fail:
+                description:
+                - "Header hash persist fail"
+            dst_ip:
+                description:
+                - "DST IP persist ok"
+            src_ip_hash_enqueue:
+                description:
+                - "SRC IP hash persist(enQ)"
+            hash_tbl_free:
+                description:
+                - "Hash tbl free"
+            hash_tbl_rst_adddel:
+                description:
+                - "Hash tbl reset (add/del)"
+            src_ip_hash_fail:
+                description:
+                - "SRC IP hash persist fail"
+            cookie_persist_ok:
+                description:
+                - "Cookie persist ok"
+            dst_ip_enqueue:
+                description:
+                - "DST IP persist enqueue"
+            dst_ip_new_sess_sel:
+                description:
+                - "DST IP new sess (select)"
+            dst_ip_fail:
+                description:
+                - "DST IP persist fail"
+            src_ip_fail:
+                description:
+                - "SRC IP persist fail"
+            src_ip:
+                description:
+                - "SRC IP persist ok"
+            ssl_sid_persist_ok:
+                description:
+                - "SSL SID persist ok"
+            dst_ip_new_sess_cache_fail:
+                description:
+                - "DST IP new sess fail (c)"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +248,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +277,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',persist_cpu_list=dict(type='list',ssl_sid_session_ok=dict(type='int',),sssl_sid_not_match=dict(type='int',),src_ip_enforce=dict(type='int',),cookie_persist_fail=dict(type='int',),url_hash_sec=dict(type='int',),header_hash_pri=dict(type='int',),header_hash_enqueue=dict(type='int',),src_ip_hash_pri=dict(type='int',),url_hash_pri=dict(type='int',),src_ip_new_sess_sel_fail=dict(type='int',),sssl_sid_match=dict(type='int',),dst_ip_hash_sec=dict(type='int',),src_ip_hash_sec=dict(type='int',),cookie_not_found=dict(type='int',),src_ip_enqueue=dict(type='int',),dst_ip_new_sess_cache=dict(type='int',),cssl_sid_match=dict(type='int',),hash_tbl_create_fail=dict(type='int',),cookie_invalid=dict(type='int',),ssl_sid_persist_fail=dict(type='int',),cssl_sid_not_found=dict(type='int',),cssl_sid_not_match=dict(type='int',),ssl_sid_session_fail=dict(type='int',),url_hash_enqueue=dict(type='int',),hash_tbl_create_ok=dict(type='int',),cookie_pass_thru=dict(type='int',),sssl_sid_reset=dict(type='int',),src_ip_new_sess_cache_fail=dict(type='int',),dst_ip_new_sess_sel_fail=dict(type='int',),src_ip_new_sess_cache=dict(type='int',),url_hash_fail=dict(type='int',),dst_ip_hash_fail=dict(type='int',),dst_ip_hash_pri=dict(type='int',),hash_tbl_rst_updown=dict(type='int',),hash_tbl_trylock_fail=dict(type='int',),dst_ip_hash_enqueue=dict(type='int',),header_hash_sec=dict(type='int',),sssl_sid_not_found=dict(type='int',),src_ip_new_sess_sel=dict(type='int',),header_hash_fail=dict(type='int',),dst_ip=dict(type='int',),src_ip_hash_enqueue=dict(type='int',),hash_tbl_free=dict(type='int',),hash_tbl_rst_adddel=dict(type='int',),src_ip_hash_fail=dict(type='int',),cookie_persist_ok=dict(type='int',),dst_ip_enqueue=dict(type='int',),dst_ip_new_sess_sel=dict(type='int',),dst_ip_fail=dict(type='int',),src_ip_fail=dict(type='int',),src_ip=dict(type='int',),ssl_sid_persist_ok=dict(type='int',),dst_ip_new_sess_cache_fail=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hash_tbl_trylock_fail','hash_tbl_create_ok','hash_tbl_create_fail','hash_tbl_free','hash_tbl_rst_updown','hash_tbl_rst_adddel','url_hash_pri','url_hash_enqueue','url_hash_sec','url_hash_fail','header_hash_pri','header_hash_enqueue','header_hash_sec','header_hash_fail','src_ip','src_ip_enqueue','src_ip_fail','src_ip_new_sess_cache','src_ip_new_sess_cache_fail','src_ip_new_sess_sel','src_ip_new_sess_sel_fail','src_ip_hash_pri','src_ip_hash_enqueue','src_ip_hash_sec','src_ip_hash_fail','src_ip_enforce','dst_ip','dst_ip_enqueue','dst_ip_fail','dst_ip_new_sess_cache','dst_ip_new_sess_cache_fail','dst_ip_new_sess_sel','dst_ip_new_sess_sel_fail','dst_ip_hash_pri','dst_ip_hash_enqueue','dst_ip_hash_sec','dst_ip_hash_fail','cssl_sid_not_found','cssl_sid_match','cssl_sid_not_match','sssl_sid_not_found','sssl_sid_reset','sssl_sid_match','sssl_sid_not_match','ssl_sid_persist_ok','ssl_sid_persist_fail','ssl_sid_session_ok','ssl_sid_session_fail','cookie_persist_ok','cookie_persist_fail','cookie_not_found','cookie_pass_thru','cookie_invalid'])),
+        stats=dict(type='dict',ssl_sid_session_ok=dict(type='str',),sssl_sid_not_match=dict(type='str',),src_ip_enforce=dict(type='str',),cookie_persist_fail=dict(type='str',),url_hash_sec=dict(type='str',),header_hash_pri=dict(type='str',),header_hash_enqueue=dict(type='str',),src_ip_hash_pri=dict(type='str',),url_hash_pri=dict(type='str',),src_ip_new_sess_sel_fail=dict(type='str',),sssl_sid_match=dict(type='str',),dst_ip_hash_sec=dict(type='str',),src_ip_hash_sec=dict(type='str',),cookie_not_found=dict(type='str',),src_ip_enqueue=dict(type='str',),dst_ip_new_sess_cache=dict(type='str',),cssl_sid_match=dict(type='str',),hash_tbl_create_fail=dict(type='str',),cookie_invalid=dict(type='str',),ssl_sid_persist_fail=dict(type='str',),cssl_sid_not_found=dict(type='str',),cssl_sid_not_match=dict(type='str',),ssl_sid_session_fail=dict(type='str',),url_hash_enqueue=dict(type='str',),hash_tbl_create_ok=dict(type='str',),cookie_pass_thru=dict(type='str',),sssl_sid_reset=dict(type='str',),src_ip_new_sess_cache_fail=dict(type='str',),dst_ip_new_sess_sel_fail=dict(type='str',),src_ip_new_sess_cache=dict(type='str',),url_hash_fail=dict(type='str',),dst_ip_hash_fail=dict(type='str',),dst_ip_hash_pri=dict(type='str',),hash_tbl_rst_updown=dict(type='str',),hash_tbl_trylock_fail=dict(type='str',),dst_ip_hash_enqueue=dict(type='str',),header_hash_sec=dict(type='str',),sssl_sid_not_found=dict(type='str',),src_ip_new_sess_sel=dict(type='str',),header_hash_fail=dict(type='str',),dst_ip=dict(type='str',),src_ip_hash_enqueue=dict(type='str',),hash_tbl_free=dict(type='str',),hash_tbl_rst_adddel=dict(type='str',),src_ip_hash_fail=dict(type='str',),cookie_persist_ok=dict(type='str',),dst_ip_enqueue=dict(type='str',),dst_ip_new_sess_sel=dict(type='str',),dst_ip_fail=dict(type='str',),src_ip_fail=dict(type='str',),src_ip=dict(type='str',),ssl_sid_persist_ok=dict(type='str',),dst_ip_new_sess_cache_fail=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +348,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +394,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +420,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["persist"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["persist"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["persist"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["persist"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["persist"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +444,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +479,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("persist", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

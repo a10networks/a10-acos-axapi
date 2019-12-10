@@ -56,6 +56,92 @@ options:
         description:
         - "'enable'= Enable stateful firewall; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            session_creation_failure:
+                description:
+                - "Session Creation Failure"
+            tcp_packet_process:
+                description:
+                - "TCP Packet Process"
+            udp_fullcone_freed:
+                description:
+                - "UDP Full-cone Freed"
+            outbound_session_created:
+                description:
+                - "Outbound Session Created"
+            tcp_fullcone_created:
+                description:
+                - "TCP Full-cone Created"
+            fullcone_creation_failure:
+                description:
+                - "Full-Cone Creation Failure"
+            one_arm_drop:
+                description:
+                - "One-Arm Drop"
+            packet_inbound_deny:
+                description:
+                - "Inbound Packet Denied"
+            inbound_session_created:
+                description:
+                - "Inbound Session Created"
+            udp_fullcone_created:
+                description:
+                - "UDP Full-cone Created"
+            other_session_created:
+                description:
+                - "Other Session Created"
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+            udp_packet_process:
+                description:
+                - "UDP Packet Process"
+            no_fwd_route:
+                description:
+                - "No Forward Route"
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+            other_session_freed:
+                description:
+                - "Other Session Freed"
+            eif_process:
+                description:
+                - "Endpnt-Independent Filter Matched"
+            inbound_session_freed:
+                description:
+                - "Inbound Session Freed"
+            udp_session_freed:
+                description:
+                - "UDP Session Freed"
+            no_rev_route:
+                description:
+                - "No Reverse Route"
+            packet_process_failure:
+                description:
+                - "Packet Error Drop"
+            tcp_session_freed:
+                description:
+                - "TCP Session Freed"
+            other_packet_process:
+                description:
+                - "Other Packet Process"
+            tcp_fullcone_freed:
+                description:
+                - "TCP Full-cone Freed"
+            outbound_session_freed:
+                description:
+                - "Outbound Session Freed"
+            no_class_list_match:
+                description:
+                - "No Class-List Match Drop"
+            packet_standby_drop:
+                description:
+                - "Standby Drop"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -69,7 +155,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -82,7 +167,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["respond_to_user_mac","sampling_enable","stateful_firewall_value","uuid",]
+AVAILABLE_PROPERTIES = ["respond_to_user_mac","sampling_enable","stateful_firewall_value","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -113,6 +198,7 @@ def get_argspec():
     rv.update(dict(
         respond_to_user_mac=dict(type='bool',),
         stateful_firewall_value=dict(type='str',choices=['enable']),
+        stats=dict(type='dict',session_creation_failure=dict(type='str',),tcp_packet_process=dict(type='str',),udp_fullcone_freed=dict(type='str',),outbound_session_created=dict(type='str',),tcp_fullcone_created=dict(type='str',),fullcone_creation_failure=dict(type='str',),one_arm_drop=dict(type='str',),packet_inbound_deny=dict(type='str',),inbound_session_created=dict(type='str',),udp_fullcone_created=dict(type='str',),other_session_created=dict(type='str',),udp_session_created=dict(type='str',),udp_packet_process=dict(type='str',),no_fwd_route=dict(type='str',),tcp_session_created=dict(type='str',),other_session_freed=dict(type='str',),eif_process=dict(type='str',),inbound_session_freed=dict(type='str',),udp_session_freed=dict(type='str',),no_rev_route=dict(type='str',),packet_process_failure=dict(type='str',),tcp_session_freed=dict(type='str',),other_packet_process=dict(type='str',),tcp_fullcone_freed=dict(type='str',),outbound_session_freed=dict(type='str',),no_class_list_match=dict(type='str',),packet_standby_drop=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp_packet_process','udp_packet_process','other_packet_process','packet_inbound_deny','packet_process_failure','outbound_session_created','outbound_session_freed','inbound_session_created','inbound_session_freed','tcp_session_created','tcp_session_freed','udp_session_created','udp_session_freed','other_session_created','other_session_freed','session_creation_failure','no_fwd_route','no_rev_route','packet_standby_drop','tcp_fullcone_created','tcp_fullcone_freed','udp_fullcone_created','udp_fullcone_freed','fullcone_creation_failure','eif_process','one_arm_drop','no_class_list_match','outbound_session_created_shadow','outbound_session_freed_shadow','inbound_session_created_shadow','inbound_session_freed_shadow','tcp_session_created_shadow','tcp_session_freed_shadow','udp_session_created_shadow','udp_session_freed_shadow','other_session_created_shadow','other_session_freed_shadow','session_creation_failure_shadow','bad_session_freed','ctl_mem_alloc','ctl_mem_free','tcp_fullcone_created_shadow','tcp_fullcone_freed_shadow','udp_fullcone_created_shadow','udp_fullcone_freed_shadow','fullcone_in_del_q','fullcone_overflow_eim','fullcone_overflow_eif','fullcone_free_found','fullcone_free_retry_lookup','fullcone_free_not_found','eif_limit_exceeded','eif_disable_drop','eif_process_failure','eif_filtered','ha_standby_session_created','ha_standby_session_eim','ha_standby_session_eif'])),
         uuid=dict(type='str',)
     ))
@@ -137,11 +223,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -182,7 +263,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -227,10 +308,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -242,15 +326,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["global"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["global"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["global"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["global"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["global"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -261,8 +350,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -298,12 +385,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("global", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -378,8 +469,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

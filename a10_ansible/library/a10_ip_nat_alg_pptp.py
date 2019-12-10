@@ -60,11 +60,51 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'current-smp-sessions'= current-smp-sessions; 'current-gre-sessions'= current-gre-sessions; 'smp-session-creation-failure'= smp-session-creation-failure; 'truncated-pns-message'= truncated-pns-message; 'truncated-pac-message'= truncated-pac-message; 'mismatched-pns-call-id'= mismatched-pns-call-id; 'mismatched-pac-call-id'= mismatched-pac-call-id; 'retransmitted-pns-message'= retransmitted-pns-message; 'retransmitted-pac-message'= retransmitted-pac-message; 'truncated-gre-packet'= truncated-gre-packet; 'unknown-gre-version'= unknown-gre-version; 'no-matching-gre-session'= no-matching-gre-session; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            retransmitted_pac_message:
+                description:
+                - "Field retransmitted_pac_message"
+            smp_session_creation_failure:
+                description:
+                - "Field smp_session_creation_failure"
+            truncated_gre_packet:
+                description:
+                - "Field truncated_gre_packet"
+            truncated_pns_message:
+                description:
+                - "Field truncated_pns_message"
+            current_gre_sessions:
+                description:
+                - "Field current_gre_sessions"
+            no_matching_gre_session:
+                description:
+                - "Field no_matching_gre_session"
+            truncated_pac_message:
+                description:
+                - "Field truncated_pac_message"
+            mismatched_pac_call_id:
+                description:
+                - "Field mismatched_pac_call_id"
+            unknown_gre_version:
+                description:
+                - "Field unknown_gre_version"
+            current_smp_sessions:
+                description:
+                - "Field current_smp_sessions"
+            retransmitted_pns_message:
+                description:
+                - "Field retransmitted_pns_message"
+            mismatched_pns_call_id:
+                description:
+                - "Field mismatched_pns_call_id"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -78,7 +118,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["pptp","sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["pptp","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -109,6 +149,7 @@ def get_argspec():
     rv.update(dict(
         pptp=dict(type='str',choices=['disable','enable']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','current-smp-sessions','current-gre-sessions','smp-session-creation-failure','truncated-pns-message','truncated-pac-message','mismatched-pns-call-id','mismatched-pac-call-id','retransmitted-pns-message','retransmitted-pac-message','truncated-gre-packet','unknown-gre-version','no-matching-gre-session'])),
+        stats=dict(type='dict',retransmitted_pac_message=dict(type='str',),smp_session_creation_failure=dict(type='str',),truncated_gre_packet=dict(type='str',),truncated_pns_message=dict(type='str',),current_gre_sessions=dict(type='str',),no_matching_gre_session=dict(type='str',),truncated_pac_message=dict(type='str',),mismatched_pac_call_id=dict(type='str',),unknown_gre_version=dict(type='str',),current_smp_sessions=dict(type='str',),retransmitted_pns_message=dict(type='str',),mismatched_pns_call_id=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -132,11 +173,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -177,7 +213,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -222,10 +258,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -237,15 +276,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["pptp"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["pptp"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["pptp"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["pptp"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["pptp"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -256,8 +300,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -293,12 +335,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("pptp", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -373,8 +419,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

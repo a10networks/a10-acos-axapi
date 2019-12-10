@@ -48,6 +48,32 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            interval:
+                description:
+                - "Field interval"
+            start_time:
+                description:
+                - "Field start_time"
+            top_n:
+                description:
+                - "Field top_n"
+            log_list:
+                description:
+                - "Field log_list"
+            max_entries:
+                description:
+                - "Field max_entries"
+            interval_position:
+                description:
+                - "Field interval_position"
+            total:
+                description:
+                - "Field total"
     top_n:
         description:
         - "Field top_n"
@@ -61,7 +87,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -74,7 +99,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["top_n","uuid",]
+AVAILABLE_PROPERTIES = ["oper","top_n","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,6 +128,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',interval=dict(type='str',),start_time=dict(type='str',),top_n=dict(type='dict',oper=dict(type='dict',file_category=dict(type='str',),interval=dict(type='str',),interval_position=dict(type='str',),top=dict(type='str',),log_list=dict(type='list',counter=dict(type='int',),name=dict(type='str',)),max_entries=dict(type='int',),start_time=dict(type='str',),total=dict(type='int',))),log_list=dict(type='list',file_category=dict(type='str',),file_name=dict(type='str',),url=dict(type='str',),file_size=dict(type='int',),source_ip=dict(type='str',),file_ext=dict(type='str',),destination_ip=dict(type='str',),time=dict(type='str',)),max_entries=dict(type='int',),interval_position=dict(type='str',),total=dict(type='int',)),
         top_n=dict(type='dict',uuid=dict(type='str',)),
         uuid=dict(type='str',)
     ))
@@ -132,11 +158,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -172,7 +193,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,10 +239,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -232,15 +256,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["file-category"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["file-category"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["file-category"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["file-category"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["file-category"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +280,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +315,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("file-category", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -370,8 +401,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

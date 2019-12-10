@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            crl_srcip_lockedout_ips:
+                description:
+                - "Field crl_srcip_lockedout_ips"
+            lockedout_ips_count:
+                description:
+                - "Field lockedout_ips_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +67,42 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'sessions_alloc'= Sessions allocated; 'sessions_freed'= Sessions freed; 'out_of_sessions'= Out of sessions; 'too_many_sessions'= Too many sessions consumed; 'called'= Threshold check count; 'permitted'= Honor threshold  count; 'threshold_exceed'= Threshold exceeded count; 'lockout_drop'= Lockout drops; 'log_msg_sent'= Log messages sent; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            threshold_exceed:
+                description:
+                - "Threshold exceeded count"
+            lockout_drop:
+                description:
+                - "Lockout drops"
+            called:
+                description:
+                - "Threshold check count"
+            sessions_freed:
+                description:
+                - "Sessions freed"
+            permitted:
+                description:
+                - "Honor threshold  count"
+            log_msg_sent:
+                description:
+                - "Log messages sent"
+            sessions_alloc:
+                description:
+                - "Sessions allocated"
+            out_of_sessions:
+                description:
+                - "Out of sessions"
+            too_many_sessions:
+                description:
+                - "Too many sessions consumed"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +116,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +145,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',crl_srcip_lockedout_ips=dict(type='list',active=dict(type='int',),start=dict(type='str',),client_ip=dict(type='str',),drops=dict(type='int',),end=dict(type='str',)),lockedout_ips_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_alloc','sessions_freed','out_of_sessions','too_many_sessions','called','permitted','threshold_exceed','lockout_drop','log_msg_sent'])),
+        stats=dict(type='dict',threshold_exceed=dict(type='str',),lockout_drop=dict(type='str',),called=dict(type='str',),sessions_freed=dict(type='str',),permitted=dict(type='str',),log_msg_sent=dict(type='str',),sessions_alloc=dict(type='str',),out_of_sessions=dict(type='str',),too_many_sessions=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +216,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +262,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +288,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["crl-srcip"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["crl-srcip"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["crl-srcip"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["crl-srcip"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["crl-srcip"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +312,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +347,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("crl-srcip", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

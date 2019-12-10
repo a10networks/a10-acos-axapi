@@ -48,6 +48,64 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            service_list:
+                description:
+                - "Field service_list"
+            state:
+                description:
+                - "Field state"
+            dns_mx_record_list:
+                description:
+                - "Field dns_mx_record_list"
+            name:
+                description:
+                - "Specify the name for the DNS zone"
+            dns_ns_record_list:
+                description:
+                - "Field dns_ns_record_list"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            received_query:
+                description:
+                - "Total Number of DNS queries received for the zone"
+            name:
+                description:
+                - "Specify the name for the DNS zone"
+            dns_ns_record_list:
+                description:
+                - "Field dns_ns_record_list"
+            sent_response:
+                description:
+                - "Total Number of DNS replies sent to clients for the zone"
+            dns_mx_record_list:
+                description:
+                - "Field dns_mx_record_list"
+            sticky_mode_response:
+                description:
+                - "Total Number of DNS replies sent to clients by the ACOS device to keep the clients on the same site. (This statistic applies on"
+            server_mode_response:
+                description:
+                - "Total Number of DNS replies sent to clients by the ACOS device as a DNS server for the zone. (This statistic applies only if th"
+            cache_mode_response:
+                description:
+                - "Total Number of cached DNS replies sent to clients by the ACOS device for the zone. (This statistic applies only if the DNS cac"
+            backup_mode_response:
+                description:
+                - "Total Number of DNS replies sent to clients by the ACOS device in backup mode"
+            service_list:
+                description:
+                - "Field service_list"
+            proxy_mode_response:
+                description:
+                - "Total Number of DNS replies sent to clients by the ACOS device as a DNS proxy for the zone"
     name:
         description:
         - "Specify the name for the DNS zone"
@@ -245,7 +303,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -258,7 +315,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable","dns_mx_record_list","dns_ns_record_list","dns_soa_record","name","policy","sampling_enable","service_list","template","ttl","use_server_ttl","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["disable","dns_mx_record_list","dns_ns_record_list","dns_soa_record","name","oper","policy","sampling_enable","service_list","stats","template","ttl","use_server_ttl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -287,6 +344,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',service_list=dict(type='list',oper=dict(type='dict',cache_list=dict(type='list',cache_ttl=dict(type='int',),additional_records=dict(type='int',),answer_records=dict(type='int',),cache_dns_flag=dict(type='str',),question_records=dict(type='int',),alias=dict(type='str',),cache_length=dict(type='int',),authority_records=dict(type='int',)),total_sessions=dict(type='int',),matched=dict(type='int',),state=dict(type='str',),session_list=dict(type='list',aging=dict(type='int',),hits=dict(type='int',),update=dict(type='int',),client=dict(type='str',),last_second_hits=dict(type='int',),mode=dict(type='str',),ttl=dict(type='str',),best=dict(type='str',))),service_port=dict(type='int',required=True,),dns_mx_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),mx_name=dict(type='str',required=True,)),dns_ns_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),ns_name=dict(type='str',required=True,)),service_name=dict(type='str',required=True,)),state=dict(type='str',),dns_mx_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),mx_name=dict(type='str',required=True,)),name=dict(type='str',required=True,),dns_ns_record_list=dict(type='list',oper=dict(type='dict',last_server=dict(type='str',)),ns_name=dict(type='str',required=True,))),
+        stats=dict(type='dict',received_query=dict(type='str',),name=dict(type='str',required=True,),dns_ns_record_list=dict(type='list',ns_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),sent_response=dict(type='str',),dns_mx_record_list=dict(type='list',stats=dict(type='dict',hits=dict(type='str',)),mx_name=dict(type='str',required=True,)),sticky_mode_response=dict(type='str',),server_mode_response=dict(type='str',),cache_mode_response=dict(type='str',),backup_mode_response=dict(type='str',),service_list=dict(type='list',dns_a_record=dict(type='dict',),stats=dict(type='dict',received_query=dict(type='str',),sent_response=dict(type='str',),sticky_mode_response=dict(type='str',),server_mode_response=dict(type='str',),cache_mode_response=dict(type='str',),backup_mode_response=dict(type='str',),proxy_mode_response=dict(type='str',)),dns_ns_record_list=dict(type='list',ns_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),dns_cname_record_list=dict(type='list',alias_name=dict(type='str',required=True,),stats=dict(type='dict',cname_hits=dict(type='str',))),dns_txt_record_list=dict(type='list',record_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),service_port=dict(type='int',required=True,),dns_mx_record_list=dict(type='list',stats=dict(type='dict',hits=dict(type='str',)),mx_name=dict(type='str',required=True,)),dns_srv_record_list=dict(type='list',srv_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',)),port=dict(type='int',required=True,)),service_name=dict(type='str',required=True,),dns_ptr_record_list=dict(type='list',ptr_name=dict(type='str',required=True,),stats=dict(type='dict',hits=dict(type='str',))),dns_naptr_record_list=dict(type='list',flag=dict(type='str',required=True,),stats=dict(type='dict',naptr_hits=dict(type='str',)),service_proto=dict(type='str',required=True,),naptr_target=dict(type='str',required=True,))),proxy_mode_response=dict(type='str',)),
         name=dict(type='str',required=True,),
         dns_ns_record_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),ns_name=dict(type='str',required=True,),uuid=dict(type='str',),ttl=dict(type='int',)),
         dns_mx_record_list=dict(type='list',priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',),mx_name=dict(type='str',required=True,),ttl=dict(type='int',)),
@@ -369,7 +428,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -415,9 +474,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -429,15 +500,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["zone"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["zone"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["zone"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["zone"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["zone"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -448,8 +524,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -485,12 +559,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("zone", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

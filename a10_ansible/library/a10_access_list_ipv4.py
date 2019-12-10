@@ -48,11 +48,18 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            acl_list:
+                description:
+                - "Field acl_list"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +73,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',acl_list=dict(type='list',is_pool_group=dict(type='int',),name=dict(type='str',),nat_pool_msl=dict(type='int',),binding=dict(type='bool',),rule_list=dict(type='list',icmp_type=dict(type='int',),dst_obj_id=dict(type='str',),geo_location_name=dict(type='str',),src_host_mask=dict(type='str',),ip_frag=dict(type='int',),vlan_id=dict(type='int',),src_port_end=dict(type='int',),dst_port_end=dict(type='int',),log=dict(type='int',),src_obj_id=dict(type='str',),proto=dict(type='str',),tcp_established=dict(type='int',),svc_obj_id=dict(type='str',),icmp_code=dict(type='int',),dst_host_mask=dict(type='str',),data_plane_hits=dict(type='int',),dscp=dict(type='int',),trunk=dict(type='int',),sequence_num=dict(type='int',),log_transparent_sess_only=dict(type='int',),remark=dict(type='str',),dst_port_start=dict(type='int',),src_host=dict(type='str',),src_port_start=dict(type='int',),action=dict(type='str',),eth=dict(type='int',),dst_host=dict(type='str',)),nat_pool_haid=dict(type='int',),nat_pool_name=dict(type='str',),mgmt_pkt_hit_count=dict(type='int',),id=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +131,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +166,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +212,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +230,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +352,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

@@ -52,11 +52,54 @@ options:
         description:
         - "'enable'= Enable persistent storage(default); 'disable'= Disable persistent storage; "
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            pri_type:
+                description:
+                - "Field pri_type"
+            sec_l4_port:
+                description:
+                - "Field sec_l4_port"
+            sec_l4_proto:
+                description:
+                - "Field sec_l4_proto"
+            file_name:
+                description:
+                - "Field file_name"
+            pri_ipv6_addr:
+                description:
+                - "Field pri_ipv6_addr"
+            pri_l4_port:
+                description:
+                - "Field pri_l4_port"
+            pri_l4_proto:
+                description:
+                - "Field pri_l4_proto"
+            pri_ipv4_addr:
+                description:
+                - "Field pri_ipv4_addr"
+            monitor_type:
+                description:
+                - "Field monitor_type"
+            sec_ipv6_addr:
+                description:
+                - "Field sec_ipv6_addr"
+            proc_metric_list:
+                description:
+                - "Field proc_metric_list"
+            sec_ipv4_addr:
+                description:
+                - "Field sec_ipv4_addr"
+            sec_type:
+                description:
+                - "Field sec_type"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -70,7 +113,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","uuid",]
+AVAILABLE_PROPERTIES = ["action","oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -100,6 +143,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         action=dict(type='str',choices=['enable','disable']),
+        oper=dict(type='dict',pri_type=dict(type='str',),sec_l4_port=dict(type='int',),sec_l4_proto=dict(type='int',),file_name=dict(type='str',),pri_ipv6_addr=dict(type='str',),pri_l4_port=dict(type='int',),pri_l4_proto=dict(type='int',),pri_ipv4_addr=dict(type='str',),monitor_type=dict(type='str',),sec_ipv6_addr=dict(type='str',),proc_metric_list=dict(type='list',metric_attr_list=dict(type='list',metric_attr_name=dict(type='str',),metric_attr_value=dict(type='str',)),metric_name=dict(type='str',)),sec_ipv4_addr=dict(type='str',),sec_type=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -128,11 +172,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -168,7 +207,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -214,10 +253,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -228,15 +270,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["metrics"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["metrics"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["metrics"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["metrics"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["metrics"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -247,8 +294,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -284,12 +329,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("metrics", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -366,8 +415,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

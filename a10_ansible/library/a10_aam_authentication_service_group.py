@@ -48,6 +48,50 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            pri_affinity_priority:
+                description:
+                - "Field pri_affinity_priority"
+            name:
+                description:
+                - "Specify AAM service group name"
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+            servers_down:
+                description:
+                - "Field servers_down"
+            stateless_state:
+                description:
+                - "Field stateless_state"
+            servers_disable:
+                description:
+                - "Field servers_disable"
+            stateless_type:
+                description:
+                - "Field stateless_type"
+            servers_total:
+                description:
+                - "Field servers_total"
+            state:
+                description:
+                - "Field state"
+            member_list:
+                description:
+                - "Field member_list"
+            servers_up:
+                description:
+                - "Field servers_up"
+            stateless_current_usage:
+                description:
+                - "Field stateless_current_usage"
+            hm_dsr_enable_all_vip:
+                description:
+                - "Field hm_dsr_enable_all_vip"
     health_check_disable:
         description:
         - "Disable health check"
@@ -102,6 +146,53 @@ options:
             name:
                 description:
                 - "Member name"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            service_resp_2xx:
+                description:
+                - "Service Group response 2xx count"
+            member_list:
+                description:
+                - "Field member_list"
+            service_unhealthy_host:
+                description:
+                - "Service Group unhealthy host count"
+            service_curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+            name:
+                description:
+                - "Specify AAM service group name"
+            server_selection_fail_drop:
+                description:
+                - "Drops due to Service selection failure"
+            service_healthy_host:
+                description:
+                - "Service Group healthy host count"
+            service_resp_count:
+                description:
+                - "Service Group response count"
+            service_req_count:
+                description:
+                - "Service Group request count"
+            service_resp_4xx:
+                description:
+                - "Service Group response 4xx count"
+            service_peak_conn:
+                description:
+                - "Peak connection count for the Service Group"
+            server_selection_fail_reset:
+                description:
+                - "Resets sent out for Service selection failure"
+            service_resp_3xx:
+                description:
+                - "Service Group response 3xx count"
+            service_resp_5xx:
+                description:
+                - "Service Group response 5xx count"
     health_check:
         description:
         - "Health Check (Monitor Name)"
@@ -110,7 +201,6 @@ options:
         description:
         - "Specify AAM service group name"
         required: True
-
 
 """
 
@@ -124,7 +214,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","health_check_disable","lb_method","member_list","name","protocol","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["health_check","health_check_disable","lb_method","member_list","name","oper","protocol","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -153,6 +243,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',pri_affinity_priority=dict(type='int',),name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),member_list=dict(type='list',oper=dict(type='dict',hm_key=dict(type='int',),alt_list=dict(type='list',alt_state=dict(type='str',),alt_rev_pkts=dict(type='int',),alt_port=dict(type='int',),alt_peak_conn=dict(type='int',),alt_curr_conn=dict(type='int',),alt_fwd_pkts=dict(type='int',),alt_total_conn=dict(type='int',),alt_name=dict(type='str',)),hm_index=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE']),drs_list=dict(type='list',drs_fwd_bts=dict(type='int',),drs_fwd_pkts=dict(type='int',),drs_rev_bts=dict(type='int',),drs_port=dict(type='int',),drs_curr_req=dict(type='int',),drs_name=dict(type='str',),drs_pers_conn=dict(type='int',),drs_priority=dict(type='int',),drs_total_req_succ=dict(type='int',),drs_hm_key=dict(type='int',),drs_hm_index=dict(type='int',),drs_rev_pkts=dict(type='int',),drs_total_conn=dict(type='int',),drs_state=dict(type='str',),drs_frsp_time=dict(type='int',),drs_peak_conn=dict(type='int',),drs_curr_conn=dict(type='int',),drs_rsp_time=dict(type='int',),drs_total_req=dict(type='int',),drs_srsp_time=dict(type='int',))),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',choices=['tcp','udp']),
         uuid=dict(type='str',),
@@ -160,6 +251,7 @@ def get_argspec():
         lb_method=dict(type='str',choices=['round-robin']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn','service_healthy_host','service_unhealthy_host','service_req_count','service_resp_count','service_resp_2xx','service_resp_3xx','service_resp_4xx','service_resp_5xx','service_curr_conn_overflow'])),
         member_list=dict(type='list',member_priority=dict(type='int',),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','curr_conn_overflow'])),member_state=dict(type='str',choices=['enable','disable']),port=dict(type='int',required=True,),name=dict(type='str',required=True,)),
+        stats=dict(type='dict',service_resp_2xx=dict(type='str',),member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),curr_conn_overflow=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),service_unhealthy_host=dict(type='str',),service_curr_conn_overflow=dict(type='str',),name=dict(type='str',required=True,),server_selection_fail_drop=dict(type='str',),service_healthy_host=dict(type='str',),service_resp_count=dict(type='str',),service_req_count=dict(type='str',),service_resp_4xx=dict(type='str',),service_peak_conn=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_resp_3xx=dict(type='str',),service_resp_5xx=dict(type='str',)),
         health_check=dict(type='str',),
         name=dict(type='str',required=True,)
     ))
@@ -231,7 +323,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -277,9 +369,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -291,15 +395,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["service-group"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["service-group"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["service-group"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["service-group"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["service-group"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -310,8 +419,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -347,12 +454,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("service-group", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

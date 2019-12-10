@@ -216,6 +216,413 @@ options:
         description:
         - "Number of seconds client should be locked out (default 600)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            redirect_wlist_fail:
+                description:
+                - "Redirect Whitelist Failure"
+            cookie_encrypt_limit_exceeded:
+                description:
+                - "Cookie Encrypt Limit Exceeded"
+            wsdl_succ:
+                description:
+                - "WSDL Success"
+            sqlia_chk_url_succ:
+                description:
+                - "SQLIA Check URL Success"
+            bot_check_succ:
+                description:
+                - "Botnet Check Success"
+            cookie_encrypt_skip_rcache:
+                description:
+                - "Cookie Encrypt Skip RCache"
+            redirect_wlist_learn:
+                description:
+                - "Redirect Whitelist Learn"
+            xml_limit_elem_child:
+                description:
+                - "XML Limit Element Child"
+            buf_ovf_parameter_value_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Value Length Failure"
+            ccn_mask_visa:
+                description:
+                - "Credit Card Number Mask Visa"
+            xss_chk_cookie_succ:
+                description:
+                - "XSS Check Cookie Success"
+            buf_ovf_cookies_len_fail:
+                description:
+                - "Buffer Overflow - Cookies Length Failure"
+            req_denied:
+                description:
+                - "Requests Denied"
+            json_check_failure:
+                description:
+                - "JSON Check Failure"
+            xss_chk_post_reject:
+                description:
+                - "XSS Check Post Rejected"
+            http_check_succ:
+                description:
+                - "Http Check Success"
+            form_consistency_succ:
+                description:
+                - "Form Consistency Success"
+            xml_limit_cdata_len:
+                description:
+                - "XML Limit CData Length"
+            xml_check_failure:
+                description:
+                - "XML Check Failure"
+            buf_ovf_hdrs_len_fail:
+                description:
+                - "Buffer Overflow - Headers length Failure"
+            referer_check_succ:
+                description:
+                - "Referer Check Success"
+            sqlia_chk_post_succ:
+                description:
+                - "SQLIA Check Post Success"
+            xss_chk_url_sanitize:
+                description:
+                - "XSS Check URL Sanitized"
+            cookie_encrypt_succ:
+                description:
+                - "Cookie Encrypt Success"
+            buf_ovf_parameter_total_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Total Length Failure"
+            soap_check_succ:
+                description:
+                - "Soap Check Success"
+            name:
+                description:
+                - "WAF Template Name"
+            max_cookies_fail:
+                description:
+                - "Max Cookies Failure"
+            json_limit_array_value_count:
+                description:
+                - "JSON Limit Array Value Count"
+            uri_wlist_succ:
+                description:
+                - "URI White List Success"
+            brute_force_success:
+                description:
+                - "Brute-force checks passed"
+            resp_code_hidden:
+                description:
+                - "Response Code Hidden"
+            xml_sqlia_chk_fail:
+                description:
+                - "XML Sqlia Check Failure"
+            xss_chk_post_succ:
+                description:
+                - "XSS Check Post Success"
+            pcre_mask:
+                description:
+                - "PCRE Mask"
+            form_consistency_fail:
+                description:
+                - "Form Consistency Failure"
+            http_check_fail:
+                description:
+                - "Http Check Failure"
+            url_check_succ:
+                description:
+                - "URL Check Success"
+            sqlia_chk_url_reject:
+                description:
+                - "SQLIA Check URL Rejected"
+            sqlia_chk_url_sanitize:
+                description:
+                - "SQLIA Check URL Sanitized"
+            xss_chk_cookie_reject:
+                description:
+                - "XSS Check Cookie Rejected"
+            json_check_succ:
+                description:
+                - "JSON Check Success"
+            max_entities_fail:
+                description:
+                - "Max Entities Failure"
+            http_method_check_fail:
+                description:
+                - "Http Method Check Failure"
+            form_non_ssl_reject:
+                description:
+                - "Form Non SSL Rejected"
+            xss_chk_post_sanitize:
+                description:
+                - "XSS Check Post Sanitized"
+            form_set_no_cache:
+                description:
+                - "Form Set No Cache"
+            xml_schema_succ:
+                description:
+                - "XML Schema Success"
+            xml_limit_attr:
+                description:
+                - "XML Limit Attribue"
+            xml_check_succ:
+                description:
+                - "XML Check Success"
+            sess_check_none:
+                description:
+                - "Session Check None"
+            xml_limit_namespace:
+                description:
+                - "XML Limit Namespace"
+            wsdl_fail:
+                description:
+                - "WSDL Failure"
+            post_form_check_succ:
+                description:
+                - "Post Form Check Success"
+            buf_ovf_query_len_fail:
+                description:
+                - "Buffer Overflow - Query Length Failure"
+            sqlia_chk_post_reject:
+                description:
+                - "SQLIA Check Post Rejected"
+            form_password_autocomplete:
+                description:
+                - "Form Password Autocomplete"
+            permitted:
+                description:
+                - "Honor threshold  count"
+            xml_xss_chk_fail:
+                description:
+                - "XML XSS Check Failure"
+            buf_ovf_url_len_fail:
+                description:
+                - "Buffer Overflow - URL Length Failure"
+            buf_ovf_cookie_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Length Failure"
+            form_csrf_tag_succ:
+                description:
+                - "Form CSRF tag Success"
+            xss_chk_cookie_sanitize:
+                description:
+                - "XSS Check Cookie Sanitized"
+            sessions_alloc:
+                description:
+                - "Sessions allocated"
+            xml_limit_entity_exp:
+                description:
+                - "XML Limit Entity Exp"
+            ccn_mask_diners:
+                description:
+                - "Credit Card Number Mask Diners"
+            sess_check_succ:
+                description:
+                - "Session Check Success"
+            json_limit_depth:
+                description:
+                - "JSON Limit Depth"
+            buf_ovf_cookie_name_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Name Length Failure"
+            learn_updates:
+                description:
+                - "Learning Updates"
+            redirect_wlist_succ:
+                description:
+                - "Redirect Whitelist Success"
+            challenge_javascript_sent:
+                description:
+                - "JavaScript challenge sent"
+            req_allowed:
+                description:
+                - "Requests Allowed"
+            json_limit_object_member_count:
+                description:
+                - "JSON Limit Object Number Count"
+            bot_check_fail:
+                description:
+                - "Botnet Check Failure"
+            uri_wlist_fail:
+                description:
+                - "URI White List Failure"
+            uri_blist_fail:
+                description:
+                - "URI Black List Failure"
+            referer_check_redirect:
+                description:
+                - "Referer Check Redirect"
+            challenge_cookie_sent:
+                description:
+                - "Cookie challenge sent"
+            sqlia_chk_post_sanitize:
+                description:
+                - "SQLIA Check Post Sanitized"
+            ccn_mask_amex:
+                description:
+                - "Credit Card Number Mask Amex"
+            num_drops:
+                description:
+                - "Number Drops"
+            referer_check_fail:
+                description:
+                - "Referer Check Failure"
+            post_form_check_sanitize:
+                description:
+                - "Post Form Check Sanitized"
+            cookie_decrypt_succ:
+                description:
+                - "Cookie Decrypt Success"
+            xss_chk_url_reject:
+                description:
+                - "XSS Check URL Rejected"
+            max_parameters_fail:
+                description:
+                - "Max Parameters Failure"
+            url_check_fail:
+                description:
+                - "URL Check Failure"
+            xml_schema_fail:
+                description:
+                - "XML Schema Failure"
+            form_non_post_reject:
+                description:
+                - "Form Non Post Rejected"
+            num_resets:
+                description:
+                - "Number Resets"
+            xml_limit_entity_exp_depth:
+                description:
+                - "XML Limit Entity Exp Depth"
+            form_non_masked_password:
+                description:
+                - "Form Non Masked Password"
+            buf_ovf_line_len_fail:
+                description:
+                - "Buffer Overflow - Line Length Failure"
+            ccn_mask_discover:
+                description:
+                - "Credit Card Number Mask Discover"
+            ssn_mask:
+                description:
+                - "Social Security Number Mask"
+            json_limit_string:
+                description:
+                - "JSON Limit String"
+            resp_hdrs_filtered:
+                description:
+                - "Response Headers Filtered"
+            called:
+                description:
+                - "Threshold check count"
+            ccn_mask_mastercard:
+                description:
+                - "Credit Card Number Mask Mastercard"
+            xml_sqlia_chk_succ:
+                description:
+                - "XML Sqlia Check Success"
+            brute_force_fail:
+                description:
+                - "Brute-force checks failed"
+            max_hdrs_fail:
+                description:
+                - "Max Headers Failure"
+            xml_limit_attr_name_len:
+                description:
+                - "XML Limit Name Length"
+            form_non_ssl_password:
+                description:
+                - "Form Non SSL Password"
+            too_many_sessions:
+                description:
+                - "Too many sessions consumed"
+            buf_ovf_hdr_value_len_fail:
+                description:
+                - "Buffer Overflow - Header Value Length Failure"
+            uri_blist_succ:
+                description:
+                - "URI Black List Success"
+            sess_check_fail:
+                description:
+                - "Session Check Failure"
+            buf_ovf_hdr_name_len_fail:
+                description:
+                - "Buffer Overflow - Header Name Length Failure"
+            resp_denied:
+                description:
+                - "Responses Denied"
+            sessions_freed:
+                description:
+                - "Sessions freed"
+            out_of_sessions:
+                description:
+                - "Out of sessions"
+            xml_limit_elem:
+                description:
+                - "XML Limit Element"
+            buf_ovf_parameter_name_len_fail:
+                description:
+                - "Buffer Overflow - HTML Parameter Name Length Failure"
+            xml_limit_attr_value_len:
+                description:
+                - "XML Limit Value Length"
+            xml_limit_elem_depth:
+                description:
+                - "XML Limit Element Depth"
+            ccn_mask_jcb:
+                description:
+                - "Credit Card Number Mask Jcb"
+            cookie_decrypt_fail:
+                description:
+                - "Cookie Decrypt Failure"
+            buf_ovf_cookie_value_len_fail:
+                description:
+                - "Buffer Overflow - Cookie Value Length Failure"
+            buf_ovf_post_size_fail:
+                description:
+                - "Buffer Overflow - Post size Failure"
+            total_req:
+                description:
+                - "Total Requests"
+            xml_limit_elem_name_len:
+                description:
+                - "XML Limit Element Name Length"
+            url_check_learn:
+                description:
+                - "URL Check Learn"
+            http_method_check_succ:
+                description:
+                - "Http Method Check Success"
+            xss_chk_url_succ:
+                description:
+                - "XSS Check URL Success"
+            xml_limit_namespace_uri_len:
+                description:
+                - "XML Limit Namespace URI Length"
+            post_form_check_reject:
+                description:
+                - "Post Form Check Rejected"
+            cookie_encrypt_fail:
+                description:
+                - "Cookie Encrypt Failure"
+            soap_check_failure:
+                description:
+                - "Soap Check Failure"
+            challenge_captcha_sent:
+                description:
+                - "Captcha challenge sent"
+            form_csrf_tag_fail:
+                description:
+                - "Form CSRF tag Failure"
+            xml_xss_chk_succ:
+                description:
+                - "XML XSS Check Success"
+            buf_ovf_max_data_parse_fail:
+                description:
+                - "Buffer Overflow - Max Data Parse Failure"
     max_parameter_name_len:
         description:
         - "Max HTML parameter name length in an HTTP request (default 256) (Maximum HTML parameter name length in an HTTP request (default 256))"
@@ -517,7 +924,6 @@ options:
         - "Check XML data against SQLIA policy"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -530,7 +936,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allowed_http_methods","bot_check","bot_check_policy_file","brute_force_challenge_limit","brute_force_check","brute_force_global","brute_force_lockout_limit","brute_force_lockout_period","brute_force_resp_codes","brute_force_resp_codes_file","brute_force_resp_headers","brute_force_resp_headers_file","brute_force_resp_string","brute_force_resp_string_file","brute_force_test_period","ccn_mask","challenge_action_cookie","challenge_action_javascript","cookie_encryption_secret","cookie_name","csrf_check","decode_entities","decode_escaped_chars","decode_hex_chars","deny_non_masked_passwords","deny_non_ssl_passwords","deny_password_autocomplete","deploy_mode","disable","filter_resp_hdrs","form_consistency_check","form_deny_non_post","form_deny_non_ssl","form_set_no_cache","hide_resp_codes","hide_resp_codes_file","http_check","http_redirect","http_resp_200","http_resp_403","json_format_check","keep_end","keep_start","lifetime","log_succ_reqs","logging","mask","max_array_value_count","max_attr","max_attr_name_len","max_attr_value_len","max_cdata_len","max_cookie_len","max_cookie_name_len","max_cookie_value_len","max_cookies","max_cookies_len","max_data_parse","max_depth","max_elem","max_elem_child","max_elem_depth","max_elem_name_len","max_entities","max_entity_exp","max_entity_exp_depth","max_hdr_name_len","max_hdr_value_len","max_hdrs","max_hdrs_len","max_line_len","max_namespace","max_namespace_uri_len","max_object_member_count","max_parameter_name_len","max_parameter_total_len","max_parameter_value_len","max_parameters","max_post_size","max_query_len","max_string","max_url_len","name","pcre_mask","redirect_wlist","referer_check","referer_domain_list","referer_domain_list_only","referer_safe_url","remove_comments","remove_selfref","remove_spaces","reset_conn","resp_url_200","resp_url_403","secret_encrypted","session_check","soap_format_check","sqlia_check","sqlia_check_policy_file","ssn_mask","uri_blist_check","uri_wlist_check","url_check","user_tag","uuid","waf_blist_file","waf_wlist_file","wsdl_file","wsdl_resp_val_file","xml_format_check","xml_schema_file","xml_schema_resp_val_file","xml_sqlia_check","xml_xss_check","xss_check","xss_check_policy_file",]
+AVAILABLE_PROPERTIES = ["allowed_http_methods","bot_check","bot_check_policy_file","brute_force_challenge_limit","brute_force_check","brute_force_global","brute_force_lockout_limit","brute_force_lockout_period","brute_force_resp_codes","brute_force_resp_codes_file","brute_force_resp_headers","brute_force_resp_headers_file","brute_force_resp_string","brute_force_resp_string_file","brute_force_test_period","ccn_mask","challenge_action_cookie","challenge_action_javascript","cookie_encryption_secret","cookie_name","csrf_check","decode_entities","decode_escaped_chars","decode_hex_chars","deny_non_masked_passwords","deny_non_ssl_passwords","deny_password_autocomplete","deploy_mode","disable","filter_resp_hdrs","form_consistency_check","form_deny_non_post","form_deny_non_ssl","form_set_no_cache","hide_resp_codes","hide_resp_codes_file","http_check","http_redirect","http_resp_200","http_resp_403","json_format_check","keep_end","keep_start","lifetime","log_succ_reqs","logging","mask","max_array_value_count","max_attr","max_attr_name_len","max_attr_value_len","max_cdata_len","max_cookie_len","max_cookie_name_len","max_cookie_value_len","max_cookies","max_cookies_len","max_data_parse","max_depth","max_elem","max_elem_child","max_elem_depth","max_elem_name_len","max_entities","max_entity_exp","max_entity_exp_depth","max_hdr_name_len","max_hdr_value_len","max_hdrs","max_hdrs_len","max_line_len","max_namespace","max_namespace_uri_len","max_object_member_count","max_parameter_name_len","max_parameter_total_len","max_parameter_value_len","max_parameters","max_post_size","max_query_len","max_string","max_url_len","name","pcre_mask","redirect_wlist","referer_check","referer_domain_list","referer_domain_list_only","referer_safe_url","remove_comments","remove_selfref","remove_spaces","reset_conn","resp_url_200","resp_url_403","secret_encrypted","session_check","soap_format_check","sqlia_check","sqlia_check_policy_file","ssn_mask","stats","uri_blist_check","uri_wlist_check","url_check","user_tag","uuid","waf_blist_file","waf_wlist_file","wsdl_file","wsdl_resp_val_file","xml_format_check","xml_schema_file","xml_schema_resp_val_file","xml_sqlia_check","xml_xss_check","xss_check","xss_check_policy_file",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -601,6 +1007,7 @@ def get_argspec():
         referer_domain_list=dict(type='str',),
         max_parameters=dict(type='int',),
         brute_force_lockout_period=dict(type='int',),
+        stats=dict(type='dict',redirect_wlist_fail=dict(type='str',),cookie_encrypt_limit_exceeded=dict(type='str',),wsdl_succ=dict(type='str',),sqlia_chk_url_succ=dict(type='str',),bot_check_succ=dict(type='str',),cookie_encrypt_skip_rcache=dict(type='str',),redirect_wlist_learn=dict(type='str',),xml_limit_elem_child=dict(type='str',),buf_ovf_parameter_value_len_fail=dict(type='str',),ccn_mask_visa=dict(type='str',),xss_chk_cookie_succ=dict(type='str',),buf_ovf_cookies_len_fail=dict(type='str',),req_denied=dict(type='str',),json_check_failure=dict(type='str',),xss_chk_post_reject=dict(type='str',),http_check_succ=dict(type='str',),form_consistency_succ=dict(type='str',),xml_limit_cdata_len=dict(type='str',),xml_check_failure=dict(type='str',),buf_ovf_hdrs_len_fail=dict(type='str',),referer_check_succ=dict(type='str',),sqlia_chk_post_succ=dict(type='str',),xss_chk_url_sanitize=dict(type='str',),cookie_encrypt_succ=dict(type='str',),buf_ovf_parameter_total_len_fail=dict(type='str',),soap_check_succ=dict(type='str',),name=dict(type='str',required=True,),max_cookies_fail=dict(type='str',),json_limit_array_value_count=dict(type='str',),uri_wlist_succ=dict(type='str',),brute_force_success=dict(type='str',),resp_code_hidden=dict(type='str',),xml_sqlia_chk_fail=dict(type='str',),xss_chk_post_succ=dict(type='str',),pcre_mask=dict(type='str',),form_consistency_fail=dict(type='str',),http_check_fail=dict(type='str',),url_check_succ=dict(type='str',),sqlia_chk_url_reject=dict(type='str',),sqlia_chk_url_sanitize=dict(type='str',),xss_chk_cookie_reject=dict(type='str',),json_check_succ=dict(type='str',),max_entities_fail=dict(type='str',),http_method_check_fail=dict(type='str',),form_non_ssl_reject=dict(type='str',),xss_chk_post_sanitize=dict(type='str',),form_set_no_cache=dict(type='str',),xml_schema_succ=dict(type='str',),xml_limit_attr=dict(type='str',),xml_check_succ=dict(type='str',),sess_check_none=dict(type='str',),xml_limit_namespace=dict(type='str',),wsdl_fail=dict(type='str',),post_form_check_succ=dict(type='str',),buf_ovf_query_len_fail=dict(type='str',),sqlia_chk_post_reject=dict(type='str',),form_password_autocomplete=dict(type='str',),permitted=dict(type='str',),xml_xss_chk_fail=dict(type='str',),buf_ovf_url_len_fail=dict(type='str',),buf_ovf_cookie_len_fail=dict(type='str',),form_csrf_tag_succ=dict(type='str',),xss_chk_cookie_sanitize=dict(type='str',),sessions_alloc=dict(type='str',),xml_limit_entity_exp=dict(type='str',),ccn_mask_diners=dict(type='str',),sess_check_succ=dict(type='str',),json_limit_depth=dict(type='str',),buf_ovf_cookie_name_len_fail=dict(type='str',),learn_updates=dict(type='str',),redirect_wlist_succ=dict(type='str',),challenge_javascript_sent=dict(type='str',),req_allowed=dict(type='str',),json_limit_object_member_count=dict(type='str',),bot_check_fail=dict(type='str',),uri_wlist_fail=dict(type='str',),uri_blist_fail=dict(type='str',),referer_check_redirect=dict(type='str',),challenge_cookie_sent=dict(type='str',),sqlia_chk_post_sanitize=dict(type='str',),ccn_mask_amex=dict(type='str',),num_drops=dict(type='str',),referer_check_fail=dict(type='str',),post_form_check_sanitize=dict(type='str',),cookie_decrypt_succ=dict(type='str',),xss_chk_url_reject=dict(type='str',),max_parameters_fail=dict(type='str',),url_check_fail=dict(type='str',),xml_schema_fail=dict(type='str',),form_non_post_reject=dict(type='str',),num_resets=dict(type='str',),xml_limit_entity_exp_depth=dict(type='str',),form_non_masked_password=dict(type='str',),buf_ovf_line_len_fail=dict(type='str',),ccn_mask_discover=dict(type='str',),ssn_mask=dict(type='str',),json_limit_string=dict(type='str',),resp_hdrs_filtered=dict(type='str',),called=dict(type='str',),ccn_mask_mastercard=dict(type='str',),xml_sqlia_chk_succ=dict(type='str',),brute_force_fail=dict(type='str',),max_hdrs_fail=dict(type='str',),xml_limit_attr_name_len=dict(type='str',),form_non_ssl_password=dict(type='str',),too_many_sessions=dict(type='str',),buf_ovf_hdr_value_len_fail=dict(type='str',),uri_blist_succ=dict(type='str',),sess_check_fail=dict(type='str',),buf_ovf_hdr_name_len_fail=dict(type='str',),resp_denied=dict(type='str',),sessions_freed=dict(type='str',),out_of_sessions=dict(type='str',),xml_limit_elem=dict(type='str',),buf_ovf_parameter_name_len_fail=dict(type='str',),xml_limit_attr_value_len=dict(type='str',),xml_limit_elem_depth=dict(type='str',),ccn_mask_jcb=dict(type='str',),cookie_decrypt_fail=dict(type='str',),buf_ovf_cookie_value_len_fail=dict(type='str',),buf_ovf_post_size_fail=dict(type='str',),total_req=dict(type='str',),xml_limit_elem_name_len=dict(type='str',),url_check_learn=dict(type='str',),http_method_check_succ=dict(type='str',),xss_chk_url_succ=dict(type='str',),xml_limit_namespace_uri_len=dict(type='str',),post_form_check_reject=dict(type='str',),cookie_encrypt_fail=dict(type='str',),soap_check_failure=dict(type='str',),challenge_captcha_sent=dict(type='str',),form_csrf_tag_fail=dict(type='str',),xml_xss_chk_succ=dict(type='str',),buf_ovf_max_data_parse_fail=dict(type='str',)),
         max_parameter_name_len=dict(type='int',),
         deny_non_masked_passwords=dict(type='bool',),
         challenge_action_javascript=dict(type='bool',),
@@ -701,11 +1108,6 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
@@ -745,7 +1147,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -790,10 +1192,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -805,15 +1210,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["template"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["template"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["template"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["template"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["template"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -824,8 +1234,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -861,12 +1269,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("template", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -941,8 +1353,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

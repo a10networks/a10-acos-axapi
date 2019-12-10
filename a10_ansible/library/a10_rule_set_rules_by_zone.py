@@ -51,6 +51,14 @@ options:
     rule_set_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            group_list:
+                description:
+                - "Field group_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -59,11 +67,18 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'dummy'= Entry for a10countergen; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            dummy:
+                description:
+                - "Entry for a10countergen"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -77,7 +92,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -106,7 +121,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',group_list=dict(type='list',to=dict(type='str',),from=dict(type='str',),rule_list=dict(type='list',dest_list=dict(type='list',dest=dict(type='str',)),action=dict(type='str',),source_list=dict(type='list',source=dict(type='str',)),name=dict(type='str',),service_list=dict(type='list',service=dict(type='str',))))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dummy'])),
+        stats=dict(type='dict',dummy=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -181,7 +198,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -227,9 +244,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -241,15 +270,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["rules-by-zone"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["rules-by-zone"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["rules-by-zone"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["rules-by-zone"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["rules-by-zone"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -260,20 +294,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
-def delete(module, result):
-    try:
-        module.client.delete(existing_url(module))
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -297,12 +317,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("rules-by-zone", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

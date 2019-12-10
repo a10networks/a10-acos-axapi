@@ -48,6 +48,34 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            geoloc_list:
+                description:
+                - "Field geoloc_list"
+            name:
+                description:
+                - "Specify name of Geolocation list"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_geoloc:
+                description:
+                - "Field total_geoloc"
+            total_active:
+                description:
+                - "Field total_active"
+            hit_count:
+                description:
+                - "Field hit_count"
+            name:
+                description:
+                - "Specify name of Geolocation list"
     uuid:
         description:
         - "uuid of the object"
@@ -89,7 +117,6 @@ options:
                 description:
                 - "Geolocation name to add"
 
-
 """
 
 EXAMPLES = """
@@ -102,7 +129,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["exclude_geoloc_name_list","include_geoloc_name_list","name","sampling_enable","shared","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["exclude_geoloc_name_list","include_geoloc_name_list","name","oper","sampling_enable","shared","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -131,6 +158,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',geoloc_list=dict(type='list',active=dict(type='int',),ntype=dict(type='str',),geoloc_name=dict(type='str',),hit_count=dict(type='int',)),name=dict(type='str',required=True,)),
+        stats=dict(type='dict',total_geoloc=dict(type='str',),total_active=dict(type='str',),hit_count=dict(type='str',),name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,),
@@ -207,7 +236,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -253,9 +282,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -267,15 +308,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["geoloc-list"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["geoloc-list"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["geoloc-list"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["geoloc-list"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["geoloc-list"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -286,8 +332,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -323,12 +367,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("geoloc-list", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

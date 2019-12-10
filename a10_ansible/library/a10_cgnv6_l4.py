@@ -56,11 +56,54 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'no-fwd-route'= No Forward Route for Session; 'no-rev-route'= No Reverse Route for Session; 'out-of-session-memory'= Out of Session Memory; 'tcp-rst-sent'= TCP RST Sent; 'ipip-icmp-reply-sent'= IPIP ICMP Echo Reply Sent; 'icmp-filtered-sent'= ICMP Administratively Filtered Sent; 'icmp-host-unreachable-sent'= ICMP Host Unreachable Sent; 'icmp-reply-no-session-drop'= ICMP Reply No Session Drop; 'ipip-truncated'= IPIP Truncated Packet; 'ip-src-invalid-unicast'= IPv4 Source Not Valid Unicast; 'ip-dst-invalid-unicast'= IPv4 Destination Not Valid Unicast; 'ipv6-src-invalid-unicast'= IPv6 Source Not Valid Unicast; 'ipv6-dst-invalid-unicast'= IPv6 Destination Not Valid Unicast; 'bad-l3-protocol'= Bad Layer 3 Protocol; 'special-ipv4-no-route'= Stateless IPv4 No Forward Route; 'special-ipv6-no-route'= Stateless IPv6 No Forward Route; 'icmp-reply-sent'= ICMP Echo Reply Sent; 'icmpv6-reply-sent'= ICMPv6 Echo Reply Sent; 'out-of-state-dropped'= L4 Out of State packets; 'ttl-exceeded-sent'= ICMP TTL Exceeded Sent; 'cross-cpu-alg-gre-no-match'= ALG GRE Cross CPU No Matching Session; 'cross-cpu-alg-gre-preprocess-err'= ALG GRE Cross CPU Preprocess Error; 'lsn-fast-setup'= LSN Fast Setup Attempt; 'lsn-fast-setup-err'= LSN Fast Setup Error; 'nat64-fast-setup'= NAT64 Fast Setup Attempt; 'nat64-fast-setup-err'= NAT64 Fast Setup Error; 'dslite-fast-setup'= DS-Lite Fast Setup Attempt; 'dslite-fast-setup-err'= DS-Lite Fast Setup Error; 'fast-setup-delayed-err'= Fast Setup Delayed Error; 'fast-setup-mtu-too-small'= Fast Setup MTU Too Small; 'fixed-nat44-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat44-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat64-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat64-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat-dslite-fast-setup'= Fixed NAT Fast Setup Attempt; 'fixed-nat-dslite-fast-setup-err'= Fixed NAT Fast Setup Error; 'fixed-nat-fast-setup-delayed-err'= Fixed NAT Fast Setup Delayed Error; 'fixed-nat-fast-setup-mtu-too-small'= Fixed NAT Fast Setup MTU Too Small; 'static-nat-fast-setup'= Static NAT Fast Setup Attempt; 'static-nat-fast-setup-err'= Static NAT Fast Setup Error; 'dst-nat-needed-drop'= Destination NAT Needed Drop; 'invalid-nat64-translated-addr'= Invalid NAT64 Translated IPv4 Address; 'tcp-rst-loop-drop'= RST Loop Drop; 'static-nat-alloc'= Static NAT Alloc; 'static-nat-free'= Static NAT Free; 'process-l4'= Process L4; 'preprocess-error'= Preprocess Error; 'process-special'= Process Special; 'process-continue'= Process Continue; 'process-error'= Process Error; 'fw-match-no-rule-drop'= Firewall Matched No CGNv6 Rule Drop; 'ip-unknown-process'= Process IP Unknown; 'src-nat-pool-not-found'= Src NAT Pool Not Found; 'dst-nat-pool-not-found'= Dst NAT Pool Not Found; 'l3-ip-src-invalid-unicast'= IPv4 L3 Source Invalid Unicast; 'l3-ip-dst-invalid-unicast'= IPv4 L3 Destination Invalid Unicast; 'l3-ipv6-src-invalid-unicast'= IPv6 L3 Source Invalid Unicast; 'l3-ipv6-dst-invalid-unicast'= IPv6 L3 Destination Invalid Unicast; 'fw-zone-mismatch-rerouting-drop'= Rerouting Zone Mismatch Drop; 'nat-range-list-acl-deny'= Nat range-list ACL deny; 'nat-range-list-acl-permit'= Nat range-list ACL permit; 'fw-next-action-incorrect-drop'= FW Next Action Incorrect Drop; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            no_rev_route:
+                description:
+                - "No Reverse Route for Session"
+            tcp_rst_sent:
+                description:
+                - "TCP RST Sent"
+            ipv6_dst_invalid_unicast:
+                description:
+                - "IPv6 Destination Not Valid Unicast"
+            ipip_icmp_reply_sent:
+                description:
+                - "IPIP ICMP Echo Reply Sent"
+            icmp_filtered_sent:
+                description:
+                - "ICMP Administratively Filtered Sent"
+            ipv6_src_invalid_unicast:
+                description:
+                - "IPv6 Source Not Valid Unicast"
+            out_of_session_memory:
+                description:
+                - "Out of Session Memory"
+            ip_dst_invalid_unicast:
+                description:
+                - "IPv4 Destination Not Valid Unicast"
+            no_fwd_route:
+                description:
+                - "No Forward Route for Session"
+            icmp_host_unreachable_sent:
+                description:
+                - "ICMP Host Unreachable Sent"
+            ip_src_invalid_unicast:
+                description:
+                - "IPv4 Source Not Valid Unicast"
+            icmp_reply_no_session_drop:
+                description:
+                - "ICMP Reply No Session Drop"
+            ipip_truncated:
+                description:
+                - "IPIP Truncated Packet"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +117,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +147,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','no-fwd-route','no-rev-route','out-of-session-memory','tcp-rst-sent','ipip-icmp-reply-sent','icmp-filtered-sent','icmp-host-unreachable-sent','icmp-reply-no-session-drop','ipip-truncated','ip-src-invalid-unicast','ip-dst-invalid-unicast','ipv6-src-invalid-unicast','ipv6-dst-invalid-unicast','bad-l3-protocol','special-ipv4-no-route','special-ipv6-no-route','icmp-reply-sent','icmpv6-reply-sent','out-of-state-dropped','ttl-exceeded-sent','cross-cpu-alg-gre-no-match','cross-cpu-alg-gre-preprocess-err','lsn-fast-setup','lsn-fast-setup-err','nat64-fast-setup','nat64-fast-setup-err','dslite-fast-setup','dslite-fast-setup-err','fast-setup-delayed-err','fast-setup-mtu-too-small','fixed-nat44-fast-setup','fixed-nat44-fast-setup-err','fixed-nat64-fast-setup','fixed-nat64-fast-setup-err','fixed-nat-dslite-fast-setup','fixed-nat-dslite-fast-setup-err','fixed-nat-fast-setup-delayed-err','fixed-nat-fast-setup-mtu-too-small','static-nat-fast-setup','static-nat-fast-setup-err','dst-nat-needed-drop','invalid-nat64-translated-addr','tcp-rst-loop-drop','static-nat-alloc','static-nat-free','process-l4','preprocess-error','process-special','process-continue','process-error','fw-match-no-rule-drop','ip-unknown-process','src-nat-pool-not-found','dst-nat-pool-not-found','l3-ip-src-invalid-unicast','l3-ip-dst-invalid-unicast','l3-ipv6-src-invalid-unicast','l3-ipv6-dst-invalid-unicast','fw-zone-mismatch-rerouting-drop','nat-range-list-acl-deny','nat-range-list-acl-permit','fw-next-action-incorrect-drop'])),
+        stats=dict(type='dict',no_rev_route=dict(type='str',),tcp_rst_sent=dict(type='str',),ipv6_dst_invalid_unicast=dict(type='str',),ipip_icmp_reply_sent=dict(type='str',),icmp_filtered_sent=dict(type='str',),ipv6_src_invalid_unicast=dict(type='str',),out_of_session_memory=dict(type='str',),ip_dst_invalid_unicast=dict(type='str',),no_fwd_route=dict(type='str',),icmp_host_unreachable_sent=dict(type='str',),ip_src_invalid_unicast=dict(type='str',),icmp_reply_no_session_drop=dict(type='str',),ipip_truncated=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +171,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +211,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +256,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +274,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["l4"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["l4"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["l4"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["l4"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["l4"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +298,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +333,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("l4", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +417,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

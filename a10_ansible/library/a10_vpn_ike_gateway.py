@@ -48,6 +48,41 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            Status:
+                description:
+                - "Field Status"
+            Remote_IP:
+                description:
+                - "Field Remote_IP"
+            Hash:
+                description:
+                - "Field Hash"
+            name:
+                description:
+                - "IKE-gateway name"
+            NAT_Traversal:
+                description:
+                - "Field NAT_Traversal"
+            Local_IP:
+                description:
+                - "Field Local_IP"
+            Responder_SPI:
+                description:
+                - "Field Responder_SPI"
+            Encryption:
+                description:
+                - "Field Encryption"
+            Lifetime:
+                description:
+                - "Field Lifetime"
+            Initiator_SPI:
+                description:
+                - "Field Initiator_SPI"
     ike_version:
         description:
         - "'v1'= IKEv1 key exchange; 'v2'= IKEv2 key exchange; "
@@ -86,6 +121,170 @@ options:
             hash:
                 description:
                 - "'md5'= MD5 Dessage-Digest Algorithm; 'sha1'= Secure Hash Algorithm 1; 'sha256'= Secure Hash Algorithm 256; 'sha384'= Secure Hash Algorithm 384; 'sha512'= Secure Hash Algorithm 512; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            v1_in_id_prot_rsp:
+                description:
+                - "Incoming ID Protection Response"
+            v1_in_auth_only_rsp:
+                description:
+                - "Incoming Auth Only Response"
+            v1_out_quick_mode_req:
+                description:
+                - "Outgoing Quick Mode Request"
+            v1_out_aggressive_req:
+                description:
+                - "Outgoing Aggressive Request"
+            v2_child_sa_rekey:
+                description:
+                - "Child SA Rekey"
+            ike_current_version:
+                description:
+                - "IKE version"
+            v2_out_auth_req:
+                description:
+                - "Outgoing Auth Request"
+            v2_rsp_rekey:
+                description:
+                - "Respond Rekey"
+            v2_out_info_req:
+                description:
+                - "Outgoing Info Request"
+            v2_out_init_req:
+                description:
+                - "Outgoing Init Request"
+            v1_in_info_v1_rsp:
+                description:
+                - "Incoming Info Response"
+            v1_out_id_prot_req:
+                description:
+                - "Outgoing ID Protection Request"
+            v2_in_invalid:
+                description:
+                - "Incoming Invalid"
+            v1_in_aggressive_req:
+                description:
+                - "Incoming Aggressive Request"
+            v1_child_sa_invalid_spi:
+                description:
+                - "Invalid SPI for Child SAs"
+            v2_in_info_rsp:
+                description:
+                - "Incoming Info Response"
+            v1_out_new_group_mode_rsp:
+                description:
+                - "Outgoing New Group Mode Response"
+            v2_out_auth_rsp:
+                description:
+                - "Outgoing Auth Response"
+            v1_in_auth_only_req:
+                description:
+                - "Incoming Auth Only Request"
+            v1_in_info_v1_req:
+                description:
+                - "Incoming Info Request"
+            v2_in_create_child_req:
+                description:
+                - "Incoming Create Child Request"
+            v2_out_info_rsp:
+                description:
+                - "Outgoing Info Response"
+            v2_out_create_child_req:
+                description:
+                - "Outgoing Create Child Request"
+            v2_in_auth_rsp:
+                description:
+                - "Incoming Auth Response"
+            v2_in_init_req:
+                description:
+                - "Incoming Init Request"
+            v1_out_info_v1_req:
+                description:
+                - "Outgoing Info Request"
+            v2_init_rekey:
+                description:
+                - "Initiate Rekey"
+            v1_in_id_prot_req:
+                description:
+                - "Incoming ID Protection Request"
+            v1_out_transaction_rsp:
+                description:
+                - "Outgoing Transaction Response"
+            v1_out_quick_mode_rsp:
+                description:
+                - "Outgoing Quick Mode Response"
+            v1_out_auth_only_rsp:
+                description:
+                - "Outgoing Auth Only Response"
+            v1_in_quick_mode_rsp:
+                description:
+                - "Incoming Quick Mode Response"
+            v1_in_new_group_mode_req:
+                description:
+                - "Incoming New Group Mode Request"
+            v1_out_id_prot_rsp:
+                description:
+                - "Outgoing ID Protection Response"
+            v1_in_transaction_rsp:
+                description:
+                - "Incoming Transaction Response"
+            v1_in_aggressive_rsp:
+                description:
+                - "Incoming Aggressive Response"
+            v1_in_transaction_req:
+                description:
+                - "Incoming Transaction Request"
+            v1_in_quick_mode_req:
+                description:
+                - "Incoming Quick Mode Request"
+            name:
+                description:
+                - "IKE-gateway name"
+            v2_in_invalid_spi:
+                description:
+                - "Incoming Invalid SPI"
+            v1_out_auth_only_req:
+                description:
+                - "Outgoing Auth Only Request"
+            v1_out_transaction_req:
+                description:
+                - "Outgoing Transaction Request"
+            v1_out_new_group_mode_req:
+                description:
+                - "Outgoing New Group Mode Request"
+            v2_child_sa_invalid_spi:
+                description:
+                - "Invalid SPI for Child SAs"
+            v1_out_info_v1_rsp:
+                description:
+                - "Outgoing Info Response"
+            v2_in_init_rsp:
+                description:
+                - "Incoming Init Response"
+            v2_in_create_child_rsp:
+                description:
+                - "Incoming Create Child Response"
+            v2_in_auth_req:
+                description:
+                - "Incoming Auth Request"
+            v2_out_init_rsp:
+                description:
+                - "Outgoing Init Response"
+            v1_in_new_group_mode_rsp:
+                description:
+                - "Incoming New Group Mode Response"
+            v2_out_create_child_rsp:
+                description:
+                - "Outgoing Create Child Response"
+            v1_out_aggressive_rsp:
+                description:
+                - "Outgoing Aggressive Response"
+            v2_in_info_req:
+                description:
+                - "Incoming Info Request"
     uuid:
         description:
         - "uuid of the object"
@@ -195,7 +394,6 @@ options:
         - "'preshare-key'= Authenticate the remote gateway using a pre-shared key (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA certificate; "
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -208,7 +406,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auth_method","dh_group","dpd","enc_cfg","ike_version","key","key_passphrase","key_passphrase_encrypted","lifetime","local_address","local_cert","local_id","mode","name","nat_traversal","preshare_key_encrypted","preshare_key_value","remote_address","remote_ca_cert","remote_id","sampling_enable","user_tag","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["auth_method","dh_group","dpd","enc_cfg","ike_version","key","key_passphrase","key_passphrase_encrypted","lifetime","local_address","local_cert","local_id","mode","name","nat_traversal","oper","preshare_key_encrypted","preshare_key_value","remote_address","remote_ca_cert","remote_id","sampling_enable","stats","user_tag","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -237,12 +435,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',Status=dict(type='str',),Remote_IP=dict(type='str',),Hash=dict(type='str',),name=dict(type='str',required=True,),NAT_Traversal=dict(type='int',),Local_IP=dict(type='str',),Responder_SPI=dict(type='str',),Encryption=dict(type='str',),Lifetime=dict(type='int',),Initiator_SPI=dict(type='str',)),
         ike_version=dict(type='str',choices=['v1','v2']),
         key_passphrase_encrypted=dict(type='str',),
         local_cert=dict(type='dict',local_cert_name=dict(type='str',)),
         lifetime=dict(type='int',),
         local_id=dict(type='str',),
         enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','null']),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512'])),
+        stats=dict(type='dict',v1_in_id_prot_rsp=dict(type='str',),v1_in_auth_only_rsp=dict(type='str',),v1_out_quick_mode_req=dict(type='str',),v1_out_aggressive_req=dict(type='str',),v2_child_sa_rekey=dict(type='str',),ike_current_version=dict(type='str',),v2_out_auth_req=dict(type='str',),v2_rsp_rekey=dict(type='str',),v2_out_info_req=dict(type='str',),v2_out_init_req=dict(type='str',),v1_in_info_v1_rsp=dict(type='str',),v1_out_id_prot_req=dict(type='str',),v2_in_invalid=dict(type='str',),v1_in_aggressive_req=dict(type='str',),v1_child_sa_invalid_spi=dict(type='str',),v2_in_info_rsp=dict(type='str',),v1_out_new_group_mode_rsp=dict(type='str',),v2_out_auth_rsp=dict(type='str',),v1_in_auth_only_req=dict(type='str',),v1_in_info_v1_req=dict(type='str',),v2_in_create_child_req=dict(type='str',),v2_out_info_rsp=dict(type='str',),v2_out_create_child_req=dict(type='str',),v2_in_auth_rsp=dict(type='str',),v2_in_init_req=dict(type='str',),v1_out_info_v1_req=dict(type='str',),v2_init_rekey=dict(type='str',),v1_in_id_prot_req=dict(type='str',),v1_out_transaction_rsp=dict(type='str',),v1_out_quick_mode_rsp=dict(type='str',),v1_out_auth_only_rsp=dict(type='str',),v1_in_quick_mode_rsp=dict(type='str',),v1_in_new_group_mode_req=dict(type='str',),v1_out_id_prot_rsp=dict(type='str',),v1_in_transaction_rsp=dict(type='str',),v1_in_aggressive_rsp=dict(type='str',),v1_in_transaction_req=dict(type='str',),v1_in_quick_mode_req=dict(type='str',),name=dict(type='str',required=True,),v2_in_invalid_spi=dict(type='str',),v1_out_auth_only_req=dict(type='str',),v1_out_transaction_req=dict(type='str',),v1_out_new_group_mode_req=dict(type='str',),v2_child_sa_invalid_spi=dict(type='str',),v1_out_info_v1_rsp=dict(type='str',),v2_in_init_rsp=dict(type='str',),v2_in_create_child_rsp=dict(type='str',),v2_in_auth_req=dict(type='str',),v2_out_init_rsp=dict(type='str',),v1_in_new_group_mode_rsp=dict(type='str',),v2_out_create_child_rsp=dict(type='str',),v1_out_aggressive_rsp=dict(type='str',),v2_in_info_req=dict(type='str',)),
         uuid=dict(type='str',),
         nat_traversal=dict(type='bool',),
         vrid=dict(type='dict',vrid_num=dict(type='int',)),
@@ -330,7 +530,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -376,9 +576,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -390,15 +602,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ike-gateway"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["ike-gateway"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["ike-gateway"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["ike-gateway"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["ike-gateway"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -409,8 +626,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -446,12 +661,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("ike-gateway", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

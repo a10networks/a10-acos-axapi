@@ -240,6 +240,317 @@ options:
             timeout:
                 description:
                 - "To set time interval to resend template (number of seconds= default is 1800, 0 means disable template resend based on timeout)"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            port_mapping_nat64_records_sent:
+                description:
+                - "Port Mapping Nat64 Event Records Sent"
+            port_batching_v2_dslite_records_sent:
+                description:
+                - "Port Batching V2 Dslite Records Sent"
+            custom_deny_reset_event_fw4_records_sent:
+                description:
+                - "Custom FW4 Deny/Reset Event Records Sent"
+            custom_session_event_dslite_deletion_records_sent:
+                description:
+                - "Custom Dslite Session Deletion Records Sent"
+            session_event_nat64_records_sent:
+                description:
+                - "Nat64 Session Event Records Sent"
+            port_batching_nat64_records_sent_failure:
+                description:
+                - "Port Batching Nat64 Records Failed"
+            custom_port_batching_v2_nat64_creation_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Batch V2 Creation Records Failed"
+            session_event_dslite_records_sent:
+                description:
+                - "Dslite Session Event Records Sent"
+            custom_port_batching_nat44_deletion_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Batch Deletion Records Failed"
+            port_batching_v2_nat44_records_sent_failure:
+                description:
+                - "Port Batching V2 Nat44 Records Failed"
+            custom_session_event_nat44_deletion_records_sent:
+                description:
+                - "Custom Nat44 Session Deletion Records Sent"
+            custom_session_event_nat64_creation_records_sent:
+                description:
+                - "Custom Nat64 Session Creation Records Sent"
+            session_event_fw6_records_sent_failure:
+                description:
+                - "FW6 Session Event Records Failed"
+            custom_port_batching_v2_nat44_deletion_records_sent:
+                description:
+                - "Custom Nat44 Port Batch V2 Deletion Records Sent"
+            custom_port_mapping_dslite_creation_records_sent:
+                description:
+                - "Custom Dslite Port Map Creation Records Sent"
+            custom_port_batching_nat44_deletion_records_sent:
+                description:
+                - "Custom Nat44 Port Batch Deletion Records Sent"
+            custom_session_event_nat64_deletion_records_sent:
+                description:
+                - "Custom Nat64 Session Deletion Records Sent"
+            custom_session_event_fw6_deletion_records_sent:
+                description:
+                - "Custom FW6 Session Deletion Records Sent"
+            session_event_dslite_records_sent_failure:
+                description:
+                - "Dslite Session Event Records Failed"
+            name:
+                description:
+                - "Name of netflow monitor"
+            nat44_records_sent:
+                description:
+                - "NAT44 Flow Records Sent"
+            custom_session_event_nat44_deletion_records_sent_failure:
+                description:
+                - "Custom Nat44 Session Deletion Records Failed"
+            custom_port_batching_v2_nat44_creation_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Batch V2 Creation Records Failed"
+            custom_port_batching_nat64_deletion_records_sent:
+                description:
+                - "Custom Nat64 Port Batch Deletion Records Sent"
+            nat64_records_sent_failure:
+                description:
+                - "NAT64 Flow Records Failed"
+            netflow_v5_records_sent_failure:
+                description:
+                - "Netflow v5 Records Failed"
+            port_batching_v2_nat64_records_sent:
+                description:
+                - "Port Batching V2 Nat64 Records Sent"
+            netflow_v5_records_sent:
+                description:
+                - "Netflow v5 Records Sent"
+            session_event_fw6_records_sent:
+                description:
+                - "FW6 Session Event Records Sent"
+            custom_port_mapping_nat44_deletion_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Map Deletion Records Failed"
+            port_mapping_nat44_records_sent_failure:
+                description:
+                - "Port Mapping Nat44 Event Records Failed"
+            custom_port_batching_dslite_creation_records_sent_failure:
+                description:
+                - "Custom Dslite Port Batch Creation Records Failed"
+            custom_port_batching_v2_dslite_creation_records_sent_failure:
+                description:
+                - "Custom Dslite Port Batch V2 Creation Records Failed"
+            custom_session_event_dslite_creation_records_sent_failure:
+                description:
+                - "Custom Dslite Session Creation Records Failed"
+            custom_port_batching_nat44_creation_records_sent:
+                description:
+                - "Custom Nat44 Port Batch Creation Records Sent"
+            custom_port_mapping_nat64_deletion_records_sent:
+                description:
+                - "Custom Nat64 Port Map Deletion Records Sent"
+            netflow_v5_ext_records_sent_failure:
+                description:
+                - "Netflow v5 Ext Records Failed"
+            port_batching_nat64_records_sent:
+                description:
+                - "Port Batching Nat64 Records Sent"
+            custom_session_event_fw4_creation_records_sent:
+                description:
+                - "Custom FW4 Session Creation Records Sent"
+            dslite_records_sent_failure:
+                description:
+                - "Dslite Flow Records Failed"
+            custom_port_mapping_nat44_creation_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Map Creation Records Failed"
+            port_batching_v2_dslite_records_sent_failure:
+                description:
+                - "Port Batching V2 Dslite Records Falied"
+            custom_port_batching_v2_nat64_deletion_records_sent:
+                description:
+                - "Custom Nat64 Port Batch V2 Deletion Records Sent"
+            custom_port_mapping_nat44_deletion_records_sent:
+                description:
+                - "Custom Nat44 Port Map Deletion Records Sent"
+            custom_port_batching_v2_nat44_creation_records_sent:
+                description:
+                - "Custom Nat44 Port Batch V2 Creation Records Sent"
+            bytes_sent:
+                description:
+                - "Sent Bytes Count"
+            custom_session_event_fw6_creation_records_sent_failure:
+                description:
+                - "Custom FW6 Session Creation Records Failed"
+            custom_port_mapping_dslite_creation_records_sent_failure:
+                description:
+                - "Custom Dslite Port Map Creation Records Failed"
+            netflow_v5_ext_records_sent:
+                description:
+                - "Netflow v5 Ext Records Sent"
+            custom_port_batching_nat64_creation_records_sent:
+                description:
+                - "Custom Nat64 Port Batch Creation Records Sent"
+            session_event_fw4_records_sent_failure:
+                description:
+                - "FW4 Session Event Records Failed"
+            custom_deny_reset_event_fw4_records_sent_failure:
+                description:
+                - "Custom FW4 Deny/Reset Event Records Failed"
+            custom_port_batching_nat64_deletion_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Batch Deletion Records Failed"
+            custom_port_batching_v2_nat44_deletion_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Batch V2 Deletion Records Failed"
+            custom_session_event_nat64_deletion_records_sent_failure:
+                description:
+                - "Custom Nat64 Session Deletion Records Failed"
+            custom_port_mapping_nat44_creation_records_sent:
+                description:
+                - "Custom Nat44 Port Map Creation Records Sent"
+            custom_deny_reset_event_fw6_records_sent_failure:
+                description:
+                - "Custom FW6 Deny/Reset Event Records Failed"
+            custom_session_event_nat44_creation_records_sent:
+                description:
+                - "Custom Nat44 Session Creation Records Sent"
+            custom_session_event_fw6_creation_records_sent:
+                description:
+                - "Custom FW6 Session Creation Records Sent"
+            port_mapping_dslite_records_sent_failure:
+                description:
+                - "Port Mapping Dslite Event Records failed"
+            custom_session_event_fw4_creation_records_sent_failure:
+                description:
+                - "Custom FW4 Session Creation Records Failed"
+            custom_port_mapping_dslite_deletion_records_sent:
+                description:
+                - "Custom Dslite Port Map Deletion Records Sent"
+            custom_port_mapping_nat64_creation_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Map Creation Records Failed"
+            port_batching_v2_nat64_records_sent_failure:
+                description:
+                - "Port Batching V2 Nat64 Records Failed"
+            session_event_nat44_records_sent:
+                description:
+                - "Nat44 Session Event Records Sent"
+            custom_port_batching_v2_dslite_deletion_records_sent:
+                description:
+                - "Custom Dslite Port Batch V2 Deletion Records Sent"
+            port_mapping_nat64_records_sent_failure:
+                description:
+                - "Port Mapping Nat64 Event Records Failed"
+            custom_session_event_fw4_deletion_records_sent:
+                description:
+                - "Custom FW4 Session Deletion Records Sent"
+            custom_port_batching_dslite_deletion_records_sent_failure:
+                description:
+                - "Custom Dslite Port Batch Deletion Records Failed"
+            port_mapping_dslite_records_sent:
+                description:
+                - "Port Mapping Dslite Event Records Sent"
+            reduced_logs_by_destination:
+                description:
+                - "Reduced Logs by Destination Protocol and Port"
+            dslite_records_sent:
+                description:
+                - "Dslite Flow Records Sent"
+            port_mapping_nat44_records_sent:
+                description:
+                - "Port Mapping Nat44 Event Records Sent"
+            custom_session_event_dslite_deletion_records_sent_failure:
+                description:
+                - "Custom Dslite Session Deletion Records Failed"
+            custom_session_event_dslite_creation_records_sent:
+                description:
+                - "Custom Dslite Session Creation Records Sent"
+            session_event_fw4_records_sent:
+                description:
+                - "FW4 Session Event Records Sent"
+            custom_port_mapping_nat64_creation_records_sent:
+                description:
+                - "Custom Nat64 Port Map Creation Records Sent"
+            custom_session_event_nat64_creation_records_sent_failure:
+                description:
+                - "Custom Nat64 Session Creation Records Failed"
+            port_batching_dslite_records_sent:
+                description:
+                - "Port Batching Dslite Records Sent"
+            custom_port_batching_v2_dslite_creation_records_sent:
+                description:
+                - "Custom Dslite Port Batch V2 Creation Records Sent"
+            port_batching_v2_nat44_records_sent:
+                description:
+                - "Port Batching V2 Nat44 Records Sent"
+            custom_port_mapping_nat64_deletion_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Map Deletion Records Failed"
+            custom_port_batching_v2_nat64_deletion_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Batch V2 Deletion Records Failed"
+            custom_port_batching_dslite_creation_records_sent:
+                description:
+                - "Custom Dslite Port Batch Creation Records Sent"
+            custom_port_batching_nat64_creation_records_sent_failure:
+                description:
+                - "Custom Nat64 Port Batch Creation Records Failed"
+            custom_session_event_fw4_deletion_records_sent_failure:
+                description:
+                - "Custom FW4 Session Deletion Records Failed"
+            nat64_records_sent:
+                description:
+                - "NAT64 Flow Records Sent"
+            custom_port_mapping_dslite_deletion_records_sent_failure:
+                description:
+                - "Custom Dslite Port Map Deletion Records Failed"
+            port_batching_dslite_records_sent_failure:
+                description:
+                - "Port Batching Dslite Records Failed"
+            custom_deny_reset_event_fw6_records_sent:
+                description:
+                - "Custom FW6 Deny/Reset Event Records Sent"
+            port_batching_nat44_records_sent:
+                description:
+                - "Port Batching Nat44 Records Sent"
+            custom_port_batching_dslite_deletion_records_sent:
+                description:
+                - "Custom Dslite Port Batch Deletion Records Sent"
+            port_batching_nat44_records_sent_failure:
+                description:
+                - "Port Batching Nat44 Records Failed"
+            custom_session_event_nat44_creation_records_sent_failure:
+                description:
+                - "Custom Nat44 Session Creation Records Failed"
+            nat44_records_sent_failure:
+                description:
+                - "NAT44 Flow Records Failed"
+            custom_session_event_fw6_deletion_records_sent_failure:
+                description:
+                - "Custom FW6 Session Deletion Records Failed"
+            session_event_nat64_records_sent_failure:
+                description:
+                - "Nat64 Session Event Records Falied"
+            custom_port_batching_nat44_creation_records_sent_failure:
+                description:
+                - "Custom Nat44 Port Batch Creation Records Failed"
+            custom_port_batching_v2_nat64_creation_records_sent:
+                description:
+                - "Custom Nat64 Port Batch V2 Creation Records Sent"
+            session_event_nat44_records_sent_failure:
+                description:
+                - "Nat44 Session Event Records Failed"
+            packets_sent:
+                description:
+                - "Sent Packets Count"
+            custom_port_batching_v2_dslite_deletion_records_sent_failure:
+                description:
+                - "Custom Dslite Port Batch V2 Deletion Records Failed"
     flow_timeout:
         description:
         - "Configure timeout value to export flow records periodically for long-live session ( Number of minutes= default is 10, 0 means only send flow record when session is deleted)"
@@ -248,7 +559,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -262,7 +572,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom_record","destination","disable","disable_log_by_destination","flow_timeout","name","protocol","record","resend_template","sample","sampling_enable","source_address","source_ip_use_mgmt","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["custom_record","destination","disable","disable_log_by_destination","flow_timeout","name","protocol","record","resend_template","sample","sampling_enable","source_address","source_ip_use_mgmt","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -304,6 +614,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets-sent','bytes-sent','nat44-records-sent','nat44-records-sent-failure','nat64-records-sent','nat64-records-sent-failure','dslite-records-sent','dslite-records-sent-failure','session-event-nat44-records-sent','session-event-nat44-records-sent-failure','session-event-nat64-records-sent','session-event-nat64-records-sent-failure','session-event-dslite-records-sent','session-event-dslite-records-sent-failure','session-event-fw4-records-sent','session-event-fw4-records-sent-failure','session-event-fw6-records-sent','session-event-fw6-records-sent-failure','port-mapping-nat44-records-sent','port-mapping-nat44-records-sent-failure','port-mapping-nat64-records-sent','port-mapping-nat64-records-sent-failure','port-mapping-dslite-records-sent','port-mapping-dslite-records-sent-failure','netflow-v5-records-sent','netflow-v5-records-sent-failure','netflow-v5-ext-records-sent','netflow-v5-ext-records-sent-failure','port-batching-nat44-records-sent','port-batching-nat44-records-sent-failure','port-batching-nat64-records-sent','port-batching-nat64-records-sent-failure','port-batching-dslite-records-sent','port-batching-dslite-records-sent-failure','port-batching-v2-nat44-records-sent','port-batching-v2-nat44-records-sent-failure','port-batching-v2-nat64-records-sent','port-batching-v2-nat64-records-sent-failure','port-batching-v2-dslite-records-sent','port-batching-v2-dslite-records-sent-failure','custom-session-event-nat44-creation-records-sent','custom-session-event-nat44-creation-records-sent-failure','custom-session-event-nat64-creation-records-sent','custom-session-event-nat64-creation-records-sent-failure','custom-session-event-dslite-creation-records-sent','custom-session-event-dslite-creation-records-sent-failure','custom-session-event-nat44-deletion-records-sent','custom-session-event-nat44-deletion-records-sent-failure','custom-session-event-nat64-deletion-records-sent','custom-session-event-nat64-deletion-records-sent-failure','custom-session-event-dslite-deletion-records-sent','custom-session-event-dslite-deletion-records-sent-failure','custom-session-event-fw4-creation-records-sent','custom-session-event-fw4-creation-records-sent-failure','custom-session-event-fw6-creation-records-sent','custom-session-event-fw6-creation-records-sent-failure','custom-session-event-fw4-deletion-records-sent','custom-session-event-fw4-deletion-records-sent-failure','custom-session-event-fw6-deletion-records-sent','custom-session-event-fw6-deletion-records-sent-failure','custom-deny-reset-event-fw4-records-sent','custom-deny-reset-event-fw4-records-sent-failure','custom-deny-reset-event-fw6-records-sent','custom-deny-reset-event-fw6-records-sent-failure','custom-port-mapping-nat44-creation-records-sent','custom-port-mapping-nat44-creation-records-sent-failure','custom-port-mapping-nat64-creation-records-sent','custom-port-mapping-nat64-creation-records-sent-failure','custom-port-mapping-dslite-creation-records-sent','custom-port-mapping-dslite-creation-records-sent-failure','custom-port-mapping-nat44-deletion-records-sent','custom-port-mapping-nat44-deletion-records-sent-failure','custom-port-mapping-nat64-deletion-records-sent','custom-port-mapping-nat64-deletion-records-sent-failure','custom-port-mapping-dslite-deletion-records-sent','custom-port-mapping-dslite-deletion-records-sent-failure','custom-port-batching-nat44-creation-records-sent','custom-port-batching-nat44-creation-records-sent-failure','custom-port-batching-nat64-creation-records-sent','custom-port-batching-nat64-creation-records-sent-failure','custom-port-batching-dslite-creation-records-sent','custom-port-batching-dslite-creation-records-sent-failure','custom-port-batching-nat44-deletion-records-sent','custom-port-batching-nat44-deletion-records-sent-failure','custom-port-batching-nat64-deletion-records-sent','custom-port-batching-nat64-deletion-records-sent-failure','custom-port-batching-dslite-deletion-records-sent','custom-port-batching-dslite-deletion-records-sent-failure','custom-port-batching-v2-nat44-creation-records-sent']),counters2=dict(type='str',choices=['custom-port-batching-v2-nat44-creation-records-sent-failure','custom-port-batching-v2-nat64-creation-records-sent','custom-port-batching-v2-nat64-creation-records-sent-failure','custom-port-batching-v2-dslite-creation-records-sent','custom-port-batching-v2-dslite-creation-records-sent-failure','custom-port-batching-v2-nat44-deletion-records-sent','custom-port-batching-v2-nat44-deletion-records-sent-failure','custom-port-batching-v2-nat64-deletion-records-sent','custom-port-batching-v2-nat64-deletion-records-sent-failure','custom-port-batching-v2-dslite-deletion-records-sent','custom-port-batching-v2-dslite-deletion-records-sent-failure','reduced-logs-by-destination'])),
         disable=dict(type='bool',),
         resend_template=dict(type='dict',records=dict(type='int',),uuid=dict(type='str',),timeout=dict(type='int',)),
+        stats=dict(type='dict',port_mapping_nat64_records_sent=dict(type='str',),port_batching_v2_dslite_records_sent=dict(type='str',),custom_deny_reset_event_fw4_records_sent=dict(type='str',),custom_session_event_dslite_deletion_records_sent=dict(type='str',),session_event_nat64_records_sent=dict(type='str',),port_batching_nat64_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat64_creation_records_sent_failure=dict(type='str',),session_event_dslite_records_sent=dict(type='str',),custom_port_batching_nat44_deletion_records_sent_failure=dict(type='str',),port_batching_v2_nat44_records_sent_failure=dict(type='str',),custom_session_event_nat44_deletion_records_sent=dict(type='str',),custom_session_event_nat64_creation_records_sent=dict(type='str',),session_event_fw6_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat44_deletion_records_sent=dict(type='str',),custom_port_mapping_dslite_creation_records_sent=dict(type='str',),custom_port_batching_nat44_deletion_records_sent=dict(type='str',),custom_session_event_nat64_deletion_records_sent=dict(type='str',),custom_session_event_fw6_deletion_records_sent=dict(type='str',),session_event_dslite_records_sent_failure=dict(type='str',),name=dict(type='str',required=True,),nat44_records_sent=dict(type='str',),custom_session_event_nat44_deletion_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat44_creation_records_sent_failure=dict(type='str',),custom_port_batching_nat64_deletion_records_sent=dict(type='str',),nat64_records_sent_failure=dict(type='str',),netflow_v5_records_sent_failure=dict(type='str',),port_batching_v2_nat64_records_sent=dict(type='str',),netflow_v5_records_sent=dict(type='str',),session_event_fw6_records_sent=dict(type='str',),custom_port_mapping_nat44_deletion_records_sent_failure=dict(type='str',),port_mapping_nat44_records_sent_failure=dict(type='str',),custom_port_batching_dslite_creation_records_sent_failure=dict(type='str',),custom_port_batching_v2_dslite_creation_records_sent_failure=dict(type='str',),custom_session_event_dslite_creation_records_sent_failure=dict(type='str',),custom_port_batching_nat44_creation_records_sent=dict(type='str',),custom_port_mapping_nat64_deletion_records_sent=dict(type='str',),netflow_v5_ext_records_sent_failure=dict(type='str',),port_batching_nat64_records_sent=dict(type='str',),custom_session_event_fw4_creation_records_sent=dict(type='str',),dslite_records_sent_failure=dict(type='str',),custom_port_mapping_nat44_creation_records_sent_failure=dict(type='str',),port_batching_v2_dslite_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat64_deletion_records_sent=dict(type='str',),custom_port_mapping_nat44_deletion_records_sent=dict(type='str',),custom_port_batching_v2_nat44_creation_records_sent=dict(type='str',),bytes_sent=dict(type='str',),custom_session_event_fw6_creation_records_sent_failure=dict(type='str',),custom_port_mapping_dslite_creation_records_sent_failure=dict(type='str',),netflow_v5_ext_records_sent=dict(type='str',),custom_port_batching_nat64_creation_records_sent=dict(type='str',),session_event_fw4_records_sent_failure=dict(type='str',),custom_deny_reset_event_fw4_records_sent_failure=dict(type='str',),custom_port_batching_nat64_deletion_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat44_deletion_records_sent_failure=dict(type='str',),custom_session_event_nat64_deletion_records_sent_failure=dict(type='str',),custom_port_mapping_nat44_creation_records_sent=dict(type='str',),custom_deny_reset_event_fw6_records_sent_failure=dict(type='str',),custom_session_event_nat44_creation_records_sent=dict(type='str',),custom_session_event_fw6_creation_records_sent=dict(type='str',),port_mapping_dslite_records_sent_failure=dict(type='str',),custom_session_event_fw4_creation_records_sent_failure=dict(type='str',),custom_port_mapping_dslite_deletion_records_sent=dict(type='str',),custom_port_mapping_nat64_creation_records_sent_failure=dict(type='str',),port_batching_v2_nat64_records_sent_failure=dict(type='str',),session_event_nat44_records_sent=dict(type='str',),custom_port_batching_v2_dslite_deletion_records_sent=dict(type='str',),port_mapping_nat64_records_sent_failure=dict(type='str',),custom_session_event_fw4_deletion_records_sent=dict(type='str',),custom_port_batching_dslite_deletion_records_sent_failure=dict(type='str',),port_mapping_dslite_records_sent=dict(type='str',),reduced_logs_by_destination=dict(type='str',),dslite_records_sent=dict(type='str',),port_mapping_nat44_records_sent=dict(type='str',),custom_session_event_dslite_deletion_records_sent_failure=dict(type='str',),custom_session_event_dslite_creation_records_sent=dict(type='str',),session_event_fw4_records_sent=dict(type='str',),custom_port_mapping_nat64_creation_records_sent=dict(type='str',),custom_session_event_nat64_creation_records_sent_failure=dict(type='str',),port_batching_dslite_records_sent=dict(type='str',),custom_port_batching_v2_dslite_creation_records_sent=dict(type='str',),port_batching_v2_nat44_records_sent=dict(type='str',),custom_port_mapping_nat64_deletion_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat64_deletion_records_sent_failure=dict(type='str',),custom_port_batching_dslite_creation_records_sent=dict(type='str',),custom_port_batching_nat64_creation_records_sent_failure=dict(type='str',),custom_session_event_fw4_deletion_records_sent_failure=dict(type='str',),nat64_records_sent=dict(type='str',),custom_port_mapping_dslite_deletion_records_sent_failure=dict(type='str',),port_batching_dslite_records_sent_failure=dict(type='str',),custom_deny_reset_event_fw6_records_sent=dict(type='str',),port_batching_nat44_records_sent=dict(type='str',),custom_port_batching_dslite_deletion_records_sent=dict(type='str',),port_batching_nat44_records_sent_failure=dict(type='str',),custom_session_event_nat44_creation_records_sent_failure=dict(type='str',),nat44_records_sent_failure=dict(type='str',),custom_session_event_fw6_deletion_records_sent_failure=dict(type='str',),session_event_nat64_records_sent_failure=dict(type='str',),custom_port_batching_nat44_creation_records_sent_failure=dict(type='str',),custom_port_batching_v2_nat64_creation_records_sent=dict(type='str',),session_event_nat44_records_sent_failure=dict(type='str',),packets_sent=dict(type='str',),custom_port_batching_v2_dslite_deletion_records_sent_failure=dict(type='str',)),
         flow_timeout=dict(type='int',),
         uuid=dict(type='str',)
     ))
@@ -330,11 +641,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -375,7 +681,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -420,10 +726,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -435,15 +744,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["monitor"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["monitor"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["monitor"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["monitor"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["monitor"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -454,8 +768,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -491,12 +803,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("monitor", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -571,8 +887,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,6 +48,77 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            icmp6_rate_over_limit_drop:
+                description:
+                - "Field icmp6_rate_over_limit_drop"
+            ipv4_addr_count:
+                description:
+                - "Field ipv4_addr_count"
+            ipv6_link_local_type:
+                description:
+                - "Field ipv6_link_local_type"
+            ipv6_addr_count:
+                description:
+                - "Field ipv6_addr_count"
+            icmp_rate_over_limit_drop:
+                description:
+                - "Field icmp_rate_over_limit_drop"
+            vlan_id:
+                description:
+                - "Field vlan_id"
+            trunk_member:
+                description:
+                - "Field trunk_member"
+            ipv4_address:
+                description:
+                - "IP address"
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
+            Hardware:
+                description:
+                - "Field Hardware"
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+            ipv4_netmask:
+                description:
+                - "IP subnet mask"
+            ipv6_link_local:
+                description:
+                - "Field ipv6_link_local"
+            ifnum:
+                description:
+                - "Trunk interface number"
+            icmp6_rate_limit_current:
+                description:
+                - "Field icmp6_rate_limit_current"
+            state:
+                description:
+                - "Field state"
+            icmp_rate_limit_current:
+                description:
+                - "Field icmp_rate_limit_current"
+            igmp_query_sent:
+                description:
+                - "Field igmp_query_sent"
+            Address:
+                description:
+                - "Field Address"
+            ipv6_link_local_scope:
+                description:
+                - "Field ipv6_link_local_scope"
+            line_protocol:
+                description:
+                - "Field line_protocol"
+            ipv6_link_local_prefix:
+                description:
+                - "Field ipv6_link_local_prefix"
     trap_source:
         description:
         - "The trap source"
@@ -140,6 +211,56 @@ options:
             acl_id:
                 description:
                 - "ACL id"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            num_tx_pkts:
+                description:
+                - "Field num_tx_pkts"
+            dropped_dis_tx_pkts:
+                description:
+                - "Field dropped_dis_tx_pkts"
+            num_total_tx_bytes:
+                description:
+                - "Field num_total_tx_bytes"
+            num_multicast_pkts:
+                description:
+                - "Field num_multicast_pkts"
+            num_unicast_pkts:
+                description:
+                - "Field num_unicast_pkts"
+            num_broadcast_tx_pkts:
+                description:
+                - "Field num_broadcast_tx_pkts"
+            num_broadcast_pkts:
+                description:
+                - "Field num_broadcast_pkts"
+            num_multicast_tx_pkts:
+                description:
+                - "Field num_multicast_tx_pkts"
+            ifnum:
+                description:
+                - "Trunk interface number"
+            num_unicast_tx_pkts:
+                description:
+                - "Field num_unicast_tx_pkts"
+            dropped_rx_pkts:
+                description:
+                - "Field dropped_rx_pkts"
+            num_total_bytes:
+                description:
+                - "Field num_total_bytes"
+            num_pkts:
+                description:
+                - "Field num_pkts"
+            dropped_dis_rx_pkts:
+                description:
+                - "Field dropped_dis_rx_pkts"
+            dropped_tx_pkts:
+                description:
+                - "Field dropped_tx_pkts"
     uuid:
         description:
         - "uuid of the object"
@@ -369,7 +490,6 @@ options:
         - "Disable L3 forwarding between VLANs"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -382,7 +502,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","bfd","ddos","do_auto_recovery","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lw_4o6","map","mtu","name","nptv6","ports_threshold","sampling_enable","timer","trap_source","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","bfd","ddos","do_auto_recovery","icmp_rate_limit","icmpv6_rate_limit","ifnum","ip","ipv6","isis","l3_vlan_fwd_disable","lw_4o6","map","mtu","name","nptv6","oper","ports_threshold","sampling_enable","stats","timer","trap_source","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -411,11 +531,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',icmp6_rate_over_limit_drop=dict(type='int',),ipv4_addr_count=dict(type='int',),ipv6_link_local_type=dict(type='str',),ipv6_addr_count=dict(type='int',),icmp_rate_over_limit_drop=dict(type='int',),vlan_id=dict(type='int',),trunk_member=dict(type='list',members=dict(type='int',)),ipv4_address=dict(type='str',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',)),Hardware=dict(type='str',choices=['TrunkGroup']),ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),ipv4_netmask=dict(type='str',),ipv6_link_local=dict(type='str',),ifnum=dict(type='int',required=True,),icmp6_rate_limit_current=dict(type='int',),state=dict(type='str',choices=['up','disabled','down']),icmp_rate_limit_current=dict(type='int',),igmp_query_sent=dict(type='int',),Address=dict(type='str',),ipv6_link_local_scope=dict(type='str',),line_protocol=dict(type='str',choices=['up','down']),ipv6_link_local_prefix=dict(type='str',)),
         trap_source=dict(type='bool',),
         ip=dict(type='dict',nat=dict(type='dict',inside=dict(type='bool',),outside=dict(type='bool',)),uuid=dict(type='str',),address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),generate_membership_query=dict(type='bool',),cache_spoofing_port=dict(type='bool',),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),allow_promiscuous_vip=dict(type='bool',),server=dict(type='bool',),max_resp_time=dict(type='int',),query_interval=dict(type='int',),helper_address_list=dict(type='list',helper_address=dict(type='str',)),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),client=dict(type='bool',),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),ttl_ignore=dict(type='bool',),dhcp=dict(type='bool',),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),slb_partition_redirect=dict(type='bool',)),
         ddos=dict(type='dict',outside=dict(type='bool',),inside=dict(type='bool',),uuid=dict(type='str',)),
         timer=dict(type='int',),
         access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',)),
+        stats=dict(type='dict',num_tx_pkts=dict(type='str',),dropped_dis_tx_pkts=dict(type='str',),num_total_tx_bytes=dict(type='str',),num_multicast_pkts=dict(type='str',),num_unicast_pkts=dict(type='str',),num_broadcast_tx_pkts=dict(type='str',),num_broadcast_pkts=dict(type='str',),num_multicast_tx_pkts=dict(type='str',),ifnum=dict(type='int',required=True,),num_unicast_tx_pkts=dict(type='str',),dropped_rx_pkts=dict(type='str',),num_total_bytes=dict(type='str',),num_pkts=dict(type='str',),dropped_dis_rx_pkts=dict(type='str',),dropped_tx_pkts=dict(type='str',)),
         uuid=dict(type='str',),
         bfd=dict(type='dict',interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),authentication=dict(type='dict',encrypted=dict(type='str',),password=dict(type='str',),method=dict(type='str',choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int',)),echo=dict(type='bool',),uuid=dict(type='str',),demand=dict(type='bool',)),
         ifnum=dict(type='int',required=True,),
@@ -503,7 +625,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -549,9 +671,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -563,15 +697,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["trunk"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["trunk"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["trunk"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["trunk"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["trunk"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -582,8 +721,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -619,12 +756,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("trunk", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

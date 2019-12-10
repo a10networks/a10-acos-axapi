@@ -48,6 +48,14 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            health_check_list:
+                description:
+                - "Field health_check_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +64,99 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'num_burst'= Number of burst; 'max_jiffie'= Maximum number of jiffies; 'min_jiffie'= Minimum number of jiffies; 'avg_jiffie'= Average number of jiffies; 'open_socket'= Number of open sockets; 'open_socket_failed'= Number of failed open sockets; 'close_socket'= Number of closed sockets; 'connect_failed'= Number of failed connections; 'send_packet'= Number of packets sent; 'send_packet_failed'= Number of packet send failures; 'recv_packet'= Number of received packets; 'recv_packet_failed'= Number of failed packet receives; 'retry_times'= Retry times; 'timeout'= Timouet value; 'unexpected_error'= Number of unexpected errors; 'conn_imdt_succ'= Number of connection immediete success; 'sock_close_before_17'= Number of sockets closed before l7; 'sock_close_without_notify'= Number of sockets closed without notify; 'curr_health_rate'= Current health rate; 'ext_health_rate'= External health rate; 'ext_health_rate_val'= External health rate value; 'total_number'= Total number; 'status_up'= Number of status ups; 'status_down'= Number of status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number of other status; 'running_time'= Running time; 'config_health_rate'= Config health rate; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            min_jiffie:
+                description:
+                - "Minimum number of jiffies"
+            unexpected_error:
+                description:
+                - "Number of unexpected errors"
+            avg_jiffie:
+                description:
+                - "Average number of jiffies"
+            num_burst:
+                description:
+                - "Number of burst"
+            status_unkn:
+                description:
+                - "Number of status unknowns"
+            retry_times:
+                description:
+                - "Retry times"
+            send_packet:
+                description:
+                - "Number of packets sent"
+            status_other:
+                description:
+                - "Number of other status"
+            curr_health_rate:
+                description:
+                - "Current health rate"
+            config_health_rate:
+                description:
+                - "Config health rate"
+            status_down:
+                description:
+                - "Number of status downs"
+            recv_packet_failed:
+                description:
+                - "Number of failed packet receives"
+            close_socket:
+                description:
+                - "Number of closed sockets"
+            conn_imdt_succ:
+                description:
+                - "Number of connection immediete success"
+            recv_packet:
+                description:
+                - "Number of received packets"
+            send_packet_failed:
+                description:
+                - "Number of packet send failures"
+            open_socket_failed:
+                description:
+                - "Number of failed open sockets"
+            sock_close_before_17:
+                description:
+                - "Number of sockets closed before l7"
+            total_number:
+                description:
+                - "Total number"
+            ext_health_rate_val:
+                description:
+                - "External health rate value"
+            open_socket:
+                description:
+                - "Number of open sockets"
+            sock_close_without_notify:
+                description:
+                - "Number of sockets closed without notify"
+            status_up:
+                description:
+                - "Number of status ups"
+            running_time:
+                description:
+                - "Running time"
+            connect_failed:
+                description:
+                - "Number of failed connections"
+            max_jiffie:
+                description:
+                - "Maximum number of jiffies"
+            ext_health_rate:
+                description:
+                - "External health rate"
+            timeout:
+                description:
+                - "Timouet value"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +170,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +199,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',health_check_list=dict(type='list',status=dict(type='str',),retries=dict(type='int',),down_state=dict(type='int',),down_cause=dict(type='int',),up_retries=dict(type='int',),server=dict(type='str',),partition_id=dict(type='int',),up_cause=dict(type='int',),reason=dict(type='str',),ip_address=dict(type='str',),total_retry=dict(type='int',),health_monitor=dict(type='str',),port=dict(type='str',))),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num_burst','max_jiffie','min_jiffie','avg_jiffie','open_socket','open_socket_failed','close_socket','connect_failed','send_packet','send_packet_failed','recv_packet','recv_packet_failed','retry_times','timeout','unexpected_error','conn_imdt_succ','sock_close_before_17','sock_close_without_notify','curr_health_rate','ext_health_rate','ext_health_rate_val','total_number','status_up','status_down','status_unkn','status_other','running_time','config_health_rate'])),
+        stats=dict(type='dict',min_jiffie=dict(type='str',),unexpected_error=dict(type='str',),avg_jiffie=dict(type='str',),num_burst=dict(type='str',),status_unkn=dict(type='str',),retry_times=dict(type='str',),send_packet=dict(type='str',),status_other=dict(type='str',),curr_health_rate=dict(type='str',),config_health_rate=dict(type='str',),status_down=dict(type='str',),recv_packet_failed=dict(type='str',),close_socket=dict(type='str',),conn_imdt_succ=dict(type='str',),recv_packet=dict(type='str',),send_packet_failed=dict(type='str',),open_socket_failed=dict(type='str',),sock_close_before_17=dict(type='str',),total_number=dict(type='str',),ext_health_rate_val=dict(type='str',),open_socket=dict(type='str',),sock_close_without_notify=dict(type='str',),status_up=dict(type='str',),running_time=dict(type='str',),connect_failed=dict(type='str',),max_jiffie=dict(type='str',),ext_health_rate=dict(type='str',),timeout=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +270,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +316,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +342,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["health-stat"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["health-stat"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["health-stat"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["health-stat"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["health-stat"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +366,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +401,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("health-stat", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

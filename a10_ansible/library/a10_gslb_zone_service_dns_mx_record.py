@@ -61,6 +61,17 @@ options:
         description:
         - "Specify Priority"
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            mx_name:
+                description:
+                - "Specify Domain Name"
+            last_server:
+                description:
+                - "Field last_server"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -69,6 +80,17 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'hits'= Number of times the record has been used; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of times the record has been used"
+            mx_name:
+                description:
+                - "Specify Domain Name"
     uuid:
         description:
         - "uuid of the object"
@@ -82,7 +104,6 @@ options:
         - "Specify TTL"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -95,7 +116,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["mx_name","priority","sampling_enable","ttl","uuid",]
+AVAILABLE_PROPERTIES = ["mx_name","oper","priority","sampling_enable","stats","ttl","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -125,7 +146,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         priority=dict(type='int',),
+        oper=dict(type='dict',mx_name=dict(type='str',required=True,),last_server=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
+        stats=dict(type='dict',hits=dict(type='str',),mx_name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         mx_name=dict(type='str',required=True,),
         ttl=dict(type='int',)
@@ -210,7 +233,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -256,9 +279,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -270,15 +305,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns-mx-record"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["dns-mx-record"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["dns-mx-record"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["dns-mx-record"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["dns-mx-record"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -289,8 +329,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -326,12 +364,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("dns-mx-record", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

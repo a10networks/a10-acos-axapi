@@ -48,6 +48,53 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            srv_gateway_arp:
+                description:
+                - "Field srv_gateway_arp"
+            port_list:
+                description:
+                - "Field port_list"
+            name:
+                description:
+                - "Server Name"
+            dns_update_time:
+                description:
+                - "Field dns_update_time"
+            state:
+                description:
+                - "Field state"
+            creation_type:
+                description:
+                - "Field creation_type"
+            server_ttl:
+                description:
+                - "Field server_ttl"
+            curr_observe_rate:
+                description:
+                - "Field curr_observe_rate"
+            curr_conn_rate:
+                description:
+                - "Field curr_conn_rate"
+            conn_rate_unit:
+                description:
+                - "Field conn_rate_unit"
+            disable:
+                description:
+                - "Field disable"
+            slow_start_conn_limit:
+                description:
+                - "Field slow_start_conn_limit"
+            is_autocreate:
+                description:
+                - "Field is_autocreate"
+            drs_list:
+                description:
+                - "Field drs_list"
     health_check_disable:
         description:
         - "Disable configured health check configuration"
@@ -156,6 +203,56 @@ options:
         description:
         - "Connection Limit"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            curr_conn:
+                description:
+                - "Current established connections"
+            peak_conn:
+                description:
+                - "Peak number of established connections"
+            rev_pkt:
+                description:
+                - "Reverse Packets Processed"
+            total_rev_pkts:
+                description:
+                - "Packets processed in reverse direction"
+            name:
+                description:
+                - "Server Name"
+            total_ssl_conn:
+                description:
+                - "Total SSL connections established"
+            total_fwd_pkts:
+                description:
+                - "Packets processed in forward direction"
+            total_req:
+                description:
+                - "Total Requests processed"
+            total_conn:
+                description:
+                - "Total established connections"
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections established"
+            total_req_succ:
+                description:
+                - "Total Requests succeeded"
+            port_list:
+                description:
+                - "Field port_list"
+            fwd_pkt:
+                description:
+                - "Forward Packets Processed"
+            total_fwd_bytes:
+                description:
+                - "Bytes processed in forward direction"
+            total_rev_bytes:
+                description:
+                - "Bytes processed in reverse direction"
     uuid:
         description:
         - "uuid of the object"
@@ -240,7 +337,6 @@ options:
         - "Do not log connection over limit event"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -253,7 +349,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","alternate_server","conn_limit","conn_resume","extended_stats","external_ip","fqdn_name","health_check","health_check_disable","health_check_shared","host","ipv6","name","no_logging","port_list","resolve_as","sampling_enable","server_ipv6_addr","shared_partition_health_check","slow_start","spoofing_cache","stats_data_action","template_server","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["action","alternate_server","conn_limit","conn_resume","extended_stats","external_ip","fqdn_name","health_check","health_check_disable","health_check_shared","host","ipv6","name","no_logging","oper","port_list","resolve_as","sampling_enable","server_ipv6_addr","shared_partition_health_check","slow_start","spoofing_cache","stats","stats_data_action","template_server","user_tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -282,6 +378,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',srv_gateway_arp=dict(type='str',),port_list=dict(type='list',oper=dict(type='dict',down_grace_period_allowed=dict(type='int',),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',),aflow_queue_size=dict(type='int',),current_time=dict(type='int',),alloc_failed=dict(type='int',),vrid=dict(type='int',),state=dict(type='str',choices=['Up','Down','Disabled','Maintenance','Unknown','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-EXCEED-RATE','DIS-DAMP']),ipv6=dict(type='str',),slow_start_conn_limit=dict(type='int',),resv_conn=dict(type='int',),hm_index=dict(type='int',),down_time_grace_period=dict(type='int',),inband_hm_reassign_num=dict(type='int',),ports_consumed=dict(type='int',),curr_observe_rate=dict(type='int',),curr_conn_rate=dict(type='int',),disable=dict(type='int',),aflow_conn_limit=dict(type='int',),diameter_enabled=dict(type='int',),soft_down_time=dict(type='int',),ha_group_id=dict(type='int',),hm_key=dict(type='int',),es_resp_time=dict(type='int',),conn_rate_unit=dict(type='str',)),protocol=dict(type='str',required=True,choices=['tcp','udp']),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,),dns_update_time=dict(type='str',),state=dict(type='str',choices=['Up','Down','Disabled','Maintenance','Unknown','Functional Up','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-EXCEED-RATE','DIS-UNKNOWN']),creation_type=dict(type='str',),server_ttl=dict(type='int',),curr_observe_rate=dict(type='int',),curr_conn_rate=dict(type='int',),conn_rate_unit=dict(type='str',),disable=dict(type='int',),slow_start_conn_limit=dict(type='int',),is_autocreate=dict(type='int',),drs_list=dict(type='list',drs_server_ipv6_addr=dict(type='str',),drs_srv_gateway_arp=dict(type='str',),drs_creation_type=dict(type='str',),drs_dns_update_time=dict(type='str',),drs_tot_req_suc=dict(type='int',),drs_curr_conn=dict(type='int',),drs_tot_rev_pkts=dict(type='int',),drs_tot_rev_bytes=dict(type='int',),drs_name=dict(type='str',),drs_server_ttl=dict(type='int',),drs_state=dict(type='str',choices=['Up','Down','Disabled','Maintenance','Unknown','Functional Up','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-EXCEED-RATE','DIS-UNKNOWN']),drs_disable=dict(type='int',),drs_tot_fwd_bytes=dict(type='int',),drs_curr_observe_rate=dict(type='int',),drs_host=dict(type='str',),drs_tot_conn=dict(type='int',),drs_curr_conn_rate=dict(type='int',),drs_tot_req=dict(type='int',),drs_conn_rate_unit=dict(type='str',),drs_peak_conn=dict(type='int',),drs_slow_start_conn_limit=dict(type='int',),drs_tot_fwd_pkts=dict(type='int',),drs_curr_req=dict(type='int',),drs_is_autocreate=dict(type='int',))),
         health_check_disable=dict(type='bool',),
         port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),weight=dict(type='int',),shared_rport_health_check=dict(type='bool',),stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),health_check_follow_port=dict(type='int',),template_port=dict(type='str',),conn_limit=dict(type='int',),uuid=dict(type='str',),support_http2=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','resp-count','resp-1xx','resp-2xx','resp-3xx','resp-4xx','resp-5xx','resp-other','resp-latency','curr_pconn'])),no_ssl=dict(type='bool',),follow_port_protocol=dict(type='str',choices=['tcp','udp']),template_server_ssl=dict(type='str',),alternate_port=dict(type='list',alternate_name=dict(type='str',),alternate=dict(type='int',),alternate_server_port=dict(type='int',)),port_number=dict(type='int',required=True,),extended_stats=dict(type='bool',),rport_health_check_shared=dict(type='str',),conn_resume=dict(type='int',),user_tag=dict(type='str',),range=dict(type='int',),auth_cfg=dict(type='dict',service_principal_name=dict(type='str',)),action=dict(type='str',choices=['enable','disable','disable-with-health-check']),health_check=dict(type='str',),no_logging=dict(type='bool',)),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
@@ -290,6 +387,7 @@ def get_argspec():
         spoofing_cache=dict(type='bool',),
         resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
         conn_limit=dict(type='int',),
+        stats=dict(type='dict',curr_conn=dict(type='str',),peak_conn=dict(type='str',),rev_pkt=dict(type='str',),total_rev_pkts=dict(type='str',),name=dict(type='str',required=True,),total_ssl_conn=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_conn=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['tcp','udp']),stats=dict(type='dict',es_resp_invalid_http=dict(type='str',),curr_req=dict(type='str',),total_rev_pkts_inspected_good_status_code=dict(type='str',),resp_1xx=dict(type='str',),curr_ssl_conn=dict(type='str',),resp_2xx=dict(type='str',),es_resp_count=dict(type='str',),total_fwd_bytes=dict(type='str',),es_resp_other=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),resp_3xx=dict(type='str',),resp_latency=dict(type='str',),resp_count=dict(type='str',),es_req_count=dict(type='str',),resp_other=dict(type='str',),es_resp_500=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),es_resp_400=dict(type='str',),es_resp_300=dict(type='str',),curr_pconn=dict(type='str',),curr_conn=dict(type='str',),es_resp_200=dict(type='str',),total_rev_bytes=dict(type='str',),response_time=dict(type='str',),resp_4xx=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),total_rev_pkts=dict(type='str',),total_req_succ=dict(type='str',),last_total_conn=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),resp_5xx=dict(type='str',),slowest_rsp_time=dict(type='str',)),port_number=dict(type='int',required=True,)),fwd_pkt=dict(type='str',),total_fwd_bytes=dict(type='str',),total_rev_bytes=dict(type='str',)),
         uuid=dict(type='str',),
         fqdn_name=dict(type='str',),
         external_ip=dict(type='str',),
@@ -377,7 +475,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -423,9 +521,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -437,15 +547,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["server"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["server"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["server"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["server"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["server"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -456,8 +571,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -493,12 +606,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("server", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

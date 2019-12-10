@@ -51,6 +51,86 @@ options:
     rule_set_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            denybytes:
+                description:
+                - "Field denybytes"
+            activesessiontcp:
+                description:
+                - "Field activesessiontcp"
+            permitbytes:
+                description:
+                - "Field permitbytes"
+            sessiontcp:
+                description:
+                - "Field sessiontcp"
+            resetpackets:
+                description:
+                - "Field resetpackets"
+            sessionsctp:
+                description:
+                - "Field sessionsctp"
+            sessionother:
+                description:
+                - "Field sessionother"
+            totalbytes:
+                description:
+                - "Field totalbytes"
+            activesessionicmp:
+                description:
+                - "Field activesessionicmp"
+            denypackets:
+                description:
+                - "Field denypackets"
+            hitcount:
+                description:
+                - "Field hitcount"
+            status:
+                description:
+                - "Field status"
+            activesessionother:
+                description:
+                - "Field activesessionother"
+            sessionudp:
+                description:
+                - "Field sessionudp"
+            sessionicmp:
+                description:
+                - "Field sessionicmp"
+            sessiontotal:
+                description:
+                - "Field sessiontotal"
+            totalpackets:
+                description:
+                - "Field totalpackets"
+            activesessionudp:
+                description:
+                - "Field activesessionudp"
+            permitpackets:
+                description:
+                - "Field permitpackets"
+            name:
+                description:
+                - "Rule name"
+            last_hitcount_time:
+                description:
+                - "Field last_hitcount_time"
+            activesessiontotal:
+                description:
+                - "Field activesessiontotal"
+            resetbytes:
+                description:
+                - "Field resetbytes"
+            action:
+                description:
+                - "Field action"
+            activesessionsctp:
+                description:
+                - "Field activesessionsctp"
     cgnv6_fixed_nat_log:
         description:
         - "Enable logging"
@@ -132,6 +212,68 @@ options:
             target_rule:
                 description:
                 - "Field target_rule"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            active_session_other:
+                description:
+                - "Active other protocol session counter"
+            session_icmp:
+                description:
+                - "ICMP session counter"
+            hit_count:
+                description:
+                - "Hit counts"
+            active_session_tcp:
+                description:
+                - "Active TCP session counter"
+            deny_packets:
+                description:
+                - "Denied packets counter"
+            session_other:
+                description:
+                - "Other protocol session counter"
+            name:
+                description:
+                - "Rule name"
+            session_sctp:
+                description:
+                - "SCTP session counter"
+            active_session_icmp:
+                description:
+                - "Active ICMP session counter"
+            permit_bytes:
+                description:
+                - "Permitted bytes counter"
+            reset_packets:
+                description:
+                - "Reset packets counter"
+            hitcount_timestamp:
+                description:
+                - "Last hit counts timestamp"
+            reset_bytes:
+                description:
+                - "Reset bytes counter"
+            session_tcp:
+                description:
+                - "TCP session counter"
+            session_udp:
+                description:
+                - "UDP session counter"
+            active_session_sctp:
+                description:
+                - "Active SCTP session counter"
+            active_session_udp:
+                description:
+                - "Active UDP session counter"
+            deny_bytes:
+                description:
+                - "Denied bytes counter"
+            permit_packets:
+                description:
+                - "Permitted packets counter"
     log:
         description:
         - "Enable logging"
@@ -403,7 +545,6 @@ options:
         - "Enable logging"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -416,7 +557,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_domain_list","dst_geoloc_list","dst_geoloc_list_shared","dst_geoloc_name","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","policy","remark","reset_lid","reset_lidlog","sampling_enable","service_any","service_list","source_list","src_class_list","src_geoloc_list","src_geoloc_list_shared","src_geoloc_name","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","status","track_application","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","app_list","application_any","cgnv6_fixed_nat_log","cgnv6_log","cgnv6_lsn_lid","cgnv6_lsn_log","cgnv6_policy","dest_list","dst_class_list","dst_domain_list","dst_geoloc_list","dst_geoloc_list_shared","dst_geoloc_name","dst_ipv4_any","dst_ipv6_any","dst_threat_list","dst_zone","dst_zone_any","forward_listen_on_port","forward_log","fw_log","fwlog","idle_timeout","ip_version","lid","lidlog","listen_on_port","listen_on_port_lid","listen_on_port_lidlog","log","move_rule","name","oper","policy","remark","reset_lid","reset_lidlog","sampling_enable","service_any","service_list","source_list","src_class_list","src_geoloc_list","src_geoloc_list_shared","src_geoloc_name","src_ipv4_any","src_ipv6_any","src_threat_list","src_zone","src_zone_any","stats","status","track_application","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -445,6 +586,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',denybytes=dict(type='int',),activesessiontcp=dict(type='int',),permitbytes=dict(type='int',),sessiontcp=dict(type='int',),resetpackets=dict(type='int',),sessionsctp=dict(type='int',),sessionother=dict(type='int',),totalbytes=dict(type='int',),activesessionicmp=dict(type='int',),denypackets=dict(type='int',),hitcount=dict(type='int',),status=dict(type='str',),activesessionother=dict(type='int',),sessionudp=dict(type='int',),sessionicmp=dict(type='int',),sessiontotal=dict(type='int',),totalpackets=dict(type='int',),activesessionudp=dict(type='int',),permitpackets=dict(type='int',),name=dict(type='str',required=True,),last_hitcount_time=dict(type='str',),activesessiontotal=dict(type='int',),resetbytes=dict(type='int',),action=dict(type='str',),activesessionsctp=dict(type='int',)),
         cgnv6_fixed_nat_log=dict(type='bool',),
         dst_geoloc_list_shared=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hit-count','permit-bytes','deny-bytes','reset-bytes','permit-packets','deny-packets','reset-packets','active-session-tcp','active-session-udp','active-session-icmp','active-session-other','session-tcp','session-udp','session-icmp','session-other','active-session-sctp','session-sctp','hitcount-timestamp'])),
@@ -460,6 +602,7 @@ def get_argspec():
         lid=dict(type='int',),
         listen_on_port=dict(type='bool',),
         move_rule=dict(type='dict',location=dict(type='str',choices=['top','before','after','bottom']),target_rule=dict(type='str',)),
+        stats=dict(type='dict',active_session_other=dict(type='str',),session_icmp=dict(type='str',),hit_count=dict(type='str',),active_session_tcp=dict(type='str',),deny_packets=dict(type='str',),session_other=dict(type='str',),name=dict(type='str',required=True,),session_sctp=dict(type='str',),active_session_icmp=dict(type='str',),permit_bytes=dict(type='str',),reset_packets=dict(type='str',),hitcount_timestamp=dict(type='str',),reset_bytes=dict(type='str',),session_tcp=dict(type='str',),session_udp=dict(type='str',),active_session_sctp=dict(type='str',),active_session_udp=dict(type='str',),deny_bytes=dict(type='str',),permit_packets=dict(type='str',)),
         log=dict(type='bool',),
         dst_geoloc_name=dict(type='str',),
         idle_timeout=dict(type='int',),
@@ -574,7 +717,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -620,9 +763,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -634,15 +789,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["rule"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["rule"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["rule"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["rule"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["rule"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -653,8 +813,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -690,12 +848,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("rule", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

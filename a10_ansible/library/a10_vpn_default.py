@@ -48,11 +48,99 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ike_local_address:
+                description:
+                - "Field ike_local_address"
+            ike_version:
+                description:
+                - "Field ike_version"
+            IPsec_remote_subnet:
+                description:
+                - "Field IPsec_remote_subnet"
+            IPsec_mode:
+                description:
+                - "Field IPsec_mode"
+            ike_nat_traversal:
+                description:
+                - "Field ike_nat_traversal"
+            ike_dpd_interval:
+                description:
+                - "Field ike_dpd_interval"
+            IPsec_priority:
+                description:
+                - "Field IPsec_priority"
+            IPsec_traffic_selector:
+                description:
+                - "Field IPsec_traffic_selector"
+            ike_encryption:
+                description:
+                - "Field ike_encryption"
+            IPsec_remote_port:
+                description:
+                - "Field IPsec_remote_port"
+            IPsec_hash:
+                description:
+                - "Field IPsec_hash"
+            IPsec_protocol:
+                description:
+                - "Field IPsec_protocol"
+            ike_priority:
+                description:
+                - "Field ike_priority"
+            ike_hash:
+                description:
+                - "Field ike_hash"
+            IPsec_remote_protocol:
+                description:
+                - "Field IPsec_remote_protocol"
+            ike_remote_address:
+                description:
+                - "Field ike_remote_address"
+            ike_dh_group:
+                description:
+                - "Field ike_dh_group"
+            ike_auth_method:
+                description:
+                - "Field ike_auth_method"
+            IPsec_anti_replay_window:
+                description:
+                - "Field IPsec_anti_replay_window"
+            ike_lifetime:
+                description:
+                - "Field ike_lifetime"
+            IPsec_lifetime:
+                description:
+                - "Field IPsec_lifetime"
+            IPsec_local_protocol:
+                description:
+                - "Field IPsec_local_protocol"
+            IPsec_local_port:
+                description:
+                - "Field IPsec_local_port"
+            IPsec_lifebytes:
+                description:
+                - "Field IPsec_lifebytes"
+            IPsec_encryption:
+                description:
+                - "Field IPsec_encryption"
+            IPsec_local_subnet:
+                description:
+                - "Field IPsec_local_subnet"
+            IPsec_dh_group:
+                description:
+                - "Field IPsec_dh_group"
+            ike_mode:
+                description:
+                - "Field ike_mode"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +154,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +183,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ike_local_address=dict(type='str',),ike_version=dict(type='str',),IPsec_remote_subnet=dict(type='str',),IPsec_mode=dict(type='str',),ike_nat_traversal=dict(type='str',),ike_dpd_interval=dict(type='int',),IPsec_priority=dict(type='int',),IPsec_traffic_selector=dict(type='str',),ike_encryption=dict(type='str',),IPsec_remote_port=dict(type='int',),IPsec_hash=dict(type='str',),IPsec_protocol=dict(type='str',),ike_priority=dict(type='int',),ike_hash=dict(type='str',),IPsec_remote_protocol=dict(type='int',),ike_remote_address=dict(type='str',),ike_dh_group=dict(type='str',),ike_auth_method=dict(type='str',),IPsec_anti_replay_window=dict(type='int',),ike_lifetime=dict(type='int',),IPsec_lifetime=dict(type='int',),IPsec_local_protocol=dict(type='int',),IPsec_local_port=dict(type='int',),IPsec_lifebytes=dict(type='int',),IPsec_encryption=dict(type='str',),IPsec_local_subnet=dict(type='str',),IPsec_dh_group=dict(type='str',),ike_mode=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +212,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +247,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +293,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +311,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +433,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

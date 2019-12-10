@@ -51,6 +51,32 @@ options:
     service_group_name:
         description:
         - Key to identify parent object
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            alt_list:
+                description:
+                - "Field alt_list"
+            name:
+                description:
+                - "Member name"
+            hm_index:
+                description:
+                - "Field hm_index"
+            hm_key:
+                description:
+                - "Field hm_key"
+            drs_list:
+                description:
+                - "Field drs_list"
+            state:
+                description:
+                - "Field state"
+            port:
+                description:
+                - "Port number"
     member_priority:
         description:
         - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
@@ -95,6 +121,77 @@ options:
         description:
         - "'enable'= Enable member service port; 'disable'= Disable member service port; 'disable-with-health-check'= disable member service port, but health check work; "
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            curr_req:
+                description:
+                - "Current requests"
+            peak_conn:
+                description:
+                - "Peak connections"
+            total_req:
+                description:
+                - "Total requests"
+            total_rev_pkts:
+                description:
+                - "Packets processed in reverse direction"
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections"
+            curr_conn:
+                description:
+                - "Current established connections"
+            total_rev_pkts_inspected_status_code_non_5xx:
+                description:
+                - "Total reverse packets inspected status code non 5xx"
+            total_rev_bytes:
+                description:
+                - "Bytes processed in reverse direction"
+            port:
+                description:
+                - "Port number"
+            response_time:
+                description:
+                - "Response time"
+            total_fwd_bytes:
+                description:
+                - "Bytes processed in forward direction"
+            name:
+                description:
+                - "Member name"
+            total_rev_pkts_inspected_status_code_2xx:
+                description:
+                - "Total reverse packets inspected status code 2xx"
+            total_ssl_conn:
+                description:
+                - "Total SSL connections"
+            total_conn:
+                description:
+                - "Total established connections"
+            fastest_rsp_time:
+                description:
+                - "Fastest response time"
+            total_fwd_pkts:
+                description:
+                - "Packets processed in forward direction"
+            total_req_succ:
+                description:
+                - "Total requests successful"
+            state_flaps:
+                description:
+                - "State flaps count"
+            total_rev_pkts_inspected:
+                description:
+                - "Total reverse packets inspected"
+            curr_conn_overflow:
+                description:
+                - "Current connection counter overflow count"
+            slowest_rsp_time:
+                description:
+                - "Slowest response time"
     server_ipv6_addr:
         description:
         - "IPV6 Address - Not applicable if real server is already defined"
@@ -108,7 +205,6 @@ options:
         - "Disable statistical data collection"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -121,7 +217,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","port","resolve_as","sampling_enable","server_ipv6_addr","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","oper","port","resolve_as","sampling_enable","server_ipv6_addr","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -150,6 +246,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',alt_list=dict(type='list',alt_state=dict(type='str',),alt_rev_pkts=dict(type='int',),alt_port=dict(type='int',),alt_peak_conn=dict(type='int',),alt_curr_conn=dict(type='int',),alt_fwd_pkts=dict(type='int',),alt_total_conn=dict(type='int',),alt_name=dict(type='str',)),name=dict(type='str',required=True,),hm_index=dict(type='int',),hm_key=dict(type='int',),drs_list=dict(type='list',drs_fwd_bts=dict(type='int',),drs_fwd_pkts=dict(type='int',),drs_rev_bts=dict(type='int',),drs_port=dict(type='int',),drs_curr_req=dict(type='int',),drs_name=dict(type='str',),drs_pers_conn=dict(type='int',),drs_priority=dict(type='int',),drs_total_req_succ=dict(type='int',),drs_hm_key=dict(type='int',),drs_hm_index=dict(type='int',),drs_rev_pkts=dict(type='int',),drs_total_conn=dict(type='int',),drs_state=dict(type='str',),drs_frsp_time=dict(type='int',),drs_peak_conn=dict(type='int',),drs_curr_conn=dict(type='int',),drs_rsp_time=dict(type='int',),drs_total_req=dict(type='int',),drs_srsp_time=dict(type='int',)),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),port=dict(type='int',required=True,)),
         member_priority=dict(type='int',),
         uuid=dict(type='str',),
         fqdn_name=dict(type='str',),
@@ -160,6 +257,7 @@ def get_argspec():
         host=dict(type='str',),
         user_tag=dict(type='str',),
         member_state=dict(type='str',choices=['enable','disable','disable-with-health-check']),
+        stats=dict(type='dict',curr_req=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_bytes=dict(type='str',),port=dict(type='int',required=True,),response_time=dict(type='str',),total_fwd_bytes=dict(type='str',),name=dict(type='str',required=True,),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req_succ=dict(type='str',),state_flaps=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),curr_conn_overflow=dict(type='str',),slowest_rsp_time=dict(type='str',)),
         server_ipv6_addr=dict(type='str',),
         port=dict(type='int',required=True,),
         member_stats_data_disable=dict(type='bool',)
@@ -240,7 +338,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -286,9 +384,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -300,15 +410,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["member"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["member"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["member"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["member"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["member"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -319,8 +434,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -356,12 +469,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("member", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

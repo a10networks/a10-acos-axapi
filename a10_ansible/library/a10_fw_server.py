@@ -48,6 +48,20 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            state:
+                description:
+                - "Field state"
+            port_list:
+                description:
+                - "Field port_list"
+            name:
+                description:
+                - "Server Name"
     health_check_disable:
         description:
         - "Disable configured health check configuration"
@@ -81,6 +95,32 @@ options:
             health_check:
                 description:
                 - "Health Check (Monitor Name)"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            peak_conn:
+                description:
+                - "Peak connections"
+            curr_conn:
+                description:
+                - "Current connections"
+            port_list:
+                description:
+                - "Field port_list"
+            name:
+                description:
+                - "Server Name"
+            fwd_pkt:
+                description:
+                - "Forward packets"
+            rev_pkt:
+                description:
+                - "Reverse Packets"
+            total_conn:
+                description:
+                - "Total connections"
     uuid:
         description:
         - "uuid of the object"
@@ -126,7 +166,6 @@ options:
         - "Server Name"
         required: True
 
-
 """
 
 EXAMPLES = """
@@ -139,7 +178,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","fqdn_name","health_check","health_check_disable","host","name","port_list","resolve_as","sampling_enable","server_ipv6_addr","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","fqdn_name","health_check","health_check_disable","host","name","oper","port_list","resolve_as","sampling_enable","server_ipv6_addr","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -168,8 +207,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),port_list=dict(type='list',oper=dict(type='dict',vrid=dict(type='int',),ha_group_id=dict(type='int',),alloc_failed=dict(type='int',),ports_consumed=dict(type='int',),ipv6=dict(type='str',),state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',)),protocol=dict(type='str',required=True,choices=['tcp','udp']),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,)),
         health_check_disable=dict(type='bool',),
         port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time'])),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),health_check=dict(type='str',)),
+        stats=dict(type='dict',peak_conn=dict(type='str',),curr_conn=dict(type='str',),port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['tcp','udp']),stats=dict(type='dict',es_resp_invalid_http=dict(type='str',),curr_req=dict(type='str',),total_rev_pkts_inspected_good_status_code=dict(type='str',),es_resp_count=dict(type='str',),total_fwd_bytes=dict(type='str',),es_resp_other=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),es_req_count=dict(type='str',),es_resp_500=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),es_resp_400=dict(type='str',),es_resp_300=dict(type='str',),curr_conn=dict(type='str',),es_resp_200=dict(type='str',),total_rev_bytes=dict(type='str',),response_time=dict(type='str',),total_conn=dict(type='str',),total_rev_pkts=dict(type='str',),total_req_succ=dict(type='str',),last_total_conn=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),slowest_rsp_time=dict(type='str',)),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,),fwd_pkt=dict(type='str',),rev_pkt=dict(type='str',),total_conn=dict(type='str',)),
         uuid=dict(type='str',),
         fqdn_name=dict(type='str',),
         resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
@@ -249,7 +290,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -295,9 +336,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -309,15 +362,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["server"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["server"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["server"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["server"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["server"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -328,8 +386,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -365,12 +421,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("server", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

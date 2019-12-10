@@ -3,11 +3,11 @@
   connection: local
   hosts: localhost
   vars:
-    a10_host: "{{ host }}"
-    a10_username: "{{ user }}"
-    a10_password: "{{ pass }}"
-    a10_port: "{{ port }}"
-    a10_protocol: "{{ protocol }}"
+    a10_host: "10.43.12.132"
+    a10_username: "admin"
+    a10_password: "devops123"
+    a10_port: "443"
+    a10_protocol: "https"
   roles:
     - health
     - interface

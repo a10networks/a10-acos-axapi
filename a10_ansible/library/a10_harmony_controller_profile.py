@@ -48,6 +48,59 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            heartbeat_status:
+                description:
+                - "Field heartbeat_status"
+            overall_status:
+                description:
+                - "Field overall_status"
+            Number_of_tenant_unmapped_partitions:
+                description:
+                - "Field Number_of_tenant_unmapped_partitions"
+            heartbeat_error_message:
+                description:
+                - "Field heartbeat_error_message"
+            deregistration_error_message:
+                description:
+                - "Field deregistration_error_message"
+            service_registry:
+                description:
+                - "Field service_registry"
+            broker_info:
+                description:
+                - "Field broker_info"
+            kafka_broker_state:
+                description:
+                - "Field kafka_broker_state"
+            deregistration_status:
+                description:
+                - "Field deregistration_status"
+            Number_of_tenant_mapped_partitions:
+                description:
+                - "Field Number_of_tenant_mapped_partitions"
+            registration_status:
+                description:
+                - "Field registration_status"
+            registration_status_code:
+                description:
+                - "Field registration_status_code"
+            schema_registry_status:
+                description:
+                - "Field schema_registry_status"
+            service_registry_error_message:
+                description:
+                - "Field service_registry_error_message"
+            deregistration_status_code:
+                description:
+                - "Field deregistration_status_code"
+            registration_error_message:
+                description:
+                - "Field registration_error_message"
     user_name:
         description:
         - "user-name for the tenant"
@@ -123,7 +176,6 @@ options:
         - "availablity zone of the thunder-device"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -136,7 +188,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","auto_restart_action","availability_zone","host","interval","password_encrypted","port","provider","re_sync","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
+AVAILABLE_PROPERTIES = ["action","auto_restart_action","availability_zone","host","interval","oper","password_encrypted","port","provider","re_sync","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -165,6 +217,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',heartbeat_status=dict(type='str',),overall_status=dict(type='str',),Number_of_tenant_unmapped_partitions=dict(type='int',),heartbeat_error_message=dict(type='str',),deregistration_error_message=dict(type='str',),service_registry=dict(type='str',),broker_info=dict(type='str',),kafka_broker_state=dict(type='str',choices=['Up','Down']),deregistration_status=dict(type='str',),Number_of_tenant_mapped_partitions=dict(type='int',),registration_status=dict(type='str',),registration_status_code=dict(type='int',),schema_registry_status=dict(type='str',),service_registry_error_message=dict(type='str',),deregistration_status_code=dict(type='int',),registration_error_message=dict(type='str',)),
         user_name=dict(type='str',),
         uuid=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
@@ -208,11 +261,6 @@ def oper_url(module):
     partial_url = existing_url(module)
     return partial_url + "/oper"
 
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
-
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
@@ -247,7 +295,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -293,10 +341,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -307,15 +358,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["profile"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["profile"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["profile"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["profile"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["profile"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -326,8 +382,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -363,12 +417,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("profile", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -445,8 +503,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

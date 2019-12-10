@@ -48,6 +48,113 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            netflow_v10_packets_received:
+                description:
+                - "Netflow v10 Packets Received"
+            netflow_v9_sample_records_bad_len:
+                description:
+                - "Netflow v9 Sample Records Bad Length"
+            sflow_disabled:
+                description:
+                - "sFlow Packet Samples Processing Disabled"
+            sflow_sample_record_bad_len:
+                description:
+                - "sFlow Sample Records Bad Length"
+            netflow_v5_sample_records_bad_len:
+                description:
+                - "Netflow v5 Sample Records Bad Length"
+            netflow_tcp_sample_received:
+                description:
+                - "Netflow TCP Samples Received"
+            agent_name:
+                description:
+                - "Specify name for the agent"
+            netflow_v10_samples_received:
+                description:
+                - "Netflow v10 Samples Received"
+            netflow_record_rse_invalid:
+                description:
+                - "Netflow Data Record Reduced Size Invalid"
+            sflow_samples_skipped:
+                description:
+                - "sFlow Samples Skipped"
+            netflow_disabled:
+                description:
+                - "Netflow Flow Samples Processing Disabled"
+            netflow_v9_samples_received:
+                description:
+                - "Netflow v9 Samples Received"
+            sflow_samples_received:
+                description:
+                - "sFlow Samples Received"
+            sflow_sample_record_invalid_layer2:
+                description:
+                - "sFlow Sample Records Unknown Layer-2"
+            netflow_v10_sample_records_bad_len:
+                description:
+                - "Netflow v10 Sample Records Bad Length"
+            netflow_icmp_sample_received:
+                description:
+                - "Netflow ICMP Samples Received"
+            netflow_udp_sample_received:
+                description:
+                - "Netflow UDP Samples received"
+            netflow_v9_packets_received:
+                description:
+                - "Netflow v9 Packets Received"
+            netflow_v10_samples_sent_for_detection:
+                description:
+                - "Netflow v10 Samples Procssed For Detection"
+            sflow_packets_received:
+                description:
+                - "sFlow Packets Received"
+            sflow_samples_sent_for_detection:
+                description:
+                - "sFlow Samples Processed For Detection"
+            netflow_v9_max_records_exceed:
+                description:
+                - "Netflow v9 Sample Max Records Error"
+            netflow_v5_samples_received:
+                description:
+                - "Netflow v5 Samples Received"
+            netflow_sample_flow_dur_error:
+                description:
+                - "Netflow Sample Flow Duration Error"
+            sflow_samples_non_std:
+                description:
+                - "sFlow Samples Non-standard"
+            netflow_other_sample_received:
+                description:
+                - "Netflow OTHER Samples Received"
+            netflow_v5_packets_received:
+                description:
+                - "Netflow v5 Packets Received"
+            netflow_v5_max_records_exceed:
+                description:
+                - "Netflow v5 Sample Max Records Error"
+            sflow_sample_ipv6_hdr_parse_fail:
+                description:
+                - "sFlow Sample IPv6 Record Header Parse Failures"
+            netflow_v10_max_records_exceed:
+                description:
+                - "Netflow v10 Sample Max records Error"
+            netflow_v5_samples_sent_for_detection:
+                description:
+                - "Netflow v5 Samples Processed For Detection"
+            sflow_samples_bad_len:
+                description:
+                - "sFlow Samples Bad Length"
+            netflow_record_copy_oom_error:
+                description:
+                - "Netflow Data Record Copy Fail OOM"
+            netflow_v9_samples_sent_for_detection:
+                description:
+                - "Netflow v9 Samples Processed For Detection"
     uuid:
         description:
         - "uuid of the object"
@@ -77,7 +184,6 @@ options:
         - "Specify name for the agent"
         required: True
 
-
 """
 
 EXAMPLES = """
@@ -90,7 +196,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["agent_name","agent_v4_addr","agent_v6_addr","sampling_enable","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["agent_name","agent_v4_addr","agent_v6_addr","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -119,6 +225,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        stats=dict(type='dict',netflow_v10_packets_received=dict(type='str',),netflow_v9_sample_records_bad_len=dict(type='str',),sflow_disabled=dict(type='str',),sflow_sample_record_bad_len=dict(type='str',),netflow_v5_sample_records_bad_len=dict(type='str',),netflow_tcp_sample_received=dict(type='str',),agent_name=dict(type='str',required=True,),netflow_v10_samples_received=dict(type='str',),netflow_record_rse_invalid=dict(type='str',),sflow_samples_skipped=dict(type='str',),netflow_disabled=dict(type='str',),netflow_v9_samples_received=dict(type='str',),sflow_samples_received=dict(type='str',),sflow_sample_record_invalid_layer2=dict(type='str',),netflow_v10_sample_records_bad_len=dict(type='str',),netflow_icmp_sample_received=dict(type='str',),netflow_udp_sample_received=dict(type='str',),netflow_v9_packets_received=dict(type='str',),netflow_v10_samples_sent_for_detection=dict(type='str',),sflow_packets_received=dict(type='str',),sflow_samples_sent_for_detection=dict(type='str',),netflow_v9_max_records_exceed=dict(type='str',),netflow_v5_samples_received=dict(type='str',),netflow_sample_flow_dur_error=dict(type='str',),sflow_samples_non_std=dict(type='str',),netflow_other_sample_received=dict(type='str',),netflow_v5_packets_received=dict(type='str',),netflow_v5_max_records_exceed=dict(type='str',),sflow_sample_ipv6_hdr_parse_fail=dict(type='str',),netflow_v10_max_records_exceed=dict(type='str',),netflow_v5_samples_sent_for_detection=dict(type='str',),sflow_samples_bad_len=dict(type='str',),netflow_record_copy_oom_error=dict(type='str',),netflow_v9_samples_sent_for_detection=dict(type='str',)),
         uuid=dict(type='str',),
         agent_v4_addr=dict(type='str',),
         agent_v6_addr=dict(type='str',),
@@ -149,11 +256,6 @@ def existing_url(module):
     f_dict["agent-name"] = module.params["agent_name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -194,7 +296,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -239,10 +341,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -254,15 +359,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["agent"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["agent"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["agent"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["agent"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["agent"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -273,8 +383,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -310,12 +418,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("agent", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -390,8 +502,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

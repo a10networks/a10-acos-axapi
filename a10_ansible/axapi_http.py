@@ -37,9 +37,9 @@ else:
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
 
-broken_replies = {
-    "": '{"response": {"status": "OK"}}'
-}
+#broken_replies = {
+#    "": '{"response": {"status": "OK"}}'
+#}
 
 
 class HttpClient(object):
@@ -100,6 +100,8 @@ class HttpClient(object):
                 file_name=None, file_content=None, axapi_args=None, **kwargs):
         LOG.debug("axapi_http: full url = %s", self.url_base + api_url)
         LOG.debug("axapi_http: %s url = %s", method, api_url)
+
+
         # LOG.debug("axapi_http: params = %s", json.dumps(logutils.clean(params), indent=4))
 
         # Update params with axapi_args for currently unsupported configuration of objects
@@ -116,15 +118,16 @@ class HttpClient(object):
         hdrs = self.HEADERS.copy()
         if headers:
             hdrs.update(headers)
-
-        if params:
+        payload = None
+        if params and method != "GET":
+        #if params:
             params_copy = params.copy()
             # params_copy.update(extra_params)
             # LOG.debug("axapi_http: params_all = %s", logutils.clean(params_copy))
 
             payload = json.dumps(params_copy, encoding='utf-8')
-        else:
-            payload = None
+        '''else:
+            payload = None'''
 
         # LOG.debug("axapi_http: headers = %s", json.dumps(logutils.clean(hdrs), indent=4))
 
@@ -140,13 +143,20 @@ class HttpClient(object):
         last_e = None
 
         try:
-            last_e = None
+            #last_e = None
             if file_name is not None:
                 z = requests.request(method, self.url_base + api_url, verify=False,
                                         files=files, headers=hdrs)
             else:
-                z = requests.request(method, self.url_base + api_url, verify=False,
-                                        data=payload, headers=hdrs)
+                '''z = requests.request(method, self.url_base + api_url, verify=False,
+                                        data=payload, headers=hdrs)'''
+                if method == "GET":
+                    z = requests.request(method, self.url_base + api_url, verify=False,
+                                         params=params, headers=hdrs)
+                else:
+                    z = requests.request(method, self.url_base + api_url, verify=False,
+                                         data=payload, headers=hdrs)
+ 
         except (socket.error, requests.exceptions.ConnectionError) as e:
             # This needs to return an error response.
             raise e
@@ -170,7 +180,7 @@ class HttpClient(object):
 
         if 'response' in r and 'status' in r['response']:
             if r['response']['status'] == 'fail':
-                    acos_responses.raise_axapi_ex(r, method, api_url)
+                acos_responses.raise_axapi_ex(r, method, api_url)
 
         if 'authorizationschema' in r:
             acos_responses.raise_axapi_auth_error(

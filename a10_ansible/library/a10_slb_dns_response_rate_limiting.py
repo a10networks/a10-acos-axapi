@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            dnsrrl_cpu_list:
+                description:
+                - "Field dnsrrl_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -56,11 +67,63 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'curr_entries'= Current Entry Count; 'total_created'= Total Entry Created; 'total_inserted'= Total Entry Inserted; 'total_withdrew'= Total Entry Withdrew; 'total_ready_to_free'= Total Entry Ready To Free; 'total_freed'= Total Entry Freed; 'total_logs'= Total Logs; 'total_overflow_entry_hits'= Total Overflow Entry Hits; 'total_refill'= Total Refills; 'total_credit_exceeded'= Total Credit Exceeded; 'other_thread_refill'= Other Thread Refilling; 'err_entry_create_failed'= Entry Creation Failure; 'err_entry_create_oom'= Entry Creation Out of Memory; 'err_entry_ext_create_oom'= Entry Extension Creation Out of Memory; 'err_entry_insert_failed'= Entry Insert Failed; 'err_vport_fail_match'= Failed to Match Vport; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            total_ready_to_free:
+                description:
+                - "Total Entry Ready To Free"
+            total_withdrew:
+                description:
+                - "Total Entry Withdrew"
+            curr_entries:
+                description:
+                - "Current Entry Count"
+            total_logs:
+                description:
+                - "Total Logs"
+            err_entry_create_oom:
+                description:
+                - "Entry Creation Out of Memory"
+            total_credit_exceeded:
+                description:
+                - "Total Credit Exceeded"
+            err_vport_fail_match:
+                description:
+                - "Failed to Match Vport"
+            total_freed:
+                description:
+                - "Total Entry Freed"
+            total_inserted:
+                description:
+                - "Total Entry Inserted"
+            total_refill:
+                description:
+                - "Total Refills"
+            total_overflow_entry_hits:
+                description:
+                - "Total Overflow Entry Hits"
+            other_thread_refill:
+                description:
+                - "Other Thread Refilling"
+            total_created:
+                description:
+                - "Total Entry Created"
+            err_entry_ext_create_oom:
+                description:
+                - "Entry Extension Creation Out of Memory"
+            err_entry_create_failed:
+                description:
+                - "Entry Creation Failure"
+            err_entry_insert_failed:
+                description:
+                - "Entry Insert Failed"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +166,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',dnsrrl_cpu_list=dict(type='list',total_ready_to_free=dict(type='int',),total_withdrew=dict(type='int',),total_logs=dict(type='int',),err_entry_create_oom=dict(type='int',),total_credit_exceeded=dict(type='int',),err_vport_fail_match=dict(type='int',),total_freed=dict(type='int',),total_inserted=dict(type='int',),total_refill=dict(type='int',),total_overflow_entry_hits=dict(type='int',),other_thread_refill=dict(type='int',),err_entry_insert_failed=dict(type='int',),err_entry_ext_create_oom=dict(type='int',),err_entry_create_failed=dict(type='int',),total_created=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_entries','total_created','total_inserted','total_withdrew','total_ready_to_free','total_freed','total_logs','total_overflow_entry_hits','total_refill','total_credit_exceeded','other_thread_refill','err_entry_create_failed','err_entry_create_oom','err_entry_ext_create_oom','err_entry_insert_failed','err_vport_fail_match'])),
+        stats=dict(type='dict',total_ready_to_free=dict(type='str',),total_withdrew=dict(type='str',),curr_entries=dict(type='str',),total_logs=dict(type='str',),err_entry_create_oom=dict(type='str',),total_credit_exceeded=dict(type='str',),err_vport_fail_match=dict(type='str',),total_freed=dict(type='str',),total_inserted=dict(type='str',),total_refill=dict(type='str',),total_overflow_entry_hits=dict(type='str',),other_thread_refill=dict(type='str',),total_created=dict(type='str',),err_entry_ext_create_oom=dict(type='str',),err_entry_create_failed=dict(type='str',),err_entry_insert_failed=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -172,7 +237,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,9 +283,21 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
 
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +309,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns-response-rate-limiting"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["dns-response-rate-limiting"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["dns-response-rate-limiting"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["dns-response-rate-limiting"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["dns-response-rate-limiting"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +333,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +368,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("dns-response-rate-limiting", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

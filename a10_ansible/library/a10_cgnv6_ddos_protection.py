@@ -119,6 +119,116 @@ options:
             include_existing_session:
                 description:
                 - "Count traffic associated with existing session into the packets-per-second (Default= Disabled)"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            ip_other_block_alloc:
+                description:
+                - "Other block alloc"
+            l4_entry_list_alloc:
+                description:
+                - "L4 Entry list alloc"
+            entry_added_shadow:
+                description:
+                - "Entry added shadow"
+            ip_node_free:
+                description:
+                - "Node free"
+            l4_entry_added:
+                description:
+                - "L4 Entry added"
+            l4_hw_out_of_entries:
+                description:
+                - "HW out of L4 entries"
+            l4_entry_list_free:
+                description:
+                - "L4 Entry list free"
+            l4_entry_added_to_hw:
+                description:
+                - "L4 Entry added to HW"
+            ip_node_alloc:
+                description:
+                - "Node alloc"
+            l3_entry_match_drop_hw:
+                description:
+                - "L3 HW entry match drop"
+            l4_entry_deleted:
+                description:
+                - "L4 Entry deleted"
+            l3_entry_remove_from_bgp_failure:
+                description:
+                - "L3 entry BGP remove failures"
+            l3_entry_removed_from_hw:
+                description:
+                - "L3 Entry removed from HW"
+            l3_entry_deleted:
+                description:
+                - "L3 Entry Deleted"
+            l3_entry_added_to_hw:
+                description:
+                - "L3 Entry added to HW"
+            l3_entry_too_many:
+                description:
+                - "L3 Too many entries"
+            l3_entry_match_drop:
+                description:
+                - "L3 Entry match drop"
+            l3_entry_drop_max_hw_exceeded:
+                description:
+                - "L3 Entry Drop due to HW Limit Exceeded"
+            l4_entry_match_drop:
+                description:
+                - "L4 Entry match drop"
+            ip_port_block_free:
+                description:
+                - "Port block free"
+            entry_invalidated:
+                description:
+                - "Entry invalidated"
+            l4_entry_drop_max_hw_exceeded:
+                description:
+                - "L4 Entry Drop due to HW Limit Exceeded"
+            l3_entry_add_to_hw_failure:
+                description:
+                - "L3 entry HW add failure"
+            ip_other_block_alloc_failure:
+                description:
+                - "Other block alloc failure"
+            ip_port_block_alloc:
+                description:
+                - "Port block alloc"
+            l3_entry_removed_from_bgp:
+                description:
+                - "Entry removed from BGP"
+            l4_entry_list_alloc_failure:
+                description:
+                - "L4 Entry list alloc failures"
+            ip_other_block_free:
+                description:
+                - "Other block free"
+            l4_entry_match_drop_hw:
+                description:
+                - "L4 HW Entry match drop"
+            l3_entry_added:
+                description:
+                - "L3 Entry Added"
+            l3_entry_add_to_bgp_failure:
+                description:
+                - "L3 Entry BGP add failures"
+            l4_entry_removed_from_hw:
+                description:
+                - "L4 Entry removed from HW"
+            l3_entry_added_to_bgp:
+                description:
+                - "L3 Entry added to BGP"
+            ip_port_block_alloc_failure:
+                description:
+                - "Port block alloc failure"
+            ip_node_alloc_failure:
+                description:
+                - "Node alloc failures"
     l4_entries:
         description:
         - "Field l4_entries"
@@ -127,7 +237,6 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-
 
 """
 
@@ -141,7 +250,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable_nat_ip_by_bgp","ip_entries","l4_entries","logging","max_hw_entries","packets_per_second","sampling_enable","toggle","uuid","zone",]
+AVAILABLE_PROPERTIES = ["disable_nat_ip_by_bgp","ip_entries","l4_entries","logging","max_hw_entries","packets_per_second","sampling_enable","stats","toggle","uuid","zone",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -179,6 +288,7 @@ def get_argspec():
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','l3_entry_added','l3_entry_deleted','l3_entry_added_to_bgp','l3_entry_removed_from_bgp','l3_entry_added_to_hw','l3_entry_removed_from_hw','l3_entry_too_many','l3_entry_match_drop','l3_entry_match_drop_hw','l3_entry_drop_max_hw_exceeded','l4_entry_added','l4_entry_deleted','l4_entry_added_to_hw','l4_entry_removed_from_hw','l4_hw_out_of_entries','l4_entry_match_drop','l4_entry_match_drop_hw','l4_entry_drop_max_hw_exceeded','l4_entry_list_alloc','l4_entry_list_free','l4_entry_list_alloc_failure','ip_node_alloc','ip_node_free','ip_node_alloc_failure','ip_port_block_alloc','ip_port_block_free','ip_port_block_alloc_failure','ip_other_block_alloc','ip_other_block_free','ip_other_block_alloc_failure','entry_added_shadow','entry_invalidated','l3_entry_add_to_bgp_failure','l3_entry_remove_from_bgp_failure','l3_entry_add_to_hw_failure'])),
         max_hw_entries=dict(type='int',),
         packets_per_second=dict(type='dict',udp=dict(type='int',),ip=dict(type='int',),tcp=dict(type='int',),other=dict(type='int',),action=dict(type='dict',route_map=dict(type='str',),timer_multiply_max=dict(type='int',),action_type=dict(type='str',choices=['log','drop','redistribute-route']),expiration=dict(type='int',)),include_existing_session=dict(type='bool',)),
+        stats=dict(type='dict',ip_other_block_alloc=dict(type='str',),l4_entry_list_alloc=dict(type='str',),entry_added_shadow=dict(type='str',),ip_node_free=dict(type='str',),l4_entry_added=dict(type='str',),l4_hw_out_of_entries=dict(type='str',),l4_entry_list_free=dict(type='str',),l4_entry_added_to_hw=dict(type='str',),ip_node_alloc=dict(type='str',),l3_entry_match_drop_hw=dict(type='str',),l4_entry_deleted=dict(type='str',),l3_entry_remove_from_bgp_failure=dict(type='str',),l3_entry_removed_from_hw=dict(type='str',),l3_entry_deleted=dict(type='str',),l3_entry_added_to_hw=dict(type='str',),l3_entry_too_many=dict(type='str',),l3_entry_match_drop=dict(type='str',),l3_entry_drop_max_hw_exceeded=dict(type='str',),l4_entry_match_drop=dict(type='str',),ip_port_block_free=dict(type='str',),entry_invalidated=dict(type='str',),l4_entry_drop_max_hw_exceeded=dict(type='str',),l3_entry_add_to_hw_failure=dict(type='str',),ip_other_block_alloc_failure=dict(type='str',),ip_port_block_alloc=dict(type='str',),l3_entry_removed_from_bgp=dict(type='str',),l4_entry_list_alloc_failure=dict(type='str',),ip_other_block_free=dict(type='str',),l4_entry_match_drop_hw=dict(type='str',),l3_entry_added=dict(type='str',),l3_entry_add_to_bgp_failure=dict(type='str',),l4_entry_removed_from_hw=dict(type='str',),l3_entry_added_to_bgp=dict(type='str',),ip_port_block_alloc_failure=dict(type='str',),ip_node_alloc_failure=dict(type='str',)),
         l4_entries=dict(type='dict',uuid=dict(type='str',))
     ))
    
@@ -202,11 +312,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -247,7 +352,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -292,10 +397,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -307,15 +415,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ddos-protection"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["ddos-protection"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["ddos-protection"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["ddos-protection"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["ddos-protection"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -326,8 +439,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -363,12 +474,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("ddos-protection", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -443,8 +558,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

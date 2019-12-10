@@ -115,6 +115,65 @@ options:
             kerberos_password_change_port:
                 description:
                 - "Specify the Kerbros password change port, default is 464"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            krb_send_req_success:
+                description:
+                - "Kerberos Request"
+            ntlm_auth_success:
+                description:
+                - "NTLM Authentication Success"
+            ntlm_prepare_req_error:
+                description:
+                - "NTLM Prepare Request Error"
+            ntlm_proto_nego_failure:
+                description:
+                - "NTLM Protocol Negotiation Failure"
+            ntlm_other_error:
+                description:
+                - "NTLM Other Error"
+            ntlm_auth_failure:
+                description:
+                - "NTLM Authentication Failure"
+            name:
+                description:
+                - "Specify Windows authentication server name"
+            krb_timeout_error:
+                description:
+                - "Kerberos Timeout"
+            ntlm_session_setup_success:
+                description:
+                - "NTLM Session Setup Success"
+            krb_other_error:
+                description:
+                - "Kerberos Other Error"
+            ntlm_timeout_error:
+                description:
+                - "NTLM Timeout"
+            krb_pw_expiry:
+                description:
+                - "Kerberos password expiry"
+            ntlm_session_setup_failure:
+                description:
+                - "NTLM Session Setup Failure"
+            krb_pw_change_failure:
+                description:
+                - "Kerberos password change failure"
+            krb_get_resp_success:
+                description:
+                - "Kerberos Response"
+            ntlm_proto_nego_success:
+                description:
+                - "NTLM Protocol Negotiation Success"
+            ntlm_prepare_req_success:
+                description:
+                - "NTLM Prepare Request Success"
+            krb_pw_change_success:
+                description:
+                - "Kerberos password change success"
     health_check_disable:
         description:
         - "Disable configured health check configuration"
@@ -132,7 +191,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -145,7 +203,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auth_protocol","health_check","health_check_disable","health_check_string","host","name","realm","sampling_enable","support_apacheds_kdc","timeout","uuid",]
+AVAILABLE_PROPERTIES = ["auth_protocol","health_check","health_check_disable","health_check_string","host","name","realm","sampling_enable","stats","support_apacheds_kdc","timeout","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -181,6 +239,7 @@ def get_argspec():
         host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),
         timeout=dict(type='int',),
         auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),
+        stats=dict(type='dict',krb_send_req_success=dict(type='str',),ntlm_auth_success=dict(type='str',),ntlm_prepare_req_error=dict(type='str',),ntlm_proto_nego_failure=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_auth_failure=dict(type='str',),name=dict(type='str',required=True,),krb_timeout_error=dict(type='str',),ntlm_session_setup_success=dict(type='str',),krb_other_error=dict(type='str',),ntlm_timeout_error=dict(type='str',),krb_pw_expiry=dict(type='str',),ntlm_session_setup_failure=dict(type='str',),krb_pw_change_failure=dict(type='str',),krb_get_resp_success=dict(type='str',),ntlm_proto_nego_success=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),krb_pw_change_success=dict(type='str',)),
         health_check_disable=dict(type='bool',),
         support_apacheds_kdc=dict(type='bool',),
         health_check=dict(type='bool',),
@@ -209,11 +268,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -254,7 +308,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -299,10 +353,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -314,15 +371,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["instance"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["instance"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["instance"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["instance"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["instance"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -333,8 +395,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -370,12 +430,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("instance", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -450,8 +514,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result

@@ -48,11 +48,495 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            tls1_dhe_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Failures"
+            tls1_rsa_aes_256_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Successes"
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Failures"
+            tls11_successes:
+                description:
+                - "Successful TLS1.1 connections"
+            tls1_dhe_rsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+            tls1_dhe_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Successes"
+            ssl3_rsa_rc4_128_sha_successes:
+                description:
+                - "SSL3_RSA_RC4_128_SHA Successes"
+            tls1_rsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Cipher ID"
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+            tls1_ecdhe_ecdsa_aes_256_sha384_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Cipher ID"
+            vserver:
+                description:
+                - "virtual server name"
+            tls1_dhe_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Successes"
+            ssl3_rsa_des_40_cbc_sha_failures:
+                description:
+                - "SSL3_RSA_DES_40_CBC_SHA Failures"
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Failures"
+            tls1_dhe_rsa_aes_256_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Successes"
+            kex_rsa_4096_successes:
+                description:
+                - "Successful 4096-bit RSA key exchanges"
+            tls1_ecdhe_rsa_aes_256_sha384_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Successes"
+            tls1_ecdhe_rsa_aes_256_sha384_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Failures"
+            cumulative_sessions:
+                description:
+                - "Cumulative SSL sessions"
+            tls1_rsa_aes_256_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Failures"
+            tls1_rsa_export1024_rc4_56_md5_successes:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Successes"
+            tls1_rsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Cipher ID"
+            ssl3_rsa_des_40_cbc_sha_id:
+                description:
+                - "SSL3_RSA_DES_40_CBC_SHA Cipher ID"
+            kex_ecdhe_secp384r1_failures:
+                description:
+                - "Failed secp384r1 ECDHE key exchanges"
+            tls1_ecdhe_ecdsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Failures"
+            ssl3_rsa_rc4_40_md5_failures:
+                description:
+                - "SSL3_RSA_RC4_40_MD5 Failures"
+            tls1_rsa_aes_128_sha_id:
+                description:
+                - "TLS1_RSA_AES_128_SHA Cipher ID"
+            tls1_dhe_rsa_aes_128_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Cipher ID"
+            tls1_rsa_aes_128_sha256_id:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Cipher ID"
+            tls1_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_RSA_AES_128_SHA Successes"
+            tls1_rsa_export1024_rc4_56_sha_successes:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Successes"
+            sni_automap_missing_cert:
+                description:
+                - "Failed SNI auto map due to missing cert/key"
+            renego_ssl3_successes:
+                description:
+                - "Successful SSL3 renegotiations"
+            kex_dhe_1024_successes:
+                description:
+                - "Successful 1024-bit DHE key exchanges"
+            ssl3_rsa_rc4_128_md5_successes:
+                description:
+                - "SSL3_RSA_RC4_128_MD5 Successes"
+            ssl3_rsa_rc4_128_sha_id:
+                description:
+                - "SSL3_RSA_RC4_128_SHA Cipher ID"
+            tls1_rsa_export1024_rc4_56_sha_id:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Cipher ID"
+            kex_rsa_4096_failures:
+                description:
+                - "Failed 4096-bit RSA key exchanges"
+            kex_dhe_512_failures:
+                description:
+                - "Failed 512-bit DHE key exchanges"
+            ssl3_rsa_des_64_cbc_sha_id:
+                description:
+                - "SSL3_RSA_DES_64_CBC_SHA Cipher ID"
+            tls1_dhe_rsa_aes_256_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Failures"
+            tls1_dhe_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Failures"
+            ssl3_rsa_rc4_128_sha_failures:
+                description:
+                - "SSL3_RSA_RC4_128_SHA Failures"
+            tls1_ecdhe_ecdsa_aes_128_sha_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Cipher ID"
+            port:
+                description:
+                - "Virtual Port"
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Successes"
+            tls1_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_RSA_AES_256_SHA Failures"
+            ssl3_rsa_des_192_cbc3_sha_id:
+                description:
+                - "SSL3_RSA_DES_192_CBC3_SHA Cipher ID"
+            ssl3_rsa_des_64_cbc_sha_failures:
+                description:
+                - "SSL3_RSA_DES_64_CBC_SHA Failures"
+            tls1_rsa_export1024_rc4_56_sha_failures:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_SHA Failures"
+            tls1_rsa_export1024_rc4_56_md5_id:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Cipher ID"
+            ssl3_rsa_rc4_128_md5_id:
+                description:
+                - "SSL3_RSA_RC4_128_MD5 Cipher ID"
+            tls1_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Successes"
+            tls1_ecdhe_rsa_aes_256_sha384_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA384 Cipher ID"
+            sess_cache_hit:
+                description:
+                - "Session cache hits"
+            ssl3_rsa_des_40_cbc_sha_successes:
+                description:
+                - "SSL3_RSA_DES_40_CBC_SHA Successes"
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+            tls1_ecdhe_ecdsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Successes"
+            tls1_rsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Failures"
+            tls1_ecdhe_ecdsa_aes_128_sha_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Successes"
+            sni_automap_failures:
+                description:
+                - "Failed SNI auto mappings"
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Failures"
+            ssl3_rsa_rc4_128_md5_failures:
+                description:
+                - "SSL3_RSA_RC4_128_MD5 Failures"
+            tls1_ecdhe_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Successes"
+            tls1_ecdhe_ecdsa_aes_128_sha_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA Failures"
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Failures"
+            tls1_rsa_aes_256_sha256_id:
+                description:
+                - "TLS1_RSA_AES_256_SHA256 Cipher ID"
+            kex_dhe_2048_successes:
+                description:
+                - "Successful 2048-bit DHE key exchanges"
+            hs_avg_time:
+                description:
+                - "Average handshake time in milliseconds"
+            tls12_failures:
+                description:
+                - "Failed TLS1.2 connections"
+            tls1_ecdhe_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA256 Successes"
+            ssl3_rsa_des_192_cbc3_sha_successes:
+                description:
+                - "SSL3_RSA_DES_192_CBC3_SHA Successes"
+            renego_ssl2_successes:
+                description:
+                - "Successful SSL2 renegotiations"
+            tls1_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_RSA_AES_256_SHA Successes"
+            sni_automap_conn_closed:
+                description:
+                - "Conn closed before SNI auto mappings"
+            renego_tls10_successes:
+                description:
+                - "Successful TLS1.0 renegotiations"
+            renego_tls12_failures:
+                description:
+                - "Failed TLS1.2 renegotiations"
+            tls1_dhe_rsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Cipher ID"
+            cert_vfy:
+                description:
+                - "Sent certificate verify for authentication"
+            sni_automap_successes:
+                description:
+                - "Successful SNI auto mappings"
+            tls1_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_RSA_AES_128_SHA256 Successes"
+            tls1_dhe_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA Successes"
+            tls1_dhe_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA Failures"
+            tls1_ecdhe_ecdsa_aes_128_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Cipher ID"
+            tls1_dhe_rsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_AES_128_GCM_SHA256 Cipher ID"
+            tls1_ecdhe_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Failures"
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+            renego_tls10_failures:
+                description:
+                - "Failed TLS1.0 renegotiations"
+            tls1_ecdhe_rsa_aes_128_sha_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA Cipher ID"
+            kex_rsa_1024_failures:
+                description:
+                - "Failed 1024-bit RSA key exchanges"
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Successes"
+            sni_automap_max_active_conn:
+                description:
+                - "Failed SNI auto map due to max active limit"
+            sess_cache_curr_conn:
+                description:
+                - "Session cache current connections"
+            tls11_failures:
+                description:
+                - "Failed TLS1.1 connections"
+            kex_rsa_512_failures:
+                description:
+                - "Failed 512-bit RSA key exchanges"
+            tls1_dhe_rsa_aes_128_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Successes"
+            tls1_ecdhe_rsa_aes_256_sha_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Failures"
+            tls10_successes:
+                description:
+                - "Successful TLS1.0 connections"
+            ssl3_rsa_rc4_40_md5_id:
+                description:
+                - "SSL3_RSA_RC4_40_MD5 Cipher ID"
+            tls1_ecdhe_ecdsa_aes_256_sha_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Successes"
+            tls1_ecdhe_ecdsa_aes_256_sha384_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Failures"
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Successes"
+            tls1_ecdhe_rsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_GCM_SHA384 Cipher ID"
+            ssl2_successes:
+                description:
+                - "Successful SSL2 connections"
+            kex_ecdhe_secp256r1_failures:
+                description:
+                - "Failed secp256r1 ECDHE key exchanges"
+            sess_cache_new:
+                description:
+                - "Session cache new entries"
+            renego_tls11_failures:
+                description:
+                - "Failed TLS1.1 renegotiations"
+            tls1_dhe_rsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA256 Failures"
+            tls1_dhe_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA Failures"
+            tls12_successes:
+                description:
+                - "Successful TLS1.2 connections"
+            kex_rsa_2048_successes:
+                description:
+                - "Successful 2048-bit RSA key exchanges"
+            kex_rsa_2048_failures:
+                description:
+                - "Failed 2048-bit RSA key exchanges"
+            renego_ssl2_failures:
+                description:
+                - "Failed SSL2 renegotiations"
+            tls1_ecdhe_rsa_aes_128_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA256 Cipher ID"
+            tls1_ecdhe_ecdsa_aes_256_sha384_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Successes"
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+            sess_cache_miss:
+                description:
+                - "Session cache misses"
+            kex_dhe_2048_failures:
+                description:
+                - "Failed 2048-bit DHE key exchanges"
+            tls1_rsa_aes_128_sha_failures:
+                description:
+                - "TLS1_RSA_AES_128_SHA Failures"
+            kex_dhe_512_successes:
+                description:
+                - "Successful 512-bit DHE key exchanges"
+            renego_tls12_successes:
+                description:
+                - "Successful TLS1.2 renegotiations"
+            kex_ecdhe_secp384r1_successes:
+                description:
+                - "Successful secp384r1 ECDHE key exchanges"
+            tls1_dhe_rsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+            renego_tls11_successes:
+                description:
+                - "Successful TLS1.1 renegotiations"
+            tls1_dhe_rsa_aes_256_sha256_id:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA256 Cipher ID"
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Cipher ID"
+            tls1_ecdhe_rsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+            ssl3_rsa_rc4_40_md5_successes:
+                description:
+                - "SSL3_RSA_RC4_40_MD5 Successes"
+            tls1_ecdhe_rsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_GCM_SHA256 Cipher ID"
+            ssl3_successes:
+                description:
+                - "Successful SSL3 connections"
+            kex_rsa_1024_successes:
+                description:
+                - "Successful 1024-bit RSA key exchanges"
+            renego_ssl3_failures:
+                description:
+                - "Failed SSL3 renegotiations"
+            kex_dhe_1024_failures:
+                description:
+                - "Failed 1024-bit DHE key exchanges"
+            tls1_ecdhe_ecdsa_aes_256_sha_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Cipher ID"
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Cipher ID"
+            tls1_dhe_rsa_chacha20_poly1305_sha256_successes:
+                description:
+                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+            renegotiation_total:
+                description:
+                - "Total renegotiations"
+            kex_rsa_512_successes:
+                description:
+                - "Successful 512-bit RSA key exchanges"
+            tls1_dhe_rsa_aes_128_sha_successes:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA Successes"
+            tls1_dhe_rsa_aes_128_sha_id:
+                description:
+                - "TLS1_DHE_RSA_AES_128_SHA Cipher ID"
+            tls10_failures:
+                description:
+                - "Failed TLS1.0 connections"
+            tls1_rsa_aes_256_gcm_sha384_failures:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Failures"
+            ssl3_rsa_des_192_cbc3_sha_failures:
+                description:
+                - "SSL3_RSA_DES_192_CBC3_SHA Failures"
+            tls1_rsa_aes_256_gcm_sha384_successes:
+                description:
+                - "TLS1_RSA_AES_256_GCM_SHA384 Successes"
+            tls1_ecdhe_ecdsa_aes_256_sha_failures:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_256_SHA Failures"
+            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id:
+                description:
+                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+            ssl3_rsa_des_64_cbc_sha_successes:
+                description:
+                - "SSL3_RSA_DES_64_CBC_SHA Successes"
+            ssl3_failures:
+                description:
+                - "Failed SSL3 connections"
+            tls1_rsa_aes_128_gcm_sha256_failures:
+                description:
+                - "TLS1_RSA_AES_128_GCM_SHA256 Failures"
+            hs_failures:
+                description:
+                - "Total handshake failures"
+            tls1_ecdhe_rsa_aes_256_sha_id:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Cipher ID"
+            ssl2_failures:
+                description:
+                - "Failed SSL2 connections"
+            tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes:
+                description:
+                - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Successes"
+            sess_cache_timeout:
+                description:
+                - "Session cache timeouts"
+            tls1_ecdhe_rsa_aes_256_sha_successes:
+                description:
+                - "TLS1_ECDHE_RSA_AES_256_SHA Successes"
+            tls1_rsa_export1024_rc4_56_md5_failures:
+                description:
+                - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Failures"
+            tls1_dhe_rsa_aes_256_sha_id:
+                description:
+                - "TLS1_DHE_RSA_AES_256_SHA Cipher ID"
+            tls1_rsa_aes_256_sha_id:
+                description:
+                - "TLS1_RSA_AES_256_SHA Cipher ID"
+            tls1_ecdhe_rsa_aes_128_sha256_failures:
+                description:
+                - "TLS1_ECDHE_RSA_AES_128_SHA256 Failures"
+            kex_ecdhe_secp256r1_successes:
+                description:
+                - "Successful secp256r1 ECDHE key exchanges"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +550,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +579,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',tls1_dhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures=dict(type='int',),tls11_successes=dict(type='int',),tls1_dhe_rsa_chacha20_poly1305_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_successes=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_id=dict(type='str',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha384_id=dict(type='str',),vserver=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),ssl3_rsa_des_40_cbc_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_successes=dict(type='int',),kex_rsa_4096_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_failures=dict(type='int',),cumulative_sessions=dict(type='int',),tls1_rsa_aes_256_sha256_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_successes=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_rsa_des_40_cbc_sha_id=dict(type='str',),kex_ecdhe_secp384r1_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_failures=dict(type='int',),ssl3_rsa_rc4_40_md5_failures=dict(type='int',),tls1_rsa_aes_128_sha_id=dict(type='str',),tls1_dhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_successes=dict(type='int',),sni_automap_missing_cert=dict(type='int',),renego_ssl3_successes=dict(type='int',),kex_dhe_1024_successes=dict(type='int',),ssl3_rsa_rc4_128_md5_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_id=dict(type='str',),tls1_rsa_export1024_rc4_56_sha_id=dict(type='str',),kex_rsa_4096_failures=dict(type='int',),kex_dhe_512_failures=dict(type='int',),ssl3_rsa_des_64_cbc_sha_id=dict(type='str',),tls1_dhe_rsa_aes_256_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_rc4_128_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_id=dict(type='str',),port=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_rsa_aes_256_sha_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_id=dict(type='str',),ssl3_rsa_des_64_cbc_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_id=dict(type='str',),ssl3_rsa_rc4_128_md5_id=dict(type='str',),tls1_rsa_aes_128_gcm_sha256_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_id=dict(type='str',),sess_cache_hit=dict(type='int',),ssl3_rsa_des_40_cbc_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_successes=dict(type='int',),tls1_rsa_aes_128_sha256_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_successes=dict(type='int',),sni_automap_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures=dict(type='int',),ssl3_rsa_rc4_128_md5_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_id=dict(type='str',),kex_dhe_2048_successes=dict(type='int',),hs_avg_time=dict(type='int',),tls12_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_successes=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_successes=dict(type='int',),renego_ssl2_successes=dict(type='int',),tls1_rsa_aes_256_sha_successes=dict(type='int',),sni_automap_conn_closed=dict(type='int',),renego_tls10_successes=dict(type='int',),renego_tls12_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),cert_vfy=dict(type='int',),sni_automap_successes=dict(type='int',),tls1_rsa_aes_128_sha256_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_id=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures=dict(type='int',),renego_tls10_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_id=dict(type='str',),kex_rsa_1024_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),sni_automap_max_active_conn=dict(type='int',),sess_cache_curr_conn=dict(type='int',),tls11_failures=dict(type='int',),kex_rsa_512_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_failures=dict(type='int',),tls10_successes=dict(type='int',),ssl3_rsa_rc4_40_md5_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha384_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),ssl2_successes=dict(type='int',),kex_ecdhe_secp256r1_failures=dict(type='int',),sess_cache_new=dict(type='int',),renego_tls11_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha_failures=dict(type='int',),tls12_successes=dict(type='int',),kex_rsa_2048_successes=dict(type='int',),kex_rsa_2048_failures=dict(type='int',),renego_ssl2_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes=dict(type='int',),sess_cache_miss=dict(type='int',),kex_dhe_2048_failures=dict(type='int',),tls1_rsa_aes_128_sha_failures=dict(type='int',),kex_dhe_512_successes=dict(type='int',),renego_tls12_successes=dict(type='int',),kex_ecdhe_secp384r1_successes=dict(type='int',),tls1_dhe_rsa_chacha20_poly1305_sha256_id=dict(type='str',),renego_tls11_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id=dict(type='str',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_id=dict(type='str',),ssl3_rsa_rc4_40_md5_successes=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_successes=dict(type='int',),kex_rsa_1024_successes=dict(type='int',),renego_ssl3_failures=dict(type='int',),kex_dhe_1024_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id=dict(type='str',),tls1_dhe_rsa_chacha20_poly1305_sha256_successes=dict(type='int',),renegotiation_total=dict(type='int',),kex_rsa_512_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_id=dict(type='str',),tls10_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id=dict(type='str',),ssl3_rsa_des_64_cbc_sha_successes=dict(type='int',),ssl3_failures=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_failures=dict(type='int',),hs_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_id=dict(type='str',),ssl2_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes=dict(type='int',),sess_cache_timeout=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha_id=dict(type='str',),tls1_rsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha256_failures=dict(type='int',),kex_ecdhe_secp256r1_successes=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +608,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +643,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +689,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +707,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +829,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

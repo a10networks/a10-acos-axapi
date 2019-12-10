@@ -48,11 +48,45 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            chassis_id:
+                description:
+                - "Field chassis_id"
+            multicast_port:
+                description:
+                - "Field multicast_port"
+            floating_ipv6_list:
+                description:
+                - "Field floating_ipv6_list"
+            multicast_addr:
+                description:
+                - "Field multicast_addr"
+            vmaster_maintenance_interval:
+                description:
+                - "Field vmaster_maintenance_interval"
+            version:
+                description:
+                - "Field version"
+            vmaster_maintenance_left:
+                description:
+                - "Field vmaster_maintenance_left"
+            member_list:
+                description:
+                - "Field member_list"
+            floating_ipv4_list:
+                description:
+                - "Field floating_ipv4_list"
+            vcs_enabled:
+                description:
+                - "Field vcs_enabled"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -66,7 +100,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -95,6 +129,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',chassis_id=dict(type='int',),multicast_port=dict(type='int',),floating_ipv6_list=dict(type='list',floating_ipv6=dict(type='str',),floating_ipv6_prefix=dict(type='int',)),multicast_addr=dict(type='str',),vmaster_maintenance_interval=dict(type='int',),version=dict(type='str',),vmaster_maintenance_left=dict(type='int',),member_list=dict(type='list',port=dict(type='int',),priority=dict(type='int',),state=dict(type='str',),ip_list=dict(type='list',ip=dict(type='str',)),location=dict(type='str',),id=dict(type='int',)),floating_ipv4_list=dict(type='list',floating_ipv4_mask=dict(type='str',),floating_ipv4=dict(type='str',)),vcs_enabled=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -123,11 +158,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -163,7 +193,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -209,10 +239,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -224,15 +257,12 @@ def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
-
 def create(module, result):
     try:
         post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -349,8 +379,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

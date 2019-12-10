@@ -56,11 +56,27 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            debug:
+                description:
+                - "Field debug"
+            all_keys:
+                description:
+                - "Field all_keys"
+            mon_entity_list:
+                description:
+                - "Field mon_entity_list"
+            primary_keys:
+                description:
+                - "Field primary_keys"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +90,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["debug","uuid",]
+AVAILABLE_PROPERTIES = ["debug","oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +120,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         debug=dict(type='dict',uuid=dict(type='str',)),
+        oper=dict(type='dict',debug=dict(type='dict',oper=dict(type='dict',all_keys=dict(type='bool',),mon_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',std_dev=dict(type='str',),min=dict(type='str',),max=dict(type='str',),metric_name=dict(type='str',),current=dict(type='str',),threshold=dict(type='str',),anomaly=dict(type='str',),mean=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),sec_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',std_dev=dict(type='str',),min=dict(type='str',),max=dict(type='str',),metric_name=dict(type='str',),current=dict(type='str',),threshold=dict(type='str',),anomaly=dict(type='str',),mean=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),ha_state=dict(type='str',)),ha_state=dict(type='str',)),primary_keys=dict(type='bool',))),all_keys=dict(type='bool',),mon_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',current=dict(type='str',),threshold=dict(type='str',),metric_name=dict(type='str',),anomaly=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),sec_entity_list=dict(type='list',uuid=dict(type='str',),l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),entity_metric_list=dict(type='list',current=dict(type='str',),threshold=dict(type='str',),metric_name=dict(type='str',),anomaly=dict(type='str',)),mode=dict(type='str',),l4_proto=dict(type='str',),flat_oid=dict(type='int',),ha_state=dict(type='str',)),ha_state=dict(type='str',)),primary_keys=dict(type='bool',)),
         uuid=dict(type='str',)
     ))
    
@@ -132,11 +149,6 @@ def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -172,7 +184,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -218,10 +230,13 @@ def get_list(module):
     return module.client.get(list_url(module))
 
 def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
     return module.client.get(oper_url(module))
-
-def get_stats(module):
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -232,15 +247,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["detail"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["detail"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["detail"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["detail"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["detail"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +271,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +306,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("detail", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -370,8 +392,6 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
     return result
 
 def main():

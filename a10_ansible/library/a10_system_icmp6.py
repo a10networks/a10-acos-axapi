@@ -56,11 +56,126 @@ options:
             counters1:
                 description:
                 - "'all'= all; 'in_msgs'= In messages; 'in_errors'= In Errors; 'in_dest_un_reach'= In Destunation Unreachable; 'in_pkt_too_big'= In Packet too big; 'in_time_exceeds'= In TTL Exceeds; 'in_param_prob'= In Parameter Problem; 'in_echoes'= In Echo requests; 'in_exho_reply'= In Echo replies; 'in_grp_mem_query'= In Group member query; 'in_grp_mem_resp'= In Group member reply; 'in_grp_mem_reduction'= In Group member reduction; 'in_router_sol'= In Router solicitation; 'in_ra'= In Router advertisement; 'in_ns'= In neighbor solicitation; 'in_na'= In neighbor advertisement; 'in_redirect'= In Redirects; 'out_msg'= Out Messages; 'out_dst_un_reach'= Out Destination Unreachable; 'out_pkt_too_big'= Out Packet too big; 'out_time_exceeds'= Out TTL Exceeds; 'out_param_prob'= Out Parameter Problem; 'out_echo_req'= Out Echo requests; 'out_echo_replies'= Out Echo replies; 'out_rs'= Out Router solicitation; 'out_ra'= Out Router advertisement; 'out_ns'= Out neighbor solicitation; 'out_na'= Out neighbor advertisement; 'out_redirects'= Out Redirects; 'out_mem_resp'= Out Group member reply; 'out_mem_reductions'= Out Group member reduction; 'err_rs'= Error Router solicitation; 'err_ra'= Error Router advertisement; 'err_ns'= Error Neighbor solicitation; 'err_na'= Error Neighbor advertisement; 'err_redirects'= Error Redirects; 'err_echoes'= Error Echo requests; 'err_echo_replies'= Error Echo replies; "
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            out_echo_req:
+                description:
+                - "Out Echo requests"
+            out_param_prob:
+                description:
+                - "Out Parameter Problem"
+            out_pkt_too_big:
+                description:
+                - "Out Packet too big"
+            out_na:
+                description:
+                - "Out neighbor advertisement"
+            out_rs:
+                description:
+                - "Out Router solicitation"
+            err_ns:
+                description:
+                - "Error Neighbor solicitation"
+            in_grp_mem_resp:
+                description:
+                - "In Group member reply"
+            in_echoes:
+                description:
+                - "In Echo requests"
+            out_ns:
+                description:
+                - "Out neighbor solicitation"
+            err_na:
+                description:
+                - "Error Neighbor advertisement"
+            out_ra:
+                description:
+                - "Out Router advertisement"
+            out_mem_reductions:
+                description:
+                - "Out Group member reduction"
+            out_dst_un_reach:
+                description:
+                - "Out Destination Unreachable"
+            in_msgs:
+                description:
+                - "In messages"
+            in_param_prob:
+                description:
+                - "In Parameter Problem"
+            in_pkt_too_big:
+                description:
+                - "In Packet too big"
+            err_ra:
+                description:
+                - "Error Router advertisement"
+            in_redirect:
+                description:
+                - "In Redirects"
+            err_echoes:
+                description:
+                - "Error Echo requests"
+            in_errors:
+                description:
+                - "In Errors"
+            out_echo_replies:
+                description:
+                - "Out Echo replies"
+            in_na:
+                description:
+                - "In neighbor advertisement"
+            in_ra:
+                description:
+                - "In Router advertisement"
+            err_rs:
+                description:
+                - "Error Router solicitation"
+            err_redirects:
+                description:
+                - "Error Redirects"
+            err_echo_replies:
+                description:
+                - "Error Echo replies"
+            in_ns:
+                description:
+                - "In neighbor solicitation"
+            out_msg:
+                description:
+                - "Out Messages"
+            out_mem_resp:
+                description:
+                - "Out Group member reply"
+            out_time_exceeds:
+                description:
+                - "Out TTL Exceeds"
+            in_exho_reply:
+                description:
+                - "In Echo replies"
+            in_router_sol:
+                description:
+                - "In Router solicitation"
+            in_grp_mem_query:
+                description:
+                - "In Group member query"
+            out_redirects:
+                description:
+                - "Out Redirects"
+            in_time_exceeds:
+                description:
+                - "In TTL Exceeds"
+            in_grp_mem_reduction:
+                description:
+                - "In Group member reduction"
+            in_dest_un_reach:
+                description:
+                - "In Destunation Unreachable"
     uuid:
         description:
         - "uuid of the object"
         required: False
-
 
 """
 
@@ -74,7 +189,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,6 +219,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','in_msgs','in_errors','in_dest_un_reach','in_pkt_too_big','in_time_exceeds','in_param_prob','in_echoes','in_exho_reply','in_grp_mem_query','in_grp_mem_resp','in_grp_mem_reduction','in_router_sol','in_ra','in_ns','in_na','in_redirect','out_msg','out_dst_un_reach','out_pkt_too_big','out_time_exceeds','out_param_prob','out_echo_req','out_echo_replies','out_rs','out_ra','out_ns','out_na','out_redirects','out_mem_resp','out_mem_reductions','err_rs','err_ra','err_ns','err_na','err_redirects','err_echoes','err_echo_replies'])),
+        stats=dict(type='dict',out_echo_req=dict(type='str',),out_param_prob=dict(type='str',),out_pkt_too_big=dict(type='str',),out_na=dict(type='str',),out_rs=dict(type='str',),err_ns=dict(type='str',),in_grp_mem_resp=dict(type='str',),in_echoes=dict(type='str',),out_ns=dict(type='str',),err_na=dict(type='str',),out_ra=dict(type='str',),out_mem_reductions=dict(type='str',),out_dst_un_reach=dict(type='str',),in_msgs=dict(type='str',),in_param_prob=dict(type='str',),in_pkt_too_big=dict(type='str',),err_ra=dict(type='str',),in_redirect=dict(type='str',),err_echoes=dict(type='str',),in_errors=dict(type='str',),out_echo_replies=dict(type='str',),in_na=dict(type='str',),in_ra=dict(type='str',),err_rs=dict(type='str',),err_redirects=dict(type='str',),err_echo_replies=dict(type='str',),in_ns=dict(type='str',),out_msg=dict(type='str',),out_mem_resp=dict(type='str',),out_time_exceeds=dict(type='str',),in_exho_reply=dict(type='str',),in_router_sol=dict(type='str',),in_grp_mem_query=dict(type='str',),out_redirects=dict(type='str',),in_time_exceeds=dict(type='str',),in_grp_mem_reduction=dict(type='str',),in_dest_un_reach=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -127,11 +243,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -172,7 +283,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -217,10 +328,13 @@ def get(module):
 def get_list(module):
     return module.client.get(list_url(module))
 
-def get_oper(module):
-    return module.client.get(oper_url(module))
-
 def get_stats(module):
+    if module.params.get("stats"):
+        query_params = {}
+        for k,v in module.params["stats"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(stats_url(module),
+                                 params=query_params)
     return module.client.get(stats_url(module))
 
 def exists(module):
@@ -232,15 +346,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["icmp6"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["icmp6"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["icmp6"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["icmp6"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["icmp6"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -251,8 +370,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -288,12 +405,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("icmp6", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -368,8 +489,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     return result
