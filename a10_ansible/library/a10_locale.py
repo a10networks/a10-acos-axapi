@@ -65,7 +65,6 @@ options:
         - "'en_US.UTF-8'= English locale for the USA, encoding with UTF-8 (default); 'zh_CN.UTF-8'= Chinese locale for PRC, encoding with UTF-8; 'zh_CN.GB18030'= Chinese locale for PRC, encoding with GB18030; 'zh_CN.GBK'= Chinese locale for PRC, encoding with GBK; 'zh_CN.GB2312'= Chinese locale for PRC, encoding with GB2312; 'zh_TW.UTF-8'= Chinese locale for Taiwan, encoding with UTF-8; 'zh_TW.BIG5'= Chinese locale for Taiwan, encoding with BIG5; 'zh_TW.EUCTW'= Chinese locale for Taiwan, encoding with EUC-TW; 'ja_JP.UTF-8'= Japanese locale for Japan, encoding with UTF-8; 'ja_JP.EUC-JP'= Japanese locale for Japan, encoding with EUC-JP; "
         required: False
 
-
 """
 
 EXAMPLES = """
@@ -167,7 +166,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -221,15 +220,20 @@ def exists(module):
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["locale"].items():
-            if v.lower() == "true":
-                v = 1
-            elif v.lower() == "false":
-                v = 0
-            if existing_config["locale"][k] != v:
-                if result["changed"] != True:
-                    result["changed"] = True
-                existing_config["locale"][k] = v
-        result.update(**existing_config)
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["locale"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["locale"][k] = v
+            result.update(**existing_config)
     else:
         result.update(**payload)
     return result
@@ -240,8 +244,6 @@ def create(module, result, payload):
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -277,12 +279,16 @@ def update(module, result, existing_config, payload):
 
 def present(module, result, existing_config):
     payload = build_json("locale", module)
+    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return report_changes(module, result, existing_config, payload)
+        return changed_config
     elif not existing_config:
         return create(module, result, payload)
-    else:
+    elif existing_config and not changed_config.get('changed'):
         return update(module, result, existing_config, payload)
+    else:
+        result["changed"] = True
+        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
