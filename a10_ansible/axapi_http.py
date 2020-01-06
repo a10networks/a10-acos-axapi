@@ -119,7 +119,11 @@ class HttpClient(object):
         payload = None
         if params and method != "GET":
             params_copy = params.copy()
-            payload = json.dumps(params_copy, encoding='utf-8')
+            # do not set encoding parameter if on python >= 3.x
+            if sys.version_info >= (3, 0):
+                payload = json.dumps(params_copy)
+            else:
+                payload = json.dumps(params_copy, encoding='utf-8')
 
         if file_name is not None:
             files = {
