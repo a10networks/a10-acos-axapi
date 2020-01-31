@@ -1,4 +1,4 @@
-# Info about github file trunking
+# Info About Github File Trunking
 When navigating to the `library` directory, you'll be greeted by this message:
 
 ![Github Trunk](/docs/trunc.png)
