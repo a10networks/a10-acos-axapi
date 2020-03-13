@@ -1,10 +1,23 @@
-# a10-ansible
-Repository of for ansible modules
+# A10 Ansible AXAPI Collection
+Repository of for ansible modules which interact with the AXAPI
+
+## Table of Contents
+1. [Overview](#Overview)
+
+2. [Installation](#Installation)
+
+3. [Usage information](#Usage)
+
+4. [Examples](#Examples)
+
+5. [Issues and Inquiries](#Issues-and-Inquiries)
+
+## Overview
+
+#### Summary
+This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
 
 This code is now being generated using the SDK generator at https://github.com/a10networks/sdkgenerator
-
-## Summary
-This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
 
 ## Installation
 a10-ansible is distributed as a Python package. It can be installed from the Github repository. It is assumed that ansible is already installed and configured.
@@ -197,8 +210,7 @@ $ ansible-playbook <playbook_name>.yml --check-mode
 ## Examples
 Please see (https://github.com/a10networks/a10-ansible/tree/master/examples) for example playbooks.
 
-## Bug Reporting and Feature Requests
-Please submit bug reports and feature requests via GitHub issues. When reporting bugs, please include the playbook that demonstrates the bug and the Ansible output. Stack traces are always nice, but playbooks work well. Please ensure any sensitive information is redacted as Issues and Pull Requests are publicly viewable.
+## Issues and Inquiries
+For all issues, please send an email to support@a10networks.com 
 
-## Contact
-If you have a question that cannot be submitted via Github Issues, please email support@a10networks.com with "a10-ansible" in the subject line. 
+For general inquiries, please send an email to opensource@a10networks.com
