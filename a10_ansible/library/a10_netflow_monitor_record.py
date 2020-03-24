@@ -55,9 +55,9 @@ options:
         description:
         - "NAT44 Flow Record Template"
         required: False
-    uuid:
+    sesn_event_nat44:
         description:
-        - "uuid of the object"
+        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
     sesn_event_nat64:
         description:
@@ -79,7 +79,7 @@ options:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    sesn_event_fw6:
+    port_batch_nat44:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
@@ -92,10 +92,6 @@ options:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
     sesn_event_dslite:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
-        required: False
-    sesn_event_nat44:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
@@ -119,18 +115,15 @@ options:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    sesn_event_fw4:
-        description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
-        required: False
     port_batch_nat64:
         description:
         - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
         required: False
-    port_batch_nat44:
+    uuid:
         description:
-        - "'both'= Export both creation and deletion events; 'creation'= Export only creation events; 'deletion'= Export only deletion events; "
+        - "uuid of the object"
         required: False
+
 
 """
 
@@ -144,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dslite","nat44","nat64","netflow_v5","netflow_v5_ext","port_batch_dslite","port_batch_nat44","port_batch_nat64","port_batch_v2_dslite","port_batch_v2_nat44","port_batch_v2_nat64","port_mapping_dslite","port_mapping_nat44","port_mapping_nat64","sesn_event_dslite","sesn_event_fw4","sesn_event_fw6","sesn_event_nat44","sesn_event_nat64","uuid",]
+AVAILABLE_PROPERTIES = ["dslite","nat44","nat64","netflow_v5","netflow_v5_ext","port_batch_dslite","port_batch_nat44","port_batch_nat64","port_batch_v2_dslite","port_batch_v2_nat44","port_batch_v2_nat64","port_mapping_dslite","port_mapping_nat44","port_mapping_nat64","sesn_event_dslite","sesn_event_nat44","sesn_event_nat64","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -174,25 +167,23 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         nat44=dict(type='bool',),
-        uuid=dict(type='str',),
+        sesn_event_nat44=dict(type='str',choices=['both','creation','deletion']),
         sesn_event_nat64=dict(type='str',choices=['both','creation','deletion']),
         nat64=dict(type='bool',),
         port_batch_v2_nat64=dict(type='str',choices=['both','creation','deletion']),
         dslite=dict(type='bool',),
         port_batch_v2_dslite=dict(type='str',choices=['both','creation','deletion']),
-        sesn_event_fw6=dict(type='str',choices=['both','creation','deletion']),
+        port_batch_nat44=dict(type='str',choices=['both','creation','deletion']),
         netflow_v5_ext=dict(type='bool',),
         port_mapping_nat64=dict(type='str',choices=['both','creation','deletion']),
         sesn_event_dslite=dict(type='str',choices=['both','creation','deletion']),
-        sesn_event_nat44=dict(type='str',choices=['both','creation','deletion']),
         port_batch_v2_nat44=dict(type='str',choices=['both','creation','deletion']),
         netflow_v5=dict(type='bool',),
         port_batch_dslite=dict(type='str',choices=['both','creation','deletion']),
         port_mapping_dslite=dict(type='str',choices=['both','creation','deletion']),
         port_mapping_nat44=dict(type='str',choices=['both','creation','deletion']),
-        sesn_event_fw4=dict(type='str',choices=['both','creation','deletion']),
         port_batch_nat64=dict(type='str',choices=['both','creation','deletion']),
-        port_batch_nat44=dict(type='str',choices=['both','creation','deletion'])
+        uuid=dict(type='str',)
     ))
    
     # Parent keys
@@ -444,15 +435,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -57,6 +57,7 @@ options:
         - "Reload all devices when VCS is enabled, or only this device itself if VCS is not enabled"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -241,6 +242,18 @@ def create(module, result, payload):
         raise gex
     return result
 
+def delete(module, result):
+    try:
+        module.client.delete(existing_url(module))
+        result["changed"] = True
+    except a10_ex.NotFound:
+        result["changed"] = False
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
+
 def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
@@ -333,15 +346,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

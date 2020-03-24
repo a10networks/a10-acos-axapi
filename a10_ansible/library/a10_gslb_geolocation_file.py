@@ -61,6 +61,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -102,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',geofiles=dict(type='list',comment=dict(type='int',),success=dict(type='int',),error_warning=dict(type='int',),lines=dict(type='int',),filename=dict(type='str',),template=dict(type='str',),percentage_loaded=dict(type='int',),ntype=dict(type='str',choices=['template','builtin']))),
+        oper=dict(type='dict',geofiles=dict(type='list',success=dict(type='int',),error_warning=dict(type='int',),lines=dict(type='int',),filename=dict(type='str',),template=dict(type='str',),percentage_loaded=dict(type='int',),ntype=dict(type='str',choices=['template','builtin']))),
         uuid=dict(type='str',)
     ))
    
@@ -341,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -352,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -9,10 +10,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_scaleout_nat_pool
+module: a10_interface_trunk_map_translation
 description:
-    - Field nat_pool
-short_description: Configures A10 scaleout.nat-pool
+    - MAP Translation (MAP-T)
+short_description: Configures A10 interface.trunk.map.translation
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -35,9 +36,32 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
+        description:
+        - Destination/target partition for object/command
+        required: False
+    trunk_ifnum:
+        description:
+        - Key to identify parent object
+    inside:
+        description:
+        - "Configure MAP inside interface (connected to MAP domains)"
+        required: False
+    outside:
+        description:
+        - "Configure MAP outside interface"
+        required: False
     uuid:
         description:
-        - "None"
+        - "uuid of the object"
         required: False
 
 
@@ -53,7 +77,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["uuid",]
+AVAILABLE_PROPERTIES = ["inside","outside","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -72,13 +96,24 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        inside=dict(type='bool',),
+        outside=dict(type='bool',),
         uuid=dict(type='str',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        trunk_ifnum=dict(type='str', required=True),
     ))
 
     return rv
@@ -86,19 +121,27 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/scaleout/nat-pool"
+    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/map/translation"
+
     f_dict = {}
+    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/scaleout/nat-pool"
+    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/map/translation"
+
     f_dict = {}
+    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -116,7 +159,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -129,13 +172,13 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -146,7 +189,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
     
     errors = []
     marg = []
@@ -171,20 +214,42 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("nat-pool", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["translation"].items():
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["translation"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["translation"][k] = v
+            result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -203,11 +268,11 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("nat-pool", module)
+def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -219,13 +284,43 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("translation", module)
+    changed_config = report_changes(module, result, existing_config, payload)
+    if module.check_mode:
+        return changed_config
+    elif not existing_config:
+        return create(module, result, payload)
+    elif existing_config and not changed_config.get('changed'):
+        return update(module, result, existing_config, payload)
     else:
-        return update(module, result, existing_config)
+        result["changed"] = True
+        return result
 
-def absent(module, result):
-    return delete(module, result)
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
+
+def replace(module, result, existing_config, payload):
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []
@@ -233,41 +328,50 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        map(run_errors.append, validation_errors)
+        for ve in validation_errors:
+            run_errors.append(ve)
     
     if not valid:
-        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
+        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
+
     existing_config = exists(module)
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
-        module.client.session.close()
+        result = absent(module, result, existing_config)
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

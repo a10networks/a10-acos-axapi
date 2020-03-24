@@ -65,6 +65,7 @@ options:
         - "'en_US.UTF-8'= English locale for the USA, encoding with UTF-8 (default); 'zh_CN.UTF-8'= Chinese locale for PRC, encoding with UTF-8; 'zh_CN.GB18030'= Chinese locale for PRC, encoding with GB18030; 'zh_CN.GBK'= Chinese locale for PRC, encoding with GBK; 'zh_CN.GB2312'= Chinese locale for PRC, encoding with GB2312; 'zh_TW.UTF-8'= Chinese locale for Taiwan, encoding with UTF-8; 'zh_TW.BIG5'= Chinese locale for Taiwan, encoding with BIG5; 'zh_TW.EUCTW'= Chinese locale for Taiwan, encoding with EUC-TW; 'ja_JP.UTF-8'= Japanese locale for Japan, encoding with UTF-8; 'ja_JP.EUC-JP'= Japanese locale for Japan, encoding with EUC-JP; "
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -354,15 +355,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -72,13 +72,9 @@ options:
         description:
         - "Export the merged pcap file when there are multiple Export sessions"
         required: False
-    ip_map_list:
-        description:
-        - "IP Map List File"
-        required: False
     syslog:
         description:
-        - "Enter 'messages' as the default syslog file name"
+        - "Syslog file"
         required: False
     use_mgmt_port:
         description:
@@ -87,10 +83,6 @@ options:
     auth_portal:
         description:
         - "Portal file for http authentication"
-        required: False
-    auth_jwks:
-        description:
-        - "Json web key"
         required: False
     fixed_nat_archive:
         description:
@@ -128,13 +120,9 @@ options:
         description:
         - "LW-4over6 Binding Table Validation Log File"
         required: False
-    file_inspection_bw_list:
+    thales_secworld:
         description:
-        - "Black white List File"
-        required: False
-    running_config:
-        description:
-        - "Running Config"
+        - "Thales security world files"
         required: False
     csr:
         description:
@@ -156,10 +144,6 @@ options:
         description:
         - "check export task status"
         required: False
-    visibility:
-        description:
-        - "Export Visibility module related files"
-        required: False
     dnssec_ds:
         description:
         - "DNSSEC DS file for child zone"
@@ -167,10 +151,6 @@ options:
     profile:
         description:
         - "Startup-config Profile"
-        required: False
-    mon_entity_debug_file:
-        description:
-        - "Enter Mon entity debug file name"
         required: False
     local_uri_file:
         description:
@@ -182,7 +162,7 @@ options:
         required: False
     ssl_key:
         description:
-        - "SSL Key File"
+        - "SSL Key File(enter bulk when export an archive file)"
         required: False
     store:
         description:
@@ -215,15 +195,15 @@ options:
         required: False
     ca_cert:
         description:
-        - "CA Cert File"
+        - "CA Cert File(enter bulk when export an archive file)"
         required: False
     axdebug:
         description:
         - "AX Debug Packet File"
         required: False
-    thales_secworld:
+    running_config:
         description:
-        - "Thales security world files"
+        - "Running Config"
         required: False
     xml_schema:
         description:
@@ -235,12 +215,13 @@ options:
         required: False
     ssl_cert:
         description:
-        - "SSL Cert File"
+        - "SSL Cert File(enter bulk when export an archive file)"
         required: False
     dnssec_dnskey:
         description:
         - "DNSSEC DNSKEY(KSK) file for child zone"
         required: False
+
 
 """
 
@@ -254,7 +235,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex","auth_jwks","auth_portal","auth_portal_image","axdebug","bw_list","ca_cert","class_list","csr","debug_monitor","dnssec_dnskey","dnssec_ds","externalfilename","file_inspection_bw_list","fixed_nat","fixed_nat_archive","geo_location","ip_map_list","local_uri_file","lw_4o6","lw_4o6_binding_table_validation_log","merged_pcap","mon_entity_debug_file","per_cpu","policy","profile","remote_file","running_config","saml_idp_name","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","startup_config","status_check","store","store_name","syslog","tgz","thales_kmdata","thales_secworld","use_mgmt_port","visibility","wsdl","xml_schema",]
+AVAILABLE_PROPERTIES = ["aflex","auth_portal","auth_portal_image","axdebug","bw_list","ca_cert","class_list","csr","debug_monitor","dnssec_dnskey","dnssec_ds","externalfilename","fixed_nat","fixed_nat_archive","geo_location","local_uri_file","lw_4o6","lw_4o6_binding_table_validation_log","merged_pcap","per_cpu","policy","profile","remote_file","running_config","saml_idp_name","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","startup_config","status_check","store","store_name","syslog","tgz","thales_kmdata","thales_secworld","use_mgmt_port","wsdl","xml_schema",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -289,11 +270,9 @@ def get_argspec():
         lw_4o6=dict(type='str',),
         tgz=dict(type='bool',),
         merged_pcap=dict(type='bool',),
-        ip_map_list=dict(type='str',),
         syslog=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
         auth_portal=dict(type='str',),
-        auth_jwks=dict(type='str',),
         fixed_nat_archive=dict(type='str',),
         aflex=dict(type='str',),
         fixed_nat=dict(type='str',),
@@ -303,17 +282,14 @@ def get_argspec():
         debug_monitor=dict(type='str',),
         policy=dict(type='str',),
         lw_4o6_binding_table_validation_log=dict(type='str',),
-        file_inspection_bw_list=dict(type='str',),
-        running_config=dict(type='bool',),
+        thales_secworld=dict(type='str',),
         csr=dict(type='str',),
         auth_portal_image=dict(type='str',),
         ssl_crl=dict(type='str',),
         class_list=dict(type='str',),
         status_check=dict(type='bool',),
-        visibility=dict(type='bool',),
         dnssec_ds=dict(type='str',),
         profile=dict(type='str',),
-        mon_entity_debug_file=dict(type='str',),
         local_uri_file=dict(type='str',),
         wsdl=dict(type='str',),
         ssl_key=dict(type='str',),
@@ -323,7 +299,7 @@ def get_argspec():
         store_name=dict(type='str',),
         ca_cert=dict(type='str',),
         axdebug=dict(type='str',),
-        thales_secworld=dict(type='str',),
+        running_config=dict(type='bool',),
         xml_schema=dict(type='str',),
         startup_config=dict(type='bool',),
         ssl_cert=dict(type='str',),
@@ -561,15 +537,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -55,15 +55,12 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'kerberos-request-send'= Total Kerberos Request; 'kerberos-response-get'= Total Kerberos Response; 'kerberos-timeout-error'= Total Kerberos Timeout; 'kerberos-other-error'= Total Kerberos Other Error; 'ntlm-authentication-success'= Total NTLM Authentication Success; 'ntlm-authentication-failure'= Total NTLM Authentication Failure; 'ntlm-proto-negotiation-success'= Total NTLM Protocol Negotiation Success; 'ntlm-proto-negotiation-failure'= Total NTLM Protocol Negotiation Failure; 'ntlm-session-setup-success'= Total NTLM Session Setup Success; 'ntlm-session-setup-failed'= Total NTLM Session Setup Failure; 'kerberos-request-normal'= Total Kerberos Normal Request; 'kerberos-request-dropped'= Total Kerberos Dropped Request; 'kerberos-response-success'= Total Kerberos Success Response; 'kerberos-response-failure'= Total Kerberos Failure Response; 'kerberos-response-error'= Total Kerberos Error Response; 'kerberos-response-timeout'= Total Kerberos Timeout Response; 'kerberos-response-other'= Total Kerberos Other Response; 'kerberos-job-start-error'= Total Kerberos Job Start Error; 'kerberos-polling-control-error'= Total Kerberos Polling Control Error; 'ntlm-prepare-req-success'= Total NTLM Prepare Request Success; 'ntlm-prepare-req-failed'= Total NTLM Prepare Request Failed; 'ntlm-timeout-error'= Total NTLM Timeout; 'ntlm-other-error'= Total NTLM Other Error; 'ntlm-request-normal'= Total NTLM Normal Request; 'ntlm-request-dropped'= Total NTLM Dropped Request; 'ntlm-response-success'= Total NTLM Success Response; 'ntlm-response-failure'= Total NTLM Failure Response; 'ntlm-response-error'= Total NTLM Error Response; 'ntlm-response-timeout'= Total NTLM Timeout Response; 'ntlm-response-other'= Total NTLM Other Response; 'ntlm-job-start-error'= Total NTLM Job Start Error; 'ntlm-polling-control-error'= Total NTLM Polling Control Error; 'kerberos-pw-expiry'= Total Kerberos password expiry; 'kerberos-pw-change-success'= Total Kerberos password change success; 'kerberos-pw-change-failure'= Total Kerberos password change failure; "
+                - "'all'= all; 'kerberos-request-send'= Total Kerberos Request; 'kerberos-response-get'= Total Kerberos Response; 'kerberos-timeout-error'= Total Kerberos Timeout; 'kerberos-other-error'= Total Kerberos Other Error; 'ntlm-authentication-success'= Total NTLM Authentication Success; 'ntlm-authentication-failure'= Total NTLM Authentication Failure; 'ntlm-proto-negotiation-success'= Total NTLM Protocol Negotiation Success; 'ntlm-proto-negotiation-failure'= Total NTLM Protocol Negotiation Failure; 'ntlm-session-setup-success'= Total NTLM Session Setup Success; 'ntlm-session-setup-failed'= Total NTLM Session Setup Failure; 'kerberos-request-normal'= Total Kerberos Normal Request; 'kerberos-request-dropped'= Total Kerberos Dropped Request; 'kerberos-response-success'= Total Kerberos Success Response; 'kerberos-response-failure'= Total Kerberos Failure Response; 'kerberos-response-error'= Total Kerberos Error Response; 'kerberos-response-timeout'= Total Kerberos Timeout Response; 'kerberos-response-other'= Total Kerberos Other Response; 'kerberos-job-start-error'= Total Kerberos Job Start Error; 'kerberos-polling-control-error'= Total Kerberos Polling Control Error; 'ntlm-prepare-req-success'= Total NTLM Prepare Request Success; 'ntlm-prepare-req-failed'= Total NTLM Prepare Request Failed; 'ntlm-timeout-error'= Total NTLM Timeout; 'ntlm-other-error'= Total NTLM Other Error; 'ntlm-request-normal'= Total NTLM Normal Request; 'ntlm-request-dropped'= Total NTLM Dropped Request; 'ntlm-response-success'= Total NTLM Success Response; 'ntlm-response-failure'= Total NTLM Failure Response; 'ntlm-response-error'= Total NTLM Error Response; 'ntlm-response-timeout'= Total NTLM Timeout Response; 'ntlm-response-other'= Total NTLM Other Response; 'ntlm-job-start-error'= Total NTLM Job Start Error; 'ntlm-polling-control-error'= Total NTLM Polling Control Error; "
     stats:
         description:
         - "Field stats"
         required: False
         suboptions:
-            kerberos_pw_change_success:
-                description:
-                - "Total Kerberos password change success"
             ntlm_response_error:
                 description:
                 - "Total NTLM Error Response"
@@ -109,9 +106,6 @@ options:
             kerberos_response_success:
                 description:
                 - "Total Kerberos Success Response"
-            kerberos_pw_expiry:
-                description:
-                - "Total Kerberos password expiry"
             ntlm_authentication_success:
                 description:
                 - "Total NTLM Authentication Success"
@@ -124,9 +118,6 @@ options:
             kerberos_request_send:
                 description:
                 - "Total Kerberos Request"
-            kerberos_pw_change_failure:
-                description:
-                - "Total Kerberos password change failure"
             kerberos_request_normal:
                 description:
                 - "Total Kerberos Normal Request"
@@ -212,6 +203,7 @@ options:
                 description:
                 - "uuid of the object"
 
+
 """
 
 EXAMPLES = """
@@ -253,10 +245,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','kerberos-request-send','kerberos-response-get','kerberos-timeout-error','kerberos-other-error','ntlm-authentication-success','ntlm-authentication-failure','ntlm-proto-negotiation-success','ntlm-proto-negotiation-failure','ntlm-session-setup-success','ntlm-session-setup-failed','kerberos-request-normal','kerberos-request-dropped','kerberos-response-success','kerberos-response-failure','kerberos-response-error','kerberos-response-timeout','kerberos-response-other','kerberos-job-start-error','kerberos-polling-control-error','ntlm-prepare-req-success','ntlm-prepare-req-failed','ntlm-timeout-error','ntlm-other-error','ntlm-request-normal','ntlm-request-dropped','ntlm-response-success','ntlm-response-failure','ntlm-response-error','ntlm-response-timeout','ntlm-response-other','ntlm-job-start-error','ntlm-polling-control-error','kerberos-pw-expiry','kerberos-pw-change-success','kerberos-pw-change-failure'])),
-        stats=dict(type='dict',kerberos_pw_change_success=dict(type='str',),ntlm_response_error=dict(type='str',),ntlm_session_setup_failed=dict(type='str',),ntlm_polling_control_error=dict(type='str',),kerberos_other_error=dict(type='str',),kerberos_timeout_error=dict(type='str',),kerberos_job_start_error=dict(type='str',),ntlm_proto_negotiation_success=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_job_start_error=dict(type='str',),kerberos_response_failure=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),ntlm_response_failure=dict(type='str',),kerberos_polling_control_error=dict(type='str',),ntlm_prepare_req_failed=dict(type='str',),kerberos_response_success=dict(type='str',),kerberos_pw_expiry=dict(type='str',),ntlm_authentication_success=dict(type='str',),ntlm_response_timeout=dict(type='str',),ntlm_authentication_failure=dict(type='str',),kerberos_request_send=dict(type='str',),kerberos_pw_change_failure=dict(type='str',),kerberos_request_normal=dict(type='str',),ntlm_response_other=dict(type='str',),kerberos_request_dropped=dict(type='str',),kerberos_response_other=dict(type='str',),ntlm_session_setup_success=dict(type='str',),kerberos_response_error=dict(type='str',),ntlm_request_normal=dict(type='str',),ntlm_request_dropped=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',krb_send_req_success=dict(type='str',),ntlm_auth_success=dict(type='str',),ntlm_prepare_req_error=dict(type='str',),ntlm_proto_nego_failure=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_auth_failure=dict(type='str',),krb_timeout_error=dict(type='str',),ntlm_session_setup_success=dict(type='str',),krb_other_error=dict(type='str',),ntlm_timeout_error=dict(type='str',),krb_pw_expiry=dict(type='str',),ntlm_session_setup_failure=dict(type='str',),krb_pw_change_failure=dict(type='str',),krb_get_resp_success=dict(type='str',),ntlm_proto_nego_success=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),krb_pw_change_success=dict(type='str',)),name=dict(type='str',required=True,)),kerberos_response_timeout=dict(type='str',),kerberos_response_get=dict(type='str',),ntlm_timeout_error=dict(type='str',),ntlm_proto_negotiation_failure=dict(type='str',),ntlm_response_success=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','kerberos-request-send','kerberos-response-get','kerberos-timeout-error','kerberos-other-error','ntlm-authentication-success','ntlm-authentication-failure','ntlm-proto-negotiation-success','ntlm-proto-negotiation-failure','ntlm-session-setup-success','ntlm-session-setup-failed','kerberos-request-normal','kerberos-request-dropped','kerberos-response-success','kerberos-response-failure','kerberos-response-error','kerberos-response-timeout','kerberos-response-other','kerberos-job-start-error','kerberos-polling-control-error','ntlm-prepare-req-success','ntlm-prepare-req-failed','ntlm-timeout-error','ntlm-other-error','ntlm-request-normal','ntlm-request-dropped','ntlm-response-success','ntlm-response-failure','ntlm-response-error','ntlm-response-timeout','ntlm-response-other','ntlm-job-start-error','ntlm-polling-control-error'])),
+        stats=dict(type='dict',ntlm_response_error=dict(type='str',),ntlm_session_setup_failed=dict(type='str',),ntlm_polling_control_error=dict(type='str',),kerberos_other_error=dict(type='str',),kerberos_timeout_error=dict(type='str',),kerberos_job_start_error=dict(type='str',),ntlm_proto_negotiation_success=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_job_start_error=dict(type='str',),kerberos_response_failure=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),ntlm_response_failure=dict(type='str',),kerberos_polling_control_error=dict(type='str',),ntlm_prepare_req_failed=dict(type='str',),kerberos_response_success=dict(type='str',),ntlm_authentication_success=dict(type='str',),ntlm_response_timeout=dict(type='str',),ntlm_authentication_failure=dict(type='str',),kerberos_request_send=dict(type='str',),kerberos_request_normal=dict(type='str',),ntlm_response_other=dict(type='str',),kerberos_request_dropped=dict(type='str',),kerberos_response_other=dict(type='str',),ntlm_session_setup_success=dict(type='str',),kerberos_response_error=dict(type='str',),ntlm_request_normal=dict(type='str',),ntlm_request_dropped=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',krb_send_req_success=dict(type='str',),ntlm_auth_success=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_proto_nego_failure=dict(type='str',),ntlm_prepare_req_error=dict(type='str',),ntlm_auth_failure=dict(type='str',),krb_timeout_error=dict(type='str',),ntlm_session_setup_success=dict(type='str',),krb_other_error=dict(type='str',),ntlm_timeout_error=dict(type='str',),ntlm_session_setup_failure=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),krb_get_resp_success=dict(type='str',),ntlm_proto_nego_success=dict(type='str',)),name=dict(type='str',required=True,)),kerberos_response_timeout=dict(type='str',),kerberos_response_get=dict(type='str',),ntlm_timeout_error=dict(type='str',),ntlm_proto_negotiation_failure=dict(type='str',),ntlm_response_success=dict(type='str',)),
         uuid=dict(type='str',),
-        instance_list=dict(type='list',health_check_string=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),timeout=dict(type='int',),auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),health_check_disable=dict(type='bool',),support_apacheds_kdc=dict(type='bool',),health_check=dict(type='bool',),uuid=dict(type='str',))
+        instance_list=dict(type='list',health_check_string=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),timeout=dict(type='int',),auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',)),health_check_disable=dict(type='bool',),support_apacheds_kdc=dict(type='bool',),health_check=dict(type='bool',),uuid=dict(type='str',))
     ))
    
 
@@ -516,10 +508,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -527,6 +517,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

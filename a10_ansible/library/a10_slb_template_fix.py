@@ -48,14 +48,10 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    logging:
+    insert_client_ip:
         description:
-        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
+        - "Insert client ip to tag 11447"
         required: False
-    name:
-        description:
-        - "FIX Template Name"
-        required: True
     tag_switching:
         description:
         - "Field tag_switching"
@@ -70,18 +66,19 @@ options:
             switching_type:
                 description:
                 - "'sender-comp-id'= Select service group based on SenderCompID; 'target-comp-id'= Select service group based on TargetCompID; "
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    insert_client_ip:
-        description:
-        - "Insert client ip to tag 11447"
-        required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    name:
+        description:
+        - "FIX Template Name"
+        required: True
+
 
 """
 
@@ -95,7 +92,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["insert_client_ip","logging","name","tag_switching","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["insert_client_ip","name","tag_switching","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -124,12 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        logging=dict(type='str',choices=['init','term','both']),
-        name=dict(type='str',required=True,),
-        tag_switching=dict(type='list',service_group=dict(type='str',),equals=dict(type='str',),switching_type=dict(type='str',choices=['sender-comp-id','target-comp-id'])),
-        user_tag=dict(type='str',),
         insert_client_ip=dict(type='bool',),
-        uuid=dict(type='str',)
+        tag_switching=dict(type='list',service_group=dict(type='str',),equals=dict(type='str',),switching_type=dict(type='str',choices=['sender-comp-id','target-comp-id'])),
+        uuid=dict(type='str',),
+        user_tag=dict(type='str',),
+        name=dict(type='str',required=True,)
     ))
    
 
@@ -377,15 +373,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

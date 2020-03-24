@@ -143,7 +143,7 @@ options:
                 - "Specify the kdc port"
             http_kerberos_hostip:
                 description:
-                - "Kdc's hostname(length=1-31) or IP address"
+                - "Kdc's hostname or IP address"
     http_expect:
         description:
         - "Specify what you expect from the response message"
@@ -160,6 +160,7 @@ options:
         description:
         - "Specify HTTP Port (Specify port number (default 80))"
         required: False
+
 
 """
 
@@ -477,15 +478,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

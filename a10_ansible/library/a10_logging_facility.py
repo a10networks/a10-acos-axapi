@@ -57,6 +57,7 @@ options:
         - "'local0'= Local use; 'local1'= Local use; 'local2'= Local use; 'local3'= Local use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local use; 'local7'= Local use;  (Facility parameter for syslog messages)"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -345,15 +346,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

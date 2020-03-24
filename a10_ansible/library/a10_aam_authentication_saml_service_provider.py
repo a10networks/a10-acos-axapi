@@ -134,10 +134,6 @@ options:
         description:
         - "Customized tag"
         required: False
-    signature_algorithm:
-        description:
-        - "'SHA1'= use SHA1 as signature algorithm (default); 'SHA256'= use SHA256 as signature algorithm; "
-        required: False
     assertion_consuming_service:
         description:
         - "Field assertion_consuming_service"
@@ -215,6 +211,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -227,7 +224,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acs_uri_bypass","adfs_ws_federation","artifact_resolution_service","assertion_consuming_service","certificate","entity_id","metadata_export_service","name","require_assertion_signed","saml_request_signed","sampling_enable","service_url","signature_algorithm","single_logout_service","soap_tls_certificate_validate","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["acs_uri_bypass","adfs_ws_federation","artifact_resolution_service","assertion_consuming_service","certificate","entity_id","metadata_export_service","name","require_assertion_signed","saml_request_signed","sampling_enable","service_url","single_logout_service","soap_tls_certificate_validate","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -264,7 +261,6 @@ def get_argspec():
         service_url=dict(type='str',),
         entity_id=dict(type='str',),
         user_tag=dict(type='str',),
-        signature_algorithm=dict(type='str',choices=['SHA1','SHA256']),
         assertion_consuming_service=dict(type='list',assertion_index=dict(type='int',),assertion_binding=dict(type='str',choices=['artifact','paos','post']),assertion_location=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sp-metadata-export-req','sp-metadata-export-success','login-auth-req','login-auth-resp','acs-req','acs-success','acs-authz-fail','acs-error','slo-req','slo-success','slo-error','other-error'])),
         saml_request_signed=dict(type='dict',saml_request_signed_disable=dict(type='bool',)),
@@ -535,10 +531,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -546,6 +540,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

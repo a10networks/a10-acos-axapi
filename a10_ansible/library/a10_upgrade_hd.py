@@ -48,10 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    rollback:
-        description:
-        - "Field rollback"
-        required: False
     reboot_after_upgrade:
         description:
         - "reboot system after upgrade is done"
@@ -85,6 +81,7 @@ options:
         - "File URL"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -97,7 +94,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["Device","file_url","image","local","reboot_after_upgrade","rollback","source_ip_address","staggered_upgrade_mode","use_mgmt_port",]
+AVAILABLE_PROPERTIES = ["Device","file_url","image","local","reboot_after_upgrade","source_ip_address","staggered_upgrade_mode","use_mgmt_port",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -126,7 +123,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rollback=dict(type='bool',),
         reboot_after_upgrade=dict(type='bool',),
         use_mgmt_port=dict(type='bool',),
         image=dict(type='str',choices=['pri','sec']),
@@ -380,15 +376,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -9,10 +10,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_slb_ssl_export_hc_metrics
+module: a10_scaleout_device_groups
 description:
-    - Export SSL metrics to Harmony Controller
-short_description: Configures A10 slb.ssl.export-hc-metrics
+    - configure scaleout device groups
+short_description: Configures A10 scaleout.device-groups
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -35,17 +36,43 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    partition:
+    a10_port:
+        description:
+        - Port for AXAPI authentication
+        required: True
+    a10_protocol:
+        description:
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
         description:
         - Destination/target partition for object/command
-    enable:
-        description:
-        - "Enable exporting SSL metrics to Harmony Controller"
         required: False
+    scaleout_cluster_id:
+        description:
+        - Key to identify parent object
+    device_group_list:
+        description:
+        - "Field device_group_list"
+        required: False
+        suboptions:
+            device_group:
+                description:
+                - "scaletout device group"
+            device_id_list:
+                description:
+                - "Field device_id_list"
+            uuid:
+                description:
+                - "uuid of the object"
+            user_tag:
+                description:
+                - "Customized tag"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -59,7 +86,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable","uuid",]
+AVAILABLE_PROPERTIES = ["device_group_list","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -81,35 +108,41 @@ def get_default_argspec():
         state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
-        partition=dict(type='str', required=False),
-        get_type=dict(type='str', choices=["single", "list"])
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable=dict(type='bool',),
+        device_group_list=dict(type='list',device_group=dict(type='int',required=True,),device_id_list=dict(type='list',device_id_start=dict(type='int',),device_id_end=dict(type='int',)),uuid=dict(type='str',),user_tag=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
+    # Parent keys
+    rv.update(dict(
+        scaleout_cluster_id=dict(type='str', required=True),
+    ))
 
     return rv
 
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/slb/ssl/export-hc-metrics"
+    url_base = "/axapi/v3/scaleout/{scaleout_cluster_id}/device-groups"
 
     f_dict = {}
+    f_dict["scaleout_cluster_id"] = module.params["scaleout_cluster_id"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/slb/ssl/export-hc-metrics"
+    url_base = "/axapi/v3/scaleout/{scaleout_cluster_id}/device-groups"
 
     f_dict = {}
+    f_dict["scaleout_cluster_id"] = module.params["scaleout_cluster_id"]
 
     return url_base.format(**f_dict)
 
@@ -147,7 +180,7 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
@@ -196,17 +229,35 @@ def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("export-hc-metrics", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["device-groups"].items():
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["device-groups"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["device-groups"][k] = v
+            result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -225,8 +276,7 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("export-hc-metrics", module)
+def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
         if post_result:
@@ -242,16 +292,30 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("device-groups", module)
+    changed_config = report_changes(module, result, existing_config, payload)
+    if module.check_mode:
+        return changed_config
+    elif not existing_config:
+        return create(module, result, payload)
+    elif existing_config and not changed_config.get('changed'):
+        return update(module, result, existing_config, payload)
     else:
-        return update(module, result, existing_config)
+        result["changed"] = True
+        return result
 
-def absent(module, result):
-    return delete(module, result)
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
 
-def replace(module, result, existing_config):
-    payload = build_json("export-hc-metrics", module)
+def replace(module, result, existing_config, payload):
     try:
         post_result = module.client.put(existing_url(module), payload)
         if post_result:
@@ -282,8 +346,7 @@ def run_command(module):
     a10_password = module.params["a10_password"]
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
-    
-    partition = module.params["partition"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
@@ -298,26 +361,25 @@ def run_command(module):
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
-    if partition:
-        module.client.activate_partition(partition)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
 
     existing_config = exists(module)
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
-        module.client.session.close()
+        result = absent(module, result, existing_config)
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

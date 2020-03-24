@@ -259,10 +259,6 @@ options:
         description:
         - "IP address"
         required: False
-    tunnel:
-        description:
-        - "Tunnel interface (Tunnel interface number)"
-        required: False
     strict_capability_match:
         description:
         - "Strict capability negotiation match"
@@ -280,6 +276,7 @@ options:
         - "BGP connect timer"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -292,7 +289,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["activate","advertisement_interval","allowas_in","allowas_in_count","as_origination_interval","collide_established","connect","default_originate","description","disallow_infinite_holdtime","distribute_lists","dont_capability_negotiate","dynamic","ebgp_multihop","ebgp_multihop_hop_count","enforce_multihop","ethernet","inbound","lif","loopback","maximum_prefix","maximum_prefix_thres","neighbor_filter_lists","neighbor_prefix_lists","neighbor_route_map_lists","next_hop_self","override_capability","pass_encrypted","pass_value","passive","peer_group","peer_group_key","peer_group_remote_as","prefix_list_direction","remove_private_as","route_map","route_refresh","send_community_val","shutdown","strict_capability_match","timers_holdtime","timers_keepalive","trunk","tunnel","unsuppress_map","update_source_ip","update_source_ipv6","uuid","ve","weight",]
+AVAILABLE_PROPERTIES = ["activate","advertisement_interval","allowas_in","allowas_in_count","as_origination_interval","collide_established","connect","default_originate","description","disallow_infinite_holdtime","distribute_lists","dont_capability_negotiate","dynamic","ebgp_multihop","ebgp_multihop_hop_count","enforce_multihop","ethernet","inbound","lif","loopback","maximum_prefix","maximum_prefix_thres","neighbor_filter_lists","neighbor_prefix_lists","neighbor_route_map_lists","next_hop_self","override_capability","pass_encrypted","pass_value","passive","peer_group","peer_group_key","peer_group_remote_as","prefix_list_direction","remove_private_as","route_map","route_refresh","send_community_val","shutdown","strict_capability_match","timers_holdtime","timers_keepalive","trunk","unsuppress_map","update_source_ip","update_source_ipv6","uuid","ve","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -366,7 +363,6 @@ def get_argspec():
         as_origination_interval=dict(type='int',),
         override_capability=dict(type='bool',),
         update_source_ip=dict(type='str',),
-        tunnel=dict(type='str',),
         strict_capability_match=dict(type='bool',),
         ebgp_multihop=dict(type='bool',),
         ethernet=dict(type='str',),
@@ -624,15 +620,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

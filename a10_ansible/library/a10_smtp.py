@@ -56,21 +56,9 @@ options:
         description:
         - "uuid of the object"
         required: False
-    use_mgmt_port:
-        description:
-        - "Use management port as source port"
-        required: False
     smtp_server:
         description:
         - "Configure SMTP Server (length=1-254)"
-        required: False
-    port:
-        description:
-        - "Configure SMTP Port (Configure SMTP port, default is 25)"
-        required: False
-    needauthentication:
-        description:
-        - "Configure SMTP server need authtication"
         required: False
     username_cfg:
         description:
@@ -83,10 +71,19 @@ options:
             password:
                 description:
                 - "Field password"
+    needauthentication:
+        description:
+        - "Configure SMTP server need authtication"
+        required: False
+    port:
+        description:
+        - "Configure SMTP Port (Configure SMTP port, default is 25)"
+        required: False
     smtp_server_v6:
         description:
         - "Configure SMTP Server IPV6 address"
         required: False
+
 
 """
 
@@ -100,7 +97,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["mailfrom","needauthentication","port","smtp_server","smtp_server_v6","use_mgmt_port","username_cfg","uuid",]
+AVAILABLE_PROPERTIES = ["mailfrom","needauthentication","port","smtp_server","smtp_server_v6","username_cfg","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -131,11 +128,10 @@ def get_argspec():
     rv.update(dict(
         mailfrom=dict(type='str',),
         uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
         smtp_server=dict(type='str',),
-        port=dict(type='int',),
-        needauthentication=dict(type='bool',),
         username_cfg=dict(type='dict',username=dict(type='str',),password=dict(type='dict',encrypted=dict(type='str',),smtp_password=dict(type='str',))),
+        needauthentication=dict(type='bool',),
+        port=dict(type='int',),
         smtp_server_v6=dict(type='str',)
     ))
    
@@ -382,15 +378,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

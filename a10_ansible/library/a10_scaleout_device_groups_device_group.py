@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -9,10 +10,10 @@ REQUIRED_VALID = (True, "")
 
 
 DOCUMENTATION = """
-module: a10_visibility_reporting_template_notification
+module: a10_scaleout_device_groups_device_group
 description:
-    - None
-short_description: Configures A10 visibility.reporting.template.notification
+    - configure scaleout device groups
+short_description: Configures A10 scaleout.device-groups.device.group
 author: A10 Networks 2018 
 version_added: 2.4
 options:
@@ -35,75 +36,43 @@ options:
         description:
         - Password for AXAPI authentication
         required: True
-    protocol:
+    a10_port:
         description:
-        - "None"
-        required: False
-    name:
-        description:
-        - "None"
+        - Port for AXAPI authentication
         required: True
-    use_mgmt_port:
+    a10_protocol:
         description:
-        - "None"
+        - Protocol for AXAPI authentication
+        required: True
+    a10_partition:
+        description:
+        - Destination/target partition for object/command
+        required: False
+    scaleout_cluster_id:
+        description:
+        - Key to identify parent object
+    device_group:
+        description:
+        - "scaletout device group"
+        required: True
+    device_id_list:
+        description:
+        - "Field device_id_list"
+        required: False
+        suboptions:
+            device_id_start:
+                description:
+                - "Field device_id_start"
+            device_id_end:
+                description:
+                - "Field device_id_end"
+    uuid:
+        description:
+        - "uuid of the object"
         required: False
     user_tag:
         description:
-        - "None"
-        required: False
-    relative_uri:
-        description:
-        - "None"
-        required: False
-    authentication:
-        description:
-        - "Field authentication"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "None"
-            encrypted:
-                description:
-                - "None"
-            relative_logoff_uri:
-                description:
-                - "None"
-            auth_password_string:
-                description:
-                - "None"
-            auth_password:
-                description:
-                - "None"
-            relative_login_uri:
-                description:
-                - "None"
-            auth_username:
-                description:
-                - "None"
-    host_name:
-        description:
-        - "None"
-        required: False
-    ipv6_address:
-        description:
-        - "None"
-        required: False
-    action:
-        description:
-        - "None"
-        required: False
-    ipv4_address:
-        description:
-        - "None"
-        required: False
-    port:
-        description:
-        - "None"
-        required: False
-    uuid:
-        description:
-        - "None"
+        - "Customized tag"
         required: False
 
 
@@ -119,7 +88,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","authentication","host_name","ipv4_address","ipv6_address","name","port","protocol","relative_uri","use_mgmt_port","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["device_group","device_id_list","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -138,24 +107,25 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent"])
+        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        a10_port=dict(type='int', required=True),
+        a10_protocol=dict(type='str', choices=["http", "https"]),
+        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
+        get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='str',choices=['http','https']),
-        name=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
-        user_tag=dict(type='str',),
-        relative_uri=dict(type='str',),
-        authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),
-        host_name=dict(type='str',),
-        ipv6_address=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
-        ipv4_address=dict(type='str',),
-        port=dict(type='int',),
-        uuid=dict(type='str',)
+        device_group=dict(type='int',required=True,),
+        device_id_list=dict(type='list',device_id_start=dict(type='int',),device_id_end=dict(type='int',)),
+        uuid=dict(type='str',),
+        user_tag=dict(type='str',)
+    ))
+   
+    # Parent keys
+    rv.update(dict(
+        scaleout_cluster_id=dict(type='str', required=True),
     ))
 
     return rv
@@ -163,21 +133,29 @@ def get_argspec():
 def new_url(module):
     """Return the URL for creating a resource"""
     # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/visibility/reporting/template/notification/{name}"
+    url_base = "/axapi/v3/scaleout/{scaleout_cluster_id}/device-groups/device-group/{device-group}"
+
     f_dict = {}
-    f_dict["name"] = ""
+    f_dict["device-group"] = ""
+    f_dict["scaleout_cluster_id"] = module.params["scaleout_cluster_id"]
 
     return url_base.format(**f_dict)
 
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
-    url_base = "/axapi/v3/visibility/reporting/template/notification/{name}"
+    url_base = "/axapi/v3/scaleout/{scaleout_cluster_id}/device-groups/device-group/{device-group}"
+
     f_dict = {}
-    f_dict["name"] = module.params["name"]
+    f_dict["device-group"] = module.params["device_group"]
+    f_dict["scaleout_cluster_id"] = module.params["scaleout_cluster_id"]
 
     return url_base.format(**f_dict)
 
+def list_url(module):
+    """Return the URL for a list of resources"""
+    ret = existing_url(module)
+    return ret[0:ret.rfind('/')]
 
 def build_envelope(title, data):
     return {
@@ -195,7 +173,7 @@ def _build_dict_from_param(param):
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
             rv[hk] = v_dict
-        if isinstance(v, list):
+        elif isinstance(v, list):
             nv = [_build_dict_from_param(x) for x in v]
             rv[hk] = nv
         else:
@@ -208,13 +186,13 @@ def build_json(title, module):
 
     for x in AVAILABLE_PROPERTIES:
         v = module.params.get(x)
-        if v:
+        if v is not None:
             rx = _to_axapi(x)
 
             if isinstance(v, dict):
                 nv = _build_dict_from_param(v)
                 rv[rx] = nv
-            if isinstance(v, list):
+            elif isinstance(v, list):
                 nv = [_build_dict_from_param(x) for x in v]
                 rv[rx] = nv
             else:
@@ -225,7 +203,7 @@ def build_json(title, module):
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if params.get(x)])
+    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
     
     errors = []
     marg = []
@@ -250,20 +228,42 @@ def validate(params):
 def get(module):
     return module.client.get(existing_url(module))
 
+def get_list(module):
+    return module.client.get(list_url(module))
+
 def exists(module):
     try:
         return get(module)
     except a10_ex.NotFound:
-        return False
+        return None
 
-def create(module, result):
-    payload = build_json("notification", module)
+def report_changes(module, result, existing_config, payload):
+    if existing_config:
+        for k, v in payload["device-group"].items():
+            if isinstance(v, str):
+                if v.lower() == "true":
+                    v = 1
+                else:
+                    if v.lower() == "false":
+                        v = 0
+            elif k not in payload:
+               break
+            else:
+                if existing_config["device-group"][k] != v:
+                    if result["changed"] != True:
+                        result["changed"] = True
+                    existing_config["device-group"][k] = v
+            result.update(**existing_config)
+    else:
+        result.update(**payload)
+    return result
+
+def create(module, result, payload):
     try:
         post_result = module.client.post(new_url(module), payload)
-        result.update(**post_result)
+        if post_result:
+            result.update(**post_result)
         result["changed"] = True
-    except a10_ex.Exists:
-        result["changed"] = False
     except a10_ex.ACOSException as ex:
         module.fail_json(msg=ex.msg, **result)
     except Exception as gex:
@@ -282,11 +282,11 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    payload = build_json("notification", module)
+def update(module, result, existing_config, payload):
     try:
-        post_result = module.client.put(existing_url(module), payload)
-        result.update(**post_result)
+        post_result = module.client.post(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
         if post_result == existing_config:
             result["changed"] = False
         else:
@@ -298,13 +298,43 @@ def update(module, result, existing_config):
     return result
 
 def present(module, result, existing_config):
-    if not exists(module):
-        return create(module, result)
+    payload = build_json("device-group", module)
+    changed_config = report_changes(module, result, existing_config, payload)
+    if module.check_mode:
+        return changed_config
+    elif not existing_config:
+        return create(module, result, payload)
+    elif existing_config and not changed_config.get('changed'):
+        return update(module, result, existing_config, payload)
     else:
-        return update(module, result, existing_config)
+        result["changed"] = True
+        return result
 
-def absent(module, result):
-    return delete(module, result)
+def absent(module, result, existing_config):
+    if module.check_mode:
+        if existing_config:
+            result["changed"] = True
+            return result
+        else:
+            result["changed"] = False
+            return result
+    else:
+        return delete(module, result)
+
+def replace(module, result, existing_config, payload):
+    try:
+        post_result = module.client.put(existing_url(module), payload)
+        if post_result:
+            result.update(**post_result)
+        if post_result == existing_config:
+            result["changed"] = False
+        else:
+            result["changed"] = True
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def run_command(module):
     run_errors = []
@@ -312,41 +342,50 @@ def run_command(module):
     result = dict(
         changed=False,
         original_message="",
-        message=""
+        message="",
+        result={}
     )
 
     state = module.params["state"]
     a10_host = module.params["a10_host"]
     a10_username = module.params["a10_username"]
     a10_password = module.params["a10_password"]
-    # TODO(remove hardcoded port #)
-    a10_port = 443
-    a10_protocol = "https"
+    a10_port = module.params["a10_port"] 
+    a10_protocol = module.params["a10_protocol"]
+    a10_partition = module.params["a10_partition"]
 
     valid = True
 
     if state == 'present':
         valid, validation_errors = validate(module.params)
-        map(run_errors.append, validation_errors)
+        for ve in validation_errors:
+            run_errors.append(ve)
     
     if not valid:
-        result["messages"] = "Validation failure"
         err_msg = "\n".join(run_errors)
+        result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    if a10_partition:
+        module.client.activate_partition(a10_partition)
+
     existing_config = exists(module)
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
-        result = absent(module, result)
-        module.client.session.close()
+        result = absent(module, result, existing_config)
+    elif state == 'noop':
+        if module.params.get("get_type") == "single":
+            result["result"] = get(module)
+        elif module.params.get("get_type") == "list":
+            result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():
-    module = AnsibleModule(argument_spec=get_argspec())
+    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 

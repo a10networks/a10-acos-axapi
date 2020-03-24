@@ -65,6 +65,7 @@ options:
         - "'icmp'= ICMP type; 'tcp'= TCP type; 'udp'= UDP type; 'ftp'= FTP type; 'http'= HTTP type; 'snmp'= SNMP type; 'smtp'= SMTP type; 'dns'= DNS type; 'dns-tcp'= DNS TCP type; 'pop3'= POP3 type; 'imap'= IMAP type; 'sip'= SIP type; 'sip-tcp'= SIP TCP type; 'radius'= RADIUS type; 'ldap'= LDAP type; 'rtsp'= RTSP type; 'kerberos-kdc'= Kerberos KDC type; 'database'= DATABASE type; 'external'= EXTERNAL type; 'https'= HTTPS type; 'ntp'= NTP type; 'compound'= Compound type; "
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -355,15 +356,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

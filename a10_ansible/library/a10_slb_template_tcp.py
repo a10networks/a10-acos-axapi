@@ -60,9 +60,9 @@ options:
         description:
         - "TCP Half Open Idle Timeout (sec), default off (half open idle timeout in second, default off)"
         required: False
-    logging:
+    qos:
         description:
-        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
+        - "QOS level (number)"
         required: False
     name:
         description:
@@ -100,34 +100,31 @@ options:
         description:
         - "send reset to client when server is disabled"
         required: False
-    reset_rev:
+    lan_fast_ack:
         description:
-        - "send reset to client if error happens"
+        - "Enable fast TCP ack on LAN"
         required: False
     insert_client_ip:
         description:
         - "Insert client ip into TCP option"
         required: False
-    lan_fast_ack:
+    reset_rev:
         description:
-        - "Enable fast TCP ack on LAN"
-        required: False
-    half_close_idle_timeout:
-        description:
-        - "TCP Half Close Idle Timeout (sec), default off (half close idle timeout in second, default off)"
+        - "send reset to client if error happens"
         required: False
     force_delete_timeout_100ms:
         description:
         - "The maximum time that a session can stay in the system before being delete (number in 100ms)"
         required: False
-    qos:
+    half_close_idle_timeout:
         description:
-        - "QOS level (number)"
+        - "TCP Half Close Idle Timeout (sec), default off (half close idle timeout in second, default off)"
         required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -141,7 +138,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","logging","name","qos","reset_follow_fin","reset_fwd","reset_rev","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["alive_if_active","del_session_on_server_down","disable","down","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","initial_window_size","insert_client_ip","lan_fast_ack","name","qos","reset_follow_fin","reset_fwd","reset_rev","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -173,7 +170,7 @@ def get_argspec():
         del_session_on_server_down=dict(type='bool',),
         initial_window_size=dict(type='int',),
         half_open_idle_timeout=dict(type='int',),
-        logging=dict(type='str',choices=['init','term','both']),
+        qos=dict(type='int',),
         name=dict(type='str',required=True,),
         reset_fwd=dict(type='bool',),
         reset_follow_fin=dict(type='bool',),
@@ -183,12 +180,11 @@ def get_argspec():
         user_tag=dict(type='str',),
         down=dict(type='bool',),
         disable=dict(type='bool',),
-        reset_rev=dict(type='bool',),
-        insert_client_ip=dict(type='bool',),
         lan_fast_ack=dict(type='bool',),
-        half_close_idle_timeout=dict(type='int',),
+        insert_client_ip=dict(type='bool',),
+        reset_rev=dict(type='bool',),
         force_delete_timeout_100ms=dict(type='int',),
-        qos=dict(type='int',),
+        half_close_idle_timeout=dict(type='int',),
         uuid=dict(type='str',)
     ))
    
@@ -437,15 +433,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

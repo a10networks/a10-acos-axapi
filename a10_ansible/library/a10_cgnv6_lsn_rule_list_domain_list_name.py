@@ -51,44 +51,18 @@ options:
     lsn_rule_list_name:
         description:
         - Key to identify parent object
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            rule_count:
-                description:
-                - "Field rule_count"
-            rule_list:
-                description:
-                - "Field rule_list"
-            name_domain_list:
-                description:
-                - "Configure a Specific Rule-Set (Domain List Name)"
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'placeholder'= placeholder; "
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            name_domain_list:
-                description:
-                - "Configure a Specific Rule-Set (Domain List Name)"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     name_domain_list:
         description:
         - "Configure a Specific Rule-Set (Domain List Name)"
         required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
     rule_cfg:
         description:
         - "Field rule_cfg"
@@ -109,10 +83,7 @@ options:
             proto:
                 description:
                 - "'tcp'= TCP L4 Protoco; 'udp'= UDP L4 Protocol; 'icmp'= ICMP L4 Protocol; 'others'= Other L4 Protocl; 'dscp'= Match dscp value; "
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
+
 
 """
 
@@ -126,7 +97,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name_domain_list","oper","rule_cfg","sampling_enable","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["name_domain_list","rule_cfg","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -155,13 +126,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',rule_count=dict(type='int',),rule_list=dict(type='list',hits=dict(type='int',),port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp','template','idle-timeout']),no_snat=dict(type='int',),proto=dict(type='str',choices=['tcp','udp','icmp','others','dscp']),timeout_val=dict(type='int',),end_port=dict(type='int',),ipv4_list=dict(type='str',),fast=dict(type='int',),vrid=dict(type='int',),pool_shared=dict(type='int',),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),action=dict(type='str',choices=['action','no-action']),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),dscp_match=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),pool=dict(type='str',),http_alg=dict(type='str',)),name_domain_list=dict(type='str',required=True,)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','placeholder'])),
-        stats=dict(type='dict',name_domain_list=dict(type='str',required=True,)),
-        uuid=dict(type='str',),
         name_domain_list=dict(type='str',required=True,),
-        rule_cfg=dict(type='list',icmp_others_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),shared=dict(type='bool',),pool=dict(type='str',)),udp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',)),tcp_cfg=dict(type='dict',port_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp','template']),no_snat=dict(type='bool',),ipv4_list=dict(type='str',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',),http_alg=dict(type='str',)),dscp_cfg=dict(type='dict',dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),action_cfg=dict(type='str',choices=['action']),action_type=dict(type='str',choices=['set-dscp']),dscp_direction=dict(type='str',choices=['inbound','outbound']),dscp_match=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','any','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63'])),proto=dict(type='str',choices=['tcp','udp','icmp','others','dscp'])),
-        user_tag=dict(type='str',)
+        uuid=dict(type='str',),
+        user_tag=dict(type='str',),
+        rule_cfg=dict(type='list',icmp_others_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),shared=dict(type='bool',),pool=dict(type='str',)),udp_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',)),tcp_cfg=dict(type='dict',ipv4_list=dict(type='str',),action_type=dict(type='str',choices=['dnat','drop','one-to-one-snat','pass-through','snat','set-dscp','template']),no_snat=dict(type='bool',),dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),end_port=dict(type='int',),vrid=dict(type='int',),action_cfg=dict(type='str',choices=['action','no-action']),dscp_direction=dict(type='str',choices=['inbound','outbound']),start_port=dict(type='int',),shared=dict(type='bool',),pool=dict(type='str',),http_alg=dict(type='str',)),dscp_cfg=dict(type='dict',dscp_value=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63']),action_cfg=dict(type='str',choices=['action']),action_type=dict(type='str',choices=['set-dscp']),dscp_direction=dict(type='str',choices=['inbound','outbound']),dscp_match=dict(type='str',choices=['default','af11','af12','af13','af21','af22','af23','af31','af32','af33','af41','af42','af43','cs1','cs2','cs3','cs4','cs5','cs6','cs7','ef','any','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63'])),proto=dict(type='str',choices=['tcp','udp','icmp','others','dscp']))
     ))
    
     # Parent keys
@@ -192,16 +160,6 @@ def existing_url(module):
     f_dict["lsn_rule_list_name"] = module.params["lsn_rule_list_name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -281,24 +239,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
-
-def get_stats(module):
-    if module.params.get("stats"):
-        query_params = {}
-        for k,v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -443,19 +383,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

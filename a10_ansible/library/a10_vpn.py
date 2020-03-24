@@ -53,72 +53,127 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            ipsec_sa_by_gw:
-                description:
-                - "Field ipsec_sa_by_gw"
-            ipsec_list:
-                description:
-                - "Field ipsec_list"
-            all_partitions:
-                description:
-                - "Field all_partitions"
             Num_hardware_devices:
                 description:
                 - "Field Num_hardware_devices"
             IPsec_mode:
                 description:
                 - "Field IPsec_mode"
-            specific_partition:
-                description:
-                - "Field specific_partition"
             IKE_Gateway_total:
                 description:
                 - "Field IKE_Gateway_total"
             ike_gateway_list:
                 description:
                 - "Field ike_gateway_list"
-            all_partition_list:
+            ipsec_list:
                 description:
-                - "Field all_partition_list"
+                - "Field ipsec_list"
             IPsec_SA_total:
                 description:
                 - "Field IPsec_SA_total"
-            default:
-                description:
-                - "Field default"
             Crypto_cores_assigned_to_IPsec:
                 description:
                 - "Field Crypto_cores_assigned_to_IPsec"
             IKE_SA_total:
                 description:
                 - "Field IKE_SA_total"
-            errordump:
-                description:
-                - "Field errordump"
             Crypto_cores_total:
                 description:
                 - "Field Crypto_cores_total"
             IPsec_total:
                 description:
                 - "Field IPsec_total"
-            shared:
-                description:
-                - "Field shared"
-            ocsp:
-                description:
-                - "Field ocsp"
             Crypto_mem:
                 description:
                 - "Field Crypto_mem"
             crl:
                 description:
                 - "Field crl"
-            log:
+            ocsp:
                 description:
-                - "Field log"
+                - "Field ocsp"
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            ike_stats_global:
+                description:
+                - "Field ike_stats_global"
+            passthrough:
+                description:
+                - "Field passthrough"
+            ike_gateway_list:
+                description:
+                - "Field ike_gateway_list"
+            ha_standby_drop:
+                description:
+                - "Field ha_standby_drop"
+            ipsec_list:
+                description:
+                - "Field ipsec_list"
+    jumbo_fragment:
+        description:
+        - "Support IKE jumbo fragment packet"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    asymmetric_flow_support:
+        description:
+        - "Support asymmetric flows pass through IPsec tunnel"
+        required: False
     tcp_mss_adjust_disable:
         description:
         - "Disable TCP MSS adjustment in SYN packet"
+        required: False
+    ocsp:
+        description:
+        - "Field ocsp"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    fragment_after_encap:
+        description:
+        - "Fragment after adding IPsec headers"
+        required: False
+    ike_stats_global:
+        description:
+        - "Field ike_stats_global"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'passthrough'= passthrough; 'ha-standby-drop'= ha-standby-drop; "
+    crl:
+        description:
+        - "Field crl"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    ike_sa_timeout:
+        description:
+        - "Timeout IKE-SA in connecting state in seconds (default 600s)"
+        required: False
+    nat_traversal_flow_affinity:
+        description:
+        - "Choose IPsec UDP source port based on port of inner flow (only for A10 to A10)"
         required: False
     ike_gateway_list:
         description:
@@ -197,147 +252,6 @@ options:
             auth_method:
                 description:
                 - "'preshare-key'= Authenticate the remote gateway using a pre-shared key (Default); 'rsa-signature'= Authenticate the remote gateway using an RSA certificate; 'ecdsa-signature'= Authenticate the remote gateway using an ECDSA certificate; "
-    fragment_after_encap:
-        description:
-        - "Fragment after adding IPsec headers"
-        required: False
-    ipsec_error_dump:
-        description:
-        - "Support record the error ipsec cavium information in dump file"
-        required: False
-    nat_traversal_flow_affinity:
-        description:
-        - "Choose IPsec UDP source port based on port of inner flow (only for A10 to A10)"
-        required: False
-    asymmetric_flow_support:
-        description:
-        - "Support asymmetric flows pass through IPsec tunnel"
-        required: False
-    ocsp:
-        description:
-        - "Field ocsp"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    ike_stats_global:
-        description:
-        - "Field ike_stats_global"
-        required: False
-        suboptions:
-            sampling_enable:
-                description:
-                - "Field sampling_enable"
-            uuid:
-                description:
-                - "uuid of the object"
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            ike_gateway_list:
-                description:
-                - "Field ike_gateway_list"
-            ha_standby_drop:
-                description:
-                - "Field ha_standby_drop"
-            error:
-                description:
-                - "Field error"
-            passthrough:
-                description:
-                - "Field passthrough"
-            ike_stats_global:
-                description:
-                - "Field ike_stats_global"
-            ipsec_list:
-                description:
-                - "Field ipsec_list"
-    jumbo_fragment:
-        description:
-        - "Support IKE jumbo fragment packet"
-        required: False
-    log:
-        description:
-        - "Field log"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    default:
-        description:
-        - "Field default"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    crl:
-        description:
-        - "Field crl"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    revocation_list:
-        description:
-        - "Field revocation_list"
-        required: False
-        suboptions:
-            name:
-                description:
-                - "Revocation name"
-            ca:
-                description:
-                - "Certificate Authority file name"
-            user_tag:
-                description:
-                - "Customized tag"
-            ocsp:
-                description:
-                - "Field ocsp"
-            crl:
-                description:
-                - "Field crl"
-            uuid:
-                description:
-                - "uuid of the object"
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'passthrough'= passthrough; 'ha-standby-drop'= ha-standby-drop; "
-    errordump:
-        description:
-        - "Field errordump"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-    ike_sa_timeout:
-        description:
-        - "Timeout IKE-SA in connecting state in seconds (default 600s)"
-        required: False
-    error:
-        description:
-        - "Field error"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     ipsec_list:
         description:
         - "Field ipsec_list"
@@ -357,7 +271,7 @@ options:
                 - "IPsec name"
             dh_group:
                 description:
-                - "'0'= Diffie-Hellman group 0 (Default); '1'= Diffie-Hellman group 1 - 768-bits; '2'= Diffie-Hellman group 2 - 1024-bits; '5'= Diffie-Hellman group 5 - 1536-bits; '14'= Diffie-Hellman group 14 - 2048-bits; '15'= Diffie-Hellman group 15 - 3072-bits; '16'= Diffie-Hellman group 16 - 4096-bits; '18'= Diffie-Hellman group 18 - 8192-bits; '19'= Diffie-Hellman group 19 - 256-bit Elliptic Curve; '20'= Diffie-Hellman group 20 - 384-bit Elliptic Curve; "
+                - "'0'= Diffie-Hellman group 0 (Default); '1'= Diffie-Hellman group 1 - 768-bits; '2'= Diffie-Hellman group 2 - 1024-bits; '5'= Diffie-Hellman group 5 - 1536-bits; '14'= Diffie-Hellman group 14 - 2048-bits; '15'= Diffie-Hellman group 15 - 3072-bits; '16'= Diffie-Hellman group 16 - 4096-bits; '18'= Diffie-Hellman group 18 - 8192-bits; "
             proto:
                 description:
                 - "'esp'= Encapsulating security protocol (Default); "
@@ -391,11 +305,26 @@ options:
             traffic_selector:
                 description:
                 - "Field traffic_selector"
-    ipsec_sa_by_gw:
+    revocation_list:
         description:
-        - "Field ipsec_sa_by_gw"
+        - "Field revocation_list"
         required: False
         suboptions:
+            name:
+                description:
+                - "Revocation name"
+            ca:
+                description:
+                - "Certificate Authority file name"
+            user_tag:
+                description:
+                - "Customized tag"
+            ocsp:
+                description:
+                - "Field ocsp"
+            crl:
+                description:
+                - "Field crl"
             uuid:
                 description:
                 - "uuid of the object"
@@ -403,6 +332,7 @@ options:
         description:
         - "VPN module will work in stateful mode and create sessions"
         required: False
+
 
 """
 
@@ -416,7 +346,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["asymmetric_flow_support","crl","default","error","errordump","fragment_after_encap","ike_gateway_list","ike_sa_timeout","ike_stats_global","ipsec_error_dump","ipsec_list","ipsec_sa_by_gw","jumbo_fragment","log","nat_traversal_flow_affinity","ocsp","oper","revocation_list","sampling_enable","stateful_mode","stats","tcp_mss_adjust_disable","uuid",]
+AVAILABLE_PROPERTIES = ["asymmetric_flow_support","crl","fragment_after_encap","ike_gateway_list","ike_sa_timeout","ike_stats_global","ipsec_list","jumbo_fragment","nat_traversal_flow_affinity","ocsp","oper","revocation_list","sampling_enable","stateful_mode","stats","tcp_mss_adjust_disable","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -445,28 +375,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ipsec_sa_by_gw=dict(type='dict',oper=dict(type='dict',local_ip=dict(type='str',),ike_gateway_name=dict(type='str',),ipsec_sa_list=dict(type='list',lifebytes=dict(type='str',),protocol=dict(type='str',),remote_ts=dict(type='str',),out_spi=dict(type='str',),local_ts=dict(type='str',),ipsec_sa_name=dict(type='str',),in_spi=dict(type='str',),mode=dict(type='str',),encryption=dict(type='str',),lifetime=dict(type='int',),hash=dict(type='str',)),peer_ip=dict(type='str',))),ipsec_list=dict(type='list',oper=dict(type='dict',Status=dict(type='str',),Hash_Algorithm=dict(type='str',),Protocol=dict(type='str',),DH_Group=dict(type='int',),Remote_SPI=dict(type='str',),Local_IP=dict(type='str',),Anti_Replay=dict(type='str',),Lifebytes=dict(type='str',),SA_Index=dict(type='int',),Peer_IP=dict(type='str',),Mode=dict(type='str',),NAT_Traversal=dict(type='int',),Local_SPI=dict(type='str',),Encryption_Algorithm=dict(type='str',),Lifetime=dict(type='int',)),name=dict(type='str',required=True,)),all_partitions=dict(type='bool',),Num_hardware_devices=dict(type='int',),IPsec_mode=dict(type='str',),specific_partition=dict(type='str',),IKE_Gateway_total=dict(type='int',),ike_gateway_list=dict(type='list',oper=dict(type='dict',Status=dict(type='str',),Remote_IP=dict(type='str',),Hash=dict(type='str',),NAT_Traversal=dict(type='int',),Local_IP=dict(type='str',),Responder_SPI=dict(type='str',),Encryption=dict(type='str',),Lifetime=dict(type='int',),Initiator_SPI=dict(type='str',)),name=dict(type='str',required=True,)),all_partition_list=dict(type='list',standby_drop=dict(type='int',),IPsec_mode=dict(type='str',),IKE_Gateway_total=dict(type='int',),Crypto_hw_err_req_alloc_fail=dict(type='int',),Crypto_mem=dict(type='int',),Crypto_hw_err_req_error=dict(type='int',),IPsec_SA_total=dict(type='int',),IPsec_stateless=dict(type='int',),Crypto_cores_total=dict(type='int',),IPsec_total=dict(type='int',),Crypto_hw_err_bad_pointer=dict(type='int',),Crypto_hw_err_bad_ctx_pointer=dict(type='int',),Crypto_hw_err_enqueue_fail=dict(type='int',),Crypto_hw_err_time_out_state=dict(type='int',),vpn_list=dict(type='list',passthrough=dict(type='int',),cpu_id=dict(type='int',)),Num_hardware_devices=dict(type='int',),Crypto_hw_err_state=dict(type='str',),Crypto_cores_assigned_to_IPsec=dict(type='int',),IKE_SA_total=dict(type='int',),Crypto_hw_err=dict(type='int',),passthrough_total=dict(type='int',),Crypto_hw_err_sg_buff_alloc_fail=dict(type='int',),Crypto_hw_err_buff_alloc_error=dict(type='int',),partition_name=dict(type='str',),Crypto_hw_err_state_error=dict(type='int',),Crypto_hw_err_time_out=dict(type='int',)),IPsec_SA_total=dict(type='int',),default=dict(type='dict',oper=dict(type='dict',ike_local_address=dict(type='str',),ike_version=dict(type='str',),IPsec_remote_subnet=dict(type='str',),IPsec_mode=dict(type='str',),ike_nat_traversal=dict(type='str',),ike_dpd_interval=dict(type='int',),IPsec_priority=dict(type='int',),IPsec_traffic_selector=dict(type='str',),ike_encryption=dict(type='str',),IPsec_remote_port=dict(type='int',),IPsec_hash=dict(type='str',),IPsec_protocol=dict(type='str',),ike_priority=dict(type='int',),ike_hash=dict(type='str',),IPsec_remote_protocol=dict(type='int',),ike_remote_address=dict(type='str',),ike_dh_group=dict(type='str',),ike_auth_method=dict(type='str',),IPsec_anti_replay_window=dict(type='int',),ike_lifetime=dict(type='int',),IPsec_lifetime=dict(type='int',),IPsec_local_protocol=dict(type='int',),IPsec_local_port=dict(type='int',),IPsec_lifebytes=dict(type='int',),IPsec_encryption=dict(type='str',),IPsec_local_subnet=dict(type='str',),IPsec_dh_group=dict(type='str',),ike_mode=dict(type='str',))),Crypto_cores_assigned_to_IPsec=dict(type='int',),IKE_SA_total=dict(type='int',),errordump=dict(type='dict',oper=dict(type='dict',IPsec_error_dump_path=dict(type='str',))),Crypto_cores_total=dict(type='int',),IPsec_total=dict(type='int',),shared=dict(type='bool',),ocsp=dict(type='dict',oper=dict(type='dict',total_ocsps=dict(type='int',),ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',)))),Crypto_mem=dict(type='int',),crl=dict(type='dict',oper=dict(type='dict',total_crls=dict(type='int',),crl_list=dict(type='list',revoked=dict(type='str',),storage_type=dict(type='str',),updates=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),issuer=dict(type='str',)))),log=dict(type='dict',oper=dict(type='dict',vpn_log_offset=dict(type='int',),vpn_log_over=dict(type='int',),vpn_log_list=dict(type='list',vpn_log_data=dict(type='str',)),from_start=dict(type='bool',),follow=dict(type='bool',),num_lines=dict(type='int',)))),
-        tcp_mss_adjust_disable=dict(type='bool',),
-        ike_gateway_list=dict(type='list',ike_version=dict(type='str',choices=['v1','v2']),key_passphrase_encrypted=dict(type='str',),local_cert=dict(type='dict',local_cert_name=dict(type='str',)),lifetime=dict(type='int',),local_id=dict(type='str',),enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','null']),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512'])),uuid=dict(type='str',),nat_traversal=dict(type='bool',),vrid=dict(type='dict',vrid_num=dict(type='int',)),preshare_key_value=dict(type='str',),key_passphrase=dict(type='str',),mode=dict(type='str',choices=['main','aggressive']),local_address=dict(type='dict',local_ip=dict(type='str',),local_ipv6=dict(type='str',)),key=dict(type='str',),preshare_key_encrypted=dict(type='str',),remote_address=dict(type='dict',remote_ip=dict(type='str',),dns=dict(type='str',),remote_ipv6=dict(type='str',)),remote_ca_cert=dict(type='dict',remote_cert_name=dict(type='str',)),name=dict(type='str',required=True,),dh_group=dict(type='str',choices=['1','2','5','14','15','16','18','19','20']),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','v2-init-rekey','v2-rsp-rekey','v2-child-sa-rekey','v2-in-invalid','v2-in-invalid-spi','v2-in-init-req','v2-in-init-rsp','v2-out-init-req','v2-out-init-rsp','v2-in-auth-req','v2-in-auth-rsp','v2-out-auth-req','v2-out-auth-rsp','v2-in-create-child-req','v2-in-create-child-rsp','v2-out-create-child-req','v2-out-create-child-rsp','v2-in-info-req','v2-in-info-rsp','v2-out-info-req','v2-out-info-rsp','v1-in-id-prot-req','v1-in-id-prot-rsp','v1-out-id-prot-req','v1-out-id-prot-rsp','v1-in-auth-only-req','v1-in-auth-only-rsp','v1-out-auth-only-req','v1-out-auth-only-rsp','v1-in-aggressive-req','v1-in-aggressive-rsp','v1-out-aggressive-req','v1-out-aggressive-rsp','v1-in-info-v1-req','v1-in-info-v1-rsp','v1-out-info-v1-req','v1-out-info-v1-rsp','v1-in-transaction-req','v1-in-transaction-rsp','v1-out-transaction-req','v1-out-transaction-rsp','v1-in-quick-mode-req','v1-in-quick-mode-rsp','v1-out-quick-mode-req','v1-out-quick-mode-rsp','v1-in-new-group-mode-req','v1-in-new-group-mode-rsp','v1-out-new-group-mode-req','v1-out-new-group-mode-rsp','v1-child-sa-invalid-spi','v2-child-sa-invalid-spi','ike-current-version'])),dpd=dict(type='dict',interval=dict(type='int',),retry=dict(type='int',)),remote_id=dict(type='str',),auth_method=dict(type='str',choices=['preshare-key','rsa-signature','ecdsa-signature'])),
-        fragment_after_encap=dict(type='bool',),
-        ipsec_error_dump=dict(type='bool',),
-        nat_traversal_flow_affinity=dict(type='bool',),
-        asymmetric_flow_support=dict(type='bool',),
-        ocsp=dict(type='dict',uuid=dict(type='str',)),
-        ike_stats_global=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','v2-init-rekey','v2-rsp-rekey','v2-child-sa-rekey','v2-in-invalid','v2-in-invalid-spi','v2-in-init-req','v2-in-init-rsp','v2-out-init-req','v2-out-init-rsp','v2-in-auth-req','v2-in-auth-rsp','v2-out-auth-req','v2-out-auth-rsp','v2-in-create-child-req','v2-in-create-child-rsp','v2-out-create-child-req','v2-out-create-child-rsp','v2-in-info-req','v2-in-info-rsp','v2-out-info-req','v2-out-info-rsp','v1-in-id-prot-req','v1-in-id-prot-rsp','v1-out-id-prot-req','v1-out-id-prot-rsp','v1-in-auth-only-req','v1-in-auth-only-rsp','v1-out-auth-only-req','v1-out-auth-only-rsp','v1-in-aggressive-req','v1-in-aggressive-rsp','v1-out-aggressive-req','v1-out-aggressive-rsp','v1-in-info-v1-req','v1-in-info-v1-rsp','v1-out-info-v1-req','v1-out-info-v1-rsp','v1-in-transaction-req','v1-in-transaction-rsp','v1-out-transaction-req','v1-out-transaction-rsp','v1-in-quick-mode-req','v1-in-quick-mode-rsp','v1-out-quick-mode-req','v1-out-quick-mode-rsp','v1-in-new-group-mode-req','v1-in-new-group-mode-rsp','v1-out-new-group-mode-req','v1-out-new-group-mode-rsp'])),uuid=dict(type='str',)),
-        uuid=dict(type='str',),
-        stats=dict(type='dict',ike_gateway_list=dict(type='list',stats=dict(type='dict',v1_in_id_prot_rsp=dict(type='str',),v1_in_auth_only_rsp=dict(type='str',),v1_out_quick_mode_req=dict(type='str',),v1_out_aggressive_req=dict(type='str',),v2_child_sa_rekey=dict(type='str',),ike_current_version=dict(type='str',),v2_out_auth_req=dict(type='str',),v2_rsp_rekey=dict(type='str',),v2_out_info_req=dict(type='str',),v2_out_init_req=dict(type='str',),v1_in_info_v1_rsp=dict(type='str',),v1_out_id_prot_req=dict(type='str',),v2_in_invalid=dict(type='str',),v1_in_aggressive_req=dict(type='str',),v1_child_sa_invalid_spi=dict(type='str',),v2_in_info_rsp=dict(type='str',),v1_out_new_group_mode_rsp=dict(type='str',),v2_out_auth_rsp=dict(type='str',),v1_in_auth_only_req=dict(type='str',),v1_in_info_v1_req=dict(type='str',),v2_in_create_child_req=dict(type='str',),v2_out_info_rsp=dict(type='str',),v2_out_create_child_req=dict(type='str',),v2_in_auth_rsp=dict(type='str',),v2_in_init_req=dict(type='str',),v1_out_info_v1_req=dict(type='str',),v2_init_rekey=dict(type='str',),v1_in_id_prot_req=dict(type='str',),v1_out_transaction_rsp=dict(type='str',),v1_out_quick_mode_rsp=dict(type='str',),v1_out_auth_only_rsp=dict(type='str',),v1_in_quick_mode_rsp=dict(type='str',),v1_in_new_group_mode_req=dict(type='str',),v1_out_id_prot_rsp=dict(type='str',),v1_in_transaction_rsp=dict(type='str',),v1_in_aggressive_rsp=dict(type='str',),v1_in_transaction_req=dict(type='str',),v1_in_quick_mode_req=dict(type='str',),v2_in_invalid_spi=dict(type='str',),v1_out_auth_only_req=dict(type='str',),v1_out_transaction_req=dict(type='str',),v1_out_new_group_mode_req=dict(type='str',),v2_child_sa_invalid_spi=dict(type='str',),v1_out_info_v1_rsp=dict(type='str',),v2_in_init_rsp=dict(type='str',),v2_in_create_child_rsp=dict(type='str',),v2_in_auth_req=dict(type='str',),v2_out_init_rsp=dict(type='str',),v1_in_new_group_mode_rsp=dict(type='str',),v2_out_create_child_rsp=dict(type='str',),v1_out_aggressive_rsp=dict(type='str',),v2_in_info_req=dict(type='str',)),name=dict(type='str',required=True,)),ha_standby_drop=dict(type='str',),error=dict(type='dict',stats=dict(type='dict',bad_opcode=dict(type='str',),bad_sg_write_len=dict(type='str',),ipv6_rh_length_error=dict(type='str',),ah_not_supported_with_gcm_gmac_sha2=dict(type='str',),bad_auth_type=dict(type='str',),bad_gre_protocol=dict(type='str',),ipv6_outbound_rh_copy_addr_error=dict(type='str',),bad_ip_payload_type=dict(type='str',),ipv6_extension_headers_too_big=dict(type='str',),bad_encrypt_type=dict(type='str',),bad_checksum=dict(type='str',),bad_gre_header=dict(type='str',),bad_ipsec_context=dict(type='str',),bad_min_frag_size_auth_sha384_512=dict(type='str',),bad_ipsec_padding=dict(type='str',),bad_inline_data=dict(type='str',),dummy_payload=dict(type='str',),bad_ip_version=dict(type='str',),bad_encrypt_type_ctr_gcm=dict(type='str',),bad_fragment_size=dict(type='str',),bad_esp_next_header=dict(type='str',),ipv6_hop_by_hop_error=dict(type='str',),error_ipv6_decrypt_rh_segs_left_error=dict(type='str',),bad_ipsec_spi=dict(type='str',),bad_ipsec_context_flag_mismatch=dict(type='str',),error_IPv6_extension_header_bad=dict(type='str',),bad_ipsec_protocol=dict(type='str',),bad_frag_size_configuration=dict(type='str',),bad_ipsec_auth=dict(type='str',),bad_ipcomp_configuration=dict(type='str',),bad_len=dict(type='str',),bad_ipsec_context_direction=dict(type='str',),bad_ipsec_unknown=dict(type='str',),ipcomp_payload=dict(type='str',),bad_srtp_auth_tag=dict(type='str',),tfc_padding_with_prefrag_not_supported=dict(type='str',),dsiv_incorrect_param=dict(type='str',),bad_selector_match=dict(type='str',))),passthrough=dict(type='str',),ike_stats_global=dict(type='dict',stats=dict(type='dict',v1_in_id_prot_rsp=dict(type='str',),v1_in_auth_only_rsp=dict(type='str',),v1_out_quick_mode_req=dict(type='str',),v1_out_aggressive_req=dict(type='str',),v2_child_sa_rekey=dict(type='str',),v2_out_auth_req=dict(type='str',),v2_rsp_rekey=dict(type='str',),v2_out_info_req=dict(type='str',),v2_out_init_req=dict(type='str',),v1_in_info_v1_rsp=dict(type='str',),v1_out_id_prot_req=dict(type='str',),v2_in_invalid=dict(type='str',),v1_in_aggressive_req=dict(type='str',),v2_in_info_rsp=dict(type='str',),v1_out_new_group_mode_rsp=dict(type='str',),v2_out_auth_rsp=dict(type='str',),v1_in_auth_only_req=dict(type='str',),v1_in_info_v1_req=dict(type='str',),v2_in_create_child_req=dict(type='str',),v2_out_info_rsp=dict(type='str',),v2_out_create_child_req=dict(type='str',),v2_in_auth_rsp=dict(type='str',),v2_in_init_req=dict(type='str',),v1_out_info_v1_req=dict(type='str',),v2_init_rekey=dict(type='str',),v1_in_id_prot_req=dict(type='str',),v1_out_transaction_rsp=dict(type='str',),v1_out_quick_mode_rsp=dict(type='str',),v1_out_auth_only_rsp=dict(type='str',),v1_in_quick_mode_rsp=dict(type='str',),v1_in_new_group_mode_req=dict(type='str',),v1_out_id_prot_rsp=dict(type='str',),v1_in_transaction_rsp=dict(type='str',),v1_in_aggressive_rsp=dict(type='str',),v1_in_transaction_req=dict(type='str',),v1_in_quick_mode_req=dict(type='str',),v2_in_invalid_spi=dict(type='str',),v1_out_auth_only_req=dict(type='str',),v1_out_transaction_req=dict(type='str',),v1_out_new_group_mode_req=dict(type='str',),v1_out_info_v1_rsp=dict(type='str',),v2_in_init_rsp=dict(type='str',),v2_in_create_child_rsp=dict(type='str',),v2_in_auth_req=dict(type='str',),v2_out_init_rsp=dict(type='str',),v1_in_new_group_mode_rsp=dict(type='str',),v2_out_create_child_rsp=dict(type='str',),v1_out_aggressive_rsp=dict(type='str',),v2_in_info_req=dict(type='str',))),ipsec_list=dict(type='list',stats=dict(type='dict',anti_replay_num=dict(type='str',),packets_decrypted=dict(type='str',),tunnel_intf_down=dict(type='str',),pkt_fail_to_send=dict(type='str',),packets_encrypted=dict(type='str',),bytes_encrypted=dict(type='str',),packets_err_nh_check=dict(type='str',),no_tunnel_found=dict(type='str',),cavium_packets_decrypted=dict(type='str',),prefrag_error=dict(type='str',),bytes_decrypted=dict(type='str',),invalid_tunnel_id=dict(type='str',),pkt_fail_prep_to_send=dict(type='str',),cavium_packets_encrypted=dict(type='str',),packets_err_icv_check=dict(type='str',),packets_err_inactive=dict(type='str',),cavium_bytes_decrypted=dict(type='str',),sequence_num_rollover=dict(type='str',),packets_err_pkt_sanity=dict(type='str',),frag_after_encap_frag_packets=dict(type='str',),cavium_bytes_encrypted=dict(type='str',),sequence_num=dict(type='str',),packets_err_lifetime_lifebytes=dict(type='str',),packets_err_encryption=dict(type='str',),rekey_num=dict(type='str',),prefrag_success=dict(type='str',),packets_err_pad_check=dict(type='str',),no_next_hop=dict(type='str',),frag_received=dict(type='str',)),name=dict(type='str',required=True,))),
+        oper=dict(type='dict',Num_hardware_devices=dict(type='int',),IPsec_mode=dict(type='str',),IKE_Gateway_total=dict(type='int',),ike_gateway_list=dict(type='list',oper=dict(type='dict',Status=dict(type='str',),Remote_IP=dict(type='str',),Hash=dict(type='str',),Local_IP=dict(type='str',),Responder_SPI=dict(type='str',),Encryption=dict(type='str',),Lifetime=dict(type='int',),Initiator_SPI=dict(type='str',)),name=dict(type='str',required=True,)),ipsec_list=dict(type='list',oper=dict(type='dict',Status=dict(type='str',),Hash_Algorithm=dict(type='str',),Protocol=dict(type='str',),DH_Group=dict(type='int',),Remote_SPI=dict(type='str',),Local_IP=dict(type='str',),Anti_Replay=dict(type='str',),Lifebytes=dict(type='str',),SA_Index=dict(type='int',),Peer_IP=dict(type='str',),Mode=dict(type='str',),NAT_Traversal=dict(type='int',),Local_SPI=dict(type='str',),Encryption_Algorithm=dict(type='str',),Lifetime=dict(type='int',)),name=dict(type='str',required=True,)),IPsec_SA_total=dict(type='int',),Crypto_cores_assigned_to_IPsec=dict(type='int',),IKE_SA_total=dict(type='int',),Crypto_cores_total=dict(type='int',),IPsec_total=dict(type='int',),Crypto_mem=dict(type='int',),crl=dict(type='dict',oper=dict(type='dict',crl_list=dict(type='list',issuer=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),revoked=dict(type='str',),updates=dict(type='str',)))),ocsp=dict(type='dict',oper=dict(type='dict',ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',))))),
+        stats=dict(type='dict',ike_stats_global=dict(type='dict',stats=dict(type='dict',v1_in_id_prot_rsp=dict(type='str',),v1_in_auth_only_rsp=dict(type='str',),v1_out_quick_mode_req=dict(type='str',),v1_out_aggressive_req=dict(type='str',),v2_child_sa_rekey=dict(type='str',),v2_out_auth_req=dict(type='str',),v2_rsp_rekey=dict(type='str',),v2_out_info_req=dict(type='str',),v2_out_init_req=dict(type='str',),v1_in_info_v1_rsp=dict(type='str',),v1_out_id_prot_req=dict(type='str',),v2_in_invalid=dict(type='str',),v1_in_aggressive_req=dict(type='str',),v2_in_info_rsp=dict(type='str',),v1_out_new_group_mode_rsp=dict(type='str',),v2_out_auth_rsp=dict(type='str',),v1_in_auth_only_req=dict(type='str',),v1_in_info_v1_req=dict(type='str',),v2_in_create_child_req=dict(type='str',),v2_out_info_rsp=dict(type='str',),v2_out_create_child_req=dict(type='str',),v2_in_auth_rsp=dict(type='str',),v2_in_init_req=dict(type='str',),v1_out_info_v1_req=dict(type='str',),v2_init_rekey=dict(type='str',),v1_in_id_prot_req=dict(type='str',),v1_out_transaction_rsp=dict(type='str',),v1_out_quick_mode_rsp=dict(type='str',),v1_out_auth_only_rsp=dict(type='str',),v1_in_quick_mode_rsp=dict(type='str',),v1_in_new_group_mode_req=dict(type='str',),v1_out_id_prot_rsp=dict(type='str',),v1_in_transaction_rsp=dict(type='str',),v1_in_aggressive_rsp=dict(type='str',),v1_in_transaction_req=dict(type='str',),v1_in_quick_mode_req=dict(type='str',),v2_in_invalid_spi=dict(type='str',),v1_out_auth_only_req=dict(type='str',),v1_out_transaction_req=dict(type='str',),v1_out_new_group_mode_req=dict(type='str',),v1_out_info_v1_rsp=dict(type='str',),v2_in_init_rsp=dict(type='str',),v2_in_create_child_rsp=dict(type='str',),v2_in_auth_req=dict(type='str',),v2_out_init_rsp=dict(type='str',),v1_in_new_group_mode_rsp=dict(type='str',),v2_out_create_child_rsp=dict(type='str',),v1_out_aggressive_rsp=dict(type='str',),v2_in_info_req=dict(type='str',))),passthrough=dict(type='str',),ike_gateway_list=dict(type='list',stats=dict(type='dict',v1_in_id_prot_rsp=dict(type='str',),v1_in_auth_only_rsp=dict(type='str',),v1_out_quick_mode_req=dict(type='str',),v1_out_aggressive_req=dict(type='str',),v2_child_sa_rekey=dict(type='str',),ike_current_version=dict(type='str',),v2_out_auth_req=dict(type='str',),v2_rsp_rekey=dict(type='str',),v2_out_info_req=dict(type='str',),v2_out_init_req=dict(type='str',),v1_in_info_v1_rsp=dict(type='str',),v1_out_id_prot_req=dict(type='str',),v2_in_invalid=dict(type='str',),v1_in_aggressive_req=dict(type='str',),v1_child_sa_invalid_spi=dict(type='str',),v2_in_info_rsp=dict(type='str',),v1_out_new_group_mode_rsp=dict(type='str',),v2_out_auth_rsp=dict(type='str',),v1_in_auth_only_req=dict(type='str',),v1_in_info_v1_req=dict(type='str',),v2_in_create_child_req=dict(type='str',),v2_out_info_rsp=dict(type='str',),v2_out_create_child_req=dict(type='str',),v2_in_auth_rsp=dict(type='str',),v2_in_init_req=dict(type='str',),v1_out_info_v1_req=dict(type='str',),v2_init_rekey=dict(type='str',),v1_in_id_prot_req=dict(type='str',),v1_out_transaction_rsp=dict(type='str',),v1_out_quick_mode_rsp=dict(type='str',),v1_out_auth_only_rsp=dict(type='str',),v1_in_quick_mode_rsp=dict(type='str',),v1_in_new_group_mode_req=dict(type='str',),v1_out_id_prot_rsp=dict(type='str',),v1_in_transaction_rsp=dict(type='str',),v1_in_aggressive_rsp=dict(type='str',),v1_in_transaction_req=dict(type='str',),v1_in_quick_mode_req=dict(type='str',),v2_in_invalid_spi=dict(type='str',),v1_out_auth_only_req=dict(type='str',),v1_out_transaction_req=dict(type='str',),v1_out_new_group_mode_req=dict(type='str',),v2_child_sa_invalid_spi=dict(type='str',),v1_out_info_v1_rsp=dict(type='str',),v2_in_init_rsp=dict(type='str',),v2_in_create_child_rsp=dict(type='str',),v2_in_auth_req=dict(type='str',),v2_out_init_rsp=dict(type='str',),v1_in_new_group_mode_rsp=dict(type='str',),v2_out_create_child_rsp=dict(type='str',),v1_out_aggressive_rsp=dict(type='str',),v2_in_info_req=dict(type='str',)),name=dict(type='str',required=True,)),ha_standby_drop=dict(type='str',),ipsec_list=dict(type='list',stats=dict(type='dict',anti_replay_num=dict(type='str',),packets_decrypted=dict(type='str',),tunnel_intf_down=dict(type='str',),pkt_fail_to_send=dict(type='str',),packets_encrypted=dict(type='str',),bytes_encrypted=dict(type='str',),no_tunnel_found=dict(type='str',),cavium_packets_decrypted=dict(type='str',),prefrag_error=dict(type='str',),bytes_decrypted=dict(type='str',),invalid_tunnel_id=dict(type='str',),pkt_fail_prep_to_send=dict(type='str',),cavium_packets_encrypted=dict(type='str',),packets_err_icv_check=dict(type='str',),packets_err_inactive=dict(type='str',),cavium_bytes_decrypted=dict(type='str',),sequence_num_rollover=dict(type='str',),packets_err_pkt_sanity=dict(type='str',),frag_after_encap_frag_packets=dict(type='str',),cavium_bytes_encrypted=dict(type='str',),sequence_num=dict(type='str',),packets_err_lifetime_lifebytes=dict(type='str',),packets_err_encryption=dict(type='str',),rekey_num=dict(type='str',),prefrag_success=dict(type='str',),packets_err_pad_check=dict(type='str',),no_next_hop=dict(type='str',),frag_received=dict(type='str',)),name=dict(type='str',required=True,))),
         jumbo_fragment=dict(type='bool',),
-        log=dict(type='dict',uuid=dict(type='str',)),
-        default=dict(type='dict',uuid=dict(type='str',)),
-        crl=dict(type='dict',uuid=dict(type='str',)),
-        revocation_list=dict(type='list',name=dict(type='str',required=True,),ca=dict(type='str',),user_tag=dict(type='str',),ocsp=dict(type='dict',ocsp_pri=dict(type='str',),ocsp_sec=dict(type='str',)),crl=dict(type='dict',crl_sec=dict(type='str',),crl_pri=dict(type='str',)),uuid=dict(type='str',)),
+        uuid=dict(type='str',),
+        asymmetric_flow_support=dict(type='bool',),
+        tcp_mss_adjust_disable=dict(type='bool',),
+        ocsp=dict(type='dict',uuid=dict(type='str',)),
+        fragment_after_encap=dict(type='bool',),
+        ike_stats_global=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','v2-init-rekey','v2-rsp-rekey','v2-child-sa-rekey','v2-in-invalid','v2-in-invalid-spi','v2-in-init-req','v2-in-init-rsp','v2-out-init-req','v2-out-init-rsp','v2-in-auth-req','v2-in-auth-rsp','v2-out-auth-req','v2-out-auth-rsp','v2-in-create-child-req','v2-in-create-child-rsp','v2-out-create-child-req','v2-out-create-child-rsp','v2-in-info-req','v2-in-info-rsp','v2-out-info-req','v2-out-info-rsp','v1-in-id-prot-req','v1-in-id-prot-rsp','v1-out-id-prot-req','v1-out-id-prot-rsp','v1-in-auth-only-req','v1-in-auth-only-rsp','v1-out-auth-only-req','v1-out-auth-only-rsp','v1-in-aggressive-req','v1-in-aggressive-rsp','v1-out-aggressive-req','v1-out-aggressive-rsp','v1-in-info-v1-req','v1-in-info-v1-rsp','v1-out-info-v1-req','v1-out-info-v1-rsp','v1-in-transaction-req','v1-in-transaction-rsp','v1-out-transaction-req','v1-out-transaction-rsp','v1-in-quick-mode-req','v1-in-quick-mode-rsp','v1-out-quick-mode-req','v1-out-quick-mode-rsp','v1-in-new-group-mode-req','v1-in-new-group-mode-rsp','v1-out-new-group-mode-req','v1-out-new-group-mode-rsp'])),uuid=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','passthrough','ha-standby-drop'])),
-        errordump=dict(type='dict',uuid=dict(type='str',)),
+        crl=dict(type='dict',uuid=dict(type='str',)),
         ike_sa_timeout=dict(type='int',),
-        error=dict(type='dict',uuid=dict(type='str',)),
-        ipsec_list=dict(type='list',uuid=dict(type='str',),lifebytes=dict(type='int',),bind_tunnel=dict(type='dict',tunnel=dict(type='int',),next_hop=dict(type='str',),uuid=dict(type='str',),next_hop_v6=dict(type='str',)),name=dict(type='str',required=True,),dh_group=dict(type='str',choices=['0','1','2','5','14','15','16','18','19','20']),proto=dict(type='str',choices=['esp']),up=dict(type='bool',),user_tag=dict(type='str',),anti_replay_window=dict(type='str',choices=['0','32','64','128','256','512','1024']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets-encrypted','packets-decrypted','anti-replay-num','rekey-num','packets-err-inactive','packets-err-encryption','packets-err-pad-check','packets-err-pkt-sanity','packets-err-icv-check','packets-err-lifetime-lifebytes','bytes-encrypted','bytes-decrypted','prefrag-success','prefrag-error','cavium-bytes-encrypted','cavium-bytes-decrypted','cavium-packets-encrypted','cavium-packets-decrypted','tunnel-intf-down','pkt-fail-prep-to-send','no-next-hop','invalid-tunnel-id','no-tunnel-found','pkt-fail-to-send','frag-after-encap-frag-packets','frag-received','sequence-num','sequence-num-rollover','packets-err-nh-check'])),ike_gateway=dict(type='str',),mode=dict(type='str',choices=['tunnel']),sequence_number_disable=dict(type='bool',),lifetime=dict(type='int',),enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','aes-gcm-128','aes-gcm-192','aes-gcm-256','null']),gcm_priority=dict(type='int',),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512','null'])),traffic_selector=dict(type='dict',ipv4=dict(type='dict',remote=dict(type='str',),local_port=dict(type='int',),remote_port=dict(type='int',),local_netmask=dict(type='str',),remote_netmask=dict(type='str',),protocol=dict(type='int',),local=dict(type='str',)),ipv6=dict(type='dict',local_portv6=dict(type='int',),protocolv6=dict(type='int',),localv6=dict(type='str',),remotev6=dict(type='str',),remote_portv6=dict(type='int',)))),
-        ipsec_sa_by_gw=dict(type='dict',uuid=dict(type='str',)),
+        nat_traversal_flow_affinity=dict(type='bool',),
+        ike_gateway_list=dict(type='list',ike_version=dict(type='str',choices=['v1','v2']),key_passphrase_encrypted=dict(type='str',),local_cert=dict(type='dict',local_cert_name=dict(type='str',)),lifetime=dict(type='int',),local_id=dict(type='str',),enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','null']),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512'])),uuid=dict(type='str',),nat_traversal=dict(type='bool',),vrid=dict(type='dict',vrid_num=dict(type='int',)),preshare_key_value=dict(type='str',),key_passphrase=dict(type='str',),mode=dict(type='str',choices=['main','aggressive']),local_address=dict(type='dict',local_ip=dict(type='str',),local_ipv6=dict(type='str',)),key=dict(type='str',),preshare_key_encrypted=dict(type='str',),remote_address=dict(type='dict',remote_ip=dict(type='str',),dns=dict(type='str',),remote_ipv6=dict(type='str',)),remote_ca_cert=dict(type='dict',remote_cert_name=dict(type='str',)),name=dict(type='str',required=True,),dh_group=dict(type='str',choices=['1','2','5','14','15','16','18','19','20']),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','v2-init-rekey','v2-rsp-rekey','v2-child-sa-rekey','v2-in-invalid','v2-in-invalid-spi','v2-in-init-req','v2-in-init-rsp','v2-out-init-req','v2-out-init-rsp','v2-in-auth-req','v2-in-auth-rsp','v2-out-auth-req','v2-out-auth-rsp','v2-in-create-child-req','v2-in-create-child-rsp','v2-out-create-child-req','v2-out-create-child-rsp','v2-in-info-req','v2-in-info-rsp','v2-out-info-req','v2-out-info-rsp','v1-in-id-prot-req','v1-in-id-prot-rsp','v1-out-id-prot-req','v1-out-id-prot-rsp','v1-in-auth-only-req','v1-in-auth-only-rsp','v1-out-auth-only-req','v1-out-auth-only-rsp','v1-in-aggressive-req','v1-in-aggressive-rsp','v1-out-aggressive-req','v1-out-aggressive-rsp','v1-in-info-v1-req','v1-in-info-v1-rsp','v1-out-info-v1-req','v1-out-info-v1-rsp','v1-in-transaction-req','v1-in-transaction-rsp','v1-out-transaction-req','v1-out-transaction-rsp','v1-in-quick-mode-req','v1-in-quick-mode-rsp','v1-out-quick-mode-req','v1-out-quick-mode-rsp','v1-in-new-group-mode-req','v1-in-new-group-mode-rsp','v1-out-new-group-mode-req','v1-out-new-group-mode-rsp','v1-child-sa-invalid-spi','v2-child-sa-invalid-spi','ike-current-version'])),dpd=dict(type='dict',interval=dict(type='int',),retry=dict(type='int',)),remote_id=dict(type='str',),auth_method=dict(type='str',choices=['preshare-key','rsa-signature','ecdsa-signature'])),
+        ipsec_list=dict(type='list',uuid=dict(type='str',),lifebytes=dict(type='int',),bind_tunnel=dict(type='dict',tunnel=dict(type='int',),next_hop=dict(type='str',),uuid=dict(type='str',),next_hop_v6=dict(type='str',)),name=dict(type='str',required=True,),dh_group=dict(type='str',choices=['0','1','2','5','14','15','16','18']),proto=dict(type='str',choices=['esp']),up=dict(type='bool',),user_tag=dict(type='str',),anti_replay_window=dict(type='str',choices=['0','32','64','128','256','512','1024']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets-encrypted','packets-decrypted','anti-replay-num','rekey-num','packets-err-inactive','packets-err-encryption','packets-err-pad-check','packets-err-pkt-sanity','packets-err-icv-check','packets-err-lifetime-lifebytes','bytes-encrypted','bytes-decrypted','prefrag-success','prefrag-error','cavium-bytes-encrypted','cavium-bytes-decrypted','cavium-packets-encrypted','cavium-packets-decrypted','tunnel-intf-down','pkt-fail-prep-to-send','no-next-hop','invalid-tunnel-id','no-tunnel-found','pkt-fail-to-send','frag-after-encap-frag-packets','frag-received','sequence-num','sequence-num-rollover'])),ike_gateway=dict(type='str',),mode=dict(type='str',choices=['tunnel']),sequence_number_disable=dict(type='bool',),lifetime=dict(type='int',),enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','aes-gcm-128','aes-gcm-192','aes-gcm-256','null']),gcm_priority=dict(type='int',),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512','null'])),traffic_selector=dict(type='dict',ipv4=dict(type='dict',remote=dict(type='str',),local_port=dict(type='int',),remote_port=dict(type='int',),local_netmask=dict(type='str',),remote_netmask=dict(type='str',),protocol=dict(type='int',),local=dict(type='str',)),ipv6=dict(type='dict',local_portv6=dict(type='int',),protocolv6=dict(type='int',),localv6=dict(type='str',),remotev6=dict(type='str',),remote_portv6=dict(type='int',)))),
+        revocation_list=dict(type='list',name=dict(type='str',required=True,),ca=dict(type='str',),user_tag=dict(type='str',),ocsp=dict(type='dict',ocsp_pri=dict(type='str',),ocsp_sec=dict(type='str',)),crl=dict(type='dict',crl_sec=dict(type='str',),crl_pri=dict(type='str',)),uuid=dict(type='str',)),
         stateful_mode=dict(type='bool',)
     ))
    
@@ -741,10 +665,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -754,6 +676,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

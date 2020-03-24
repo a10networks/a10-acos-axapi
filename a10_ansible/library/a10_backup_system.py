@@ -52,10 +52,6 @@ options:
         description:
         - "password for the remote site"
         required: False
-    encrypt:
-        description:
-        - "Encrypt the backup file"
-        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -69,6 +65,7 @@ options:
         - "Save backup store information"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -81,7 +78,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypt","password","remote_file","store_name","use_mgmt_port",]
+AVAILABLE_PROPERTIES = ["password","remote_file","store_name","use_mgmt_port",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -111,7 +108,6 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         password=dict(type='str',),
-        encrypt=dict(type='bool',),
         use_mgmt_port=dict(type='bool',),
         remote_file=dict(type='str',),
         store_name=dict(type='str',)
@@ -360,15 +356,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

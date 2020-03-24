@@ -59,6 +59,10 @@ options:
             tunnel_end:
                 description:
                 - "tunnel port"
+    management:
+        description:
+        - "Management Interface"
+        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -148,6 +152,7 @@ options:
                 description:
                 - "Ethernet port"
 
+
 """
 
 EXAMPLES = """
@@ -160,7 +165,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_v4_list","acl_v6_list","all_data_intf","eth_cfg","tunnel_cfg","uuid","ve_cfg",]
+AVAILABLE_PROPERTIES = ["acl_v4_list","acl_v6_list","all_data_intf","eth_cfg","management","tunnel_cfg","uuid","ve_cfg",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -190,6 +195,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         tunnel_cfg=dict(type='list',tunnel_start=dict(type='int',),tunnel_end=dict(type='int',)),
+        management=dict(type='bool',),
         uuid=dict(type='str',),
         acl_v6_list=dict(type='list',tunnel_cfg=dict(type='list',tunnel_start=dict(type='int',),tunnel_end=dict(type='int',)),management=dict(type='bool',),uuid=dict(type='str',),acl_name=dict(type='str',required=True,),user_tag=dict(type='str',),ve_cfg=dict(type='list',ve_end=dict(type='int',),ve_start=dict(type='int',)),all_data_intf=dict(type='bool',),eth_cfg=dict(type='list',ethernet_start=dict(type='str',),ethernet_end=dict(type='str',))),
         ve_cfg=dict(type='list',ve_end=dict(type='int',),ve_start=dict(type='int',)),
@@ -429,15 +435,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

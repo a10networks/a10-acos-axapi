@@ -56,30 +56,12 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            http_host_hits:
-                description:
-                - "Field http_host_hits"
             protocol:
                 description:
                 - "'dns-udp'= DNS service over UDP; "
-            cpu_count:
-                description:
-                - "Field cpu_count"
-            port_number:
-                description:
-                - "Port"
             loc_list:
                 description:
                 - "Field loc_list"
-            http_hits_list:
-                description:
-                - "Field http_hits_list"
-            http_vport:
-                description:
-                - "Field http_vport"
-            state:
-                description:
-                - "Field state"
             loc_max_depth:
                 description:
                 - "Field loc_max_depth"
@@ -89,18 +71,15 @@ options:
             loc_last:
                 description:
                 - "Field loc_last"
-            http_url_hits:
+            state:
                 description:
-                - "Field http_url_hits"
+                - "Field state"
             geo_location:
                 description:
                 - "Field geo_location"
-            http_vport_cpu_list:
+            port_number:
                 description:
-                - "Field http_vport_cpu_list"
-            real_curr_conn:
-                description:
-                - "Field real_curr_conn"
+                - "Port"
             loc_success:
                 description:
                 - "Field loc_success"
@@ -113,6 +92,54 @@ options:
             loc_override:
                 description:
                 - "Field loc_override"
+    protocol:
+        description:
+        - "'dns-udp'= DNS service over UDP; "
+        required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    precedence:
+        description:
+        - "Set auto NAT pool as higher precedence for source NAT"
+        required: False
+    auto:
+        description:
+        - "Configure auto NAT for the vport"
+        required: False
+    template_policy:
+        description:
+        - "Policy Template (Policy template name)"
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to this Virtual Server (Service Group Name)"
+        required: False
+    port_number:
+        description:
+        - "Port"
+        required: True
+    action:
+        description:
+        - "'enable'= Enable; 'disable'= Disable; "
+        required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'curr_conn'= Current connection; 'total_l4_conn'= Total L4 connections; 'total_l7_conn'= Total L7 connections; 'toatal_tcp_conn'= Total TCP connections; 'total_conn'= Total connections; 'total_fwd_bytes'= Total forward bytes; 'total_fwd_pkts'= Total forward packets; 'total_rev_bytes'= Total reverse bytes; 'total_rev_pkts'= Total reverse packets; 'total_dns_pkts'= Total DNS packets; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; "
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    template_dns:
+        description:
+        - "DNS template (DNS template name)"
+        required: False
     stats:
         description:
         - "Field stats"
@@ -202,86 +229,11 @@ options:
             toatal_tcp_conn:
                 description:
                 - "Total TCP connections"
-    protocol:
-        description:
-        - "'dns-udp'= DNS service over UDP; "
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    precedence:
-        description:
-        - "Set auto NAT pool as higher precedence for source NAT"
-        required: False
-    auto:
-        description:
-        - "Configure auto NAT for the vport"
-        required: False
-    template_policy:
-        description:
-        - "Policy Template (Policy template name)"
-        required: False
-    service_group:
-        description:
-        - "Bind a Service Group to this Virtual Server (Service Group Name)"
-        required: False
-    port_number:
-        description:
-        - "Port"
-        required: True
-    acl_name_list:
-        description:
-        - "Field acl_name_list"
-        required: False
-        suboptions:
-            acl_name:
-                description:
-                - "Apply an access list name (Named Access List)"
-            acl_name_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-            acl_name_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'curr_conn'= Current connection; 'total_l4_conn'= Total L4 connections; 'total_l7_conn'= Total L7 connections; 'toatal_tcp_conn'= Total TCP connections; 'total_conn'= Total connections; 'total_fwd_bytes'= Total forward bytes; 'total_fwd_pkts'= Total forward packets; 'total_rev_bytes'= Total reverse bytes; 'total_rev_pkts'= Total reverse packets; 'total_dns_pkts'= Total DNS packets; 'total_mf_dns_pkts'= Total MF DNS packets; 'es_total_failure_actions'= Total failure actions; 'compression_bytes_before'= Data into compression engine; 'compression_bytes_after'= Data out of compression engine; 'compression_hit'= Number of requests compressed; 'compression_miss'= Number of requests NOT compressed; 'compression_miss_no_client'= Compression miss no client; 'compression_miss_template_exclusion'= Compression miss template exclusion; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total successful requests; 'peak_conn'= Peak connections; 'curr_conn_rate'= Current connection rate; 'last_rsp_time'= Last response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; "
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    template_dns:
-        description:
-        - "DNS template (DNS template name)"
-        required: False
-    acl_id_list:
-        description:
-        - "Field acl_id_list"
-        required: False
-        suboptions:
-            acl_id_seq_num:
-                description:
-                - "Specify ACL precedence (sequence-number)"
-            acl_id:
-                description:
-                - "ACL id VPORT"
-            acl_id_src_nat_pool:
-                description:
-                - "Policy based Source NAT (NAT Pool or Pool Group)"
-    action:
-        description:
-        - "'enable'= Enable; 'disable'= Disable; "
-        required: False
     pool:
         description:
         - "Specify NAT pool or pool group"
         required: False
+
 
 """
 
@@ -295,7 +247,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["acl_id_list","acl_name_list","action","auto","oper","pool","port_number","precedence","protocol","sampling_enable","service_group","stats","template_dns","template_policy","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","auto","oper","pool","port_number","precedence","protocol","sampling_enable","service_group","stats","template_dns","template_policy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -324,8 +276,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',http_host_hits=dict(type='bool',),protocol=dict(type='str',required=True,choices=['dns-udp']),cpu_count=dict(type='int',),port_number=dict(type='int',required=True,),loc_list=dict(type='str',),http_hits_list=dict(type='list',name=dict(type='str',),hits_count=dict(type='int',)),http_vport=dict(type='bool',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),loc_max_depth=dict(type='int',),level_str=dict(type='str',),loc_last=dict(type='str',),http_url_hits=dict(type='bool',),geo_location=dict(type='str',),http_vport_cpu_list=dict(type='list',REQ_50u=dict(type='int',),http2_control_bytes=dict(type='int',),ws_server_switch=dict(type='int',),REQ_50m=dict(type='int',),status_450=dict(type='int',),http2_reset_received=dict(type='int',),status_510=dict(type='int',),ws_handshake_request=dict(type='int',),http2_header_bytes=dict(type='int',),status_207=dict(type='int',),status_206=dict(type='int',),status_205=dict(type='int',),status_204=dict(type='int',),status_203=dict(type='int',),status_202=dict(type='int',),status_201=dict(type='int',),status_200=dict(type='int',),ws_client_switch=dict(type='int',),status_2xx=dict(type='int',),http2_goaway_received=dict(type='int',),REQ_500u=dict(type='int',),status_4xx=dict(type='int',),status_3xx=dict(type='int',),REQ_200u=dict(type='int',),stream_closed=dict(type='int',),REQ_100m=dict(type='int',),REQ_5m=dict(type='int',),REQ_100u=dict(type='int',),REQ_5s=dict(type='int',),REQ_20m=dict(type='int',),header_length_long=dict(type='int',),REQ_20u=dict(type='int',),REQ_2s=dict(type='int',),total_http2_bytes=dict(type='int',),status_411=dict(type='int',),status_306=dict(type='int',),status_307=dict(type='int',),status_304=dict(type='int',),status_305=dict(type='int',),status_302=dict(type='int',),status_303=dict(type='int',),REQ_2m=dict(type='int',),status_301=dict(type='int',),REQ_10u=dict(type='int',),total_http2_conn=dict(type='int',),REQ_10m=dict(type='int',),REQ_200m=dict(type='int',),peak_http2_conn=dict(type='int',),status_412=dict(type='int',),status_413=dict(type='int',),status_410=dict(type='int',),http2_reset_sent=dict(type='int',),status_416=dict(type='int',),status_417=dict(type='int',),status_414=dict(type='int',),status_415=dict(type='int',),status_418=dict(type='int',),status_unknown=dict(type='int',),status_100=dict(type='int',),status_101=dict(type='int',),status_102=dict(type='int',),status_300=dict(type='int',),status_424=dict(type='int',),curr_http2_conn=dict(type='int',),ws_handshake_success=dict(type='int',),status_504_ax=dict(type='int',),status_6xx=dict(type='int',),status_5xx=dict(type='int',),status_401=dict(type='int',),status_400=dict(type='int',),status_403=dict(type='int',),status_402=dict(type='int',),status_405=dict(type='int',),status_404=dict(type='int',),status_407=dict(type='int',),status_406=dict(type='int',),status_409=dict(type='int',),status_408=dict(type='int',),http2_goaway_sent=dict(type='int',),REQ_1m=dict(type='int',),REQ_1s=dict(type='int',),status_1xx=dict(type='int',),http2_data_bytes=dict(type='int',),status_423=dict(type='int',),status_422=dict(type='int',),status_426=dict(type='int',),status_425=dict(type='int',),REQ_500m=dict(type='int',),status_508=dict(type='int',),status_509=dict(type='int',),REQ_OVER_5s=dict(type='int',),status_500=dict(type='int',),status_501=dict(type='int',),status_502=dict(type='int',),status_503=dict(type='int',),status_504=dict(type='int',),status_505=dict(type='int',),status_506=dict(type='int',),status_507=dict(type='int',),status_449=dict(type='int',)),real_curr_conn=dict(type='int',),loc_success=dict(type='int',),loc_error=dict(type='int',),group_id=dict(type='int',),loc_override=dict(type='int',)),
-        stats=dict(type='dict',curr_req=dict(type='str',),protocol=dict(type='str',required=True,choices=['dns-udp']),total_fwd_bytes=dict(type='str',),compression_miss=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_mf_dns_pkts=dict(type='str',),compression_miss_template_exclusion=dict(type='str',),total_dns_pkts=dict(type='str',),peak_conn=dict(type='str',),compression_bytes_after=dict(type='str',),total_req=dict(type='str',),compression_bytes_before=dict(type='str',),last_rsp_time=dict(type='str',),curr_conn=dict(type='str',),port_number=dict(type='int',required=True,),total_rev_bytes=dict(type='str',),curr_conn_rate=dict(type='str',),compression_miss_no_client=dict(type='str',),es_total_failure_actions=dict(type='str',),total_conn=dict(type='str',),compression_hit=dict(type='str',),total_rev_pkts=dict(type='str',),total_l7_conn=dict(type='str',),total_req_succ=dict(type='str',),total_l4_conn=dict(type='str',),slowest_rsp_time=dict(type='str',),toatal_tcp_conn=dict(type='str',)),
+        oper=dict(type='dict',protocol=dict(type='str',required=True,choices=['dns-udp']),loc_list=dict(type='str',),loc_max_depth=dict(type='int',),level_str=dict(type='str',),loc_last=dict(type='str',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),geo_location=dict(type='str',),port_number=dict(type='int',required=True,),loc_success=dict(type='int',),loc_error=dict(type='int',),group_id=dict(type='int',),loc_override=dict(type='int',)),
         protocol=dict(type='str',required=True,choices=['dns-udp']),
         uuid=dict(type='str',),
         precedence=dict(type='bool',),
@@ -333,12 +284,11 @@ def get_argspec():
         template_policy=dict(type='str',),
         service_group=dict(type='str',),
         port_number=dict(type='int',required=True,),
-        acl_name_list=dict(type='list',acl_name=dict(type='str',),acl_name_src_nat_pool=dict(type='str',),acl_name_seq_num=dict(type='int',)),
+        action=dict(type='str',choices=['enable','disable']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','toatal_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time'])),
         user_tag=dict(type='str',),
         template_dns=dict(type='str',),
-        acl_id_list=dict(type='list',acl_id_seq_num=dict(type='int',),acl_id=dict(type='int',),acl_id_src_nat_pool=dict(type='str',)),
-        action=dict(type='str',choices=['enable','disable']),
+        stats=dict(type='dict',curr_req=dict(type='str',),protocol=dict(type='str',required=True,choices=['dns-udp']),total_fwd_bytes=dict(type='str',),compression_miss=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_mf_dns_pkts=dict(type='str',),compression_miss_template_exclusion=dict(type='str',),total_dns_pkts=dict(type='str',),peak_conn=dict(type='str',),compression_bytes_after=dict(type='str',),total_req=dict(type='str',),compression_bytes_before=dict(type='str',),last_rsp_time=dict(type='str',),curr_conn=dict(type='str',),port_number=dict(type='int',required=True,),total_rev_bytes=dict(type='str',),curr_conn_rate=dict(type='str',),compression_miss_no_client=dict(type='str',),es_total_failure_actions=dict(type='str',),total_conn=dict(type='str',),compression_hit=dict(type='str',),total_rev_pkts=dict(type='str',),total_l7_conn=dict(type='str',),total_req_succ=dict(type='str',),total_l4_conn=dict(type='str',),slowest_rsp_time=dict(type='str',),toatal_tcp_conn=dict(type='str',)),
         pool=dict(type='str',)
     ))
    
@@ -623,10 +573,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -636,6 +584,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

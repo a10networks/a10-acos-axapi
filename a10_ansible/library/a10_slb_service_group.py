@@ -92,27 +92,24 @@ options:
         - "Field member_list"
         required: False
         suboptions:
+            member_stats_data_disable:
+                description:
+                - "Disable statistical data collection"
             member_priority:
                 description:
                 - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
-            uuid:
+            name:
                 description:
-                - "uuid of the object"
+                - "Member name"
             fqdn_name:
                 description:
                 - "Server hostname - Not applicable if real server is already defined"
-            resolve_as:
-                description:
-                - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as AAAA Query to resolve FQDN; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
             member_template:
                 description:
                 - "Real server port template (Real server port template name)"
-            name:
-                description:
-                - "Member name"
             host:
                 description:
                 - "IP Address - Not applicable if real server is already defined"
@@ -128,9 +125,9 @@ options:
             port:
                 description:
                 - "Port number"
-            member_stats_data_disable:
+            uuid:
                 description:
-                - "Disable statistical data collection"
+                - "uuid of the object"
     stats_data_action:
         description:
         - "'stats-data-enable'= Enable statistical data collection for service group; 'stats-data-disable'= Disable statistical data collection for service group; "
@@ -138,10 +135,6 @@ options:
     traffic_replication_mirror_da_repl:
         description:
         - "Replace Destination MAC"
-        required: False
-    template_policy_shared:
-        description:
-        - "Policy template"
         required: False
     rpt_ext_server:
         description:
@@ -173,36 +166,33 @@ options:
             service_unhealthy_host:
                 description:
                 - "Service Group unhealthy host count"
-            service_curr_conn_overflow:
-                description:
-                - "Current connection counter overflow count"
             name:
                 description:
                 - "SLB Service Name"
-            server_selection_fail_drop:
+            service_req_count:
                 description:
-                - "Drops due to Service selection failure"
+                - "Service Group request count"
             service_healthy_host:
                 description:
                 - "Service Group healthy host count"
             service_resp_count:
                 description:
                 - "Service Group response count"
-            service_req_count:
-                description:
-                - "Service Group request count"
-            service_resp_4xx:
-                description:
-                - "Service Group response 4xx count"
-            service_peak_conn:
-                description:
-                - "Peak connection count for the Service Group"
-            server_selection_fail_reset:
-                description:
-                - "Resets sent out for Service selection failure"
             service_resp_3xx:
                 description:
                 - "Service Group response 3xx count"
+            service_resp_4xx:
+                description:
+                - "Service Group response 4xx count"
+            server_selection_fail_drop:
+                description:
+                - "Drops due to Service selection failure"
+            server_selection_fail_reset:
+                description:
+                - "Resets sent out for Service selection failure"
+            service_peak_conn:
+                description:
+                - "Peak connection count for the Service Group"
             service_resp_5xx:
                 description:
                 - "Service Group response 5xx count"
@@ -222,25 +212,13 @@ options:
         description:
         - "PRR, select the oldest node for sub-select"
         required: False
-    shared_partition_policy_template:
-        description:
-        - "Reference a policy template from shared partition"
-        required: False
     l4_session_usage_revert_rate:
         description:
         - "Usage to revert to statelful method"
         required: False
-    shared_partition_svcgrp_health_check:
-        description:
-        - "Reference a health-check from shared partition"
-        required: False
     template_server:
         description:
         - "Server template (Server template name)"
-        required: False
-    svcgrp_health_check_shared:
-        description:
-        - "Health Check (Monitor Name)"
         required: False
     traffic_replication_mirror:
         description:
@@ -256,7 +234,7 @@ options:
         required: False
     lb_method:
         description:
-        - "'dst-ip-hash'= Load-balancing based on only Dst IP and Port hash; 'dst-ip-only-hash'= Load-balancing based on only Dst IP hash; 'fastest-response'= Fastest response time on service port level; 'least-request'= Least request on service port level; 'src-ip-hash'= Load-balancing based on only Src IP and Port hash; 'src-ip-only-hash'= Load-balancing based on only Src IP hash; 'weighted-rr'= Weighted round robin on server level; 'service-weighted-rr'= Weighted round robin on service port level; 'round-robin'= Round robin on server level; 'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'= odd/even hash based of client src-ip; "
+        - "'dst-ip-hash'= Load-balancing based on only Dst IP and Port hash; 'dst-ip-only-hash'= Load-balancing based on only Dst IP hash; 'fastest-response'= Fastest response time on service port level; 'least-request'= Least request on service port level; 'src-ip-hash'= Load-balancing based on only Src IP and Port hash; 'src-ip-only-hash'= Load-balancing based on only Src IP hash; 'weighted-rr'= Weighted round robin on server level; 'round-robin'= Round robin on server level; 'round-robin-strict'= Strict mode round robin on server level; 'odd-even-hash'= odd/even hash based of client src-ip; "
         required: False
     stateless_auto_switch:
         description:
@@ -287,45 +265,27 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            pri_affinity_priority:
-                description:
-                - "Field pri_affinity_priority"
-            name:
-                description:
-                - "SLB Service Name"
-            stateless_current_rate:
-                description:
-                - "Field stateless_current_rate"
-            servers_down:
-                description:
-                - "Field servers_down"
-            stateless_state:
-                description:
-                - "Field stateless_state"
-            servers_disable:
-                description:
-                - "Field servers_disable"
-            stateless_type:
-                description:
-                - "Field stateless_type"
-            servers_total:
-                description:
-                - "Field servers_total"
             state:
                 description:
                 - "Field state"
+            name:
+                description:
+                - "SLB Service Name"
             member_list:
                 description:
                 - "Field member_list"
             servers_up:
                 description:
                 - "Field servers_up"
-            stateless_current_usage:
+            servers_down:
                 description:
-                - "Field stateless_current_usage"
-            hm_dsr_enable_all_vip:
+                - "Field servers_down"
+            servers_total:
                 description:
-                - "Field hm_dsr_enable_all_vip"
+                - "Field servers_total"
+            servers_disable:
+                description:
+                - "Field servers_disable"
     name:
         description:
         - "SLB Service Name"
@@ -385,7 +345,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'server_selection_fail_drop'= Drops due to Service selection failure; 'server_selection_fail_reset'= Resets sent out for Service selection failure; 'service_peak_conn'= Peak connection count for the Service Group; 'service_healthy_host'= Service Group healthy host count; 'service_unhealthy_host'= Service Group unhealthy host count; 'service_req_count'= Service Group request count; 'service_resp_count'= Service Group response count; 'service_resp_2xx'= Service Group response 2xx count; 'service_resp_3xx'= Service Group response 3xx count; 'service_resp_4xx'= Service Group response 4xx count; 'service_resp_5xx'= Service Group response 5xx count; 'service_curr_conn_overflow'= Current connection counter overflow count; "
+                - "'all'= all; 'server_selection_fail_drop'= Drops due to Service selection failure; 'server_selection_fail_reset'= Resets sent out for Service selection failure; 'service_peak_conn'= Peak connection count for the Service Group; 'service_healthy_host'= Service Group healthy host count; 'service_unhealthy_host'= Service Group unhealthy host count; 'service_req_count'= Service Group request count; 'service_resp_count'= Service Group response count; 'service_resp_2xx'= Service Group response 2xx count; 'service_resp_3xx'= Service Group response 3xx count; 'service_resp_4xx'= Service Group response 4xx count; 'service_resp_5xx'= Service Group response 5xx count; "
     top_fastest:
         description:
         - "Report top 10 fastest servers"
@@ -411,6 +371,7 @@ options:
         - "Health Check (Monitor Name)"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -423,7 +384,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","oper","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","shared_partition_policy_template","shared_partition_svcgrp_health_check","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats","stats_data_action","strict_select","svcgrp_health_check_shared","template_policy","template_policy_shared","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["backup_server_event_log","conn_rate","conn_rate_duration","conn_rate_grace_period","conn_rate_log","conn_rate_revert_duration","conn_revert_rate","extended_stats","health_check","health_check_disable","l4_session_revert_duration","l4_session_usage","l4_session_usage_duration","l4_session_usage_grace_period","l4_session_usage_log","l4_session_usage_revert_rate","lb_method","lc_method","member_list","min_active_member","min_active_member_action","name","oper","priorities","priority_affinity","protocol","pseudo_round_robin","report_delay","reset","reset_on_server_selection_fail","reset_priority_affinity","rpt_ext_server","sample_rsp_time","sampling_enable","stateless_auto_switch","stateless_lb_method","stateless_lb_method2","stats","stats_data_action","strict_select","template_policy","template_port","template_server","top_fastest","top_slowest","traffic_replication_mirror","traffic_replication_mirror_da_repl","traffic_replication_mirror_ip_repl","traffic_replication_mirror_sa_da_repl","traffic_replication_mirror_sa_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -460,35 +421,31 @@ def get_argspec():
         reset_priority_affinity=dict(type='bool',),
         priorities=dict(type='list',priority=dict(type='int',),priority_action=dict(type='str',choices=['drop','drop-if-exceed-limit','proceed','reset','reset-if-exceed-limit'])),
         min_active_member=dict(type='int',),
-        member_list=dict(type='list',member_priority=dict(type='int',),uuid=dict(type='str',),fqdn_name=dict(type='str',),resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','curr_conn_overflow','state_flaps'])),member_template=dict(type='str',),name=dict(type='str',required=True,),host=dict(type='str',),user_tag=dict(type='str',),member_state=dict(type='str',choices=['enable','disable','disable-with-health-check']),server_ipv6_addr=dict(type='str',),port=dict(type='int',required=True,),member_stats_data_disable=dict(type='bool',)),
+        member_list=dict(type='list',member_stats_data_disable=dict(type='bool',),member_priority=dict(type='int',),name=dict(type='str',required=True,),fqdn_name=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),member_template=dict(type='str',),host=dict(type='str',),user_tag=dict(type='str',),member_state=dict(type='str',choices=['enable','disable','disable-with-health-check']),server_ipv6_addr=dict(type='str',),port=dict(type='int',required=True,),uuid=dict(type='str',)),
         stats_data_action=dict(type='str',choices=['stats-data-enable','stats-data-disable']),
         traffic_replication_mirror_da_repl=dict(type='bool',),
-        template_policy_shared=dict(type='str',),
         rpt_ext_server=dict(type='bool',),
         template_port=dict(type='str',),
         conn_rate_grace_period=dict(type='int',),
         l4_session_usage_duration=dict(type='int',),
-        stats=dict(type='dict',service_resp_2xx=dict(type='str',),member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),state_flaps=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),curr_conn_overflow=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),service_unhealthy_host=dict(type='str',),service_curr_conn_overflow=dict(type='str',),name=dict(type='str',required=True,),server_selection_fail_drop=dict(type='str',),service_healthy_host=dict(type='str',),service_resp_count=dict(type='str',),service_req_count=dict(type='str',),service_resp_4xx=dict(type='str',),service_peak_conn=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_resp_3xx=dict(type='str',),service_resp_5xx=dict(type='str',)),
+        stats=dict(type='dict',service_resp_2xx=dict(type='str',),member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),service_unhealthy_host=dict(type='str',),name=dict(type='str',required=True,),service_req_count=dict(type='str',),service_healthy_host=dict(type='str',),service_resp_count=dict(type='str',),service_resp_3xx=dict(type='str',),service_resp_4xx=dict(type='str',),server_selection_fail_drop=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_peak_conn=dict(type='str',),service_resp_5xx=dict(type='str',)),
         uuid=dict(type='str',),
         backup_server_event_log=dict(type='bool',),
         lc_method=dict(type='str',choices=['least-connection','service-least-connection','weighted-least-connection','service-weighted-least-connection']),
         pseudo_round_robin=dict(type='bool',),
-        shared_partition_policy_template=dict(type='bool',),
         l4_session_usage_revert_rate=dict(type='int',),
-        shared_partition_svcgrp_health_check=dict(type='bool',),
         template_server=dict(type='str',),
-        svcgrp_health_check_shared=dict(type='str',),
         traffic_replication_mirror=dict(type='bool',),
         l4_session_revert_duration=dict(type='int',),
         traffic_replication_mirror_sa_da_repl=dict(type='bool',),
-        lb_method=dict(type='str',choices=['dst-ip-hash','dst-ip-only-hash','fastest-response','least-request','src-ip-hash','src-ip-only-hash','weighted-rr','service-weighted-rr','round-robin','round-robin-strict','odd-even-hash']),
+        lb_method=dict(type='str',choices=['dst-ip-hash','dst-ip-only-hash','fastest-response','least-request','src-ip-hash','src-ip-only-hash','weighted-rr','round-robin','round-robin-strict','odd-even-hash']),
         stateless_auto_switch=dict(type='bool',),
         min_active_member_action=dict(type='str',choices=['dynamic-priority','skip-pri-set']),
         l4_session_usage=dict(type='int',),
         extended_stats=dict(type='bool',),
         conn_rate_revert_duration=dict(type='int',),
         strict_select=dict(type='bool',),
-        oper=dict(type='dict',pri_affinity_priority=dict(type='int',),name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),member_list=dict(type='list',oper=dict(type='dict',hm_key=dict(type='int',),alt_list=dict(type='list',alt_state=dict(type='str',),alt_rev_pkts=dict(type='int',),alt_port=dict(type='int',),alt_peak_conn=dict(type='int',),alt_curr_conn=dict(type='int',),alt_fwd_pkts=dict(type='int',),alt_total_conn=dict(type='int',),alt_name=dict(type='str',)),hm_index=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),drs_list=dict(type='list',drs_fwd_bts=dict(type='int',),drs_fwd_pkts=dict(type='int',),drs_rev_bts=dict(type='int',),drs_port=dict(type='int',),drs_curr_req=dict(type='int',),drs_name=dict(type='str',),drs_pers_conn=dict(type='int',),drs_priority=dict(type='int',),drs_total_req_succ=dict(type='int',),drs_hm_key=dict(type='int',),drs_hm_index=dict(type='int',),drs_rev_pkts=dict(type='int',),drs_total_conn=dict(type='int',),drs_state=dict(type='str',),drs_frsp_time=dict(type='int',),drs_peak_conn=dict(type='int',),drs_curr_conn=dict(type='int',),drs_rsp_time=dict(type='int',),drs_total_req=dict(type='int',),drs_srsp_time=dict(type='int',))),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
+        oper=dict(type='dict',state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),name=dict(type='str',required=True,),member_list=dict(type='list',oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE'])),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),servers_down=dict(type='int',),servers_total=dict(type='int',),servers_disable=dict(type='int',)),
         name=dict(type='str',required=True,),
         reset=dict(type='dict',auto_switch=dict(type='bool',)),
         traffic_replication_mirror_sa_repl=dict(type='bool',),
@@ -501,7 +458,7 @@ def get_argspec():
         stateless_lb_method2=dict(type='str',choices=['stateless-dst-ip-hash','stateless-per-pkt-round-robin','stateless-src-dst-ip-hash','stateless-src-dst-ip-only-hash','stateless-src-ip-hash','stateless-src-ip-only-hash']),
         user_tag=dict(type='str',),
         sample_rsp_time=dict(type='bool',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn','service_healthy_host','service_unhealthy_host','service_req_count','service_resp_count','service_resp_2xx','service_resp_3xx','service_resp_4xx','service_resp_5xx','service_curr_conn_overflow'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn','service_healthy_host','service_unhealthy_host','service_req_count','service_resp_count','service_resp_2xx','service_resp_3xx','service_resp_4xx','service_resp_5xx'])),
         top_fastest=dict(type='bool',),
         conn_revert_rate=dict(type='int',),
         l4_session_usage_grace_period=dict(type='int',),
@@ -783,10 +740,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -796,6 +751,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -48,9 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    sampling_enable:
+        description:
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'spn_krb_request'= SPN Kerberos Request; 'spn_krb_success'= SPN Kerberos Success; 'spn_krb_faiure'= SPN Kerberos Failure; "
     retry:
         description:
-        - "Maximum number of consecutive failed logon attempts (default 3)"
+        - "Specify max. number of failure retry (1 ~ 32), default is 3"
         required: False
     stats:
         description:
@@ -77,22 +85,6 @@ options:
         description:
         - "Specify HTTP-Authenticate logon name"
         required: True
-    sampling_enable:
-        description:
-        - "Field sampling_enable"
-        required: False
-        suboptions:
-            counters1:
-                description:
-                - "'all'= all; 'spn_krb_request'= SPN Kerberos Request; 'spn_krb_success'= SPN Kerberos Success; 'spn_krb_faiure'= SPN Kerberos Failure; "
-    account_lock:
-        description:
-        - "Lock the account when the failed logon attempts is exceeded"
-        required: False
-    duration:
-        description:
-        - "The time an account remains locked in seconds (default 1800)"
-        required: False
     auth_method:
         description:
         - "Field auth_method"
@@ -108,6 +100,7 @@ options:
                 description:
                 - "Field basic"
 
+
 """
 
 EXAMPLES = """
@@ -120,7 +113,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["account_lock","auth_method","duration","name","retry","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["auth_method","name","retry","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -149,13 +142,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','spn_krb_request','spn_krb_success','spn_krb_faiure'])),
         retry=dict(type='int',),
         stats=dict(type='dict',spn_krb_success=dict(type='str',),spn_krb_request=dict(type='str',),name=dict(type='str',required=True,),spn_krb_faiure=dict(type='str',)),
         uuid=dict(type='str',),
         name=dict(type='str',required=True,),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','spn_krb_request','spn_krb_success','spn_krb_faiure'])),
-        account_lock=dict(type='bool',),
-        duration=dict(type='int',),
         auth_method=dict(type='dict',ntlm=dict(type='dict',ntlm_enable=dict(type='bool',)),negotiate=dict(type='dict',negotiate_enable=dict(type='bool',)),basic=dict(type='dict',new_pin_page=dict(type='str',),basic_enable=dict(type='bool',),challenge_page=dict(type='str',),next_token_variable=dict(type='str',),next_token_page=dict(type='str',),challenge_variable=dict(type='str',),basic_realm=dict(type='str',),new_pin_variable=dict(type='str',),challenge_response_form=dict(type='str',)))
     ))
    
@@ -418,10 +409,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -429,6 +418,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

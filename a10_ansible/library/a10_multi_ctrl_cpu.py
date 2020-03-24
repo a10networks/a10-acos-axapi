@@ -50,8 +50,9 @@ options:
         required: False
     num_ctrl_cpus:
         description:
-        - "Set number of control CPUs. Default is 1, and max limit is platform dependent."
+        - "Enter a number between 1 and less than half of the total number of CPUs, default is 1"
         required: False
+
 
 """
 
@@ -340,15 +341,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -9,8 +9,8 @@
     a10_port: "{{ port }}"
     a10_protocol: "{{ protocol }}"
   roles:
-    - health
-    - interface
+#   - health
+#    - interface
     - network
     - slb
     - check_mode

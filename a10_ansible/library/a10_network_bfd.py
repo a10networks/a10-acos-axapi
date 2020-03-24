@@ -55,13 +55,13 @@ options:
         suboptions:
             interval:
                 description:
-                - "Transmit interval between BFD packets (Milliseconds (default= 800))"
+                - "Transmit interval between BFD packets (Milliseconds)"
             min_rx:
                 description:
-                - "Minimum receive interval capability (Milliseconds (default= 800))"
+                - "Minimum receive interval capability (Milliseconds)"
             multiplier:
                 description:
-                - "Multiplier value used to compute holddown (value used to multiply the interval (default= 4))"
+                - "Multiplier value used to compute holddown (value used to multiply the interval)"
     enable:
         description:
         - "Enable BFD"
@@ -74,6 +74,7 @@ options:
         description:
         - "Enable BFD Echo"
         required: False
+
 
 """
 
@@ -365,15 +366,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

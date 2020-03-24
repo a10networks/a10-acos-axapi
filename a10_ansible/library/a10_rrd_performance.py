@@ -67,6 +67,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -108,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',end_time=dict(type='int',),start_time=dict(type='int',),performance_data=dict(type='list',lsn_cps=dict(type='int',),ov_ip_cur_conns=dict(type='int',),ov_l7_req=dict(type='int',),lsn_udp_port_avail=dict(type='int',),rus_s_conns_act=dict(type='int',),ov_new_conn_srv_ssl=dict(type='int',),syn_recv=dict(type='int',),ov_udp_cur_conns=dict(type='int',),ov_cur_conns=dict(type='int',),ov_new_conn_l7=dict(type='int',),ov_new_conn_l4=dict(type='int',),ov_new_conn_tot=dict(type='int',),lsn_tcp_port_used=dict(type='int',),lsn_avail_sess=dict(type='int',),lsn_used_sess=dict(type='int',),syn_fail=dict(type='int',),rus_s_conns_tot=dict(type='int',),ov_new_conn_ssl=dict(type='int',),lsn_tcp_port_avail=dict(type='int',),ov_puts=dict(type='int',),rus_c_conns_cur=dict(type='int',),ov_sctp_cur_conns=dict(type='int',),ov_tcp_cur_conns=dict(type='int',),rus_c_conns_tot=dict(type='int',),ov_new_conn_ipnat=dict(type='int',),time=dict(type='int',),rus_s_conns_cur=dict(type='int',),lsn_udp_port_used=dict(type='int',),ov_other_cur_conns=dict(type='int',))),
+        oper=dict(type='dict',end_time=dict(type='int',),start_time=dict(type='int',),performance_data=dict(type='list',syn_fail=dict(type='int',),rus_s_conns_tot=dict(type='int',),ov_new_conn_ssl=dict(type='int',),rus_s_conns_cur=dict(type='int',),ov_new_conn_l7=dict(type='int',),ov_cur_conns=dict(type='int',),syn_recv=dict(type='int',),ov_new_conn_l4=dict(type='int',),rus_c_conns_tot=dict(type='int',),ov_l7_req=dict(type='int',),ov_new_conn_ipnat=dict(type='int',),ov_new_conn_tot=dict(type='int',),time=dict(type='int',),rus_s_conns_act=dict(type='int',),ov_puts=dict(type='int',),rus_c_conns_cur=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    
@@ -347,10 +348,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -358,6 +357,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

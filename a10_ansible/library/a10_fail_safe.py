@@ -56,9 +56,6 @@ options:
             total_system_memory:
                 description:
                 - "Field total_system_memory"
-            fpga_stats_iochan:
-                description:
-                - "Field fpga_stats_iochan"
             total_free_fpga_buff:
                 description:
                 - "Field total_free_fpga_buff"
@@ -68,12 +65,6 @@ options:
             free_fpga_buffers:
                 description:
                 - "Field free_fpga_buffers"
-            config:
-                description:
-                - "Field config"
-            fpga_stats_num_cntrs:
-                description:
-                - "Field fpga_stats_num_cntrs"
             free_session_memory:
                 description:
                 - "Field free_session_memory"
@@ -116,49 +107,14 @@ options:
         description:
         - "Enable fail-safe software error monitor"
         required: False
-    fpga_monitor_enable:
-        description:
-        - "FPGA monitor feature enable"
-        required: False
-    fpga_monitor_threshold:
-        description:
-        - "FPGA monitor packet missed for error condition (Numbers of missed monitor packets before setting error condition (default 3))"
-        required: False
-    fpga_monitor_forced_reboot:
-        description:
-        - "FPGA monitor forced reboot in error condition"
-        required: False
     kill:
         description:
         - "Stop the traffic and log the event"
         required: False
-    disable_failsafe:
-        description:
-        - "Field disable_failsafe"
-        required: False
-        suboptions:
-            action:
-                description:
-                - "'all'= Disable All; 'io-buffer'= Disable I/O Buffer; 'session-memory'= Disable Session Memory; 'system-memory'= Disable System Memory; "
-            uuid:
-                description:
-                - "uuid of the object"
     total_memory_size_check:
         description:
         - "Check total memory size of current system (Size of memory (GB))"
         required: False
-    fpga_monitor_interval:
-        description:
-        - "FPGA monitor packet interval (seconds) (Numbers of seconds between sending packets (default 1))"
-        required: False
-    config:
-        description:
-        - "Field config"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
     sw_error_recovery_timeout:
         description:
         - "Software error recovery timeout (minutes) (waiting time of recovery from software errors (default 3))"
@@ -167,6 +123,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -180,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["config","disable_failsafe","fpga_buff_recovery_threshold","fpga_monitor_enable","fpga_monitor_forced_reboot","fpga_monitor_interval","fpga_monitor_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","oper","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
+AVAILABLE_PROPERTIES = ["fpga_buff_recovery_threshold","hw_error_monitor","hw_error_recovery_timeout","kill","log","oper","session_mem_recovery_threshold","sw_error_monitor_enable","sw_error_recovery_timeout","total_memory_size_check","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -209,21 +166,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_system_memory=dict(type='int',),fpga_stats_iochan=dict(type='list',fpga_stats_iochan_tx=dict(type='int',),fpga_stats_iochan_rx=dict(type='int',),fpga_stats_iochan_id=dict(type='int',)),total_free_fpga_buff=dict(type='int',),total_fpga_buffers=dict(type='int',),free_fpga_buffers=dict(type='int',),config=dict(type='dict',oper=dict(type='dict',fpga_mon_threshold=dict(type='str',),sw_error_mon=dict(type='str',),sw_recovery_timeout=dict(type='str',),hw_recovery_timeout=dict(type='str',),fpga_mon_interval=dict(type='str',),fpga_mon_forced_reboot=dict(type='str',),fpga_mon_enable=dict(type='str',),mem_mon=dict(type='str',),hw_error_mon=dict(type='str',))),fpga_stats_num_cntrs=dict(type='int',),free_session_memory=dict(type='int',),avail_fpga_buff_domain1=dict(type='int',),avail_fpga_buff_domain2=dict(type='int',),total_session_memory=dict(type='int',),fpga_buff_recovery_threshold=dict(type='int',),sess_mem_recovery_threshold=dict(type='int',)),
+        oper=dict(type='dict',total_system_memory=dict(type='int',),total_free_fpga_buff=dict(type='int',),total_fpga_buffers=dict(type='int',),free_fpga_buffers=dict(type='int',),free_session_memory=dict(type='int',),avail_fpga_buff_domain1=dict(type='int',),avail_fpga_buff_domain2=dict(type='int',),total_session_memory=dict(type='int',),fpga_buff_recovery_threshold=dict(type='int',),sess_mem_recovery_threshold=dict(type='int',)),
         session_mem_recovery_threshold=dict(type='int',),
         log=dict(type='bool',),
         fpga_buff_recovery_threshold=dict(type='int',),
         hw_error_monitor=dict(type='str',choices=['hw-error-monitor-disable','hw-error-monitor-enable']),
         hw_error_recovery_timeout=dict(type='int',),
         sw_error_monitor_enable=dict(type='bool',),
-        fpga_monitor_enable=dict(type='bool',),
-        fpga_monitor_threshold=dict(type='int',),
-        fpga_monitor_forced_reboot=dict(type='bool',),
         kill=dict(type='bool',),
-        disable_failsafe=dict(type='dict',action=dict(type='str',choices=['all','io-buffer','session-memory','system-memory']),uuid=dict(type='str',)),
         total_memory_size_check=dict(type='int',),
-        fpga_monitor_interval=dict(type='int',),
-        config=dict(type='dict',uuid=dict(type='str',)),
         sw_error_recovery_timeout=dict(type='int',),
         uuid=dict(type='str',)
     ))
@@ -485,10 +436,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -496,6 +445,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

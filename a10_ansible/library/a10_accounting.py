@@ -83,6 +83,7 @@ options:
         - "Specify the debug level for accounting (Debug level for command accounting. bitwise OR of the following= 1(common), 2(packet),4(packet detail), 8(md5))"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -375,15 +376,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

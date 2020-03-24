@@ -48,23 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ticket_cache:
-                description:
-                - "Field ticket_cache"
-            default_principal:
-                description:
-                - "Field default_principal"
-            name:
-                description:
-                - "Specify Kerberos authentication relay name"
-            item_list:
-                description:
-                - "Field item_list"
     kerberos_account:
         description:
         - "Specify the kerberos account name"
@@ -138,6 +121,7 @@ options:
         - "Specify Kerberos authentication relay name"
         required: True
 
+
 """
 
 EXAMPLES = """
@@ -150,7 +134,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypted","kerberos_account","kerberos_kdc","kerberos_kdc_service_group","kerberos_realm","name","oper","password","port","sampling_enable","secret_string","stats","timeout","uuid",]
+AVAILABLE_PROPERTIES = ["encrypted","kerberos_account","kerberos_kdc","kerberos_kdc_service_group","kerberos_realm","name","password","port","sampling_enable","secret_string","stats","timeout","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -179,7 +163,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ticket_cache=dict(type='str',),default_principal=dict(type='str',),name=dict(type='str',required=True,),item_list=dict(type='list',client_principal=dict(type='str',),end_time=dict(type='str',),start_time=dict(type='str',),service_principal=dict(type='str',),renew_time=dict(type='str',),flags=dict(type='str',))),
         kerberos_account=dict(type='str',),
         stats=dict(type='dict',current_requests_of_user=dict(type='str',),response_receive=dict(type='str',),request_send=dict(type='str',),name=dict(type='str',required=True,),tickets=dict(type='str',)),
         uuid=dict(type='str',),
@@ -217,11 +200,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -306,15 +284,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -468,19 +437,16 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

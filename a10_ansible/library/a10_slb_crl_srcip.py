@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_crl_srcip
 description:
-    - Configure connection rate limit
+    - Show connection rate limit statistics
 short_description: Configures A10 slb.crl-srcip
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,17 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            crl_srcip_lockedout_ips:
-                description:
-                - "Field crl_srcip_lockedout_ips"
-            lockedout_ips_count:
-                description:
-                - "Field lockedout_ips_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -104,6 +93,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -116,7 +106,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -145,7 +135,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',crl_srcip_lockedout_ips=dict(type='list',active=dict(type='int',),start=dict(type='str',),client_ip=dict(type='str',),drops=dict(type='int',),end=dict(type='str',)),lockedout_ips_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_alloc','sessions_freed','out_of_sessions','too_many_sessions','called','permitted','threshold_exceed','lockout_drop','log_msg_sent'])),
         stats=dict(type='dict',threshold_exceed=dict(type='str',),lockout_drop=dict(type='str',),called=dict(type='str',),sessions_freed=dict(type='str',),permitted=dict(type='str',),log_msg_sent=dict(type='str',),sessions_alloc=dict(type='str',),out_of_sessions=dict(type='str',),too_many_sessions=dict(type='str',)),
         uuid=dict(type='str',)
@@ -171,11 +160,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -260,15 +244,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -422,19 +397,16 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

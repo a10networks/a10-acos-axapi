@@ -58,7 +58,7 @@ options:
         required: False
     cookie_name:
         description:
-        - "Set cookie name"
+        - "Set cookie name (Cookie name, default 'sto-id')"
         required: False
     secure:
         description:
@@ -106,7 +106,7 @@ options:
         required: False
     path:
         description:
-        - "Set cookie path"
+        - "Set cookie path (Cookie path, default is '/')"
         required: False
     pass_thru:
         description:
@@ -128,6 +128,7 @@ options:
         description:
         - "Cookie persistence (Cookie persistence template name)"
         required: True
+
 
 """
 
@@ -437,15 +438,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

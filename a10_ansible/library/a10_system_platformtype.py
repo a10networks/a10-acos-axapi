@@ -53,28 +53,14 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            platform_lxc:
-                description:
-                - "Field platform_lxc"
-            platform_dpdk:
-                description:
-                - "Field platform_dpdk"
-            platform_info:
-                description:
-                - "Field platform_info"
-            platform_axv:
-                description:
-                - "Field platform_axv"
             platform_type:
                 description:
                 - "Field platform_type"
-            platform_id:
-                description:
-                - "Field platform_id"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -117,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',platform_lxc=dict(type='int',),platform_dpdk=dict(type='int',),platform_info=dict(type='str',),platform_axv=dict(type='int',),platform_type=dict(type='str',),platform_id=dict(type='int',)),
+        oper=dict(type='dict',platform_type=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -356,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -367,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

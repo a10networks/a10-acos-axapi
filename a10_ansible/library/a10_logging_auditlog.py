@@ -48,17 +48,9 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     audit_facility:
         description:
         - "'local0'= Local use; 'local1'= Local use; 'local2'= Local use; 'local3'= Local use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local use; 'local7'= Local use;  (Configure the facility of auditlog)"
-        required: False
-    partition_name:
-        description:
-        - "Select partition name for logging"
         required: False
     host6:
         description:
@@ -68,14 +60,15 @@ options:
         description:
         - "Configure the auditlog host"
         required: False
-    shared:
+    uuid:
         description:
-        - "Select shared partition"
+        - "uuid of the object"
         required: False
     port:
         description:
-        - "Set remote audit log port number(Default 514)"
+        - "Set remote audit log port number"
         required: False
+
 
 """
 
@@ -89,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["audit_facility","host4","host6","partition_name","port","shared","uuid",]
+AVAILABLE_PROPERTIES = ["audit_facility","host4","host6","port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -118,12 +111,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
         audit_facility=dict(type='str',choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
-        partition_name=dict(type='str',),
         host6=dict(type='str',),
         host4=dict(type='str',),
-        shared=dict(type='bool',),
+        uuid=dict(type='str',),
         port=dict(type='int',)
     ))
    
@@ -370,15 +361,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

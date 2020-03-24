@@ -53,66 +53,33 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            state:
-                description:
-                - "Field state"
-            ipv6_link_local_prefix:
-                description:
-                - "Field ipv6_link_local_prefix"
-            ipv6_list:
-                description:
-                - "Field ipv6_list"
             line_protocol:
                 description:
                 - "Field line_protocol"
             ipv4_netmask:
                 description:
                 - "IP subnet mask"
-            ipv6_link_local_type:
-                description:
-                - "Field ipv6_link_local_type"
-            icmp6_rate_over_limit_drop:
-                description:
-                - "Field icmp6_rate_over_limit_drop"
-            ifnum:
-                description:
-                - "Virtual ethernet interface number"
-            mac:
-                description:
-                - "Field mac"
-            ipv6_addr_count:
-                description:
-                - "Field ipv6_addr_count"
-            icmp6_rate_limit_current:
-                description:
-                - "Field icmp6_rate_limit_current"
-            ipv4_addr_count:
-                description:
-                - "Field ipv4_addr_count"
-            user_trunk_id:
-                description:
-                - "Field user_trunk_id"
-            ipv6_link_local_scope:
-                description:
-                - "Field ipv6_link_local_scope"
-            icmp_rate_over_limit_drop:
-                description:
-                - "Field icmp_rate_over_limit_drop"
             ipv6_link_local:
                 description:
                 - "Field ipv6_link_local"
-            igmp_query_sent:
+            ifnum:
                 description:
-                - "Field igmp_query_sent"
+                - "Virtual ethernet interface number"
+            state:
+                description:
+                - "Field state"
+            mac:
+                description:
+                - "Field mac"
+            ipv6_link_local_type:
+                description:
+                - "Field ipv6_link_local_type"
             ipv4_address:
                 description:
                 - "IP address"
-            icmp_rate_limit_current:
+            ipv6_link_local_prefix:
                 description:
-                - "Field icmp_rate_limit_current"
-            ipv4_list:
-                description:
-                - "Field ipv4_list"
+                - "Field ipv6_link_local_prefix"
             link_type:
                 description:
                 - "Field link_type"
@@ -121,21 +88,9 @@ options:
         - "Field map"
         required: False
         suboptions:
-            inside:
+            translation:
                 description:
-                - "Configure MAP inside interface (connected to MAP domains)"
-            map_t_inside:
-                description:
-                - "Configure MAP inside interface (connected to MAP domains)"
-            uuid:
-                description:
-                - "uuid of the object"
-            map_t_outside:
-                description:
-                - "Configure MAP outside interface"
-            outside:
-                description:
-                - "Configure MAP outside interface"
+                - "Field translation"
     trap_source:
         description:
         - "The trap source"
@@ -160,9 +115,9 @@ options:
             allow_promiscuous_vip:
                 description:
                 - "Allow traffic to be associated with promiscuous VIP"
-            helper_address_list:
+            dhcp:
                 description:
-                - "Field helper_address_list"
+                - "Use DHCP to configure IP address"
             max_resp_time:
                 description:
                 - "Maximum Response Time (Max Response Time (Default is 100))"
@@ -172,9 +127,9 @@ options:
             outside:
                 description:
                 - "Configure interface as outside"
-            client:
+            helper_address_list:
                 description:
-                - "Client facing interface for IPv4/v6 traffic"
+                - "Field helper_address_list"
             stateful_firewall:
                 description:
                 - "Field stateful_firewall"
@@ -187,12 +142,6 @@ options:
             router:
                 description:
                 - "Field router"
-            dhcp:
-                description:
-                - "Use DHCP to configure IP address"
-            server:
-                description:
-                - "Server facing interface for IPv4/v6 traffic"
             ospf:
                 description:
                 - "Field ospf"
@@ -231,13 +180,13 @@ options:
         suboptions:
             num_tx_pkts:
                 description:
-                - "Transmitted packets"
+                - "Transmitted packtes"
             num_total_tx_bytes:
                 description:
-                - "Transmitted bytes"
+                - "Transmitte bytes"
             num_unicast_tx_pkts:
                 description:
-                - "Transmitted unicasts"
+                - "Trasnmitted unicasts"
             rate_pkt_rcvd:
                 description:
                 - "Packet received rate packets/sec"
@@ -252,7 +201,7 @@ options:
                 - "Transmitted broadcasts"
             num_broadcast_pkts:
                 description:
-                - "Received broadcasts"
+                - "Received braodcasts"
             num_multicast_tx_pkts:
                 description:
                 - "Transmitted multicasts"
@@ -416,7 +365,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num_pkts'= Input packets; 'num_total_bytes'= Input bytes; 'num_unicast_pkts'= Received unicasts; 'num_broadcast_pkts'= Received broadcasts; 'num_multicast_pkts'= Received multicasts; 'num_tx_pkts'= Transmitted packets; 'num_total_tx_bytes'= Transmitted bytes; 'num_unicast_tx_pkts'= Transmitted unicasts; 'num_broadcast_tx_pkts'= Transmitted broadcasts; 'num_multicast_tx_pkts'= Transmitted multicasts; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval; "
+                - "'all'= all; 'num_pkts'= Input packets; 'num_total_bytes'= Input bytes; 'num_unicast_pkts'= Received unicasts; 'num_broadcast_pkts'= Received braodcasts; 'num_multicast_pkts'= Received multicasts; 'num_tx_pkts'= Transmitted packtes; 'num_total_tx_bytes'= Transmitte bytes; 'num_unicast_tx_pkts'= Trasnmitted unicasts; 'num_broadcast_tx_pkts'= Transmitted broadcasts; 'num_multicast_tx_pkts'= Transmitted multicasts; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; 'load_interval'= Load Interval; "
     lw_4o6:
         description:
         - "Field lw_4o6"
@@ -484,6 +433,7 @@ options:
         - "Disable L3 forwarding between VLANs for incoming packets on this interface"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -525,10 +475,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',state=dict(type='str',choices=['up','disabled','down']),ipv6_link_local_prefix=dict(type='str',),ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),line_protocol=dict(type='str',choices=['up','down']),ipv4_netmask=dict(type='str',),ipv6_link_local_type=dict(type='str',),icmp6_rate_over_limit_drop=dict(type='int',),ifnum=dict(type='int',required=True,),mac=dict(type='str',),ipv6_addr_count=dict(type='int',),icmp6_rate_limit_current=dict(type='int',),ipv4_addr_count=dict(type='int',),user_trunk_id=dict(type='int',),ipv6_link_local_scope=dict(type='str',),icmp_rate_over_limit_drop=dict(type='int',),ipv6_link_local=dict(type='str',),igmp_query_sent=dict(type='int',),ipv4_address=dict(type='str',),icmp_rate_limit_current=dict(type='int',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',)),link_type=dict(type='str',)),
-        map=dict(type='dict',inside=dict(type='bool',),map_t_inside=dict(type='bool',),uuid=dict(type='str',),map_t_outside=dict(type='bool',),outside=dict(type='bool',)),
+        oper=dict(type='dict',line_protocol=dict(type='str',choices=['UP','DOWN']),ipv4_netmask=dict(type='str',),ipv6_link_local=dict(type='str',),ifnum=dict(type='int',required=True,),state=dict(type='str',choices=['UP','DISABLED','DOWN']),mac=dict(type='str',),ipv6_link_local_type=dict(type='str',),ipv4_address=dict(type='str',),ipv6_link_local_prefix=dict(type='str',),link_type=dict(type='str',)),
+        map=dict(type='dict',translation=dict(type='dict',inside=dict(type='bool',),outside=dict(type='bool',),uuid=dict(type='str',))),
         trap_source=dict(type='bool',),
-        ip=dict(type='dict',uuid=dict(type='str',),generate_membership_query=dict(type='bool',),address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),inside=dict(type='bool',),allow_promiscuous_vip=dict(type='bool',),helper_address_list=dict(type='list',helper_address=dict(type='str',)),max_resp_time=dict(type='int',),query_interval=dict(type='int',),outside=dict(type='bool',),client=dict(type='bool',),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),ttl_ignore=dict(type='bool',),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),dhcp=dict(type='bool',),server=dict(type='bool',),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),slb_partition_redirect=dict(type='bool',)),
+        ip=dict(type='dict',uuid=dict(type='str',),generate_membership_query=dict(type='bool',),address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),inside=dict(type='bool',),allow_promiscuous_vip=dict(type='bool',),dhcp=dict(type='bool',),max_resp_time=dict(type='int',),query_interval=dict(type='int',),outside=dict(type='bool',),helper_address_list=dict(type='list',helper_address=dict(type='str',)),stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),ttl_ignore=dict(type='bool',),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),slb_partition_redirect=dict(type='bool',)),
         ddos=dict(type='dict',outside=dict(type='bool',),inside=dict(type='bool',),uuid=dict(type='str',)),
         access_list=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',)),
         stats=dict(type='dict',num_tx_pkts=dict(type='str',),num_total_tx_bytes=dict(type='str',),num_unicast_tx_pkts=dict(type='str',),rate_pkt_rcvd=dict(type='str',),num_multicast_pkts=dict(type='str',),num_unicast_pkts=dict(type='str',),num_broadcast_tx_pkts=dict(type='str',),num_broadcast_pkts=dict(type='str',),num_multicast_tx_pkts=dict(type='str',),rate_byte_sent=dict(type='str',),rate_byte_rcvd=dict(type='str',),num_total_bytes=dict(type='str',),load_interval=dict(type='str',),num_pkts=dict(type='str',),ifnum=dict(type='int',required=True,),rate_pkt_sent=dict(type='str',)),
@@ -822,10 +772,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -835,6 +783,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

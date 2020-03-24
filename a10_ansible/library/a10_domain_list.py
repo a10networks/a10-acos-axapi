@@ -56,9 +56,6 @@ options:
             domain_name:
                 description:
                 - "Domain name to be added to this domain list"
-            interval:
-                description:
-                - "DNS query interval (in minute, default is 10)"
     uuid:
         description:
         - "uuid of the object"
@@ -71,6 +68,7 @@ options:
         description:
         - "Name of the domain list"
         required: True
+
 
 """
 
@@ -113,7 +111,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain_name_list=dict(type='list',domain_name=dict(type='str',),interval=dict(type='int',)),
+        domain_name_list=dict(type='list',domain_name=dict(type='str',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,)
@@ -364,15 +362,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

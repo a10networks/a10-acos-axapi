@@ -99,10 +99,6 @@ options:
         description:
         - "how long between heartbeats (in unit of second, default is 3)"
         required: False
-    speed_limit:
-        description:
-        - "speed (KByte/s) limitation for the transmit monitor"
-        required: False
     config_seq:
         description:
         - "Configuration sequence number"
@@ -115,10 +111,7 @@ options:
             floating_ipv6:
                 description:
                 - "Floating IPv6 address"
-    size:
-        description:
-        - "file size (MBytes) to transmit to monitor the TCP channel"
-        required: False
+
 
 """
 
@@ -132,7 +125,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["config_seq","dead_interval","failure_retry_count_value","floating_ip_cfg","floating_ipv6_cfg","force_wait_interval","forever","multicast_ip","multicast_ipv6","multicast_port","size","speed_limit","ssl_enable","time_interval","uuid",]
+AVAILABLE_PROPERTIES = ["config_seq","dead_interval","failure_retry_count_value","floating_ip_cfg","floating_ipv6_cfg","force_wait_interval","forever","multicast_ip","multicast_ipv6","multicast_port","ssl_enable","time_interval","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -172,10 +165,8 @@ def get_argspec():
         floating_ip_cfg=dict(type='list',floating_ip_mask=dict(type='str',),floating_ip=dict(type='str',)),
         failure_retry_count_value=dict(type='int',),
         time_interval=dict(type='int',),
-        speed_limit=dict(type='int',),
         config_seq=dict(type='str',),
-        floating_ipv6_cfg=dict(type='list',floating_ipv6=dict(type='str',)),
-        size=dict(type='int',)
+        floating_ipv6_cfg=dict(type='list',floating_ipv6=dict(type='str',))
     ))
    
 
@@ -421,15 +412,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

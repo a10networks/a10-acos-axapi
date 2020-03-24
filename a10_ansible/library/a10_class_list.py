@@ -56,74 +56,47 @@ options:
             file_or_string:
                 description:
                 - "Field file_or_string"
-            ac_total_entries:
+            string_entries:
                 description:
-                - "Field ac_total_entries"
-            ipv6_total_subnet:
+                - "Field string_entries"
+            name:
                 description:
-                - "Field ipv6_total_subnet"
-            dns_total_entries:
-                description:
-                - "Field dns_total_entries"
-            ipv4_total_subnet:
-                description:
-                - "Field ipv4_total_subnet"
+                - "Specify name of the class list"
             dns_entries:
                 description:
                 - "Field dns_entries"
             ipv4_entries:
                 description:
                 - "Field ipv4_entries"
-            ipv4_total_single_ip:
-                description:
-                - "Field ipv4_total_single_ip"
             user_tag:
                 description:
                 - "Field user_tag"
-            name:
-                description:
-                - "Specify name of the class list"
             ipv6_entries:
                 description:
                 - "Field ipv6_entries"
-            string_total_entries:
-                description:
-                - "Field string_total_entries"
             ac_entries:
                 description:
                 - "Field ac_entries"
             ntype:
                 description:
                 - "Field type"
-            string_entries:
-                description:
-                - "Field string_entries"
-            ipv6_total_single_ip:
-                description:
-                - "Field ipv6_total_single_ip"
     dns:
         description:
         - "Field dns"
         required: False
         suboptions:
-            dns_match_string:
-                description:
-                - "Domain name"
-            dns_glid_shared:
-                description:
-                - "Use global Limit ID"
             dns_glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
-            dns_lid:
-                description:
-                - "Use Limit ID defined in template (Specify LID index)"
-            shared_partition_dns_glid:
-                description:
-                - "Reference a glid from shared partition"
             dns_match_type:
                 description:
                 - "'contains'= Domain contains another string; 'ends-with'= Domain ends with another string; 'starts-with'= Domain starts-with another string; "
+            dns_match_string:
+                description:
+                - "Domain name"
+            dns_lid:
+                description:
+                - "Use Limit ID defined in template (Specify LID index)"
     name:
         description:
         - "Specify name of the class list"
@@ -136,27 +109,18 @@ options:
             lid:
                 description:
                 - "Use Limit ID defined in template (Specify LID index)"
-            glid:
-                description:
-                - "Use global Limit ID (Specify global LID index)"
-            age:
-                description:
-                - "Specify age in minutes"
-            glid_shared:
-                description:
-                - "Use global Limit ID"
-            ipv4addr:
-                description:
-                - "Specify IP address"
             lsn_lid:
                 description:
                 - "LSN Limit ID (LID index)"
-            shared_partition_glid:
-                description:
-                - "Reference a glid from shared partition"
             lsn_radius_profile:
                 description:
                 - "LSN RADIUS Profile Index"
+            ipv4addr:
+                description:
+                - "Specify IP address"
+            glid:
+                description:
+                - "Use global Limit ID (Specify global LID index)"
     uuid:
         description:
         - "uuid of the object"
@@ -187,15 +151,9 @@ options:
             str_lid:
                 description:
                 - "LID index"
-            shared_partition_str_glid:
-                description:
-                - "Reference a glid from shared partition"
             value_str:
                 description:
                 - "Specify value string"
-            str_glid_shared:
-                description:
-                - "Use global Limit ID"
             str_glid_dummy:
                 description:
                 - "Use global Limit ID"
@@ -221,30 +179,22 @@ options:
         - "Field ipv6_list"
         required: False
         suboptions:
-            v6_lsn_lid:
-                description:
-                - "LSN Limit ID (LID index)"
             v6_glid:
                 description:
                 - "Use global Limit ID (Specify global LID index)"
+            v6_lsn_lid:
+                description:
+                - "LSN Limit ID (LID index)"
             ipv6_addr:
                 description:
                 - "Specify IPv6 host or subnet"
-            v6_age:
-                description:
-                - "Specify age in minutes"
-            v6_glid_shared:
-                description:
-                - "Use global Limit ID"
-            v6_lid:
-                description:
-                - "Use Limit ID defined in template (Specify LID index)"
-            shared_partition_v6_glid:
-                description:
-                - "Reference a glid from shared partition"
             v6_lsn_radius_profile:
                 description:
                 - "LSN RADIUS Profile Index"
+            v6_lid:
+                description:
+                - "Use Limit ID defined in template (Specify LID index)"
+
 
 """
 
@@ -287,17 +237,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_or_string=dict(type='str',choices=['file','config']),ac_total_entries=dict(type='int',),ipv6_total_subnet=dict(type='int',),dns_total_entries=dict(type='int',),ipv4_total_subnet=dict(type='int',),dns_entries=dict(type='list',dns_glid=dict(type='int',),dns_hit_count=dict(type='int',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with']),dns_match_string=dict(type='str',),dns_lid=dict(type='int',)),ipv4_entries=dict(type='list',ipv4_lsn_lid=dict(type='int',),ipv4_addr=dict(type='str',),ipv4_lid=dict(type='int',),ipv4_age=dict(type='int',),ipv4_lsn_radius_profile=dict(type='int',),ipv4_hit_count=dict(type='int',),ipv4_glid=dict(type='int',)),ipv4_total_single_ip=dict(type='int',),user_tag=dict(type='str',),name=dict(type='str',required=True,),ipv6_entries=dict(type='list',ipv6_lid=dict(type='int',),ipv6_hit_count=dict(type='int',),ipv6_lsn_radius_profile=dict(type='int',),ipv6_lsn_lid=dict(type='int',),ipv6_glid=dict(type='int',),ipv6addr=dict(type='str',),ipv6_age=dict(type='int',)),string_total_entries=dict(type='int',),ac_entries=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','starts-with','equals']),ac_match_string=dict(type='str',),ac_match_value=dict(type='str',),ac_hit_count=dict(type='int',)),ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive','[ipv4]','[ipv6]','[dns]','[dns, ipv4]','[dns, ipv6]']),string_entries=dict(type='list',string_lid=dict(type='int',),string_hit_count=dict(type='int',),string_key=dict(type='str',),string_glid=dict(type='int',),string_value=dict(type='str',)),ipv6_total_single_ip=dict(type='int',)),
-        dns=dict(type='list',dns_match_string=dict(type='str',),dns_glid_shared=dict(type='int',),dns_glid=dict(type='int',),dns_lid=dict(type='int',),shared_partition_dns_glid=dict(type='bool',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
+        oper=dict(type='dict',file_or_string=dict(type='str',choices=['file','config']),string_entries=dict(type='list',string_key=dict(type='str',),string_value=dict(type='str',),string_glid=dict(type='int',),string_lid=dict(type='int',)),name=dict(type='str',required=True,),dns_entries=dict(type='list',dns_glid=dict(type='int',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with']),dns_match_string=dict(type='str',),dns_lid=dict(type='int',)),ipv4_entries=dict(type='list',ipv4_glid=dict(type='int',),ipv4_addr=dict(type='str',),ipv4_lid=dict(type='int',),ipv4_hit_count=dict(type='int',),ipv4_lsn_radius_profile=dict(type='int',),ipv4_lsn_lid=dict(type='int',)),user_tag=dict(type='str',),ipv6_entries=dict(type='list',ipv6_lid=dict(type='int',),ipv6_hit_count=dict(type='int',),ipv6_lsn_radius_profile=dict(type='int',),ipv6_lsn_lid=dict(type='int',),ipv6_glid=dict(type='int',),ipv6addr=dict(type='str',)),ac_entries=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','starts-with','equals']),ac_match_string=dict(type='str',),ac_match_value=dict(type='str',)),ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive','[ipv4]','[ipv6]','[dns]','[dns, ipv4]','[dns, ipv6]'])),
+        dns=dict(type='list',dns_glid=dict(type='int',),dns_match_type=dict(type='str',choices=['contains','ends-with','starts-with']),dns_match_string=dict(type='str',),dns_lid=dict(type='int',)),
         name=dict(type='str',required=True,),
-        ipv4_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),age=dict(type='int',),glid_shared=dict(type='int',),ipv4addr=dict(type='str',),lsn_lid=dict(type='int',),shared_partition_glid=dict(type='bool',),lsn_radius_profile=dict(type='int',)),
+        ipv4_list=dict(type='list',lid=dict(type='int',),lsn_lid=dict(type='int',),lsn_radius_profile=dict(type='int',),ipv4addr=dict(type='str',),glid=dict(type='int',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         ac_list=dict(type='list',ac_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),ac_key_string=dict(type='str',),ac_value=dict(type='str',)),
-        str_list=dict(type='list',str_lid=dict(type='int',),shared_partition_str_glid=dict(type='bool',),value_str=dict(type='str',),str_glid_shared=dict(type='int',),str_glid_dummy=dict(type='bool',),str_glid=dict(type='int',),str_lid_dummy=dict(type='bool',),str=dict(type='str',)),
+        str_list=dict(type='list',str_lid=dict(type='int',),value_str=dict(type='str',),str_glid_dummy=dict(type='bool',),str_glid=dict(type='int',),str_lid_dummy=dict(type='bool',),str=dict(type='str',)),
         file=dict(type='bool',),
         ntype=dict(type='str',choices=['ac','dns','ipv4','ipv6','string','string-case-insensitive']),
-        ipv6_list=dict(type='list',v6_lsn_lid=dict(type='int',),v6_glid=dict(type='int',),ipv6_addr=dict(type='str',),v6_age=dict(type='int',),v6_glid_shared=dict(type='int',),v6_lid=dict(type='int',),shared_partition_v6_glid=dict(type='bool',),v6_lsn_radius_profile=dict(type='int',))
+        ipv6_list=dict(type='list',v6_glid=dict(type='int',),v6_lsn_lid=dict(type='int',),ipv6_addr=dict(type='str',),v6_lsn_radius_profile=dict(type='int',),v6_lid=dict(type='int',))
     ))
    
 
@@ -559,10 +509,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -570,6 +518,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -48,50 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ipv6_list:
-                description:
-                - "Field ipv6_list"
-            line_protocol:
-                description:
-                - "Field line_protocol"
-            ipv4_netmask:
-                description:
-                - "IP subnet mask"
-            ipv6_link_local:
-                description:
-                - "Field ipv6_link_local"
-            ifnum:
-                description:
-                - "Loopback interface number"
-            state:
-                description:
-                - "Field state"
-            ipv6_link_local_prefix:
-                description:
-                - "Field ipv6_link_local_prefix"
-            ipv4_addr_count:
-                description:
-                - "Field ipv4_addr_count"
-            ipv6_link_local_type:
-                description:
-                - "Field ipv6_link_local_type"
-            ipv6_link_local_scope:
-                description:
-                - "Field ipv6_link_local_scope"
-            ipv6_addr_count:
-                description:
-                - "Field ipv6_addr_count"
-            ipv4_address:
-                description:
-                - "IP address"
-            ipv4_list:
-                description:
-                - "Field ipv4_list"
     isis:
         description:
         - "Field isis"
@@ -213,6 +169,7 @@ options:
         - "Name for the interface"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -225,7 +182,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ifnum","ip","ipv6","isis","name","oper","snmp_server","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["ifnum","ip","ipv6","isis","name","snmp_server","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -254,13 +211,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),line_protocol=dict(type='str',),ipv4_netmask=dict(type='str',),ipv6_link_local=dict(type='str',),ifnum=dict(type='str',required=True,),state=dict(type='str',),ipv6_link_local_prefix=dict(type='str',),ipv4_addr_count=dict(type='int',),ipv6_link_local_type=dict(type='str',),ipv6_link_local_scope=dict(type='str',),ipv6_addr_count=dict(type='int',),ipv4_address=dict(type='str',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',))),
         isis=dict(type='dict',priority_list=dict(type='list',priority=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),padding=dict(type='bool',),hello_interval_minimal_list=dict(type='list',hello_interval_minimal=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mesh_group=dict(type='dict',value=dict(type='int',),blocked=dict(type='bool',)),uuid=dict(type='str',),authentication=dict(type='dict',send_only_list=dict(type='list',send_only=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mode_list=dict(type='list',mode=dict(type='str',choices=['md5']),level=dict(type='str',choices=['level-1','level-2'])),key_chain_list=dict(type='list',key_chain=dict(type='str',),level=dict(type='str',choices=['level-1','level-2']))),csnp_interval_list=dict(type='list',csnp_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),retransmit_interval=dict(type='int',),password_list=dict(type='list',password=dict(type='str',),level=dict(type='str',choices=['level-1','level-2'])),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),wide_metric_list=dict(type='list',wide_metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),hello_interval_list=dict(type='list',hello_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),circuit_type=dict(type='str',choices=['level-1','level-1-2','level-2-only']),hello_multiplier_list=dict(type='list',hello_multiplier=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),metric_list=dict(type='list',metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),lsp_interval=dict(type='int',)),
         uuid=dict(type='str',),
         snmp_server=dict(type='dict',trap_source=dict(type='bool',)),
         ip=dict(type='dict',address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),cost=dict(type='int',))),uuid=dict(type='str',),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',)))),
         user_tag=dict(type='str',),
-        ifnum=dict(type='str',required=True,),
+        ifnum=dict(type='int',required=True,),
         ipv6=dict(type='dict',uuid=dict(type='str',),address_list=dict(type='list',link_local=dict(type='bool',),ipv6_addr=dict(type='str',),anycast=dict(type='bool',)),rip=dict(type='dict',split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),uuid=dict(type='str',)),ipv6_enable=dict(type='bool',),router=dict(type='dict',ripng=dict(type='dict',uuid=dict(type='str',),rip=dict(type='bool',)),ospf=dict(type='dict',area_list=dict(type='list',area_id_addr=dict(type='str',),tag=dict(type='str',),instance_id=dict(type='int',),area_id_num=dict(type='int',)),uuid=dict(type='str',)),isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',)))),
         name=dict(type='str',)
     ))
@@ -287,11 +243,6 @@ def existing_url(module):
     f_dict["ifnum"] = module.params["ifnum"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -371,15 +322,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def exists(module):
     try:
@@ -524,17 +466,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

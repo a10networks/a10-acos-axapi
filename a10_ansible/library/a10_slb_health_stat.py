@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_health_stat
 description:
-    - Configure health monitor
+    - Show health monitor statistics
 short_description: Configures A10 slb.health-stat
 author: A10 Networks 2018 
 version_added: 2.4
@@ -63,7 +63,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'num_burst'= Number of burst; 'max_jiffie'= Maximum number of jiffies; 'min_jiffie'= Minimum number of jiffies; 'avg_jiffie'= Average number of jiffies; 'open_socket'= Number of open sockets; 'open_socket_failed'= Number of failed open sockets; 'close_socket'= Number of closed sockets; 'connect_failed'= Number of failed connections; 'send_packet'= Number of packets sent; 'send_packet_failed'= Number of packet send failures; 'recv_packet'= Number of received packets; 'recv_packet_failed'= Number of failed packet receives; 'retry_times'= Retry times; 'timeout'= Timouet value; 'unexpected_error'= Number of unexpected errors; 'conn_imdt_succ'= Number of connection immediete success; 'sock_close_before_17'= Number of sockets closed before l7; 'sock_close_without_notify'= Number of sockets closed without notify; 'curr_health_rate'= Current health rate; 'ext_health_rate'= External health rate; 'ext_health_rate_val'= External health rate value; 'total_number'= Total number; 'status_up'= Number of status ups; 'status_down'= Number of status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number of other status; 'running_time'= Running time; 'config_health_rate'= Config health rate; "
+                - "'all'= all; 'num_burst'= Number of burst; 'max_jiffie'= Maximum number of jiffies; 'min_jiffie'= Minimum number of jiffies; 'avg_jiffie'= Average number of jiffies; 'open_socket'= Number of open sockets; 'open_socket_failed'= Number of failed open sockets; 'close_socket'= Number of closed sockets; 'connect_failed'= Number of failed connections; 'send_packet'= Number of packets sent; 'send_packet_failed'= Number of packet send failures; 'recv_packet'= Number of received packets; 'recv_packet_failed'= Number of failed packet receives; 'retry_times'= Retry times; 'timeout'= Timouet value; 'unexpected_error'= Number of unexpected errors; 'conn_imdt_succ'= Number of connection immediete success; 'sock_close_before_17'= Number of sockets closed before l7; 'sock_close_without_notify'= Number of sockets closed without notify; 'curr_health_rate'= Current health rate; 'ext_health_rate'= External health rate; 'ext_health_rate_val'= External health rate value; 'total_number'= Total number; 'status_up'= Number of status ups; 'status_down'= Number of status downs; 'status_unkn'= Number of status unknowns; 'status_other'= Number of other status; 'running_time'= Running time; "
     stats:
         description:
         - "Field stats"
@@ -96,9 +96,6 @@ options:
             curr_health_rate:
                 description:
                 - "Current health rate"
-            config_health_rate:
-                description:
-                - "Config health rate"
             status_down:
                 description:
                 - "Number of status downs"
@@ -129,15 +126,15 @@ options:
             ext_health_rate_val:
                 description:
                 - "External health rate value"
-            open_socket:
-                description:
-                - "Number of open sockets"
-            sock_close_without_notify:
-                description:
-                - "Number of sockets closed without notify"
             status_up:
                 description:
                 - "Number of status ups"
+            sock_close_without_notify:
+                description:
+                - "Number of sockets closed without notify"
+            open_socket:
+                description:
+                - "Number of open sockets"
             running_time:
                 description:
                 - "Running time"
@@ -157,6 +154,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -199,9 +197,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',health_check_list=dict(type='list',status=dict(type='str',),retries=dict(type='int',),down_state=dict(type='int',),down_cause=dict(type='int',),up_retries=dict(type='int',),server=dict(type='str',),partition_id=dict(type='int',),up_cause=dict(type='int',),reason=dict(type='str',),ip_address=dict(type='str',),total_retry=dict(type='int',),health_monitor=dict(type='str',),port=dict(type='str',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num_burst','max_jiffie','min_jiffie','avg_jiffie','open_socket','open_socket_failed','close_socket','connect_failed','send_packet','send_packet_failed','recv_packet','recv_packet_failed','retry_times','timeout','unexpected_error','conn_imdt_succ','sock_close_before_17','sock_close_without_notify','curr_health_rate','ext_health_rate','ext_health_rate_val','total_number','status_up','status_down','status_unkn','status_other','running_time','config_health_rate'])),
-        stats=dict(type='dict',min_jiffie=dict(type='str',),unexpected_error=dict(type='str',),avg_jiffie=dict(type='str',),num_burst=dict(type='str',),status_unkn=dict(type='str',),retry_times=dict(type='str',),send_packet=dict(type='str',),status_other=dict(type='str',),curr_health_rate=dict(type='str',),config_health_rate=dict(type='str',),status_down=dict(type='str',),recv_packet_failed=dict(type='str',),close_socket=dict(type='str',),conn_imdt_succ=dict(type='str',),recv_packet=dict(type='str',),send_packet_failed=dict(type='str',),open_socket_failed=dict(type='str',),sock_close_before_17=dict(type='str',),total_number=dict(type='str',),ext_health_rate_val=dict(type='str',),open_socket=dict(type='str',),sock_close_without_notify=dict(type='str',),status_up=dict(type='str',),running_time=dict(type='str',),connect_failed=dict(type='str',),max_jiffie=dict(type='str',),ext_health_rate=dict(type='str',),timeout=dict(type='str',)),
+        oper=dict(type='dict',health_check_list=dict(type='list',status=dict(type='str',),retries=dict(type='int',),down_state=dict(type='int',),down_cause=dict(type='int',),up_retries=dict(type='int',),partition_id=dict(type='int',),up_cause=dict(type='int',),reason=dict(type='str',),ip_address=dict(type='str',),total_retry=dict(type='int',),health_monitor=dict(type='str',),port=dict(type='str',))),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num_burst','max_jiffie','min_jiffie','avg_jiffie','open_socket','open_socket_failed','close_socket','connect_failed','send_packet','send_packet_failed','recv_packet','recv_packet_failed','retry_times','timeout','unexpected_error','conn_imdt_succ','sock_close_before_17','sock_close_without_notify','curr_health_rate','ext_health_rate','ext_health_rate_val','total_number','status_up','status_down','status_unkn','status_other','running_time'])),
+        stats=dict(type='dict',min_jiffie=dict(type='str',),unexpected_error=dict(type='str',),avg_jiffie=dict(type='str',),num_burst=dict(type='str',),status_unkn=dict(type='str',),retry_times=dict(type='str',),send_packet=dict(type='str',),status_other=dict(type='str',),curr_health_rate=dict(type='str',),status_down=dict(type='str',),recv_packet_failed=dict(type='str',),close_socket=dict(type='str',),conn_imdt_succ=dict(type='str',),recv_packet=dict(type='str',),send_packet_failed=dict(type='str',),open_socket_failed=dict(type='str',),sock_close_before_17=dict(type='str',),total_number=dict(type='str',),ext_health_rate_val=dict(type='str',),status_up=dict(type='str',),sock_close_without_notify=dict(type='str',),open_socket=dict(type='str',),running_time=dict(type='str',),connect_failed=dict(type='str',),max_jiffie=dict(type='str',),ext_health_rate=dict(type='str',),timeout=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -476,10 +474,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -489,6 +485,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

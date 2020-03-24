@@ -142,7 +142,7 @@ options:
                 - "'echo-reply'= Type 0, echo reply; 'echo-request'= Type 8, echo request; 'info-reply'= Type 16, information reply; 'info-request'= Type 15, information request; 'mask-reply'= Type 18, address mask reply; 'mask-request'= Type 17, address mask request; 'parameter-problem'= Type 12, parameter problem; 'redirect'= Type 5, redirect message; 'source-quench'= Type 4, source quench; 'time-exceeded'= Type 11, time exceeded; 'timestamp'= Type 13, timestamp; 'timestamp-reply'= Type 14, timestamp reply; 'dest-unreachable'= Type 3, destination unreachable; "
     svc_name:
         description:
-        - "Service Object Group Name"
+        - "Service Object Name"
         required: True
     description:
         description:
@@ -156,6 +156,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -450,15 +451,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

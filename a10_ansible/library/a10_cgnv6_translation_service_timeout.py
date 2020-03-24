@@ -48,30 +48,27 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    service_type:
-        description:
-        - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
-        required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     timeout_val:
         description:
         - "Timeout in seconds (Interval of 60 seconds)"
         required: False
-    port_end:
+    service_type:
         description:
-        - "End Port Number"
-        required: False
-    fast:
-        description:
-        - "Use Fast Aging"
-        required: False
+        - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
+        required: True
     port:
         description:
         - "Port Number"
         required: True
+    fast:
+        description:
+        - "Use Fast Aging"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+
 
 """
 
@@ -85,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fast","port","port_end","service_type","timeout_val","uuid",]
+AVAILABLE_PROPERTIES = ["fast","port","service_type","timeout_val","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -114,12 +111,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        service_type=dict(type='str',required=True,choices=['tcp','udp']),
-        uuid=dict(type='str',),
         timeout_val=dict(type='int',),
-        port_end=dict(type='int',),
+        service_type=dict(type='str',required=True,choices=['tcp','udp']),
+        port=dict(type='int',required=True,),
         fast=dict(type='bool',),
-        port=dict(type='int',required=True,)
+        uuid=dict(type='str',)
     ))
    
 
@@ -369,15 +365,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -50,12 +50,13 @@ options:
         required: False
     action:
         description:
-        - "'auto'= Set FAN Speed to automatic based on system temperature; '50'= Set FAN Speed to 50% of maximum speed (approx); '75'= Set FAN Speed to 75% of maximum speed (approx); '100'= Set FAN Speed to 100% full hardware speed; "
+        - "'auto'= Set FAN Speed to automatic based on system temperature; '50'= Set FAN Speed to 50; '75'= Set FAN Speed to 75; '100'= Set FAN Speed to 100; "
         required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -333,15 +334,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():
