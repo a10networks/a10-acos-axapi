@@ -62,7 +62,7 @@ options:
         required: False
     snat_msl:
         description:
-        - "Source NAT MSL (Source NAT MSL value)"
+        - "Source NAT MSL (Source NAT MSL value (seconds))"
         required: False
     allow_syn_otherflags:
         description:

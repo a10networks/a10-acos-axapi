@@ -48,6 +48,47 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
+            state:
+                description:
+                - "Field state"
+            icmp6_rate_over_limit_drop:
+                description:
+                - "Field icmp6_rate_over_limit_drop"
+            ifnum:
+                description:
+                - "Lif interface number"
+            mac:
+                description:
+                - "Field mac"
+            icmp6_rate_limit_current:
+                description:
+                - "Field icmp6_rate_limit_current"
+            ipv4_addr_count:
+                description:
+                - "Field ipv4_addr_count"
+            icmp_rate_limit_current:
+                description:
+                - "Field icmp_rate_limit_current"
+            igmp_query_sent:
+                description:
+                - "Field igmp_query_sent"
+            icmp_rate_over_limit_drop:
+                description:
+                - "Field icmp_rate_over_limit_drop"
+            ipv6_addr_count:
+                description:
+                - "Field ipv6_addr_count"
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
     isis:
         description:
         - "Field isis"
@@ -271,7 +312,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","bfd","ifnum","ip","isis","mtu","sampling_enable","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","bfd","ifnum","ip","isis","mtu","oper","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -300,6 +341,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),state=dict(type='str',choices=['up','disabled','down']),icmp6_rate_over_limit_drop=dict(type='int',),ifnum=dict(type='int',required=True,),mac=dict(type='str',),icmp6_rate_limit_current=dict(type='int',),ipv4_addr_count=dict(type='int',),icmp_rate_limit_current=dict(type='int',),igmp_query_sent=dict(type='int',),icmp_rate_over_limit_drop=dict(type='int',),ipv6_addr_count=dict(type='int',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',))),
         isis=dict(type='dict',priority_list=dict(type='list',priority=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),padding=dict(type='bool',),hello_interval_minimal_list=dict(type='list',hello_interval_minimal=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mesh_group=dict(type='dict',value=dict(type='int',),blocked=dict(type='bool',)),network=dict(type='str',choices=['broadcast','point-to-point']),authentication=dict(type='dict',send_only_list=dict(type='list',send_only=dict(type='bool',),level=dict(type='str',choices=['level-1','level-2'])),mode_list=dict(type='list',mode=dict(type='str',choices=['md5']),level=dict(type='str',choices=['level-1','level-2'])),key_chain_list=dict(type='list',key_chain=dict(type='str',),level=dict(type='str',choices=['level-1','level-2']))),csnp_interval_list=dict(type='list',csnp_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),retransmit_interval=dict(type='int',),password_list=dict(type='list',password=dict(type='str',),level=dict(type='str',choices=['level-1','level-2'])),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),wide_metric_list=dict(type='list',wide_metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),hello_interval_list=dict(type='list',hello_interval=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),circuit_type=dict(type='str',choices=['level-1','level-1-2','level-2-only']),hello_multiplier_list=dict(type='list',hello_multiplier=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),metric_list=dict(type='list',metric=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),lsp_interval=dict(type='int',),uuid=dict(type='str',)),
         uuid=dict(type='str',),
         bfd=dict(type='dict',interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),authentication=dict(type='dict',encrypted=dict(type='str',),password=dict(type='str',),method=dict(type='str',choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int',)),echo=dict(type='bool',),uuid=dict(type='str',),demand=dict(type='bool',)),
@@ -335,6 +377,11 @@ def existing_url(module):
     f_dict["ifnum"] = module.params["ifnum"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -419,6 +466,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -579,6 +635,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

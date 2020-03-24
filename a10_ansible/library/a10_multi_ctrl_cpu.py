@@ -50,7 +50,7 @@ options:
         required: False
     num_ctrl_cpus:
         description:
-        - "Enter a number between 1 and less than half of the total number of CPUs, default is 1"
+        - "Set number of control CPUs. Default is 1, and max limit is platform dependent."
         required: False
 
 

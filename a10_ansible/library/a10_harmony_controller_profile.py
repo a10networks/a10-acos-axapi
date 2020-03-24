@@ -59,6 +59,9 @@ options:
             overall_status:
                 description:
                 - "Field overall_status"
+            Number_of_tenant_unmapped_partitions:
+                description:
+                - "Field Number_of_tenant_unmapped_partitions"
             heartbeat_error_message:
                 description:
                 - "Field heartbeat_error_message"
@@ -77,12 +80,18 @@ options:
             deregistration_status:
                 description:
                 - "Field deregistration_status"
+            Number_of_tenant_mapped_partitions:
+                description:
+                - "Field Number_of_tenant_mapped_partitions"
             registration_status:
                 description:
                 - "Field registration_status"
             registration_status_code:
                 description:
                 - "Field registration_status_code"
+            schema_registry_status:
+                description:
+                - "Field schema_registry_status"
             service_registry_error_message:
                 description:
                 - "Field service_registry_error_message"
@@ -104,13 +113,21 @@ options:
         description:
         - "Use management port for connections"
         required: False
+    auto_restart_action:
+        description:
+        - "'enable'= enable auto analytics bus restart, default behavior is enable; 'disable'= disable auto analytics bus restart; "
+        required: False
     region:
         description:
         - "region of the thunder-device"
         required: False
-    metrics_export_interval:
+    interval:
         description:
-        - "metrics export interval in seconds, default is 60 (metrics export interval in seconds, default is 60 seconds)"
+        - "auto analytics bus restart time interval in mins, default is 3 mins"
+        required: False
+    host:
+        description:
+        - "Set harmony controller host adddress"
         required: False
     port:
         description:
@@ -127,10 +144,17 @@ options:
             ip_address:
                 description:
                 - "IP address (IPv4 address)"
-    host:
+    re_sync:
         description:
-        - "Set harmony controller host adddress"
+        - "Field re_sync"
         required: False
+        suboptions:
+            analytics_bus:
+                description:
+                - "re-sync analtyics bus connections"
+            schema_registry:
+                description:
+                - "re-sync the schema registry"
     password_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
@@ -165,7 +189,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","availability_zone","host","metrics_export_interval","oper","password_encrypted","port","provider","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
+AVAILABLE_PROPERTIES = ["action","auto_restart_action","availability_zone","host","interval","oper","password_encrypted","port","provider","re_sync","region","secret_value","thunder_mgmt_ip","use_mgmt_port","user_name","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -194,15 +218,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',heartbeat_status=dict(type='str',),overall_status=dict(type='str',),heartbeat_error_message=dict(type='str',),deregistration_error_message=dict(type='str',),service_registry=dict(type='str',),broker_info=dict(type='str',),kafka_broker_state=dict(type='str',choices=['Up','Down']),deregistration_status=dict(type='str',),registration_status=dict(type='str',),registration_status_code=dict(type='int',),service_registry_error_message=dict(type='str',),deregistration_status_code=dict(type='int',),registration_error_message=dict(type='str',)),
+        oper=dict(type='dict',heartbeat_status=dict(type='str',),overall_status=dict(type='str',),Number_of_tenant_unmapped_partitions=dict(type='int',),heartbeat_error_message=dict(type='str',),deregistration_error_message=dict(type='str',),service_registry=dict(type='str',),broker_info=dict(type='str',),kafka_broker_state=dict(type='str',choices=['Up','Down']),deregistration_status=dict(type='str',),Number_of_tenant_mapped_partitions=dict(type='int',),registration_status=dict(type='str',),registration_status_code=dict(type='int',),schema_registry_status=dict(type='str',),service_registry_error_message=dict(type='str',),deregistration_status_code=dict(type='int',),registration_error_message=dict(type='str',)),
         user_name=dict(type='str',),
         uuid=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
+        auto_restart_action=dict(type='str',choices=['enable','disable']),
         region=dict(type='str',),
-        metrics_export_interval=dict(type='int',),
+        interval=dict(type='int',),
+        host=dict(type='str',),
         port=dict(type='int',),
         thunder_mgmt_ip=dict(type='dict',uuid=dict(type='str',),ip_address=dict(type='str',)),
-        host=dict(type='str',),
+        re_sync=dict(type='dict',analytics_bus=dict(type='bool',),schema_registry=dict(type='bool',)),
         password_encrypted=dict(type='str',),
         provider=dict(type='str',),
         action=dict(type='str',choices=['register','deregister']),

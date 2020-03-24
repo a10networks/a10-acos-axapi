@@ -165,21 +165,24 @@ options:
         - "Field passive_interface_list"
         required: False
         suboptions:
-            ethernet:
-                description:
-                - "Ethernet interface (Port number)"
             lif:
                 description:
                 - "Logical interface (Lif interface number)"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
             ve:
                 description:
                 - "Virtual ethernet interface (Virtual ethernet interface number)"
             loopback:
                 description:
                 - "Loopback interface (Port number)"
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
+            ethernet:
+                description:
+                - "Ethernet interface (Port number)"
     summary_address_list:
         description:
         - "Field summary_address_list"
@@ -336,7 +339,7 @@ def get_argspec():
         protocol_list=dict(type='list',protocol_topology=dict(type='bool',)),
         log_adjacency_changes_cfg=dict(type='dict',state=dict(type='str',choices=['detail','disable'])),
         spf_interval_exp_list=dict(type='list',max=dict(type='int',),min=dict(type='int',),level=dict(type='str',choices=['level-1','level-2'])),
-        passive_interface_list=dict(type='list',ethernet=dict(type='str',),lif=dict(type='str',),trunk=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',)),
+        passive_interface_list=dict(type='list',lif=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),
         summary_address_list=dict(type='list',prefix=dict(type='str',),level=dict(type='str',choices=['level-1','level-1-2','level-2'])),
         adjacency_check=dict(type='bool',),
         default_information=dict(type='str',choices=['originate']),

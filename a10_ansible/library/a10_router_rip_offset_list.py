@@ -59,18 +59,21 @@ options:
             loopback:
                 description:
                 - "Loopback interface (Port number)"
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
             metric:
                 description:
                 - "Metric value"
-            trunk:
-                description:
-                - "Trunk interface (Trunk interface number)"
-            acl:
-                description:
-                - "Access-list name"
             offset_list_direction:
                 description:
                 - "'in'= Filter incoming updates; 'out'= Filter outgoing updates; "
+            acl:
+                description:
+                - "Access-list name"
+            trunk:
+                description:
+                - "Trunk interface (Trunk interface number)"
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
@@ -121,7 +124,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),metric=dict(type='int',),trunk=dict(type='str',),acl=dict(type='str',),offset_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',)),
+        acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),metric=dict(type='int',),offset_list_direction=dict(type='str',choices=['in','out']),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

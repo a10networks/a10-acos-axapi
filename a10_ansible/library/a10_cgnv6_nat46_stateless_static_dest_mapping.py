@@ -56,17 +56,25 @@ options:
         description:
         - "IPv6 address"
         required: True
-    v4_address:
+    uuid:
         description:
-        - "IPv4 address"
-        required: True
+        - "uuid of the object"
+        required: False
+    to_shared:
+        description:
+        - "Send NATed traffic through shared partition"
+        required: False
     vrid:
         description:
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
-    uuid:
+    v4_address:
         description:
-        - "uuid of the object"
+        - "IPv4 address"
+        required: True
+    shared:
+        description:
+        - "Share/Expose this mapping with other partitions"
         required: False
 
 
@@ -82,7 +90,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["count","uuid","v4_address","v6_address","vrid",]
+AVAILABLE_PROPERTIES = ["count","shared","to_shared","uuid","v4_address","v6_address","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -113,9 +121,11 @@ def get_argspec():
     rv.update(dict(
         count=dict(type='int',),
         v6_address=dict(type='str',required=True,),
-        v4_address=dict(type='str',required=True,),
+        uuid=dict(type='str',),
+        to_shared=dict(type='bool',),
         vrid=dict(type='int',),
-        uuid=dict(type='str',)
+        v4_address=dict(type='str',required=True,),
+        shared=dict(type='bool',)
     ))
    
 

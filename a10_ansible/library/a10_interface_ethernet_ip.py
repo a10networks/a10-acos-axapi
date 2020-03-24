@@ -82,9 +82,9 @@ options:
         description:
         - "Allow traffic to be associated with promiscuous VIP"
         required: False
-    dhcp:
+    client:
         description:
-        - "Use DHCP to configure IP address"
+        - "Client facing interface for IPv4/v6 traffic"
         required: False
     max_resp_time:
         description:
@@ -167,6 +167,14 @@ options:
             isis:
                 description:
                 - "Field isis"
+    dhcp:
+        description:
+        - "Use DHCP to configure IP address"
+        required: False
+    server:
+        description:
+        - "Server facing interface for IPv4/v6 traffic"
+        required: False
     ospf:
         description:
         - "Field ospf"
@@ -196,7 +204,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["address_list","allow_promiscuous_vip","cache_spoofing_port","dhcp","generate_membership_query","helper_address_list","inside","max_resp_time","ospf","outside","query_interval","rip","router","slb_partition_redirect","stateful_firewall","ttl_ignore","uuid",]
+AVAILABLE_PROPERTIES = ["address_list","allow_promiscuous_vip","cache_spoofing_port","client","dhcp","generate_membership_query","helper_address_list","inside","max_resp_time","ospf","outside","query_interval","rip","router","server","slb_partition_redirect","stateful_firewall","ttl_ignore","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -231,7 +239,7 @@ def get_argspec():
         cache_spoofing_port=dict(type='bool',),
         inside=dict(type='bool',),
         allow_promiscuous_vip=dict(type='bool',),
-        dhcp=dict(type='bool',),
+        client=dict(type='bool',),
         max_resp_time=dict(type='int',),
         query_interval=dict(type='int',),
         outside=dict(type='bool',),
@@ -240,6 +248,8 @@ def get_argspec():
         rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),
         ttl_ignore=dict(type='bool',),
         router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),
+        dhcp=dict(type='bool',),
+        server=dict(type='bool',),
         ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),
         slb_partition_redirect=dict(type='bool',)
     ))

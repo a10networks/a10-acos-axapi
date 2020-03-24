@@ -53,39 +53,77 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            state:
+            pri_affinity_priority:
                 description:
-                - "Field state"
+                - "Field pri_affinity_priority"
             name:
                 description:
                 - "CGNV6 Service Name"
+            stateless_current_rate:
+                description:
+                - "Field stateless_current_rate"
+            servers_down:
+                description:
+                - "Field servers_down"
+            stateless_state:
+                description:
+                - "Field stateless_state"
+            servers_disable:
+                description:
+                - "Field servers_disable"
+            stateless_type:
+                description:
+                - "Field stateless_type"
+            servers_total:
+                description:
+                - "Field servers_total"
+            state:
+                description:
+                - "Field state"
             member_list:
                 description:
                 - "Field member_list"
             servers_up:
                 description:
                 - "Field servers_up"
-            servers_down:
+            stateless_current_usage:
                 description:
-                - "Field servers_down"
-            servers_total:
+                - "Field stateless_current_usage"
+            hm_dsr_enable_all_vip:
                 description:
-                - "Field servers_total"
-            servers_disable:
-                description:
-                - "Field servers_disable"
+                - "Field hm_dsr_enable_all_vip"
     shared_partition:
         description:
         - "Share with a single partition (Partition Name)"
         required: False
+    stats:
+        description:
+        - "Field stats"
+        required: False
+        suboptions:
+            member_list:
+                description:
+                - "Field member_list"
+            server_selection_fail_drop:
+                description:
+                - "Service selection fail drop"
+            server_selection_fail_reset:
+                description:
+                - "Service selection fail reset"
+            service_peak_conn:
+                description:
+                - "Service peak connection"
+            name:
+                description:
+                - "CGNV6 Service Name"
     protocol:
         description:
         - "'tcp'= TCP LB service; 'udp'= UDP LB service; "
         required: False
-    uuid:
+    name:
         description:
-        - "uuid of the object"
-        required: False
+        - "CGNV6 Service Name"
+        required: True
     user_tag:
         description:
         - "Customized tag"
@@ -93,6 +131,10 @@ options:
     shared_group:
         description:
         - "Share with a partition group (Partition Group Name)"
+        required: False
+    traffic_replication_mirror_ip_repl:
+        description:
+        - "Replaces IP with server-IP"
         required: False
     sampling_enable:
         description:
@@ -122,34 +164,18 @@ options:
             name:
                 description:
                 - "Member name"
-    stats:
+    shared:
         description:
-        - "Field stats"
+        - "Share with partition"
         required: False
-        suboptions:
-            member_list:
-                description:
-                - "Field member_list"
-            server_selection_fail_drop:
-                description:
-                - "Service selection fail drop"
-            server_selection_fail_reset:
-                description:
-                - "Service selection fail reset"
-            service_peak_conn:
-                description:
-                - "Service peak connection"
-            name:
-                description:
-                - "CGNV6 Service Name"
     health_check:
         description:
         - "Health Check (Monitor Name)"
         required: False
-    name:
+    uuid:
         description:
-        - "CGNV6 Service Name"
-        required: True
+        - "uuid of the object"
+        required: False
 
 
 """
@@ -164,7 +190,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["health_check","member_list","name","oper","protocol","sampling_enable","shared_group","shared_partition","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["health_check","member_list","name","oper","protocol","sampling_enable","shared","shared_group","shared_partition","stats","traffic_replication_mirror_ip_repl","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -193,17 +219,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',state=dict(type='str',choices=['All Up','Functional Up','Partial Up','Down','Disabled','Unknown']),name=dict(type='str',required=True,),member_list=dict(type='list',oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','MAINTENANCE'])),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),servers_down=dict(type='int',),servers_total=dict(type='int',),servers_disable=dict(type='int',)),
+        oper=dict(type='dict',pri_affinity_priority=dict(type='int',),name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),member_list=dict(type='list',oper=dict(type='dict',hm_key=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),hm_index=dict(type='int',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
         shared_partition=dict(type='str',),
+        stats=dict(type='dict',member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),server_selection_fail_drop=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_peak_conn=dict(type='str',),name=dict(type='str',required=True,)),
         protocol=dict(type='str',choices=['tcp','udp']),
-        uuid=dict(type='str',),
+        name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
         shared_group=dict(type='str',),
+        traffic_replication_mirror_ip_repl=dict(type='bool',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn'])),
-        member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
-        stats=dict(type='dict',member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),server_selection_fail_drop=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_peak_conn=dict(type='str',),name=dict(type='str',required=True,)),
+        member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
+        shared=dict(type='bool',),
         health_check=dict(type='str',),
-        name=dict(type='str',required=True,)
+        uuid=dict(type='str',)
     ))
    
 

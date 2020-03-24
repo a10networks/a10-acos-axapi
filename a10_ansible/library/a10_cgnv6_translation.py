@@ -61,21 +61,24 @@ options:
         - "Field service_timeout_list"
         required: False
         suboptions:
-            timeout_val:
-                description:
-                - "Timeout in seconds (Interval of 60 seconds)"
             service_type:
                 description:
                 - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
-            port:
-                description:
-                - "Port Number"
-            fast:
-                description:
-                - "Use Fast Aging"
             uuid:
                 description:
                 - "uuid of the object"
+            timeout_val:
+                description:
+                - "Timeout in seconds (Interval of 60 seconds)"
+            port_end:
+                description:
+                - "End Port Number"
+            fast:
+                description:
+                - "Use Fast Aging"
+            port:
+                description:
+                - "Port Number"
     icmp_timeout:
         description:
         - "Field icmp_timeout"
@@ -136,7 +139,7 @@ def get_argspec():
     rv.update(dict(
         tcp_timeout=dict(type='int',),
         udp_timeout=dict(type='int',),
-        service_timeout_list=dict(type='list',timeout_val=dict(type='int',),service_type=dict(type='str',required=True,choices=['tcp','udp']),port=dict(type='int',required=True,),fast=dict(type='bool',),uuid=dict(type='str',)),
+        service_timeout_list=dict(type='list',service_type=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),timeout_val=dict(type='int',),port_end=dict(type='int',),fast=dict(type='bool',),port=dict(type='int',required=True,)),
         icmp_timeout=dict(type='dict',icmp_timeout_val=dict(type='int',),fast=dict(type='bool',)),
         uuid=dict(type='str',)
     ))

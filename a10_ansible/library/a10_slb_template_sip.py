@@ -55,7 +55,7 @@ options:
         suboptions:
             server_request_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             server_request_erase_all:
                 description:
                 - "Erase all headers"
@@ -92,7 +92,7 @@ options:
         suboptions:
             server_response_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             insert_condition_server_response:
                 description:
                 - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
@@ -116,7 +116,7 @@ options:
                 - "Erase a SIP header (Header Name)"
             client_request_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
             client_request_erase_all:
                 description:
                 - "Erase all headers"
@@ -175,7 +175,7 @@ options:
                 - "Erase a SIP header (Header Name)"
             client_response_header_insert:
                 description:
-                - "Insert a SIP header (Header Content (Format= 'name= value'))"
+                - "Insert a SIP header (Header Content (Format= 'name=value'))"
     failed_server_selection_message:
         description:
         - "Send SIP message (includs status code) to client when select server fail(Format= 3 digits(1XX~6XX) space reason)"

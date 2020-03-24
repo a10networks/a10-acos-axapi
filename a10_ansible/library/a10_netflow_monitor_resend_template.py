@@ -53,7 +53,7 @@ options:
         - Key to identify parent object
     records:
         description:
-        - "To resend template once for each number of records (Number of records= default is 1000, 0 means never resend template)"
+        - "To resend template once for each number of records (Number of records= default is 1000, 0 means disable template resend based on record-count)"
         required: False
     uuid:
         description:
@@ -61,7 +61,7 @@ options:
         required: False
     timeout:
         description:
-        - "To set time interval to resend template (number of seconds= default is 1800, 0 means never resend template)"
+        - "To set time interval to resend template (number of seconds= default is 1800, 0 means disable template resend based on timeout)"
         required: False
 
 

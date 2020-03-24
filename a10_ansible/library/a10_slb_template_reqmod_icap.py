@@ -52,25 +52,53 @@ options:
         description:
         - "min-payload-size value 0 - 65535, default is 0"
         required: False
-    logging:
+    shared_partition_persist_source_ip_template:
         description:
-        - "logging template (Logging template name)"
+        - "Reference a persist source ip template from shared partition"
+        required: False
+    template_tcp_proxy_shared:
+        description:
+        - "TCP Proxy Template name"
+        required: False
+    allowed_http_methods:
+        description:
+        - "List of allowed HTTP methods. Default is 'Allow All'. (List of HTTP methods allowed (default 'Allow All'))"
         required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+    source_ip:
+        description:
+        - "Source IP persistence template (Source IP persistence template name)"
+        required: False
+    shared_partition_tcp_proxy_template:
+        description:
+        - "Reference a TCP Proxy template from shared partition"
+        required: False
+    service_group:
+        description:
+        - "Bind a Service Group to the template (Service Group Name)"
+        required: False
+    tcp_proxy:
+        description:
+        - "TCP Proxy Template Name"
+        required: False
+    preview:
+        description:
+        - "Preview value 1 - 32768, default is 32768"
+        required: False
+    disable_http_server_reset:
+        description:
+        - "Don't reset http server"
+        required: False
     server_ssl:
         description:
         - "Server SSL template (Server SSL template name)"
         required: False
-    service_url:
+    fail_close:
         description:
-        - "URL to send to ICAP server (Service URL Name)"
-        required: False
-    tcp_proxy:
-        description:
-        - "TCP proxy template (TCP proxy template name)"
+        - "When template sg is down mark vport down"
         required: False
     bypass_ip_cfg:
         description:
@@ -83,21 +111,29 @@ options:
             mask:
                 description:
                 - "IP prefix mask"
+    template_persist_source_ip_shared:
+        description:
+        - "Source IP Persistence Template Name"
+        required: False
+    include_protocol_in_uri:
+        description:
+        - "Include protocol and port in HTTP URI"
+        required: False
+    logging:
+        description:
+        - "logging template (Logging template name)"
+        required: False
+    name:
+        description:
+        - "Reqmod ICAP Template Name"
+        required: True
     user_tag:
         description:
         - "Customized tag"
         required: False
-    fail_close:
+    x_auth_url:
         description:
-        - "When template sg is down mark vport down"
-        required: False
-    service_group:
-        description:
-        - "Bind a Service Group to the template (Service Group Name)"
-        required: False
-    allowed_http_methods:
-        description:
-        - "List of allowed HTTP methods. Default is 'Allow All'. (List of HTTP methods allowed (default 'Allow All'))"
+        - "Use URL format for authentication"
         required: False
     log_only_allowed_method:
         description:
@@ -107,22 +143,14 @@ options:
         description:
         - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
         required: False
-    include_protocol_in_uri:
+    cylance:
         description:
-        - "Include protocol and port in HTTP URI"
+        - "cylance external server"
         required: False
-    preview:
+    service_url:
         description:
-        - "Preview value 1 - 32768, default is 32768"
+        - "URL to send to ICAP server (Service URL Name)"
         required: False
-    source_ip:
-        description:
-        - "Source IP persistence template (Source IP persistence template name)"
-        required: False
-    name:
-        description:
-        - "Reqmod ICAP Template Name"
-        required: True
 
 
 """
@@ -137,7 +165,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","allowed_http_methods","bypass_ip_cfg","fail_close","include_protocol_in_uri","log_only_allowed_method","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","source_ip","tcp_proxy","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","allowed_http_methods","bypass_ip_cfg","cylance","disable_http_server_reset","fail_close","include_protocol_in_uri","log_only_allowed_method","logging","min_payload_size","name","preview","server_ssl","service_group","service_url","shared_partition_persist_source_ip_template","shared_partition_tcp_proxy_template","source_ip","tcp_proxy","template_persist_source_ip_shared","template_tcp_proxy_shared","user_tag","uuid","x_auth_url",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -167,22 +195,29 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         min_payload_size=dict(type='int',),
-        logging=dict(type='str',),
-        uuid=dict(type='str',),
-        server_ssl=dict(type='str',),
-        service_url=dict(type='str',),
-        tcp_proxy=dict(type='str',),
-        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
-        user_tag=dict(type='str',),
-        fail_close=dict(type='bool',),
-        service_group=dict(type='str',),
+        shared_partition_persist_source_ip_template=dict(type='bool',),
+        template_tcp_proxy_shared=dict(type='str',),
         allowed_http_methods=dict(type='str',),
+        uuid=dict(type='str',),
+        source_ip=dict(type='str',),
+        shared_partition_tcp_proxy_template=dict(type='bool',),
+        service_group=dict(type='str',),
+        tcp_proxy=dict(type='str',),
+        preview=dict(type='int',),
+        disable_http_server_reset=dict(type='bool',),
+        server_ssl=dict(type='str',),
+        fail_close=dict(type='bool',),
+        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
+        template_persist_source_ip_shared=dict(type='str',),
+        include_protocol_in_uri=dict(type='bool',),
+        logging=dict(type='str',),
+        name=dict(type='str',required=True,),
+        user_tag=dict(type='str',),
+        x_auth_url=dict(type='bool',),
         log_only_allowed_method=dict(type='bool',),
         action=dict(type='str',choices=['continue','drop','reset']),
-        include_protocol_in_uri=dict(type='bool',),
-        preview=dict(type='int',),
-        source_ip=dict(type='str',),
-        name=dict(type='str',required=True,)
+        cylance=dict(type='bool',),
+        service_url=dict(type='str',)
     ))
    
 

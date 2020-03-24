@@ -48,6 +48,18 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    low_latency:
+        description:
+        - "Enable low latency mode"
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            server_auto_reselect:
+                description:
+                - "Field server_auto_reselect"
     use_mss_tab:
         description:
         - "Use MSS based on internal table for SLB processing"
@@ -64,9 +76,9 @@ options:
         description:
         - "Enable the Player id check"
         required: False
-    dns_cache_enable:
+    after_disable:
         description:
-        - "Enable DNS cache"
+        - "Graceful shutdown after disable server/port and/or virtual server/port"
         required: False
     msl_time:
         description:
@@ -136,9 +148,20 @@ options:
         description:
         - "port range end"
         required: False
-    after_disable:
+    dns_response_rate_limiting:
         description:
-        - "Graceful shutdown after disable server/port and/or virtual server/port"
+        - "Field dns_response_rate_limiting"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+            max_table_entries:
+                description:
+                - "Maximum number of entries allowed"
+    dns_cache_enable:
+        description:
+        - "Enable DNS cache"
         required: False
     max_local_rate:
         description:
@@ -188,9 +211,17 @@ options:
         description:
         - "Set DNS cache entry size, default is 256 bytes (1-4096 bytes, default is 256 bytes)"
         required: False
+    log_for_reset_unknown_conn:
+        description:
+        - "Log when rate exceed"
+        required: False
     auto_nat_no_ip_refresh:
         description:
         - "'enable'= enable; 'disable'= disable; "
+        required: False
+    pkt_rate_for_reset_unknown_conn:
+        description:
+        - "Field pkt_rate_for_reset_unknown_conn"
         required: False
     buff_thresh_sys_buff_high:
         description:
@@ -312,7 +343,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["after_disable","auto_nat_no_ip_refresh","buff_thresh","buff_thresh_hw_buff","buff_thresh_relieve_thresh","buff_thresh_sys_buff_high","buff_thresh_sys_buff_low","compress_block_size","conn_rate_limit","ddos_protection","disable_adaptive_resource_check","disable_server_auto_reselect","dns_cache_age","dns_cache_enable","dns_cache_entry_size","dns_vip_stateless","drop_icmp_to_vip_when_vip_down","dsr_health_check_enable","enable_l7_req_acct","entity","exclude_destination","extended_stats","fast_path_disable","gateway_health_check","graceful_shutdown","graceful_shutdown_enable","honor_server_response_ttl","hw_compression","hw_syn_rr","interval","l2l3_trunk_lb_disable","max_buff_queued_per_conn","max_http_header_count","max_local_rate","max_remote_rate","msl_time","mss_table","no_auto_up_on_aflex","override_port","player_id_check_enable","range","range_end","range_start","rate_limit_logging","reset_stale_session","resolve_port_conflict","response_type","scale_out","snat_gwy_for_l3","snat_on_vip","software","sort_res","ssli_sni_hash_enable","stateless_sg_multi_binding","stats_data_disable","timeout","ttl_threshold","use_mss_tab","uuid",]
+AVAILABLE_PROPERTIES = ["after_disable","auto_nat_no_ip_refresh","buff_thresh","buff_thresh_hw_buff","buff_thresh_relieve_thresh","buff_thresh_sys_buff_high","buff_thresh_sys_buff_low","compress_block_size","conn_rate_limit","ddos_protection","disable_adaptive_resource_check","disable_server_auto_reselect","dns_cache_age","dns_cache_enable","dns_cache_entry_size","dns_response_rate_limiting","dns_vip_stateless","drop_icmp_to_vip_when_vip_down","dsr_health_check_enable","enable_l7_req_acct","entity","exclude_destination","extended_stats","fast_path_disable","gateway_health_check","graceful_shutdown","graceful_shutdown_enable","honor_server_response_ttl","hw_compression","hw_syn_rr","interval","l2l3_trunk_lb_disable","log_for_reset_unknown_conn","low_latency","max_buff_queued_per_conn","max_http_header_count","max_local_rate","max_remote_rate","msl_time","mss_table","no_auto_up_on_aflex","oper","override_port","pkt_rate_for_reset_unknown_conn","player_id_check_enable","range","range_end","range_start","rate_limit_logging","reset_stale_session","resolve_port_conflict","response_type","scale_out","snat_gwy_for_l3","snat_on_vip","software","sort_res","ssli_sni_hash_enable","stateless_sg_multi_binding","stats_data_disable","timeout","ttl_threshold","use_mss_tab","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -341,11 +372,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        low_latency=dict(type='bool',),
+        oper=dict(type='dict',server_auto_reselect=dict(type='int',)),
         use_mss_tab=dict(type='bool',),
         stats_data_disable=dict(type='bool',),
         compress_block_size=dict(type='int',),
         player_id_check_enable=dict(type='bool',),
-        dns_cache_enable=dict(type='bool',),
+        after_disable=dict(type='bool',),
         msl_time=dict(type='int',),
         graceful_shutdown_enable=dict(type='bool',),
         buff_thresh_hw_buff=dict(type='int',),
@@ -363,7 +396,8 @@ def get_argspec():
         dns_vip_stateless=dict(type='bool',),
         buff_thresh_sys_buff_low=dict(type='int',),
         range_end=dict(type='int',),
-        after_disable=dict(type='bool',),
+        dns_response_rate_limiting=dict(type='dict',uuid=dict(type='str',),max_table_entries=dict(type='int',)),
+        dns_cache_enable=dict(type='bool',),
         max_local_rate=dict(type='int',),
         exclude_destination=dict(type='str',choices=['local','remote']),
         dns_cache_age=dict(type='int',),
@@ -376,7 +410,9 @@ def get_argspec():
         dsr_health_check_enable=dict(type='bool',),
         buff_thresh=dict(type='bool',),
         dns_cache_entry_size=dict(type='int',),
+        log_for_reset_unknown_conn=dict(type='bool',),
         auto_nat_no_ip_refresh=dict(type='str',choices=['enable','disable']),
+        pkt_rate_for_reset_unknown_conn=dict(type='int',),
         buff_thresh_sys_buff_high=dict(type='int',),
         max_buff_queued_per_conn=dict(type='int',),
         max_remote_rate=dict(type='int',),
@@ -422,6 +458,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -501,6 +542,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def exists(module):
     try:
@@ -652,6 +702,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
     module.client.session.close()
     return result
 

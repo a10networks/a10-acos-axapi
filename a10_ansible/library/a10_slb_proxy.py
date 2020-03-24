@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_proxy
 description:
-    - Show Proxy Global Statistics
+    - Configure Proxy Global
 short_description: Configures A10 slb.proxy
 author: A10 Networks 2018 
 version_added: 2.4

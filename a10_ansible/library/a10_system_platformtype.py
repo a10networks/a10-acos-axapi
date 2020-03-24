@@ -53,9 +53,24 @@ options:
         - "Field oper"
         required: False
         suboptions:
+            platform_lxc:
+                description:
+                - "Field platform_lxc"
+            platform_dpdk:
+                description:
+                - "Field platform_dpdk"
+            platform_info:
+                description:
+                - "Field platform_info"
+            platform_axv:
+                description:
+                - "Field platform_axv"
             platform_type:
                 description:
                 - "Field platform_type"
+            platform_id:
+                description:
+                - "Field platform_id"
     uuid:
         description:
         - "uuid of the object"
@@ -103,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',platform_type=dict(type='str',)),
+        oper=dict(type='dict',platform_lxc=dict(type='int',),platform_dpdk=dict(type='int',),platform_info=dict(type='str',),platform_axv=dict(type='int',),platform_type=dict(type='str',),platform_id=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

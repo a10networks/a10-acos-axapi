@@ -62,7 +62,7 @@ options:
         required: False
     nat_end_address:
         description:
-        - "IPv6 End NAT Address"
+        - "IPv4 End NAT Address"
         required: False
     vrid:
         description:

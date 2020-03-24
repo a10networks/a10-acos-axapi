@@ -51,9 +51,13 @@ options:
     monitor_name:
         description:
         - Key to identify parent object
-    ext_program:
+    uuid:
         description:
-        - "Specify external application (Program name)"
+        - "uuid of the object"
+        required: False
+    external:
+        description:
+        - "EXTERNAL type"
         required: False
     ext_preference:
         description:
@@ -63,17 +67,21 @@ options:
         description:
         - "Specify external application's arguments (Application arguments)"
         required: False
-    uuid:
+    shared_partition_program:
         description:
-        - "uuid of the object"
-        required: False
-    external:
-        description:
-        - "EXTERNAL type"
+        - "external application from shared partition"
         required: False
     ext_port:
         description:
         - "Specify the server port (Port Number)"
+        required: False
+    ext_program_shared:
+        description:
+        - "Specify external application (Program name)"
+        required: False
+    ext_program:
+        description:
+        - "Specify external application (Program name)"
         required: False
 
 
@@ -89,7 +97,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext_arguments","ext_port","ext_preference","ext_program","external","uuid",]
+AVAILABLE_PROPERTIES = ["ext_arguments","ext_port","ext_preference","ext_program","ext_program_shared","external","shared_partition_program","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -118,12 +126,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ext_program=dict(type='str',),
-        ext_preference=dict(type='bool',),
-        ext_arguments=dict(type='str',),
         uuid=dict(type='str',),
         external=dict(type='bool',),
-        ext_port=dict(type='int',)
+        ext_preference=dict(type='bool',),
+        ext_arguments=dict(type='str',),
+        shared_partition_program=dict(type='bool',),
+        ext_port=dict(type='int',),
+        ext_program_shared=dict(type='str',),
+        ext_program=dict(type='str',)
     ))
    
     # Parent keys

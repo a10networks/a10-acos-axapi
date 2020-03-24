@@ -55,7 +55,7 @@ options:
         suboptions:
             exec_banner:
                 description:
-                - "Banner text, string \n is taken as line break of multi-line banner text, use \\n to indicate \n"
+                - "Banner text, string \n is taken as line break of multi-line banner text, use \\n for \n, \077 for ? and \011 for tab"
             nexec:
                 description:
                 - "Set EXEC process creation banner"

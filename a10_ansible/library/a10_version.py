@@ -53,60 +53,99 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            firmware_version:
+            sys_poll_mode:
                 description:
-                - "Field firmware_version"
+                - "Field sys_poll_mode"
             hw_code:
                 description:
                 - "Field hw_code"
-            hd_sec:
-                description:
-                - "Field hd_sec"
             hd_pri:
                 description:
                 - "Field hd_pri"
-            copyright:
-                description:
-                - "Field copyright"
-            sw_version:
-                description:
-                - "Field sw_version"
-            boot_from:
-                description:
-                - "Field boot_from"
-            cf_pri:
-                description:
-                - "Field cf_pri"
             axapi_version:
                 description:
                 - "Field axapi_version"
-            plat_features:
-                description:
-                - "Field plat_features"
-            cf_sec:
-                description:
-                - "Field cf_sec"
-            hw_platform:
-                description:
-                - "Field hw_platform"
             serial_number:
                 description:
                 - "Field serial_number"
             up_time:
                 description:
                 - "Field up_time"
-            current_time:
+            firmware_version:
                 description:
-                - "Field current_time"
-            aflex_version:
+                - "Field firmware_version"
+            hd_sec:
                 description:
-                - "Field aflex_version"
-            virtualization_type:
+                - "Field hd_sec"
+            pri_gui_version:
                 description:
-                - "Field virtualization_type"
+                - "Field pri_gui_version"
+            copyright:
+                description:
+                - "Field copyright"
+            io_buff_enabled:
+                description:
+                - "Field io_buff_enabled"
+            series_name:
+                description:
+                - "Field series_name"
+            hostname:
+                description:
+                - "Field hostname"
+            cots_sys_ver:
+                description:
+                - "Field cots_sys_ver"
+            hw_platform:
+                description:
+                - "Field hw_platform"
             last_config_saved_time:
                 description:
                 - "Field last_config_saved_time"
+            sw_version:
+                description:
+                - "Field sw_version"
+            cf_pri:
+                description:
+                - "Field cf_pri"
+            build_type:
+                description:
+                - "Field build_type"
+            cf_sec:
+                description:
+                - "Field cf_sec"
+            current_time:
+                description:
+                - "Field current_time"
+            nun_ctrl_cpus:
+                description:
+                - "Field nun_ctrl_cpus"
+            sec_gui_version:
+                description:
+                - "Field sec_gui_version"
+            cylance_version:
+                description:
+                - "Field cylance_version"
+            buff_size:
+                description:
+                - "Field buff_size"
+            virtualization_type:
+                description:
+                - "Field virtualization_type"
+            boot_from:
+                description:
+                - "Field boot_from"
+            plat_features:
+                description:
+                - "Field plat_features"
+            aflex_version:
+                description:
+                - "Field aflex_version"
+            cots_sys_name:
+                description:
+                - "Field cots_sys_name"
+            cots_sys_mfg:
+                description:
+                - "Field cots_sys_mfg"
     uuid:
         description:
         - "uuid of the object"
@@ -154,7 +193,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',firmware_version=dict(type='str',),hw_code=dict(type='str',),hd_sec=dict(type='str',),hd_pri=dict(type='str',),copyright=dict(type='str',),sw_version=dict(type='str',),boot_from=dict(type='str',),cf_pri=dict(type='str',),axapi_version=dict(type='str',),plat_features=dict(type='str',),cf_sec=dict(type='str',),hw_platform=dict(type='str',),serial_number=dict(type='str',),up_time=dict(type='str',),current_time=dict(type='str',),aflex_version=dict(type='str',),virtualization_type=dict(type='str',),last_config_saved_time=dict(type='str',)),
+        oper=dict(type='dict',sys_poll_mode=dict(type='str',),hw_code=dict(type='str',),hd_pri=dict(type='str',),axapi_version=dict(type='str',),serial_number=dict(type='str',),up_time=dict(type='str',),firmware_version=dict(type='str',),hd_sec=dict(type='str',),pri_gui_version=dict(type='str',),copyright=dict(type='str',),io_buff_enabled=dict(type='str',),series_name=dict(type='str',),hostname=dict(type='str',),cots_sys_ver=dict(type='str',),hw_platform=dict(type='str',),last_config_saved_time=dict(type='str',),sw_version=dict(type='str',),cf_pri=dict(type='str',),build_type=dict(type='str',),cf_sec=dict(type='str',),current_time=dict(type='str',),nun_ctrl_cpus=dict(type='int',),sec_gui_version=dict(type='str',),cylance_version=dict(type='str',),buff_size=dict(type='int',),virtualization_type=dict(type='str',),boot_from=dict(type='str',),plat_features=dict(type='str',),aflex_version=dict(type='str',),cots_sys_name=dict(type='str',),cots_sys_mfg=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

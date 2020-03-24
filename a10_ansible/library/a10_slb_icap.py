@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_icap
 description:
-    - Show ICAP Statistics
+    - Configure ICAP
 short_description: Configures A10 slb.icap
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -391,7 +402,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -420,6 +431,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',status_449=dict(type='int',),no_payload_buff_err=dict(type='int',),prep_req_fail_err=dict(type='int',),icap_ver_err=dict(type='int',),resp_line_parse_err=dict(type='int',),app_serv_conn_no_pcb_err=dict(type='int',),status_450=dict(type='int',),status_510=dict(type='int',),encap_hdr_incomplete_err=dict(type='int',),chunk_no_allow_204=dict(type='int',),http_resp_line_parse_err=dict(type='int',),status_207=dict(type='int',),status_206=dict(type='int',),status_205=dict(type='int',),status_204=dict(type='int',),status_203=dict(type='int',),status_202=dict(type='int',),status_201=dict(type='int',),status_200=dict(type='int',),no_status_code_err=dict(type='int',),resp_hdr_incomplete_err=dict(type='int',),respmod_request_after_100=dict(type='int',),reqmod_response=dict(type='int',),status_406=dict(type='int',),reqmod_response_after_100=dict(type='int',),status_4xx=dict(type='int',),no_payload_next_buff_err=dict(type='int',),status_3xx=dict(type='int',),reqmod_request=dict(type='int',),recv_option_resp=dict(type='int',),no_icap_resp_err=dict(type='int',),respmod_request=dict(type='int',),app_serv_conn_err=dict(type='int',),result_continue=dict(type='int',),len_exceed_no_allow_204=dict(type='int',),status_306=dict(type='int',),status_307=dict(type='int',),status_304=dict(type='int',),status_305=dict(type='int',),status_302=dict(type='int',),status_303=dict(type='int',),status_300=dict(type='int',),status_301=dict(type='int',),start_icap_conn_fail_err=dict(type='int',),status_418=dict(type='int',),result_100_continue=dict(type='int',),status_419=dict(type='int',),result_other=dict(type='int',),chunk_bad_trail_err=dict(type='int',),respmod_response_after_100=dict(type='int',),status_412=dict(type='int',),status_413=dict(type='int',),status_410=dict(type='int',),status_411=dict(type='int',),status_416=dict(type='int',),status_417=dict(type='int',),status_414=dict(type='int',),status_415=dict(type='int',),chunk2_hdr_err=dict(type='int',),status_unknown=dict(type='int',),status_100=dict(type='int',),status_101=dict(type='int',),status_102=dict(type='int',),status_509=dict(type='int',),send_option_req=dict(type='int',),http_resp_line_read_err=dict(type='int',),status_6xx=dict(type='int',),status_5xx=dict(type='int',),http_resp_hdr_err=dict(type='int',),status_401=dict(type='int',),status_400=dict(type='int',),status_403=dict(type='int',),status_402=dict(type='int',),status_405=dict(type='int',),status_404=dict(type='int',),status_407=dict(type='int',),status_2xx=dict(type='int',),status_409=dict(type='int',),status_408=dict(type='int',),respmod_response=dict(type='int',),status_505=dict(type='int',),resp_line_read_err=dict(type='int',),req_hdr_incomplete_err=dict(type='int',),status_1xx=dict(type='int',),resp_hdr_err=dict(type='int',),serv_sel_fail_err=dict(type='int',),chunk1_hdr_err=dict(type='int',),status_423=dict(type='int',),status_422=dict(type='int',),status_420=dict(type='int',),status_426=dict(type='int',),status_425=dict(type='int',),status_424=dict(type='int',),status_508=dict(type='int',),result_icap_response=dict(type='int',),status_500=dict(type='int',),status_501=dict(type='int',),status_502=dict(type='int',),status_503=dict(type='int',),status_504=dict(type='int',),reqmod_request_after_100=dict(type='int',),status_506=dict(type='int',),status_507=dict(type='int',),icap_line_err=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','reqmod_request','respmod_request','reqmod_request_after_100','respmod_request_after_100','reqmod_response','respmod_response','reqmod_response_after_100','respmod_response_after_100','chunk_no_allow_204','len_exceed_no_allow_204','result_continue','result_icap_response','result_100_continue','result_other','status_2xx','status_200','status_201','status_202','status_203','status_204','status_205','status_206','status_207','status_1xx','status_100','status_101','status_102','status_3xx','status_300','status_301','status_302','status_303','status_304','status_305','status_306','status_307','status_4xx','status_400','status_401','status_402','status_403','status_404','status_405','status_406','status_407','status_408','status_409','status_410','status_411','status_412','status_413','status_414','status_415','status_416','status_417','status_418','status_419','status_420','status_422','status_423','status_424','status_425','status_426','status_449','status_450','status_5xx','status_500','status_501','status_502','status_503','status_504','status_505','status_506','status_507','status_508','status_509','status_510','status_6xx','status_unknown','send_option_req','app_serv_conn_no_pcb_err','app_serv_conn_err','chunk1_hdr_err','chunk2_hdr_err','chunk_bad_trail_err','no_payload_next_buff_err','no_payload_buff_err','resp_hdr_incomplete_err','serv_sel_fail_err','start_icap_conn_fail_err','prep_req_fail_err','icap_ver_err','icap_line_err','encap_hdr_incomplete_err','no_icap_resp_err','resp_line_read_err','resp_line_parse_err','resp_hdr_err','req_hdr_incomplete_err','no_status_code_err','http_resp_line_read_err','http_resp_line_parse_err','http_resp_hdr_err','recv_option_resp'])),
         stats=dict(type='dict',status_449=dict(type='str',),no_payload_buff_err=dict(type='str',),prep_req_fail_err=dict(type='str',),icap_ver_err=dict(type='str',),resp_line_parse_err=dict(type='str',),app_serv_conn_no_pcb_err=dict(type='str',),status_450=dict(type='str',),status_510=dict(type='str',),encap_hdr_incomplete_err=dict(type='str',),chunk_no_allow_204=dict(type='str',),http_resp_line_parse_err=dict(type='str',),status_207=dict(type='str',),status_206=dict(type='str',),status_205=dict(type='str',),status_204=dict(type='str',),status_203=dict(type='str',),status_202=dict(type='str',),status_201=dict(type='str',),status_200=dict(type='str',),no_status_code_err=dict(type='str',),resp_hdr_incomplete_err=dict(type='str',),respmod_request_after_100=dict(type='str',),reqmod_response=dict(type='str',),status_406=dict(type='str',),reqmod_response_after_100=dict(type='str',),status_4xx=dict(type='str',),no_payload_next_buff_err=dict(type='str',),status_3xx=dict(type='str',),reqmod_request=dict(type='str',),recv_option_resp=dict(type='str',),no_icap_resp_err=dict(type='str',),respmod_request=dict(type='str',),app_serv_conn_err=dict(type='str',),result_continue=dict(type='str',),len_exceed_no_allow_204=dict(type='str',),status_306=dict(type='str',),status_307=dict(type='str',),status_304=dict(type='str',),status_305=dict(type='str',),status_302=dict(type='str',),status_303=dict(type='str',),status_300=dict(type='str',),status_301=dict(type='str',),start_icap_conn_fail_err=dict(type='str',),status_418=dict(type='str',),result_100_continue=dict(type='str',),status_419=dict(type='str',),result_other=dict(type='str',),chunk_bad_trail_err=dict(type='str',),respmod_response_after_100=dict(type='str',),status_412=dict(type='str',),status_413=dict(type='str',),status_410=dict(type='str',),status_411=dict(type='str',),status_416=dict(type='str',),status_417=dict(type='str',),status_414=dict(type='str',),status_415=dict(type='str',),chunk2_hdr_err=dict(type='str',),status_unknown=dict(type='str',),status_100=dict(type='str',),status_101=dict(type='str',),status_102=dict(type='str',),status_509=dict(type='str',),send_option_req=dict(type='str',),http_resp_line_read_err=dict(type='str',),status_6xx=dict(type='str',),status_5xx=dict(type='str',),http_resp_hdr_err=dict(type='str',),status_401=dict(type='str',),status_400=dict(type='str',),status_403=dict(type='str',),status_402=dict(type='str',),status_405=dict(type='str',),status_404=dict(type='str',),status_407=dict(type='str',),status_2xx=dict(type='str',),status_409=dict(type='str',),status_408=dict(type='str',),respmod_response=dict(type='str',),status_505=dict(type='str',),resp_line_read_err=dict(type='str',),req_hdr_incomplete_err=dict(type='str',),status_1xx=dict(type='str',),resp_hdr_err=dict(type='str',),serv_sel_fail_err=dict(type='str',),chunk1_hdr_err=dict(type='str',),status_423=dict(type='str',),status_422=dict(type='str',),status_420=dict(type='str',),status_426=dict(type='str',),status_425=dict(type='str',),status_424=dict(type='str',),status_508=dict(type='str',),result_icap_response=dict(type='str',),status_500=dict(type='str',),status_501=dict(type='str',),status_502=dict(type='str',),status_503=dict(type='str',),status_504=dict(type='str',),reqmod_request_after_100=dict(type='str',),status_506=dict(type='str',),status_507=dict(type='str',),icap_line_err=dict(type='str',)),
         uuid=dict(type='str',)
@@ -445,6 +457,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -529,6 +546,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -689,6 +715,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

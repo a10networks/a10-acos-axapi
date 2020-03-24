@@ -64,14 +64,41 @@ options:
         description:
         - "Forward proxy Inspect if Certificate issuer matches class-list"
         required: False
+    certificate_san_contains_list:
+        description:
+        - "Field certificate_san_contains_list"
+        required: False
+        suboptions:
+            certificate_san_contains:
+                description:
+                - "Forward proxy bypass if Certificate SAN contains another string"
     forward_proxy_block_message:
         description:
         - "Message to be included on the block page (Message, enclose in quotes if spaces are present)"
+        required: False
+    direct_client_server_auth:
+        description:
+        - "Let backend server does SSL client authentication directly"
         required: False
     ocspst_sg_hours:
         description:
         - "Specify update period, in hours"
         required: False
+    no_shared_cipher_action:
+        description:
+        - "'bypass'= bypass SSLi processing; 'drop'= close the connection; "
+        required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            name:
+                description:
+                - "Client SSL Template Name"
+            cert_status_list:
+                description:
+                - "Field cert_status_list"
     fp_cert_fetch_autonat:
         description:
         - "'auto'= Configure auto NAT for server certificate fetching; "
@@ -116,14 +143,10 @@ options:
         description:
         - "Lower TLS/SSL version can be downgraded"
         required: False
-    ec_list:
+    client_auth_class_list:
         description:
-        - "Field ec_list"
+        - "Forward proxy client auth bypass if SNI string matches class-list (Class List Name)"
         required: False
-        suboptions:
-            ec:
-                description:
-                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; "
     key_encrypted:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
@@ -192,6 +215,10 @@ options:
         description:
         - "Day"
         required: False
+    key_alt_passphrase:
+        description:
+        - "Password Phrase"
+        required: False
     forward_proxy_ssl_version:
         description:
         - "TLS/SSL version, default is TLS1.2 (TLS/SSL version= 31-TLSv1.0, 32-TLSv1.1 and 33-TLSv1.2)"
@@ -204,15 +231,18 @@ options:
             ca_cert:
                 description:
                 - "CA Certificate (CA Certificate Name)"
-            client_ocsp:
-                description:
-                - "Specify ocsp authentication server(s) for client certificate verification"
             client_ocsp_sg:
                 description:
                 - "Specify service-group (Service group name)"
+            client_ocsp:
+                description:
+                - "Specify ocsp authentication server(s) for client certificate verification"
             client_ocsp_srvr:
                 description:
                 - "Specify authentication server"
+            ca_shared:
+                description:
+                - "CA Certificate Partition Shared"
     forward_proxy_crl_disable:
         description:
         - "Disable Certificate Revocation List checking for forward proxy"
@@ -273,9 +303,21 @@ options:
         description:
         - "Disable SSL renegotiation"
         required: False
+    exception_ad_group_list:
+        description:
+        - "Exceptions to forward proxy bypass if ad-group matches class-list"
+        required: False
+    key_alternate:
+        description:
+        - "Specify the second private key (Key Name)"
+        required: False
     fp_alt_key:
         description:
         - "CA Private Key for forward proxy alternate signing (Key name)"
+        required: False
+    server_name_auto_map:
+        description:
+        - "Enable automatic mapping of server name indication in Client hello extension"
         required: False
     disable_sslv3:
         description:
@@ -297,6 +339,10 @@ options:
             client_auth_equals:
                 description:
                 - "Forward proxy bypass if SNI string equals another string"
+    forward_proxy_no_sni_action:
+        description:
+        - "'intercept'= intercept in no SNI case; 'bypass'= bypass in no SNI case; 'reset'= reset in no SNI case; "
+        required: False
     certificate_issuer_equals_list:
         description:
         - "Field certificate_issuer_equals_list"
@@ -317,15 +363,30 @@ options:
             certificate_subject_starts:
                 description:
                 - "Forward proxy bypass if Certificate Subject starts with another string"
+    certificate_san_ends_with_list:
+        description:
+        - "Field certificate_san_ends_with_list"
+        required: False
+        suboptions:
+            certificate_san_ends_with:
+                description:
+                - "Forward proxy bypass if Certificate SAN ends with another string"
     forward_proxy_cert_cache_timeout:
         description:
         - "Certificate cache timeout, default is 1 hour (seconds, set to 0 for never timeout)"
+        required: False
+    fp_cert_fetch_natpool_name_shared:
+        description:
+        - "Specify NAT pool or pool group"
         required: False
     crl_certs:
         description:
         - "Field crl_certs"
         required: False
         suboptions:
+            crl_shared:
+                description:
+                - "Certificate Revocation Lists Partition Shared"
             crl:
                 description:
                 - "Certificate Revocation Lists (Certificate Revocation Lists file name)"
@@ -336,6 +397,22 @@ options:
     ocspst_srvr_hours:
         description:
         - "Specify update period, in hours"
+        required: False
+    local_logging:
+        description:
+        - "Enable local logging"
+        required: False
+    fp_cert_fetch_autonat_precedence:
+        description:
+        - "Set this NAT pool as higher precedence than other source NAT like configued under template policy"
+        required: False
+    cert_str:
+        description:
+        - "Certificate Name"
+        required: False
+    cert_shared_str:
+        description:
+        - "Certificate Name"
         required: False
     cert_revoke_action:
         description:
@@ -353,6 +430,10 @@ options:
             multi_clist_name:
                 description:
                 - "Class List Name"
+    user_name_list:
+        description:
+        - "Forward proxy bypass if user-name matches class-list"
+        required: False
     session_ticket_lifetime:
         description:
         - "Session ticket lifetime in seconds from stateless session resumption (Lifetime value in seconds. Default value 0 (Session ticket lifetime limit disabled))"
@@ -365,9 +446,17 @@ options:
             certificate_issuer_ends_with:
                 description:
                 - "Forward proxy bypass if Certificate issuer ends with another string"
+    ssli_logging:
+        description:
+        - "SSLi logging level, default is error logging only"
+        required: False
     session_cache_size:
         description:
         - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse disabled))"
+        required: False
+    handshake_logging_enable:
+        description:
+        - "Enable SSL handshake logging"
         required: False
     non_ssl_bypass_service_group:
         description:
@@ -417,9 +506,9 @@ options:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
-    cert:
+    inspect_certificate_san_cl_name:
         description:
-        - "Server Certificate (Certificate Name)"
+        - "Forward proxy Inspect if Certificate Subject Alternative Name matches class-list"
         required: False
     web_category:
         description:
@@ -678,29 +767,45 @@ options:
             military:
                 description:
                 - "Category Military"
+    certificate_san_equals_list:
+        description:
+        - "Field certificate_san_equals_list"
+        required: False
+        suboptions:
+            certificate_san_equals:
+                description:
+                - "Forward proxy bypass if Certificate SAN equals another string"
+    template_cipher:
+        description:
+        - "Cipher Template Name"
+        required: False
     notbeforemonth:
         description:
         - "Month"
         required: False
+    bypass_cert_san_class_list_name:
+        description:
+        - "Class List Name"
+        required: False
     chain_cert:
         description:
-        - "Chain Certificate (Chain Certificate Name)"
+        - "Chain Certificate Name"
         required: False
     forward_proxy_cert_unknown_action:
         description:
         - "Action taken if a certificate revocation status is unknown, bypass SSLi processing by default"
         required: False
-    key:
+    exception_certificate_san_cl_name:
         description:
-        - "Server Private Key (Key Name)"
+        - "Exceptions to forward-proxy-bypass"
         required: False
     ocspst_sg:
         description:
         - "Specify authentication service group"
         required: False
-    exception_sni_cl_name:
+    key_alt_encrypted:
         description:
-        - "Exceptions to forward-proxy-bypass"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     fp_cert_ext_aia_ca_issuers:
         description:
@@ -993,9 +1098,13 @@ options:
             alcohol_and_tobacco:
                 description:
                 - "alcohol and tobacco category"
-    ocspst_srvr:
+    sni_enable_log:
         description:
-        - "Specify OCSP authentication server"
+        - "Enable logging of sni-auto-map failures. Disable by default"
+        required: False
+    key_shared_str:
+        description:
+        - "Key Name"
         required: False
     notaftermonth:
         description:
@@ -1013,9 +1122,9 @@ options:
         description:
         - "Password Phrase"
         required: False
-    template_cipher:
+    ocspst_srvr:
         description:
-        - "Cipher Template Name"
+        - "Specify OCSP authentication server"
         required: False
     ocspst_srvr_minutes:
         description:
@@ -1029,6 +1138,18 @@ options:
             certificate_issuer_contains:
                 description:
                 - "Forward proxy bypass if Certificate  issuer contains another string (Certificate issuer)"
+    require_web_category:
+        description:
+        - "Wait for web category to be resolved before taking bypass decision"
+        required: False
+    bypass_cert_san_multi_class_list:
+        description:
+        - "Field bypass_cert_san_multi_class_list"
+        required: False
+        suboptions:
+            bypass_cert_san_multi_class_list_name:
+                description:
+                - "Class List Name"
     client_auth_starts_with_list:
         description:
         - "Field client_auth_starts_with_list"
@@ -1057,10 +1178,14 @@ options:
         description:
         - "Specify update period, in days"
         required: False
-    client_auth_class_list:
+    ec_list:
         description:
-        - "Forward proxy client auth bypass if SNI string matches class-list (Class List Name)"
+        - "Field ec_list"
         required: False
+        suboptions:
+            ec:
+                description:
+                - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; "
     forward_proxy_decrypted_dscp_bypass:
         description:
         - "DSCP to apply to bypassed traffic"
@@ -1078,30 +1203,48 @@ options:
         - "Field server_name_list"
         required: False
         suboptions:
+            server_shared:
+                description:
+                - "Server Name Partition Shared"
             server_passphrase_regex:
                 description:
                 - "help Password Phrase"
+            server_chain:
+                description:
+                - "Server Certificate Chain associated to SNI (Server Certificate Chain Name)"
             server_cert_regex:
                 description:
                 - "Server Certificate associated to SNI regex (Server Certificate Name)"
             server_name:
                 description:
                 - "Server name indication in Client hello extension (Server name String)"
-            server_key:
-                description:
-                - "Server Private Key associated to SNI (Server Private Key Name)"
-            server_encrypted_regex:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
-            server_name_regex:
-                description:
-                - "Server name indication in Client hello extension with regular expression (Server name String with regex)"
             server_key_regex:
                 description:
                 - "Server Private Key associated to SNI regex (Server Private Key Name)"
+            server_name_regex_alternate:
+                description:
+                - "Specific the second certifcate"
+            server_encrypted_regex:
+                description:
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
+            server_shared_regex:
+                description:
+                - "Server Name Partition Shared"
+            server_name_regex:
+                description:
+                - "Server name indication in Client hello extension with regular expression (Server name String with regex)"
             server_passphrase:
                 description:
                 - "help Password Phrase"
+            server_key:
+                description:
+                - "Server Private Key associated to SNI (Server Private Key Name)"
+            server_chain_regex:
+                description:
+                - "Server Certificate Chain associated to SNI regex (Server Certificate Chain Name)"
+            server_name_alternate:
+                description:
+                - "Specific the second certifcate"
             server_encrypted:
                 description:
                 - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
@@ -1112,6 +1255,10 @@ options:
         description:
         - "Class List Name"
         required: False
+    fp_cert_ext_crldp:
+        description:
+        - "CRL Distribution Point (CRL Distribution Point URI)"
+        required: False
     shared_partition_cipher_template:
         description:
         - "Reference a cipher template from shared partition"
@@ -1120,9 +1267,17 @@ options:
         description:
         - "Set this NAT pool as higher precedence than other source NAT like configued under template policy"
         required: False
+    cert_alternate:
+        description:
+        - "Specify the second certificate (Certificate Name)"
+        required: False
     forward_proxy_cert_cache_limit:
         description:
         - "Certificate cache size limit, default is 524288 (set to 0 for unlimited size)"
+        required: False
+    non_ssl_bypass_l4session:
+        description:
+        - "Handle the non-ssl session as L4 for performance optimization"
         required: False
     certificate_issuer_starts_with_list:
         description:
@@ -1132,6 +1287,14 @@ options:
             certificate_issuer_starts:
                 description:
                 - "Forward proxy bypass if Certificate issuer starts with another string"
+    certificate_san_starts_with_list:
+        description:
+        - "Field certificate_san_starts_with_list"
+        required: False
+        suboptions:
+            certificate_san_starts:
+                description:
+                - "Forward proxy bypass if Certificate SAN starts with another string"
     client_auth_ends_with_list:
         description:
         - "Field client_auth_ends_with_list"
@@ -1144,25 +1307,33 @@ options:
         description:
         - "Send close notification when terminate connection"
         required: False
+    forward_proxy_no_shared_cipher_action:
+        description:
+        - "Action taken if handshake fails due to no shared ciper, close the connection by default"
+        required: False
     forward_proxy_ocsp_disable:
         description:
         - "Disable ocsp-stapling for forward proxy"
         required: False
-    fp_cert_fetch_autonat_precedence:
+    sslilogging:
         description:
-        - "Set this NAT pool as higher precedence than other source NAT like configued under template policy"
+        - "'disable'= Disable all logging; 'all'= enable all logging(error, info); "
         required: False
     auth_username:
         description:
         - "Specify the Username Field in the Client Certificate(If multi-fields are specificed, prior one has higher priority)"
         required: False
-    fp_cert_ext_crldp:
+    exception_user_name_list:
         description:
-        - "CRL Distribution Point (CRL Distribution Point URI)"
+        - "Exceptions to forward proxy bypass if user-name matches class-list"
         required: False
     ocspst_sg_days:
         description:
         - "Specify update period, in days"
+        required: False
+    key_str:
+        description:
+        - "Key Name"
         required: False
     inspect_list_name:
         description:
@@ -1176,6 +1347,10 @@ options:
         description:
         - "Specify NAT pool or pool group"
         required: False
+    exception_sni_cl_name:
+        description:
+        - "Exceptions to forward-proxy-bypass"
+        required: False
     inspect_certificate_subject_cl_name:
         description:
         - "Forward proxy Inspect if Certificate Subject matches class-list"
@@ -1183,6 +1358,10 @@ options:
     ldap_base_dn_from_cert:
         description:
         - "Use Subject DN as LDAP search base DN"
+        required: False
+    ad_group_list:
+        description:
+        - "Forward proxy bypass if ad-group matches class-list"
         required: False
     client_certificate:
         description:
@@ -1196,9 +1375,17 @@ options:
         description:
         - "Enable SSL forward proxy"
         required: False
+    shared_partition_pool:
+        description:
+        - "Reference a NAT pool or pool group from shared partition"
+        required: False
     ldap_search_filter:
         description:
         - "Specify LDAP search filter"
+        required: False
+    key_shared_encrypted:
+        description:
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     auth_sg_filter:
         description:
@@ -1216,6 +1403,10 @@ options:
             certificate_subject_equals:
                 description:
                 - "Forward proxy bypass if Certificate Subject equals another string"
+    chain_cert_shared_str:
+        description:
+        - "Chain Certificate Name"
+        required: False
     enable_tls_alert_logging:
         description:
         - "Enable TLS alert logging"
@@ -1239,7 +1430,7 @@ options:
         suboptions:
             cipher_wo_prio:
                 description:
-                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; "
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256; 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'= TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256; 'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256; "
     ocspst_sg_minutes:
         description:
         - "Specify update period, in minutes"
@@ -1252,6 +1443,10 @@ options:
             starts_with:
                 description:
                 - "Forward proxy bypass if SNI string starts with another string"
+    key_shared_passphrase:
+        description:
+        - "Password Phrase"
+        required: False
 
 
 """
@@ -1266,7 +1461,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","bypass_cert_issuer_class_list_name","bypass_cert_issuer_multi_class_list","bypass_cert_subject_class_list_name","bypass_cert_subject_multi_class_list","ca_certs","cache_persistence_list_name","case_insensitive","cert","cert_revoke_action","cert_unknown_action","certificate_issuer_contains_list","certificate_issuer_ends_with_list","certificate_issuer_equals_list","certificate_issuer_starts_with_list","certificate_subject_contains_list","certificate_subject_ends_with_list","certificate_subject_equals_list","certificate_subject_starts_with_list","chain_cert","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_certificate_issuer_cl_name","exception_certificate_subject_cl_name","exception_sni_cl_name","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_block_message","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_precedence","hsm_type","inspect_certificate_issuer_cl_name","inspect_certificate_subject_cl_name","inspect_list_name","key","key_encrypted","key_passphrase","ldap_base_dn_from_cert","ldap_search_filter","multi_class_list","name","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","renegotiation_disable","req_ca_lists","sampling_enable","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","ssl_false_start_disable","sslv2_bypass_service_group","starts_with_list","stats","template_cipher","template_cipher_shared","template_hsm","user_tag","uuid","verify_cert_fail_action","version","web_category",]
+AVAILABLE_PROPERTIES = ["ad_group_list","alert_type","auth_sg","auth_sg_dn","auth_sg_filter","auth_username","auth_username_attribute","authen_name","authorization","bypass_cert_issuer_class_list_name","bypass_cert_issuer_multi_class_list","bypass_cert_san_class_list_name","bypass_cert_san_multi_class_list","bypass_cert_subject_class_list_name","bypass_cert_subject_multi_class_list","ca_certs","cache_persistence_list_name","case_insensitive","cert_alternate","cert_revoke_action","cert_shared_str","cert_str","cert_unknown_action","certificate_issuer_contains_list","certificate_issuer_ends_with_list","certificate_issuer_equals_list","certificate_issuer_starts_with_list","certificate_san_contains_list","certificate_san_ends_with_list","certificate_san_equals_list","certificate_san_starts_with_list","certificate_subject_contains_list","certificate_subject_ends_with_list","certificate_subject_equals_list","certificate_subject_starts_with_list","chain_cert","chain_cert_shared_str","cipher_without_prio_list","class_list_name","client_auth_case_insensitive","client_auth_class_list","client_auth_contains_list","client_auth_ends_with_list","client_auth_equals_list","client_auth_starts_with_list","client_certificate","close_notify","contains_list","crl_certs","dgversion","dh_type","direct_client_server_auth","disable_sslv3","ec_list","enable_tls_alert_logging","ends_with_list","equals_list","exception_ad_group_list","exception_certificate_issuer_cl_name","exception_certificate_san_cl_name","exception_certificate_subject_cl_name","exception_sni_cl_name","exception_user_name_list","expire_hours","forward_encrypted","forward_passphrase","forward_proxy_alt_sign","forward_proxy_block_message","forward_proxy_ca_cert","forward_proxy_ca_key","forward_proxy_cert_cache_limit","forward_proxy_cert_cache_timeout","forward_proxy_cert_expiry","forward_proxy_cert_not_ready_action","forward_proxy_cert_revoke_action","forward_proxy_cert_unknown_action","forward_proxy_crl_disable","forward_proxy_decrypted_dscp","forward_proxy_decrypted_dscp_bypass","forward_proxy_enable","forward_proxy_failsafe_disable","forward_proxy_log_disable","forward_proxy_no_shared_cipher_action","forward_proxy_no_sni_action","forward_proxy_ocsp_disable","forward_proxy_selfsign_redir","forward_proxy_ssl_version","forward_proxy_trusted_ca_lists","forward_proxy_verify_cert_fail_action","fp_alt_cert","fp_alt_encrypted","fp_alt_key","fp_alt_passphrase","fp_cert_ext_aia_ca_issuers","fp_cert_ext_aia_ocsp","fp_cert_ext_crldp","fp_cert_fetch_autonat","fp_cert_fetch_autonat_precedence","fp_cert_fetch_natpool_name","fp_cert_fetch_natpool_name_shared","fp_cert_fetch_natpool_precedence","handshake_logging_enable","hsm_type","inspect_certificate_issuer_cl_name","inspect_certificate_san_cl_name","inspect_certificate_subject_cl_name","inspect_list_name","key_alt_encrypted","key_alt_passphrase","key_alternate","key_encrypted","key_passphrase","key_shared_encrypted","key_shared_passphrase","key_shared_str","key_str","ldap_base_dn_from_cert","ldap_search_filter","local_logging","multi_class_list","name","no_shared_cipher_action","non_ssl_bypass_l4session","non_ssl_bypass_service_group","notafter","notafterday","notaftermonth","notafteryear","notbefore","notbeforeday","notbeforemonth","notbeforeyear","ocsp_stapling","ocspst_ca_cert","ocspst_ocsp","ocspst_sg","ocspst_sg_days","ocspst_sg_hours","ocspst_sg_minutes","ocspst_sg_timeout","ocspst_srvr","ocspst_srvr_days","ocspst_srvr_hours","ocspst_srvr_minutes","ocspst_srvr_timeout","oper","renegotiation_disable","req_ca_lists","require_web_category","sampling_enable","server_name_auto_map","server_name_list","session_cache_size","session_cache_timeout","session_ticket_lifetime","shared_partition_cipher_template","shared_partition_pool","sni_enable_log","ssl_false_start_disable","ssli_logging","sslilogging","sslv2_bypass_service_group","starts_with_list","stats","template_cipher","template_cipher_shared","template_hsm","user_name_list","user_tag","uuid","verify_cert_fail_action","version","web_category",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -1298,8 +1493,12 @@ def get_argspec():
         bypass_cert_subject_multi_class_list=dict(type='list',bypass_cert_subject_multi_class_list_name=dict(type='str',)),
         verify_cert_fail_action=dict(type='str',choices=['bypass','continue','drop','block']),
         inspect_certificate_issuer_cl_name=dict(type='str',),
+        certificate_san_contains_list=dict(type='list',certificate_san_contains=dict(type='str',)),
         forward_proxy_block_message=dict(type='str',),
+        direct_client_server_auth=dict(type='bool',),
         ocspst_sg_hours=dict(type='int',),
+        no_shared_cipher_action=dict(type='str',choices=['bypass','drop']),
+        oper=dict(type='dict',name=dict(type='str',required=True,),cert_status_list=dict(type='list',cert_status_responder=dict(type='str',),cert_status_status=dict(type='str',),cert_status_age=dict(type='int',),cert_status_next_update=dict(type='str',),cert_status_name=dict(type='str',))),
         fp_cert_fetch_autonat=dict(type='str',choices=['auto']),
         equals_list=dict(type='list',equals=dict(type='str',)),
         exception_certificate_subject_cl_name=dict(type='str',),
@@ -1309,7 +1508,7 @@ def get_argspec():
         forward_proxy_ca_cert=dict(type='str',),
         ssl_false_start_disable=dict(type='bool',),
         dgversion=dict(type='int',),
-        ec_list=dict(type='list',ec=dict(type='str',choices=['secp256r1','secp384r1'])),
+        client_auth_class_list=dict(type='str',),
         key_encrypted=dict(type='str',),
         notafteryear=dict(type='int',),
         forward_proxy_alt_sign=dict(type='bool',),
@@ -1325,8 +1524,9 @@ def get_argspec():
         class_list_name=dict(type='str',),
         ocspst_ocsp=dict(type='bool',),
         notbeforeday=dict(type='int',),
+        key_alt_passphrase=dict(type='str',),
         forward_proxy_ssl_version=dict(type='int',),
-        ca_certs=dict(type='list',ca_cert=dict(type='str',),client_ocsp=dict(type='bool',),client_ocsp_sg=dict(type='str',),client_ocsp_srvr=dict(type='str',)),
+        ca_certs=dict(type='list',ca_cert=dict(type='str',),client_ocsp_sg=dict(type='str',),client_ocsp=dict(type='bool',),client_ocsp_srvr=dict(type='str',),ca_shared=dict(type='bool',)),
         forward_proxy_crl_disable=dict(type='bool',),
         client_auth_contains_list=dict(type='list',client_auth_contains=dict(type='str',)),
         certificate_subject_contains_list=dict(type='list',certificate_subject_contains=dict(type='str',)),
@@ -1338,23 +1538,36 @@ def get_argspec():
         cert_unknown_action=dict(type='str',choices=['bypass','continue','drop','block']),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','real-estate','computer-and-internet-security','financial-services','business-and-economy','computer-and-internet-info','auctions','shopping','cult-and-occult','travel','drugs','adult-and-pornography','home-and-garden','military','social-network','dead-sites','stock-advice-and-tools','training-and-tools','dating','sex-education','religion','entertainment-and-arts','personal-sites-and-blogs','legal','local-information','streaming-media','job-search','gambling','translation','reference-and-research','shareware-and-freeware','peer-to-peer','marijuana','hacking','games','philosophy-and-politics','weapons','pay-to-surf','hunting-and-fishing','society','educational-institutions','online-greeting-cards','sports','swimsuits-and-intimate-apparel','questionable','kids','hate-and-racism','personal-storage','violence','keyloggers-and-monitoring','search-engines','internet-portals','web-advertisements','cheating','gross','web-based-email','malware-sites','phishing-and-other-fraud','proxy-avoid-and-anonymizers','spyware-and-adware','music','government','nudity','news-and-media','illegal','CDNs','internet-communications','bot-nets','abortion','health-and-medicine','confirmed-SPAM-sources','SPAM-URLs','unconfirmed-SPAM-sources','open-HTTP-proxies','dynamic-comment','parked-domains','alcohol-and-tobacco','private-IP-addresses','image-and-video-search','fashion-and-beauty','recreation-and-hobbies','motor-vehicles','web-hosting-sites','food-and-dining','uncategorised','other-category'])),
         renegotiation_disable=dict(type='bool',),
+        exception_ad_group_list=dict(type='str',),
+        key_alternate=dict(type='str',),
         fp_alt_key=dict(type='str',),
+        server_name_auto_map=dict(type='bool',),
         disable_sslv3=dict(type='bool',),
         bypass_cert_issuer_multi_class_list=dict(type='list',bypass_cert_issuer_multi_class_list_name=dict(type='str',)),
         client_auth_equals_list=dict(type='list',client_auth_equals=dict(type='str',)),
+        forward_proxy_no_sni_action=dict(type='str',choices=['intercept','bypass','reset']),
         certificate_issuer_equals_list=dict(type='list',certificate_issuer_equals=dict(type='str',)),
         fp_alt_passphrase=dict(type='str',),
         certificate_subject_starts_with_list=dict(type='list',certificate_subject_starts=dict(type='str',)),
+        certificate_san_ends_with_list=dict(type='list',certificate_san_ends_with=dict(type='str',)),
         forward_proxy_cert_cache_timeout=dict(type='int',),
-        crl_certs=dict(type='list',crl=dict(type='str',)),
+        fp_cert_fetch_natpool_name_shared=dict(type='str',),
+        crl_certs=dict(type='list',crl_shared=dict(type='bool',),crl=dict(type='str',)),
         notafterday=dict(type='int',),
         ocspst_srvr_hours=dict(type='int',),
+        local_logging=dict(type='bool',),
+        fp_cert_fetch_autonat_precedence=dict(type='bool',),
+        cert_str=dict(type='str',),
+        cert_shared_str=dict(type='str',),
         cert_revoke_action=dict(type='str',choices=['bypass','continue','drop','block']),
         version=dict(type='int',),
         multi_class_list=dict(type='list',multi_clist_name=dict(type='str',)),
+        user_name_list=dict(type='str',),
         session_ticket_lifetime=dict(type='int',),
         certificate_issuer_ends_with_list=dict(type='list',certificate_issuer_ends_with=dict(type='str',)),
+        ssli_logging=dict(type='bool',),
         session_cache_size=dict(type='int',),
+        handshake_logging_enable=dict(type='bool',),
         non_ssl_bypass_service_group=dict(type='str',),
         forward_proxy_failsafe_disable=dict(type='bool',),
         session_cache_timeout=dict(type='int',),
@@ -1367,14 +1580,17 @@ def get_argspec():
         hsm_type=dict(type='str',choices=['thales-embed','thales-hwcrhk']),
         forward_proxy_log_disable=dict(type='bool',),
         fp_alt_encrypted=dict(type='str',),
-        cert=dict(type='str',),
+        inspect_certificate_san_cl_name=dict(type='str',),
         web_category=dict(type='dict',philosophy_and_politics=dict(type='bool',),stock_advice_and_tools=dict(type='bool',),news_and_media=dict(type='bool',),business_and_economy=dict(type='bool',),peer_to_peer=dict(type='bool',),phishing_and_other_fraud=dict(type='bool',),nudity=dict(type='bool',),weapons=dict(type='bool',),health_and_medicine=dict(type='bool',),marijuana=dict(type='bool',),home_and_garden=dict(type='bool',),cult_and_occult=dict(type='bool',),society=dict(type='bool',),personal_storage=dict(type='bool',),computer_and_internet_security=dict(type='bool',),food_and_dining=dict(type='bool',),motor_vehicles=dict(type='bool',),swimsuits_and_intimate_apparel=dict(type='bool',),dead_sites=dict(type='bool',),translation=dict(type='bool',),proxy_avoid_and_anonymizers=dict(type='bool',),financial_services=dict(type='bool',),gross=dict(type='bool',),cheating=dict(type='bool',),entertainment_and_arts=dict(type='bool',),sex_education=dict(type='bool',),illegal=dict(type='bool',),travel=dict(type='bool',),cdns=dict(type='bool',),local_information=dict(type='bool',),legal=dict(type='bool',),sports=dict(type='bool',),bot_nets=dict(type='bool',),religion=dict(type='bool',),private_ip_addresses=dict(type='bool',),music=dict(type='bool',),hate_and_racism=dict(type='bool',),open_http_proxies=dict(type='bool',),internet_communications=dict(type='bool',),shareware_and_freeware=dict(type='bool',),dating=dict(type='bool',),spyware_and_adware=dict(type='bool',),uncategorized=dict(type='bool',),questionable=dict(type='bool',),reference_and_research=dict(type='bool',),web_advertisements=dict(type='bool',),streaming_media=dict(type='bool',),social_network=dict(type='bool',),government=dict(type='bool',),drugs=dict(type='bool',),web_hosting_sites=dict(type='bool',),malware_sites=dict(type='bool',),pay_to_surf=dict(type='bool',),spam_urls=dict(type='bool',),kids=dict(type='bool',),gambling=dict(type='bool',),online_greeting_cards=dict(type='bool',),confirmed_spam_sources=dict(type='bool',),image_and_video_search=dict(type='bool',),educational_institutions=dict(type='bool',),keyloggers_and_monitoring=dict(type='bool',),hunting_and_fishing=dict(type='bool',),search_engines=dict(type='bool',),fashion_and_beauty=dict(type='bool',),dynamic_comment=dict(type='bool',),computer_and_internet_info=dict(type='bool',),real_estate=dict(type='bool',),internet_portals=dict(type='bool',),shopping=dict(type='bool',),violence=dict(type='bool',),abortion=dict(type='bool',),training_and_tools=dict(type='bool',),web_based_email=dict(type='bool',),personal_sites_and_blogs=dict(type='bool',),unconfirmed_spam_sources=dict(type='bool',),games=dict(type='bool',),parked_domains=dict(type='bool',),auctions=dict(type='bool',),job_search=dict(type='bool',),recreation_and_hobbies=dict(type='bool',),hacking=dict(type='bool',),alcohol_and_tobacco=dict(type='bool',),adult_and_pornography=dict(type='bool',),military=dict(type='bool',)),
+        certificate_san_equals_list=dict(type='list',certificate_san_equals=dict(type='str',)),
+        template_cipher=dict(type='str',),
         notbeforemonth=dict(type='int',),
+        bypass_cert_san_class_list_name=dict(type='str',),
         chain_cert=dict(type='str',),
         forward_proxy_cert_unknown_action=dict(type='bool',),
-        key=dict(type='str',),
+        exception_certificate_san_cl_name=dict(type='str',),
         ocspst_sg=dict(type='str',),
-        exception_sni_cl_name=dict(type='str',),
+        key_alt_encrypted=dict(type='str',),
         fp_cert_ext_aia_ca_issuers=dict(type='str',),
         authen_name=dict(type='str',),
         expire_hours=dict(type='int',),
@@ -1383,55 +1599,70 @@ def get_argspec():
         notbeforeyear=dict(type='int',),
         forward_encrypted=dict(type='str',),
         stats=dict(type='dict',stock_advice_and_tools=dict(type='str',),news_and_media=dict(type='str',),CDNs=dict(type='str',),cult_and_occult=dict(type='str',),fashion_and_beauty=dict(type='str',),food_and_dining=dict(type='str',),SPAM_URLs=dict(type='str',),streaming_media=dict(type='str',),bot_nets=dict(type='str',),cheating=dict(type='str',),entertainment_and_arts=dict(type='str',),illegal=dict(type='str',),local_information=dict(type='str',),sports=dict(type='str',),confirmed_SPAM_sources=dict(type='str',),private_IP_addresses=dict(type='str',),music=dict(type='str',),open_HTTP_proxies=dict(type='str',),shareware_and_freeware=dict(type='str',),spyware_and_adware=dict(type='str',),questionable=dict(type='str',),financial_services=dict(type='str',),social_network=dict(type='str',),government=dict(type='str',),drugs=dict(type='str',),web_hosting_sites=dict(type='str',),web_advertisements=dict(type='str',),educational_institutions=dict(type='str',),dynamic_comment=dict(type='str',),translation=dict(type='str',),job_search=dict(type='str',),hunting_and_fishing=dict(type='str',),search_engines=dict(type='str',),peer_to_peer=dict(type='str',),computer_and_internet_security=dict(type='str',),real_estate=dict(type='str',),computer_and_internet_info=dict(type='str',),internet_portals=dict(type='str',),shopping=dict(type='str',),philosophy_and_politics=dict(type='str',),web_based_email=dict(type='str',),recreation_and_hobbies=dict(type='str',),hacking=dict(type='str',),adult_and_pornography=dict(type='str',),business_and_economy=dict(type='str',),phishing_and_other_fraud=dict(type='str',),nudity=dict(type='str',),health_and_medicine=dict(type='str',),marijuana=dict(type='str',),home_and_garden=dict(type='str',),society=dict(type='str',),unconfirmed_SPAM_sources=dict(type='str',),personal_storage=dict(type='str',),motor_vehicles=dict(type='str',),swimsuits_and_intimate_apparel=dict(type='str',),dead_sites=dict(type='str',),other_category=dict(type='str',),proxy_avoid_and_anonymizers=dict(type='str',),gross=dict(type='str',),uncategorised=dict(type='str',),travel=dict(type='str',),legal=dict(type='str',),weapons=dict(type='str',),religion=dict(type='str',),hate_and_racism=dict(type='str',),internet_communications=dict(type='str',),gambling=dict(type='str',),dating=dict(type='str',),malware_sites=dict(type='str',),name=dict(type='str',required=True,),pay_to_surf=dict(type='str',),military=dict(type='str',),image_and_video_search=dict(type='str',),reference_and_research=dict(type='str',),keyloggers_and_monitoring=dict(type='str',),kids=dict(type='str',),online_greeting_cards=dict(type='str',),violence=dict(type='str',),training_and_tools=dict(type='str',),sex_education=dict(type='str',),personal_sites_and_blogs=dict(type='str',),games=dict(type='str',),parked_domains=dict(type='str',),auctions=dict(type='str',),abortion=dict(type='str',),alcohol_and_tobacco=dict(type='str',)),
-        ocspst_srvr=dict(type='str',),
+        sni_enable_log=dict(type='bool',),
+        key_shared_str=dict(type='str',),
         notaftermonth=dict(type='int',),
         cache_persistence_list_name=dict(type='str',),
         ocspst_sg_timeout=dict(type='int',),
         key_passphrase=dict(type='str',),
-        template_cipher=dict(type='str',),
+        ocspst_srvr=dict(type='str',),
         ocspst_srvr_minutes=dict(type='int',),
         certificate_issuer_contains_list=dict(type='list',certificate_issuer_contains=dict(type='str',)),
+        require_web_category=dict(type='bool',),
+        bypass_cert_san_multi_class_list=dict(type='list',bypass_cert_san_multi_class_list_name=dict(type='str',)),
         client_auth_starts_with_list=dict(type='list',client_auth_starts_with=dict(type='str',)),
         certificate_subject_ends_with_list=dict(type='list',certificate_subject_ends_with=dict(type='str',)),
         authorization=dict(type='bool',),
         forward_proxy_verify_cert_fail_action=dict(type='bool',),
         ocspst_srvr_days=dict(type='int',),
-        client_auth_class_list=dict(type='str',),
+        ec_list=dict(type='list',ec=dict(type='str',choices=['secp256r1','secp384r1'])),
         forward_proxy_decrypted_dscp_bypass=dict(type='int',),
         alert_type=dict(type='str',choices=['fatal']),
         forward_proxy_cert_not_ready_action=dict(type='str',choices=['bypass','reset','intercept']),
-        server_name_list=dict(type='list',server_passphrase_regex=dict(type='str',),server_cert_regex=dict(type='str',),server_name=dict(type='str',),server_key=dict(type='str',),server_encrypted_regex=dict(type='str',),server_name_regex=dict(type='str',),server_key_regex=dict(type='str',),server_passphrase=dict(type='str',),server_encrypted=dict(type='str',),server_cert=dict(type='str',)),
+        server_name_list=dict(type='list',server_shared=dict(type='bool',),server_passphrase_regex=dict(type='str',),server_chain=dict(type='str',),server_cert_regex=dict(type='str',),server_name=dict(type='str',),server_key_regex=dict(type='str',),server_name_regex_alternate=dict(type='bool',),server_encrypted_regex=dict(type='str',),server_shared_regex=dict(type='bool',),server_name_regex=dict(type='str',),server_passphrase=dict(type='str',),server_key=dict(type='str',),server_chain_regex=dict(type='str',),server_name_alternate=dict(type='bool',),server_encrypted=dict(type='str',),server_cert=dict(type='str',)),
         bypass_cert_issuer_class_list_name=dict(type='str',),
+        fp_cert_ext_crldp=dict(type='str',),
         shared_partition_cipher_template=dict(type='bool',),
         fp_cert_fetch_natpool_precedence=dict(type='bool',),
+        cert_alternate=dict(type='str',),
         forward_proxy_cert_cache_limit=dict(type='int',),
+        non_ssl_bypass_l4session=dict(type='bool',),
         certificate_issuer_starts_with_list=dict(type='list',certificate_issuer_starts=dict(type='str',)),
+        certificate_san_starts_with_list=dict(type='list',certificate_san_starts=dict(type='str',)),
         client_auth_ends_with_list=dict(type='list',client_auth_ends_with=dict(type='str',)),
         close_notify=dict(type='bool',),
+        forward_proxy_no_shared_cipher_action=dict(type='bool',),
         forward_proxy_ocsp_disable=dict(type='bool',),
-        fp_cert_fetch_autonat_precedence=dict(type='bool',),
+        sslilogging=dict(type='str',choices=['disable','all']),
         auth_username=dict(type='str',),
-        fp_cert_ext_crldp=dict(type='str',),
+        exception_user_name_list=dict(type='str',),
         ocspst_sg_days=dict(type='int',),
+        key_str=dict(type='str',),
         inspect_list_name=dict(type='str',),
         auth_username_attribute=dict(type='str',),
         fp_cert_fetch_natpool_name=dict(type='str',),
+        exception_sni_cl_name=dict(type='str',),
         inspect_certificate_subject_cl_name=dict(type='str',),
         ldap_base_dn_from_cert=dict(type='bool',),
+        ad_group_list=dict(type='str',),
         client_certificate=dict(type='str',choices=['Ignore','Require','Request']),
         forward_proxy_cert_expiry=dict(type='bool',),
         forward_proxy_enable=dict(type='bool',),
+        shared_partition_pool=dict(type='bool',),
         ldap_search_filter=dict(type='str',),
+        key_shared_encrypted=dict(type='str',),
         auth_sg_filter=dict(type='str',),
         ocspst_srvr_timeout=dict(type='int',),
         certificate_subject_equals_list=dict(type='list',certificate_subject_equals=dict(type='str',)),
+        chain_cert_shared_str=dict(type='str',),
         enable_tls_alert_logging=dict(type='bool',),
         dh_type=dict(type='str',choices=['1024','1024-dsa','2048']),
         fp_alt_cert=dict(type='str',),
         case_insensitive=dict(type='bool',),
-        cipher_without_prio_list=dict(type='list',cipher_wo_prio=dict(type='str',choices=['SSL3_RSA_DES_192_CBC3_SHA','SSL3_RSA_RC4_128_MD5','SSL3_RSA_RC4_128_SHA','TLS1_RSA_AES_128_SHA','TLS1_RSA_AES_256_SHA','TLS1_RSA_AES_128_SHA256','TLS1_RSA_AES_256_SHA256','TLS1_DHE_RSA_AES_128_GCM_SHA256','TLS1_DHE_RSA_AES_128_SHA','TLS1_DHE_RSA_AES_128_SHA256','TLS1_DHE_RSA_AES_256_GCM_SHA384','TLS1_DHE_RSA_AES_256_SHA','TLS1_DHE_RSA_AES_256_SHA256','TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256','TLS1_ECDHE_ECDSA_AES_128_SHA','TLS1_ECDHE_ECDSA_AES_128_SHA256','TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA','TLS1_ECDHE_RSA_AES_128_GCM_SHA256','TLS1_ECDHE_RSA_AES_128_SHA','TLS1_ECDHE_RSA_AES_128_SHA256','TLS1_ECDHE_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA','TLS1_RSA_AES_128_GCM_SHA256','TLS1_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA384'])),
+        cipher_without_prio_list=dict(type='list',cipher_wo_prio=dict(type='str',choices=['SSL3_RSA_DES_192_CBC3_SHA','SSL3_RSA_RC4_128_MD5','SSL3_RSA_RC4_128_SHA','TLS1_RSA_AES_128_SHA','TLS1_RSA_AES_256_SHA','TLS1_RSA_AES_128_SHA256','TLS1_RSA_AES_256_SHA256','TLS1_DHE_RSA_AES_128_GCM_SHA256','TLS1_DHE_RSA_AES_128_SHA','TLS1_DHE_RSA_AES_128_SHA256','TLS1_DHE_RSA_AES_256_GCM_SHA384','TLS1_DHE_RSA_AES_256_SHA','TLS1_DHE_RSA_AES_256_SHA256','TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256','TLS1_ECDHE_ECDSA_AES_128_SHA','TLS1_ECDHE_ECDSA_AES_128_SHA256','TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA','TLS1_ECDHE_RSA_AES_128_GCM_SHA256','TLS1_ECDHE_RSA_AES_128_SHA','TLS1_ECDHE_RSA_AES_128_SHA256','TLS1_ECDHE_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA','TLS1_RSA_AES_128_GCM_SHA256','TLS1_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA384','TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256','TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256','TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'])),
         ocspst_sg_minutes=dict(type='int',),
-        starts_with_list=dict(type='list',starts_with=dict(type='str',))
+        starts_with_list=dict(type='list',starts_with=dict(type='str',)),
+        key_shared_passphrase=dict(type='str',)
     ))
    
 
@@ -1456,6 +1687,11 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -1540,6 +1776,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -1700,6 +1945,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

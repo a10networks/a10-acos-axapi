@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_spdy_proxy
 description:
-    - Show SPDY Proxy Statistics
+    - Configure SPDY Proxy
 short_description: Configures A10 slb.spdy-proxy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            l4_cpu_list:
+                description:
+                - "Field l4_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -331,7 +342,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -360,6 +371,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',l4_cpu_list=dict(type='list',name_value_total_len_ex=dict(type='int',),data_cb_no_tuple=dict(type='int',),server_rst=dict(type='int',),server_fin=dict(type='int',),total_proxy=dict(type='int',),curr_http_proxy=dict(type='int',),total_v2_proxy=dict(type='int',),window_frame=dict(type='int',),close_stream_stream_not_found=dict(type='int',),client_rst=dict(type='int',),est_cb_no_tuple=dict(type='int',),stream_alloc_fail=dict(type='int',),max_concurrent_stream_limit=dict(type='int',),deflate_ctx=dict(type='int',),client_goaway=dict(type='int',),total_v3_proxy=dict(type='int',),compress_ctx_alloc_fail=dict(type='int',),server_goaway=dict(type='int',),syn_after_goaway=dict(type='int',),invalid_version=dict(type='int',),total_http_proxy=dict(type='int',),close_stream_session_close=dict(type='int',),decompress_fail=dict(type='int',),ping_frame=dict(type='int',),ping_sent=dict(type='int',),invalid_frame_size=dict(type='int',),http_err_stream_closed=dict(type='int',),header_after_session_close=dict(type='int',),http_data_stream_close=dict(type='int',),control_frame=dict(type='int',),stream_not_found=dict(type='int',),fin_stream_closed=dict(type='int',),stream_close=dict(type='int',),total_stream=dict(type='int',),inflate_ctx=dict(type='int',),session_needs_requeue=dict(type='int',),data_no_stream=dict(type='int',),data_no_stream_no_goaway=dict(type='int',),ctx_alloc_fail=dict(type='int',),close_stream_session_not_found=dict(type='int',),stream_found=dict(type='int',),syn_stream_exist_or_even=dict(type='int',),close_session_already_closed=dict(type='int',),headers_frame=dict(type='int',),syn_reply_alr_rcvd=dict(type='int',),invalid_window_size=dict(type='int',),header_compress_fail=dict(type='int',),tcp_err=dict(type='int',),curr_proxy=dict(type='int',),name_value_keepalive=dict(type='int',),settings_frame=dict(type='int',),syn_frame=dict(type='int',),window_no_stream=dict(type='int',),data_frame=dict(type='int',),server_rst_close_stream=dict(type='int',),new_stream_session_del=dict(type='int',),request_header_alloc_fail=dict(type='int',),unknown_control_frame=dict(type='int',),http_data_stream_not_found=dict(type='int',),http_close_stream_closed=dict(type='int',),curr_stream=dict(type='int',),close_stream_already_closed=dict(type='int',),name_value_zero_len=dict(type='int',),data_on_closed_stream=dict(type='int',),name_value_trasnfer_encod=dict(type='int',),http_conn_alloc_fail=dict(type='int',),fin_close_session=dict(type='int',),name_value_no_must_have=dict(type='int',),name_value_proxy_conn=dict(type='int',),syn_reply_frame=dict(type='int',),name_value_invalid_http_ver=dict(type='int',),session_err=dict(type='int',),client_rst_nostream=dict(type='int',),http_hdr_stream_close=dict(type='int',),name_value_connection=dict(type='int',),client_fin=dict(type='int',),data_no_stream_goaway_close=dict(type='int',),total_stream_succ=dict(type='int',),syn_unidir=dict(type='int',),http_data_session_close=dict(type='int',),stream_lt_prev=dict(type='int',),close_stream_not_http_proxy=dict(type='int',),stream_err=dict(type='int',),session_close=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','curr_http_proxy','total_http_proxy','total_v2_proxy','total_v3_proxy','curr_stream','total_stream','total_stream_succ','client_rst','server_rst','client_goaway','server_goaway','tcp_err','inflate_ctx','deflate_ctx','ping_sent','stream_not_found','client_fin','server_fin','stream_close','stream_err','session_err','control_frame','syn_frame','syn_reply_frame','headers_frame','settings_frame','window_frame','ping_frame','data_frame','data_no_stream','data_no_stream_no_goaway','data_no_stream_goaway_close','est_cb_no_tuple','data_cb_no_tuple','ctx_alloc_fail','fin_close_session','server_rst_close_stream','stream_found','close_stream_session_not_found','close_stream_stream_not_found','close_stream_already_closed','close_stream_session_close','close_session_already_closed','max_concurrent_stream_limit','stream_alloc_fail','http_conn_alloc_fail','request_header_alloc_fail','name_value_total_len_ex','name_value_zero_len','name_value_invalid_http_ver','name_value_connection','name_value_keepalive','name_value_proxy_conn','name_value_trasnfer_encod','name_value_no_must_have','decompress_fail','syn_after_goaway','stream_lt_prev','syn_stream_exist_or_even','syn_unidir','syn_reply_alr_rcvd','client_rst_nostream','window_no_stream','invalid_window_size','unknown_control_frame','data_on_closed_stream','invalid_frame_size','invalid_version','header_after_session_close','compress_ctx_alloc_fail','header_compress_fail','http_data_session_close','http_data_stream_not_found','close_stream_not_http_proxy','session_needs_requeue','new_stream_session_del','fin_stream_closed','http_close_stream_closed','http_err_stream_closed','http_hdr_stream_close','http_data_stream_close','session_close'])),
         stats=dict(type='dict',name_value_total_len_ex=dict(type='str',),data_cb_no_tuple=dict(type='str',),server_rst=dict(type='str',),server_fin=dict(type='str',),total_proxy=dict(type='str',),curr_http_proxy=dict(type='str',),total_v2_proxy=dict(type='str',),window_frame=dict(type='str',),close_stream_stream_not_found=dict(type='str',),client_rst=dict(type='str',),est_cb_no_tuple=dict(type='str',),stream_alloc_fail=dict(type='str',),max_concurrent_stream_limit=dict(type='str',),deflate_ctx=dict(type='str',),client_goaway=dict(type='str',),total_v3_proxy=dict(type='str',),compress_ctx_alloc_fail=dict(type='str',),server_goaway=dict(type='str',),syn_after_goaway=dict(type='str',),invalid_version=dict(type='str',),total_http_proxy=dict(type='str',),close_stream_session_close=dict(type='str',),decompress_fail=dict(type='str',),ping_frame=dict(type='str',),ping_sent=dict(type='str',),invalid_frame_size=dict(type='str',),http_err_stream_closed=dict(type='str',),header_after_session_close=dict(type='str',),http_data_stream_close=dict(type='str',),control_frame=dict(type='str',),stream_not_found=dict(type='str',),fin_stream_closed=dict(type='str',),stream_close=dict(type='str',),total_stream=dict(type='str',),inflate_ctx=dict(type='str',),session_needs_requeue=dict(type='str',),data_no_stream=dict(type='str',),data_no_stream_no_goaway=dict(type='str',),ctx_alloc_fail=dict(type='str',),close_stream_session_not_found=dict(type='str',),stream_found=dict(type='str',),syn_stream_exist_or_even=dict(type='str',),close_session_already_closed=dict(type='str',),headers_frame=dict(type='str',),syn_reply_alr_rcvd=dict(type='str',),invalid_window_size=dict(type='str',),header_compress_fail=dict(type='str',),tcp_err=dict(type='str',),curr_proxy=dict(type='str',),name_value_keepalive=dict(type='str',),settings_frame=dict(type='str',),syn_frame=dict(type='str',),window_no_stream=dict(type='str',),data_frame=dict(type='str',),server_rst_close_stream=dict(type='str',),new_stream_session_del=dict(type='str',),request_header_alloc_fail=dict(type='str',),unknown_control_frame=dict(type='str',),http_data_stream_not_found=dict(type='str',),http_close_stream_closed=dict(type='str',),curr_stream=dict(type='str',),close_stream_already_closed=dict(type='str',),name_value_zero_len=dict(type='str',),data_on_closed_stream=dict(type='str',),name_value_trasnfer_encod=dict(type='str',),http_conn_alloc_fail=dict(type='str',),fin_close_session=dict(type='str',),name_value_no_must_have=dict(type='str',),name_value_proxy_conn=dict(type='str',),syn_reply_frame=dict(type='str',),name_value_invalid_http_ver=dict(type='str',),session_err=dict(type='str',),client_rst_nostream=dict(type='str',),http_hdr_stream_close=dict(type='str',),name_value_connection=dict(type='str',),client_fin=dict(type='str',),data_no_stream_goaway_close=dict(type='str',),total_stream_succ=dict(type='str',),syn_unidir=dict(type='str',),http_data_session_close=dict(type='str',),stream_lt_prev=dict(type='str',),close_stream_not_http_proxy=dict(type='str',),stream_err=dict(type='str',),session_close=dict(type='str',)),
         uuid=dict(type='str',)
@@ -385,6 +397,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -469,6 +486,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -629,6 +655,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

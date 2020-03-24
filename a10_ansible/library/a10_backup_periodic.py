@@ -52,21 +52,21 @@ options:
         description:
         - "Specify interval weeks"
         required: False
-    uuid:
+    encrypt:
         description:
-        - "uuid of the object"
+        - "Encrypt the backup file"
         required: False
-    use_mgmt_port:
+    log:
         description:
-        - "Use management port as source port"
-        required: False
-    system:
-        description:
-        - "Backup system files"
+        - "Backup log files"
         required: False
     hour:
         description:
         - "Specify interval hours"
+        required: False
+    system:
+        description:
+        - "Backup system files"
         required: False
     store_name:
         description:
@@ -76,13 +76,21 @@ options:
         description:
         - "profile name for remote url"
         required: False
+    use_mgmt_port:
+        description:
+        - "Use management port as source port"
+        required: False
+    fixed_nat:
+        description:
+        - "Backup fixed-nat port mapping files"
+        required: False
     day:
         description:
         - "Specify interval days"
         required: False
-    log:
+    uuid:
         description:
-        - "Backup log files"
+        - "uuid of the object"
         required: False
 
 
@@ -98,7 +106,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["day","hour","log","remote_file","store_name","system","use_mgmt_port","uuid","week",]
+AVAILABLE_PROPERTIES = ["day","encrypt","fixed_nat","hour","log","remote_file","store_name","system","use_mgmt_port","uuid","week",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -128,14 +136,16 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         week=dict(type='int',),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        system=dict(type='bool',),
+        encrypt=dict(type='bool',),
+        log=dict(type='bool',),
         hour=dict(type='int',),
+        system=dict(type='bool',),
         store_name=dict(type='str',),
         remote_file=dict(type='str',),
+        use_mgmt_port=dict(type='bool',),
+        fixed_nat=dict(type='bool',),
         day=dict(type='int',),
-        log=dict(type='bool',)
+        uuid=dict(type='str',)
     ))
    
 

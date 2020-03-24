@@ -56,6 +56,9 @@ options:
             config_speed:
                 description:
                 - "Field config_speed"
+            ipv6_list:
+                description:
+                - "Field ipv6_list"
             ipv4_netmask:
                 description:
                 - "IPv4 subnet mask"
@@ -65,6 +68,12 @@ options:
             link_type:
                 description:
                 - "Field link_type"
+            ipv4_addr_count:
+                description:
+                - "Field ipv4_addr_count"
+            ipv4_list:
+                description:
+                - "Field ipv4_list"
             mac:
                 description:
                 - "Field mac"
@@ -77,6 +86,12 @@ options:
             ipv6_link_local_type:
                 description:
                 - "Field ipv6_link_local_type"
+            ipv6_link_local_scope:
+                description:
+                - "Field ipv6_link_local_scope"
+            ipv6_addr_count:
+                description:
+                - "Field ipv6_addr_count"
             line_protocol:
                 description:
                 - "Field line_protocol"
@@ -94,21 +109,33 @@ options:
             num_tx_err_pkts:
                 description:
                 - "sent error packets"
+            rate_pkt_rcvd:
+                description:
+                - "Packet received rate packets/sec"
             num_rx_err_pkts:
                 description:
                 - "received error packets"
-            num_total_rx_bytes:
-                description:
-                - "received bytes"
             ifnum:
                 description:
                 - "Tunnel interface number"
-            num_tx_pkts:
+            num_total_rx_bytes:
                 description:
-                - "sent packets"
+                - "received bytes"
+            rate_byte_sent:
+                description:
+                - "Byte sent rate bits/sec"
+            rate_byte_rcvd:
+                description:
+                - "Byte received rate bits/sec"
             num_total_tx_bytes:
                 description:
                 - "sent bytes"
+            num_tx_pkts:
+                description:
+                - "sent packets"
+            rate_pkt_sent:
+                description:
+                - "Packet sent rate packets/sec"
             num_rx_pkts:
                 description:
                 - "received packets"
@@ -127,6 +154,9 @@ options:
             generate_membership_query:
                 description:
                 - "Enable Membership Query"
+            rip:
+                description:
+                - "Field rip"
             max_resp_time:
                 description:
                 - "Max Response Time (Default is 100)"
@@ -139,6 +169,10 @@ options:
             generate_membership_query_val:
                 description:
                 - "1 - 255 (Default is 125)"
+    ifnum:
+        description:
+        - "Tunnel interface number"
+        required: True
     user_tag:
         description:
         - "Customized tag"
@@ -147,10 +181,14 @@ options:
         description:
         - "Interface mtu (Interface MTU, default 1 (min MTU is 1280 for IPv6))"
         required: False
-    ifnum:
+    sampling_enable:
         description:
-        - "Tunnel interface number"
-        required: True
+        - "Field sampling_enable"
+        required: False
+        suboptions:
+            counters1:
+                description:
+                - "'all'= all; 'num-rx-pkts'= received packets; 'num-total-rx-bytes'= received bytes; 'num-tx-pkts'= sent packets; 'num-total-tx-bytes'= sent bytes; 'num-rx-err-pkts'= received error packets; 'num-tx-err-pkts'= sent error packets; 'rate_pkt_sent'= Packet sent rate packets/sec; 'rate_byte_sent'= Byte sent rate bits/sec; 'rate_pkt_rcvd'= Packet received rate packets/sec; 'rate_byte_rcvd'= Byte received rate bits/sec; "
     load_interval:
         description:
         - "Configure Load Interval (Seconds (5-300, Multiple of 5), default 300)"
@@ -201,7 +239,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","ifnum","ip","ipv6","load_interval","mtu","name","oper","speed","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","ifnum","ip","ipv6","load_interval","mtu","name","oper","sampling_enable","speed","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -230,15 +268,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',config_speed=dict(type='int',),ipv4_netmask=dict(type='str',),ipv6_link_local=dict(type='str',),link_type=dict(type='str',),mac=dict(type='str',),ifnum=dict(type='int',required=True,),state=dict(type='str',choices=['UP','DISABLED','DOWN']),ipv6_link_local_type=dict(type='str',),line_protocol=dict(type='str',choices=['UP','DOWN']),ipv6_link_local_prefix=dict(type='str',),ipv4_address=dict(type='str',)),
-        stats=dict(type='dict',num_tx_err_pkts=dict(type='str',),num_rx_err_pkts=dict(type='str',),num_total_rx_bytes=dict(type='str',),ifnum=dict(type='int',required=True,),num_tx_pkts=dict(type='str',),num_total_tx_bytes=dict(type='str',),num_rx_pkts=dict(type='str',)),
+        oper=dict(type='dict',config_speed=dict(type='int',),ipv6_list=dict(type='list',is_anycast=dict(type='int',),prefix=dict(type='str',),addr=dict(type='str',)),ipv4_netmask=dict(type='str',),ipv6_link_local=dict(type='str',),link_type=dict(type='str',),ipv4_addr_count=dict(type='int',),ipv4_list=dict(type='list',mask=dict(type='str',),addr=dict(type='str',)),mac=dict(type='str',),ifnum=dict(type='int',required=True,),state=dict(type='str',choices=['up','disabled','down']),ipv6_link_local_type=dict(type='str',),ipv6_link_local_scope=dict(type='str',),ipv6_addr_count=dict(type='int',),line_protocol=dict(type='str',choices=['up','down']),ipv6_link_local_prefix=dict(type='str',),ipv4_address=dict(type='str',)),
+        stats=dict(type='dict',num_tx_err_pkts=dict(type='str',),rate_pkt_rcvd=dict(type='str',),num_rx_err_pkts=dict(type='str',),ifnum=dict(type='int',required=True,),num_total_rx_bytes=dict(type='str',),rate_byte_sent=dict(type='str',),rate_byte_rcvd=dict(type='str',),num_total_tx_bytes=dict(type='str',),num_tx_pkts=dict(type='str',),rate_pkt_sent=dict(type='str',),num_rx_pkts=dict(type='str',)),
         name=dict(type='str',),
-        ip=dict(type='dict',uuid=dict(type='str',),generate_membership_query=dict(type='bool',),max_resp_time=dict(type='int',),address=dict(type='dict',ip_cfg=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',))),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),generate_membership_query_val=dict(type='int',)),
+        ip=dict(type='dict',uuid=dict(type='str',),generate_membership_query=dict(type='bool',),rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),max_resp_time=dict(type='int',),address=dict(type='dict',ip_cfg=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',))),ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),generate_membership_query_val=dict(type='int',)),
+        ifnum=dict(type='int',required=True,),
         user_tag=dict(type='str',),
         mtu=dict(type='int',),
-        ifnum=dict(type='int',required=True,),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num-rx-pkts','num-total-rx-bytes','num-tx-pkts','num-total-tx-bytes','num-rx-err-pkts','num-tx-err-pkts','rate_pkt_sent','rate_byte_sent','rate_pkt_rcvd','rate_byte_rcvd'])),
         load_interval=dict(type='int',),
-        ipv6=dict(type='dict',router=dict(type='dict',ospf=dict(type='dict',area_list=dict(type='list',area_id_addr=dict(type='str',),tag=dict(type='str',),instance_id=dict(type='int',),area_id_num=dict(type='int',)),uuid=dict(type='str',))),address_cfg=dict(type='list',address_type=dict(type='str',choices=['anycast','link-local']),ipv6_addr=dict(type='str',)),ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),neighbor_cfg=dict(type='list',neighbor_priority=dict(type='int',),neighbor_poll_interval=dict(type='int',),neig_inst=dict(type='int',),neighbor=dict(type='str',),neighbor_cost=dict(type='int',)),network_list=dict(type='list',broadcast_type=dict(type='str',choices=['broadcast','non-broadcast','point-to-point','point-to-multipoint']),p2mp_nbma=dict(type='bool',),network_instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',))),ipv6_enable=dict(type='bool',),uuid=dict(type='str',)),
+        ipv6=dict(type='dict',router=dict(type='dict',ripng=dict(type='dict',uuid=dict(type='str',),rip=dict(type='bool',)),ospf=dict(type='dict',area_list=dict(type='list',area_id_addr=dict(type='str',),tag=dict(type='str',),instance_id=dict(type='int',),area_id_num=dict(type='int',)),uuid=dict(type='str',))),address_cfg=dict(type='list',address_type=dict(type='str',choices=['anycast','link-local']),ipv6_addr=dict(type='str',)),ospf=dict(type='dict',uuid=dict(type='str',),bfd=dict(type='bool',),cost_cfg=dict(type='list',cost=dict(type='int',),instance_id=dict(type='int',)),priority_cfg=dict(type='list',priority=dict(type='int',),instance_id=dict(type='int',)),hello_interval_cfg=dict(type='list',hello_interval=dict(type='int',),instance_id=dict(type='int',)),mtu_ignore_cfg=dict(type='list',mtu_ignore=dict(type='bool',),instance_id=dict(type='int',)),retransmit_interval_cfg=dict(type='list',retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),disable=dict(type='bool',),transmit_delay_cfg=dict(type='list',transmit_delay=dict(type='int',),instance_id=dict(type='int',)),neighbor_cfg=dict(type='list',neighbor_priority=dict(type='int',),neighbor_poll_interval=dict(type='int',),neig_inst=dict(type='int',),neighbor=dict(type='str',),neighbor_cost=dict(type='int',)),network_list=dict(type='list',broadcast_type=dict(type='str',choices=['broadcast','non-broadcast','point-to-point','point-to-multipoint']),p2mp_nbma=dict(type='bool',),network_instance_id=dict(type='int',)),dead_interval_cfg=dict(type='list',dead_interval=dict(type='int',),instance_id=dict(type='int',))),ipv6_enable=dict(type='bool',),uuid=dict(type='str',)),
         action=dict(type='str',choices=['enable','disable']),
         speed=dict(type='int',),
         uuid=dict(type='str',)

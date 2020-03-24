@@ -64,15 +64,24 @@ options:
         - "Field stats"
         required: False
         suboptions:
-            total_count:
-                description:
-                - "Field total_count"
-            hit_count:
-                description:
-                - "Field hit_count"
             index:
                 description:
                 - "Specify AAA rule index"
+            hit_auth:
+                description:
+                - "Field hit_auth"
+            hit_bypass:
+                description:
+                - "Field hit_bypass"
+            total_count:
+                description:
+                - "Field total_count"
+            hit_deny:
+                description:
+                - "Field hit_deny"
+            failure_bypass:
+                description:
+                - "Field failure_bypass"
     uuid:
         description:
         - "uuid of the object"
@@ -96,6 +105,17 @@ options:
         description:
         - "Customized tag"
         required: False
+    user_agent:
+        description:
+        - "Field user_agent"
+        required: False
+        suboptions:
+            user_agent_str:
+                description:
+                - "Specify request User-Agent string"
+            user_agent_match_type:
+                description:
+                - "'contains'= Match request User-Agent header if it contains specified string; 'ends-with'= Match request User-Agent header if it ends with specified string; 'equals'= Match request User-Agent header if it equals specified string; 'starts-with'= Match request User-Agent header if it starts with specified string; "
     host:
         description:
         - "Field host"
@@ -128,10 +148,10 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total_count'= total_count; 'hit_count'= hit_count; "
-    domain_name:
+                - "'all'= all; 'total_count'= total_count; 'hit_deny'= hit_deny; 'hit_auth'= hit_auth; 'hit_bypass'= hit_bypass; 'failure_bypass'= failure_bypass; "
+    auth_failure_bypass:
         description:
-        - "Specify domain name to bind to the AAA rule (ex= a10networks.com, www.a10networks.com)"
+        - "Forward client’s request even though authentication has failed"
         required: False
     authentication_template:
         description:
@@ -144,6 +164,10 @@ options:
     port:
         description:
         - "Specify port number for aaa-rule, default is 0 for all port numbers"
+        required: False
+    domain_name:
+        description:
+        - "Specify domain name to bind to the AAA rule (ex= a10networks.com, www.a10networks.com)"
         required: False
 
 
@@ -159,7 +183,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list","action","authentication_template","authorize_policy","domain_name","host","index","match_encoded_uri","port","sampling_enable","stats","uri","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access_list","action","auth_failure_bypass","authentication_template","authorize_policy","domain_name","host","index","match_encoded_uri","port","sampling_enable","stats","uri","user_agent","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -190,18 +214,20 @@ def get_argspec():
     rv.update(dict(
         index=dict(type='int',required=True,),
         match_encoded_uri=dict(type='bool',),
-        stats=dict(type='dict',total_count=dict(type='str',),hit_count=dict(type='str',),index=dict(type='int',required=True,)),
+        stats=dict(type='dict',index=dict(type='int',required=True,),hit_auth=dict(type='str',),hit_bypass=dict(type='str',),total_count=dict(type='str',),hit_deny=dict(type='str',),failure_bypass=dict(type='str',)),
         uuid=dict(type='str',),
         authorize_policy=dict(type='str',),
         uri=dict(type='list',match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),uri_str=dict(type='str',)),
         user_tag=dict(type='str',),
+        user_agent=dict(type='list',user_agent_str=dict(type='str',),user_agent_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),
         host=dict(type='list',host_str=dict(type='str',),host_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),
         access_list=dict(type='dict',acl_name=dict(type='str',choices=['ip-name','ipv6-name']),acl_id=dict(type='int',),name=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_count','hit_count'])),
-        domain_name=dict(type='str',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_count','hit_deny','hit_auth','hit_bypass','failure_bypass'])),
+        auth_failure_bypass=dict(type='bool',),
         authentication_template=dict(type='str',),
         action=dict(type='str',choices=['allow','deny']),
-        port=dict(type='int',)
+        port=dict(type='int',),
+        domain_name=dict(type='str',)
     ))
    
     # Parent keys

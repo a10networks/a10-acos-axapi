@@ -48,19 +48,7 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    enable:
-        description:
-        - "Enable static mapping"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    enable_disable_action:
+    action:
         description:
         - "'enable'= Enable static mapping (default); 'disable'= Disable static mapping; "
         required: False
@@ -68,9 +56,13 @@ options:
         description:
         - "NAT Address"
         required: True
-    disable:
+    vrid:
         description:
-        - "Disable static mapping"
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
         required: False
     src_address:
         description:
@@ -90,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["disable","enable","enable_disable_action","nat_address","src_address","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["action","nat_address","src_address","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -119,12 +111,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        vrid=dict(type='int',),
-        enable_disable_action=dict(type='str',choices=['enable','disable']),
+        action=dict(type='str',choices=['enable','disable']),
         nat_address=dict(type='str',required=True,),
-        disable=dict(type='bool',),
+        vrid=dict(type='int',),
+        uuid=dict(type='str',),
         src_address=dict(type='str',required=True,)
     ))
    

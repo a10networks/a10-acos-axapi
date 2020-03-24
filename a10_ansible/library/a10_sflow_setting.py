@@ -52,21 +52,25 @@ options:
         description:
         - "Use management interface's IP address for source IP of sFlow packets"
         required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
     counter_polling_interval:
         description:
-        - "sFlow counter polling interval, default is 20"
+        - "sFlow counter polling interval, default is 10"
         required: False
     packet_sampling_rate:
         description:
         - "sFlow packet sampling rate, default is 1000"
         required: False
+    local_collection:
+        description:
+        - "Enable local sflow collection"
+        required: False
     max_header:
         description:
         - "Configure maximum number of bytes that should be copied from a sampled packet (default= 128) (The maximum number of bytes (Default= 128))"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
         required: False
 
 
@@ -82,7 +86,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["counter_polling_interval","max_header","packet_sampling_rate","source_ip_use_mgmt","uuid",]
+AVAILABLE_PROPERTIES = ["counter_polling_interval","local_collection","max_header","packet_sampling_rate","source_ip_use_mgmt","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -112,10 +116,11 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         source_ip_use_mgmt=dict(type='bool',),
+        uuid=dict(type='str',),
         counter_polling_interval=dict(type='int',),
         packet_sampling_rate=dict(type='int',),
-        max_header=dict(type='int',),
-        uuid=dict(type='str',)
+        local_collection=dict(type='bool',),
+        max_header=dict(type='int',)
     ))
    
 

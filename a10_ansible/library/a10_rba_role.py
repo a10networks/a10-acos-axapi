@@ -48,9 +48,9 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    uuid:
+    default_privilege:
         description:
-        - "uuid of the object"
+        - "'no-access'= no-access; 'read'= read; 'write'= write; "
         required: False
     name:
         description:
@@ -67,10 +67,18 @@ options:
         suboptions:
             operation:
                 description:
-                - "'no-access'= no-access; 'read'= read; 'write'= write; "
+                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write; "
             object:
                 description:
                 - "Lineage of object class for permitted operation"
+    partition_only:
+        description:
+        - "Partition RBA Role"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
 
 """
@@ -85,7 +93,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name","rule_list","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["default_privilege","name","partition_only","rule_list","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -114,10 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
+        default_privilege=dict(type='str',choices=['no-access','read','write']),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
-        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))
+        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',)),
+        partition_only=dict(type='bool',),
+        uuid=dict(type='str',)
     ))
    
 

@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_ssl_cert_revoke
 description:
-    - Show ssl-cert-revoke-stats
+    - Configure ssl-cert-revoke-stats
 short_description: Configures A10 slb.ssl-cert-revoke
 author: A10 Networks 2018 
 version_added: 2.4

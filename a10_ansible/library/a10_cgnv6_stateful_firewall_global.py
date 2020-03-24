@@ -48,6 +48,10 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    respond_to_user_mac:
+        description:
+        - "Use the user's source MAC for the next hop rather than the routing table (default= off)"
+        required: False
     stateful_firewall_value:
         description:
         - "'enable'= Enable stateful firewall; "
@@ -164,7 +168,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stateful_firewall_value","stats","uuid",]
+AVAILABLE_PROPERTIES = ["respond_to_user_mac","sampling_enable","stateful_firewall_value","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -193,6 +197,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        respond_to_user_mac=dict(type='bool',),
         stateful_firewall_value=dict(type='str',choices=['enable']),
         stats=dict(type='dict',session_creation_failure=dict(type='str',),tcp_packet_process=dict(type='str',),udp_fullcone_freed=dict(type='str',),outbound_session_created=dict(type='str',),tcp_fullcone_created=dict(type='str',),fullcone_creation_failure=dict(type='str',),one_arm_drop=dict(type='str',),packet_inbound_deny=dict(type='str',),inbound_session_created=dict(type='str',),udp_fullcone_created=dict(type='str',),other_session_created=dict(type='str',),udp_session_created=dict(type='str',),udp_packet_process=dict(type='str',),no_fwd_route=dict(type='str',),tcp_session_created=dict(type='str',),other_session_freed=dict(type='str',),eif_process=dict(type='str',),inbound_session_freed=dict(type='str',),udp_session_freed=dict(type='str',),no_rev_route=dict(type='str',),packet_process_failure=dict(type='str',),tcp_session_freed=dict(type='str',),other_packet_process=dict(type='str',),tcp_fullcone_freed=dict(type='str',),outbound_session_freed=dict(type='str',),no_class_list_match=dict(type='str',),packet_standby_drop=dict(type='str',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','tcp_packet_process','udp_packet_process','other_packet_process','packet_inbound_deny','packet_process_failure','outbound_session_created','outbound_session_freed','inbound_session_created','inbound_session_freed','tcp_session_created','tcp_session_freed','udp_session_created','udp_session_freed','other_session_created','other_session_freed','session_creation_failure','no_fwd_route','no_rev_route','packet_standby_drop','tcp_fullcone_created','tcp_fullcone_freed','udp_fullcone_created','udp_fullcone_freed','fullcone_creation_failure','eif_process','one_arm_drop','no_class_list_match','outbound_session_created_shadow','outbound_session_freed_shadow','inbound_session_created_shadow','inbound_session_freed_shadow','tcp_session_created_shadow','tcp_session_freed_shadow','udp_session_created_shadow','udp_session_freed_shadow','other_session_created_shadow','other_session_freed_shadow','session_creation_failure_shadow','bad_session_freed','ctl_mem_alloc','ctl_mem_free','tcp_fullcone_created_shadow','tcp_fullcone_freed_shadow','udp_fullcone_created_shadow','udp_fullcone_freed_shadow','fullcone_in_del_q','fullcone_overflow_eim','fullcone_overflow_eif','fullcone_free_found','fullcone_free_retry_lookup','fullcone_free_not_found','eif_limit_exceeded','eif_disable_drop','eif_process_failure','eif_filtered','ha_standby_session_created','ha_standby_session_eim','ha_standby_session_eif'])),

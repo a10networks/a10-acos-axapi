@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_mysql
 description:
-    - Show mysql Statistics
+    - Configure mysql
 short_description: Configures A10 slb.mysql
 author: A10 Networks 2018 
 version_added: 2.4

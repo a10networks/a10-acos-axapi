@@ -53,6 +53,9 @@ options:
         - "Field oper"
         required: False
         suboptions:
+            partition:
+                description:
+                - "Field partition"
             file_list:
                 description:
                 - "Field file_list"
@@ -63,6 +66,10 @@ options:
     uuid:
         description:
         - "uuid of the object"
+        required: False
+    secured:
+        description:
+        - "Mark as non-exportable"
         required: False
     file:
         description:
@@ -94,7 +101,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","oper","size","uuid",]
+AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","oper","secured","size","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -123,9 +130,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_list=dict(type='list',file=dict(type='str',))),
+        oper=dict(type='dict',partition=dict(type='str',),file_list=dict(type='list',file=dict(type='str',))),
         dst_file=dict(type='str',),
         uuid=dict(type='str',),
+        secured=dict(type='bool',),
         file=dict(type='str',),
         action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         file_handle=dict(type='str',),

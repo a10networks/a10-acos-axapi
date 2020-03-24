@@ -53,12 +53,18 @@ options:
         - "Field oper"
         required: False
         suboptions:
+            visibility_mon_entity_default:
+                description:
+                - "Field visibility_mon_entity_default"
             nat_pool_addr_min:
                 description:
                 - "Field nat_pool_addr_min"
-            class_list_ac_min:
+            radius_table_size_max:
                 description:
-                - "Field class_list_ac_min"
+                - "Field radius_table_size_max"
+            radius_table_size_default:
+                description:
+                - "Field radius_table_size_default"
             auth_portal_image_file_size_default:
                 description:
                 - "Field auth_portal_image_file_size_default"
@@ -71,6 +77,12 @@ options:
             aflex_table_entry_count_max:
                 description:
                 - "Field aflex_table_entry_count_max"
+            visibility_mon_entity_min:
+                description:
+                - "Field visibility_mon_entity_min"
+            authz_policy_number_default:
+                description:
+                - "Field authz_policy_number_default"
             auth_portal_image_file_size_max:
                 description:
                 - "Field auth_portal_image_file_size_max"
@@ -86,12 +98,21 @@ options:
             l4_session_count_default:
                 description:
                 - "Field l4_session_count_default"
+            radius_table_size_min:
+                description:
+                - "Field radius_table_size_min"
             nat_pool_addr_default:
                 description:
                 - "Field nat_pool_addr_default"
+            class_list_ac_min:
+                description:
+                - "Field class_list_ac_min"
             class_list_ac_max:
                 description:
                 - "Field class_list_ac_max"
+            visibility_mon_entity_max:
+                description:
+                - "Field visibility_mon_entity_max"
             class_list_ipv6_addr_default:
                 description:
                 - "Field class_list_ipv6_addr_default"
@@ -110,6 +131,12 @@ options:
             aflex_authz_collection_number_default:
                 description:
                 - "Field aflex_authz_collection_number_default"
+            authz_policy_number_max:
+                description:
+                - "Field authz_policy_number_max"
+            authz_policy_number_min:
+                description:
+                - "Field authz_policy_number_min"
             class_list_ipv6_addr_min:
                 description:
                 - "Field class_list_ipv6_addr_min"
@@ -134,6 +161,10 @@ options:
             class_list_ac_default:
                 description:
                 - "Field class_list_ac_default"
+    l4_session_count:
+        description:
+        - "Total Sessions in the System"
+        required: False
     nat_pool_addr_count:
         description:
         - "Total configurable NAT Pool addresses in the System"
@@ -142,9 +173,24 @@ options:
         description:
         - "Specify the maximum number of collections supported by aFleX authorization"
         required: False
+    visibility:
+        description:
+        - "Field visibility"
+        required: False
+        suboptions:
+            monitored_entity_count:
+                description:
+                - "Total number of monitored entities for visibility"
+            uuid:
+                description:
+                - "uuid of the object"
     class_list_ipv6_addr_count:
         description:
         - "Total IPv6 addresses for class-list"
+        required: False
+    authz_policy_number:
+        description:
+        - "Specify the maximum number of authorization policies"
         required: False
     max_aflex_file_size:
         description:
@@ -154,9 +200,13 @@ options:
         description:
         - "Total entries for AC class-list"
         required: False
-    l4_session_count:
+    ssl_dma_memory:
         description:
-        - "Total Sessions in the System"
+        - "Total SSL DMA memory needed in units of MB. Will be rounded to closest multiple of 2MB"
+        required: False
+    radius_table_size:
+        description:
+        - "Total configurable CGNV6 RADIUS Table entries"
         required: False
     aflex_table_entry_count:
         description:
@@ -192,7 +242,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","oper","ssl_context_memory","uuid",]
+AVAILABLE_PROPERTIES = ["aflex_table_entry_count","auth_portal_html_file_size","auth_portal_image_file_size","authz_policy_number","class_list_ac_entry_count","class_list_ipv6_addr_count","l4_session_count","max_aflex_authz_collection_number","max_aflex_file_size","nat_pool_addr_count","oper","radius_table_size","ssl_context_memory","ssl_dma_memory","uuid","visibility",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -221,13 +271,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',nat_pool_addr_min=dict(type='int',),class_list_ac_min=dict(type='int',),auth_portal_image_file_size_default=dict(type='int',),auth_portal_html_file_size_max=dict(type='int',),aflex_table_entry_count_min=dict(type='int',),aflex_table_entry_count_max=dict(type='int',),auth_portal_image_file_size_max=dict(type='int',),aflex_table_entry_count_default=dict(type='int',),l4_session_count_max=dict(type='int',),aflex_file_size_default=dict(type='int',),l4_session_count_default=dict(type='int',),nat_pool_addr_default=dict(type='int',),class_list_ac_max=dict(type='int',),class_list_ipv6_addr_default=dict(type='int',),l4_session_count_min=dict(type='int',),auth_portal_image_file_size_min=dict(type='int',),class_list_ipv6_addr_max=dict(type='int',),aflex_file_size_min=dict(type='int',),aflex_authz_collection_number_default=dict(type='int',),class_list_ipv6_addr_min=dict(type='int',),aflex_file_size_max=dict(type='int',),auth_portal_html_file_size_default=dict(type='int',),aflex_authz_collection_number_min=dict(type='int',),nat_pool_addr_max=dict(type='int',),aflex_authz_collection_number_max=dict(type='int',),auth_portal_html_file_size_min=dict(type='int',),class_list_ac_default=dict(type='int',)),
+        oper=dict(type='dict',visibility_mon_entity_default=dict(type='int',),nat_pool_addr_min=dict(type='int',),radius_table_size_max=dict(type='int',),radius_table_size_default=dict(type='int',),auth_portal_image_file_size_default=dict(type='int',),auth_portal_html_file_size_max=dict(type='int',),aflex_table_entry_count_min=dict(type='int',),aflex_table_entry_count_max=dict(type='int',),visibility_mon_entity_min=dict(type='int',),authz_policy_number_default=dict(type='int',),auth_portal_image_file_size_max=dict(type='int',),aflex_table_entry_count_default=dict(type='int',),l4_session_count_max=dict(type='int',),aflex_file_size_default=dict(type='int',),l4_session_count_default=dict(type='int',),radius_table_size_min=dict(type='int',),nat_pool_addr_default=dict(type='int',),class_list_ac_min=dict(type='int',),class_list_ac_max=dict(type='int',),visibility_mon_entity_max=dict(type='int',),class_list_ipv6_addr_default=dict(type='int',),l4_session_count_min=dict(type='int',),auth_portal_image_file_size_min=dict(type='int',),class_list_ipv6_addr_max=dict(type='int',),aflex_file_size_min=dict(type='int',),aflex_authz_collection_number_default=dict(type='int',),authz_policy_number_max=dict(type='int',),authz_policy_number_min=dict(type='int',),class_list_ipv6_addr_min=dict(type='int',),aflex_file_size_max=dict(type='int',),auth_portal_html_file_size_default=dict(type='int',),aflex_authz_collection_number_min=dict(type='int',),nat_pool_addr_max=dict(type='int',),aflex_authz_collection_number_max=dict(type='int',),auth_portal_html_file_size_min=dict(type='int',),class_list_ac_default=dict(type='int',)),
+        l4_session_count=dict(type='int',),
         nat_pool_addr_count=dict(type='int',),
         max_aflex_authz_collection_number=dict(type='int',),
+        visibility=dict(type='dict',monitored_entity_count=dict(type='int',),uuid=dict(type='str',)),
         class_list_ipv6_addr_count=dict(type='int',),
+        authz_policy_number=dict(type='int',),
         max_aflex_file_size=dict(type='int',),
         class_list_ac_entry_count=dict(type='int',),
-        l4_session_count=dict(type='int',),
+        ssl_dma_memory=dict(type='int',),
+        radius_table_size=dict(type='int',),
         aflex_table_entry_count=dict(type='int',),
         ssl_context_memory=dict(type='int',),
         auth_portal_html_file_size=dict(type='int',),

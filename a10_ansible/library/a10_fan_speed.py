@@ -50,7 +50,7 @@ options:
         required: False
     action:
         description:
-        - "'auto'= Set FAN Speed to automatic based on system temperature; '50'= Set FAN Speed to 50; '75'= Set FAN Speed to 75; '100'= Set FAN Speed to 100; "
+        - "'auto'= Set FAN Speed to automatic based on system temperature; '50'= Set FAN Speed to 50% of maximum speed (approx); '75'= Set FAN Speed to 75% of maximum speed (approx); '100'= Set FAN Speed to 100% full hardware speed; "
         required: False
     uuid:
         description:

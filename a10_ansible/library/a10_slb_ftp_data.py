@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_ftp_data
 description:
-    - Show FTP Statistics
+    - Configure FTP
 short_description: Configures A10 slb.ftp-data
 author: A10 Networks 2018 
 version_added: 2.4

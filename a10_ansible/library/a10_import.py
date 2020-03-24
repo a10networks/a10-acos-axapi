@@ -68,6 +68,10 @@ options:
         description:
         - "USB License File"
         required: False
+    ip_map_list:
+        description:
+        - "IP Map List File"
+        required: False
     health_external:
         description:
         - "Field health_external"
@@ -95,6 +99,10 @@ options:
         description:
         - "Portal file for http authentication"
         required: False
+    local_uri_file:
+        description:
+        - "Local URI files for http response"
+        required: False
     aflex:
         description:
         - "aFleX Script Source File"
@@ -119,6 +127,10 @@ options:
         description:
         - "Thales Kmdata files"
         required: False
+    secured:
+        description:
+        - "Mark as non-exportable"
+        required: False
     ssl_crl:
         description:
         - "SSL Crl File"
@@ -130,6 +142,10 @@ options:
     policy:
         description:
         - "WAF policy File"
+        required: False
+    file_inspection_bw_list:
+        description:
+        - "Black white List File"
         required: False
     thales_secworld:
         description:
@@ -175,9 +191,13 @@ options:
         description:
         - "DNSSEC DS file for child zone"
         required: False
-    local_uri_file:
+    cloud_creds:
         description:
-        - "Local URI files for http response"
+        - "Cloud Credentials File"
+        required: False
+    auth_jwks:
+        description:
+        - "JSON web key"
         required: False
     wsdl:
         description:
@@ -198,6 +218,10 @@ options:
     remote_file:
         description:
         - "profile name for remote url"
+        required: False
+    cloud_config:
+        description:
+        - "Cloud Configuration File"
         required: False
     to_device:
         description:
@@ -311,7 +335,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex","auth_portal","auth_portal_image","auth_saml_idp","bw_list","ca_cert","certificate_type","class_list","class_list_convert","class_list_type","dnssec_dnskey","dnssec_ds","geo_location","glm_cert","glm_license","health_external","health_postfile","local_uri_file","lw_4o6","overwrite","password","pfx_password","policy","remote_file","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","store","store_name","terminal","thales_kmdata","thales_secworld","to_device","usb_license","use_mgmt_port","user_tag","web_category_license","wsdl","xml_schema",]
+AVAILABLE_PROPERTIES = ["aflex","auth_jwks","auth_portal","auth_portal_image","auth_saml_idp","bw_list","ca_cert","certificate_type","class_list","class_list_convert","class_list_type","cloud_config","cloud_creds","dnssec_dnskey","dnssec_ds","file_inspection_bw_list","geo_location","glm_cert","glm_license","health_external","health_postfile","ip_map_list","local_uri_file","lw_4o6","overwrite","password","pfx_password","policy","remote_file","secured","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","store","store_name","terminal","thales_kmdata","thales_secworld","to_device","usb_license","use_mgmt_port","user_tag","web_category_license","wsdl","xml_schema",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -345,17 +369,21 @@ def get_argspec():
         class_list_convert=dict(type='str',),
         bw_list=dict(type='str',),
         usb_license=dict(type='str',),
+        ip_map_list=dict(type='str',),
         health_external=dict(type='dict',description=dict(type='str',),remote_file=dict(type='str',),externalfilename=dict(type='str',),password=dict(type='str',),use_mgmt_port=dict(type='bool',),overwrite=dict(type='bool',)),
         auth_portal=dict(type='str',),
+        local_uri_file=dict(type='str',),
         aflex=dict(type='str',),
         overwrite=dict(type='bool',),
         class_list_type=dict(type='str',choices=['ac','ipv4','ipv6','string','string-case-insensitive']),
         pfx_password=dict(type='str',),
         web_category_license=dict(type='str',),
         thales_kmdata=dict(type='str',),
+        secured=dict(type='bool',),
         ssl_crl=dict(type='str',),
         terminal=dict(type='bool',),
         policy=dict(type='str',),
+        file_inspection_bw_list=dict(type='str',),
         thales_secworld=dict(type='str',),
         lw_4o6=dict(type='str',),
         auth_portal_image=dict(type='str',),
@@ -363,12 +391,14 @@ def get_argspec():
         class_list=dict(type='str',),
         glm_license=dict(type='str',),
         dnssec_ds=dict(type='str',),
-        local_uri_file=dict(type='str',),
+        cloud_creds=dict(type='str',),
+        auth_jwks=dict(type='str',),
         wsdl=dict(type='str',),
         password=dict(type='str',),
         ssl_key=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
         remote_file=dict(type='str',),
+        cloud_config=dict(type='str',),
         to_device=dict(type='dict',web_category_license=dict(type='str',),remote_file=dict(type='str',),glm_license=dict(type='str',),glm_cert=dict(type='str',),device=dict(type='int',),use_mgmt_port=dict(type='bool',),overwrite=dict(type='bool',)),
         user_tag=dict(type='str',),
         store_name=dict(type='str',),

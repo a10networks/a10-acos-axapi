@@ -64,13 +64,17 @@ options:
         description:
         - "Source IP persistence template name"
         required: True
+    enforce_higher_priority:
+        description:
+        - "Enforce to use high priority node if available"
+        required: False
     dont_honor_conn_rules:
         description:
         - "Do not observe connection rate rules"
         required: False
-    netmask:
+    primary_port:
         description:
-        - "IP subnet mask"
+        - "Primary port to create the persist session"
         required: False
     user_tag:
         description:
@@ -92,9 +96,9 @@ options:
         description:
         - "Persist with SCAN of all members"
         required: False
-    enforce_higher_priority:
+    netmask:
         description:
-        - "Enforce to use high priority node if available"
+        - "IP subnet mask"
         required: False
     incl_sport:
         description:
@@ -122,7 +126,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dont_honor_conn_rules","enforce_higher_priority","hash_persist","incl_dst_ip","incl_sport","match_type","name","netmask","netmask6","scan_all_members","server","service_group","timeout","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["dont_honor_conn_rules","enforce_higher_priority","hash_persist","incl_dst_ip","incl_sport","match_type","name","netmask","netmask6","primary_port","scan_all_members","server","service_group","timeout","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -155,14 +159,15 @@ def get_argspec():
         incl_dst_ip=dict(type='bool',),
         hash_persist=dict(type='bool',),
         name=dict(type='str',required=True,),
+        enforce_higher_priority=dict(type='bool',),
         dont_honor_conn_rules=dict(type='bool',),
-        netmask=dict(type='str',),
+        primary_port=dict(type='int',),
         user_tag=dict(type='str',),
         server=dict(type='bool',),
         service_group=dict(type='bool',),
         timeout=dict(type='int',),
         scan_all_members=dict(type='bool',),
-        enforce_higher_priority=dict(type='bool',),
+        netmask=dict(type='str',),
         incl_sport=dict(type='bool',),
         match_type=dict(type='bool',),
         uuid=dict(type='str',)

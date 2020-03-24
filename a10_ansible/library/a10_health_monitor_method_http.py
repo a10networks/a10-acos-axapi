@@ -143,7 +143,7 @@ options:
                 - "Specify the kdc port"
             http_kerberos_hostip:
                 description:
-                - "Kdc's hostname or IP address"
+                - "Kdc's hostname(length=1-31) or IP address"
     http_expect:
         description:
         - "Specify what you expect from the response message"

@@ -70,7 +70,7 @@ options:
         required: False
     timeout:
         description:
-        - "Timeout in seconds. Multiple of 60 (def 2400)"
+        - "Timeout in seconds. Multiple of 60 (default 2400)"
         required: False
     num_conn_per_port:
         description:

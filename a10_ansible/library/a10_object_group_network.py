@@ -69,12 +69,15 @@ options:
             ip_range_end:
                 description:
                 - "IPV4 Host address end"
+            any:
+                description:
+                - "Any host"
             slb_vserver:
                 description:
                 - "Virtual Server"
-            fw_ipv4_address:
+            fw_ipv6_subnet:
                 description:
-                - "IPv4 Network Address"
+                - "IPv6 Network Address"
             ipv6_subnet:
                 description:
                 - "IPv6 Network Address"
@@ -96,9 +99,9 @@ options:
             rev_subnet_mask:
                 description:
                 - "Network Mask. 0=apply, 255=ignore"
-            any:
+            fw_ipv4_address:
                 description:
-                - "Any host"
+                - "IPv4 Network Address"
             ip_range_start:
                 description:
                 - "IPv4 Host Address start"
@@ -116,7 +119,7 @@ options:
         required: False
     net_name:
         description:
-        - "Network Object Name"
+        - "Network Object Group Name"
         required: True
     uuid:
         description:
@@ -166,7 +169,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         description=dict(type='str',),
-        rules=dict(type='list',host_v6=dict(type='str',),subnet=dict(type='str',),host_v4=dict(type='str',),ip_range_end=dict(type='str',),slb_vserver=dict(type='str',),fw_ipv4_address=dict(type='str',),ipv6_subnet=dict(type='str',),seq_num=dict(type='int',),obj_network=dict(type='str',),ipv6_range_end=dict(type='str',),ipv6_range_start=dict(type='str',),slb_server=dict(type='str',),rev_subnet_mask=dict(type='str',),any=dict(type='bool',),ip_range_start=dict(type='str',)),
+        rules=dict(type='list',host_v6=dict(type='str',),subnet=dict(type='str',),host_v4=dict(type='str',),ip_range_end=dict(type='str',),any=dict(type='bool',),slb_vserver=dict(type='str',),fw_ipv6_subnet=dict(type='str',),ipv6_subnet=dict(type='str',),seq_num=dict(type='int',),obj_network=dict(type='str',),ipv6_range_end=dict(type='str',),ipv6_range_start=dict(type='str',),slb_server=dict(type='str',),rev_subnet_mask=dict(type='str',),fw_ipv4_address=dict(type='str',),ip_range_start=dict(type='str',)),
         user_tag=dict(type='str',),
         ip_version=dict(type='str',choices=['v4','v6']),
         usage=dict(type='str',choices=['acl','fw']),

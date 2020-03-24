@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_fix
 description:
-    - Show FIX Proxy Statistics
+    - Configure FIX Proxy
 short_description: Configures A10 slb.fix
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            fix_cpu_list:
+                description:
+                - "Field fix_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -112,7 +123,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -141,6 +152,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',fix_cpu_list=dict(type='list',svrsel_fail=dict(type='int',),curr_proxy=dict(type='int',),default_switching=dict(type='int',),total_proxy=dict(type='int',),noroute=dict(type='int',),sender_switching=dict(type='int',),client_err=dict(type='int',),target_switching=dict(type='int',),server_err=dict(type='int',),snat_fail=dict(type='int',),insert_clientip=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','svrsel_fail','noroute','snat_fail','client_err','server_err','insert_clientip','default_switching','sender_switching','target_switching'])),
         stats=dict(type='dict',svrsel_fail=dict(type='str',),curr_proxy=dict(type='str',),default_switching=dict(type='str',),total_proxy=dict(type='str',),noroute=dict(type='str',),sender_switching=dict(type='str',),client_err=dict(type='str',),target_switching=dict(type='str',),server_err=dict(type='str',),snat_fail=dict(type='str',),insert_clientip=dict(type='str',)),
         uuid=dict(type='str',)
@@ -166,6 +178,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -250,6 +267,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -410,6 +436,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

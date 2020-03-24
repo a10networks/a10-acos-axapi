@@ -65,6 +65,9 @@ options:
             gslb_service_port_count_max:
                 description:
                 - "Field gslb_service_port_count_max"
+            slb_threshold_res_usage_default:
+                description:
+                - "Field slb_threshold_res_usage_default"
             gslb_service_port_count_min:
                 description:
                 - "Field gslb_service_port_count_min"
@@ -101,9 +104,15 @@ options:
             gslb_service_count_max:
                 description:
                 - "Field gslb_service_count_max"
+            cache_template_max:
+                description:
+                - "Field cache_template_max"
             gslb_template_count_max:
                 description:
                 - "Field gslb_template_count_max"
+            cache_template_min:
+                description:
+                - "Field cache_template_min"
             proxy_template_max:
                 description:
                 - "Field proxy_template_max"
@@ -113,6 +122,9 @@ options:
             gslb_service_count_min:
                 description:
                 - "Field gslb_service_count_min"
+            cache_template_default:
+                description:
+                - "Field cache_template_default"
             real_port_max:
                 description:
                 - "Field real_port_max"
@@ -131,6 +143,9 @@ options:
             gslb_device_count_max:
                 description:
                 - "Field gslb_device_count_max"
+            gslb_template_count_default:
+                description:
+                - "Field gslb_template_count_default"
             fast_udp_template_max:
                 description:
                 - "Field fast_udp_template_max"
@@ -143,15 +158,12 @@ options:
             gslb_site_count_max:
                 description:
                 - "Field gslb_site_count_max"
-            gslb_device_count_min:
-                description:
-                - "Field gslb_device_count_min"
             gslb_service_ip_count_max:
                 description:
                 - "Field gslb_service_ip_count_max"
-            fast_tcp_template_default:
+            gslb_device_count_min:
                 description:
-                - "Field fast_tcp_template_default"
+                - "Field gslb_device_count_min"
             gslb_zone_count_min:
                 description:
                 - "Field gslb_zone_count_min"
@@ -215,6 +227,9 @@ options:
             server_ssl_template_min:
                 description:
                 - "Field server_ssl_template_min"
+            slb_threshold_res_usage_min:
+                description:
+                - "Field slb_threshold_res_usage_min"
             real_port_min:
                 description:
                 - "Field real_port_min"
@@ -224,6 +239,9 @@ options:
             persist_cookie_template_min:
                 description:
                 - "Field persist_cookie_template_min"
+            slb_threshold_res_usage_max:
+                description:
+                - "Field slb_threshold_res_usage_max"
             server_ssl_template_max:
                 description:
                 - "Field server_ssl_template_max"
@@ -251,9 +269,9 @@ options:
             stream_template_max:
                 description:
                 - "Field stream_template_max"
-            gslb_template_count_default:
+            fast_tcp_template_default:
                 description:
-                - "Field gslb_template_count_default"
+                - "Field fast_tcp_template_default"
             virtual_port_min:
                 description:
                 - "Field virtual_port_min"
@@ -314,29 +332,21 @@ options:
             gslb_service_ip_count_default:
                 description:
                 - "Field gslb_service_ip_count_default"
-    proxy_template_count:
-        description:
-        - "Total configurable Proxy Templates in the System"
-        required: False
     nat_pool_addr_count:
         description:
-        - "Total configurable NAT Pool addresses in the System"
+        - "Total configurable NAT Pool addresses in the System (deprecated)"
         required: False
     fast_tcp_template_count:
         description:
         - "Total configurable Fast TCP Templates in the System"
         required: False
-    virtual_port_count:
+    cache_template_count:
         description:
-        - "Total Virtual Server Ports in the System"
+        - "Total configurable HTTP Cache Templates in the System"
         required: False
-    health_monitor_count:
+    proxy_template_count:
         description:
-        - "Total Health Monitors in the System"
-        required: False
-    fast_udp_template_count:
-        description:
-        - "Total configurable Fast UDP Templates in the System"
+        - "Total configurable Proxy Templates in the System"
         required: False
     persist_srcip_template_count:
         description:
@@ -346,14 +356,6 @@ options:
         description:
         - "Total configurable Client SSL Templates in the System"
         required: False
-    server_ssl_template_count:
-        description:
-        - "Total configurable Server SSL Templates in the System"
-        required: False
-    http_template_count:
-        description:
-        - "Total configurable HTTP Templates in the System"
-        required: False
     pbslb_subnet_count:
         description:
         - "Total PBSLB Subnets in the System"
@@ -361,10 +363,6 @@ options:
     persist_cookie_template_count:
         description:
         - "Total configurable Persistent cookie Templates in the System"
-        required: False
-    virtual_server_count:
-        description:
-        - "Total Virtual Servers in the System"
         required: False
     stream_template_count:
         description:
@@ -374,21 +372,49 @@ options:
         description:
         - "Total configurable Connection reuse Templates in the System"
         required: False
-    real_server_count:
-        description:
-        - "Total Real Servers in the System"
-        required: False
     real_port_count:
         description:
         - "Total Real Server Ports in the System"
+        required: False
+    http_template_count:
+        description:
+        - "Total configurable HTTP Templates in the System"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
         required: False
     service_group_count:
         description:
         - "Total Service Groups in the System"
         required: False
-    uuid:
+    virtual_server_count:
         description:
-        - "uuid of the object"
+        - "Total Virtual Servers in the System"
+        required: False
+    fast_udp_template_count:
+        description:
+        - "Total configurable Fast UDP Templates in the System"
+        required: False
+    virtual_port_count:
+        description:
+        - "Total Virtual Server Ports in the System"
+        required: False
+    slb_threshold_res_usage_percent:
+        description:
+        - "Enter the threshold as a percentage (Threshold in percentage(default is 0%))"
+        required: False
+    health_monitor_count:
+        description:
+        - "Total Health Monitors in the System"
+        required: False
+    server_ssl_template_count:
+        description:
+        - "Total configurable Server SSL Templates in the System"
+        required: False
+    real_server_count:
+        description:
+        - "Total Real Servers in the System"
         required: False
 
 
@@ -404,7 +430,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["client_ssl_template_count","conn_reuse_template_count","fast_tcp_template_count","fast_udp_template_count","health_monitor_count","http_template_count","nat_pool_addr_count","oper","pbslb_subnet_count","persist_cookie_template_count","persist_srcip_template_count","proxy_template_count","real_port_count","real_server_count","server_ssl_template_count","service_group_count","stream_template_count","uuid","virtual_port_count","virtual_server_count",]
+AVAILABLE_PROPERTIES = ["cache_template_count","client_ssl_template_count","conn_reuse_template_count","fast_tcp_template_count","fast_udp_template_count","health_monitor_count","http_template_count","nat_pool_addr_count","oper","pbslb_subnet_count","persist_cookie_template_count","persist_srcip_template_count","proxy_template_count","real_port_count","real_server_count","server_ssl_template_count","service_group_count","slb_threshold_res_usage_percent","stream_template_count","uuid","virtual_port_count","virtual_server_count",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -433,26 +459,28 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',service_group_min=dict(type='int',),service_group_default=dict(type='int',),service_group_max=dict(type='int',),gslb_service_port_count_max=dict(type='int',),gslb_service_port_count_min=dict(type='int',),health_monitor_count_default=dict(type='int',),gslb_template_count_min=dict(type='int',),gslb_policy_count_default=dict(type='int',),proxy_template_default=dict(type='int',),client_ssl_template_min=dict(type='int',),client_ssl_template_default=dict(type='int',),fast_tcp_template_min=dict(type='int',),fast_tcp_template_max=dict(type='int',),client_ssl_template_max=dict(type='int',),gslb_site_count_min=dict(type='int',),gslb_service_count_max=dict(type='int',),gslb_template_count_max=dict(type='int',),proxy_template_max=dict(type='int',),pbslb_subnet_count_min=dict(type='int',),gslb_service_count_min=dict(type='int',),real_port_max=dict(type='int',),nat_pool_addr_max=dict(type='int',),gslb_geo_location_count_min=dict(type='int',),real_server_min=dict(type='int',),virtual_server_default=dict(type='int',),gslb_device_count_max=dict(type='int',),fast_udp_template_max=dict(type='int',),fast_udp_template_min=dict(type='int',),gslb_geo_location_count_max=dict(type='int',),gslb_site_count_max=dict(type='int',),gslb_device_count_min=dict(type='int',),gslb_service_ip_count_max=dict(type='int',),fast_tcp_template_default=dict(type='int',),gslb_zone_count_min=dict(type='int',),gslb_service_ip_count_min=dict(type='int',),gslb_service_count_default=dict(type='int',),persist_cookie_template_default=dict(type='int',),fast_udp_template_default=dict(type='int',),real_server_default=dict(type='int',),gslb_zone_count_max=dict(type='int',),gslb_device_count_default=dict(type='int',),conn_reuse_template_min=dict(type='int',),real_port_default=dict(type='int',),gslb_ip_list_count_min=dict(type='int',),http_template_default=dict(type='int',),persist_srcip_template_default=dict(type='int',),gslb_policy_count_max=dict(type='int',),gslb_svcgroup_count_max=dict(type='int',),proxy_template_min=dict(type='int',),gslb_policy_count_min=dict(type='int',),gslb_geo_location_count_default=dict(type='int',),gslb_zone_count_default=dict(type='int',),server_ssl_template_default=dict(type='int',),server_ssl_template_min=dict(type='int',),real_port_min=dict(type='int',),gslb_ip_list_count_max=dict(type='int',),persist_cookie_template_min=dict(type='int',),server_ssl_template_max=dict(type='int',),gslb_site_count_default=dict(type='int',),gslb_ip_list_count_default=dict(type='int',),virtual_server_max=dict(type='int',),real_server_max=dict(type='int',),conn_reuse_template_default=dict(type='int',),persist_cookie_template_max=dict(type='int',),virtual_server_min=dict(type='int',),stream_template_max=dict(type='int',),gslb_template_count_default=dict(type='int',),virtual_port_min=dict(type='int',),nat_pool_addr_min=dict(type='int',),virtual_port_max=dict(type='int',),virtual_port_default=dict(type='int',),pbslb_subnet_count_max=dict(type='int',),gslb_service_port_count_default=dict(type='int',),persist_srcip_template_min=dict(type='int',),stream_template_min=dict(type='int',),nat_pool_addr_default=dict(type='int',),http_template_max=dict(type='int',),stream_template_default=dict(type='int',),gslb_svcgroup_count_default=dict(type='int',),health_monitor_count_min=dict(type='int',),pbslb_subnet_count_default=dict(type='int',),health_monitor_count_max=dict(type='int',),persist_srcip_template_max=dict(type='int',),conn_reuse_template_max=dict(type='int',),http_template_min=dict(type='int',),gslb_svcgroup_count_min=dict(type='int',),gslb_service_ip_count_default=dict(type='int',)),
-        proxy_template_count=dict(type='int',),
+        oper=dict(type='dict',service_group_min=dict(type='int',),service_group_default=dict(type='int',),service_group_max=dict(type='int',),gslb_service_port_count_max=dict(type='int',),slb_threshold_res_usage_default=dict(type='int',),gslb_service_port_count_min=dict(type='int',),health_monitor_count_default=dict(type='int',),gslb_template_count_min=dict(type='int',),gslb_policy_count_default=dict(type='int',),proxy_template_default=dict(type='int',),client_ssl_template_min=dict(type='int',),client_ssl_template_default=dict(type='int',),fast_tcp_template_min=dict(type='int',),fast_tcp_template_max=dict(type='int',),client_ssl_template_max=dict(type='int',),gslb_site_count_min=dict(type='int',),gslb_service_count_max=dict(type='int',),cache_template_max=dict(type='int',),gslb_template_count_max=dict(type='int',),cache_template_min=dict(type='int',),proxy_template_max=dict(type='int',),pbslb_subnet_count_min=dict(type='int',),gslb_service_count_min=dict(type='int',),cache_template_default=dict(type='int',),real_port_max=dict(type='int',),nat_pool_addr_max=dict(type='int',),gslb_geo_location_count_min=dict(type='int',),real_server_min=dict(type='int',),virtual_server_default=dict(type='int',),gslb_device_count_max=dict(type='int',),gslb_template_count_default=dict(type='int',),fast_udp_template_max=dict(type='int',),fast_udp_template_min=dict(type='int',),gslb_geo_location_count_max=dict(type='int',),gslb_site_count_max=dict(type='int',),gslb_service_ip_count_max=dict(type='int',),gslb_device_count_min=dict(type='int',),gslb_zone_count_min=dict(type='int',),gslb_service_ip_count_min=dict(type='int',),gslb_service_count_default=dict(type='int',),persist_cookie_template_default=dict(type='int',),fast_udp_template_default=dict(type='int',),real_server_default=dict(type='int',),gslb_zone_count_max=dict(type='int',),gslb_device_count_default=dict(type='int',),conn_reuse_template_min=dict(type='int',),real_port_default=dict(type='int',),gslb_ip_list_count_min=dict(type='int',),http_template_default=dict(type='int',),persist_srcip_template_default=dict(type='int',),gslb_policy_count_max=dict(type='int',),gslb_svcgroup_count_max=dict(type='int',),proxy_template_min=dict(type='int',),gslb_policy_count_min=dict(type='int',),gslb_geo_location_count_default=dict(type='int',),gslb_zone_count_default=dict(type='int',),server_ssl_template_default=dict(type='int',),server_ssl_template_min=dict(type='int',),slb_threshold_res_usage_min=dict(type='int',),real_port_min=dict(type='int',),gslb_ip_list_count_max=dict(type='int',),persist_cookie_template_min=dict(type='int',),slb_threshold_res_usage_max=dict(type='int',),server_ssl_template_max=dict(type='int',),gslb_site_count_default=dict(type='int',),gslb_ip_list_count_default=dict(type='int',),virtual_server_max=dict(type='int',),real_server_max=dict(type='int',),conn_reuse_template_default=dict(type='int',),persist_cookie_template_max=dict(type='int',),virtual_server_min=dict(type='int',),stream_template_max=dict(type='int',),fast_tcp_template_default=dict(type='int',),virtual_port_min=dict(type='int',),nat_pool_addr_min=dict(type='int',),virtual_port_max=dict(type='int',),virtual_port_default=dict(type='int',),pbslb_subnet_count_max=dict(type='int',),gslb_service_port_count_default=dict(type='int',),persist_srcip_template_min=dict(type='int',),stream_template_min=dict(type='int',),nat_pool_addr_default=dict(type='int',),http_template_max=dict(type='int',),stream_template_default=dict(type='int',),gslb_svcgroup_count_default=dict(type='int',),health_monitor_count_min=dict(type='int',),pbslb_subnet_count_default=dict(type='int',),health_monitor_count_max=dict(type='int',),persist_srcip_template_max=dict(type='int',),conn_reuse_template_max=dict(type='int',),http_template_min=dict(type='int',),gslb_svcgroup_count_min=dict(type='int',),gslb_service_ip_count_default=dict(type='int',)),
         nat_pool_addr_count=dict(type='int',),
         fast_tcp_template_count=dict(type='int',),
-        virtual_port_count=dict(type='int',),
-        health_monitor_count=dict(type='int',),
-        fast_udp_template_count=dict(type='int',),
+        cache_template_count=dict(type='int',),
+        proxy_template_count=dict(type='int',),
         persist_srcip_template_count=dict(type='int',),
         client_ssl_template_count=dict(type='int',),
-        server_ssl_template_count=dict(type='int',),
-        http_template_count=dict(type='int',),
         pbslb_subnet_count=dict(type='int',),
         persist_cookie_template_count=dict(type='int',),
-        virtual_server_count=dict(type='int',),
         stream_template_count=dict(type='int',),
         conn_reuse_template_count=dict(type='int',),
-        real_server_count=dict(type='int',),
         real_port_count=dict(type='int',),
+        http_template_count=dict(type='int',),
+        uuid=dict(type='str',),
         service_group_count=dict(type='int',),
-        uuid=dict(type='str',)
+        virtual_server_count=dict(type='int',),
+        fast_udp_template_count=dict(type='int',),
+        virtual_port_count=dict(type='int',),
+        slb_threshold_res_usage_percent=dict(type='int',),
+        health_monitor_count=dict(type='int',),
+        server_ssl_template_count=dict(type='int',),
+        real_server_count=dict(type='int',)
     ))
    
 

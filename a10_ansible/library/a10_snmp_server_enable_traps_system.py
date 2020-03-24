@@ -92,6 +92,10 @@ options:
         description:
         - "Enable system secondary hard disk trap"
         required: False
+    license_management:
+        description:
+        - "Enable system license management traps"
+        required: False
     start:
         description:
         - "Enable system start trap"
@@ -108,9 +112,9 @@ options:
         description:
         - "Enable system primary hard disk trap"
         required: False
-    license_management:
+    syslog_severity_one:
         description:
-        - "Enable system license management traps"
+        - "Enable system syslog severity one messages trap"
         required: False
     tacacs_server_up_down:
         description:
@@ -142,7 +146,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","control_cpu_high","data_cpu_high","fan","file_sys_read_only","high_disk_use","high_memory_use","high_temp","license_management","low_temp","packet_drop","power","pri_disk","restart","sec_disk","shutdown","smp_resource_event","start","tacacs_server_up_down","uuid",]
+AVAILABLE_PROPERTIES = ["all","control_cpu_high","data_cpu_high","fan","file_sys_read_only","high_disk_use","high_memory_use","high_temp","license_management","low_temp","packet_drop","power","pri_disk","restart","sec_disk","shutdown","smp_resource_event","start","syslog_severity_one","tacacs_server_up_down","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -182,11 +186,12 @@ def get_argspec():
         low_temp=dict(type='bool',),
         high_temp=dict(type='bool',),
         sec_disk=dict(type='bool',),
+        license_management=dict(type='bool',),
         start=dict(type='bool',),
         fan=dict(type='bool',),
         shutdown=dict(type='bool',),
         pri_disk=dict(type='bool',),
-        license_management=dict(type='bool',),
+        syslog_severity_one=dict(type='bool',),
         tacacs_server_up_down=dict(type='bool',),
         smp_resource_event=dict(type='bool',),
         restart=dict(type='bool',),

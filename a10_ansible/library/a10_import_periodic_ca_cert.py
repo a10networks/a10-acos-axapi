@@ -48,13 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    pfx_password:
+    ca_cert:
         description:
-        - "The password for certificate file (pfx type only)"
-        required: False
+        - "SSL CA Cert File(enter bulk when import an archive file)"
+        required: True
     use_mgmt_port:
         description:
         - "Use management port as source port"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
         required: False
     remote_file:
         description:
@@ -63,18 +67,6 @@ options:
     period:
         description:
         - "Specify the period in second"
-        required: False
-    ca_cert:
-        description:
-        - "SSL CA Cert File(enter bulk when import an archive file)"
-        required: True
-    certificate_type:
-        description:
-        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
         required: False
 
 
@@ -90,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ca_cert","certificate_type","period","pfx_password","remote_file","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["ca_cert","period","remote_file","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -119,13 +111,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pfx_password=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        remote_file=dict(type='str',),
-        period=dict(type='int',),
         ca_cert=dict(type='str',required=True,),
-        certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
-        uuid=dict(type='str',)
+        use_mgmt_port=dict(type='bool',),
+        uuid=dict(type='str',),
+        remote_file=dict(type='str',),
+        period=dict(type='int',)
     ))
    
 

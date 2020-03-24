@@ -48,6 +48,26 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            entry:
+                description:
+                - "Field entry"
+            cache_entry:
+                description:
+                - "Field cache_entry"
+            total:
+                description:
+                - "Field total"
+            cache_client:
+                description:
+                - "Field cache_client"
+            client:
+                description:
+                - "Field client"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -142,7 +162,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -171,6 +191,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',entry=dict(type='bool',),cache_entry=dict(type='list',cache_class=dict(type='int',),domain=dict(type='str',),name=dict(type='str',),dnssec=dict(type='int',),cache_type=dict(type='int',),age=dict(type='int',),hits=dict(type='int',),weight=dict(type='int',),q_length=dict(type='int',),ttl=dict(type='int',),r_length=dict(type='int',)),total=dict(type='int',),cache_client=dict(type='list',lockup=dict(type='int',),domain=dict(type='str',),over_rate_limit_times=dict(type='int',),unit_type=dict(type='str',),address=dict(type='str',),lockup_time=dict(type='int',),curr_rate=dict(type='int',)),client=dict(type='bool',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_q','total_r','hit','bad_q','encode_q','multiple_q','oversize_q','bad_r','oversize_r','encode_r','multiple_r','answer_r','ttl_r','ageout','bad_answer','ageout_weight','total_log','total_alloc','total_freed','current_allocate','current_data_allocate'])),
         stats=dict(type='dict',ageout=dict(type='str',),hit=dict(type='str',),ageout_weight=dict(type='str',),bad_answer=dict(type='str',),multiple_r=dict(type='str',),multiple_q=dict(type='str',),current_allocate=dict(type='str',),bad_q=dict(type='str',),total_freed=dict(type='str',),bad_r=dict(type='str',),oversize_r=dict(type='str',),answer_r=dict(type='str',),encode_q=dict(type='str',),total_alloc=dict(type='str',),total_q=dict(type='str',),total_r=dict(type='str',),oversize_q=dict(type='str',),total_log=dict(type='str',),current_data_allocate=dict(type='str',),ttl_r=dict(type='str',),encode_r=dict(type='str',)),
         uuid=dict(type='str',)
@@ -196,6 +217,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -280,6 +306,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -440,6 +475,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

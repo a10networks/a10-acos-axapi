@@ -51,10 +51,6 @@ options:
     partition_name:
         description:
         - Key to identify parent object
-    vrid:
-        description:
-        - "Specify VRRP-A vrid"
-        required: False
     mgmt_floating_ip_address:
         description:
         - "IPv4 Address for Shared VLAN Mgmt IP Address"
@@ -62,6 +58,14 @@ options:
     allowable_ip_range:
         description:
         - "Field allowable_ip_range"
+        required: False
+    vrid:
+        description:
+        - "Specify VRRP-A vrid"
+        required: False
+    allowable_ipv6_range:
+        description:
+        - "Field allowable_ipv6_range"
         required: False
     vlan:
         description:
@@ -85,7 +89,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allowable_ip_range","mgmt_floating_ip_address","uuid","vlan","vrid",]
+AVAILABLE_PROPERTIES = ["allowable_ip_range","allowable_ipv6_range","mgmt_floating_ip_address","uuid","vlan","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -114,9 +118,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vrid=dict(type='int',),
         mgmt_floating_ip_address=dict(type='str',),
         allowable_ip_range=dict(type='list',),
+        vrid=dict(type='int',),
+        allowable_ipv6_range=dict(type='list',),
         vlan=dict(type='int',),
         uuid=dict(type='str',)
     ))

@@ -52,6 +52,14 @@ options:
         description:
         - "External Service Template Name"
         required: True
+    shared_partition_persist_source_ip_template:
+        description:
+        - "Reference a persist source ip template from shared partition"
+        required: False
+    ntype:
+        description:
+        - "'skyfire-icap'= Skyfire ICAP service; 'url-filter'= URL filtering service; "
+        required: False
     source_ip:
         description:
         - "Source IP persistence template (Source IP persistence template name)"
@@ -64,20 +72,21 @@ options:
             request_header_forward:
                 description:
                 - "Request header to be forwarded to external service (Header Name)"
-    bypass_ip_cfg:
+    template_tcp_proxy_shared:
         description:
-        - "Field bypass_ip_cfg"
+        - "TCP Proxy Template name"
         required: False
-        suboptions:
-            bypass_ip:
-                description:
-                - "ip address to bypass external service"
-            mask:
-                description:
-                - "IP prefix mask"
     user_tag:
         description:
         - "Customized tag"
+        required: False
+    shared_partition_tcp_proxy_template:
+        description:
+        - "Reference a TCP Proxy template from shared partition"
+        required: False
+    action:
+        description:
+        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
         required: False
     service_group:
         description:
@@ -93,16 +102,23 @@ options:
         required: False
     tcp_proxy:
         description:
-        - "TCP proxy template (TCP proxy template name)"
+        - "TCP Proxy Template Name"
         required: False
-    action:
+    template_persist_source_ip_shared:
         description:
-        - "'continue'= Continue; 'drop'= Drop; 'reset'= Reset; "
+        - "Source IP Persistence Template Name"
         required: False
-    ntype:
+    bypass_ip_cfg:
         description:
-        - "'skyfire-icap'= Skyfire ICAP service; 'url-filter'= URL filtering service; "
+        - "Field bypass_ip_cfg"
         required: False
+        suboptions:
+            bypass_ip:
+                description:
+                - "ip address to bypass external service"
+            mask:
+                description:
+                - "IP prefix mask"
     uuid:
         description:
         - "uuid of the object"
@@ -121,7 +137,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","bypass_ip_cfg","failure_action","name","request_header_forward_list","service_group","source_ip","tcp_proxy","timeout","ntype","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action","bypass_ip_cfg","failure_action","name","request_header_forward_list","service_group","shared_partition_persist_source_ip_template","shared_partition_tcp_proxy_template","source_ip","tcp_proxy","template_persist_source_ip_shared","template_tcp_proxy_shared","timeout","ntype","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -151,16 +167,20 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         name=dict(type='str',required=True,),
+        shared_partition_persist_source_ip_template=dict(type='bool',),
+        ntype=dict(type='str',choices=['skyfire-icap','url-filter']),
         source_ip=dict(type='str',),
         request_header_forward_list=dict(type='list',request_header_forward=dict(type='str',)),
-        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
+        template_tcp_proxy_shared=dict(type='str',),
         user_tag=dict(type='str',),
+        shared_partition_tcp_proxy_template=dict(type='bool',),
+        action=dict(type='str',choices=['continue','drop','reset']),
         service_group=dict(type='str',),
         failure_action=dict(type='str',choices=['continue','drop','reset']),
         timeout=dict(type='int',),
         tcp_proxy=dict(type='str',),
-        action=dict(type='str',choices=['continue','drop','reset']),
-        ntype=dict(type='str',choices=['skyfire-icap','url-filter']),
+        template_persist_source_ip_shared=dict(type='str',),
+        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

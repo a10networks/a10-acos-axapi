@@ -59,6 +59,9 @@ options:
             name:
                 description:
                 - "Field name"
+            local_db_only:
+                description:
+                - "Field local_db_only"
     uuid:
         description:
         - "uuid of the object"
@@ -106,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',category_list=dict(type='list',category=dict(type='str',)),name=dict(type='str',)),
+        oper=dict(type='dict',category_list=dict(type='list',category=dict(type='str',)),name=dict(type='str',),local_db_only=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

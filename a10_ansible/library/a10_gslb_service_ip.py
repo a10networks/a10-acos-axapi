@@ -185,7 +185,7 @@ options:
         required: False
     ipv6:
         description:
-        - "IPv6 address Mapping"
+        - "IPv6 address Mapping (Applicable only when service-ip has an IPv4 Address)"
         required: False
     ipv6_address:
         description:

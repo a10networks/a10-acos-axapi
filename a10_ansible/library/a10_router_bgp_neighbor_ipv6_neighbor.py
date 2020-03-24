@@ -185,6 +185,10 @@ options:
         description:
         - "Accept as-path with my AS present in it"
         required: False
+    acos_application_only:
+        description:
+        - "Send BGP update to ACOS application"
+        required: False
     pass_value:
         description:
         - "Key String"
@@ -283,6 +287,10 @@ options:
         description:
         - "Bidirectional Forwarding Detection (BFD)"
         required: False
+    tunnel:
+        description:
+        - "Tunnel interface (Tunnel interface number)"
+        required: False
     strict_capability_match:
         description:
         - "Strict capability negotiation match"
@@ -313,7 +321,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["activate","advertisement_interval","allowas_in","allowas_in_count","as_origination_interval","bfd","bfd_encrypted","bfd_value","collide_established","connect","default_originate","description","disallow_infinite_holdtime","distribute_lists","dont_capability_negotiate","dynamic","ebgp_multihop","ebgp_multihop_hop_count","enforce_multihop","ethernet","inbound","key_id","key_type","lif","loopback","maximum_prefix","maximum_prefix_thres","multihop","nbr_remote_as","neighbor_filter_lists","neighbor_ipv6","neighbor_prefix_lists","neighbor_route_map_lists","next_hop_self","override_capability","pass_encrypted","pass_value","passive","peer_group_name","prefix_list_direction","remove_private_as","route_map","route_refresh","send_community_val","shutdown","strict_capability_match","timers_holdtime","timers_keepalive","trunk","unsuppress_map","update_source_ip","update_source_ipv6","uuid","ve","weight",]
+AVAILABLE_PROPERTIES = ["acos_application_only","activate","advertisement_interval","allowas_in","allowas_in_count","as_origination_interval","bfd","bfd_encrypted","bfd_value","collide_established","connect","default_originate","description","disallow_infinite_holdtime","distribute_lists","dont_capability_negotiate","dynamic","ebgp_multihop","ebgp_multihop_hop_count","enforce_multihop","ethernet","inbound","key_id","key_type","lif","loopback","maximum_prefix","maximum_prefix_thres","multihop","nbr_remote_as","neighbor_filter_lists","neighbor_ipv6","neighbor_prefix_lists","neighbor_route_map_lists","next_hop_self","override_capability","pass_encrypted","pass_value","passive","peer_group_name","prefix_list_direction","remove_private_as","route_map","route_refresh","send_community_val","shutdown","strict_capability_match","timers_holdtime","timers_keepalive","trunk","tunnel","unsuppress_map","update_source_ip","update_source_ipv6","uuid","ve","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -372,6 +380,7 @@ def get_argspec():
         passive=dict(type='bool',),
         ebgp_multihop_hop_count=dict(type='int',),
         allowas_in=dict(type='bool',),
+        acos_application_only=dict(type='bool',),
         pass_value=dict(type='str',),
         key_id=dict(type='int',),
         timers_holdtime=dict(type='int',),
@@ -393,6 +402,7 @@ def get_argspec():
         as_origination_interval=dict(type='int',),
         override_capability=dict(type='bool',),
         bfd=dict(type='bool',),
+        tunnel=dict(type='str',),
         strict_capability_match=dict(type='bool',),
         ebgp_multihop=dict(type='bool',),
         ethernet=dict(type='str',),

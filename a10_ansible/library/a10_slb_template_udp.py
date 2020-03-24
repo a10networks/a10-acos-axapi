@@ -62,7 +62,7 @@ options:
         required: True
     age:
         description:
-        - "short age"
+        - "short age (in sec), default is 31"
         required: False
     stateless_conn_timeout:
         description:

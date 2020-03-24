@@ -48,7 +48,27 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    
+    qosmos:
+        description:
+        - "only remove QOSMOS license"
+        required: False
+    webroot_ti:
+        description:
+        - "only remove Webroot Threat Intel license"
+        required: False
+    cylance:
+        description:
+        - "only remove Cylance license"
+        required: False
+    ipsec_vpn:
+        description:
+        - "only remove IPSEC VPN license"
+        required: False
+    threatstop:
+        description:
+        - "only remove ThreatSTOP license"
+        required: False
+
 
 """
 
@@ -62,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = []
+AVAILABLE_PROPERTIES = ["cylance","ipsec_vpn","qosmos","threatstop","webroot_ti",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -91,7 +111,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
+        qosmos=dict(type='bool',),
+        webroot_ti=dict(type='bool',),
+        cylance=dict(type='bool',),
+        ipsec_vpn=dict(type='bool',),
+        threatstop=dict(type='bool',)
     ))
    
 

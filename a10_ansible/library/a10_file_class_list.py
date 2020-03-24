@@ -74,7 +74,7 @@ options:
         required: False
     action:
         description:
-        - "'ceate'= ceate; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     file_handle:
         description:
@@ -132,7 +132,7 @@ def get_argspec():
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         file=dict(type='str',),
-        action=dict(type='str',choices=['ceate','import','export','copy','rename','check','replace','delete']),
+        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         file_handle=dict(type='str',),
         size=dict(type='int',)
     ))

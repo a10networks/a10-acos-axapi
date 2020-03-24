@@ -53,21 +53,54 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            all_paritions:
+            top_by_tcp_usage:
                 description:
-                - "Field all_paritions"
-            display_debug:
-                description:
-                - "Field display_debug"
+                - "Field top_by_tcp_usage"
             prefix_filter:
                 description:
                 - "Field prefix_filter"
-            partition:
+            pool_shared:
                 description:
-                - "Field partition"
+                - "Field pool_shared"
+            all_partitions:
+                description:
+                - "Field all_partitions"
+            top_by_icmp_usage:
+                description:
+                - "Field top_by_icmp_usage"
+            top_by_udp_usage:
+                description:
+                - "Field top_by_udp_usage"
+            session_count:
+                description:
+                - "Field session_count"
+            top_count:
+                description:
+                - "Field top_count"
+            shared_partition:
+                description:
+                - "Field shared_partition"
+            nat_addr:
+                description:
+                - "Field nat_addr"
+            partition_name:
+                description:
+                - "Field partition_name"
+            top_by_all_usage:
+                description:
+                - "Field top_by_all_usage"
             session_list:
                 description:
                 - "Field session_list"
+            inside_addr_v6:
+                description:
+                - "Field inside_addr_v6"
+            display_debug:
+                description:
+                - "Field display_debug"
+            nat_pool_name:
+                description:
+                - "Field nat_pool_name"
     uuid:
         description:
         - "uuid of the object"
@@ -115,7 +148,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',all_paritions=dict(type='str',choices=['true']),display_debug=dict(type='str',choices=['true']),prefix_filter=dict(type='str',),partition=dict(type='str',),session_list=dict(type='list',lid_number=dict(type='int',),tcp_quota=dict(type='int',),nat_address=dict(type='str',),icmp_quota=dict(type='int',),nat_pool_name=dict(type='str',),session_count=dict(type='int',),inside_address=dict(type='str',),udp_quota=dict(type='int',))),
+        oper=dict(type='dict',top_by_tcp_usage=dict(type='bool',),prefix_filter=dict(type='str',),pool_shared=dict(type='bool',),all_partitions=dict(type='bool',),top_by_icmp_usage=dict(type='bool',),top_by_udp_usage=dict(type='bool',),session_count=dict(type='int',),top_count=dict(type='int',),shared_partition=dict(type='bool',),nat_addr=dict(type='str',),partition_name=dict(type='str',),top_by_all_usage=dict(type='bool',),session_list=dict(type='list',lid_number=dict(type='int',),tcp_quota=dict(type='int',),prefix_len=dict(type='int',),nat_address=dict(type='str',),icmp_quota=dict(type='int',),flags=dict(type='str',),nat_pool_name=dict(type='str',),session_count=dict(type='int',),inside_address=dict(type='str',),udp_quota=dict(type='int',)),inside_addr_v6=dict(type='str',),display_debug=dict(type='str',choices=['true']),nat_pool_name=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

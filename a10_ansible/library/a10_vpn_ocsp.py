@@ -53,6 +53,9 @@ options:
         - "Field oper"
         required: False
         suboptions:
+            total_ocsps:
+                description:
+                - "Field total_ocsps"
             ocsp_list:
                 description:
                 - "Field ocsp_list"
@@ -103,7 +106,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',))),
+        oper=dict(type='dict',total_ocsps=dict(type='int',),ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    

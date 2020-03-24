@@ -60,6 +60,10 @@ options:
         description:
         - "Virtual server template name"
         required: True
+    icmp_lockup_period:
+        description:
+        - "Lockup period (second)"
+        required: False
     conn_limit_reset:
         description:
         - "Send client reset when connection over limit"
@@ -88,9 +92,13 @@ options:
         description:
         - "Send client reset when connection rate over limit"
         required: False
-    icmp_lockup_period:
+    tcp_stack_tfo_backoff_time:
         description:
-        - "Lockup period (second)"
+        - "The time tcp stack will wait before allowing new fast-open requests after security condition, default 600 seconds (number)"
+        required: False
+    tcp_stack_tfo_cookie_time_limit:
+        description:
+        - "The time limit (in seconds) that a layer 7 tcp fast-open cookie is valid, default is 60 seconds (number)"
         required: False
     conn_limit_no_logging:
         description:
@@ -104,13 +112,17 @@ options:
         description:
         - "Connection rate limit"
         required: False
-    icmp_rate_limit:
+    tcp_stack_tfo_active_conn_limit:
         description:
-        - "ICMP rate limit (Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit)"
+        - "The allowed active layer 7 tcp fast-open connection limit, default is zero (number)"
         required: False
     icmp_lockup:
         description:
         - "Enter lockup state when ICMP rate exceeds lockup rate limit (Maximum rate limit. If exceeds this limit, drop all ICMP packet for a time period)"
+        required: False
+    icmp_rate_limit:
+        description:
+        - "ICMP rate limit (Normal rate limit. If exceeds this limit, drop the ICMP packet that goes over the limit)"
         required: False
     uuid:
         description:
@@ -130,7 +142,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["conn_limit","conn_limit_no_logging","conn_limit_reset","conn_rate_limit","conn_rate_limit_no_logging","conn_rate_limit_reset","icmp_lockup","icmp_lockup_period","icmp_rate_limit","icmpv6_lockup","icmpv6_lockup_period","icmpv6_rate_limit","name","rate_interval","subnet_gratuitous_arp","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["conn_limit","conn_limit_no_logging","conn_limit_reset","conn_rate_limit","conn_rate_limit_no_logging","conn_rate_limit_reset","icmp_lockup","icmp_lockup_period","icmp_rate_limit","icmpv6_lockup","icmpv6_lockup_period","icmpv6_rate_limit","name","rate_interval","subnet_gratuitous_arp","tcp_stack_tfo_active_conn_limit","tcp_stack_tfo_backoff_time","tcp_stack_tfo_cookie_time_limit","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -162,6 +174,7 @@ def get_argspec():
         conn_limit=dict(type='int',),
         conn_rate_limit_no_logging=dict(type='bool',),
         name=dict(type='str',required=True,),
+        icmp_lockup_period=dict(type='int',),
         conn_limit_reset=dict(type='bool',),
         rate_interval=dict(type='str',choices=['100ms','second']),
         user_tag=dict(type='str',),
@@ -169,12 +182,14 @@ def get_argspec():
         subnet_gratuitous_arp=dict(type='bool',),
         icmpv6_lockup=dict(type='int',),
         conn_rate_limit_reset=dict(type='bool',),
-        icmp_lockup_period=dict(type='int',),
+        tcp_stack_tfo_backoff_time=dict(type='int',),
+        tcp_stack_tfo_cookie_time_limit=dict(type='int',),
         conn_limit_no_logging=dict(type='bool',),
         icmpv6_lockup_period=dict(type='int',),
         conn_rate_limit=dict(type='int',),
-        icmp_rate_limit=dict(type='int',),
+        tcp_stack_tfo_active_conn_limit=dict(type='int',),
         icmp_lockup=dict(type='int',),
+        icmp_rate_limit=dict(type='int',),
         uuid=dict(type='str',)
     ))
    

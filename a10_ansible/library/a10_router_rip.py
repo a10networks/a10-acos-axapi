@@ -95,18 +95,21 @@ options:
         - "Field passive_interface_list"
         required: False
         suboptions:
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
             trunk:
                 description:
                 - "Trunk interface (Trunk interface number)"
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
     redistribute:
         description:
         - "Field redistribute"
@@ -134,18 +137,21 @@ options:
         - "Field network_interface_list_cfg"
         required: False
         suboptions:
+            tunnel:
+                description:
+                - "Tunnel interface (Tunnel interface number)"
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
-            loopback:
-                description:
-                - "Loopback interface (Port number)"
-            ve:
-                description:
-                - "Virtual ethernet interface (Virtual ethernet interface number)"
             trunk:
                 description:
                 - "Trunk interface (Trunk interface number)"
+            ve:
+                description:
+                - "Virtual ethernet interface (Virtual ethernet interface number)"
+            loopback:
+                description:
+                - "Loopback interface (Port number)"
     recv_buffer_size:
         description:
         - "Set the RIP UDP receive buffer size (the RIP UDP receive buffer size value)"
@@ -250,16 +256,16 @@ def get_argspec():
         cisco_metric_behavior=dict(type='str',choices=['enable','disable']),
         uuid=dict(type='str',),
         rip_maximum_prefix_cfg=dict(type='dict',maximum_prefix=dict(type='int',),maximum_prefix_thres=dict(type='int',)),
-        offset_list=dict(type='dict',acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),metric=dict(type='int',),trunk=dict(type='str',),acl=dict(type='str',),offset_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',)),uuid=dict(type='str',)),
-        passive_interface_list=dict(type='list',ethernet=dict(type='str',),loopback=dict(type='str',),ve=dict(type='str',),trunk=dict(type='str',)),
+        offset_list=dict(type='dict',acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),metric=dict(type='int',),offset_list_direction=dict(type='str',choices=['in','out']),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),uuid=dict(type='str',)),
+        passive_interface_list=dict(type='list',tunnel=dict(type='str',),ethernet=dict(type='str',),trunk=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',)),
         redistribute=dict(type='dict',vip_list=dict(type='list',vip_metric=dict(type='int',),vip_route_map=dict(type='str',),vip_type=dict(type='str',choices=['only-flagged','only-not-flagged'])),redist_list=dict(type='list',metric=dict(type='int',),route_map=dict(type='str',),ntype=dict(type='str',choices=['bgp','connected','floating-ip','ip-nat-list','ip-nat','isis','lw4o6','nat-map','ospf','static'])),uuid=dict(type='str',)),
         neighbor=dict(type='list',value=dict(type='str',)),
-        network_interface_list_cfg=dict(type='list',ethernet=dict(type='str',),loopback=dict(type='str',),ve=dict(type='str',),trunk=dict(type='str',)),
+        network_interface_list_cfg=dict(type='list',tunnel=dict(type='str',),ethernet=dict(type='str',),trunk=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',)),
         recv_buffer_size=dict(type='int',),
         timers=dict(type='dict',timers_cfg=dict(type='dict',val_3=dict(type='int',),val_2=dict(type='int',),basic=dict(type='int',))),
         version=dict(type='int',),
         default_information=dict(type='str',choices=['originate']),
-        distribute_list=dict(type='dict',acl_cfg=dict(type='list',acl_direction=dict(type='str',choices=['in','out']),ve=dict(type='str',),loopback=dict(type='str',),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),prefix=dict(type='dict',uuid=dict(type='str',),prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))),uuid=dict(type='str',)),
+        distribute_list=dict(type='dict',acl_cfg=dict(type='list',acl_direction=dict(type='str',choices=['in','out']),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),prefix=dict(type='dict',uuid=dict(type='str',),prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))),uuid=dict(type='str',)),
         distance_list_cfg=dict(type='list',distance=dict(type='int',),distance_ipv4_mask=dict(type='str',),distance_acl=dict(type='str',)),
         network_addresses=dict(type='list',network_ipv4_mask=dict(type='str',))
     ))

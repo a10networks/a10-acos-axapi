@@ -54,7 +54,7 @@ options:
         required: False
     ipv4_addr:
         description:
-        - "help IPV4 address of SNMP trap host"
+        - "IPV4 address of SNMP trap host"
         required: True
     udp_port:
         description:

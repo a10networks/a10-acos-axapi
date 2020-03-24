@@ -48,10 +48,14 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    uuid:
+    timers:
         description:
-        - "uuid of the object"
+        - "Field timers"
         required: False
+        suboptions:
+            spf:
+                description:
+                - "Field spf"
     redistribute:
         description:
         - "Field redistribute"
@@ -77,7 +81,7 @@ options:
                 - "IP-NAT"
             metric_ip_nat:
                 description:
-                - "OSPF default metric (OSPF metric)"
+                - "OSPFV3 default metric (OSPFV3 metric)"
             route_map_ip_nat:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
@@ -86,7 +90,7 @@ options:
                 - "Field vip_floating_list"
             metric_type_ip_nat:
                 description:
-                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
+                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2 metrics; "
     abr_type_option:
         description:
         - "'cisco'= Alternative ABR, Cisco implementation (RFC3509); 'ibm'= Alternative ABR, IBM implementation (RFC3509); 'standard'= Standard behavior (RFC2328); "
@@ -115,7 +119,7 @@ options:
                 - "OSPF area ID as a decimal value"
             ntype:
                 description:
-                - "'lw4o6'= LW4O6 Prefix; 'nat64'= NAT64 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
+                - "'lw4o6'= LW4O6 Prefix; 'nat64'= NAT64 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
     default_metric:
         description:
         - "Set metric of redistributed routes (Default metric)"
@@ -141,6 +145,9 @@ options:
         - "Field passive_interface"
         required: False
         suboptions:
+            tunnel_cfg:
+                description:
+                - "Field tunnel_cfg"
             ve_cfg:
                 description:
                 - "Field ve_cfg"
@@ -153,14 +160,29 @@ options:
             eth_cfg:
                 description:
                 - "Field eth_cfg"
-    timers:
+    default_information:
         description:
-        - "Field timers"
+        - "Field default_information"
         required: False
         suboptions:
-            spf:
+            originate:
                 description:
-                - "Field spf"
+                - "Distribute a default route"
+            uuid:
+                description:
+                - "uuid of the object"
+            always:
+                description:
+                - "Always advertise default route"
+            metric:
+                description:
+                - "OSPF default metric (OSPF metric)"
+            route_map:
+                description:
+                - "Route map reference (Pointer to route-map entries)"
+            metric_type:
+                description:
+                - "OSPF metric type for default routes"
     ha_standby_extra_cost:
         description:
         - "Field ha_standby_extra_cost"
@@ -172,6 +194,10 @@ options:
             extra_cost:
                 description:
                 - "The extra cost value"
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
     bfd_all_interfaces:
         description:
         - "Enable BFD on all interfaces"
@@ -219,7 +245,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["abr_type_option","area_list","auto_cost_reference_bandwidth","bfd_all_interfaces","default_metric","distribute_internal_list","ha_standby_extra_cost","log_adjacency_changes","max_concurrent_dd","passive_interface","process_id","redistribute","router_id","timers","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["abr_type_option","area_list","auto_cost_reference_bandwidth","bfd_all_interfaces","default_information","default_metric","distribute_internal_list","ha_standby_extra_cost","log_adjacency_changes","max_concurrent_dd","passive_interface","process_id","redistribute","router_id","timers","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -248,7 +274,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
+        timers=dict(type='dict',spf=dict(type='dict',exp=dict(type='dict',max_delay=dict(type='int',),min_delay=dict(type='int',)))),
         redistribute=dict(type='dict',redist_list=dict(type='list',metric=dict(type='int',),route_map=dict(type='str',),ntype=dict(type='str',choices=['bgp','connected','floating-ip','ip-nat-list','nat-map','nat64','lw4o6','isis','rip','static']),metric_type=dict(type='str',choices=['1','2'])),ospf_list=dict(type='list',route_map_ospf=dict(type='str',),metric_ospf=dict(type='int',),metric_type_ospf=dict(type='str',choices=['1','2']),ospf=dict(type='bool',),process_id=dict(type='str',)),uuid=dict(type='str',),ip_nat_floating_list=dict(type='list',ip_nat_floating_IP_forward=dict(type='str',),ip_nat_prefix=dict(type='str',)),vip_list=dict(type='list',metric_vip=dict(type='int',),metric_type_vip=dict(type='str',choices=['1','2']),type_vip=dict(type='str',choices=['only-flagged','only-not-flagged']),route_map_vip=dict(type='str',)),ip_nat=dict(type='bool',),metric_ip_nat=dict(type='int',),route_map_ip_nat=dict(type='str',),vip_floating_list=dict(type='list',vip_address=dict(type='str',),vip_floating_IP_forward=dict(type='str',)),metric_type_ip_nat=dict(type='str',choices=['1','2'])),
         abr_type_option=dict(type='str',choices=['cisco','ibm','standard']),
         auto_cost_reference_bandwidth=dict(type='int',),
@@ -259,9 +285,10 @@ def get_argspec():
         max_concurrent_dd=dict(type='int',),
         process_id=dict(type='str',required=True,),
         log_adjacency_changes=dict(type='str',choices=['detail','disable']),
-        passive_interface=dict(type='dict',ve_cfg=dict(type='list',ve=dict(type='str',)),loopback_cfg=dict(type='list',loopback=dict(type='str',)),trunk_cfg=dict(type='list',trunk=dict(type='str',)),eth_cfg=dict(type='list',ethernet=dict(type='str',))),
-        timers=dict(type='dict',spf=dict(type='dict',exp=dict(type='dict',max_delay=dict(type='int',),min_delay=dict(type='int',)))),
+        passive_interface=dict(type='dict',tunnel_cfg=dict(type='list',tunnel=dict(type='str',)),ve_cfg=dict(type='list',ve=dict(type='str',)),loopback_cfg=dict(type='list',loopback=dict(type='str',)),trunk_cfg=dict(type='list',trunk=dict(type='str',)),eth_cfg=dict(type='list',ethernet=dict(type='str',))),
+        default_information=dict(type='dict',originate=dict(type='bool',),uuid=dict(type='str',),always=dict(type='bool',),metric=dict(type='int',),route_map=dict(type='str',),metric_type=dict(type='int',)),
         ha_standby_extra_cost=dict(type='list',group=dict(type='int',),extra_cost=dict(type='int',)),
+        uuid=dict(type='str',),
         bfd_all_interfaces=dict(type='bool',),
         area_list=dict(type='list',uuid=dict(type='str',),area_ipv4=dict(type='str',required=True,),virtual_link_list=dict(type='list',dead_interval=dict(type='int',),hello_interval=dict(type='int',),bfd=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',),retransmit_interval=dict(type='int',),instance_id=dict(type='int',)),stub=dict(type='bool',),area_num=dict(type='int',required=True,),range_list=dict(type='list',option=dict(type='str',choices=['advertise','not-advertise']),value=dict(type='str',)),default_cost=dict(type='int',),no_summary=dict(type='bool',))
     ))

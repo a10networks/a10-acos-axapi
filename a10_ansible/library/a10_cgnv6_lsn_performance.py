@@ -48,6 +48,20 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            user_quotas:
+                description:
+                - "Field user_quotas"
+            data_sessions:
+                description:
+                - "Field data_sessions"
+            full_cone_sessions:
+                description:
+                - "Field full_cone_sessions"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -106,7 +120,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,6 +149,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',user_quotas=dict(type='int',),data_sessions=dict(type='int',),full_cone_sessions=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','data-sessions-current-epoch','fullcone-created-current-epoch','user-quote-created-current-epoch','data-sessions-previous-epoch-first','fullcone-created-previous-epoch-first','user-quote-created-previous-epoch-first','data-sessions-previous-epoch-last','fullcone-created-previous-epoch-last','user-quote-created-previous-epoch-last'])),
         stats=dict(type='dict',fullcone_created_previous_epoch_first=dict(type='str',),fullcone_created_previous_epoch_last=dict(type='str',),data_sessions_previous_epoch_first=dict(type='str',),user_quote_created_current_epoch=dict(type='str',),user_quote_created_previous_epoch_first=dict(type='str',),data_sessions_previous_epoch_last=dict(type='str',),fullcone_created_current_epoch=dict(type='str',),user_quote_created_previous_epoch_last=dict(type='str',),data_sessions_current_epoch=dict(type='str',)),
         uuid=dict(type='str',)
@@ -160,6 +175,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -244,6 +264,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -404,6 +433,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

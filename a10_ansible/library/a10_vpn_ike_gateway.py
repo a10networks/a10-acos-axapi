@@ -65,6 +65,9 @@ options:
             name:
                 description:
                 - "IKE-gateway name"
+            NAT_Traversal:
+                description:
+                - "Field NAT_Traversal"
             Local_IP:
                 description:
                 - "Field Local_IP"
@@ -433,7 +436,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',Status=dict(type='str',),Remote_IP=dict(type='str',),Hash=dict(type='str',),name=dict(type='str',required=True,),Local_IP=dict(type='str',),Responder_SPI=dict(type='str',),Encryption=dict(type='str',),Lifetime=dict(type='int',),Initiator_SPI=dict(type='str',)),
+        oper=dict(type='dict',Status=dict(type='str',),Remote_IP=dict(type='str',),Hash=dict(type='str',),name=dict(type='str',required=True,),NAT_Traversal=dict(type='int',),Local_IP=dict(type='str',),Responder_SPI=dict(type='str',),Encryption=dict(type='str',),Lifetime=dict(type='int',),Initiator_SPI=dict(type='str',)),
         ike_version=dict(type='str',choices=['v1','v2']),
         key_passphrase_encrypted=dict(type='str',),
         local_cert=dict(type='dict',local_cert_name=dict(type='str',)),

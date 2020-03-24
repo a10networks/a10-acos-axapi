@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_sport_rate_limit
 description:
-    - Show source port rate-limit statistics
+    - Configure source port rate-limit
 short_description: Configures A10 slb.sport-rate-limit
 author: A10 Networks 2018 
 version_added: 2.4

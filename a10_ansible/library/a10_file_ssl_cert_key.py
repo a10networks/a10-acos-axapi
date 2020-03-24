@@ -48,17 +48,21 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
-        required: False
     dst_file:
         description:
         - "destination file name for copy and rename action"
         required: False
+    secured:
+        description:
+        - "Mark keys as non-exportable"
+        required: False
     file:
         description:
         - "ssl certificate local file name"
+        required: False
+    action:
+        description:
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     file_handle:
         description:
@@ -82,7 +86,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","size",]
+AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","secured","size",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -111,9 +115,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         dst_file=dict(type='str',),
+        secured=dict(type='bool',),
         file=dict(type='str',),
+        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         file_handle=dict(type='str',),
         size=dict(type='int',)
     ))

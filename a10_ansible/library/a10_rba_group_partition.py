@@ -78,7 +78,7 @@ options:
         suboptions:
             operation:
                 description:
-                - "'no-access'= no-access; 'read'= read; 'write'= write; "
+                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write; "
             object:
                 description:
                 - "Lineage of object class for permitted operation"
@@ -129,7 +129,7 @@ def get_argspec():
         role_list=dict(type='list',role=dict(type='str',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
-        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))
+        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',))
     ))
    
     # Parent keys

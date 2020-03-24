@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_persist
 description:
-    - Show persist statistics
+    - Configure persist
 short_description: Configures A10 slb.persist
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,6 +48,17 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    oper:
+        description:
+        - "Field oper"
+        required: False
+        suboptions:
+            persist_cpu_list:
+                description:
+                - "Field persist_cpu_list"
+            cpu_count:
+                description:
+                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -238,7 +249,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -267,6 +278,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        oper=dict(type='dict',persist_cpu_list=dict(type='list',ssl_sid_session_ok=dict(type='int',),sssl_sid_not_match=dict(type='int',),src_ip_enforce=dict(type='int',),cookie_persist_fail=dict(type='int',),url_hash_sec=dict(type='int',),header_hash_pri=dict(type='int',),header_hash_enqueue=dict(type='int',),src_ip_hash_pri=dict(type='int',),url_hash_pri=dict(type='int',),src_ip_new_sess_sel_fail=dict(type='int',),sssl_sid_match=dict(type='int',),dst_ip_hash_sec=dict(type='int',),src_ip_hash_sec=dict(type='int',),cookie_not_found=dict(type='int',),src_ip_enqueue=dict(type='int',),dst_ip_new_sess_cache=dict(type='int',),cssl_sid_match=dict(type='int',),hash_tbl_create_fail=dict(type='int',),cookie_invalid=dict(type='int',),ssl_sid_persist_fail=dict(type='int',),cssl_sid_not_found=dict(type='int',),cssl_sid_not_match=dict(type='int',),ssl_sid_session_fail=dict(type='int',),url_hash_enqueue=dict(type='int',),hash_tbl_create_ok=dict(type='int',),cookie_pass_thru=dict(type='int',),sssl_sid_reset=dict(type='int',),src_ip_new_sess_cache_fail=dict(type='int',),dst_ip_new_sess_sel_fail=dict(type='int',),src_ip_new_sess_cache=dict(type='int',),url_hash_fail=dict(type='int',),dst_ip_hash_fail=dict(type='int',),dst_ip_hash_pri=dict(type='int',),hash_tbl_rst_updown=dict(type='int',),hash_tbl_trylock_fail=dict(type='int',),dst_ip_hash_enqueue=dict(type='int',),header_hash_sec=dict(type='int',),sssl_sid_not_found=dict(type='int',),src_ip_new_sess_sel=dict(type='int',),header_hash_fail=dict(type='int',),dst_ip=dict(type='int',),src_ip_hash_enqueue=dict(type='int',),hash_tbl_free=dict(type='int',),hash_tbl_rst_adddel=dict(type='int',),src_ip_hash_fail=dict(type='int',),cookie_persist_ok=dict(type='int',),dst_ip_enqueue=dict(type='int',),dst_ip_new_sess_sel=dict(type='int',),dst_ip_fail=dict(type='int',),src_ip_fail=dict(type='int',),src_ip=dict(type='int',),ssl_sid_persist_ok=dict(type='int',),dst_ip_new_sess_cache_fail=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hash_tbl_trylock_fail','hash_tbl_create_ok','hash_tbl_create_fail','hash_tbl_free','hash_tbl_rst_updown','hash_tbl_rst_adddel','url_hash_pri','url_hash_enqueue','url_hash_sec','url_hash_fail','header_hash_pri','header_hash_enqueue','header_hash_sec','header_hash_fail','src_ip','src_ip_enqueue','src_ip_fail','src_ip_new_sess_cache','src_ip_new_sess_cache_fail','src_ip_new_sess_sel','src_ip_new_sess_sel_fail','src_ip_hash_pri','src_ip_hash_enqueue','src_ip_hash_sec','src_ip_hash_fail','src_ip_enforce','dst_ip','dst_ip_enqueue','dst_ip_fail','dst_ip_new_sess_cache','dst_ip_new_sess_cache_fail','dst_ip_new_sess_sel','dst_ip_new_sess_sel_fail','dst_ip_hash_pri','dst_ip_hash_enqueue','dst_ip_hash_sec','dst_ip_hash_fail','cssl_sid_not_found','cssl_sid_match','cssl_sid_not_match','sssl_sid_not_found','sssl_sid_reset','sssl_sid_match','sssl_sid_not_match','ssl_sid_persist_ok','ssl_sid_persist_fail','ssl_sid_session_ok','ssl_sid_session_fail','cookie_persist_ok','cookie_persist_fail','cookie_not_found','cookie_pass_thru','cookie_invalid'])),
         stats=dict(type='dict',ssl_sid_session_ok=dict(type='str',),sssl_sid_not_match=dict(type='str',),src_ip_enforce=dict(type='str',),cookie_persist_fail=dict(type='str',),url_hash_sec=dict(type='str',),header_hash_pri=dict(type='str',),header_hash_enqueue=dict(type='str',),src_ip_hash_pri=dict(type='str',),url_hash_pri=dict(type='str',),src_ip_new_sess_sel_fail=dict(type='str',),sssl_sid_match=dict(type='str',),dst_ip_hash_sec=dict(type='str',),src_ip_hash_sec=dict(type='str',),cookie_not_found=dict(type='str',),src_ip_enqueue=dict(type='str',),dst_ip_new_sess_cache=dict(type='str',),cssl_sid_match=dict(type='str',),hash_tbl_create_fail=dict(type='str',),cookie_invalid=dict(type='str',),ssl_sid_persist_fail=dict(type='str',),cssl_sid_not_found=dict(type='str',),cssl_sid_not_match=dict(type='str',),ssl_sid_session_fail=dict(type='str',),url_hash_enqueue=dict(type='str',),hash_tbl_create_ok=dict(type='str',),cookie_pass_thru=dict(type='str',),sssl_sid_reset=dict(type='str',),src_ip_new_sess_cache_fail=dict(type='str',),dst_ip_new_sess_sel_fail=dict(type='str',),src_ip_new_sess_cache=dict(type='str',),url_hash_fail=dict(type='str',),dst_ip_hash_fail=dict(type='str',),dst_ip_hash_pri=dict(type='str',),hash_tbl_rst_updown=dict(type='str',),hash_tbl_trylock_fail=dict(type='str',),dst_ip_hash_enqueue=dict(type='str',),header_hash_sec=dict(type='str',),sssl_sid_not_found=dict(type='str',),src_ip_new_sess_sel=dict(type='str',),header_hash_fail=dict(type='str',),dst_ip=dict(type='str',),src_ip_hash_enqueue=dict(type='str',),hash_tbl_free=dict(type='str',),hash_tbl_rst_adddel=dict(type='str',),src_ip_hash_fail=dict(type='str',),cookie_persist_ok=dict(type='str',),dst_ip_enqueue=dict(type='str',),dst_ip_new_sess_sel=dict(type='str',),dst_ip_fail=dict(type='str',),src_ip_fail=dict(type='str',),src_ip=dict(type='str',),ssl_sid_persist_ok=dict(type='str',),dst_ip_new_sess_cache_fail=dict(type='str',)),
         uuid=dict(type='str',)
@@ -292,6 +304,11 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
+
+def oper_url(module):
+    """Return the URL for operational data of an existing resource"""
+    partial_url = existing_url(module)
+    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -376,6 +393,15 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
+
+def get_oper(module):
+    if module.params.get("oper"):
+        query_params = {}
+        for k,v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v 
+        return module.client.get(oper_url(module),
+                                 params=query_params)
+    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -536,6 +562,8 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+        elif module.params.get("get_type") == "oper":
+            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

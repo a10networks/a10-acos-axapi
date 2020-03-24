@@ -62,7 +62,7 @@ options:
         required: True
     port:
         description:
-        - "Ethernet Port on which the Address is applicable (Port Value (Defualt VLAN is 1))"
+        - "Ethernet Port on which the Address is applicable (Port Value)"
         required: False
     uuid:
         description:

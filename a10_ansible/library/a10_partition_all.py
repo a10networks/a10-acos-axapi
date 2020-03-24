@@ -56,6 +56,12 @@ options:
             partition_list:
                 description:
                 - "Field partition_list"
+            manageable:
+                description:
+                - "Field manageable"
+            active_partition_count:
+                description:
+                - "Field active_partition_count"
     uuid:
         description:
         - "uuid of the object"
@@ -103,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',partition_list=dict(type='list',status=dict(type='str',),partition_id=dict(type='int',),partition_name=dict(type='str',),admin_Count=dict(type='int',),app_Type=dict(type='str',))),
+        oper=dict(type='dict',partition_list=dict(type='list',status=dict(type='str',),partition_name=dict(type='str',),parent_l3v=dict(type='str',),partition_type=dict(type='str',),app_Type=dict(type='str',),partition_id=dict(type='int',),admin_Count=dict(type='int',)),manageable=dict(type='bool',),active_partition_count=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

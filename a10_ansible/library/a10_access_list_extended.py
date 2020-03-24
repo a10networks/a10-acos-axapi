@@ -148,7 +148,7 @@ options:
                 - "Match only packets with a greater port number"
             dst_object_group:
                 description:
-                - "Destination network object group name (Source network object group name)"
+                - "Destination network object group name"
             any_type:
                 description:
                 - "Any ICMP type"

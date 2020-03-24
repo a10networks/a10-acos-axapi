@@ -55,24 +55,48 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'cert_create'= Certificates created; 'cert_expr'= Certificates expired; 'cert_hit'= Certificate cache hits; 'cert_miss'= Certificate cache miss; 'conn_bypass'= Connections bypassed; 'conn_inspect'= Connections inspected; 'aflex_bypass'= Bypass triggered by aFleX; 'cert_in_cache'= Certificates in cache; 'tot_conn_in_buff'= Total buffered async connections; 'curr_conn_in_buff'= Current buffered async connections; "
+                - "'all'= all; 'cert_create'= Certificates created; 'cert_expr'= Certificates expired; 'cert_hit'= Certificate cache hits; 'cert_miss'= Certificate cache miss; 'conn_bypass'= Connections bypassed; 'conn_inspect'= Connections inspected; 'bypass-failsafe-ssl-sessions'= Bypass Failsafe SSL sessions; 'bypass-sni-sessions'= Bypass SNI sessions; 'bypass-client-auth-sessions'= Bypass Client Auth sessions; 'failed-in-ssl-handshakes'= Failed in SSL handshakes; 'failed-in-crypto-operations'= Failed in crypto operations; 'failed-in-tcp'= Failed in TCP; 'failed-in-certificate-verification'= Failed in Certificate verification; 'failed-in-certificate-signing'= Failed in Certificate signing; 'invalid-ocsp-stapling-response'= Invalid OCSP Stapling Response; 'revoked-ocsp-response'= Revoked OCSP Response; 'unsupported-ssl-version'= Unsupported SSL version; 'certificates-in-cache'= Certificates in cache; 'connections-failed'= Connections failed; 'aflex-bypass'= Bypass triggered by aFleX; 'bypass-cert-subject-sessions'= Bypass Cert Subject sessions; 'bypass-cert-issuer-sessions'= Bypass Cert issuer sessions; 'bypass-cert-san-sessions'= Bypass Cert SAN sessions; 'bypass-no-sni-sessions'= Bypass NO SNI sessions; 'reset-no-sni-sessions'= Reset No SNI sessions; 'bypass-username-sessions'= Bypass Username sessions; 'bypass-ad-group-sessions'= Bypass AD-group sessions; 'cert_in_cache'= Certificates in cache; 'tot_conn_in_buff'= Total buffered async connections; 'curr_conn_in_buff'= Current buffered async connections; "
     stats:
         description:
         - "Field stats"
         required: False
         suboptions:
+            bypass_username_sessions:
+                description:
+                - "Bypass Username sessions"
+            invalid_ocsp_stapling_response:
+                description:
+                - "Invalid OCSP Stapling Response"
+            failed_in_certificate_verification:
+                description:
+                - "Failed in Certificate verification"
+            revoked_ocsp_response:
+                description:
+                - "Revoked OCSP Response"
+            failed_in_tcp:
+                description:
+                - "Failed in TCP"
+            certificates_in_cache:
+                description:
+                - "Certificates in cache"
+            cert_in_cache:
+                description:
+                - "Certificates in cache"
+            failed_in_crypto_operations:
+                description:
+                - "Failed in crypto operations"
             cert_hit:
                 description:
                 - "Certificate cache hits"
-            cert_create:
+            bypass_cert_subject_sessions:
                 description:
-                - "Certificates created"
+                - "Bypass Cert Subject sessions"
             cert_miss:
                 description:
                 - "Certificate cache miss"
-            conn_bypass:
+            unsupported_ssl_version:
                 description:
-                - "Connections bypassed"
+                - "Unsupported SSL version"
             aflex_bypass:
                 description:
                 - "Bypass triggered by aFleX"
@@ -82,15 +106,51 @@ options:
             conn_inspect:
                 description:
                 - "Connections inspected"
-            tot_conn_in_buff:
-                description:
-                - "Total buffered async connections"
             cert_expr:
                 description:
                 - "Certificates expired"
-            cert_in_cache:
+            bypass_cert_san_sessions:
                 description:
-                - "Certificates in cache"
+                - "Bypass Cert SAN sessions"
+            bypass_client_auth_sessions:
+                description:
+                - "Bypass Client Auth sessions"
+            cert_create:
+                description:
+                - "Certificates created"
+            bypass_sni_sessions:
+                description:
+                - "Bypass SNI sessions"
+            connections_failed:
+                description:
+                - "Connections failed"
+            failed_in_ssl_handshakes:
+                description:
+                - "Failed in SSL handshakes"
+            reset_no_sni_sessions:
+                description:
+                - "Reset No SNI sessions"
+            bypass_no_sni_sessions:
+                description:
+                - "Bypass NO SNI sessions"
+            conn_bypass:
+                description:
+                - "Connections bypassed"
+            tot_conn_in_buff:
+                description:
+                - "Total buffered async connections"
+            bypass_cert_issuer_sessions:
+                description:
+                - "Bypass Cert issuer sessions"
+            failed_in_certificate_signing:
+                description:
+                - "Failed in Certificate signing"
+            bypass_ad_group_sessions:
+                description:
+                - "Bypass AD-group sessions"
+            bypass_failsafe_ssl_sessions:
+                description:
+                - "Bypass Failsafe SSL sessions"
     uuid:
         description:
         - "uuid of the object"
@@ -138,8 +198,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cert_create','cert_expr','cert_hit','cert_miss','conn_bypass','conn_inspect','aflex_bypass','cert_in_cache','tot_conn_in_buff','curr_conn_in_buff'])),
-        stats=dict(type='dict',cert_hit=dict(type='str',),cert_create=dict(type='str',),cert_miss=dict(type='str',),conn_bypass=dict(type='str',),aflex_bypass=dict(type='str',),curr_conn_in_buff=dict(type='str',),conn_inspect=dict(type='str',),tot_conn_in_buff=dict(type='str',),cert_expr=dict(type='str',),cert_in_cache=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cert_create','cert_expr','cert_hit','cert_miss','conn_bypass','conn_inspect','bypass-failsafe-ssl-sessions','bypass-sni-sessions','bypass-client-auth-sessions','failed-in-ssl-handshakes','failed-in-crypto-operations','failed-in-tcp','failed-in-certificate-verification','failed-in-certificate-signing','invalid-ocsp-stapling-response','revoked-ocsp-response','unsupported-ssl-version','certificates-in-cache','connections-failed','aflex-bypass','bypass-cert-subject-sessions','bypass-cert-issuer-sessions','bypass-cert-san-sessions','bypass-no-sni-sessions','reset-no-sni-sessions','bypass-username-sessions','bypass-ad-group-sessions','cert_in_cache','tot_conn_in_buff','curr_conn_in_buff'])),
+        stats=dict(type='dict',bypass_username_sessions=dict(type='str',),invalid_ocsp_stapling_response=dict(type='str',),failed_in_certificate_verification=dict(type='str',),revoked_ocsp_response=dict(type='str',),failed_in_tcp=dict(type='str',),certificates_in_cache=dict(type='str',),cert_in_cache=dict(type='str',),failed_in_crypto_operations=dict(type='str',),cert_hit=dict(type='str',),bypass_cert_subject_sessions=dict(type='str',),cert_miss=dict(type='str',),unsupported_ssl_version=dict(type='str',),aflex_bypass=dict(type='str',),curr_conn_in_buff=dict(type='str',),conn_inspect=dict(type='str',),cert_expr=dict(type='str',),bypass_cert_san_sessions=dict(type='str',),bypass_client_auth_sessions=dict(type='str',),cert_create=dict(type='str',),bypass_sni_sessions=dict(type='str',),connections_failed=dict(type='str',),failed_in_ssl_handshakes=dict(type='str',),reset_no_sni_sessions=dict(type='str',),bypass_no_sni_sessions=dict(type='str',),conn_bypass=dict(type='str',),tot_conn_in_buff=dict(type='str',),bypass_cert_issuer_sessions=dict(type='str',),failed_in_certificate_signing=dict(type='str',),bypass_ad_group_sessions=dict(type='str',),bypass_failsafe_ssl_sessions=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

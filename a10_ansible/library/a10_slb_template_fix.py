@@ -48,10 +48,14 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    insert_client_ip:
+    logging:
         description:
-        - "Insert client ip to tag 11447"
+        - "'init'= init only log; 'term'= termination only log; 'both'= both initial and termination log; "
         required: False
+    name:
+        description:
+        - "FIX Template Name"
+        required: True
     tag_switching:
         description:
         - "Field tag_switching"
@@ -66,18 +70,18 @@ options:
             switching_type:
                 description:
                 - "'sender-comp-id'= Select service group based on SenderCompID; 'target-comp-id'= Select service group based on TargetCompID; "
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     user_tag:
         description:
         - "Customized tag"
         required: False
-    name:
+    insert_client_ip:
         description:
-        - "FIX Template Name"
-        required: True
+        - "Insert client ip to tag 11447"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
 
 """
@@ -92,7 +96,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["insert_client_ip","name","tag_switching","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["insert_client_ip","logging","name","tag_switching","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -121,11 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        insert_client_ip=dict(type='bool',),
+        logging=dict(type='str',choices=['init','term','both']),
+        name=dict(type='str',required=True,),
         tag_switching=dict(type='list',service_group=dict(type='str',),equals=dict(type='str',),switching_type=dict(type='str',choices=['sender-comp-id','target-comp-id'])),
-        uuid=dict(type='str',),
         user_tag=dict(type='str',),
-        name=dict(type='str',required=True,)
+        insert_client_ip=dict(type='bool',),
+        uuid=dict(type='str',)
     ))
    
 

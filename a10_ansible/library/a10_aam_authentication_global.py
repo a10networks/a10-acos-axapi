@@ -55,57 +55,78 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'requests'= Total Authentication Request; 'responses'= Total Authentication Response; 'misses'= Total Authentication Request Missed; 'ocsp-stapling-requests-to-a10authd'= Total OCSP Stapling Request; 'ocsp-stapling-responses-from-a10authd'= Total OCSP Stapling Response; 'opened-socket'= Total AAM Socket Opened; 'open-socket-failed'= Total AAM Open Socket Failed; 'connect'= Total AAM Connection; 'connect-failed'= Total AAM Connect Failed; 'created-timer'= Total AAM Timer Created; 'create-timer-failed'= Total AAM Timer Creation Failed; 'total-request'= Total Request Received by A10 Auth Service; 'get-socket-option-failed'= Total AAM Get Socket Option Failed; 'aflex-authz-succ'= Total Authorization success number in aFleX; 'aflex-authz-fail'= Total Authorization failure number in aFleX; "
+                - "'all'= all; 'requests'= Total Authentication Request; 'responses'= Total Authentication Response; 'misses'= Total Authentication Request Missed; 'ocsp-stapling-requests-to-a10authd'= Total OCSP Stapling Request; 'ocsp-stapling-responses-from-a10authd'= Total OCSP Stapling Response; 'opened-socket'= Total AAM Socket Opened; 'open-socket-failed'= Total AAM Open Socket Failed; 'connect'= Total AAM Connection; 'connect-failed'= Total AAM Connect Failed; 'created-timer'= Total AAM Timer Created; 'create-timer-failed'= Total AAM Timer Creation Failed; 'total-request'= Total Request Received by A10 Auth Service; 'get-socket-option-failed'= Total AAM Get Socket Option Failed; 'aflex-authz-succ'= Total Authorization success number in aFleX; 'aflex-authz-fail'= Total Authorization failure number in aFleX; 'authn-success'= Total Authentication success number; 'authn-failure'= Total Authentication failure number; 'authz-success'= Total Authorization success number; 'authz-failure'= Total Authorization failure number; 'active-session'= Total Active Auth-Sessions; 'active-user'= Total Active Users; 'dns-resolve-failed'= Total AAM DNS resolve failed; "
     stats:
         description:
         - "Field stats"
         required: False
         suboptions:
-            ocsp_stapling_requests_to_a10authd:
-                description:
-                - "Total OCSP Stapling Request"
-            ocsp_stapling_responses_from_a10authd:
-                description:
-                - "Total OCSP Stapling Response"
-            responses:
-                description:
-                - "Total Authentication Response"
-            created_timer:
-                description:
-                - "Total AAM Timer Created"
             open_socket_failed:
                 description:
                 - "Total AAM Open Socket Failed"
-            connect_failed:
-                description:
-                - "Total AAM Connect Failed"
-            misses:
-                description:
-                - "Total Authentication Request Missed"
             connect:
                 description:
                 - "Total AAM Connection"
             aflex_authz_succ:
                 description:
                 - "Total Authorization success number in aFleX"
-            opened_socket:
+            authz_success:
                 description:
-                - "Total AAM Socket Opened"
-            requests:
-                description:
-                - "Total Authentication Request"
-            total_request:
-                description:
-                - "Total Request Received by A10 Auth Service"
+                - "Total Authorization success number"
             aflex_authz_fail:
                 description:
                 - "Total Authorization failure number in aFleX"
+            responses:
+                description:
+                - "Total Authentication Response"
+            ocsp_stapling_requests_to_a10authd:
+                description:
+                - "Total OCSP Stapling Request"
+            dns_resolve_failed:
+                description:
+                - "Total AAM DNS resolve failed"
+            misses:
+                description:
+                - "Total Authentication Request Missed"
+            connect_failed:
+                description:
+                - "Total AAM Connect Failed"
+            opened_socket:
+                description:
+                - "Total AAM Socket Opened"
+            active_session:
+                description:
+                - "Total Active Auth-Sessions"
+            active_user:
+                description:
+                - "Total Active Users"
             create_timer_failed:
                 description:
                 - "Total AAM Timer Creation Failed"
             get_socket_option_failed:
                 description:
                 - "Total AAM Get Socket Option Failed"
+            authn_success:
+                description:
+                - "Total Authentication success number"
+            authz_failure:
+                description:
+                - "Total Authorization failure number"
+            ocsp_stapling_responses_from_a10authd:
+                description:
+                - "Total OCSP Stapling Response"
+            authn_failure:
+                description:
+                - "Total Authentication failure number"
+            created_timer:
+                description:
+                - "Total AAM Timer Created"
+            requests:
+                description:
+                - "Total Authentication Request"
+            total_request:
+                description:
+                - "Total Request Received by A10 Auth Service"
     uuid:
         description:
         - "uuid of the object"
@@ -153,8 +174,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','requests','responses','misses','ocsp-stapling-requests-to-a10authd','ocsp-stapling-responses-from-a10authd','opened-socket','open-socket-failed','connect','connect-failed','created-timer','create-timer-failed','total-request','get-socket-option-failed','aflex-authz-succ','aflex-authz-fail'])),
-        stats=dict(type='dict',ocsp_stapling_requests_to_a10authd=dict(type='str',),ocsp_stapling_responses_from_a10authd=dict(type='str',),responses=dict(type='str',),created_timer=dict(type='str',),open_socket_failed=dict(type='str',),connect_failed=dict(type='str',),misses=dict(type='str',),connect=dict(type='str',),aflex_authz_succ=dict(type='str',),opened_socket=dict(type='str',),requests=dict(type='str',),total_request=dict(type='str',),aflex_authz_fail=dict(type='str',),create_timer_failed=dict(type='str',),get_socket_option_failed=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','requests','responses','misses','ocsp-stapling-requests-to-a10authd','ocsp-stapling-responses-from-a10authd','opened-socket','open-socket-failed','connect','connect-failed','created-timer','create-timer-failed','total-request','get-socket-option-failed','aflex-authz-succ','aflex-authz-fail','authn-success','authn-failure','authz-success','authz-failure','active-session','active-user','dns-resolve-failed'])),
+        stats=dict(type='dict',open_socket_failed=dict(type='str',),connect=dict(type='str',),aflex_authz_succ=dict(type='str',),authz_success=dict(type='str',),aflex_authz_fail=dict(type='str',),responses=dict(type='str',),ocsp_stapling_requests_to_a10authd=dict(type='str',),dns_resolve_failed=dict(type='str',),misses=dict(type='str',),connect_failed=dict(type='str',),opened_socket=dict(type='str',),active_session=dict(type='str',),active_user=dict(type='str',),create_timer_failed=dict(type='str',),get_socket_option_failed=dict(type='str',),authn_success=dict(type='str',),authz_failure=dict(type='str',),ocsp_stapling_responses_from_a10authd=dict(type='str',),authn_failure=dict(type='str',),created_timer=dict(type='str',),requests=dict(type='str',),total_request=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
