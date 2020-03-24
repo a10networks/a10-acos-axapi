@@ -95,10 +95,17 @@ options:
                 description:
                 - "Total AAM Socket Opened"
             active_session:
+<<<<<<< HEAD
                 description:
                 - "Total Active Auth-Sessions"
             active_user:
                 description:
+=======
+                description:
+                - "Total Active Auth-Sessions"
+            active_user:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Total Active Users"
             create_timer_failed:
                 description:

@@ -244,6 +244,10 @@ options:
             level:
                 description:
                 - "'warning'= Log level Warning; 'critical'= Log level Critical (Default); 'notice'= Log level Notice; "
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

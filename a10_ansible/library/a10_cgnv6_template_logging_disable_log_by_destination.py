@@ -137,6 +137,10 @@ options:
         description:
         - "Disable logging for icmp traffic"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

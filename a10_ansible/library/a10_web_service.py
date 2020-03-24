@@ -115,6 +115,10 @@ options:
             restart:
                 description:
                 - "Restart WEB service"
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

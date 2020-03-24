@@ -57,11 +57,19 @@ options:
         - "NAT Address"
         required: True
     vrid:
+<<<<<<< HEAD
         description:
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
     uuid:
         description:
+=======
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        required: False
+    uuid:
+        description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "uuid of the object"
         required: False
     src_address:

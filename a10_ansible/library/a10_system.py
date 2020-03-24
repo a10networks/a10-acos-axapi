@@ -92,6 +92,7 @@ options:
                 description:
                 - "mac-address to be configured as mgmt port"
     geolocation_file:
+<<<<<<< HEAD
         description:
         - "Field geolocation_file"
         required: False
@@ -473,6 +474,389 @@ options:
         - "Field queuing_buffer"
         required: False
         suboptions:
+=======
+        description:
+        - "Field geolocation_file"
+        required: False
+        suboptions:
+            error_info:
+                description:
+                - "Field error_info"
+            uuid:
+                description:
+                - "uuid of the object"
+    promiscuous_mode:
+        description:
+        - "Run in promiscous mode settings"
+        required: False
+    ndisc_ra:
+        description:
+        - "Field ndisc_ra"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    tcp:
+        description:
+        - "Field tcp"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    bandwidth:
+        description:
+        - "Field bandwidth"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    session:
+        description:
+        - "Field session"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    session_reclaim_limit:
+        description:
+        - "Field session_reclaim_limit"
+        required: False
+        suboptions:
+            scan_freq:
+                description:
+                - "smp session scan frequency (scan per second)"
+            nscan_limit:
+                description:
+                - "smp session scan limit (number of smp sessions per scan)"
+            uuid:
+                description:
+                - "uuid of the object"
+    inuse_cpu_list:
+        description:
+        - "Field inuse_cpu_list"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    add_port:
+        description:
+        - "Field add_port"
+        required: False
+        suboptions:
+            port_index:
+                description:
+                - "port index to be configured (Specify port index)"
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    bfd:
+        description:
+        - "Field bfd"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    ddos_attack:
+        description:
+        - "System DDoS Attack"
+        required: False
+    trunk_xaui_hw_hash:
+        description:
+        - "Field trunk_xaui_hw_hash"
+        required: False
+        suboptions:
+            mode:
+                description:
+                - "Set HW hash mode, default is 6 (1=dst-mac 2=src-mac 3=src-dst-mac 4=src-ip 5=dst-ip 6=rtag6 7=rtag7)"
+            uuid:
+                description:
+                - "uuid of the object"
+    environment:
+        description:
+        - "Field environment"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    port_info:
+        description:
+        - "Field port_info"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    trunk_hw_hash:
+        description:
+        - "Field trunk_hw_hash"
+        required: False
+        suboptions:
+            mode:
+                description:
+                - "Set HW hash mode, default is 6 (1=dst-mac 2=src-mac 3=src-dst-mac 4=src-ip 5=dst-ip 6=rtag6 7=rtag7)"
+            uuid:
+                description:
+                - "uuid of the object"
+    ve_mac_scheme:
+        description:
+        - "Field ve_mac_scheme"
+        required: False
+        suboptions:
+            ve_mac_scheme_val:
+                description:
+                - "'hash-based'= Hash-based using the VE number; 'round-robin'= Round Robin scheme; 'system-mac'= Use system MAC address; "
+            uuid:
+                description:
+                - "uuid of the object"
+    template_bind:
+        description:
+        - "Field template_bind"
+        required: False
+        suboptions:
+            monitor_list:
+                description:
+                - "Field monitor_list"
+    ipmi:
+        description:
+        - "Field ipmi"
+        required: False
+        suboptions:
+            reset:
+                description:
+                - "Reset IPMI Controller"
+            ip:
+                description:
+                - "Field ip"
+            ipsrc:
+                description:
+                - "Field ipsrc"
+            tool:
+                description:
+                - "Field tool"
+            user:
+                description:
+                - "Field user"
+    icmp_rate:
+        description:
+        - "Field icmp_rate"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    telemetry_log:
+        description:
+        - "Field telemetry_log"
+        required: False
+        suboptions:
+            device_status:
+                description:
+                - "Field device_status"
+            top_k_source_list:
+                description:
+                - "Field top_k_source_list"
+            top_k_app_svc_list:
+                description:
+                - "Field top_k_app_svc_list"
+            partition_metrics:
+                description:
+                - "Field partition_metrics"
+    ipsec:
+        description:
+        - "Field ipsec"
+        required: False
+        suboptions:
+            packet_round_robin:
+                description:
+                - "Enable packet round robin for IPsec packets"
+            crypto_core:
+                description:
+                - "Crypto cores assigned for IPsec processing"
+            uuid:
+                description:
+                - "uuid of the object"
+            fpga_decrypt:
+                description:
+                - "Field fpga_decrypt"
+            crypto_mem:
+                description:
+                - "Crypto memory percentage assigned for IPsec processing (rounded to increments of 10)"
+    hrxq_status:
+        description:
+        - "Field hrxq_status"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    cosq_stats:
+        description:
+        - "Field cosq_stats"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    sockstress_disable:
+        description:
+        - "Disable sockstress protection"
+        required: False
+    io_cpu:
+        description:
+        - "Field io_cpu"
+        required: False
+        suboptions:
+            max_cores:
+                description:
+                - "max number of IO cores (Specify number of cores)"
+    cpu_map:
+        description:
+        - "Field cpu_map"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    ports:
+        description:
+        - "Field ports"
+        required: False
+        suboptions:
+            link_detection_interval:
+                description:
+                - "Link detection interval in msecs"
+            uuid:
+                description:
+                - "uuid of the object"
+    app_performance:
+        description:
+        - "Field app_performance"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    counter_lib_accounting:
+        description:
+        - "Field counter_lib_accounting"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    inuse_port_list:
+        description:
+        - "Field inuse_port_list"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    control_cpu:
+        description:
+        - "Field control_cpu"
+        required: False
+        suboptions:
+            uuid:
+                description:
+                - "uuid of the object"
+    password_policy:
+        description:
+        - "Field password_policy"
+        required: False
+        suboptions:
+            aging:
+                description:
+                - "'Strict'= Strict= Max Age-60 Days; 'Medium'= Medium= Max Age- 90 Days; 'Simple'= Simple= Max Age-120 Days; "
+            complexity:
+                description:
+                - "'Strict'= Strict= Min length=8, Min Lower Case=2, Min Upper Case=2, Min Numbers=2, Min Special Character=1; 'Medium'= Medium= Min length=6, Min Lower Case=2, Min Upper Case=2, Min Numbers=1, Min Special Character=1; 'Simple'= Simple= Min length=4, Min Lower Case=1, Min Upper Case=1, Min Numbers=1, Min Special Character=0; "
+            history:
+                description:
+                - "'Strict'= Strict= Does not allow upto 5 old passwords; 'Medium'= Medium= Does not allow upto 4 old passwords; 'Simple'= Simple= Does not allow upto 3 old passwords; "
+            uuid:
+                description:
+                - "uuid of the object"
+            min_pswd_len:
+                description:
+                - "Configure custom password length"
+    module_ctrl_cpu:
+        description:
+        - "'high'= high cpu usage; 'low'= low cpu usage; 'medium'= medium cpu usage; "
+        required: False
+    radius:
+        description:
+        - "Field radius"
+        required: False
+        suboptions:
+            server:
+                description:
+                - "Field server"
+    modify_port:
+        description:
+        - "Field modify_port"
+        required: False
+        suboptions:
+            port_index:
+                description:
+                - "port index to be configured (Specify port index)"
+            port_number:
+                description:
+                - "port number to be configured (Specify port number)"
+    del_port:
+        description:
+        - "Field del_port"
+        required: False
+        suboptions:
+            port_index:
+                description:
+                - "port index to be configured (Specify port index)"
+    shared_poll_mode:
+        description:
+        - "Field shared_poll_mode"
+        required: False
+        suboptions:
+            enable:
+                description:
+                - "Enable shared poll mode"
+            disable:
+                description:
+                - "Disable shared poll mode"
+    queuing_buffer:
+        description:
+        - "Field queuing_buffer"
+        required: False
+        suboptions:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
             enable:
                 description:
                 - "Enable/Disable micro-burst traffic support"
@@ -798,6 +1182,7 @@ options:
                 description:
                 - "core index to be added (Specify core index)"
     log_cpu_interval:
+<<<<<<< HEAD
         description:
         - "Log high CPU interval (Specify consecutive seconds before logging high CPU)"
         required: False
@@ -814,6 +1199,24 @@ options:
                 - "uuid of the object"
     gui_image_list:
         description:
+=======
+        description:
+        - "Log high CPU interval (Specify consecutive seconds before logging high CPU)"
+        required: False
+    icmp:
+        description:
+        - "Field icmp"
+        required: False
+        suboptions:
+            sampling_enable:
+                description:
+                - "Field sampling_enable"
+            uuid:
+                description:
+                - "uuid of the object"
+    gui_image_list:
+        description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "Field gui_image_list"
         required: False
         suboptions:

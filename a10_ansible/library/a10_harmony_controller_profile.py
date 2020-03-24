@@ -122,11 +122,19 @@ options:
         - "region of the thunder-device"
         required: False
     interval:
+<<<<<<< HEAD
         description:
         - "auto analytics bus restart time interval in mins, default is 3 mins"
         required: False
     host:
         description:
+=======
+        description:
+        - "auto analytics bus restart time interval in mins, default is 3 mins"
+        required: False
+    host:
+        description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "Set harmony controller host adddress"
         required: False
     port:

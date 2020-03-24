@@ -260,10 +260,17 @@ options:
                 description:
                 - "Total ICMP Ports Freed"
             fwd_ingress_packets_others:
+<<<<<<< HEAD
                 description:
                 - "Forward Ingress Packets OTHERS"
             rev_egress_packets_others:
                 description:
+=======
+                description:
+                - "Forward Ingress Packets OTHERS"
+            rev_egress_packets_others:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Reverse Egress Packets OTHERS"
             no_radius_profile_match:
                 description:

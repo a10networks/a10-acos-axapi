@@ -330,10 +330,17 @@ options:
                 description:
                 - "Netflow v5 Records Sent"
             session_event_fw6_records_sent:
+<<<<<<< HEAD
                 description:
                 - "FW6 Session Event Records Sent"
             custom_port_mapping_nat44_deletion_records_sent_failure:
                 description:
+=======
+                description:
+                - "FW6 Session Event Records Sent"
+            custom_port_mapping_nat44_deletion_records_sent_failure:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Custom Nat44 Port Map Deletion Records Failed"
             port_mapping_nat44_records_sent_failure:
                 description:
@@ -348,6 +355,7 @@ options:
                 description:
                 - "Custom Dslite Session Creation Records Failed"
             custom_port_batching_nat44_creation_records_sent:
+<<<<<<< HEAD
                 description:
                 - "Custom Nat44 Port Batch Creation Records Sent"
             custom_port_mapping_nat64_deletion_records_sent:
@@ -361,6 +369,21 @@ options:
                 - "Port Batching Nat64 Records Sent"
             custom_session_event_fw4_creation_records_sent:
                 description:
+=======
+                description:
+                - "Custom Nat44 Port Batch Creation Records Sent"
+            custom_port_mapping_nat64_deletion_records_sent:
+                description:
+                - "Custom Nat64 Port Map Deletion Records Sent"
+            netflow_v5_ext_records_sent_failure:
+                description:
+                - "Netflow v5 Ext Records Failed"
+            port_batching_nat64_records_sent:
+                description:
+                - "Port Batching Nat64 Records Sent"
+            custom_session_event_fw4_creation_records_sent:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Custom FW4 Session Creation Records Sent"
             dslite_records_sent_failure:
                 description:
@@ -396,10 +419,17 @@ options:
                 description:
                 - "Custom Nat64 Port Batch Creation Records Sent"
             session_event_fw4_records_sent_failure:
+<<<<<<< HEAD
                 description:
                 - "FW4 Session Event Records Failed"
             custom_deny_reset_event_fw4_records_sent_failure:
                 description:
+=======
+                description:
+                - "FW4 Session Event Records Failed"
+            custom_deny_reset_event_fw4_records_sent_failure:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Custom FW4 Deny/Reset Event Records Failed"
             custom_port_batching_nat64_deletion_records_sent_failure:
                 description:
@@ -501,6 +531,7 @@ options:
                 description:
                 - "Custom Nat64 Port Batch Creation Records Failed"
             custom_session_event_fw4_deletion_records_sent_failure:
+<<<<<<< HEAD
                 description:
                 - "Custom FW4 Session Deletion Records Failed"
             nat64_records_sent:
@@ -523,6 +554,30 @@ options:
                 - "Custom Dslite Port Batch Deletion Records Sent"
             port_batching_nat44_records_sent_failure:
                 description:
+=======
+                description:
+                - "Custom FW4 Session Deletion Records Failed"
+            nat64_records_sent:
+                description:
+                - "NAT64 Flow Records Sent"
+            custom_port_mapping_dslite_deletion_records_sent_failure:
+                description:
+                - "Custom Dslite Port Map Deletion Records Failed"
+            port_batching_dslite_records_sent_failure:
+                description:
+                - "Port Batching Dslite Records Failed"
+            custom_deny_reset_event_fw6_records_sent:
+                description:
+                - "Custom FW6 Deny/Reset Event Records Sent"
+            port_batching_nat44_records_sent:
+                description:
+                - "Port Batching Nat44 Records Sent"
+            custom_port_batching_dslite_deletion_records_sent:
+                description:
+                - "Custom Dslite Port Batch Deletion Records Sent"
+            port_batching_nat44_records_sent_failure:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Port Batching Nat44 Records Failed"
             custom_session_event_nat44_creation_records_sent_failure:
                 description:
@@ -537,10 +592,17 @@ options:
                 description:
                 - "Nat64 Session Event Records Falied"
             custom_port_batching_nat44_creation_records_sent_failure:
+<<<<<<< HEAD
                 description:
                 - "Custom Nat44 Port Batch Creation Records Failed"
             custom_port_batching_v2_nat64_creation_records_sent:
                 description:
+=======
+                description:
+                - "Custom Nat44 Port Batch Creation Records Failed"
+            custom_port_batching_v2_nat64_creation_records_sent:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Custom Nat64 Port Batch V2 Creation Records Sent"
             session_event_nat44_records_sent_failure:
                 description:

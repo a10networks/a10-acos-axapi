@@ -240,6 +240,10 @@ options:
             health_check:
                 description:
                 - "Check server's health status"
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

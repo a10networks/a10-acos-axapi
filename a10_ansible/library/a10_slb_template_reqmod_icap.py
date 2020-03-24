@@ -151,6 +151,10 @@ options:
         description:
         - "URL to send to ICAP server (Service URL Name)"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

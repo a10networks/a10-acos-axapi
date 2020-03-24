@@ -201,6 +201,10 @@ options:
             operational_state:
                 description:
                 - "'up'= Scaleout is up and running; 'down'= Scaleout is down or disabled; "
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

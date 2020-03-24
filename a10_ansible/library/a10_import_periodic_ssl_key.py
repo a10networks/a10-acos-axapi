@@ -72,6 +72,10 @@ options:
         description:
         - "SSL Key File(enter bulk when import an archive file)"
         required: True
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

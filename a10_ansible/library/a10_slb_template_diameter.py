@@ -163,6 +163,10 @@ options:
         description:
         - "Forward client message to the latest server that sends message with the same session id"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

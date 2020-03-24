@@ -122,6 +122,7 @@ options:
         required: False
         suboptions:
             inside:
+<<<<<<< HEAD
                 description:
                 - "Configure MAP inside interface (connected to MAP domains)"
             map_t_inside:
@@ -135,6 +136,21 @@ options:
                 - "Configure MAP outside interface"
             outside:
                 description:
+=======
+                description:
+                - "Configure MAP inside interface (connected to MAP domains)"
+            map_t_inside:
+                description:
+                - "Configure MAP inside interface (connected to MAP domains)"
+            uuid:
+                description:
+                - "uuid of the object"
+            map_t_outside:
+                description:
+                - "Configure MAP outside interface"
+            outside:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Configure MAP outside interface"
     trap_source:
         description:

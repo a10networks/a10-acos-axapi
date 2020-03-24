@@ -409,6 +409,10 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+<<<<<<< HEAD
+=======
+    module.client.session.close()
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result
 
 def main():

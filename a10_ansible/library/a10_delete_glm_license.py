@@ -68,6 +68,10 @@ options:
         description:
         - "only remove ThreatSTOP license"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

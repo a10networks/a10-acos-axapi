@@ -84,6 +84,10 @@ options:
         description:
         - "geo-location database list file size in byte"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

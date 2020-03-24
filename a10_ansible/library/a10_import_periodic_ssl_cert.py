@@ -57,17 +57,29 @@ options:
         - "Specify the period in second"
         required: False
     uuid:
+<<<<<<< HEAD
         description:
         - "uuid of the object"
         required: False
     remote_file:
         description:
+=======
+        description:
+        - "uuid of the object"
+        required: False
+    remote_file:
+        description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "profile name for remote url"
         required: False
     ssl_cert:
         description:
         - "SSL Cert File(enter bulk when import an archive file)"
         required: True
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

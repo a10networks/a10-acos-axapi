@@ -416,6 +416,10 @@ options:
         description:
         - "Total Real Servers in the System"
         required: False
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 

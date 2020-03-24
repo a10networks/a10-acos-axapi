@@ -340,6 +340,7 @@ options:
                 description:
                 - "Configure MAP inside interface (connected to MAP domains)"
             map_t_inside:
+<<<<<<< HEAD
                 description:
                 - "Configure MAP inside interface (connected to MAP domains)"
             uuid:
@@ -347,6 +348,15 @@ options:
                 - "uuid of the object"
             map_t_outside:
                 description:
+=======
+                description:
+                - "Configure MAP inside interface (connected to MAP domains)"
+            uuid:
+                description:
+                - "uuid of the object"
+            map_t_outside:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Configure MAP outside interface"
             outside:
                 description:
@@ -844,6 +854,10 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+<<<<<<< HEAD
+=======
+    module.client.session.close()
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result
 
 def main():
