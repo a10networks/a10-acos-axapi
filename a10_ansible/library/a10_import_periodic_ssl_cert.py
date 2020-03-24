@@ -58,11 +58,21 @@ options:
         required: False
     uuid:
 <<<<<<< HEAD
+<<<<<<< HEAD
+        description:
+        - "uuid of the object"
+=======
         description:
         - "uuid of the object"
         required: False
     remote_file:
         description:
+        - "profile name for remote url"
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+        required: False
+    remote_file:
+        description:
+<<<<<<< HEAD
 =======
         description:
         - "uuid of the object"
@@ -78,6 +88,10 @@ options:
         required: True
 <<<<<<< HEAD
 =======
+=======
+        - "SSL Cert File(enter bulk when import an archive file)"
+        required: True
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 

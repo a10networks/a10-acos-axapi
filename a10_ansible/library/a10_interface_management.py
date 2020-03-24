@@ -303,7 +303,10 @@ options:
                 description:
                 - "IP subnet mask"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
@@ -637,7 +640,10 @@ def run_command(module):
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     module.client.session.close()
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result

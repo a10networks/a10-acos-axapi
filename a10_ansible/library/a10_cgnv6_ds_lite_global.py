@@ -88,16 +88,26 @@ options:
                 description:
                 - "TCP User-Quota Exceeded"
             rev_ingress_packets_udp:
+<<<<<<< HEAD
                 description:
                 - "Reverse Ingress Packets UDP"
             rev_egress_bytes_icmp:
                 description:
+=======
+                description:
+                - "Reverse Ingress Packets UDP"
+            rev_egress_bytes_icmp:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Reverse Egress Bytes ICMP"
             ha_nat_pool_batch_type_mismatch:
                 description:
                 - "HA NAT Pool Batch Type Mismatch"
             rev_ingress_packets_others:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 description:
                 - "Reverse Ingress Packets OTHERS"
             user_quota_unusable_drop:
@@ -105,6 +115,7 @@ options:
                 - "User-Quota Unusable Drop"
             fwd_egress_packets_icmp:
                 description:
+<<<<<<< HEAD
 =======
                 description:
                 - "Reverse Ingress Packets OTHERS"
@@ -113,6 +124,8 @@ options:
                 - "User-Quota Unusable Drop"
             fwd_egress_packets_icmp:
                 description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+=======
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Forward Egress Packets ICMP"
             fullcone_failure:
@@ -302,6 +315,7 @@ options:
                 description:
                 - "Data Session Freed"
             total_udp_overloaded:
+<<<<<<< HEAD
                 description:
                 - "UDP Port Overloaded"
             port_overloading_smp_inserted_tcp:
@@ -365,6 +379,69 @@ options:
             rev_egress_pkt_size_range2:
                 description:
 =======
+                description:
+                - "TCP Port Overloading Session Freed"
+            rev_ingress_bytes_udp:
+                description:
+                - "Reverse Ingress Bytes UDP"
+            rev_ingress_bytes_icmp:
+                description:
+                - "Reverse Ingress Bytes ICMP"
+            rev_egress_bytes_others:
+                description:
+                - "Reverse Egress Bytes OTHERS"
+            port_overloading_smp_free_udp:
+                description:
+                - "UDP Port Overloading Session Freed"
+            udp_user_quota_exceeded:
+                description:
+                - "UDP User-Quota Exceeded"
+            fwd_ingress_bytes_icmp:
+                description:
+                - "Forward Ingress Bytes ICMP"
+            fwd_egress_pkt_size_range1:
+                description:
+                - "Forward Egress Packet size between 0 and 200"
+            rev_ingress_packets_icmp:
+                description:
+                - "Reverse Ingress Packets ICMP"
+            rev_egress_packets_udp:
+                description:
+                - "Reverse Egress Packets UDP"
+            fwd_ingress_bytes_udp:
+                description:
+                - "Forward Ingress Bytes UDP"
+            fwd_egress_pkt_size_range4:
+                description:
+                - "Forward Egress Packet size between 1551 and 9000"
+            extended_quota_exceeded:
+                description:
+                - "Extended User-Quota Exceeded"
+            rev_egress_pkt_size_range4:
+                description:
+                - "Reverse Egress Packet size between 1551 and 9000"
+            rev_egress_pkt_size_range3:
+                description:
+                - "Reverse Egress Packet size between 801 and 1550"
+            fwd_ingress_packets_icmp:
+                description:
+                - "Forward Ingress Packets ICMP"
+            rev_egress_pkt_size_range2:
+                description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+=======
+                description:
+                - "UDP Port Overloaded"
+            port_overloading_smp_inserted_tcp:
+                description:
+                - "TCP Port Overloading Session Created"
+            nat_pool_unusable:
+                description:
+                - "NAT Pool Unusable"
+            nat_port_unavailable_udp:
+                description:
+                - "UDP NAT Port Unavailable"
+            port_overloading_smp_free_tcp:
                 description:
                 - "TCP Port Overloading Session Freed"
             rev_ingress_bytes_udp:

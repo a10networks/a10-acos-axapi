@@ -261,15 +261,21 @@ options:
                 - "Total ICMP Ports Freed"
             fwd_ingress_packets_others:
 <<<<<<< HEAD
+<<<<<<< HEAD
                 description:
                 - "Forward Ingress Packets OTHERS"
             rev_egress_packets_others:
                 description:
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 description:
                 - "Forward Ingress Packets OTHERS"
             rev_egress_packets_others:
                 description:
+<<<<<<< HEAD
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+=======
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
                 - "Reverse Egress Packets OTHERS"
             no_radius_profile_match:

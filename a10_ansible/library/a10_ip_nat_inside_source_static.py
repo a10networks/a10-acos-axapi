@@ -49,6 +49,7 @@ options:
         - Destination/target partition for object/command
         required: False
     action:
+<<<<<<< HEAD
         description:
         - "'enable'= Enable static mapping (default); 'disable'= Disable static mapping; "
         required: False
@@ -62,13 +63,25 @@ options:
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
     uuid:
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         description:
 =======
         description:
+<<<<<<< HEAD
+=======
+        - "NAT Address"
+        required: True
+    vrid:
+        description:
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
     uuid:
         description:
+<<<<<<< HEAD
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+=======
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
         - "uuid of the object"
         required: False

@@ -120,7 +120,10 @@ options:
         - "file size (MBytes) to transmit to monitor the TCP channel"
         required: False
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 

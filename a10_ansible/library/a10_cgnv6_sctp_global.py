@@ -328,7 +328,10 @@ def run_command(module):
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     module.client.session.close()
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result

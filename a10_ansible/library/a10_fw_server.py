@@ -166,7 +166,10 @@ options:
         - "Server Name"
         required: True
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 >>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
