@@ -7,7 +7,7 @@
     a10_port: "{{ a10_port }}"
     a10_protocol: "{{ a10_protocol }}"
     name: hm1
-  register: hm_resp
+  register: hm_resp1
 - assert:
     that:
       - "hm_resp['monitor']['name'] == 'hm1'"

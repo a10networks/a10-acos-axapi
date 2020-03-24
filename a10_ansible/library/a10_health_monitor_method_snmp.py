@@ -87,6 +87,7 @@ options:
                 description:
                 - "'getnext'= Get-Next-Request command; 'get'= Get-Request command; "
 
+
 """
 
 EXAMPLES = """
@@ -385,15 +386,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():
