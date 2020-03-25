@@ -62,7 +62,7 @@ options:
         required: False
     weight:
         description:
-        - "Weight for the Real Servers (Connection Weight (default is 1))"
+        - "Weight for the Real Servers (Connection Weight)"
         required: False
     bw_rate_limit:
         description:
@@ -172,6 +172,7 @@ options:
         description:
         - "Health Check Monitor (Health monitor name)"
         required: False
+
 
 """
 
@@ -492,15 +493,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

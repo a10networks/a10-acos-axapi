@@ -53,9 +53,6 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            total_ocsps:
-                description:
-                - "Field total_ocsps"
             ocsp_list:
                 description:
                 - "Field ocsp_list"
@@ -63,6 +60,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -105,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_ocsps=dict(type='int',),ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',))),
+        oper=dict(type='dict',ocsp_list=dict(type='list',certificate_status=dict(type='str',),subject=dict(type='str',),validity=dict(type='str',),issuer=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -344,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -355,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

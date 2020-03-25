@@ -85,6 +85,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -126,7 +127,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_list=dict(type='list',content=dict(type='int',),partition=dict(type='str',),all_partitions=dict(type='int',),file=dict(type='str',),desc=dict(type='str',))),
+        oper=dict(type='dict',file_list=dict(type='list',file=dict(type='str',),desc=dict(type='str',))),
         dst_file=dict(type='str',),
         description=dict(type='str',),
         file=dict(type='str',),
@@ -393,10 +394,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -404,6 +403,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

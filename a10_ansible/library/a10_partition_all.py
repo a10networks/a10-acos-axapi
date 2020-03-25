@@ -56,16 +56,11 @@ options:
             partition_list:
                 description:
                 - "Field partition_list"
-            manageable:
-                description:
-                - "Field manageable"
-            active_partition_count:
-                description:
-                - "Field active_partition_count"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -108,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',partition_list=dict(type='list',status=dict(type='str',),partition_name=dict(type='str',),parent_l3v=dict(type='str',),partition_type=dict(type='str',),app_Type=dict(type='str',),partition_id=dict(type='int',),admin_Count=dict(type='int',)),manageable=dict(type='bool',),active_partition_count=dict(type='int',)),
+        oper=dict(type='dict',partition_list=dict(type='list',status=dict(type='str',),partition_id=dict(type='int',),partition_name=dict(type='str',),admin_Count=dict(type='int',),app_Type=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -347,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -358,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -68,10 +68,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-    local_logging:
-        description:
-        - "Enable local logging"
-        required: False
     auth_sess_mode:
         description:
         - "'cookie-based'= Track auth-session by cookie (default); 'ip-based'= Track auth-session by client IP; "
@@ -86,7 +82,7 @@ options:
         required: False
     modify_content_security_policy:
         description:
-        - "Put redirect-uri or service-principal-name into CSP header to avoid CPS break authentication process"
+        - "Put redirct-uri or service-principal-name into CSP header to avoid CPS break authentication process"
         required: False
     relay:
         description:
@@ -140,10 +136,6 @@ options:
         description:
         - "Specify logout url (Specify logout url string)"
         required: False
-    jwt:
-        description:
-        - "Specify authentication jwt template"
-        required: False
     user_tag:
         description:
         - "Customized tag"
@@ -161,6 +153,7 @@ options:
         - "Specify authentication logon (Specify authentication logon template name)"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -173,7 +166,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["account","accounting_server","accounting_service_group","auth_sess_mode","cookie_domain","cookie_domain_group","cookie_max_age","forward_logout_disable","jwt","local_logging","log","logon","logout_idle_timeout","logout_url","max_session_time","modify_content_security_policy","name","redirect_hostname","relay","saml_idp","saml_sp","server","service_group","ntype","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["account","accounting_server","accounting_service_group","auth_sess_mode","cookie_domain","cookie_domain_group","cookie_max_age","forward_logout_disable","log","logon","logout_idle_timeout","logout_url","max_session_time","modify_content_security_policy","name","redirect_hostname","relay","saml_idp","saml_sp","server","service_group","ntype","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -207,7 +200,6 @@ def get_argspec():
         saml_idp=dict(type='str',),
         cookie_max_age=dict(type='int',),
         uuid=dict(type='str',),
-        local_logging=dict(type='bool',),
         auth_sess_mode=dict(type='str',choices=['cookie-based','ip-based']),
         service_group=dict(type='str',),
         ntype=dict(type='str',choices=['saml','standard']),
@@ -223,7 +215,6 @@ def get_argspec():
         account=dict(type='str',),
         name=dict(type='str',required=True,),
         logout_url=dict(type='str',),
-        jwt=dict(type='str',),
         user_tag=dict(type='str',),
         server=dict(type='str',),
         redirect_hostname=dict(type='str',),
@@ -475,15 +466,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

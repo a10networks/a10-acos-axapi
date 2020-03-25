@@ -63,9 +63,6 @@ options:
             loopback:
                 description:
                 - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
             prefix_list:
                 description:
                 - "Filter prefixes in routing updates (Name of a prefix list)"
@@ -78,6 +75,7 @@ options:
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
+
 
 """
 
@@ -121,7 +119,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str',),
-        prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))
+        prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))
     ))
    
 
@@ -367,15 +365,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

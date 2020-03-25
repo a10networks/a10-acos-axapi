@@ -61,6 +61,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -102,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',trunk=dict(type='list',trunk_member_status=dict(type='list',oper_status=dict(type='str',choices=['Blocked','Up','Dn']),cfg_status=dict(type='str',choices=['Enb','Dis']),members=dict(type='int',)),member_count=dict(type='int',),trunk_name=dict(type='str',),trunk_type=dict(type='str',choices=['Dynamic-LACP','Static']),timer=dict(type='int',),trunk_status=dict(type='str',choices=['Up','Down']),ports_threshold_block=dict(type='str',choices=['Yes','No']),admin_key=dict(type='int',),timer_running=dict(type='str',choices=['Yes','No']),ports_threshold=dict(type='int',),trunk_id=dict(type='int',),working_lead=dict(type='int',))),
+        oper=dict(type='dict',trunk=dict(type='list',trunk_type=dict(type='str',choices=['Dynamic-LACP','Static']),member_count=dict(type='int',),trunk_member_status=dict(type='list',oper_status=dict(type='str',choices=['Blocked','Up','Dn']),cfg_status=dict(type='str',choices=['Enb','Dis']),members=dict(type='int',)),timer=dict(type='int',),trunk_status=dict(type='str',choices=['Up','Down']),admin_key=dict(type='int',),timer_running=dict(type='str',choices=['Yes','No']),ports_threshold=dict(type='int',),trunk_id=dict(type='int',),working_lead=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    
@@ -341,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -352,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

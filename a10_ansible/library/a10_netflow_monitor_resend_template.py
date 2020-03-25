@@ -53,7 +53,7 @@ options:
         - Key to identify parent object
     records:
         description:
-        - "To resend template once for each number of records (Number of records= default is 1000, 0 means disable template resend based on record-count)"
+        - "To resend template once for each number of records (Number of records= default is 1000, 0 means never resend template)"
         required: False
     uuid:
         description:
@@ -61,8 +61,9 @@ options:
         required: False
     timeout:
         description:
-        - "To set time interval to resend template (number of seconds= default is 1800, 0 means disable template resend based on timeout)"
+        - "To set time interval to resend template (number of seconds= default is 1800, 0 means never resend template)"
         required: False
+
 
 """
 
@@ -359,15 +360,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

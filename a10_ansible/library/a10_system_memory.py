@@ -59,36 +59,18 @@ options:
             Used:
                 description:
                 - "Field Used"
-            ssl_memory_counts:
-                description:
-                - "Field ssl_memory_counts"
-            Cached:
-                description:
-                - "Field Cached"
             TCP_memory:
                 description:
                 - "Field TCP_memory"
-            system_memory_counts:
-                description:
-                - "Field system_memory_counts"
             Free:
                 description:
                 - "Field Free"
             aFleX_memory:
                 description:
                 - "Field aFleX_memory"
-            tcp_memory_counts:
-                description:
-                - "Field tcp_memory_counts"
             System_memory:
                 description:
                 - "Field System_memory"
-            n2_memory_counts:
-                description:
-                - "Field n2_memory_counts"
-            Shared:
-                description:
-                - "Field Shared"
             Usage:
                 description:
                 - "Field Usage"
@@ -98,12 +80,6 @@ options:
             Total:
                 description:
                 - "Field Total"
-            aflex_memory_counts:
-                description:
-                - "Field aflex_memory_counts"
-            Buffers:
-                description:
-                - "Field Buffers"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -124,6 +100,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -166,7 +143,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',N2_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Used=dict(type='int',),ssl_memory_counts=dict(type='int',),Cached=dict(type='int',),TCP_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),system_memory_counts=dict(type='int',),Free=dict(type='int',),aFleX_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),tcp_memory_counts=dict(type='int',),System_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),n2_memory_counts=dict(type='int',),Shared=dict(type='int',),Usage=dict(type='str',),SSL_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Total=dict(type='int',),aflex_memory_counts=dict(type='int',),Buffers=dict(type='int',)),
+        oper=dict(type='dict',N2_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Used=dict(type='int',),TCP_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Free=dict(type='int',),aFleX_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),System_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Usage=dict(type='str',),SSL_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Total=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','usage-percentage'])),
         stats=dict(type='dict',usage_percentage=dict(type='str',)),
         uuid=dict(type='str',)
@@ -443,10 +420,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -456,6 +431,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

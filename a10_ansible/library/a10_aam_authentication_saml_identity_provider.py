@@ -48,83 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    reload_metadata:
-        description:
-        - "Reload IdP's metadata immediately"
-        required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            md:
-                description:
-                - "Field md"
-            name:
-                description:
-                - "SAML authentication identity provider name"
-            sso_list:
-                description:
-                - "Field sso_list"
-            entity_id:
-                description:
-                - "Field entity_id"
-            slo_list:
-                description:
-                - "Field slo_list"
-            cert:
-                description:
-                - "Field cert"
-            ars_list:
-                description:
-                - "Field ars_list"
-            aqs_list:
-                description:
-                - "Field aqs_list"
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            valid_status:
-                description:
-                - "Valid IdP status or not"
-            md_state:
-                description:
-                - "Metadata State"
-            name:
-                description:
-                - "SAML authentication identity provider name"
-            md_update:
-                description:
-                - "Metadata Update Success Count"
-            acs_fail:
-                description:
-                - "ACS Fail Count"
-            acs_pass:
-                description:
-                - "ACS Pass Count"
-            acs_state:
-                description:
-                - "ACS State"
-            md_fail:
-                description:
-                - "Metadata Update Fail Count"
-            acs_req:
-                description:
-                - "ACS Request Total Count"
-    name:
-        description:
-        - "SAML authentication identity provider name"
-        required: True
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    reload_interval:
-        description:
-        - "Specify URI metadata reload period (Specify URI metadata reload period in seconds, default is 28800)"
-        required: False
     metadata:
         description:
         - "URL of SAML identity provider's metadata file"
@@ -133,13 +56,15 @@ options:
         description:
         - "uuid of the object"
         required: False
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+    user_tag:
+        description:
+        - "Customized tag"
+        required: False
+    name:
+        description:
+        - "SAML authentication identity provider name"
+        required: True
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -153,7 +78,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["metadata","name","oper","reload_interval","reload_metadata","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["metadata","name","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -182,14 +107,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        reload_metadata=dict(type='bool',),
-        oper=dict(type='dict',md=dict(type='str',),name=dict(type='str',required=True,),sso_list=dict(type='list',sso_binding=dict(type='str',),sso_location=dict(type='str',)),entity_id=dict(type='str',),slo_list=dict(type='list',slo_binding=dict(type='str',),slo_location=dict(type='str',)),cert=dict(type='str',),ars_list=dict(type='list',ars_binding=dict(type='str',),ars_location=dict(type='str',),ars_index=dict(type='int',)),aqs_list=dict(type='list',aqs_binding=dict(type='str',),aqs_location=dict(type='str',))),
-        stats=dict(type='dict',valid_status=dict(type='str',),md_state=dict(type='str',),name=dict(type='str',required=True,),md_update=dict(type='str',),acs_fail=dict(type='str',),acs_pass=dict(type='str',),acs_state=dict(type='str',),md_fail=dict(type='str',),acs_req=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        reload_interval=dict(type='int',),
         metadata=dict(type='str',),
-        uuid=dict(type='str',)
+        uuid=dict(type='str',),
+        user_tag=dict(type='str',),
+        name=dict(type='str',required=True,)
     ))
    
 
@@ -214,16 +135,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -303,24 +214,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
-
-def get_stats(module):
-    if module.params.get("stats"):
-        query_params = {}
-        for k,v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -465,26 +358,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     module.client.session.close()
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result
 
 def main():

@@ -95,26 +95,10 @@ options:
             privilege_partition:
                 description:
                 - "'partition-enable-disable'= Set per-partition enable/disable privilege; 'partition-read'= Set per-partition read privilege; 'partition-write'= Set per-partition write privilege; "
-    aws_accesskey:
+    user_tag:
         description:
-        - "Field aws_accesskey"
+        - "Customized tag"
         required: False
-        suboptions:
-            nimport:
-                description:
-                - "Import an aws-accesskey"
-            delete:
-                description:
-                - "Delete an authorized aws accesskey"
-            use_mgmt_port:
-                description:
-                - "Use management port as source port"
-            file_url:
-                description:
-                - "File URL"
-            show:
-                description:
-                - "Show authorized aws accesskey"
     access:
         description:
         - "Field access"
@@ -134,13 +118,9 @@ options:
         description:
         - "Unlock admin user"
         required: False
-    user_tag:
+    password_key:
         description:
-        - "Customized tag"
-        required: False
-    action:
-        description:
-        - "'enable'= Enable user; 'disable'= Disable user; "
+        - "Config admin user password"
         required: False
     trusted_host_acl_id:
         description:
@@ -160,18 +140,19 @@ options:
             encrypted_in_module:
                 description:
                 - "Specify an ENCRYPTED password string (System admin user password)"
-    passwd_string:
+    action:
         description:
-        - "Config admin user password"
+        - "'enable'= Enable user; 'disable'= Disable user; "
         required: False
     trusted_host_cidr:
         description:
         - "Trusted IP Address with network mask"
         required: False
-    password_key:
+    passwd_string:
         description:
         - "Config admin user password"
         required: False
+
 
 """
 
@@ -185,7 +166,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access","access_list","action","aws_accesskey","passwd_string","password","password_key","privilege_global","privilege_list","ssh_pubkey","trusted_host","trusted_host_acl_id","trusted_host_cidr","unlock","user","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["access","access_list","action","passwd_string","password","password_key","privilege_global","privilege_list","ssh_pubkey","trusted_host","trusted_host_acl_id","trusted_host_cidr","unlock","user","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -220,17 +201,16 @@ def get_argspec():
         trusted_host=dict(type='bool',),
         user=dict(type='str',required=True,),
         privilege_list=dict(type='list',partition_name=dict(type='str',),privilege_partition=dict(type='str',choices=['partition-enable-disable','partition-read','partition-write'])),
-        aws_accesskey=dict(type='dict',nimport=dict(type='bool',),delete=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',),show=dict(type='bool',)),
+        user_tag=dict(type='str',),
         access=dict(type='dict',access_type=dict(type='str',choices=['axapi','cli','web']),uuid=dict(type='str',)),
         access_list=dict(type='bool',),
         unlock=dict(type='bool',),
-        user_tag=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
+        password_key=dict(type='bool',),
         trusted_host_acl_id=dict(type='int',),
         password=dict(type='dict',password_in_module=dict(type='str',),uuid=dict(type='str',),encrypted_in_module=dict(type='str',)),
-        passwd_string=dict(type='str',),
+        action=dict(type='str',choices=['enable','disable']),
         trusted_host_cidr=dict(type='str',),
-        password_key=dict(type='bool',)
+        passwd_string=dict(type='str',)
     ))
    
 
@@ -478,15 +458,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

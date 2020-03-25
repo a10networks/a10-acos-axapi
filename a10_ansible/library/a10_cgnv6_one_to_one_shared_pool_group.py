@@ -56,28 +56,11 @@ options:
             shared_pool_group_list:
                 description:
                 - "Field shared_pool_group_list"
-            members:
-                description:
-                - "Field members"
     uuid:
         description:
         - "uuid of the object"
         required: False
-    members:
-        description:
-        - "Field members"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -91,7 +74,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["members","oper","uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -120,9 +103,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_pool_group_list=dict(type='list',vird=dict(type='int',),pool_group_name=dict(type='str',)),members=dict(type='dict',oper=dict(type='dict',member_list=dict(type='list',pool_name=dict(type='str',)),pool_group_name=dict(type='str',)))),
-        uuid=dict(type='str',),
-        members=dict(type='dict',uuid=dict(type='str',))
+        oper=dict(type='dict',shared_pool_group_list=dict(type='list',pool_group_name=dict(type='str',))),
+        uuid=dict(type='str',)
     ))
    
 
@@ -245,30 +227,13 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
+def report_changes(module, result, existing_config):
     if existing_config:
-        for k, v in payload["shared-pool-group"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-               break
-            else:
-                if existing_config["shared-pool-group"][k] != v:
-                    if result["changed"] != True:
-                        result["changed"] = True
-                    existing_config["shared-pool-group"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
+        result["changed"] = True
     return result
-
-def create(module, result, payload):
+def create(module, result):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
@@ -290,9 +255,9 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
+def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -306,17 +271,12 @@ def update(module, result, existing_config, payload):
     return result
 
 def present(module, result, existing_config):
-    payload = build_json("shared-pool-group", module)
-    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
-    elif not existing_config:
-        return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
-        return update(module, result, existing_config, payload)
+        return report_changes(module, result, existing_config)
+    if not existing_config:
+        return create(module, result)
     else:
-        result["changed"] = True
-        return result
+        return update(module, result, existing_config)
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -329,9 +289,9 @@ def absent(module, result, existing_config):
     else:
         return delete(module, result)
 
-def replace(module, result, existing_config, payload):
+def replace(module, result, existing_config):
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.put(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -382,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -393,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

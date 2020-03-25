@@ -48,37 +48,27 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    uuid:
+    ssl_key:
         description:
-        - "uuid of the object"
-        required: False
+        - "SSL Key File(enter bulk when import an archive file)"
+        required: True
     use_mgmt_port:
         description:
         - "Use management port as source port"
         required: False
-    secured:
+    uuid:
         description:
-        - "Mark as non-exportable"
-        required: False
-    period:
-        description:
-        - "Specify the period in second"
+        - "uuid of the object"
         required: False
     remote_file:
         description:
         - "profile name for remote url"
         required: False
-    ssl_key:
+    period:
         description:
-        - "SSL Key File(enter bulk when import an archive file)"
-        required: True
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+        - "Specify the period in second"
+        required: False
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -92,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["period","remote_file","secured","ssl_key","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["period","remote_file","ssl_key","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -121,12 +111,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
+        ssl_key=dict(type='str',required=True,),
         use_mgmt_port=dict(type='bool',),
-        secured=dict(type='bool',),
-        period=dict(type='int',),
+        uuid=dict(type='str',),
         remote_file=dict(type='str',),
-        ssl_key=dict(type='str',required=True,)
+        period=dict(type='int',)
     ))
    
 
@@ -374,15 +363,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

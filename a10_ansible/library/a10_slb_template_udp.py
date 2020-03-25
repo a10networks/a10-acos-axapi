@@ -62,7 +62,7 @@ options:
         required: True
     age:
         description:
-        - "short age (in sec), default is 31"
+        - "short age"
         required: False
     stateless_conn_timeout:
         description:
@@ -92,6 +92,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -392,15 +393,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

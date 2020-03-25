@@ -56,12 +56,30 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            down_grace_period_allowed:
+            vrid:
                 description:
-                - "Field down_grace_period_allowed"
+                - "Field vrid"
+            ha_group_id:
+                description:
+                - "Field ha_group_id"
+            alloc_failed:
+                description:
+                - "Field alloc_failed"
+            ports_consumed:
+                description:
+                - "Field ports_consumed"
             protocol:
                 description:
                 - "'tcp'= TCP Port; 'udp'= UDP Port; "
+            ipv6:
+                description:
+                - "Field ipv6"
+            state:
+                description:
+                - "Field state"
+            port_number:
+                description:
+                - "Port Number"
             ip:
                 description:
                 - "Field ip"
@@ -71,75 +89,6 @@ options:
             ports_consumed_total:
                 description:
                 - "Field ports_consumed_total"
-            aflow_queue_size:
-                description:
-                - "Field aflow_queue_size"
-            current_time:
-                description:
-                - "Field current_time"
-            alloc_failed:
-                description:
-                - "Field alloc_failed"
-            vrid:
-                description:
-                - "Field vrid"
-            state:
-                description:
-                - "Field state"
-            ipv6:
-                description:
-                - "Field ipv6"
-            slow_start_conn_limit:
-                description:
-                - "Field slow_start_conn_limit"
-            resv_conn:
-                description:
-                - "Field resv_conn"
-            hm_index:
-                description:
-                - "Field hm_index"
-            down_time_grace_period:
-                description:
-                - "Field down_time_grace_period"
-            inband_hm_reassign_num:
-                description:
-                - "Field inband_hm_reassign_num"
-            ports_consumed:
-                description:
-                - "Field ports_consumed"
-            port_number:
-                description:
-                - "Port Number"
-            curr_observe_rate:
-                description:
-                - "Field curr_observe_rate"
-            curr_conn_rate:
-                description:
-                - "Field curr_conn_rate"
-            disable:
-                description:
-                - "Field disable"
-            aflow_conn_limit:
-                description:
-                - "Field aflow_conn_limit"
-            diameter_enabled:
-                description:
-                - "Field diameter_enabled"
-            soft_down_time:
-                description:
-                - "Field soft_down_time"
-            ha_group_id:
-                description:
-                - "Field ha_group_id"
-            hm_key:
-                description:
-                - "Field hm_key"
-            es_resp_time:
-                description:
-                - "Field es_resp_time"
-            conn_rate_unit:
-                description:
-                - "Field conn_rate_unit"
     health_check_disable:
         description:
         - "Disable health check"
@@ -268,6 +217,7 @@ options:
         - "Health Check (Monitor Name)"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -309,7 +259,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',down_grace_period_allowed=dict(type='int',),protocol=dict(type='str',required=True,choices=['tcp','udp']),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',),aflow_queue_size=dict(type='int',),current_time=dict(type='int',),alloc_failed=dict(type='int',),vrid=dict(type='int',),state=dict(type='str',choices=['Up','Down','Disabled','Maintenance','Unknown','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-EXCEED-RATE','DIS-DAMP']),ipv6=dict(type='str',),slow_start_conn_limit=dict(type='int',),resv_conn=dict(type='int',),hm_index=dict(type='int',),down_time_grace_period=dict(type='int',),inband_hm_reassign_num=dict(type='int',),ports_consumed=dict(type='int',),port_number=dict(type='int',required=True,),curr_observe_rate=dict(type='int',),curr_conn_rate=dict(type='int',),disable=dict(type='int',),aflow_conn_limit=dict(type='int',),diameter_enabled=dict(type='int',),soft_down_time=dict(type='int',),ha_group_id=dict(type='int',),hm_key=dict(type='int',),es_resp_time=dict(type='int',),conn_rate_unit=dict(type='str',)),
+        oper=dict(type='dict',vrid=dict(type='int',),ha_group_id=dict(type='int',),alloc_failed=dict(type='int',),ports_consumed=dict(type='int',),protocol=dict(type='str',required=True,choices=['tcp','udp']),ipv6=dict(type='str',),state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),port_number=dict(type='int',required=True,),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',)),
         health_check_disable=dict(type='bool',),
         protocol=dict(type='str',required=True,choices=['tcp','udp']),
         uuid=dict(type='str',),
@@ -604,10 +554,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -617,6 +565,7 @@ def run_command(module):
             result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

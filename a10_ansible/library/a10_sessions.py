@@ -53,147 +53,50 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            ext:
-                description:
-                - "Field ext"
-            sport_rate_limit_exceed:
-                description:
-                - "Field sport_rate_limit_exceed"
-            app:
-                description:
-                - "Field app"
-            fw_dest_zone:
-                description:
-                - "Field fw_dest_zone"
-            src_port:
-                description:
-                - "Field src_port"
-            fw_dest_vserver:
-                description:
-                - "Field fw_dest_vserver"
-            nat_port:
-                description:
-                - "Field nat_port"
-            fw_src_obj_grp:
-                description:
-                - "Field fw_src_obj_grp"
             dst_ipv4_addr:
                 description:
                 - "Field dst_ipv4_addr"
-            app_sessions:
-                description:
-                - "Field app_sessions"
-            name_str:
-                description:
-                - "Field name_str"
-            app_category:
-                description:
-                - "Field app_category"
-            fw_src_rserver:
-                description:
-                - "Field fw_src_rserver"
-            smp:
-                description:
-                - "Field smp"
-            application:
-                description:
-                - "Field application"
-            nat_ipv4_addr:
-                description:
-                - "Field nat_ipv4_addr"
-            session_list:
-                description:
-                - "Field session_list"
-            fw_dest_obj_grp:
-                description:
-                - "Field fw_dest_obj_grp"
-            src_ipv6_prefix:
-                description:
-                - "Field src_ipv6_prefix"
-            total_sessions:
-                description:
-                - "Field total_sessions"
-            session_id:
-                description:
-                - "Field session_id"
-            check_inside_user:
-                description:
-                - "Field check_inside_user"
-            sport_rate_limit_curr:
-                description:
-                - "Field sport_rate_limit_curr"
-            fw_rule:
-                description:
-                - "Field fw_rule"
-            l4_protocol:
-                description:
-                - "Field l4_protocol"
-            zone_name:
-                description:
-                - "Field zone_name"
-            fw_dest_rserver:
-                description:
-                - "Field fw_dest_rserver"
-            fw_helper_sessions:
-                description:
-                - "Field fw_helper_sessions"
-            fw_ip_type:
-                description:
-                - "Field fw_ip_type"
-            fw_dest_obj:
-                description:
-                - "Field fw_dest_obj"
-            filter_type:
-                description:
-                - "Field filter_type"
-            dst_ipv6_prefix:
-                description:
-                - "Field dst_ipv6_prefix"
             src_ipv6_addr:
                 description:
                 - "Field src_ipv6_addr"
             dst_ipv6_addr:
                 description:
                 - "Field dst_ipv6_addr"
-            fw_src_zone:
+            name_str:
                 description:
-                - "Field fw_src_zone"
+                - "Field name_str"
+            total_sessions:
+                description:
+                - "Field total_sessions"
             src_ipv4_addr:
                 description:
                 - "Field src_ipv4_addr"
-            fw_src_obj:
+            src_port:
                 description:
-                - "Field fw_src_obj"
+                - "Field src_port"
             dest_port:
                 description:
                 - "Field dest_port"
-    ext:
-        description:
-        - "Field ext"
-        required: False
-        suboptions:
-            uuid:
+            nat_port:
                 description:
-                - "uuid of the object"
+                - "Field nat_port"
+            nat_ipv4_addr:
+                description:
+                - "Field nat_ipv4_addr"
+            filter_type:
+                description:
+                - "Field filter_type"
+            l4_protocol:
+                description:
+                - "Field l4_protocol"
+            session_list:
+                description:
+                - "Field session_list"
     uuid:
         description:
         - "uuid of the object"
         required: False
-    smp:
-        description:
-        - "Field smp"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -207,7 +110,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext","oper","smp","uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -236,10 +139,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ext=dict(type='dict',oper=dict(type='dict',session_ext_list=dict(type='list',fail=dict(type='int',),alloc=dict(type='int',),ntype=dict(type='str',),free=dict(type='int',),cpu_round_robin_fail=dict(type='int',)))),sport_rate_limit_exceed=dict(type='bool',),app=dict(type='str',),fw_dest_zone=dict(type='str',),src_port=dict(type='int',),fw_dest_vserver=dict(type='str',),nat_port=dict(type='int',),fw_src_obj_grp=dict(type='str',),dst_ipv4_addr=dict(type='str',),app_sessions=dict(type='int',),name_str=dict(type='str',),app_category=dict(type='str',),fw_src_rserver=dict(type='str',),smp=dict(type='dict',oper=dict(type='dict',session_smp_list=dict(type='list',alloc=dict(type='int',),ntype=dict(type='str',),free=dict(type='int',),alloc_fail=dict(type='int',)))),application=dict(type='str',),nat_ipv4_addr=dict(type='str',),session_list=dict(type='list',100ms=dict(type='str',),conn_idx=dict(type='int',),rate=dict(type='int',),service_name=dict(type='str',),duration=dict(type='int',),limit=dict(type='int',),reverse_source=dict(type='str',),reverse_dest=dict(type='str',),app_type=dict(type='str',),protocol=dict(type='str',),rserver_name=dict(type='str',),extension_fields_list=dict(type='list',ext_field_name=dict(type='str',),ext_field_val=dict(type='str',)),hash=dict(type='int',),sip_call_id=dict(type='str',),app_name=dict(type='str',),forward_dest=dict(type='str',),peak_rate=dict(type='int',),forward_source=dict(type='str',),age=dict(type='int',),drop=dict(type='int',),bytes=dict(type='int',),flags=dict(type='str',),category_name=dict(type='str',)),fw_dest_obj_grp=dict(type='str',),src_ipv6_prefix=dict(type='str',),total_sessions=dict(type='int',),session_id=dict(type='str',),check_inside_user=dict(type='bool',),sport_rate_limit_curr=dict(type='bool',),fw_rule=dict(type='str',),l4_protocol=dict(type='str',choices=['udp','tcp','icmp','icmpv6']),zone_name=dict(type='str',),fw_dest_rserver=dict(type='str',),fw_helper_sessions=dict(type='bool',),fw_ip_type=dict(type='str',choices=['ipv4','ipv6']),fw_dest_obj=dict(type='str',),filter_type=dict(type='str',choices=['ipv4','ipv6','nat44','nat64','persist-ipv6-src-ip','persist-ipv6-dst-ip','persist-ipv6-ssl-id','persist-dst-ip','persist-src-ip','persist-uie','persist-ssl-id','radius','server','virtual-server','sip','sixrd','filter','ds-lite','dns-id-switch','local','fw','clear-all','full-width','debug','application','ipsec','diameter','zone','source-port-rate-limit','source-port-rate-limitv4','source-port-rate-limitv6']),dst_ipv6_prefix=dict(type='str',),src_ipv6_addr=dict(type='str',),dst_ipv6_addr=dict(type='str',),fw_src_zone=dict(type='str',),src_ipv4_addr=dict(type='str',),fw_src_obj=dict(type='str',),dest_port=dict(type='int',)),
-        ext=dict(type='dict',uuid=dict(type='str',)),
-        uuid=dict(type='str',),
-        smp=dict(type='dict',uuid=dict(type='str',))
+        oper=dict(type='dict',dst_ipv4_addr=dict(type='str',),src_ipv6_addr=dict(type='str',),dst_ipv6_addr=dict(type='str',),name_str=dict(type='str',),total_sessions=dict(type='int',),src_ipv4_addr=dict(type='str',),src_port=dict(type='int',),dest_port=dict(type='int',),nat_port=dict(type='int',),nat_ipv4_addr=dict(type='str',),filter_type=dict(type='str',choices=['ipv4','ipv6','nat44','nat64','persist-ipv6-srcp-ip','persist-ipv6-dst-ip','persist-ipv6-ssl-id','persist-dst-ip','persist-src-ip','persist-uie','persist-ssl-id','radius','rserver','vserver','sip','sixrd','filter','ds-lite','dns-id-switch','local']),l4_protocol=dict(type='str',choices=['udp','tcp','icmp','icmpv6']),session_list=dict(type='list',protocol=dict(type='str',),sip_call_id=dict(type='str',),forward_source=dict(type='str',),age=dict(type='int',),app_type=dict(type='str',),forward_dest=dict(type='str',),flags=dict(type='str',),hash=dict(type='int',),reverse_source=dict(type='str',),reverse_dest=dict(type='str',))),
+        uuid=dict(type='str',)
     ))
    
 
@@ -362,30 +263,13 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
+def report_changes(module, result, existing_config):
     if existing_config:
-        for k, v in payload["sessions"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-               break
-            else:
-                if existing_config["sessions"][k] != v:
-                    if result["changed"] != True:
-                        result["changed"] = True
-                    existing_config["sessions"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
+        result["changed"] = True
     return result
-
-def create(module, result, payload):
+def create(module, result):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
@@ -407,9 +291,9 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
+def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -423,17 +307,12 @@ def update(module, result, existing_config, payload):
     return result
 
 def present(module, result, existing_config):
-    payload = build_json("sessions", module)
-    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
-    elif not existing_config:
-        return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
-        return update(module, result, existing_config, payload)
+        return report_changes(module, result, existing_config)
+    if not existing_config:
+        return create(module, result)
     else:
-        result["changed"] = True
-        return result
+        return update(module, result, existing_config)
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -446,9 +325,9 @@ def absent(module, result, existing_config):
     else:
         return delete(module, result)
 
-def replace(module, result, existing_config, payload):
+def replace(module, result, existing_config):
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.put(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -499,10 +378,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -510,6 +387,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

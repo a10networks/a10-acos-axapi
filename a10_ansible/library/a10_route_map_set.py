@@ -121,7 +121,7 @@ options:
         suboptions:
             value:
                 description:
-                - "Metric Value (from -4294967295 to 4294967295)"
+                - "Metric value"
     as_path:
         description:
         - "Field as_path"
@@ -175,20 +175,6 @@ options:
             val:
                 description:
                 - "Preference value"
-    ddos:
-        description:
-        - "Field ddos"
-        required: False
-        suboptions:
-            class_list_name:
-                description:
-                - "Class-List Name"
-            class_list_cid:
-                description:
-                - "Class-List Cid"
-            zone:
-                description:
-                - "Zone Name"
     tag:
         description:
         - "Field tag"
@@ -249,6 +235,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -261,7 +248,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aggregator","as_path","atomic_aggregate","comm_list","community","dampening_cfg","ddos","extcommunity","ip","ipv6","level","local_preference","metric","metric_type","origin","originator_id","tag","uuid","weight",]
+AVAILABLE_PROPERTIES = ["aggregator","as_path","atomic_aggregate","comm_list","community","dampening_cfg","extcommunity","ip","ipv6","level","local_preference","metric","metric_type","origin","originator_id","tag","uuid","weight",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -302,7 +289,6 @@ def get_argspec():
         atomic_aggregate=dict(type='bool',),
         community=dict(type='str',),
         local_preference=dict(type='dict',val=dict(type='int',)),
-        ddos=dict(type='dict',class_list_name=dict(type='str',),class_list_cid=dict(type='int',),zone=dict(type='str',)),
         tag=dict(type='dict',value=dict(type='int',)),
         aggregator=dict(type='dict',aggregator_as=dict(type='dict',ip=dict(type='str',),asn=dict(type='int',))),
         dampening_cfg=dict(type='dict',dampening_max_supress=dict(type='int',),dampening=dict(type='bool',),dampening_penalty=dict(type='int',),dampening_half_time=dict(type='int',),dampening_supress=dict(type='int',),dampening_reuse=dict(type='int',)),
@@ -566,15 +552,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

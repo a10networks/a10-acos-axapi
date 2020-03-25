@@ -55,7 +55,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'outbound_ipv4_received'= Outbound IPv4 packets received; 'outbound_ipv4_drop'= Outbound IPv4 packets dropped; 'outbound_ipv4_fragment_received'= Outbound IPv4 fragment packets received; 'outbound_ipv6_unreachable'= Outbound IPv6 destination unreachable; 'outbound_ipv6_fragmented'= Outbound IPv6 packets fragmented; 'inbound_ipv6_received'= Inbound IPv6 packets received; 'inbound_ipv6_drop'= Inbound IPv6 packets dropped; 'inbound_ipv6_fragment_received'= Inbound IPv6 fragment packets received; 'inbound_ipv4_unreachable'= Inbound IPv4 destination unreachable; 'inbound_ipv4_fragmented'= Inbound IPv4 packets fragmented; 'packet_too_big'= Packet too big; 'fragment_error'= Fragment processing errors; 'icmpv6_to_icmp'= ICMPv6 to ICMP; 'icmpv6_to_icmp_error'= ICMPv6 to ICMP errors; 'icmp_to_icmpv6'= ICMP to ICMPv6; 'icmp_to_icmpv6_error'= ICMP to ICMPv6 errors; 'ha_standby'= HA is standby; 'other_error'= Other errors; 'conn_count'= conn count; "
+                - "'all'= all; 'outbound_ipv4_received'= Outbound IPv4 packets received; 'outbound_ipv4_drop'= Outbound IPv4 packets dropped; 'outbound_ipv4_fragment_received'= Outbound IPv4 fragment packets received; 'outbound_ipv6_unreachable'= Outbound IPv6 destination unreachable; 'outbound_ipv6_fragmented'= Outbound IPv6 packets fragmented; 'inbound_ipv6_received'= Inbound IPv6 packets received; 'inbound_ipv6_drop'= Inbound IPv6 packets dropped; 'inbound_ipv6_fragment_received'= Inbound IPv6 fragment packets received; 'inbound_ipv4_unreachable'= Inbound IPv4 destination unreachable; 'inbound_ipv4_fragmented'= Inbound IPv4 packets fragmented; 'packet_too_big'= Packet too big; 'fragment_error'= Fragment processing errors; 'icmpv6_to_icmp'= ICMPv6 to ICMP; 'icmpv6_to_icmp_error'= ICMPv6 to ICMP errors; 'icmp_to_icmpv6'= ICMP to ICMPv6; 'icmp_to_icmpv6_error'= ICMP to ICMPv6 errors; 'ha_standby'= HA is standby; 'other_error'= Other errors; "
     stats:
         description:
         - "Field stats"
@@ -106,9 +106,6 @@ options:
             outbound_ipv4_drop:
                 description:
                 - "Outbound IPv4 packets dropped"
-            conn_count:
-                description:
-                - "conn count"
             icmpv6_to_icmp:
                 description:
                 - "ICMPv6 to ICMP"
@@ -122,6 +119,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -164,8 +162,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','outbound_ipv4_received','outbound_ipv4_drop','outbound_ipv4_fragment_received','outbound_ipv6_unreachable','outbound_ipv6_fragmented','inbound_ipv6_received','inbound_ipv6_drop','inbound_ipv6_fragment_received','inbound_ipv4_unreachable','inbound_ipv4_fragmented','packet_too_big','fragment_error','icmpv6_to_icmp','icmpv6_to_icmp_error','icmp_to_icmpv6','icmp_to_icmpv6_error','ha_standby','other_error','conn_count'])),
-        stats=dict(type='dict',inbound_ipv4_unreachable=dict(type='str',),outbound_ipv6_unreachable=dict(type='str',),outbound_ipv4_received=dict(type='str',),outbound_ipv6_fragmented=dict(type='str',),ha_standby=dict(type='str',),packet_too_big=dict(type='str',),inbound_ipv6_received=dict(type='str',),icmp_to_icmpv6=dict(type='str',),inbound_ipv6_drop=dict(type='str',),fragment_error=dict(type='str',),inbound_ipv6_fragment_received=dict(type='str',),icmpv6_to_icmp_error=dict(type='str',),inbound_ipv4_fragmented=dict(type='str',),outbound_ipv4_fragment_received=dict(type='str',),outbound_ipv4_drop=dict(type='str',),conn_count=dict(type='str',),icmpv6_to_icmp=dict(type='str',),other_error=dict(type='str',),icmp_to_icmpv6_error=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','outbound_ipv4_received','outbound_ipv4_drop','outbound_ipv4_fragment_received','outbound_ipv6_unreachable','outbound_ipv6_fragmented','inbound_ipv6_received','inbound_ipv6_drop','inbound_ipv6_fragment_received','inbound_ipv4_unreachable','inbound_ipv4_fragmented','packet_too_big','fragment_error','icmpv6_to_icmp','icmpv6_to_icmp_error','icmp_to_icmpv6','icmp_to_icmpv6_error','ha_standby','other_error'])),
+        stats=dict(type='dict',inbound_ipv4_unreachable=dict(type='str',),outbound_ipv6_unreachable=dict(type='str',),outbound_ipv4_received=dict(type='str',),outbound_ipv6_fragmented=dict(type='str',),ha_standby=dict(type='str',),packet_too_big=dict(type='str',),inbound_ipv6_received=dict(type='str',),icmp_to_icmpv6=dict(type='str',),inbound_ipv6_drop=dict(type='str',),fragment_error=dict(type='str',),inbound_ipv6_fragment_received=dict(type='str',),icmpv6_to_icmp_error=dict(type='str',),inbound_ipv4_fragmented=dict(type='str',),outbound_ipv4_fragment_received=dict(type='str',),outbound_ipv4_drop=dict(type='str',),icmpv6_to_icmp=dict(type='str',),other_error=dict(type='str',),icmp_to_icmpv6_error=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -426,10 +424,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -437,6 +433,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

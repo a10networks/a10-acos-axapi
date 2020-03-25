@@ -52,14 +52,11 @@ options:
         description:
         - "Configure netflow packet queue time (Max packet queue time(*20ms). Default=50( *20ms = 1s)))"
         required: False
-    reset_time_on_flow_record:
-        description:
-        - "Reset session start time to current time on each flow timeout export for long-lasting session (default= disabled)."
-        required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -73,7 +70,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["max_packet_queue_time","reset_time_on_flow_record","uuid",]
+AVAILABLE_PROPERTIES = ["max_packet_queue_time","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +100,6 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         max_packet_queue_time=dict(type='int',),
-        reset_time_on_flow_record=dict(type='bool',),
         uuid=dict(type='str',)
     ))
    
@@ -350,15 +346,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -48,10 +48,18 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    drop_on_nat_pool_mismatch:
+        description:
+        - "Drop traffic from users if their current NAT pool does not match the lid's (default= off)"
+        required: False
     user_quota_prefix_length:
         description:
-        - "NAT64/DS-Lite user quota prefix length (Prefix Length (Default= Uses the global NAT64/DS-Lite configured value))"
+        - "NAT64 user quota prefix length (Prefix Length (Default= Uses the global NAT64 configured value))"
         required: False
+    lid_number:
+        description:
+        - "LSN Lid"
+        required: True
     extended_user_quota:
         description:
         - "Field extended_user_quota"
@@ -63,10 +71,6 @@ options:
             tcp:
                 description:
                 - "Field tcp"
-    lid_number:
-        description:
-        - "LSN Lid"
-        required: True
     ds_lite:
         description:
         - "Field ds_lite"
@@ -140,6 +144,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -152,7 +157,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["conn_rate_limit","ds_lite","extended_user_quota","lid_number","lsn_rule_list","name","override","respond_to_user_mac","source_nat_pool","user_quota","user_quota_prefix_length","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["conn_rate_limit","drop_on_nat_pool_mismatch","ds_lite","extended_user_quota","lid_number","lsn_rule_list","name","override","respond_to_user_mac","source_nat_pool","user_quota","user_quota_prefix_length","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -181,9 +186,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        drop_on_nat_pool_mismatch=dict(type='bool',),
         user_quota_prefix_length=dict(type='int',),
-        extended_user_quota=dict(type='dict',udp=dict(type='list',udp_sessions=dict(type='int',),udp_service_port=dict(type='int',)),tcp=dict(type='list',tcp_service_port=dict(type='int',),tcp_sessions=dict(type='int',))),
         lid_number=dict(type='int',required=True,),
+        extended_user_quota=dict(type='dict',udp=dict(type='list',udp_sessions=dict(type='int',),udp_service_port=dict(type='int',)),tcp=dict(type='list',tcp_service_port=dict(type='int',),tcp_sessions=dict(type='int',))),
         ds_lite=dict(type='dict',inside_src_permit_list=dict(type='str',)),
         user_quota=dict(type='dict',quota_udp=dict(type='dict',udp_reserve=dict(type='int',),udp_quota=dict(type='int',)),icmp=dict(type='int',),session=dict(type='int',),quota_tcp=dict(type='dict',tcp_quota=dict(type='int',),tcp_reserve=dict(type='int',))),
         user_tag=dict(type='str',),
@@ -441,15 +447,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

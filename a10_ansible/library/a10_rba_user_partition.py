@@ -78,10 +78,11 @@ options:
         suboptions:
             operation:
                 description:
-                - "'no-access'= no-access; 'read'= read; 'oper'= oper; 'write'= write; "
+                - "'no-access'= no-access; 'read'= read; 'write'= write; "
             object:
                 description:
                 - "Lineage of object class for permitted operation"
+
 
 """
 
@@ -128,7 +129,7 @@ def get_argspec():
         role_list=dict(type='list',role=dict(type='str',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
-        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',))
+        rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))
     ))
    
     # Parent keys
@@ -382,15 +383,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

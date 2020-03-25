@@ -48,10 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    facility:
-        description:
-        - "'local0'= Local use; 'local1'= Local use; 'local2'= Local use; 'local3'= Local use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local use; 'local7'= Local use; "
-        required: False
     enable:
         description:
         - "Enable authentication logs"
@@ -60,10 +56,11 @@ options:
         description:
         - "uuid of the object"
         required: False
-    format:
+    facility:
         description:
-        - "'syslog'= Syslog Format (default); 'cef'= Common Event Format; "
+        - "'local0'= Local use; 'local1'= Local use; 'local2'= Local use; 'local3'= Local use; 'local4'= Local use; 'local5'= Local use; 'local6'= Local use; 'local7'= Local use; "
         required: False
+
 
 """
 
@@ -77,7 +74,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable","facility","format","uuid",]
+AVAILABLE_PROPERTIES = ["enable","facility","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -106,10 +103,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        facility=dict(type='str',choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
         enable=dict(type='bool',),
         uuid=dict(type='str',),
-        format=dict(type='str',choices=['syslog','cef'])
+        facility=dict(type='str',choices=['local0','local1','local2','local3','local4','local5','local6','local7'])
     ))
    
 
@@ -355,15 +351,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

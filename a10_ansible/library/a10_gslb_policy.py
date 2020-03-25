@@ -325,9 +325,6 @@ options:
             server_full_list:
                 description:
                 - "Append All A Records in Authoritative Section"
-            server_any_with_metric:
-                description:
-                - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
             dns_auto_map:
                 description:
                 - "Automatically build DNS Infrastructure"
@@ -512,6 +509,7 @@ options:
         - "Select Service-IP by geographic"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -571,7 +569,7 @@ def get_argspec():
         metric_type=dict(type='str',choices=['health-check','weighted-ip','weighted-site','capacity','active-servers','active-rdt','geographic','connection-load','num-session','admin-preference','bw-cost','least-response','admin-ip']),
         num_session_tolerance=dict(type='int',),
         name=dict(type='str',required=True,),
-        dns=dict(type='dict',server_mode_only=dict(type='bool',),external_soa=dict(type='bool',),server_sec=dict(type='bool',),sticky_ipv6_mask=dict(type='int',),sticky=dict(type='bool',),delegation=dict(type='bool',),active_only_fail_safe=dict(type='bool',),cname_detect=dict(type='bool',),ttl=dict(type='int',),dynamic_preference=dict(type='bool',),use_server_ttl=dict(type='bool',),server_ptr=dict(type='bool',),selected_only=dict(type='bool',),ip_replace=dict(type='bool',),dns_addition_mx=dict(type='bool',),backup_alias=dict(type='bool',),server_any=dict(type='bool',),hint=dict(type='str',choices=['none','answer','addition']),cache=dict(type='bool',),external_ip=dict(type='bool',),server_txt=dict(type='bool',),server_addition_mx=dict(type='bool',),aging_time=dict(type='int',),block_action=dict(type='bool',),template=dict(type='str',),ipv6=dict(type='list',dns_ipv6_mapping_type=dict(type='str',choices=['addition','answer','exclusive','replace']),dns_ipv6_option=dict(type='str',choices=['mix','smart','mapping'])),selected_only_value=dict(type='int',),geoloc_action=dict(type='bool',),server_ns=dict(type='bool',),action_type=dict(type='str',choices=['drop','reject','ignore']),server_naptr=dict(type='bool',),active_only=dict(type='bool',),block_value=dict(type='list',block_value=dict(type='int',)),server_srv=dict(type='bool',),server_auto_ptr=dict(type='bool',),server_cname=dict(type='bool',),server_authoritative=dict(type='bool',),server_full_list=dict(type='bool',),server_any_with_metric=dict(type='bool',),dns_auto_map=dict(type='bool',),block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),sticky_mask=dict(type='str',),geoloc_alias=dict(type='bool',),logging=dict(type='str',choices=['none','query','response','both']),backup_server=dict(type='bool',),sticky_aging_time=dict(type='int',),geoloc_policy=dict(type='bool',),uuid=dict(type='str',),server=dict(type='bool',),dynamic_weight=dict(type='bool',),server_ns_list=dict(type='bool',),server_auto_ns=dict(type='bool',),action=dict(type='bool',),proxy_block_port_range_list=dict(type='list',proxy_block_range_from=dict(type='int',),proxy_block_range_to=dict(type='int',)),server_mx=dict(type='bool',)),
+        dns=dict(type='dict',server_mode_only=dict(type='bool',),external_soa=dict(type='bool',),server_sec=dict(type='bool',),sticky_ipv6_mask=dict(type='int',),sticky=dict(type='bool',),delegation=dict(type='bool',),active_only_fail_safe=dict(type='bool',),cname_detect=dict(type='bool',),ttl=dict(type='int',),dynamic_preference=dict(type='bool',),use_server_ttl=dict(type='bool',),server_ptr=dict(type='bool',),selected_only=dict(type='bool',),ip_replace=dict(type='bool',),dns_addition_mx=dict(type='bool',),backup_alias=dict(type='bool',),server_any=dict(type='bool',),hint=dict(type='str',choices=['none','answer','addition']),cache=dict(type='bool',),external_ip=dict(type='bool',),server_txt=dict(type='bool',),server_addition_mx=dict(type='bool',),aging_time=dict(type='int',),block_action=dict(type='bool',),template=dict(type='str',),ipv6=dict(type='list',dns_ipv6_mapping_type=dict(type='str',choices=['addition','answer','exclusive','replace']),dns_ipv6_option=dict(type='str',choices=['mix','smart','mapping'])),selected_only_value=dict(type='int',),geoloc_action=dict(type='bool',),server_ns=dict(type='bool',),action_type=dict(type='str',choices=['drop','reject','ignore']),server_naptr=dict(type='bool',),active_only=dict(type='bool',),block_value=dict(type='list',block_value=dict(type='int',)),server_srv=dict(type='bool',),server_auto_ptr=dict(type='bool',),server_cname=dict(type='bool',),server_authoritative=dict(type='bool',),server_full_list=dict(type='bool',),dns_auto_map=dict(type='bool',),block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),sticky_mask=dict(type='str',),geoloc_alias=dict(type='bool',),logging=dict(type='str',choices=['none','query','response','both']),backup_server=dict(type='bool',),sticky_aging_time=dict(type='int',),geoloc_policy=dict(type='bool',),uuid=dict(type='str',),server=dict(type='bool',),dynamic_weight=dict(type='bool',),server_ns_list=dict(type='bool',),server_auto_ns=dict(type='bool',),action=dict(type='bool',),proxy_block_port_range_list=dict(type='list',proxy_block_range_from=dict(type='int',),proxy_block_range_to=dict(type='int',)),server_mx=dict(type='bool',)),
         weighted_ip_total_hits=dict(type='bool',),
         weighted_site_total_hits=dict(type='bool',),
         ip_list=dict(type='str',),
@@ -854,10 +852,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -865,6 +861,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

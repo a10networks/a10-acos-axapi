@@ -74,6 +74,7 @@ options:
                 description:
                 - "Customized tag"
 
+
 """
 
 EXAMPLES = """
@@ -117,7 +118,7 @@ def get_argspec():
     rv.update(dict(
         ipv6_tunnel_addr=dict(type='str',required=True,),
         user_tag=dict(type='str',),
-        nat_address_list=dict(type='list',ipv4_nat_addr=dict(type='str',required=True,),port_range_list=dict(type='list',port_start=dict(type='int',required=True,),tunnel_endpoint_address=dict(type='str',required=True,),port_end=dict(type='int',required=True,)),user_tag=dict(type='str',))
+        nat_address_list=dict(type='list',ipv4_nat_addr=dict(type='str',required=True,),port_range_list=dict(type='list',port_start=dict(type='int',required=True,),tunnel_endpoint_address=dict(type='str',),port_end=dict(type='int',required=True,)),user_tag=dict(type='str',))
     ))
    
     # Parent keys
@@ -371,15 +372,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -70,7 +70,7 @@ options:
         required: False
     timeout:
         description:
-        - "Timeout in seconds. Multiple of 60 (default 2400)"
+        - "Timeout in seconds. Multiple of 60 (def 2400)"
         required: False
     num_conn_per_port:
         description:
@@ -80,6 +80,7 @@ options:
         description:
         - "Connection Reuse Template Name"
         required: True
+
 
 """
 
@@ -377,15 +378,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

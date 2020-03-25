@@ -53,12 +53,13 @@ options:
         - Key to identify parent object
     severity_val:
         description:
-        - "'emergency'= System unusable log messages (Most Important); 'alert'= Action must be taken immediately; 'critical'= Critical conditions; 'error'= Error conditions; 'warning'= Warning conditions; 'notification'= Normal but significant conditions; 'information'= Informational messages; 'debugging'= Debug level messages (Least Important); "
+        - "'emergency'= System unusable log messages      (severity=0); 'alert'= Action must be taken immediately  (severity=1); 'critical'= Critical conditions               (severity=2); 'error'= Error conditions                  (severity=3); 'warning'= Warning conditions                (severity=4); 'notification'= Normal but significant conditions (severity=5); 'information'= Informational messages            (severity=6); 'debugging'= Debug level messages              (severity=7); "
         required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -354,15 +355,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

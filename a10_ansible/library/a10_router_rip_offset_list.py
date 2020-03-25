@@ -59,21 +59,18 @@ options:
             loopback:
                 description:
                 - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
             metric:
                 description:
                 - "Metric value"
-            offset_list_direction:
-                description:
-                - "'in'= Filter incoming updates; 'out'= Filter outgoing updates; "
-            acl:
-                description:
-                - "Access-list name"
             trunk:
                 description:
                 - "Trunk interface (Trunk interface number)"
+            acl:
+                description:
+                - "Access-list name"
+            offset_list_direction:
+                description:
+                - "'in'= Filter incoming updates; 'out'= Filter outgoing updates; "
             ethernet:
                 description:
                 - "Ethernet interface (Port number)"
@@ -81,6 +78,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -123,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),metric=dict(type='int',),offset_list_direction=dict(type='str',choices=['in','out']),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),
+        acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),metric=dict(type='int',),trunk=dict(type='str',),acl=dict(type='str',),offset_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -370,15 +368,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

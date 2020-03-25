@@ -57,9 +57,6 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            partition:
-                description:
-                - "Field partition"
             file_list:
                 description:
                 - "Field file_list"
@@ -70,10 +67,6 @@ options:
     uuid:
         description:
         - "uuid of the object"
-        required: False
-    pfx_password_export:
-        description:
-        - "The password for exported certificate file (pfx type only)"
         required: False
     file:
         description:
@@ -96,6 +89,7 @@ options:
         - "ssl certificate file size in byte"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -108,7 +102,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","certificate_type","dst_file","file","file_handle","oper","pfx_password","pfx_password_export","size","uuid",]
+AVAILABLE_PROPERTIES = ["action","certificate_type","dst_file","file","file_handle","oper","pfx_password","size","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -138,10 +132,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         pfx_password=dict(type='str',),
-        oper=dict(type='dict',partition=dict(type='str',),file_list=dict(type='list',file=dict(type='str',))),
+        oper=dict(type='dict',file_list=dict(type='list',file=dict(type='str',))),
         dst_file=dict(type='str',),
         uuid=dict(type='str',),
-        pfx_password_export=dict(type='str',),
         file=dict(type='str',),
         action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
@@ -406,10 +399,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -417,6 +408,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

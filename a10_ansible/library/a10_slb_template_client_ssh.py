@@ -48,23 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            forwarding_errors:
-                description:
-                - "Field forwarding_errors"
-            successful_handshakes:
-                description:
-                - "Field successful_handshakes"
-            failed_handshakes:
-                description:
-                - "Field failed_handshakes"
-            name:
-                description:
-                - "Client SSH Template Name"
     uuid:
         description:
         - "uuid of the object"
@@ -94,6 +77,7 @@ options:
         - "Client SSH Template Name"
         required: True
 
+
 """
 
 EXAMPLES = """
@@ -106,7 +90,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["encrypted","forward_proxy_enable","forward_proxy_hostkey","name","passphrase","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["encrypted","forward_proxy_enable","forward_proxy_hostkey","name","passphrase","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,7 +119,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',forwarding_errors=dict(type='str',),successful_handshakes=dict(type='str',),failed_handshakes=dict(type='str',),name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         encrypted=dict(type='str',),
         user_tag=dict(type='str',),
@@ -167,11 +150,6 @@ def existing_url(module):
     f_dict["name"] = module.params["name"]
 
     return url_base.format(**f_dict)
-
-def stats_url(module):
-    """Return the URL for statistical data of and existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/stats"
 
 def list_url(module):
     """Return the URL for a list of resources"""
@@ -251,15 +229,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_stats(module):
-    if module.params.get("stats"):
-        query_params = {}
-        for k,v in module.params["stats"].items():
-            query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
-    return module.client.get(stats_url(module))
 
 def exists(module):
     try:
@@ -404,24 +373,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "stats":
-            result["result"] = get_stats(module)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     module.client.session.close()
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
     return result
 
 def main():

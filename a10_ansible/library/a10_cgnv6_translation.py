@@ -61,24 +61,21 @@ options:
         - "Field service_timeout_list"
         required: False
         suboptions:
-            service_type:
-                description:
-                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
-            uuid:
-                description:
-                - "uuid of the object"
             timeout_val:
                 description:
                 - "Timeout in seconds (Interval of 60 seconds)"
-            port_end:
+            service_type:
                 description:
-                - "End Port Number"
-            fast:
-                description:
-                - "Use Fast Aging"
+                - "'tcp'= TCP Protocol; 'udp'= UDP Protocol; "
             port:
                 description:
                 - "Port Number"
+            fast:
+                description:
+                - "Use Fast Aging"
+            uuid:
+                description:
+                - "uuid of the object"
     icmp_timeout:
         description:
         - "Field icmp_timeout"
@@ -94,6 +91,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -138,7 +136,7 @@ def get_argspec():
     rv.update(dict(
         tcp_timeout=dict(type='int',),
         udp_timeout=dict(type='int',),
-        service_timeout_list=dict(type='list',service_type=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),timeout_val=dict(type='int',),port_end=dict(type='int',),fast=dict(type='bool',),port=dict(type='int',required=True,)),
+        service_timeout_list=dict(type='list',timeout_val=dict(type='int',),service_type=dict(type='str',required=True,choices=['tcp','udp']),port=dict(type='int',required=True,),fast=dict(type='bool',),uuid=dict(type='str',)),
         icmp_timeout=dict(type='dict',icmp_timeout_val=dict(type='int',),fast=dict(type='bool',)),
         uuid=dict(type='str',)
     ))
@@ -386,15 +384,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

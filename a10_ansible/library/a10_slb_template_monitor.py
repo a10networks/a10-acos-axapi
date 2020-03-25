@@ -58,7 +58,7 @@ options:
                 - "Specify the port physical port number"
             clear_all_sequence:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             sessions:
                 description:
                 - "'all'= Clear all sessions; 'sequence'= Sequence number; "
@@ -73,7 +73,7 @@ options:
         suboptions:
             ena_sequence:
                 description:
-                - "Sequence number (Specify the physical port number)"
+                - "Sequence number (Specify the sequence number)"
             enaeth:
                 description:
                 - "Specify the physical port number (Ethernet interface number)"
@@ -93,13 +93,13 @@ options:
                 - "Specify the port physical port number (Ethernet interface number)"
             link_up_sequence1:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             link_up_sequence3:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             link_up_sequence2:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
     link_down_cfg:
         description:
         - "Field link_down_cfg"
@@ -107,13 +107,13 @@ options:
         suboptions:
             link_down_sequence1:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             link_down_sequence2:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             link_down_sequence3:
                 description:
-                - "Sequence number (Specify the port physical port number)"
+                - "Sequence number (Specify the sequence number)"
             linkdown_ethernet2:
                 description:
                 - "Specify the port physical port number (Ethernet interface number)"
@@ -134,7 +134,7 @@ options:
         suboptions:
             dis_sequence:
                 description:
-                - "Sequence number (Specify the physical port number)"
+                - "Sequence number (Specify the sequence number)"
             diseth:
                 description:
                 - "Specify the physical port number (Ethernet interface number)"
@@ -146,6 +146,7 @@ options:
         description:
         - "Monitor template ID Number"
         required: True
+
 
 """
 
@@ -444,15 +445,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -82,7 +82,7 @@ options:
         required: False
     action:
         description:
-        - "'import'= import; "
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     file_handle:
         description:
@@ -92,6 +92,7 @@ options:
         description:
         - "startup-config file size in byte"
         required: False
+
 
 """
 
@@ -138,7 +139,7 @@ def get_argspec():
         dst_file=dict(type='str',),
         uuid=dict(type='str',),
         file=dict(type='str',),
-        action=dict(type='str',choices=['import']),
+        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         file_handle=dict(type='str',),
         size=dict(type='int',)
     ))
@@ -400,10 +401,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -411,6 +410,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

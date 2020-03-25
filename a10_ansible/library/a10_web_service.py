@@ -50,47 +50,11 @@ options:
         required: False
     login_message:
         description:
-        - "Set GUI login message"
-        required: False
-    gui_session_limit:
-        description:
-        - "Set the max allowed GUI sessions (Session limit (default 30))"
+        - "Set web login message"
         required: False
     axapi_session_limit:
         description:
-        - "Set the max allowed aXAPI sessions (Session limit (default 30))"
-        required: False
-    gui_idle:
-        description:
-        - "Idle timeout of a connection in minutes (Connection idle timeout value in minutes, default 10, 0 means never timeout)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    axapi_idle:
-        description:
-        - "Idle timeout of a xml service connection in minutes (Connection idle timeout value in minutes, default 10, 0 means never timeout)"
-        required: False
-    server_disable:
-        description:
-        - "Disable"
-        required: False
-    secure_port:
-        description:
-        - "Set web secure server port number for listening (Secure Port Number(default 443))"
-        required: False
-    auto_redirt_disable:
-        description:
-        - "Diable"
-        required: False
-    secure_server_disable:
-        description:
-        - "Disable"
-        required: False
-    port:
-        description:
-        - "Set Web Server Port (Port number(default 80))"
+        - "Set Web service axapi Session Limit (Session limit (default 30))"
         required: False
     secure:
         description:
@@ -115,13 +79,35 @@ options:
             restart:
                 description:
                 - "Restart WEB service"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+    axapi_idle:
+        description:
+        - "Idle timeout of a xml service connection in minutes (Connection idle timeout value in minutes)"
+        required: False
+    server_disable:
+        description:
+        - "Disable"
+        required: False
+    secure_port:
+        description:
+        - "Set web secure server port number for listening (Secure Port Number(default 443))"
+        required: False
+    auto_redirt_disable:
+        description:
+        - "Diable"
+        required: False
+    secure_server_disable:
+        description:
+        - "Disable"
+        required: False
+    port:
+        description:
+        - "Set Web Server Port (Port number(default 80))"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -135,7 +121,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auto_redirt_disable","axapi_idle","axapi_session_limit","gui_idle","gui_session_limit","login_message","port","secure","secure_port","secure_server_disable","server_disable","uuid",]
+AVAILABLE_PROPERTIES = ["auto_redirt_disable","axapi_idle","axapi_session_limit","login_message","port","secure","secure_port","secure_server_disable","server_disable","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -165,17 +151,15 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         login_message=dict(type='str',),
-        gui_session_limit=dict(type='int',),
         axapi_session_limit=dict(type='int',),
-        gui_idle=dict(type='int',),
-        uuid=dict(type='str',),
+        secure=dict(type='dict',certificate=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),regenerate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),wipe=dict(type='bool',),private_key=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),generate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),restart=dict(type='bool',)),
         axapi_idle=dict(type='int',),
         server_disable=dict(type='bool',),
         secure_port=dict(type='int',),
         auto_redirt_disable=dict(type='bool',),
         secure_server_disable=dict(type='bool',),
         port=dict(type='int',),
-        secure=dict(type='dict',certificate=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),regenerate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),wipe=dict(type='bool',),private_key=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),generate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),restart=dict(type='bool',))
+        uuid=dict(type='str',)
     ))
    
 
@@ -421,15 +405,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

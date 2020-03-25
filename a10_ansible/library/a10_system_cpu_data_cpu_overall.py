@@ -67,6 +67,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -108,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',cpu_usage=dict(type='list',cpu_id=dict(type='int',),30_sec=dict(type='int',),1_sec=dict(type='int',),60_sec=dict(type='int',),10_sec=dict(type='int',),5_sec=dict(type='int',),dcpu_str=dict(type='str',)),number_of_data_cpu=dict(type='int',),number_of_cpu=dict(type='int',)),
+        oper=dict(type='dict',cpu_usage=dict(type='list',cpu_id=dict(type='int',),30_sec=dict(type='int',),60_sec=dict(type='int',),10_sec=dict(type='int',),5_sec=dict(type='int',),1_sec=dict(type='int',)),number_of_data_cpu=dict(type='int',),number_of_cpu=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    
@@ -347,10 +348,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -358,6 +357,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

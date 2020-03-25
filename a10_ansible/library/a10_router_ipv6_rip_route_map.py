@@ -62,9 +62,6 @@ options:
             loopback:
                 description:
                 - "Loopback interface (Port number)"
-            tunnel:
-                description:
-                - "Tunnel interface (Tunnel interface number)"
             route_map_direction:
                 description:
                 - "'in'= Route map set for input filtering; 'out'= Route map set for output filtering; "
@@ -78,6 +75,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -120,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        map_cfg=dict(type='list',map=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),route_map_direction=dict(type='str',choices=['in','out']),trunk=dict(type='str',),ethernet=dict(type='str',)),
+        map_cfg=dict(type='list',map=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',),route_map_direction=dict(type='str',choices=['in','out']),trunk=dict(type='str',),ethernet=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -367,15 +365,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

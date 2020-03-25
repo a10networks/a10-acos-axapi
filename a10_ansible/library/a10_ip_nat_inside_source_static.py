@@ -48,8 +48,19 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    action:
-<<<<<<< HEAD
+    enable:
+        description:
+        - "Enable static mapping"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    vrid:
+        description:
+        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
+        required: False
+    enable_disable_action:
         description:
         - "'enable'= Enable static mapping (default); 'disable'= Disable static mapping; "
         required: False
@@ -57,38 +68,15 @@ options:
         description:
         - "NAT Address"
         required: True
-    vrid:
-<<<<<<< HEAD
+    disable:
         description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    uuid:
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
-        description:
-=======
-        description:
-<<<<<<< HEAD
-=======
-        - "NAT Address"
-        required: True
-    vrid:
-        description:
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
-    uuid:
-        description:
-<<<<<<< HEAD
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
-        - "uuid of the object"
+        - "Disable static mapping"
         required: False
     src_address:
         description:
         - "Original Source Address"
         required: True
+
 
 """
 
@@ -102,7 +90,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","nat_address","src_address","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["disable","enable","enable_disable_action","nat_address","src_address","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -131,10 +119,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['enable','disable']),
-        nat_address=dict(type='str',required=True,),
-        vrid=dict(type='int',),
+        enable=dict(type='bool',),
         uuid=dict(type='str',),
+        vrid=dict(type='int',),
+        enable_disable_action=dict(type='str',choices=['enable','disable']),
+        nat_address=dict(type='str',required=True,),
+        disable=dict(type='bool',),
         src_address=dict(type='str',required=True,)
     ))
    
@@ -385,15 +375,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

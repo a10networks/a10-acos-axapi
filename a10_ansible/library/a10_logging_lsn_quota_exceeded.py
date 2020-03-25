@@ -68,13 +68,13 @@ options:
         description:
         - "Customized attribute No.3"
         required: False
-    disable_pool_based:
-        description:
-        - "Disable log LSN user quota exceeded based on LSN pool(Default= enabled)"
-        required: False
     imei:
         description:
         - " International Mobile Equipment Identity (IMEI)"
+        required: False
+    pool_based:
+        description:
+        - "Log LSN user quota exceeded based on LSN pool(Default= enabled)"
         required: False
     ip_based:
         description:
@@ -89,6 +89,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -101,7 +102,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["custom1","custom2","custom3","disable_pool_based","imei","imsi","ip_based","msisdn","uuid","with_radius_attribute",]
+AVAILABLE_PROPERTIES = ["custom1","custom2","custom3","imei","imsi","ip_based","msisdn","pool_based","uuid","with_radius_attribute",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -135,8 +136,8 @@ def get_argspec():
         custom1=dict(type='bool',),
         custom2=dict(type='bool',),
         custom3=dict(type='bool',),
-        disable_pool_based=dict(type='bool',),
         imei=dict(type='bool',),
+        pool_based=dict(type='bool',),
         ip_based=dict(type='bool',),
         imsi=dict(type='bool',),
         uuid=dict(type='str',)
@@ -385,15 +386,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

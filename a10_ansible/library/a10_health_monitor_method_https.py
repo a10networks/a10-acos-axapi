@@ -55,9 +55,13 @@ options:
         description:
         - "Specify realm of Kerberos server"
         required: False
-    cert_key_shared:
+    text_regex:
         description:
-        - "Select shared partition"
+        - "Specify text expected  with Regex"
+        required: False
+    disable_session_ticket:
+        description:
+        - "Disable session ticket for HTTPs"
         required: False
     response_code_regex:
         description:
@@ -71,9 +75,9 @@ options:
         description:
         - "'postdata'= Specify the HTTP post data; 'postfile'= Specify the HTTP post data; "
         required: False
-    https_kerberos_auth:
+    url_path:
         description:
-        - "Https Kerberos Auth"
+        - "Specify URL path, default is '/'"
         required: False
     https_username:
         description:
@@ -98,10 +102,6 @@ options:
     https:
         description:
         - "HTTPS type"
-        required: False
-    text_regex:
-        description:
-        - "Specify text expected  with Regex"
         required: False
     https_host:
         description:
@@ -134,7 +134,7 @@ options:
         suboptions:
             https_kerberos_hostip:
                 description:
-                - "Kdc's hostname(length=1-31) or IP address"
+                - "Kdc's hostname or IP address"
             https_kerberos_port:
                 description:
                 - "Specify the kdc port"
@@ -176,9 +176,9 @@ options:
         description:
         - "Specify response code range (e.g. 200,400-430) (Format is xx,xx-xx (xx between [100, 899])"
         required: False
-    url_path:
+    https_kerberos_auth:
         description:
-        - "Specify URL path, default is '/'"
+        - "Https Kerberos Auth"
         required: False
     https_maintenance_code:
         description:
@@ -188,6 +188,7 @@ options:
         description:
         - "Specify URL string, default is GET /"
         required: False
+
 
 """
 
@@ -201,7 +202,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["cert","cert_key_shared","disable_sslv2hello","https","https_encrypted","https_expect","https_host","https_kerberos_auth","https_kerberos_kdc","https_kerberos_realm","https_key_encrypted","https_maintenance_code","https_password","https_password_string","https_postdata","https_postfile","https_response_code","https_text","https_url","https_username","key","key_pass_phrase","key_phrase","post_path","post_type","response_code_regex","text_regex","url_path","url_type","uuid","web_port",]
+AVAILABLE_PROPERTIES = ["cert","disable_session_ticket","disable_sslv2hello","https","https_encrypted","https_expect","https_host","https_kerberos_auth","https_kerberos_kdc","https_kerberos_realm","https_key_encrypted","https_maintenance_code","https_password","https_password_string","https_postdata","https_postfile","https_response_code","https_text","https_url","https_username","key","key_pass_phrase","key_phrase","post_path","post_type","response_code_regex","text_regex","url_path","url_type","uuid","web_port",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -231,18 +232,18 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         https_kerberos_realm=dict(type='str',),
-        cert_key_shared=dict(type='bool',),
+        text_regex=dict(type='str',),
+        disable_session_ticket=dict(type='bool',),
         response_code_regex=dict(type='str',),
         uuid=dict(type='str',),
         post_type=dict(type='str',choices=['postdata','postfile']),
-        https_kerberos_auth=dict(type='bool',),
+        url_path=dict(type='str',),
         https_username=dict(type='str',),
         key_phrase=dict(type='str',),
         https_postdata=dict(type='str',),
         https_key_encrypted=dict(type='str',),
         https_expect=dict(type='bool',),
         https=dict(type='bool',),
-        text_regex=dict(type='str',),
         https_host=dict(type='str',),
         key_pass_phrase=dict(type='bool',),
         https_encrypted=dict(type='str',),
@@ -258,7 +259,7 @@ def get_argspec():
         cert=dict(type='str',),
         https_text=dict(type='str',),
         https_response_code=dict(type='str',),
-        url_path=dict(type='str',),
+        https_kerberos_auth=dict(type='bool',),
         https_maintenance_code=dict(type='str',),
         https_url=dict(type='bool',)
     ))
@@ -512,15 +513,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

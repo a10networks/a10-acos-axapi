@@ -52,14 +52,11 @@ options:
         description:
         - "IPv6 prefix"
         required: False
-    vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -73,7 +70,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv6_prefix","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["ipv6_prefix","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +100,6 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ipv6_prefix=dict(type='str',),
-        vrid=dict(type='int',),
         uuid=dict(type='str',)
     ))
    
@@ -350,15 +346,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

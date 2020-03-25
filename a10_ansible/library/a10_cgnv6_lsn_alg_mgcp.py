@@ -64,38 +64,11 @@ options:
         description:
         - "Field stats"
         required: False
-        suboptions:
-            auep:
-                description:
-                - "MGCP AUEP"
-            mdcx:
-                description:
-                - "MGCP MDCX"
-            rsip:
-                description:
-                - "MGCP RSIP"
-            rqnt:
-                description:
-                - "MGCP RQNT"
-            ntfy:
-                description:
-                - "MGCP NTFY"
-            crcx:
-                description:
-                - "MGCP CRCX"
-            dlcx:
-                description:
-                - "MGCP DLCX"
-            epcf:
-                description:
-                - "MGCP EPCF"
-            aucx:
-                description:
-                - "MGCP AUCX"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -140,7 +113,7 @@ def get_argspec():
     rv.update(dict(
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','auep','aucx','crcx','dlcx','epcf','mdcx','ntfy','rqnt','rsip','parse-error','conn-ext-creation-failure','third-party-sdp','sdp-process-candidate-failure','sdp-op-failure','sdp-alloc-port-map-success','sdp-alloc-port-map-failure','modify-failure','rewrite-failure','tcp-out-of-order-drop'])),
         mgcp_value=dict(type='str',choices=['enable']),
-        stats=dict(type='dict',auep=dict(type='str',),mdcx=dict(type='str',),rsip=dict(type='str',),rqnt=dict(type='str',),ntfy=dict(type='str',),crcx=dict(type='str',),dlcx=dict(type='str',),epcf=dict(type='str',),aucx=dict(type='str',)),
+        stats=dict(type='dict',),
         uuid=dict(type='str',)
     ))
    
@@ -401,10 +374,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -412,6 +383,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

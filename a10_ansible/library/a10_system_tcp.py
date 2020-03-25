@@ -48,17 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            tcp_cpu_list:
-                description:
-                - "Field tcp_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -66,7 +55,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'activeopens'= Active open conns; 'passiveopens'= Passive open conns; 'attemptfails'= Connect attemp failures; 'estabresets'= Resets rcvd on EST conn; 'insegs'= Total in TCP packets; 'outsegs'= Total out TCP packets; 'retranssegs'= Retransmited packets; 'inerrs'= Input errors; 'outrsts'= Reset Sent; 'sock_alloc'= Sockets allocated; 'orphan_count'= Orphan sockets; 'mem_alloc'= Memory alloc; 'recv_mem'= Total rx buffer; 'send_mem'= Total tx buffer; 'currestab'= Currently EST conns; 'currsyssnt'= TCP in SYN-SNT state; 'currsynrcv'= TCP in SYN-RCV state; 'currfinw1'= TCP in FIN-W1 state; 'currfinw2'= TCP FIN-W2 state; 'currtimew'= TCP TimeW state; 'currclose'= TCP in Close state; 'currclsw'= TCP in CloseW state; 'currlack'= TCP in LastACK state; 'currlstn'= TCP in Listen state; 'currclsg'= TCP in Closing state; 'pawsactiverejected'= TCP paw active rej; 'syn_rcv_rstack'= Rcv RST|ACK on SYN; 'syn_rcv_rst'= Rcv RST on SYN; 'syn_rcv_ack'= Rcv ACK on SYN; 'ax_rexmit_syn'= TCP rexmit SYN; 'tcpabortontimeout'= TCP abort on timeout; 'noroute'= TCPIP out noroute; 'exceedmss'= MSS exceeded pkt dropped; 'tfo_conns'= TFO Total Connections; 'tfo_actives'= TFO Current Actives; 'tfo_denied'= TFO Denied; "
+                - "'all'= all; 'activeopens'= Active open conns; 'passiveopens'= Passive open conns; 'attemptfails'= Connect attemp failures; 'estabresets'= Resets rcvd on EST conn; 'insegs'= Total in TCP packets; 'outsegs'= Total out TCP packets; 'retranssegs'= Retransmited packets; 'inerrs'= Input errors; 'outrsts'= Reset Sent; 'sock_alloc'= Sockets allocated; 'orphan_count'= Orphan sockets; 'mem_alloc'= Memory alloc; 'recv_mem'= Total rx buffer; 'send_mem'= Total tx buffer; 'currestab'= Currently EST conns; 'currsyssnt'= TCP in SYN-SNT state; 'currsynrcv'= TCP in SYN-RCV state; 'currfinw1'= TCP in FIN-W1 state; 'currfinw2'= TCP FIN-W2 state; 'currtimew'= TCP TimeW state; 'currclose'= TCP in Close state; 'currclsw'= TCP in CloseW state; 'currlack'= TCP in LastACK state; 'currlstn'= TCP in Listen state; 'currclsg'= TCP in Closing state; 'pawsactiverejected'= TCP paw active rej; 'syn_rcv_rstack'= Rcv RST|ACK on SYN; 'syn_rcv_rst'= Rcv RST on SYN; 'syn_rcv_ack'= Rcv ACK on SYN; 'ax_rexmit_syn'= TCP rexmit SYN; 'tcpabortontimeout'= TCP abort on timeout; 'noroute'= TCPIP out noroute; 'exceedmss'= MSS exceeded pkt dropped; "
     stats:
         description:
         - "Field stats"
@@ -83,6 +72,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -95,7 +85,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -124,9 +114,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',tcp_cpu_list=dict(type='list',tfo_conns=dict(type='int',),pawsactiverejected=dict(type='int',),currlack=dict(type='int',),send_mem=dict(type='int',),outrsts=dict(type='int',),currclose=dict(type='int',),outsegs=dict(type='int',),syn_rcv_rst=dict(type='int',),currfinw2=dict(type='int',),currfinw1=dict(type='int',),inerrs=dict(type='int',),currestab=dict(type='int',),syn_rcv_rstack=dict(type='int',),retranssegs=dict(type='int',),estabresets=dict(type='int',),orphan_count=dict(type='int',),noroute=dict(type='int',),exceedmss=dict(type='int',),currclsw=dict(type='int',),tfo_denied=dict(type='int',),mem_alloc=dict(type='int',),passiveopens=dict(type='int',),sock_alloc=dict(type='int',),insegs=dict(type='int',),currclsg=dict(type='int',),attemptfails=dict(type='int',),syn_rcv_ack=dict(type='int',),currtimew=dict(type='int',),tcpabortontimeout=dict(type='int',),currsyssnt=dict(type='int',),currsynrcv=dict(type='int',),ax_rexmit_syn=dict(type='int',),recv_mem=dict(type='int',),activeopens=dict(type='int',),tfo_actives=dict(type='int',),currlstn=dict(type='int',)),cpu_count=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','activeopens','passiveopens','attemptfails','estabresets','insegs','outsegs','retranssegs','inerrs','outrsts','sock_alloc','orphan_count','mem_alloc','recv_mem','send_mem','currestab','currsyssnt','currsynrcv','currfinw1','currfinw2','currtimew','currclose','currclsw','currlack','currlstn','currclsg','pawsactiverejected','syn_rcv_rstack','syn_rcv_rst','syn_rcv_ack','ax_rexmit_syn','tcpabortontimeout','noroute','exceedmss','tfo_conns','tfo_actives','tfo_denied'])),
-        stats=dict(type='str',required=false,sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','connattempt','connects','drops','conndrops','closed','segstimed','rttupdated','delack','timeoutdrop','rexmttimeo','persisttimeo','keeptimeo','keepprobe','keepdrops','sndtotal','sndpack','sndbyte','sndrexmitpack','sndrexmitbyte','sndrexmitbad','sndacks','sndprobe','sndurg','sndwinup','sndctrl','sndrst','sndfin','sndsyn','rcvtotal','rcvpack','rcvbyte','rcvbadoff','rcvmemdrop','rcvduppack','rcvdupbyte','rcvpartduppack','rcvpartdupbyte','rcvoopack','rcvoobyte','rcvpackafterwin','rcvbyteafterwin','rcvwinprobe','rcvdupack','rcvacktoomuch','rcvackpack','rcvackbyte','rcvwinupd','pawsdrop','predack','preddat','persistdrop','badrst','finwait2_drops','sack_recovery_episode','sack_rexmits','sack_rexmit_bytes','sack_rcv_blocks','sack_send_blocks','sndcack','cacklim','reassmemdrop','reasstimeout','cc_idle','cc_reduce','rcvdsack','a2brcvwnd','a2bsackpresent','a2bdupack','a2brxdata','a2btcpoptions','a2boodata','a2bpartialack','a2bfsmtransition','a2btransitionnum','b2atransitionnum','bad_iochan','atcpforward','atcpsent','atcprexmitsadrop','atcpsendbackack','atcprexmit','atcpbuffallocfail','a2bappbuffering','atcpsendfail','earlyrexmit','mburstlim','a2bsndwnd'])),uuid=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','activeopens','passiveopens','attemptfails','estabresets','insegs','outsegs','retranssegs','inerrs','outrsts','sock_alloc','orphan_count','mem_alloc','recv_mem','send_mem','currestab','currsyssnt','currsynrcv','currfinw1','currfinw2','currtimew','currclose','currclsw','currlack','currlstn','currclsg','pawsactiverejected','syn_rcv_rstack','syn_rcv_rst','syn_rcv_ack','ax_rexmit_syn','tcpabortontimeout','noroute','exceedmss'])),
+        stats=dict(type='str',required=false,sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','connattempt','connects','drops','conndrops','closed','segstimed','rttupdated','delack','timeoutdrop','rexmttimeo','persisttimeo','keeptimeo','keepprobe','keepdrops','sndtotal','sndpack','sndbyte','sndrexmitpack','sndrexmitbyte','sndrexmitbad','sndacks','sndprobe','sndurg','sndwinup','sndctrl','sndrst','sndfin','sndsyn','rcvtotal','rcvpack','rcvbyte','rcvbadoff','rcvmemdrop','rcvshort','rcvduppack','rcvdupbyte','rcvpartduppack','rcvpartdupbyte','rcvoopack','rcvoobyte','rcvpackafterwin','rcvbyteafterwin','rcvwinprobe','rcvdupack','rcvacktoomuch','rcvackpack','rcvackbyte','rcvwinupd','pawsdrop','predack','preddat','persistdrop','mturesent','badrst','finwait2_drops','sack_recovery_episode','sack_rexmits','sack_rexmit_bytes','sack_rcv_blocks','sack_send_blocks','ecn_shs','ecn_rcwnd','sndcack','cacklim','bad_iochan'])),uuid=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -150,11 +139,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -239,15 +223,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -401,19 +376,16 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

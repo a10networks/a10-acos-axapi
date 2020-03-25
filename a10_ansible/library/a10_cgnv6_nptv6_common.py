@@ -54,8 +54,9 @@ options:
         required: False
     send_icmpv6_on_error:
         description:
-        - "'disable'= Disable to send ICMPv6 when error discovered; "
+        - "Send ICMPv6 when error discovered (Default)"
         required: False
+
 
 """
 
@@ -99,7 +100,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str',),
-        send_icmpv6_on_error=dict(type='str',choices=['disable'])
+        send_icmpv6_on_error=dict(type='bool',)
     ))
    
 
@@ -345,15 +346,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

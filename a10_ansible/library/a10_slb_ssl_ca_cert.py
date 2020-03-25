@@ -53,25 +53,14 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            exact_match:
-                description:
-                - "Field exact_match"
-            sortby_exp:
-                description:
-                - "Field sortby_exp"
             ssl_certs:
                 description:
                 - "Field ssl_certs"
-            sortby_name:
-                description:
-                - "Field sortby_name"
-            partition:
-                description:
-                - "Field partition"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -114,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',exact_match=dict(type='bool',),sortby_exp=dict(type='bool',),ssl_certs=dict(type='list',status=dict(type='str',),name=dict(type='str',),notbefore=dict(type='str',),notafter_number=dict(type='int',),notafter=dict(type='str',),keysize=dict(type='int',),common_name=dict(type='str',),organization=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),ntype=dict(type='str',),issuer=dict(type='str',)),sortby_name=dict(type='bool',),partition=dict(type='str',)),
+        oper=dict(type='dict',ssl_certs=dict(type='list',status=dict(type='str',),name=dict(type='str',),notbefore=dict(type='str',),notafter=dict(type='str',),common_name=dict(type='str',),organization=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),ntype=dict(type='str',),issuer=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -353,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -364,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

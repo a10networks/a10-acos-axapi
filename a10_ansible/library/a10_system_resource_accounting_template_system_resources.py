@@ -61,7 +61,7 @@ options:
                 - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to 99.99 (up to 2 digits precision))"
             l4_session_limit_min_guarantee:
                 description:
-                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0 to 99.99)"
+                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0.01 to 99.99)"
     l7cps_limit_cfg:
         description:
         - "Field l7cps_limit_cfg"
@@ -140,6 +140,7 @@ options:
             concurrent_session_limit_max:
                 description:
                 - "Enter the Concurrent Session limit (cps) (Concurrent-Session cps limit (no limits applied by default))"
+
 
 """
 
@@ -432,15 +433,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_template_logging_disable_log_by_destination
 description:
-    - Disable logging by destination ip address protocol and port
+    - Disable logging by destination protocol and port
 short_description: Configures A10 cgnv6.template.logging.disable-log-by-destination
 author: A10 Networks 2018 
 version_added: 2.4
@@ -51,77 +51,6 @@ options:
     logging_name:
         description:
         - Key to identify parent object
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
-    ip_list:
-        description:
-        - "Field ip_list"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv4_addr:
-                description:
-                - "Configure an IP subnet"
-            user_tag:
-                description:
-                - "Customized tag"
-            tcp_list:
-                description:
-                - "Field tcp_list"
-            others:
-                description:
-                - "Disable logging for other L4 protocols"
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
-    tcp_list:
-        description:
-        - "Field tcp_list"
-        required: False
-        suboptions:
-            tcp_port_start:
-                description:
-                - "Destination Port (Single Destination Port or Port Range Start)"
-            tcp_port_end:
-                description:
-                - "Port Range End"
-    others:
-        description:
-        - "Disable logging for other L4 protocols"
-        required: False
-    ip6_list:
-        description:
-        - "Field ip6_list"
-        required: False
-        suboptions:
-            uuid:
-                description:
-                - "uuid of the object"
-            ipv6_addr:
-                description:
-                - "Configure an IPv6 subnet"
-            user_tag:
-                description:
-                - "Customized tag"
-            tcp_list:
-                description:
-                - "Field tcp_list"
-            others:
-                description:
-                - "Disable logging for other L4 protocols"
-            udp_list:
-                description:
-                - "Field udp_list"
-            icmp:
-                description:
-                - "Disable logging for icmp traffic"
     udp_list:
         description:
         - "Field udp_list"
@@ -137,13 +66,26 @@ options:
         description:
         - "Disable logging for icmp traffic"
         required: False
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+    tcp_list:
+        description:
+        - "Field tcp_list"
+        required: False
+        suboptions:
+            tcp_port_start:
+                description:
+                - "Destination Port (Single Destination Port or Port Range Start)"
+            tcp_port_end:
+                description:
+                - "Port Range End"
+    others:
+        description:
+        - "Disable logging for other L4 protocols"
+        required: False
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -157,7 +99,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["icmp","ip_list","ip6_list","others","tcp_list","udp_list","uuid",]
+AVAILABLE_PROPERTIES = ["icmp","others","tcp_list","udp_list","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -186,13 +128,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ip_list=dict(type='list',uuid=dict(type='str',),ipv4_addr=dict(type='str',required=True,),user_tag=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',),udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',)),
-        tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),
-        others=dict(type='bool',),
-        ip6_list=dict(type='list',uuid=dict(type='str',),ipv6_addr=dict(type='str',required=True,),user_tag=dict(type='str',),tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),others=dict(type='bool',),udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),icmp=dict(type='bool',)),
         udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),
-        icmp=dict(type='bool',)
+        icmp=dict(type='bool',),
+        uuid=dict(type='str',),
+        tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),
+        others=dict(type='bool',)
     ))
    
     # Parent keys
@@ -444,15 +384,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

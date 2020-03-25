@@ -61,6 +61,7 @@ options:
         - "uuid of the object"
         required: False
 
+
 """
 
 EXAMPLES = """
@@ -102,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',server=dict(type='list',status=dict(type='str',),ntp_server=dict(type='str',),auth=dict(type='str',),is_preferred=dict(type='str',),mode=dict(type='str',))),
+        oper=dict(type='dict',server=dict(type='list',ntp_server=dict(type='str',),status=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -341,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -352,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

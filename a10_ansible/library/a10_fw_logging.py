@@ -55,93 +55,69 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'log_message_sent'= Log Packet Sent; 'log_type_reset'= Log Event Type Reset; 'log_type_deny'= Log Event Type Deny; 'log_type_session_closed'= Log Event Type Session Close; 'log_type_session_opened'= Log Event Type Session Open; 'rule_not_logged'= Firewall Rule Not Logged; 'log-dropped'= Log Packets Dropped; 'tcp-session-created'= TCP Session Created; 'tcp-session-deleted'= TCP Session Deleted; 'udp-session-created'= UDP Session Created; 'udp-session-deleted'= UDP Session Deleted; 'icmp-session-deleted'= ICMP Session Deleted; 'icmp-session-created'= ICMP Session Created; 'icmpv6-session-deleted'= ICMPV6 Session Deleted; 'icmpv6-session-created'= ICMPV6 Session Created; 'other-session-deleted'= Other Session Deleted; 'other-session-created'= Other Session Created; 'http-request-logged'= HTTP Request Logged; 'http-logging-invalid-format'= HTTP Logging Invalid Format Error; 'dcmsg_permit'= Dcmsg Permit; 'alg_override_permit'= Alg Override Permit; 'template_error'= Template Error; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'tcp-logging-conn-established'= TCP Logging Conn Established; 'tcp-logging-conn-create-failed'= TCP Logging Conn Create Failed; 'tcp-logging-conn-dropped'= TCP Logging Conn Dropped; 'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed; 'sctp-session-created'= SCTP Session Created; 'sctp-session-deleted'= SCTP Session Deleted; 'log_type_sctp_inner_proto_filter'= Log Event Type SCTP Inner Proto Filter; 'log_type_gtp_message_filtering'= Log Event Type GTP Message Filtering; 'log_type_gtp_apn_filtering'= Log Event Type GTP Apn Filtering; 'tcp-logging-port-allocated'= TCP Logging Port Allocated; 'tcp-logging-port-freed'= TCP Logging Port Freed; 'tcp-logging-port-allocation-failed'= TCP Logging Port Allocation Failed; 'log_type_gtp_invalid_teid'= Log Event Type GTP Invalid TEID; 'log_gtp_type_reserved_ie_present'= Log Event Type GTP Reserved Information Element Present; 'log_type_gtp_mandatory_ie_missing'= Log Event Type GTP Mandatory Information Element Missing; "
+                - "'all'= all; 'log_message_sent'= Log Packet Sent; 'log_type_reset'= Log Event Type Reset; 'log_type_deny'= Log Event Type Deny; 'log_type_session_closed'= Log Event Type Session Close; 'log_type_session_opened'= Log Event Type Session Open; 'rule_not_logged'= Firewall Rule Not Logged; 'log-dropped'= Log Packets Dropped; 'tcp-session-created'= TCP Session Created; 'tcp-session-deleted'= TCP Session Deleted; 'udp-session-created'= UDP Session Created; 'udp-session-deleted'= UDP Session Deleted; 'icmp-session-deleted'= ICMP Session Deleted; 'icmp-session-created'= ICMP Session Created; 'icmpv6-session-deleted'= ICMPV6 Session Deleted; 'icmpv6-session-created'= ICMPV6 Session Created; 'other-session-deleted'= Other Session Deleted; 'other-session-created'= Other Session Created; 'http-request-logged'= HTTP Request Logged; 'http-logging-invalid-format'= HTTP Logging Invalid Format Error; 'dcmsg_permit'= Dcmsg Permit; 'alg_override_permit'= Alg Override Permit; 'template_error'= Template Error; 'ipv4-frag-applied'= IPv4 Fragmentation Applied; 'ipv4-frag-failed'= IPv4 Fragmentation Failed; 'ipv6-frag-applied'= IPv6 Fragmentation Applied; 'ipv6-frag-failed'= IPv6 Fragmentation Failed; 'out-of-buffers'= Out of Buffers; 'add-msg-failed'= Add Message to Buffer Failed; 'tcp-logging-conn-established'= TCP Logging Conn Established; 'tcp-logging-conn-create-failed'= TCP Logging Conn Create Failed; 'tcp-logging-conn-dropped'= TCP Logging Conn Dropped; 'log-message-too-long'= Log message too long; 'http-out-of-order-dropped'= HTTP out-of-order dropped; 'http-alloc-failed'= HTTP Request Info Allocation Failed; 'tcp-logging-port-allocated'= TCP Logging Port Allocated; 'tcp-logging-port-freed'= TCP Logging Port Freed; 'tcp-logging-port-allocation-failed'= TCP Logging Port Allocation Failed; "
     stats:
         description:
         - "Field stats"
         required: False
         suboptions:
-            tcp_session_deleted:
-                description:
-                - "TCP Session Deleted"
-            log_type_gtp_mandatory_ie_missing:
-                description:
-                - "Log Event Type GTP Mandatory Information Element Missing"
-            icmpv6_session_created:
-                description:
-                - "ICMPV6 Session Created"
-            log_type_gtp_apn_filtering:
-                description:
-                - "Log Event Type GTP Apn Filtering"
-            tcp_session_created:
-                description:
-                - "TCP Session Created"
-            sctp_session_created:
-                description:
-                - "SCTP Session Created"
-            udp_session_created:
-                description:
-                - "UDP Session Created"
-            http_request_logged:
-                description:
-                - "HTTP Request Logged"
-            other_session_created:
-                description:
-                - "Other Session Created"
-            log_type_gtp_invalid_teid:
-                description:
-                - "Log Event Type GTP Invalid TEID"
-            rule_not_logged:
-                description:
-                - "Firewall Rule Not Logged"
-            other_session_deleted:
-                description:
-                - "Other Session Deleted"
-            http_logging_invalid_format:
-                description:
-                - "HTTP Logging Invalid Format Error"
-            log_gtp_type_reserved_ie_present:
-                description:
-                - "Log Event Type GTP Reserved Information Element Present"
-            sctp_session_deleted:
-                description:
-                - "SCTP Session Deleted"
-            icmpv6_session_deleted:
-                description:
-                - "ICMPV6 Session Deleted"
-            log_type_deny:
-                description:
-                - "Log Event Type Deny"
-            log_type_gtp_message_filtering:
-                description:
-                - "Log Event Type GTP Message Filtering"
-            log_type_reset:
-                description:
-                - "Log Event Type Reset"
-            log_type_session_opened:
-                description:
-                - "Log Event Type Session Open"
-            log_type_session_closed:
-                description:
-                - "Log Event Type Session Close"
-            log_type_sctp_inner_proto_filter:
-                description:
-                - "Log Event Type SCTP Inner Proto Filter"
             icmp_session_deleted:
                 description:
                 - "ICMP Session Deleted"
-            icmp_session_created:
+            other_session_deleted:
                 description:
-                - "ICMP Session Created"
-            log_message_sent:
+                - "Other Session Deleted"
+            log_type_reset:
                 description:
-                - "Log Packet Sent"
+                - "Log Event Type Reset"
+            tcp_session_deleted:
+                description:
+                - "TCP Session Deleted"
+            log_type_session_opened:
+                description:
+                - "Log Event Type Session Open"
             log_dropped:
                 description:
                 - "Log Packets Dropped"
+            icmpv6_session_created:
+                description:
+                - "ICMPV6 Session Created"
+            log_type_deny:
+                description:
+                - "Log Event Type Deny"
+            log_message_sent:
+                description:
+                - "Log Packet Sent"
+            http_request_logged:
+                description:
+                - "HTTP Request Logged"
+            http_logging_invalid_format:
+                description:
+                - "HTTP Logging Invalid Format Error"
+            tcp_session_created:
+                description:
+                - "TCP Session Created"
+            other_session_created:
+                description:
+                - "Other Session Created"
+            log_type_session_closed:
+                description:
+                - "Log Event Type Session Close"
             udp_session_deleted:
                 description:
                 - "UDP Session Deleted"
+            rule_not_logged:
+                description:
+                - "Firewall Rule Not Logged"
+            icmpv6_session_deleted:
+                description:
+                - "ICMPV6 Session Deleted"
+            udp_session_created:
+                description:
+                - "UDP Session Created"
+            icmp_session_created:
+                description:
+                - "ICMP Session Created"
     name:
         description:
         - "Logging Template Name"
@@ -150,6 +126,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -192,8 +169,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log_message_sent','log_type_reset','log_type_deny','log_type_session_closed','log_type_session_opened','rule_not_logged','log-dropped','tcp-session-created','tcp-session-deleted','udp-session-created','udp-session-deleted','icmp-session-deleted','icmp-session-created','icmpv6-session-deleted','icmpv6-session-created','other-session-deleted','other-session-created','http-request-logged','http-logging-invalid-format','dcmsg_permit','alg_override_permit','template_error','ipv4-frag-applied','ipv4-frag-failed','ipv6-frag-applied','ipv6-frag-failed','out-of-buffers','add-msg-failed','tcp-logging-conn-established','tcp-logging-conn-create-failed','tcp-logging-conn-dropped','log-message-too-long','http-out-of-order-dropped','http-alloc-failed','sctp-session-created','sctp-session-deleted','log_type_sctp_inner_proto_filter','log_type_gtp_message_filtering','log_type_gtp_apn_filtering','tcp-logging-port-allocated','tcp-logging-port-freed','tcp-logging-port-allocation-failed','log_type_gtp_invalid_teid','log_gtp_type_reserved_ie_present','log_type_gtp_mandatory_ie_missing'])),
-        stats=dict(type='dict',tcp_session_deleted=dict(type='str',),log_type_gtp_mandatory_ie_missing=dict(type='str',),icmpv6_session_created=dict(type='str',),log_type_gtp_apn_filtering=dict(type='str',),tcp_session_created=dict(type='str',),sctp_session_created=dict(type='str',),udp_session_created=dict(type='str',),http_request_logged=dict(type='str',),other_session_created=dict(type='str',),log_type_gtp_invalid_teid=dict(type='str',),rule_not_logged=dict(type='str',),other_session_deleted=dict(type='str',),http_logging_invalid_format=dict(type='str',),log_gtp_type_reserved_ie_present=dict(type='str',),sctp_session_deleted=dict(type='str',),icmpv6_session_deleted=dict(type='str',),log_type_deny=dict(type='str',),log_type_gtp_message_filtering=dict(type='str',),log_type_reset=dict(type='str',),log_type_session_opened=dict(type='str',),log_type_session_closed=dict(type='str',),log_type_sctp_inner_proto_filter=dict(type='str',),icmp_session_deleted=dict(type='str',),icmp_session_created=dict(type='str',),log_message_sent=dict(type='str',),log_dropped=dict(type='str',),udp_session_deleted=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','log_message_sent','log_type_reset','log_type_deny','log_type_session_closed','log_type_session_opened','rule_not_logged','log-dropped','tcp-session-created','tcp-session-deleted','udp-session-created','udp-session-deleted','icmp-session-deleted','icmp-session-created','icmpv6-session-deleted','icmpv6-session-created','other-session-deleted','other-session-created','http-request-logged','http-logging-invalid-format','dcmsg_permit','alg_override_permit','template_error','ipv4-frag-applied','ipv4-frag-failed','ipv6-frag-applied','ipv6-frag-failed','out-of-buffers','add-msg-failed','tcp-logging-conn-established','tcp-logging-conn-create-failed','tcp-logging-conn-dropped','log-message-too-long','http-out-of-order-dropped','http-alloc-failed','tcp-logging-port-allocated','tcp-logging-port-freed','tcp-logging-port-allocation-failed'])),
+        stats=dict(type='dict',icmp_session_deleted=dict(type='str',),other_session_deleted=dict(type='str',),log_type_reset=dict(type='str',),tcp_session_deleted=dict(type='str',),log_type_session_opened=dict(type='str',),log_dropped=dict(type='str',),icmpv6_session_created=dict(type='str',),log_type_deny=dict(type='str',),log_message_sent=dict(type='str',),http_request_logged=dict(type='str',),http_logging_invalid_format=dict(type='str',),tcp_session_created=dict(type='str',),other_session_created=dict(type='str',),log_type_session_closed=dict(type='str',),udp_session_deleted=dict(type='str',),rule_not_logged=dict(type='str',),icmpv6_session_deleted=dict(type='str',),udp_session_created=dict(type='str',),icmp_session_created=dict(type='str',)),
         name=dict(type='str',),
         uuid=dict(type='str',)
     ))
@@ -455,10 +432,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -466,6 +441,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

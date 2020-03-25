@@ -53,24 +53,6 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            username:
-                description:
-                - "Field username"
-            cmd_type:
-                description:
-                - "Field cmd_type"
-            partition:
-                description:
-                - "Field partition"
-            vserver:
-                description:
-                - "Field vserver"
-            ipv4:
-                description:
-                - "Field ipv4"
-            ipv6:
-                description:
-                - "Field ipv6"
             session_list:
                 description:
                 - "Field session_list"
@@ -78,6 +60,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -120,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',username=dict(type='str',),cmd_type=dict(type='str',choices=['sess-only','attr-only','sess-attr']),partition=dict(type='str',),vserver=dict(type='str',),ipv4=dict(type='str',),ipv6=dict(type='str',),session_list=dict(type='list',Session_id=dict(type='int',),Domain_Group=dict(type='str',),Client_IP=dict(type='str',),Domain=dict(type='str',),TTL_in_seconds=dict(type='int',),VIP=dict(type='str',),Token_Lifetime=dict(type='str',),VPort=dict(type='str',),Type=dict(type='str',),Created_Time=dict(type='str',),User=dict(type='str',))),
+        oper=dict(type='dict',session_list=dict(type='list',Session_id=dict(type='int',),Domain_Group=dict(type='str',),Client_IP=dict(type='str',),Domain=dict(type='str',),TTL_in_seconds=dict(type='int',),VIP=dict(type='str',),VPort=dict(type='str',),Type=dict(type='str',),Created_Time=dict(type='str',),User=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    
@@ -359,10 +342,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -370,6 +351,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():

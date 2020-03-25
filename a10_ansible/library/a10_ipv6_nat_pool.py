@@ -48,17 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            nat_pool_addr_list:
-                description:
-                - "Field nat_pool_addr_list"
-            pool_name:
-                description:
-                - "Specify pool name"
     stats:
         description:
         - "Field stats"
@@ -124,6 +113,7 @@ options:
         - "Specify pool name"
         required: True
 
+
 """
 
 EXAMPLES = """
@@ -136,7 +126,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["end_address","gateway","ip_rr","netmask","oper","pool_name","sampling_enable","scaleout_device_id","start_address","stats","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["end_address","gateway","ip_rr","netmask","pool_name","sampling_enable","scaleout_device_id","start_address","stats","uuid","vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -165,7 +155,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',nat_pool_addr_list=dict(type='list',Failed=dict(type='int',),Total_Used=dict(type='int',),Total_Freed=dict(type='int',),Port_Usage=dict(type='int',),Address=dict(type='str',)),pool_name=dict(type='str',required=True,)),
         stats=dict(type='dict',Failed=dict(type='str',),Total_Used=dict(type='str',),Total_Freed=dict(type='str',),Port_Usage=dict(type='str',),pool_name=dict(type='str',required=True,)),
         uuid=dict(type='str',),
         start_address=dict(type='str',),
@@ -201,11 +190,6 @@ def existing_url(module):
     f_dict["pool-name"] = module.params["pool_name"]
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -290,15 +274,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -452,19 +427,16 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
+    module.client.session.close()
     return result
 
 def main():

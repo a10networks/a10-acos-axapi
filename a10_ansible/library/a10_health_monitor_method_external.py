@@ -51,13 +51,9 @@ options:
     monitor_name:
         description:
         - Key to identify parent object
-    uuid:
+    ext_program:
         description:
-        - "uuid of the object"
-        required: False
-    external:
-        description:
-        - "EXTERNAL type"
+        - "Specify external application (Program name)"
         required: False
     ext_preference:
         description:
@@ -67,29 +63,19 @@ options:
         description:
         - "Specify external application's arguments (Application arguments)"
         required: False
-    shared_partition_program:
+    uuid:
         description:
-        - "external application from shared partition"
+        - "uuid of the object"
+        required: False
+    external:
+        description:
+        - "EXTERNAL type"
         required: False
     ext_port:
         description:
         - "Specify the server port (Port Number)"
         required: False
-    ext_program_shared:
-        description:
-        - "Specify external application (Program name)"
-        required: False
-    ext_program:
-        description:
-        - "Specify external application (Program name)"
-        required: False
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
->>>>>>> 8cdbeb80... Incorporated changes to provide session close feature
 
 """
 
@@ -103,7 +89,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext_arguments","ext_port","ext_preference","ext_program","ext_program_shared","external","shared_partition_program","uuid",]
+AVAILABLE_PROPERTIES = ["ext_arguments","ext_port","ext_preference","ext_program","external","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -132,14 +118,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        external=dict(type='bool',),
+        ext_program=dict(type='str',),
         ext_preference=dict(type='bool',),
         ext_arguments=dict(type='str',),
-        shared_partition_program=dict(type='bool',),
-        ext_port=dict(type='int',),
-        ext_program_shared=dict(type='str',),
-        ext_program=dict(type='str',)
+        uuid=dict(type='str',),
+        external=dict(type='bool',),
+        ext_port=dict(type='int',)
     ))
    
     # Parent keys
@@ -391,15 +375,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

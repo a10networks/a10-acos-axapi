@@ -103,7 +103,7 @@ options:
                 - "Disable Drop DNS CNAME Response"
             cache:
                 description:
-                - "Use a cached A-query response to provide AAAA query responses for the same hostname"
+                - "Generate Response by DNS Cache"
             passive_query_disable:
                 description:
                 - "Disable Generate A query upon empty or error Response"
@@ -160,6 +160,7 @@ options:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -460,15 +461,14 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
+    module.client.session.close()
     return result
 
 def main():

@@ -53,75 +53,12 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            psu2_np15:
-                description:
-                - "Field psu2_np15"
-            disk_percentage:
-                description:
-                - "Field disk_percentage"
-            serial:
-                description:
-                - "Field serial"
-            compression_cards:
-                description:
-                - "Field compression_cards"
-            cpu_stepping:
-                description:
-                - "Field cpu_stepping"
-            disk2_status:
-                description:
-                - "Field disk2_status"
-            storage:
-                description:
-                - "Field storage"
-            bypass_pr:
-                description:
-                - "Field bypass_pr"
-            psu1_np15:
-                description:
-                - "Field psu1_np15"
-            plat_flag:
-                description:
-                - "Field plat_flag"
-            memory:
-                description:
-                - "Field memory"
-            spe_present:
-                description:
-                - "Field spe_present"
-            num_disks:
-                description:
-                - "Field num_disks"
-            disk_used:
-                description:
-                - "Field disk_used"
-            ipmi:
-                description:
-                - "Field ipmi"
-            raid_present:
-                description:
-                - "Field raid_present"
-            cpu_cores:
-                description:
-                - "Field cpu_cores"
-            disk_free:
-                description:
-                - "Field disk_free"
-            platform_description:
-                description:
-                - "Field platform_description"
-            ssl_cards:
-                description:
-                - "Field ssl_cards"
-            raid_list:
-                description:
-                - "Field raid_list"
             bios_version:
                 description:
                 - "Field bios_version"
-            disk_total:
+            cpu_cores:
                 description:
-                - "Field disk_total"
+                - "Field cpu_cores"
             l23_asic:
                 description:
                 - "Field l23_asic"
@@ -131,28 +68,44 @@ options:
             fpga_summary:
                 description:
                 - "Field fpga_summary"
-            bypass_list:
+            memory:
                 description:
-                - "Field bypass_list"
-            cpu:
+                - "Field memory"
+            storage:
                 description:
-                - "Field cpu"
-            disk1_status:
+                - "Field storage"
+            compression_cards:
                 description:
-                - "Field disk1_status"
+                - "Field compression_cards"
             fpga_date:
                 description:
                 - "Field fpga_date"
+            ipmi:
+                description:
+                - "Field ipmi"
+            platform_description:
+                description:
+                - "Field platform_description"
+            ssl_cards:
+                description:
+                - "Field ssl_cards"
+            serial:
+                description:
+                - "Field serial"
+            cpu:
+                description:
+                - "Field cpu"
+            cpu_stepping:
+                description:
+                - "Field cpu_stepping"
             ports:
                 description:
                 - "Field ports"
-            octeon:
-                description:
-                - "Field octeon"
     uuid:
         description:
         - "uuid of the object"
         required: False
+
 
 """
 
@@ -195,7 +148,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',psu2_np15=dict(type='str',),disk_percentage=dict(type='int',),serial=dict(type='str',),compression_cards=dict(type='dict',aha363=dict(type='int',),unknown_compression=dict(type='int',),gzip_devices=dict(type='int',)),cpu_stepping=dict(type='int',),disk2_status=dict(type='str',),storage=dict(type='str',),bypass_pr=dict(type='int',),psu1_np15=dict(type='str',),plat_flag=dict(type='str',),memory=dict(type='str',),spe_present=dict(type='str',),num_disks=dict(type='int',),disk_used=dict(type='int',),ipmi=dict(type='str',),raid_present=dict(type='int',),cpu_cores=dict(type='int',),disk_free=dict(type='int',),platform_description=dict(type='str',),ssl_cards=dict(type='dict',unknown_ssl_cards=dict(type='int',),nitrox5_cores=dict(type='int',),nitrox3_cores=dict(type='int',),ssl_devices=dict(type='int',),nitroxpx=dict(type='int',),nitrox5=dict(type='int',),hsm=dict(type='int',),nitrox3=dict(type='int',),nitrox2=dict(type='int',),nitrox1=dict(type='int',)),raid_list=dict(type='list',md_name=dict(type='str',),md_pri=dict(type='str',),md_sec=dict(type='str',)),bios_version=dict(type='str',),disk_total=dict(type='int',),l23_asic=dict(type='str',),bios_release_date=dict(type='str',),fpga_summary=dict(type='str',),bypass_list=dict(type='list',bypass_info=dict(type='str',),bypass_name=dict(type='str',)),cpu=dict(type='str',),disk1_status=dict(type='str',),fpga_date=dict(type='str',),ports=dict(type='str',),octeon=dict(type='int',)),
+        oper=dict(type='dict',bios_version=dict(type='str',),cpu_cores=dict(type='int',),l23_asic=dict(type='str',),bios_release_date=dict(type='str',),fpga_summary=dict(type='str',),memory=dict(type='str',),storage=dict(type='str',),compression_cards=dict(type='dict',aha363=dict(type='int',),unknown_compression=dict(type='int',),gzip_devices=dict(type='int',)),fpga_date=dict(type='str',),ipmi=dict(type='str',),platform_description=dict(type='str',),ssl_cards=dict(type='dict',unknown_ssl_cards=dict(type='int',),hsm=dict(type='int',),ssl_devices=dict(type='int',),nitroxpx=dict(type='int',),nitrox5=dict(type='int',),nitrox3=dict(type='int',),nitrox2=dict(type='int',),nitrox1=dict(type='int',)),serial=dict(type='str',),cpu=dict(type='str',),cpu_stepping=dict(type='int',),ports=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    
@@ -434,10 +387,8 @@ def run_command(module):
 
     if state == 'present':
         result = present(module, result, existing_config)
-        module.client.session.close()
     elif state == 'absent':
         result = absent(module, result, existing_config)
-        module.client.session.close()
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
@@ -445,6 +396,7 @@ def run_command(module):
             result["result"] = get_list(module)
         elif module.params.get("get_type") == "oper":
             result["result"] = get_oper(module)
+    module.client.session.close()
     return result
 
 def main():
