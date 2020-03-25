@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_cgnv6_shared_service_group
 description:
-    - CGNv6 Shared Service Group
+    - Field shared_service_group
 short_description: Configures A10 cgnv6.shared-service-group
 author: A10 Networks 2018 
 version_added: 2.4

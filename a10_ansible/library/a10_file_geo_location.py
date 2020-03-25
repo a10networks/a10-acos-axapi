@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_file_geo_location
 description:
-    - Display geo-location files
+    - Display waf files
 short_description: Configures A10 file.geo-location
 author: A10 Networks 2018 
 version_added: 2.4
@@ -56,33 +56,9 @@ options:
             file_list:
                 description:
                 - "Field file_list"
-    dst_file:
-        description:
-        - "destination file name for copy and rename action"
-        required: False
     uuid:
         description:
         - "uuid of the object"
-        required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
-    file:
-        description:
-        - "geo-location database local file name"
-        required: False
-    action:
-        description:
-        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
-        required: False
-    file_handle:
-        description:
-        - "full path of the uploaded file"
-        required: False
-    size:
-        description:
-        - "geo-location database list file size in byte"
         required: False
 
 
@@ -98,7 +74,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","dst_file","file","file_handle","oper","size","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["oper","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -128,13 +104,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         oper=dict(type='dict',file_list=dict(type='list',file=dict(type='str',))),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        uuid=dict(type='str',)
     ))
    
 
@@ -257,30 +227,13 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
-def report_changes(module, result, existing_config, payload):
+def report_changes(module, result, existing_config):
     if existing_config:
-        for k, v in payload["geo-location"].items():
-            if isinstance(v, str):
-                if v.lower() == "true":
-                    v = 1
-                else:
-                    if v.lower() == "false":
-                        v = 0
-            elif k not in payload:
-               break
-            else:
-                if existing_config["geo-location"][k] != v:
-                    if result["changed"] != True:
-                        result["changed"] = True
-                    existing_config["geo-location"][k] = v
-            result.update(**existing_config)
-    else:
-        result.update(**payload)
+        result["changed"] = True
     return result
-
-def create(module, result, payload):
+def create(module, result):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        post_result = module.client.post(new_url(module))
         if post_result:
             result.update(**post_result)
         result["changed"] = True
@@ -302,9 +255,9 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
+def update(module, result, existing_config):
     try:
-        post_result = module.client.post(existing_url(module), payload)
+        post_result = module.client.post(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:
@@ -318,17 +271,12 @@ def update(module, result, existing_config, payload):
     return result
 
 def present(module, result, existing_config):
-    payload = build_json("geo-location", module)
-    changed_config = report_changes(module, result, existing_config, payload)
     if module.check_mode:
-        return changed_config
-    elif not existing_config:
-        return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
-        return update(module, result, existing_config, payload)
+        return report_changes(module, result, existing_config)
+    if not existing_config:
+        return create(module, result)
     else:
-        result["changed"] = True
-        return result
+        return update(module, result, existing_config)
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -341,9 +289,9 @@ def absent(module, result, existing_config):
     else:
         return delete(module, result)
 
-def replace(module, result, existing_config, payload):
+def replace(module, result, existing_config):
     try:
-        post_result = module.client.put(existing_url(module), payload)
+        post_result = module.client.put(existing_url(module))
         if post_result:
             result.update(**post_result)
         if post_result == existing_config:

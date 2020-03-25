@@ -48,14 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            ldaps_server_list:
-                description:
-                - "Field ldaps_server_list"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -63,96 +55,75 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'admin-bind-success'= Total Admin Bind Success; 'admin-bind-failure'= Total Admin Bind Failure; 'bind-success'= Total User Bind Success; 'bind-failure'= Total User Bind Failure; 'search-success'= Total Search Success; 'search-failure'= Total Search Failure; 'authorize-success'= Total Authorization Success; 'authorize-failure'= Total Authorization Failure; 'timeout-error'= Total Timeout; 'other-error'= Total Other Error; 'request'= Total Request; 'request-normal'= Total Normal Request; 'request-dropped'= Total Dropped Request; 'response-success'= Total Success Response; 'response-failure'= Total Failure Response; 'response-error'= Total Error Response; 'response-timeout'= Total Timeout Response; 'response-other'= Total Other Response; 'job-start-error'= Total Job Start Error; 'polling-control-error'= Total Polling Control Error; 'ssl-session-created'= TLS/SSL Session Created; 'ssl-session-failure'= TLS/SSL Session Failure; 'ldaps-idle-conn-num'= LDAPS Idle Connection Number; 'ldaps-inuse-conn-num'= LDAPS In-use Connection Number; 'pw-expiry'= Total Password expiry; 'pw-change-success'= Total password change success; 'pw-change-failure'= Total password change failure; "
+                - "'all'= all; 'admin-bind-success'= Total Admin Bind Success; 'admin-bind-failure'= Total Admin Bind Failure; 'bind-success'= Total User Bind Success; 'bind-failure'= Total User Bind Failure; 'search-success'= Total Search Success; 'search-failure'= Total Search Failure; 'authorize-success'= Total Authorization Success; 'authorize-failure'= Total Authorization Failure; 'timeout-error'= Total Timeout; 'other-error'= Total Other Error; 'request'= Total Request; 'request-normal'= Total Normal Request; 'request-dropped'= Total Dropped Request; 'response-success'= Total Success Response; 'response-failure'= Total Failure Response; 'response-error'= Total Error Response; 'response-timeout'= Total Timeout Response; 'response-other'= Total Other Response; 'job-start-error'= Total Job Start Error; 'polling-control-error'= Total Polling Control Error; "
     stats:
         description:
         - "Field stats"
         required: False
         suboptions:
-            pw_change_success:
-                description:
-                - "Total password change success"
-            admin_bind_success:
-                description:
-                - "Total Admin Bind Success"
-            response_failure:
-                description:
-                - "Total Failure Response"
-            request_dropped:
-                description:
-                - "Total Dropped Request"
-            other_error:
-                description:
-                - "Total Other Error"
-            response_timeout:
-                description:
-                - "Total Timeout Response"
-            job_start_error:
-                description:
-                - "Total Job Start Error"
-            search_failure:
-                description:
-                - "Total Search Failure"
             bind_failure:
                 description:
                 - "Total User Bind Failure"
-            request_normal:
-                description:
-                - "Total Normal Request"
-            instance_list:
-                description:
-                - "Field instance_list"
-            response_other:
-                description:
-                - "Total Other Response"
-            pw_change_failure:
-                description:
-                - "Total password change failure"
-            timeout_error:
-                description:
-                - "Total Timeout"
-            ldaps_idle_conn_num:
-                description:
-                - "LDAPS Idle Connection Number"
-            ssl_session_failure:
-                description:
-                - "TLS/SSL Session Failure"
             authorize_failure:
                 description:
                 - "Total Authorization Failure"
-            ldaps_inuse_conn_num:
+            request_normal:
                 description:
-                - "LDAPS In-use Connection Number"
-            search_success:
-                description:
-                - "Total Search Success"
-            ssl_session_created:
-                description:
-                - "TLS/SSL Session Created"
-            bind_success:
-                description:
-                - "Total User Bind Success"
+                - "Total Normal Request"
             admin_bind_failure:
                 description:
                 - "Total Admin Bind Failure"
             authorize_success:
                 description:
                 - "Total Authorization Success"
+            instance_list:
+                description:
+                - "Field instance_list"
+            timeout_error:
+                description:
+                - "Total Timeout"
             request:
                 description:
                 - "Total Request"
+            other_error:
+                description:
+                - "Total Other Error"
+            response_other:
+                description:
+                - "Total Other Response"
+            admin_bind_success:
+                description:
+                - "Total Admin Bind Success"
+            response_failure:
+                description:
+                - "Total Failure Response"
             polling_control_error:
                 description:
                 - "Total Polling Control Error"
-            pw_expiry:
+            request_dropped:
                 description:
-                - "Total Password expiry"
+                - "Total Dropped Request"
+            response_timeout:
+                description:
+                - "Total Timeout Response"
+            search_success:
+                description:
+                - "Total Search Success"
+            search_failure:
+                description:
+                - "Total Search Failure"
             response_success:
                 description:
                 - "Total Success Response"
+            job_start_error:
+                description:
+                - "Total Job Start Error"
             response_error:
                 description:
                 - "Total Error Response"
+            bind_success:
+                description:
+                - "Total User Bind Success"
     uuid:
         description:
         - "uuid of the object"
@@ -162,72 +133,45 @@ options:
         - "Field instance_list"
         required: False
         suboptions:
-            health_check_disable:
+            health_check_string:
                 description:
-                - "Disable configured health check configuration"
-            protocol:
-                description:
-                - "'ldap'= Use LDAP (default); 'ldaps'= Use LDAP over SSL; 'starttls'= Use LDAP StartTLS; "
-            encrypted:
-                description:
-                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
-            port:
-                description:
-                - "Specify the LDAP server's authentication port, default is 389"
-            ldaps_conn_reuse_idle_timeout:
-                description:
-                - "Specify LDAPS connection reuse idle timeout value (in seconds) (Specify idle timeout value (in seconds), default is 0 (not reuse LDAPS connection))"
+                - "Health monitor name"
             port_hm:
                 description:
                 - "Check port's health status"
             uuid:
                 description:
                 - "uuid of the object"
-            admin_dn:
-                description:
-                - "The LDAP server's admin DN"
-            default_domain:
-                description:
-                - "Specify default domain for LDAP"
-            auth_type:
-                description:
-                - "'ad'= Active Directory. Default; 'open-ldap'= OpenLDAP; "
-            admin_secret:
-                description:
-                - "Specify the LDAP server's admin secret password"
-            pwdmaxage:
-                description:
-                - "Specify the LDAP server's default password expiration time (in seconds) (The LDAP server's default password expiration time (in seconds), default is 0 (no expiration))"
-            health_check_string:
-                description:
-                - "Health monitor name"
-            derive_bind_dn:
-                description:
-                - "Field derive_bind_dn"
-            prompt_pw_change_before_exp:
-                description:
-                - "Prompt user to change password before expiration in N days. This option only takes effect when server type is AD (Prompt user to change password before expiration in N days, default is not to prompt the user)"
-            base:
-                description:
-                - "Specify the LDAP server's search base"
-            secret_string:
-                description:
-                - "secret password"
-            name:
-                description:
-                - "Specify LDAP authentication server name"
             port_hm_disable:
                 description:
                 - "Disable configured port health check configuration"
-            host:
+            admin_dn:
                 description:
-                - "Field host"
-            ca_cert:
+                - "The LDAP server's admin DN"
+            encrypted:
                 description:
-                - "Specify the LDAPS CA cert filename (Trusted LDAPS CA cert filename)"
+                - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
+            default_domain:
+                description:
+                - "Specify default domain for LDAP"
+            health_check_disable:
+                description:
+                - "Disable configured health check configuration"
+            admin_secret:
+                description:
+                - "Specify the LDAP server's admin secret password"
+            port:
+                description:
+                - "Specify the LDAP server's authentication port, default is 389"
             bind_with_dn:
                 description:
                 - "Enforce using DN for LDAP binding(All user input name will be used to create DN)"
+            host:
+                description:
+                - "Field host"
+            base:
+                description:
+                - "Specify the LDAP server's search base"
             sampling_enable:
                 description:
                 - "Field sampling_enable"
@@ -237,9 +181,21 @@ options:
             timeout:
                 description:
                 - "Specify timout for LDAP, default is 10 seconds (The timeout, default is 10 seconds)"
+            pwdmaxage:
+                description:
+                - "Specify the LDAP server's default password expiration time (in seconds) (The LDAP server's default password expiration time (in seconds), default is 0 (no expiration))"
+            derive_bind_dn:
+                description:
+                - "Field derive_bind_dn"
+            secret_string:
+                description:
+                - "secret password"
             health_check:
                 description:
                 - "Check server's health status"
+            name:
+                description:
+                - "Specify LDAP authentication server name"
 
 
 """
@@ -254,7 +210,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["instance_list","oper","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["instance_list","sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -283,11 +239,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ldaps_server_list=dict(type='list',ldaps_idle_conn_num=dict(type='int',),ldaps_inuse_conn_num=dict(type='int',),ldaps_inuse_conn_fd_list=dict(type='str',),ldaps_idle_conn_fd_list=dict(type='str',),ldap_uri=dict(type='str',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error','ssl-session-created','ssl-session-failure','ldaps-idle-conn-num','ldaps-inuse-conn-num','pw-expiry','pw-change-success','pw-change-failure'])),
-        stats=dict(type='dict',pw_change_success=dict(type='str',),admin_bind_success=dict(type='str',),response_failure=dict(type='str',),request_dropped=dict(type='str',),other_error=dict(type='str',),response_timeout=dict(type='str',),job_start_error=dict(type='str',),search_failure=dict(type='str',),bind_failure=dict(type='str',),request_normal=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',bind_failure=dict(type='str',),authorize_failure=dict(type='str',),admin_bind_failure=dict(type='str',),search_failure=dict(type='str',),authorize_success=dict(type='str',),pw_change_success=dict(type='str',),timeout_error=dict(type='str',),request=dict(type='str',),pw_expiry=dict(type='str',),admin_bind_success=dict(type='str',),search_success=dict(type='str',),other_error=dict(type='str',),ssl_session_created=dict(type='str',),pw_change_failure=dict(type='str',),ssl_session_failure=dict(type='str',),bind_success=dict(type='str',)),name=dict(type='str',required=True,)),response_other=dict(type='str',),pw_change_failure=dict(type='str',),timeout_error=dict(type='str',),ldaps_idle_conn_num=dict(type='str',),ssl_session_failure=dict(type='str',),authorize_failure=dict(type='str',),ldaps_inuse_conn_num=dict(type='str',),search_success=dict(type='str',),ssl_session_created=dict(type='str',),bind_success=dict(type='str',),admin_bind_failure=dict(type='str',),authorize_success=dict(type='str',),request=dict(type='str',),polling_control_error=dict(type='str',),pw_expiry=dict(type='str',),response_success=dict(type='str',),response_error=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other','job-start-error','polling-control-error'])),
+        stats=dict(type='dict',bind_failure=dict(type='str',),authorize_failure=dict(type='str',),request_normal=dict(type='str',),admin_bind_failure=dict(type='str',),authorize_success=dict(type='str',),instance_list=dict(type='list',stats=dict(type='dict',bind_failure=dict(type='str',),authorize_failure=dict(type='str',),admin_bind_failure=dict(type='str',),authorize_success=dict(type='str',),timeout_error=dict(type='str',),request=dict(type='str',),admin_bind_success=dict(type='str',),search_success=dict(type='str',),other_error=dict(type='str',),search_failure=dict(type='str',),bind_success=dict(type='str',)),name=dict(type='str',required=True,)),timeout_error=dict(type='str',),request=dict(type='str',),other_error=dict(type='str',),response_other=dict(type='str',),admin_bind_success=dict(type='str',),response_failure=dict(type='str',),polling_control_error=dict(type='str',),request_dropped=dict(type='str',),response_timeout=dict(type='str',),search_success=dict(type='str',),search_failure=dict(type='str',),response_success=dict(type='str',),job_start_error=dict(type='str',),response_error=dict(type='str',),bind_success=dict(type='str',)),
         uuid=dict(type='str',),
-        instance_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',choices=['ldap','ldaps','starttls']),encrypted=dict(type='str',),port=dict(type='int',),ldaps_conn_reuse_idle_timeout=dict(type='int',),port_hm=dict(type='str',),uuid=dict(type='str',),admin_dn=dict(type='str',),default_domain=dict(type='str',),auth_type=dict(type='str',choices=['ad','open-ldap']),admin_secret=dict(type='bool',),pwdmaxage=dict(type='int',),health_check_string=dict(type='str',),derive_bind_dn=dict(type='dict',username_attr=dict(type='str',)),prompt_pw_change_before_exp=dict(type='int',),base=dict(type='str',),secret_string=dict(type='str',),name=dict(type='str',required=True,),port_hm_disable=dict(type='bool',),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),ca_cert=dict(type='str',),bind_with_dn=dict(type='bool',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request','ssl-session-created','ssl-session-failure','pw_expiry','pw_change_success','pw_change_failure'])),dn_attribute=dict(type='str',),timeout=dict(type='int',),health_check=dict(type='bool',))
+        instance_list=dict(type='list',health_check_string=dict(type='str',),port_hm=dict(type='str',),uuid=dict(type='str',),port_hm_disable=dict(type='bool',),admin_dn=dict(type='str',),encrypted=dict(type='str',),default_domain=dict(type='str',),health_check_disable=dict(type='bool',),admin_secret=dict(type='bool',),port=dict(type='int',),bind_with_dn=dict(type='bool',),host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),base=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','admin-bind-success','admin-bind-failure','bind-success','bind-failure','search-success','search-failure','authorize-success','authorize-failure','timeout-error','other-error','request'])),dn_attribute=dict(type='str',),timeout=dict(type='int',),pwdmaxage=dict(type='int',),derive_bind_dn=dict(type='dict',username_attr=dict(type='str',)),secret_string=dict(type='str',),health_check=dict(type='bool',),name=dict(type='str',required=True,))
     ))
    
 
@@ -310,11 +265,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -399,15 +349,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -568,8 +509,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

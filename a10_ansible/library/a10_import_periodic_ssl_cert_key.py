@@ -52,25 +52,21 @@ options:
         description:
         - "'bulk'= import an archive file; "
         required: True
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
         required: False
-    secured:
+    uuid:
         description:
-        - "Mark keys as non-exportable"
-        required: False
-    period:
-        description:
-        - "Specify the period in second"
+        - "uuid of the object"
         required: False
     remote_file:
         description:
         - "profile name for remote url"
+        required: False
+    period:
+        description:
+        - "Specify the period in second"
         required: False
 
 
@@ -86,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["period","remote_file","secured","ssl_cert_key","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["period","remote_file","ssl_cert_key","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -116,11 +112,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ssl_cert_key=dict(type='str',required=True,choices=['bulk']),
-        uuid=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
-        secured=dict(type='bool',),
-        period=dict(type='int',),
-        remote_file=dict(type='str',)
+        uuid=dict(type='str',),
+        remote_file=dict(type='str',),
+        period=dict(type='int',)
     ))
    
 

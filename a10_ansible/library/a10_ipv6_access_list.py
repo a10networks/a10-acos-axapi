@@ -148,7 +148,7 @@ options:
                 - "Access list entry comment (Notes for this ACL)"
             dst_object_group:
                 description:
-                - "Destination network object group name"
+                - "Destination network object group name (Source network object group name)"
             any_type:
                 description:
                 - "Any ICMP type"

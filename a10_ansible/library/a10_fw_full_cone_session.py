@@ -56,9 +56,6 @@ options:
             ipv4_addr:
                 description:
                 - "Field ipv4_addr"
-            total:
-                description:
-                - "Field total"
             ipv6_addr:
                 description:
                 - "Field ipv6_addr"
@@ -112,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ipv4_addr=dict(type='str',),total=dict(type='int',),ipv6_addr=dict(type='str',),session_list=dict(type='list',protocol=dict(type='str',),inbound=dict(type='int',),age=dict(type='str',),cpu=dict(type='int',),inside_port=dict(type='int',),outbound=dict(type='int',),inside_address=dict(type='str',))),
+        oper=dict(type='dict',ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),session_list=dict(type='list',protocol=dict(type='str',),inbound=dict(type='int',),age=dict(type='str',),cpu=dict(type='int',),inside_port=dict(type='int',),outbound=dict(type='int',),inside_address=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    

@@ -57,15 +57,12 @@ options:
         - "Field stats"
         required: False
         suboptions:
-            method_register:
-                description:
-                - "Method REGISTER"
             stat_request:
                 description:
                 - "Request Received"
-            method_publish:
+            method_info:
                 description:
-                - "Method PUBLISH"
+                - "Method INFO"
             method_cancel:
                 description:
                 - "Method CANCEL"
@@ -81,18 +78,21 @@ options:
             method_invite:
                 description:
                 - "Method INVITE"
-            method_options:
-                description:
-                - "Method OPTIONS"
-            method_prack:
-                description:
-                - "Method PRACK"
             method_notify:
                 description:
                 - "Method NOTIFY"
-            method_info:
+            method_register:
                 description:
-                - "Method INFO"
+                - "Method REGISTER"
+            method_prack:
+                description:
+                - "Method PRACK"
+            method_port_config:
+                description:
+                - "Method OPTIONS"
+            method_publish:
+                description:
+                - "Method PUBLISH"
             method_ack:
                 description:
                 - "Method ACK"
@@ -115,7 +115,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'stat-request'= Request Received; 'stat-response'= Response Received; 'method-register'= Method REGISTER; 'method-invite'= Method INVITE; 'method-ack'= Method ACK; 'method-cancel'= Method CANCEL; 'method-bye'= Method BYE; 'method-options'= Method OPTIONS; 'method-prack'= Method PRACK; 'method-subscribe'= Method SUBSCRIBE; 'method-notify'= Method NOTIFY; 'method-publish'= Method PUBLISH; 'method-info'= Method INFO; 'method-refer'= Method REFER; 'method-message'= Method MESSAGE; 'method-update'= Method UPDATE; 'method-unknown'= Method Unknown; 'parse-error'= Message Parse Error; 'keep-alive'= Keep Alive; 'contact-error'= Contact Process Error; 'sdp-error'= SDP Process Error; 'rtp-port-no-op'= RTP Port No Op; 'rtp-rtcp-port-success'= RTP RTCP Port Success; 'rtp-port-failure'= RTP Port Failure; 'rtcp-port-failure'= RTCP Port Failure; 'contact-port-no-op'= Contact Port No Op; 'contact-port-success'= Contact Port Success; 'contact-port-failure'= Contact Port Failure; 'contact-new'= Contact Alloc; 'contact-alloc-failure'= Contact Alloc Failure; 'contact-eim'= Contact EIM; 'contact-eim-set'= Contact EIM Set; 'rtp-new'= RTP Alloc; 'rtp-alloc-failure'= RTP Alloc Failure; 'rtp-eim'= RTP EIM; 'helper-found'= SMP Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'= SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed; 'helper-failure'= SMP Helper Failure; "
+                - "'all'= all; 'stat-request'= Request Received; 'stat-response'= Response Received; 'method-register'= Method REGISTER; 'method-invite'= Method INVITE; 'method-ack'= Method ACK; 'method-cancel'= Method CANCEL; 'method-bye'= Method BYE; 'method-port-config'= Method OPTIONS; 'method-prack'= Method PRACK; 'method-subscribe'= Method SUBSCRIBE; 'method-notify'= Method NOTIFY; 'method-publish'= Method PUBLISH; 'method-info'= Method INFO; 'method-refer'= Method REFER; 'method-message'= Method MESSAGE; 'method-update'= Method UPDATE; 'method-unknown'= Method Unknown; 'parse-error'= Message Parse Error; 'keep-alive'= Keep Alive; 'contact-error'= Contact Process Error; 'sdp-error'= SDP Process Error; 'rtp-port-no-op'= RTP Port No Op; 'rtp-rtcp-port-success'= RTP RTCP Port Success; 'rtp-port-failure'= RTP Port Failure; 'rtcp-port-failure'= RTCP Port Failure; 'contact-port-no-op'= Contact Port No Op; 'contact-port-success'= Contact Port Success; 'contact-port-failure'= Contact Port Failure; 'contact-new'= Contact Alloc; 'contact-alloc-failure'= Contact Alloc Failure; 'contact-eim'= Contact EIM; 'contact-eim-set'= Contact EIM Set; 'rtp-new'= RTP Alloc; 'rtp-alloc-failure'= RTP Alloc Failure; 'rtp-eim'= RTP EIM; 'helper-found'= SMP Helper Conn Found; 'helper-created'= SMP Helper Conn Created; 'helper-deleted'= SMP Helper Conn Already Deleted; 'helper-freed'= SMP Helper Conn Freed; 'helper-failure'= SMP Helper Failure; "
     uuid:
         description:
         - "uuid of the object"
@@ -164,8 +164,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         default_port_disable=dict(type='str',choices=['default-port-disable']),
-        stats=dict(type='dict',method_register=dict(type='str',),stat_request=dict(type='str',),method_publish=dict(type='str',),method_cancel=dict(type='str',),method_unknown=dict(type='str',),method_update=dict(type='str',),method_subscribe=dict(type='str',),method_invite=dict(type='str',),method_options=dict(type='str',),method_prack=dict(type='str',),method_notify=dict(type='str',),method_info=dict(type='str',),method_ack=dict(type='str',),method_refer=dict(type='str',),stat_response=dict(type='str',),method_bye=dict(type='str',),method_message=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-options','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
+        stats=dict(type='dict',stat_request=dict(type='str',),method_info=dict(type='str',),method_cancel=dict(type='str',),method_unknown=dict(type='str',),method_update=dict(type='str',),method_subscribe=dict(type='str',),method_invite=dict(type='str',),method_notify=dict(type='str',),method_register=dict(type='str',),method_prack=dict(type='str',),method_port_config=dict(type='str',),method_publish=dict(type='str',),method_ack=dict(type='str',),method_refer=dict(type='str',),stat_response=dict(type='str',),method_bye=dict(type='str',),method_message=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','stat-request','stat-response','method-register','method-invite','method-ack','method-cancel','method-bye','method-port-config','method-prack','method-subscribe','method-notify','method-publish','method-info','method-refer','method-message','method-update','method-unknown','parse-error','keep-alive','contact-error','sdp-error','rtp-port-no-op','rtp-rtcp-port-success','rtp-port-failure','rtcp-port-failure','contact-port-no-op','contact-port-success','contact-port-failure','contact-new','contact-alloc-failure','contact-eim','contact-eim-set','rtp-new','rtp-alloc-failure','rtp-eim','helper-found','helper-created','helper-deleted','helper-freed','helper-failure'])),
         uuid=dict(type='str',)
     ))
    

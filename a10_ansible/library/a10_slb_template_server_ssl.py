@@ -56,9 +56,9 @@ options:
         description:
         - "Cipher Template Name"
         required: False
-    sslilogging:
+    encrypted:
         description:
-        - "'disable'= Disable all logging; 'all'= enable all logging(error, info); "
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
         required: False
     user_tag:
         description:
@@ -84,10 +84,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-    key_shared_str:
-        description:
-        - "Key Name"
-        required: False
     template_cipher_shared:
         description:
         - "Cipher Template Name"
@@ -95,10 +91,6 @@ options:
     dgversion:
         description:
         - "Lower TLS/SSL version can be downgraded"
-        required: False
-    cert_shared_str:
-        description:
-        - "Certificate Name"
         required: False
     version:
         description:
@@ -112,14 +104,6 @@ options:
             ec:
                 description:
                 - "'secp256r1'= X9_62_prime256v1; 'secp384r1'= secp384r1; "
-    encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
-        required: False
-    ssli_logging:
-        description:
-        - "SSLi logging level, default is error logging only"
-        required: False
     session_cache_size:
         description:
         - "Session Cache Size (Maximum cache size. Default value 0 (Session ID reuse disabled))"
@@ -138,11 +122,7 @@ options:
         required: False
     key:
         description:
-        - "Key Name"
-        required: False
-    key_shared_encrypted:
-        description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED password string)"
+        - "Client private-key (Key Name)"
         required: False
     cipher_without_prio_list:
         description:
@@ -151,7 +131,7 @@ options:
         suboptions:
             cipher_wo_prio:
                 description:
-                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; 'TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256; 'TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256'= TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256; 'TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'= TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256; "
+                - "'SSL3_RSA_DES_192_CBC3_SHA'= SSL3_RSA_DES_192_CBC3_SHA; 'SSL3_RSA_RC4_128_MD5'= SSL3_RSA_RC4_128_MD5; 'SSL3_RSA_RC4_128_SHA'= SSL3_RSA_RC4_128_SHA; 'TLS1_RSA_AES_128_SHA'= TLS1_RSA_AES_128_SHA; 'TLS1_RSA_AES_256_SHA'= TLS1_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_SHA256'= TLS1_RSA_AES_128_SHA256; 'TLS1_RSA_AES_256_SHA256'= TLS1_RSA_AES_256_SHA256; 'TLS1_DHE_RSA_AES_128_GCM_SHA256'= TLS1_DHE_RSA_AES_128_GCM_SHA256; 'TLS1_DHE_RSA_AES_128_SHA'= TLS1_DHE_RSA_AES_128_SHA; 'TLS1_DHE_RSA_AES_128_SHA256'= TLS1_DHE_RSA_AES_128_SHA256; 'TLS1_DHE_RSA_AES_256_GCM_SHA384'= TLS1_DHE_RSA_AES_256_GCM_SHA384; 'TLS1_DHE_RSA_AES_256_SHA'= TLS1_DHE_RSA_AES_256_SHA; 'TLS1_DHE_RSA_AES_256_SHA256'= TLS1_DHE_RSA_AES_256_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256'= TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_ECDSA_AES_128_SHA'= TLS1_ECDHE_ECDSA_AES_128_SHA; 'TLS1_ECDHE_ECDSA_AES_128_SHA256'= TLS1_ECDHE_ECDSA_AES_128_SHA256; 'TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384'= TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA'= TLS1_ECDHE_ECDSA_AES_256_SHA; 'TLS1_ECDHE_RSA_AES_128_GCM_SHA256'= TLS1_ECDHE_RSA_AES_128_GCM_SHA256; 'TLS1_ECDHE_RSA_AES_128_SHA'= TLS1_ECDHE_RSA_AES_128_SHA; 'TLS1_ECDHE_RSA_AES_128_SHA256'= TLS1_ECDHE_RSA_AES_128_SHA256; 'TLS1_ECDHE_RSA_AES_256_GCM_SHA384'= TLS1_ECDHE_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA'= TLS1_ECDHE_RSA_AES_256_SHA; 'TLS1_RSA_AES_128_GCM_SHA256'= TLS1_RSA_AES_128_GCM_SHA256; 'TLS1_RSA_AES_256_GCM_SHA384'= TLS1_RSA_AES_256_GCM_SHA384; 'TLS1_ECDHE_RSA_AES_256_SHA384'= TLS1_ECDHE_RSA_AES_256_SHA384; 'TLS1_ECDHE_ECDSA_AES_256_SHA384'= TLS1_ECDHE_ECDSA_AES_256_SHA384; "
     ca_certs:
         description:
         - "Field ca_certs"
@@ -160,23 +140,20 @@ options:
             ca_cert:
                 description:
                 - "Specify CA certificate"
-            ca_cert_partition_shared:
-                description:
-                - "CA Certificate Partition Shared"
-            server_ocsp_sg:
-                description:
-                - "Specify service-group (Service group name)"
             server_ocsp_srvr:
                 description:
                 - "Specify authentication server"
-    name:
-        description:
-        - "Server SSL Template Name"
-        required: True
+            server_ocsp_sg:
+                description:
+                - "Specify service-group (Service group name)"
     shared_partition_cipher_template:
         description:
         - "Reference a cipher template from shared partition"
         required: False
+    name:
+        description:
+        - "Server SSL Template Name"
+        required: True
     enable_tls_alert_logging:
         description:
         - "Enable TLS alert logging"
@@ -191,11 +168,7 @@ options:
         required: False
     cert:
         description:
-        - "Certificate Name"
-        required: False
-    handshake_logging_enable:
-        description:
-        - "Enable SSL handshake logging"
+        - "Specify Client certificate (Certificate Name)"
         required: False
     renegotiation_disable:
         description:
@@ -213,10 +186,6 @@ options:
         description:
         - "Send close notification when terminate connection"
         required: False
-    key_shared_passphrase:
-        description:
-        - "Password Phrase"
-        required: False
 
 
 """
@@ -231,7 +200,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["alert_type","ca_certs","cert","cert_shared_str","cipher_template","cipher_without_prio_list","close_notify","crl_certs","dgversion","dh_type","ec_list","enable_tls_alert_logging","encrypted","forward_proxy_enable","handshake_logging_enable","key","key_shared_encrypted","key_shared_passphrase","key_shared_str","name","ocsp_stapling","passphrase","renegotiation_disable","server_certificate_error","session_cache_size","session_cache_timeout","session_ticket_enable","shared_partition_cipher_template","ssli_logging","sslilogging","template_cipher_shared","use_client_sni","user_tag","uuid","version",]
+AVAILABLE_PROPERTIES = ["alert_type","ca_certs","cert","cipher_template","cipher_without_prio_list","close_notify","crl_certs","dgversion","dh_type","ec_list","enable_tls_alert_logging","encrypted","forward_proxy_enable","key","name","ocsp_stapling","passphrase","renegotiation_disable","server_certificate_error","session_cache_size","session_cache_timeout","session_ticket_enable","shared_partition_cipher_template","template_cipher_shared","use_client_sni","user_tag","uuid","version",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -262,39 +231,32 @@ def get_argspec():
     rv.update(dict(
         session_cache_timeout=dict(type='int',),
         cipher_template=dict(type='str',),
-        sslilogging=dict(type='str',choices=['disable','all']),
+        encrypted=dict(type='str',),
         user_tag=dict(type='str',),
         passphrase=dict(type='str',),
         ocsp_stapling=dict(type='bool',),
         crl_certs=dict(type='list',crl=dict(type='str',)),
         uuid=dict(type='str',),
-        key_shared_str=dict(type='str',),
         template_cipher_shared=dict(type='str',),
         dgversion=dict(type='int',),
-        cert_shared_str=dict(type='str',),
         version=dict(type='int',),
         ec_list=dict(type='list',ec=dict(type='str',choices=['secp256r1','secp384r1'])),
-        encrypted=dict(type='str',),
-        ssli_logging=dict(type='bool',),
         session_cache_size=dict(type='int',),
         dh_type=dict(type='str',choices=['1024','1024-dsa','2048']),
         use_client_sni=dict(type='bool',),
         forward_proxy_enable=dict(type='bool',),
         key=dict(type='str',),
-        key_shared_encrypted=dict(type='str',),
-        cipher_without_prio_list=dict(type='list',cipher_wo_prio=dict(type='str',choices=['SSL3_RSA_DES_192_CBC3_SHA','SSL3_RSA_RC4_128_MD5','SSL3_RSA_RC4_128_SHA','TLS1_RSA_AES_128_SHA','TLS1_RSA_AES_256_SHA','TLS1_RSA_AES_128_SHA256','TLS1_RSA_AES_256_SHA256','TLS1_DHE_RSA_AES_128_GCM_SHA256','TLS1_DHE_RSA_AES_128_SHA','TLS1_DHE_RSA_AES_128_SHA256','TLS1_DHE_RSA_AES_256_GCM_SHA384','TLS1_DHE_RSA_AES_256_SHA','TLS1_DHE_RSA_AES_256_SHA256','TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256','TLS1_ECDHE_ECDSA_AES_128_SHA','TLS1_ECDHE_ECDSA_AES_128_SHA256','TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA','TLS1_ECDHE_RSA_AES_128_GCM_SHA256','TLS1_ECDHE_RSA_AES_128_SHA','TLS1_ECDHE_RSA_AES_128_SHA256','TLS1_ECDHE_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA','TLS1_RSA_AES_128_GCM_SHA256','TLS1_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA384','TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256','TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256','TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256'])),
-        ca_certs=dict(type='list',ca_cert=dict(type='str',),ca_cert_partition_shared=dict(type='bool',),server_ocsp_sg=dict(type='str',),server_ocsp_srvr=dict(type='str',)),
-        name=dict(type='str',required=True,),
+        cipher_without_prio_list=dict(type='list',cipher_wo_prio=dict(type='str',choices=['SSL3_RSA_DES_192_CBC3_SHA','SSL3_RSA_RC4_128_MD5','SSL3_RSA_RC4_128_SHA','TLS1_RSA_AES_128_SHA','TLS1_RSA_AES_256_SHA','TLS1_RSA_AES_128_SHA256','TLS1_RSA_AES_256_SHA256','TLS1_DHE_RSA_AES_128_GCM_SHA256','TLS1_DHE_RSA_AES_128_SHA','TLS1_DHE_RSA_AES_128_SHA256','TLS1_DHE_RSA_AES_256_GCM_SHA384','TLS1_DHE_RSA_AES_256_SHA','TLS1_DHE_RSA_AES_256_SHA256','TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256','TLS1_ECDHE_ECDSA_AES_128_SHA','TLS1_ECDHE_ECDSA_AES_128_SHA256','TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA','TLS1_ECDHE_RSA_AES_128_GCM_SHA256','TLS1_ECDHE_RSA_AES_128_SHA','TLS1_ECDHE_RSA_AES_128_SHA256','TLS1_ECDHE_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA','TLS1_RSA_AES_128_GCM_SHA256','TLS1_RSA_AES_256_GCM_SHA384','TLS1_ECDHE_RSA_AES_256_SHA384','TLS1_ECDHE_ECDSA_AES_256_SHA384'])),
+        ca_certs=dict(type='list',ca_cert=dict(type='str',),server_ocsp_srvr=dict(type='str',),server_ocsp_sg=dict(type='str',)),
         shared_partition_cipher_template=dict(type='bool',),
+        name=dict(type='str',required=True,),
         enable_tls_alert_logging=dict(type='bool',),
         session_ticket_enable=dict(type='bool',),
         alert_type=dict(type='str',choices=['fatal']),
         cert=dict(type='str',),
-        handshake_logging_enable=dict(type='bool',),
         renegotiation_disable=dict(type='bool',),
         server_certificate_error=dict(type='list',error_type=dict(type='str',choices=['email','ignore','logging','trap'])),
-        close_notify=dict(type='bool',),
-        key_shared_passphrase=dict(type='str',)
+        close_notify=dict(type='bool',)
     ))
    
 

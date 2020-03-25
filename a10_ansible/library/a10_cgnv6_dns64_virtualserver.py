@@ -53,21 +53,12 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            peak_conn:
-                description:
-                - "Field peak_conn"
             conn_rate_unit:
                 description:
                 - "Field conn_rate_unit"
             port_list:
                 description:
                 - "Field port_list"
-            curr_conn_overflow:
-                description:
-                - "Field curr_conn_overflow"
-            icmp_rate_over_limit_drop:
-                description:
-                - "Field icmp_rate_over_limit_drop"
             name:
                 description:
                 - "CGNV6 Virtual Server Name"
@@ -92,15 +83,12 @@ options:
             curr_icmpv6_rate:
                 description:
                 - "Field curr_icmpv6_rate"
-            ip_address:
+            icmp_rate_over_limit_drop:
                 description:
-                - "Field ip_address"
+                - "Field icmp_rate_over_limit_drop"
             icmp_lockup_time_left:
                 description:
                 - "Field icmp_lockup_time_left"
-            migration_status:
-                description:
-                - "Field migration_status"
     use_if_ip:
         description:
         - "Use Interface IP"
@@ -131,9 +119,9 @@ options:
             port_number:
                 description:
                 - "Port"
-            acl_name_list:
+            action:
                 description:
-                - "Field acl_name_list"
+                - "'enable'= Enable; 'disable'= Disable; "
             sampling_enable:
                 description:
                 - "Field sampling_enable"
@@ -143,12 +131,6 @@ options:
             template_dns:
                 description:
                 - "DNS template (DNS template name)"
-            acl_id_list:
-                description:
-                - "Field acl_id_list"
-            action:
-                description:
-                - "'enable'= Enable; 'disable'= Disable; "
             pool:
                 description:
                 - "Specify NAT pool or pool group"
@@ -239,9 +221,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',peak_conn=dict(type='int',),conn_rate_unit=dict(type='str',choices=['100ms','second']),port_list=dict(type='list',oper=dict(type='dict',http_host_hits=dict(type='bool',),cpu_count=dict(type='int',),loc_list=dict(type='str',),http_hits_list=dict(type='list',name=dict(type='str',),hits_count=dict(type='int',)),http_vport=dict(type='bool',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),loc_max_depth=dict(type='int',),level_str=dict(type='str',),loc_last=dict(type='str',),http_url_hits=dict(type='bool',),geo_location=dict(type='str',),http_vport_cpu_list=dict(type='list',REQ_50u=dict(type='int',),http2_control_bytes=dict(type='int',),ws_server_switch=dict(type='int',),REQ_50m=dict(type='int',),status_450=dict(type='int',),http2_reset_received=dict(type='int',),status_510=dict(type='int',),ws_handshake_request=dict(type='int',),http2_header_bytes=dict(type='int',),status_207=dict(type='int',),status_206=dict(type='int',),status_205=dict(type='int',),status_204=dict(type='int',),status_203=dict(type='int',),status_202=dict(type='int',),status_201=dict(type='int',),status_200=dict(type='int',),ws_client_switch=dict(type='int',),status_2xx=dict(type='int',),http2_goaway_received=dict(type='int',),REQ_500u=dict(type='int',),status_4xx=dict(type='int',),status_3xx=dict(type='int',),REQ_200u=dict(type='int',),stream_closed=dict(type='int',),REQ_100m=dict(type='int',),REQ_5m=dict(type='int',),REQ_100u=dict(type='int',),REQ_5s=dict(type='int',),REQ_20m=dict(type='int',),header_length_long=dict(type='int',),REQ_20u=dict(type='int',),REQ_2s=dict(type='int',),total_http2_bytes=dict(type='int',),status_411=dict(type='int',),status_306=dict(type='int',),status_307=dict(type='int',),status_304=dict(type='int',),status_305=dict(type='int',),status_302=dict(type='int',),status_303=dict(type='int',),REQ_2m=dict(type='int',),status_301=dict(type='int',),REQ_10u=dict(type='int',),total_http2_conn=dict(type='int',),REQ_10m=dict(type='int',),REQ_200m=dict(type='int',),peak_http2_conn=dict(type='int',),status_412=dict(type='int',),status_413=dict(type='int',),status_410=dict(type='int',),http2_reset_sent=dict(type='int',),status_416=dict(type='int',),status_417=dict(type='int',),status_414=dict(type='int',),status_415=dict(type='int',),status_418=dict(type='int',),status_unknown=dict(type='int',),status_100=dict(type='int',),status_101=dict(type='int',),status_102=dict(type='int',),status_300=dict(type='int',),status_424=dict(type='int',),curr_http2_conn=dict(type='int',),ws_handshake_success=dict(type='int',),status_504_ax=dict(type='int',),status_6xx=dict(type='int',),status_5xx=dict(type='int',),status_401=dict(type='int',),status_400=dict(type='int',),status_403=dict(type='int',),status_402=dict(type='int',),status_405=dict(type='int',),status_404=dict(type='int',),status_407=dict(type='int',),status_406=dict(type='int',),status_409=dict(type='int',),status_408=dict(type='int',),http2_goaway_sent=dict(type='int',),REQ_1m=dict(type='int',),REQ_1s=dict(type='int',),status_1xx=dict(type='int',),http2_data_bytes=dict(type='int',),status_423=dict(type='int',),status_422=dict(type='int',),status_426=dict(type='int',),status_425=dict(type='int',),REQ_500m=dict(type='int',),status_508=dict(type='int',),status_509=dict(type='int',),REQ_OVER_5s=dict(type='int',),status_500=dict(type='int',),status_501=dict(type='int',),status_502=dict(type='int',),status_503=dict(type='int',),status_504=dict(type='int',),status_505=dict(type='int',),status_506=dict(type='int',),status_507=dict(type='int',),status_449=dict(type='int',)),real_curr_conn=dict(type='int',),loc_success=dict(type='int',),loc_error=dict(type='int',),group_id=dict(type='int',),loc_override=dict(type='int',)),protocol=dict(type='str',required=True,choices=['dns-udp']),port_number=dict(type='int',required=True,)),curr_conn_overflow=dict(type='int',),icmp_rate_over_limit_drop=dict(type='int',),name=dict(type='str',required=True,),icmpv6_rate_over_limit_drop=dict(type='int',),curr_conn_rate=dict(type='int',),mac=dict(type='str',),curr_icmp_rate=dict(type='int',),icmpv6_lockup_time_left=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Partial Up','Down','Disb','Unkn']),curr_icmpv6_rate=dict(type='int',),ip_address=dict(type='str',),icmp_lockup_time_left=dict(type='int',),migration_status=dict(type='str',)),
+        oper=dict(type='dict',conn_rate_unit=dict(type='str',choices=['100ms','second']),port_list=dict(type='list',oper=dict(type='dict',loc_list=dict(type='str',),loc_max_depth=dict(type='int',),level_str=dict(type='str',),loc_last=dict(type='str',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),geo_location=dict(type='str',),loc_success=dict(type='int',),loc_error=dict(type='int',),group_id=dict(type='int',),loc_override=dict(type='int',)),protocol=dict(type='str',required=True,choices=['dns-udp']),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,),icmpv6_rate_over_limit_drop=dict(type='int',),curr_conn_rate=dict(type='int',),mac=dict(type='str',),curr_icmp_rate=dict(type='int',),icmpv6_lockup_time_left=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Partial Up','Down','Disb','Unkn']),curr_icmpv6_rate=dict(type='int',),icmp_rate_over_limit_drop=dict(type='int',),icmp_lockup_time_left=dict(type='int',)),
         use_if_ip=dict(type='bool',),
-        port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['dns-udp']),uuid=dict(type='str',),precedence=dict(type='bool',),auto=dict(type='bool',),template_policy=dict(type='str',),service_group=dict(type='str',),port_number=dict(type='int',required=True,),acl_name_list=dict(type='list',acl_name=dict(type='str',),acl_name_src_nat_pool=dict(type='str',),acl_name_seq_num=dict(type='int',)),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','toatal_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time'])),user_tag=dict(type='str',),template_dns=dict(type='str',),acl_id_list=dict(type='list',acl_id_seq_num=dict(type='int',),acl_id=dict(type='int',),acl_id_src_nat_pool=dict(type='str',)),action=dict(type='str',choices=['enable','disable']),pool=dict(type='str',)),
+        port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['dns-udp']),uuid=dict(type='str',),precedence=dict(type='bool',),auto=dict(type='bool',),template_policy=dict(type='str',),service_group=dict(type='str',),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_l4_conn','total_l7_conn','toatal_tcp_conn','total_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_dns_pkts','total_mf_dns_pkts','es_total_failure_actions','compression_bytes_before','compression_bytes_after','compression_hit','compression_miss','compression_miss_no_client','compression_miss_template_exclusion','curr_req','total_req','total_req_succ','peak_conn','curr_conn_rate','last_rsp_time','fastest_rsp_time','slowest_rsp_time'])),user_tag=dict(type='str',),template_dns=dict(type='str',),pool=dict(type='str',)),
         name=dict(type='str',required=True,),
         template_policy=dict(type='str',),
         vrid=dict(type='int',),

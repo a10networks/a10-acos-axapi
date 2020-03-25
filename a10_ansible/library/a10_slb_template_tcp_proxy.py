@@ -54,7 +54,7 @@ options:
         required: False
     init_cwnd:
         description:
-        - "The initial congestion control window size (packets), default is 10 (init-cwnd in packets, default 10)"
+        - "The initial congestion control window size (packets), default is 10 (number)"
         required: False
     idle_timeout:
         description:
@@ -62,7 +62,7 @@ options:
         required: False
     fin_timeout:
         description:
-        - "FIN timeout (sec), default is disabled (number)"
+        - "FIN timeout (sec), default is 5 (number)"
         required: False
     half_open_idle_timeout:
         description:
@@ -76,10 +76,6 @@ options:
         description:
         - "send reset to client when server is down"
         required: False
-    early_retransmit:
-        description:
-        - "Configure the Early-Retransmit Algorithm (RFC 5827) (Early-Retransmit is disabled by default)"
-        required: False
     server_down_action:
         description:
         - "'FIN'= FIN Connection; 'RST'= Reset Connection; "
@@ -88,25 +84,13 @@ options:
         description:
         - "Timewait Threshold (sec), default 5 (number)"
         required: False
-    min_rto:
-        description:
-        - "The minmum retransmission timeout, default is 200ms (number)"
-        required: False
     dynamic_buffer_allocation:
         description:
         - "Optimally adjust the transmit and receive buffer sizes of TCP proxy while keeping their sum constant"
         required: False
-    limited_slowstart:
+    uuid:
         description:
-        - "RFC 3742 Limited Slow-Start for TCP with Large Congestion Windows (number)"
-        required: False
-    disable_sack:
-        description:
-        - "disable Selective Ack Option"
-        required: False
-    disable_window_scale:
-        description:
-        - "disable TCP Window-Scale Option"
+        - "uuid of the object"
         required: False
     alive_if_active:
         description:
@@ -118,7 +102,7 @@ options:
         required: False
     keepalive_interval:
         description:
-        - "Interval between keepalive probes (sec), default is off (number (seconds))"
+        - "Interval between keepalive probes (sec), default is off (number)"
         required: False
     retransmit_retries:
         description:
@@ -130,7 +114,7 @@ options:
         required: False
     transmit_buffer:
         description:
-        - "TCP Transmit Buffer (default 200k) (number default 200000 bytes)"
+        - "TCP Transmit Buffer (default 200k) (number)"
         required: False
     nagle:
         description:
@@ -148,10 +132,6 @@ options:
         description:
         - "Number of keepalive probes sent, default is off"
         required: False
-    psh_flag_optimization:
-        description:
-        - "Enable Optimized PSH Flag Use"
-        required: False
     ack_aggressiveness:
         description:
         - "'low'= Delayed ACK; 'medium'= Delayed ACK, with ACK on each packet with PUSH flag; 'high'= ACK on each packet; "
@@ -168,17 +148,9 @@ options:
         description:
         - "send reset to client if error happens"
         required: False
-    maxburst:
-        description:
-        - "The max packet count sent per transmission event (number)"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
-        required: False
     receive_buffer:
         description:
-        - "TCP Receive Buffer (default 200k) (number default 200000 bytes)"
+        - "TCP Receive Buffer (default 200k) (number)"
         required: False
     del_session_on_server_down:
         description:
@@ -188,17 +160,9 @@ options:
         description:
         - "TCP Proxy Template Name"
         required: True
-    reassembly_timeout:
-        description:
-        - "The reassembly timeout, default is 30sec (number)"
-        required: False
     reset_fwd:
         description:
         - "send reset to server if error happens"
-        required: False
-    disable_tcp_timestamps:
-        description:
-        - "disable TCP Timestamps Option"
         required: False
     syn_retries:
         description:
@@ -212,21 +176,9 @@ options:
         description:
         - "Customized tag"
         required: False
-    reassembly_limit:
-        description:
-        - "The reassembly queuing limit, default is 25 segments (number)"
-        required: False
-    invalid_rate_limit:
-        description:
-        - "Invalid Packet Response Rate Limit (ms), default is 500 (number default 500 challenges)"
-        required: False
-    disable_abc:
-        description:
-        - "Appropriate Byte Counting RFC 3465 Disabled, default is enabled (Appropriate Byte Counting (ABC) is enabled by default)"
-        required: False
     half_close_idle_timeout:
         description:
-        - "TCP Half Close Idle Timeout (sec), default is off (cmd is deprecated, use fin-timeout instead) (number)"
+        - "TCP Half Close Idle Timeout (sec), default is off (number)"
         required: False
 
 
@@ -242,7 +194,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ack_aggressiveness","alive_if_active","backend_wscale","del_session_on_server_down","disable","disable_abc","disable_sack","disable_tcp_timestamps","disable_window_scale","down","dynamic_buffer_allocation","early_retransmit","fin_timeout","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","init_cwnd","initial_window_size","insert_client_ip","invalid_rate_limit","keepalive_interval","keepalive_probes","limited_slowstart","maxburst","min_rto","mss","nagle","name","psh_flag_optimization","qos","reassembly_limit","reassembly_timeout","receive_buffer","reno","reset_fwd","reset_rev","retransmit_retries","server_down_action","syn_retries","timewait","transmit_buffer","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["ack_aggressiveness","alive_if_active","backend_wscale","del_session_on_server_down","disable","down","dynamic_buffer_allocation","fin_timeout","force_delete_timeout","force_delete_timeout_100ms","half_close_idle_timeout","half_open_idle_timeout","idle_timeout","init_cwnd","initial_window_size","insert_client_ip","keepalive_interval","keepalive_probes","mss","nagle","name","qos","receive_buffer","reno","reset_fwd","reset_rev","retransmit_retries","server_down_action","syn_retries","timewait","transmit_buffer","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -278,14 +230,10 @@ def get_argspec():
         half_open_idle_timeout=dict(type='int',),
         reno=dict(type='bool',),
         down=dict(type='bool',),
-        early_retransmit=dict(type='bool',),
         server_down_action=dict(type='str',choices=['FIN','RST']),
         timewait=dict(type='int',),
-        min_rto=dict(type='int',),
         dynamic_buffer_allocation=dict(type='bool',),
-        limited_slowstart=dict(type='int',),
-        disable_sack=dict(type='bool',),
-        disable_window_scale=dict(type='bool',),
+        uuid=dict(type='str',),
         alive_if_active=dict(type='bool',),
         mss=dict(type='int',),
         keepalive_interval=dict(type='int',),
@@ -296,25 +244,17 @@ def get_argspec():
         force_delete_timeout_100ms=dict(type='int',),
         initial_window_size=dict(type='int',),
         keepalive_probes=dict(type='int',),
-        psh_flag_optimization=dict(type='bool',),
         ack_aggressiveness=dict(type='str',choices=['low','medium','high']),
         backend_wscale=dict(type='int',),
         disable=dict(type='bool',),
         reset_rev=dict(type='bool',),
-        maxburst=dict(type='int',),
-        uuid=dict(type='str',),
         receive_buffer=dict(type='int',),
         del_session_on_server_down=dict(type='bool',),
         name=dict(type='str',required=True,),
-        reassembly_timeout=dict(type='int',),
         reset_fwd=dict(type='bool',),
-        disable_tcp_timestamps=dict(type='bool',),
         syn_retries=dict(type='int',),
         force_delete_timeout=dict(type='int',),
         user_tag=dict(type='str',),
-        reassembly_limit=dict(type='int',),
-        invalid_rate_limit=dict(type='int',),
-        disable_abc=dict(type='bool',),
         half_close_idle_timeout=dict(type='int',)
     ))
    

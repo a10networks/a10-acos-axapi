@@ -56,42 +56,30 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            alt_list:
-                description:
-                - "Field alt_list"
-            name:
-                description:
-                - "Member name"
-            hm_index:
-                description:
-                - "Field hm_index"
-            hm_key:
-                description:
-                - "Field hm_key"
-            drs_list:
-                description:
-                - "Field drs_list"
             state:
                 description:
                 - "Field state"
+            name:
+                description:
+                - "Member name"
             port:
                 description:
                 - "Port number"
+    member_stats_data_disable:
+        description:
+        - "Disable statistical data collection"
+        required: False
     member_priority:
         description:
         - "Priority of Port in the Group (Priority of Port in the Group, default is 1)"
         required: False
-    uuid:
+    name:
         description:
-        - "uuid of the object"
-        required: False
+        - "Member name"
+        required: True
     fqdn_name:
         description:
         - "Server hostname - Not applicable if real server is already defined"
-        required: False
-    resolve_as:
-        description:
-        - "'resolve-to-ipv4'= Use A Query only to resolve FQDN; 'resolve-to-ipv6'= Use AAAA Query only to resolve FQDN; 'resolve-to-ipv4-and-ipv6'= Use A as well as AAAA Query to resolve FQDN; "
         required: False
     sampling_enable:
         description:
@@ -100,15 +88,11 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total established connections; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_status_code_2xx'= Total reverse packets inspected status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse packets inspected status code non 5xx; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total requests successful; 'peak_conn'= Peak connections; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; 'curr_conn_overflow'= Current connection counter overflow count; 'state_flaps'= State flaps count; "
+                - "'all'= all; 'total_fwd_bytes'= Bytes processed in forward direction; 'total_fwd_pkts'= Packets processed in forward direction; 'total_rev_bytes'= Bytes processed in reverse direction; 'total_rev_pkts'= Packets processed in reverse direction; 'total_conn'= Total established connections; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_status_code_2xx'= Total reverse packets inspected status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse packets inspected status code non 5xx; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total requests successful; 'peak_conn'= peak_conn; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; "
     member_template:
         description:
         - "Real server port template (Real server port template name)"
         required: False
-    name:
-        description:
-        - "Member name"
-        required: True
     host:
         description:
         - "IP Address - Not applicable if real server is already defined"
@@ -129,42 +113,15 @@ options:
             curr_req:
                 description:
                 - "Current requests"
-            peak_conn:
-                description:
-                - "Peak connections"
-            total_req:
-                description:
-                - "Total requests"
-            total_rev_pkts:
-                description:
-                - "Packets processed in reverse direction"
-            curr_ssl_conn:
-                description:
-                - "Current SSL connections"
-            curr_conn:
-                description:
-                - "Current established connections"
-            total_rev_pkts_inspected_status_code_non_5xx:
-                description:
-                - "Total reverse packets inspected status code non 5xx"
             total_rev_bytes:
                 description:
                 - "Bytes processed in reverse direction"
-            port:
-                description:
-                - "Port number"
-            response_time:
-                description:
-                - "Response time"
-            total_fwd_bytes:
-                description:
-                - "Bytes processed in forward direction"
             name:
                 description:
                 - "Member name"
-            total_rev_pkts_inspected_status_code_2xx:
+            peak_conn:
                 description:
-                - "Total reverse packets inspected status code 2xx"
+                - "Field peak_conn"
             total_ssl_conn:
                 description:
                 - "Total SSL connections"
@@ -177,21 +134,42 @@ options:
             total_fwd_pkts:
                 description:
                 - "Packets processed in forward direction"
+            total_req:
+                description:
+                - "Total requests"
+            total_rev_pkts:
+                description:
+                - "Packets processed in reverse direction"
+            port:
+                description:
+                - "Port number"
+            curr_ssl_conn:
+                description:
+                - "Current SSL connections"
             total_req_succ:
                 description:
                 - "Total requests successful"
-            state_flaps:
+            curr_conn:
                 description:
-                - "State flaps count"
-            total_rev_pkts_inspected:
+                - "Current established connections"
+            total_rev_pkts_inspected_status_code_non_5xx:
                 description:
-                - "Total reverse packets inspected"
-            curr_conn_overflow:
+                - "Total reverse packets inspected status code non 5xx"
+            total_rev_pkts_inspected_status_code_2xx:
                 description:
-                - "Current connection counter overflow count"
+                - "Total reverse packets inspected status code 2xx"
+            total_fwd_bytes:
+                description:
+                - "Bytes processed in forward direction"
             slowest_rsp_time:
                 description:
                 - "Slowest response time"
+            response_time:
+                description:
+                - "Response time"
+            total_rev_pkts_inspected:
+                description:
+                - "Total reverse packets inspected"
     server_ipv6_addr:
         description:
         - "IPV6 Address - Not applicable if real server is already defined"
@@ -200,9 +178,9 @@ options:
         description:
         - "Port number"
         required: True
-    member_stats_data_disable:
+    uuid:
         description:
-        - "Disable statistical data collection"
+        - "uuid of the object"
         required: False
 
 
@@ -218,7 +196,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","oper","port","resolve_as","sampling_enable","server_ipv6_addr","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["fqdn_name","host","member_priority","member_state","member_stats_data_disable","member_template","name","oper","port","sampling_enable","server_ipv6_addr","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -247,21 +225,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',alt_list=dict(type='list',alt_state=dict(type='str',),alt_rev_pkts=dict(type='int',),alt_port=dict(type='int',),alt_peak_conn=dict(type='int',),alt_curr_conn=dict(type='int',),alt_fwd_pkts=dict(type='int',),alt_total_conn=dict(type='int',),alt_name=dict(type='str',)),name=dict(type='str',required=True,),hm_index=dict(type='int',),hm_key=dict(type='int',),drs_list=dict(type='list',drs_fwd_bts=dict(type='int',),drs_fwd_pkts=dict(type='int',),drs_rev_bts=dict(type='int',),drs_port=dict(type='int',),drs_curr_req=dict(type='int',),drs_name=dict(type='str',),drs_pers_conn=dict(type='int',),drs_priority=dict(type='int',),drs_total_req_succ=dict(type='int',),drs_hm_key=dict(type='int',),drs_hm_index=dict(type='int',),drs_rev_pkts=dict(type='int',),drs_total_conn=dict(type='int',),drs_state=dict(type='str',),drs_frsp_time=dict(type='int',),drs_peak_conn=dict(type='int',),drs_curr_conn=dict(type='int',),drs_rsp_time=dict(type='int',),drs_total_req=dict(type='int',),drs_srsp_time=dict(type='int',)),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),port=dict(type='int',required=True,)),
+        oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE']),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),
+        member_stats_data_disable=dict(type='bool',),
         member_priority=dict(type='int',),
-        uuid=dict(type='str',),
-        fqdn_name=dict(type='str',),
-        resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn','curr_conn_overflow','state_flaps'])),
-        member_template=dict(type='str',),
         name=dict(type='str',required=True,),
+        fqdn_name=dict(type='str',),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),
+        member_template=dict(type='str',),
         host=dict(type='str',),
         user_tag=dict(type='str',),
         member_state=dict(type='str',choices=['enable','disable','disable-with-health-check']),
-        stats=dict(type='dict',curr_req=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_bytes=dict(type='str',),port=dict(type='int',required=True,),response_time=dict(type='str',),total_fwd_bytes=dict(type='str',),name=dict(type='str',required=True,),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req_succ=dict(type='str',),state_flaps=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),curr_conn_overflow=dict(type='str',),slowest_rsp_time=dict(type='str',)),
+        stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),name=dict(type='str',required=True,),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),port=dict(type='int',required=True,),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),
         server_ipv6_addr=dict(type='str',),
         port=dict(type='int',required=True,),
-        member_stats_data_disable=dict(type='bool',)
+        uuid=dict(type='str',)
     ))
    
     # Parent keys

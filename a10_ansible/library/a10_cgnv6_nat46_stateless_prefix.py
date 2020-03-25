@@ -52,10 +52,6 @@ options:
         description:
         - "IPv6 prefix"
         required: False
-    vrid:
-        description:
-        - "VRRP-A vrid (Specify ha VRRP-A vrid)"
-        required: False
     uuid:
         description:
         - "uuid of the object"
@@ -74,7 +70,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ipv6_prefix","uuid","vrid",]
+AVAILABLE_PROPERTIES = ["ipv6_prefix","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -104,7 +100,6 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ipv6_prefix=dict(type='str',),
-        vrid=dict(type='int',),
         uuid=dict(type='str',)
     ))
    

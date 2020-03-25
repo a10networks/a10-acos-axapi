@@ -94,9 +94,9 @@ options:
         - "Field role_list"
         required: False
         suboptions:
-            default_privilege:
+            uuid:
                 description:
-                - "'no-access'= no-access; 'read'= read; 'write'= write; "
+                - "uuid of the object"
             name:
                 description:
                 - "Name for the RBA role"
@@ -106,12 +106,6 @@ options:
             rule_list:
                 description:
                 - "Field rule_list"
-            partition_only:
-                description:
-                - "Partition RBA Role"
-            uuid:
-                description:
-                - "uuid of the object"
     uuid:
         description:
         - "uuid of the object"
@@ -160,9 +154,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         action=dict(type='str',choices=['enable','disable']),
-        group_list=dict(type='list',partition_list=dict(type='list',partition_name=dict(type='str',required=True,),role_list=dict(type='list',role=dict(type='str',)),uuid=dict(type='str',),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',))),user_list=dict(type='list',user=dict(type='str',)),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),
-        user_list=dict(type='list',partition_list=dict(type='list',partition_name=dict(type='str',required=True,),role_list=dict(type='list',role=dict(type='str',)),uuid=dict(type='str',),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',))),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),
-        role_list=dict(type='list',default_privilege=dict(type='str',choices=['no-access','read','write']),name=dict(type='str',required=True,),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','oper','write']),object=dict(type='str',)),partition_only=dict(type='bool',),uuid=dict(type='str',)),
+        group_list=dict(type='list',partition_list=dict(type='list',partition_name=dict(type='str',required=True,),role_list=dict(type='list',role=dict(type='str',)),uuid=dict(type='str',),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))),user_list=dict(type='list',user=dict(type='str',)),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),
+        user_list=dict(type='list',partition_list=dict(type='list',partition_name=dict(type='str',required=True,),role_list=dict(type='list',role=dict(type='str',)),uuid=dict(type='str',),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',)),
+        role_list=dict(type='list',uuid=dict(type='str',),name=dict(type='str',required=True,),user_tag=dict(type='str',),rule_list=dict(type='list',operation=dict(type='str',choices=['no-access','read','write']),object=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    

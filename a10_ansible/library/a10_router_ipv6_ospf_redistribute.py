@@ -58,7 +58,7 @@ options:
         suboptions:
             metric:
                 description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
+                - "OSPF default metric (OSPF metric)"
             route_map:
                 description:
                 - "Route map reference (Pointer to route-map entries)"
@@ -67,7 +67,7 @@ options:
                 - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'= Floating IP; 'ip-nat-list'= IP NAT list; 'nat-map'= NAT MAP Prefix; 'nat64'= NAT64 Prefix; 'lw4o6'= LW4O6 Prefix; 'isis'= ISO IS-IS; 'rip'= Routing Information Protocol (RIP); 'static'= Static routes; "
             metric_type:
                 description:
-                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2 metrics; "
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
     ospf_list:
         description:
         - "Field ospf_list"
@@ -78,16 +78,16 @@ options:
                 - "Route map reference (Pointer to route-map entries)"
             metric_ospf:
                 description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
+                - "OSPF default metric (OSPF metric)"
             metric_type_ospf:
                 description:
-                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2 metrics; "
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
             ospf:
                 description:
                 - "Open Shortest Path First (OSPF)"
             process_id:
                 description:
-                - "OSPFV3 process tag"
+                - "OSPF process ID"
     uuid:
         description:
         - "uuid of the object"
@@ -110,10 +110,10 @@ options:
         suboptions:
             metric_vip:
                 description:
-                - "OSPFV3 default metric (OSPFV3 metric)"
+                - "OSPF default metric (OSPF metric)"
             metric_type_vip:
                 description:
-                - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2 metrics; "
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
             type_vip:
                 description:
                 - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not flagged; "
@@ -126,7 +126,7 @@ options:
         required: False
     metric_ip_nat:
         description:
-        - "OSPFV3 default metric (OSPFV3 metric)"
+        - "OSPF default metric (OSPF metric)"
         required: False
     route_map_ip_nat:
         description:
@@ -145,7 +145,7 @@ options:
                 - "Floating-IP as forward address"
     metric_type_ip_nat:
         description:
-        - "'1'= Set OSPFV3 External Type 1 metrics; '2'= Set OSPFV3 External Type 2 metrics; "
+        - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
         required: False
 
 

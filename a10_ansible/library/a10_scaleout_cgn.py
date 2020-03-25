@@ -48,7 +48,15 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    
+    enable:
+        description:
+        - "Enable Scaleout for CGN"
+        required: False
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
+
 
 """
 
@@ -62,7 +70,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = []
+AVAILABLE_PROPERTIES = ["enable","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -91,7 +99,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        
+        enable=dict(type='bool',),
+        uuid=dict(type='str',)
     ))
    
 

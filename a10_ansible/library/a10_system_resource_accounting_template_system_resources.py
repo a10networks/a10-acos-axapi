@@ -61,7 +61,7 @@ options:
                 - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to 99.99 (up to 2 digits precision))"
             l4_session_limit_min_guarantee:
                 description:
-                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0 to 99.99)"
+                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0.01 to 99.99)"
     l7cps_limit_cfg:
         description:
         - "Field l7cps_limit_cfg"

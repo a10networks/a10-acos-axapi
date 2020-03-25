@@ -55,10 +55,17 @@ options:
         description:
         - "enable logging"
         required: False
-    http_status_code:
+    stats:
         description:
-        - "'301'= Moved permanently; '302'= Found; "
+        - "Field stats"
         required: False
+        suboptions:
+            hits:
+                description:
+                - "Number of requests matching this destination rule"
+            name:
+                description:
+                - "Action policy name"
     forward_snat:
         description:
         - "Source NAT pool or pool group"
@@ -67,9 +74,9 @@ options:
         description:
         - "uuid of the object"
         required: False
-    drop_response_code:
+    http_status_code:
         description:
-        - "Specify response code for drop action"
+        - "'301'= Moved permanently; '302'= Found; "
         required: False
     action1:
         description:
@@ -83,17 +90,6 @@ options:
         description:
         - "Customized tag"
         required: False
-    stats:
-        description:
-        - "Field stats"
-        required: False
-        suboptions:
-            hits:
-                description:
-                - "Number of requests matching this destination rule"
-            name:
-                description:
-                - "Action policy name"
     real_sg:
         description:
         - "service group to forward the packets"
@@ -140,7 +136,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","drop_response_code","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","stats","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["action1","drop_message","drop_redirect_url","fake_sg","fall_back","fall_back_snat","forward_snat","http_status_code","log","name","real_sg","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -170,14 +166,13 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         log=dict(type='bool',),
-        http_status_code=dict(type='str',choices=['301','302']),
+        stats=dict(type='dict',hits=dict(type='str',),name=dict(type='str',required=True,)),
         forward_snat=dict(type='str',),
         uuid=dict(type='str',),
-        drop_response_code=dict(type='int',),
+        http_status_code=dict(type='str',choices=['301','302']),
         action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),
         fake_sg=dict(type='str',),
         user_tag=dict(type='str',),
-        stats=dict(type='dict',hits=dict(type='str',),name=dict(type='str',required=True,)),
         real_sg=dict(type='str',),
         drop_message=dict(type='str',),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),

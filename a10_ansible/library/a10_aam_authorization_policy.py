@@ -48,14 +48,10 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    jwt_authorization:
+    uuid:
         description:
-        - "Specify JWT authorization template (Specify JWT authorization template name)"
+        - "uuid of the object"
         required: False
-    name:
-        description:
-        - "Specify authorization policy name"
-        required: True
     user_tag:
         description:
         - "Customized tag"
@@ -64,41 +60,6 @@ options:
         description:
         - "Specify a LDAP or RADIUS server for authorization (Specify a LDAP or RADIUS server name)"
         required: False
-    jwt_claim_map_list:
-        description:
-        - "Field jwt_claim_map_list"
-        required: False
-        suboptions:
-            claim:
-                description:
-                - "Specify JWT claim name to map to."
-            bool_val:
-                description:
-                - "'true'= True; 'false'= False; "
-            uuid:
-                description:
-                - "uuid of the object"
-            string_type:
-                description:
-                - "Claim type is string"
-            str_val:
-                description:
-                - "Specify JWT claim value."
-            num_val:
-                description:
-                - "Specify JWT claim value."
-            attr_num:
-                description:
-                - "Spcify attribute ID for claim mapping"
-            number_type:
-                description:
-                - "Claim type is number"
-            boolean_type:
-                description:
-                - "Claim type is boolean"
-            ntype:
-                description:
-                - "Specify claim type"
     service_group:
         description:
         - "Specify an authentication service group for authorization (Specify authentication service group name)"
@@ -111,9 +72,9 @@ options:
             attribute_name:
                 description:
                 - "Specify attribute name"
-            integer_type:
+            ip_type:
                 description:
-                - "Attribute type is integer"
+                - "IP address is transformed into network byte order"
             custom_attr_type:
                 description:
                 - "Specify attribute type"
@@ -141,9 +102,9 @@ options:
             attr_int:
                 description:
                 - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal; 'less-than'= Operation type is less-than; 'more-than'= Operation type is more-than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-equal-to'= Operation type is more-thatn-equal-to; "
-            ip_type:
+            integer_type:
                 description:
-                - "IP address is transformed into network byte order"
+                - "Attribute type is integer"
             attr_ip:
                 description:
                 - "'equal'= Operation type is equal; 'not-equal'= Operation type is not-equal; "
@@ -153,19 +114,12 @@ options:
             attr_str:
                 description:
                 - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
-            any:
-                description:
-                - "Matched when attribute is present (with any value)."
             custom_attr_str:
                 description:
                 - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
             attr_int_val:
                 description:
                 - "Set attribute value"
-    extended_filter:
-        description:
-        - "Extended search filter. EX= Check whether user belongs to a nested group. (memberOf=1.2.840.113556.1.4.1941==$GROUP-DN)"
-        required: False
     attribute_rule:
         description:
         - "Define attribute rule for authorization policy"
@@ -174,10 +128,10 @@ options:
         description:
         - "This policy only provides server info for forward policy feature"
         required: False
-    uuid:
+    name:
         description:
-        - "uuid of the object"
-        required: False
+        - "Specify authorization policy name"
+        required: True
 
 
 """
@@ -192,7 +146,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["attribute_list","attribute_rule","extended_filter","forward_policy_authorize_only","jwt_authorization","jwt_claim_map_list","name","server","service_group","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["attribute_list","attribute_rule","forward_policy_authorize_only","name","server","service_group","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -221,17 +175,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        jwt_authorization=dict(type='str',),
-        name=dict(type='str',required=True,),
+        uuid=dict(type='str',),
         user_tag=dict(type='str',),
         server=dict(type='str',),
-        jwt_claim_map_list=dict(type='list',claim=dict(type='str',),bool_val=dict(type='str',choices=['true','false']),uuid=dict(type='str',),string_type=dict(type='bool',),str_val=dict(type='str',),num_val=dict(type='int',),attr_num=dict(type='int',required=True,),number_type=dict(type='bool',),boolean_type=dict(type='bool',),ntype=dict(type='bool',)),
         service_group=dict(type='str',),
-        attribute_list=dict(type='list',attribute_name=dict(type='str',),integer_type=dict(type='bool',),custom_attr_type=dict(type='bool',),uuid=dict(type='str',),string_type=dict(type='bool',),attr_str_val=dict(type='str',),attr_ipv4=dict(type='str',),attr_type=dict(type='bool',),attr_num=dict(type='int',required=True,),a10_dynamic_defined=dict(type='bool',),attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),ip_type=dict(type='bool',),attr_ip=dict(type='str',choices=['equal','not-equal']),A10_AX_AUTH_URI=dict(type='bool',),attr_str=dict(type='str',choices=['match','sub-string']),any=dict(type='bool',),custom_attr_str=dict(type='str',choices=['match','sub-string']),attr_int_val=dict(type='int',)),
-        extended_filter=dict(type='str',),
+        attribute_list=dict(type='list',attribute_name=dict(type='str',),ip_type=dict(type='bool',),custom_attr_type=dict(type='bool',),uuid=dict(type='str',),string_type=dict(type='bool',),attr_str_val=dict(type='str',),attr_ipv4=dict(type='str',),attr_type=dict(type='bool',),attr_num=dict(type='int',required=True,),a10_dynamic_defined=dict(type='bool',),attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),integer_type=dict(type='bool',),attr_ip=dict(type='str',choices=['equal','not-equal']),A10_AX_AUTH_URI=dict(type='bool',),attr_str=dict(type='str',choices=['match','sub-string']),custom_attr_str=dict(type='str',choices=['match','sub-string']),attr_int_val=dict(type='int',)),
         attribute_rule=dict(type='str',),
         forward_policy_authorize_only=dict(type='bool',),
-        uuid=dict(type='str',)
+        name=dict(type='str',required=True,)
     ))
    
 

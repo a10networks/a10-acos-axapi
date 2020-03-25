@@ -48,10 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    password:
-        description:
-        - "password for the remote site"
-        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
@@ -74,7 +70,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["password","remote_file","use_mgmt_port",]
+AVAILABLE_PROPERTIES = ["remote_file","use_mgmt_port",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -103,7 +99,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        password=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
         remote_file=dict(type='str',)
     ))

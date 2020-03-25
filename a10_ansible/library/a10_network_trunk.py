@@ -103,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',trunk=dict(type='list',trunk_member_status=dict(type='list',oper_status=dict(type='str',choices=['Blocked','Up','Dn']),cfg_status=dict(type='str',choices=['Enb','Dis']),members=dict(type='int',)),member_count=dict(type='int',),trunk_name=dict(type='str',),trunk_type=dict(type='str',choices=['Dynamic-LACP','Static']),timer=dict(type='int',),trunk_status=dict(type='str',choices=['Up','Down']),ports_threshold_block=dict(type='str',choices=['Yes','No']),admin_key=dict(type='int',),timer_running=dict(type='str',choices=['Yes','No']),ports_threshold=dict(type='int',),trunk_id=dict(type='int',),working_lead=dict(type='int',))),
+        oper=dict(type='dict',trunk=dict(type='list',trunk_type=dict(type='str',choices=['Dynamic-LACP','Static']),member_count=dict(type='int',),trunk_member_status=dict(type='list',oper_status=dict(type='str',choices=['Blocked','Up','Dn']),cfg_status=dict(type='str',choices=['Enb','Dis']),members=dict(type='int',)),timer=dict(type='int',),trunk_status=dict(type='str',choices=['Up','Down']),admin_key=dict(type='int',),timer_running=dict(type='str',choices=['Yes','No']),ports_threshold=dict(type='int',),trunk_id=dict(type='int',),working_lead=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    

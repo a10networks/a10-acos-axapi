@@ -58,7 +58,7 @@ options:
         required: False
     cookie_name:
         description:
-        - "Set cookie name"
+        - "Set cookie name (Cookie name, default 'sto-id')"
         required: False
     secure:
         description:
@@ -106,7 +106,7 @@ options:
         required: False
     path:
         description:
-        - "Set cookie path"
+        - "Set cookie path (Cookie path, default is '/')"
         required: False
     pass_thru:
         description:

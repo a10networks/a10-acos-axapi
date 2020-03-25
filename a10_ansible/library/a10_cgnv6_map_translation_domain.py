@@ -99,7 +99,7 @@ options:
                 - "Packet Exceeded MTU"
             inbound_addr_port_validation_failed:
                 description:
-                - "Inbound IPv4 Destination Address Port Validation Failed"
+                - "Inbound IPv4 Destination Address  Port Validation Failed"
             frag_icmp_sent:
                 description:
                 - "ICMP Packet Too Big Sent"
@@ -113,18 +113,14 @@ options:
         description:
         - "uuid of the object"
         required: False
-    name:
-        description:
-        - "MAP-T domain name"
-        required: True
     user_tag:
         description:
         - "Customized tag"
         required: False
-    mtu:
+    name:
         description:
-        - "Domain MTU"
-        required: False
+        - "MAP-T domain name"
+        required: True
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -132,15 +128,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'inbound_packet_received'= Inbound IPv4 Packets Received; 'inbound_frag_packet_received'= Inbound IPv4 Fragment Packets Received; 'inbound_addr_port_validation_failed'= Inbound IPv4 Destination Address Port Validation Failed; 'inbound_rev_lookup_failed'= Inbound IPv4 Reverse Route Lookup Failed; 'inbound_dest_unreachable'= Inbound IPv6 Destination Address Unreachable; 'outbound_packet_received'= Outbound IPv6 Packets Received; 'outbound_frag_packet_received'= Outbound IPv6 Fragment Packets Received; 'outbound_addr_validation_failed'= Outbound IPv6 Source Address Validation Failed; 'outbound_rev_lookup_failed'= Outbound IPv6 Reverse Route Lookup Failed; 'outbound_dest_unreachable'= Outbound IPv4 Destination Address Unreachable; 'packet_mtu_exceeded'= Packet Exceeded MTU; 'frag_icmp_sent'= ICMP Packet Too Big Sent; 'interface_not_configured'= Interfaces not Configured Dropped; 'bmr_prefixrules_configured'= BMR prefix rules configured; 'helper_count'= Helper Count; 'active_dhcpv6_leases'= Active DHCPv6 leases; "
-    tcp:
-        description:
-        - "Field tcp"
-        required: False
-        suboptions:
-            mss_clamp:
-                description:
-                - "Field mss_clamp"
+                - "'all'= all; 'inbound_packet_received'= Inbound IPv4 Packets Received; 'inbound_frag_packet_received'= Inbound IPv4 Fragment Packets Received; 'inbound_addr_port_validation_failed'= Inbound IPv4 Destination Address  Port Validation Failed; 'inbound_rev_lookup_failed'= Inbound IPv4 Reverse Route Lookup Failed; 'inbound_dest_unreachable'= Inbound IPv6 Destination Address Unreachable; 'outbound_packet_received'= Outbound IPv6 Packets Received; 'outbound_frag_packet_received'= Outbound IPv6 Fragment Packets Received; 'outbound_addr_validation_failed'= Outbound IPv6 Source Address Validation Failed; 'outbound_rev_lookup_failed'= Outbound IPv6 Reverse Route Lookup Failed; 'outbound_dest_unreachable'= Outbound IPv4 Destination Address Unreachable; 'packet_mtu_exceeded'= Packet Exceeded MTU; 'frag_icmp_sent'= ICMP Packet Too Big Sent; 'interface_not_configured'= Interfaces not Configured Dropped; 'bmr_prefixrules_configured'= BMR prefix rules configured; 'helper_count'= Helper Count; 'active_dhcpv6_leases'= Active DHCPv6 leases; 'num_domains_configured'= Total MAP Domains configured; "
     health_check_gateway:
         description:
         - "Field health_check_gateway"
@@ -199,7 +187,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["basic_mapping_rule","default_mapping_rule","description","health_check_gateway","mtu","name","sampling_enable","stats","tcp","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["basic_mapping_rule","default_mapping_rule","description","health_check_gateway","name","sampling_enable","stats","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -231,11 +219,9 @@ def get_argspec():
         default_mapping_rule=dict(type='dict',rule_ipv6_prefix=dict(type='str',),uuid=dict(type='str',)),
         stats=dict(type='dict',interface_not_configured=dict(type='str',),inbound_packet_received=dict(type='str',),name=dict(type='str',required=True,),outbound_dest_unreachable=dict(type='str',),outbound_packet_received=dict(type='str',),inbound_dest_unreachable=dict(type='str',),inbound_rev_lookup_failed=dict(type='str',),bmr_prefixrules_configured=dict(type='str',),outbound_frag_packet_received=dict(type='str',),outbound_addr_validation_failed=dict(type='str',),packet_mtu_exceeded=dict(type='str',),inbound_addr_port_validation_failed=dict(type='str',),frag_icmp_sent=dict(type='str',),inbound_frag_packet_received=dict(type='str',),outbound_rev_lookup_failed=dict(type='str',)),
         uuid=dict(type='str',),
-        name=dict(type='str',required=True,),
         user_tag=dict(type='str',),
-        mtu=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','inbound_packet_received','inbound_frag_packet_received','inbound_addr_port_validation_failed','inbound_rev_lookup_failed','inbound_dest_unreachable','outbound_packet_received','outbound_frag_packet_received','outbound_addr_validation_failed','outbound_rev_lookup_failed','outbound_dest_unreachable','packet_mtu_exceeded','frag_icmp_sent','interface_not_configured','bmr_prefixrules_configured','helper_count','active_dhcpv6_leases'])),
-        tcp=dict(type='dict',mss_clamp=dict(type='dict',mss_subtract=dict(type='int',),mss_value=dict(type='int',),mss_clamp_type=dict(type='str',choices=['fixed','none','subtract']),min=dict(type='int',))),
+        name=dict(type='str',required=True,),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','inbound_packet_received','inbound_frag_packet_received','inbound_addr_port_validation_failed','inbound_rev_lookup_failed','inbound_dest_unreachable','outbound_packet_received','outbound_frag_packet_received','outbound_addr_validation_failed','outbound_rev_lookup_failed','outbound_dest_unreachable','packet_mtu_exceeded','frag_icmp_sent','interface_not_configured','bmr_prefixrules_configured','helper_count','active_dhcpv6_leases','num_domains_configured'])),
         health_check_gateway=dict(type='dict',ipv6_address_list=dict(type='list',ipv6_gateway=dict(type='str',)),address_list=dict(type='list',ipv4_gateway=dict(type='str',)),withdraw_route=dict(type='str',choices=['all-link-failure','any-link-failure']),uuid=dict(type='str',)),
         basic_mapping_rule=dict(type='dict',rule_ipv4_address_port_settings=dict(type='str',choices=['prefix-addr','single-addr','shared-addr']),port_start=dict(type='int',),uuid=dict(type='str',),share_ratio=dict(type='int',),prefix_rule_list=dict(type='list',name=dict(type='str',required=True,),ipv4_netmask=dict(type='str',),rule_ipv4_prefix=dict(type='str',),user_tag=dict(type='str',),rule_ipv6_prefix=dict(type='str',),uuid=dict(type='str',)),ea_length=dict(type='int',)),
         description=dict(type='str',)

@@ -48,17 +48,13 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    pool_shared:
-        description:
-        - "Specify NAT pool or pool group"
-        required: False
     name:
         description:
         - "Logging Template Name"
         required: True
     format:
         description:
-        - "Specify a format string for web logging (format string(less than 250 characters) for web logging)"
+        - "Specfiy a format string for web logging (format string(less than 250 characters) for web logging)"
         required: False
     auto:
         description:
@@ -76,13 +72,9 @@ options:
         description:
         - "Character to mask the matched pattern (default= X)"
         required: False
-    template_tcp_proxy_shared:
+    user_tag:
         description:
-        - "TCP Proxy Template name"
-        required: False
-    shared_partition_tcp_proxy_template:
-        description:
-        - "Reference a TCP Proxy template from shared partition"
+        - "Customized tag"
         required: False
     keep_start:
         description:
@@ -96,17 +88,9 @@ options:
         description:
         - "Mask matched PCRE pattern in the log"
         required: False
-    user_tag:
-        description:
-        - "Customized tag"
-        required: False
     tcp_proxy:
         description:
-        - "TCP Proxy Template Name"
-        required: False
-    shared_partition_pool:
-        description:
-        - "Reference a NAT pool or pool group from shared partition"
+        - "TCP proxy template (TCP Proxy Config name)"
         required: False
     pool:
         description:
@@ -130,7 +114,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["auto","format","keep_end","keep_start","local_logging","mask","name","pcre_mask","pool","pool_shared","service_group","shared_partition_pool","shared_partition_tcp_proxy_template","tcp_proxy","template_tcp_proxy_shared","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["auto","format","keep_end","keep_start","local_logging","mask","name","pcre_mask","pool","service_group","tcp_proxy","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -159,21 +143,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pool_shared=dict(type='str',),
         name=dict(type='str',required=True,),
         format=dict(type='str',),
         auto=dict(type='str',choices=['auto']),
         keep_end=dict(type='int',),
         local_logging=dict(type='int',),
         mask=dict(type='str',),
-        template_tcp_proxy_shared=dict(type='str',),
-        shared_partition_tcp_proxy_template=dict(type='bool',),
+        user_tag=dict(type='str',),
         keep_start=dict(type='int',),
         service_group=dict(type='str',),
         pcre_mask=dict(type='str',),
-        user_tag=dict(type='str',),
         tcp_proxy=dict(type='str',),
-        shared_partition_pool=dict(type='bool',),
         pool=dict(type='str',),
         uuid=dict(type='str',)
     ))

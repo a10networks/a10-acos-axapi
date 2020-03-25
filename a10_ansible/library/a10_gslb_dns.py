@@ -55,7 +55,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total-query'= Total number of DNS queries received; 'total-response'= Total number of DNS replies sent to clients; 'bad-packet-query'= Number of queries with incorrect data length; 'bad-packet-response'= Number of replies with incorrect data length; 'bad-header-query'= Number of queries with incorrect header; 'bad-header-response'= Number of replies with incorrect header; 'bad-format-query'= Number of queries with incorrect format; 'bad-format-response'= Number of replies with incorrect format; 'bad-service-query'= Number of queries with unknown service; 'bad-service-response'= Number of replies with unknown service; 'bad-class-query'= Number of queries with incorrect class; 'bad-class-response'= Number of replies with incorrect class; 'bad-type-query'= Number of queries with incorrect type; 'bad-type-response'= Number of replies with incorrect type; 'no_answer'= Number of replies with unknown server IP; 'metric_health_check'= Metric Health Check Hit; 'metric_weighted_ip'= Metric Weighted IP Hit; 'metric_weighted_site'= Metric Weighted Site Hit; 'metric_capacity'= Metric Capacity Hit; 'metric_active_server'= Metric Active Server Hit; 'metric_easy_rdt'= Metric Easy RDT Hit; 'metric_active_rdt'= Metric Active RDT Hit; 'metric_geographic'= Metric Geographic Hit; 'metric_connection_load'= Metric Connection Load Hit; 'metric_number_of_sessions'= Metric Number of Sessions Hit; 'metric_active_weight'= Metric Active Weight Hit; 'metric_admin_preference'= Metric Admin Preference Hit; 'metric_bandwidth_quality'= Metric Bandwidth Quality Hit; 'metric_bandwidth_cost'= Metric Bandwidth Cost Hit; 'metric_user'= Metric User Hit; 'metric_least_reponse'= Metric Least Reponse Hit; 'metric_admin_ip'= Metric Admin IP Hit; 'metric_round_robin'= Metric Round Robin Hit; "
+                - "'all'= all; 'total-query'= Total number of DNS queries received; 'total-response'= Total number of DNS replies sent to clients; 'bad-packet-query'= Number of queries with incorrect data length; 'bad-packet-response'= Number of replies with incorrect data length; 'bad-header-query'= Number of queries with incorrect header; 'bad-header-response'= Number of replies with incorrect header; 'bad-format-query'= Number of queries with incorrect format; 'bad-format-response'= Number of replies with incorrect format; 'bad-service-query'= Number of queries with unknown service; 'bad-service-response'= Number of replies with unknown service; 'bad-class-query'= Number of queries with incorrect class; 'bad-class-response'= Number of replies with incorrect class; 'bad-type-query'= Number of queries with incorrect type; 'bad-type-response'= Number of replies with incorrect type; 'no_answer'= Number of replies with unknown server IP; "
     logging:
         description:
         - "'none'= No logging (default); 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS Query and Response; "
@@ -77,105 +77,51 @@ options:
         - "Field stats"
         required: False
         suboptions:
-            metric_capacity:
+            bad_header_query:
                 description:
-                - "Metric Capacity Hit"
-            metric_admin_ip:
+                - "Number of queries with incorrect header"
+            total_response:
                 description:
-                - "Metric Admin IP Hit"
+                - "Total number of DNS replies sent to clients"
+            bad_service_response:
+                description:
+                - "Number of replies with unknown service"
+            bad_packet_response:
+                description:
+                - "Number of replies with incorrect data length"
             no_answer:
                 description:
                 - "Number of replies with unknown server IP"
             bad_format_query:
                 description:
                 - "Number of queries with incorrect format"
-            metric_active_server:
-                description:
-                - "Metric Active Server Hit"
-            metric_active_rdt:
-                description:
-                - "Metric Active RDT Hit"
-            metric_connection_load:
-                description:
-                - "Metric Connection Load Hit"
-            bad_service_response:
-                description:
-                - "Number of replies with unknown service"
-            metric_user:
-                description:
-                - "Metric User Hit"
             bad_packet_query:
                 description:
                 - "Number of queries with incorrect data length"
             total_query:
                 description:
                 - "Total number of DNS queries received"
-            metric_bandwidth_cost:
-                description:
-                - "Metric Bandwidth Cost Hit"
             bad_class_query:
                 description:
                 - "Number of queries with incorrect class"
-            metric_bandwidth_quality:
-                description:
-                - "Metric Bandwidth Quality Hit"
-            bad_service_query:
-                description:
-                - "Number of queries with unknown service"
-            bad_header_response:
-                description:
-                - "Number of replies with incorrect header"
-            metric_least_reponse:
-                description:
-                - "Metric Least Reponse Hit"
-            metric_weighted_site:
-                description:
-                - "Metric Weighted Site Hit"
-            total_response:
-                description:
-                - "Total number of DNS replies sent to clients"
-            metric_health_check:
-                description:
-                - "Metric Health Check Hit"
-            metric_round_robin:
-                description:
-                - "Metric Round Robin Hit"
-            metric_easy_rdt:
-                description:
-                - "Metric Easy RDT Hit"
             bad_type_query:
                 description:
                 - "Number of queries with incorrect type"
-            bad_packet_response:
+            bad_service_query:
                 description:
-                - "Number of replies with incorrect data length"
-            metric_weighted_ip:
-                description:
-                - "Metric Weighted IP Hit"
+                - "Number of queries with unknown service"
             bad_class_response:
                 description:
                 - "Number of replies with incorrect class"
             bad_format_response:
                 description:
                 - "Number of replies with incorrect format"
-            metric_geographic:
-                description:
-                - "Metric Geographic Hit"
-            bad_header_query:
-                description:
-                - "Number of queries with incorrect header"
-            metric_active_weight:
-                description:
-                - "Metric Active Weight Hit"
-            metric_admin_preference:
-                description:
-                - "Metric Admin Preference Hit"
-            metric_number_of_sessions:
-                description:
-                - "Metric Number of Sessions Hit"
             bad_type_response:
                 description:
                 - "Number of replies with incorrect type"
+            bad_header_response:
+                description:
+                - "Number of replies with incorrect header"
 
 
 """
@@ -219,12 +165,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-query','total-response','bad-packet-query','bad-packet-response','bad-header-query','bad-header-response','bad-format-query','bad-format-response','bad-service-query','bad-service-response','bad-class-query','bad-class-response','bad-type-query','bad-type-response','no_answer','metric_health_check','metric_weighted_ip','metric_weighted_site','metric_capacity','metric_active_server','metric_easy_rdt','metric_active_rdt','metric_geographic','metric_connection_load','metric_number_of_sessions','metric_active_weight','metric_admin_preference','metric_bandwidth_quality','metric_bandwidth_cost','metric_user','metric_least_reponse','metric_admin_ip','metric_round_robin'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-query','total-response','bad-packet-query','bad-packet-response','bad-header-query','bad-header-response','bad-format-query','bad-format-response','bad-service-query','bad-service-response','bad-class-query','bad-class-response','bad-type-query','bad-type-response','no_answer'])),
         logging=dict(type='str',choices=['none','query','response','both']),
         uuid=dict(type='str',),
         template=dict(type='str',),
         action=dict(type='str',choices=['none','drop','reject','ignore']),
-        stats=dict(type='dict',metric_capacity=dict(type='str',),metric_admin_ip=dict(type='str',),no_answer=dict(type='str',),bad_format_query=dict(type='str',),metric_active_server=dict(type='str',),metric_active_rdt=dict(type='str',),metric_connection_load=dict(type='str',),bad_service_response=dict(type='str',),metric_user=dict(type='str',),bad_packet_query=dict(type='str',),total_query=dict(type='str',),metric_bandwidth_cost=dict(type='str',),bad_class_query=dict(type='str',),metric_bandwidth_quality=dict(type='str',),bad_service_query=dict(type='str',),bad_header_response=dict(type='str',),metric_least_reponse=dict(type='str',),metric_weighted_site=dict(type='str',),total_response=dict(type='str',),metric_health_check=dict(type='str',),metric_round_robin=dict(type='str',),metric_easy_rdt=dict(type='str',),bad_type_query=dict(type='str',),bad_packet_response=dict(type='str',),metric_weighted_ip=dict(type='str',),bad_class_response=dict(type='str',),bad_format_response=dict(type='str',),metric_geographic=dict(type='str',),bad_header_query=dict(type='str',),metric_active_weight=dict(type='str',),metric_admin_preference=dict(type='str',),metric_number_of_sessions=dict(type='str',),bad_type_response=dict(type='str',))
+        stats=dict(type='dict',bad_header_query=dict(type='str',),total_response=dict(type='str',),bad_service_response=dict(type='str',),bad_packet_response=dict(type='str',),no_answer=dict(type='str',),bad_format_query=dict(type='str',),bad_packet_query=dict(type='str',),total_query=dict(type='str',),bad_class_query=dict(type='str',),bad_type_query=dict(type='str',),bad_service_query=dict(type='str',),bad_class_response=dict(type='str',),bad_format_response=dict(type='str',),bad_type_response=dict(type='str',),bad_header_response=dict(type='str',))
     ))
    
 

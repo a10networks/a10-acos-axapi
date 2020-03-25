@@ -60,10 +60,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-    v4_count:
-        description:
-        - "Number of addresses to be translated in this range"
-        required: False
     local_start_ipv6_addr:
         description:
         - "Local Start IPv6 Address of this list"
@@ -72,10 +68,6 @@ options:
         description:
         - "Name for this Static List"
         required: True
-    global_start_ipv4_addr:
-        description:
-        - "Global Start IPv4 Address of this list"
-        required: False
     local_netmaskv4:
         description:
         - "Mask for this Address range"
@@ -84,21 +76,17 @@ options:
         description:
         - "Local Start IPv4 Address of this list"
         required: False
-    v4_acl_name:
+    global_start_ipv4_addr:
         description:
-        - "Access list name"
+        - "Global Start IPv4 Address of this list"
         required: False
     v6_vrid:
         description:
         - "VRRP-A vrid (Specify ha VRRP-A vrid)"
         required: False
-    v6_acl_name:
+    v4_count:
         description:
-        - "Access list name"
-        required: False
-    v4_acl_id:
-        description:
-        - "Access list ID"
+        - "Number of addresses to be translated in this range"
         required: False
     v6_count:
         description:
@@ -122,7 +110,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["global_netmaskv4","global_start_ipv4_addr","global_start_ipv6_addr","local_netmaskv4","local_start_ipv4_addr","local_start_ipv6_addr","name","uuid","v4_acl_id","v4_acl_name","v4_count","v4_vrid","v6_acl_name","v6_count","v6_vrid",]
+AVAILABLE_PROPERTIES = ["global_netmaskv4","global_start_ipv4_addr","global_start_ipv6_addr","local_netmaskv4","local_start_ipv4_addr","local_start_ipv6_addr","name","uuid","v4_count","v4_vrid","v6_count","v6_vrid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -154,16 +142,13 @@ def get_argspec():
         global_start_ipv6_addr=dict(type='str',),
         v4_vrid=dict(type='int',),
         uuid=dict(type='str',),
-        v4_count=dict(type='int',),
         local_start_ipv6_addr=dict(type='str',),
         name=dict(type='str',required=True,),
-        global_start_ipv4_addr=dict(type='str',),
         local_netmaskv4=dict(type='str',),
         local_start_ipv4_addr=dict(type='str',),
-        v4_acl_name=dict(type='str',),
+        global_start_ipv4_addr=dict(type='str',),
         v6_vrid=dict(type='int',),
-        v6_acl_name=dict(type='str',),
-        v4_acl_id=dict(type='int',),
+        v4_count=dict(type='int',),
         v6_count=dict(type='int',),
         global_netmaskv4=dict(type='str',)
     ))

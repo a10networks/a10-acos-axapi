@@ -55,9 +55,9 @@ options:
         description:
         - "Specify attribute name"
         required: False
-    integer_type:
+    ip_type:
         description:
-        - "Attribute type is integer"
+        - "IP address is transformed into network byte order"
         required: False
     custom_attr_type:
         description:
@@ -95,9 +95,9 @@ options:
         description:
         - "'equal'= Operation type is equal; 'not-equal'= Operation type is not equal; 'less-than'= Operation type is less-than; 'more-than'= Operation type is more-than; 'less-than-equal-to'= Operation type is less-than-equal-to; 'more-than-equal-to'= Operation type is more-thatn-equal-to; "
         required: False
-    ip_type:
+    integer_type:
         description:
-        - "IP address is transformed into network byte order"
+        - "Attribute type is integer"
         required: False
     attr_ip:
         description:
@@ -110,10 +110,6 @@ options:
     attr_str:
         description:
         - "'match'= Operation type is match; 'sub-string'= Operation type is sub-string; "
-        required: False
-    any:
-        description:
-        - "Matched when attribute is present (with any value)."
         required: False
     custom_attr_str:
         description:
@@ -137,7 +133,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["A10_AX_AUTH_URI","a10_dynamic_defined","any","attr_int","attr_int_val","attr_ip","attr_ipv4","attr_num","attr_str","attr_str_val","attr_type","attribute_name","custom_attr_str","custom_attr_type","integer_type","ip_type","string_type","uuid",]
+AVAILABLE_PROPERTIES = ["A10_AX_AUTH_URI","a10_dynamic_defined","attr_int","attr_int_val","attr_ip","attr_ipv4","attr_num","attr_str","attr_str_val","attr_type","attribute_name","custom_attr_str","custom_attr_type","integer_type","ip_type","string_type","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -167,7 +163,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         attribute_name=dict(type='str',),
-        integer_type=dict(type='bool',),
+        ip_type=dict(type='bool',),
         custom_attr_type=dict(type='bool',),
         uuid=dict(type='str',),
         string_type=dict(type='bool',),
@@ -177,11 +173,10 @@ def get_argspec():
         attr_num=dict(type='int',required=True,),
         a10_dynamic_defined=dict(type='bool',),
         attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),
-        ip_type=dict(type='bool',),
+        integer_type=dict(type='bool',),
         attr_ip=dict(type='str',choices=['equal','not-equal']),
         A10_AX_AUTH_URI=dict(type='bool',),
         attr_str=dict(type='str',choices=['match','sub-string']),
-        any=dict(type='bool',),
         custom_attr_str=dict(type='str',choices=['match','sub-string']),
         attr_int_val=dict(type='int',)
     ))
