@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_fw_system_status
 description:
-    - Firewall system status
+    - Field system_status
 short_description: Configures A10 fw.system-status
 author: A10 Networks 2018 
 version_added: 2.4

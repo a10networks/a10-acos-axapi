@@ -104,10 +104,6 @@ options:
         description:
         - "uuid of the object"
         required: False
-    proto_aging_time:
-        description:
-        - "Specify GSLB Protocol aging time, default is 60"
-        required: False
     device_name:
         description:
         - "Specify SLB device name"
@@ -124,9 +120,9 @@ options:
         description:
         - "Enable DNS Auto Mapping"
         required: False
-    msg_format_acos_2x:
+    proto_aging_time:
         description:
-        - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
+        - "Specify GSLB Protocol aging time, default is 60"
         required: False
     rdt_value:
         description:
@@ -184,7 +180,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["admin_preference","auto_detect","auto_map","client_ip","device_name","gateway_ip_addr","health_check_action","ip_address","max_client","msg_format_acos_2x","oper","proto_aging_fast","proto_aging_time","proto_compatible","rdt_value","user_tag","uuid","vip_server",]
+AVAILABLE_PROPERTIES = ["admin_preference","auto_detect","auto_map","client_ip","device_name","gateway_ip_addr","health_check_action","ip_address","max_client","oper","proto_aging_fast","proto_aging_time","proto_compatible","rdt_value","user_tag","uuid","vip_server",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -217,12 +213,11 @@ def get_argspec():
         health_check_action=dict(type='str',choices=['health-check','health-check-disable']),
         client_ip=dict(type='str',),
         uuid=dict(type='str',),
-        proto_aging_time=dict(type='int',),
         device_name=dict(type='str',required=True,),
         proto_compatible=dict(type='bool',),
         user_tag=dict(type='str',),
         auto_map=dict(type='bool',),
-        msg_format_acos_2x=dict(type='bool',),
+        proto_aging_time=dict(type='int',),
         rdt_value=dict(type='int',),
         gateway_ip_addr=dict(type='str',),
         vip_server=dict(type='dict',vip_server_v4_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),ipv4=dict(type='str',required=True,),uuid=dict(type='str',)),vip_server_v6_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),uuid=dict(type='str',),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),vip_name=dict(type='str',required=True,),uuid=dict(type='str',))),

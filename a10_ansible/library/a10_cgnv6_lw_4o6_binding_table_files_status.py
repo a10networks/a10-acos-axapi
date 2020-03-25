@@ -56,9 +56,6 @@ options:
             entry_list:
                 description:
                 - "Field entry_list"
-            entry_count:
-                description:
-                - "Field entry_count"
     uuid:
         description:
         - "uuid of the object"
@@ -106,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',entry_list=dict(type='list',active=dict(type='str',),name=dict(type='str',),modified=dict(type='str',)),entry_count=dict(type='int',)),
+        oper=dict(type='dict',entry_list=dict(type='list',active=dict(type='str',),name=dict(type='str',),modified=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    

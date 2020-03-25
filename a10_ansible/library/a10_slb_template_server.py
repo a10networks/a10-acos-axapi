@@ -62,7 +62,7 @@ options:
         required: False
     weight:
         description:
-        - "Weight for the Real Servers (Connection Weight (default is 1))"
+        - "Weight for the Real Servers (Connection Weight)"
         required: False
     bw_rate_limit:
         description:

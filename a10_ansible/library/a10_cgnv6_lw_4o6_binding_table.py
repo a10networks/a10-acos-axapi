@@ -113,7 +113,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        tunnel_address_list=dict(type='list',ipv6_tunnel_addr=dict(type='str',required=True,),user_tag=dict(type='str',),nat_address_list=dict(type='list',ipv4_nat_addr=dict(type='str',required=True,),port_range_list=dict(type='list',port_start=dict(type='int',required=True,),tunnel_endpoint_address=dict(type='str',required=True,),port_end=dict(type='int',required=True,)),user_tag=dict(type='str',))),
+        tunnel_address_list=dict(type='list',ipv6_tunnel_addr=dict(type='str',required=True,),user_tag=dict(type='str',),nat_address_list=dict(type='list',ipv4_nat_addr=dict(type='str',required=True,),port_range_list=dict(type='list',port_start=dict(type='int',required=True,),tunnel_endpoint_address=dict(type='str',),port_end=dict(type='int',required=True,)),user_tag=dict(type='str',))),
         name=dict(type='str',required=True,),
         user_tag=dict(type='str',)
     ))

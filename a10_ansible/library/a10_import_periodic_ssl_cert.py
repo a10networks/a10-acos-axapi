@@ -48,26 +48,34 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    pfx_password:
+        description:
+        - "The password for certificate file (pfx type only)"
+        required: False
     use_mgmt_port:
         description:
         - "Use management port as source port"
-        required: False
-    period:
-        description:
-        - "Specify the period in second"
-        required: False
-    uuid:
-        description:
-        - "uuid of the object"
         required: False
     remote_file:
         description:
         - "profile name for remote url"
         required: False
+    period:
+        description:
+        - "Specify the period in second"
+        required: False
+    certificate_type:
+        description:
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
+        required: False
     ssl_cert:
         description:
         - "SSL Cert File(enter bulk when import an archive file)"
         required: True
+    uuid:
+        description:
+        - "uuid of the object"
+        required: False
 
 
 """
@@ -82,7 +90,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["period","remote_file","ssl_cert","use_mgmt_port","uuid",]
+AVAILABLE_PROPERTIES = ["certificate_type","period","pfx_password","remote_file","ssl_cert","use_mgmt_port","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -111,11 +119,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        pfx_password=dict(type='str',),
         use_mgmt_port=dict(type='bool',),
-        period=dict(type='int',),
-        uuid=dict(type='str',),
         remote_file=dict(type='str',),
-        ssl_cert=dict(type='str',required=True,)
+        period=dict(type='int',),
+        certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
+        ssl_cert=dict(type='str',required=True,),
+        uuid=dict(type='str',)
     ))
    
 

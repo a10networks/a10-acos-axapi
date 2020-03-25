@@ -53,66 +53,18 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            shared_partition:
+            all_paritions:
                 description:
-                - "Field shared_partition"
-            session_count:
+                - "Field all_paritions"
+            partition:
                 description:
-                - "Field session_count"
-            all_partitions:
-                description:
-                - "Field all_partitions"
-            inside_addr_end:
-                description:
-                - "Field inside_addr_end"
-            pcp:
-                description:
-                - "Field pcp"
-            debug_session:
-                description:
-                - "Field debug_session"
-            inside_addr_start:
-                description:
-                - "Field inside_addr_start"
-            inside_addr_v6:
-                description:
-                - "Field inside_addr_v6"
-            partition_name:
-                description:
-                - "Field partition_name"
-            inside_addr_v6_start:
-                description:
-                - "Field inside_addr_v6_start"
-            nat_port:
-                description:
-                - "Field nat_port"
-            session_type:
-                description:
-                - "Field session_type"
+                - "Field partition"
             session_list:
                 description:
                 - "Field session_list"
-            graceful:
+            session_type:
                 description:
-                - "Field graceful"
-            inside_port:
-                description:
-                - "Field inside_port"
-            nat_addr_end:
-                description:
-                - "Field nat_addr_end"
-            nat_addr_start:
-                description:
-                - "Field nat_addr_start"
-            nat_addr:
-                description:
-                - "Field nat_addr"
-            inside_addr:
-                description:
-                - "Field inside_addr"
-            inside_addr_v6_end:
-                description:
-                - "Field inside_addr_v6_end"
+                - "Field session_type"
     uuid:
         description:
         - "uuid of the object"
@@ -160,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_partition=dict(type='bool',),session_count=dict(type='int',),all_partitions=dict(type='bool',),inside_addr_end=dict(type='str',),pcp=dict(type='bool',),debug_session=dict(type='bool',),inside_addr_start=dict(type='str',),inside_addr_v6=dict(type='str',),partition_name=dict(type='str',),inside_addr_v6_start=dict(type='str',),nat_port=dict(type='int',),session_type=dict(type='str',choices=['nat44','nat64','ds-lite']),session_list=dict(type='list',protocol=dict(type='str',),inside_v6_address=dict(type='str',),age=dict(type='str',),inside_port=dict(type='int',),inside_address=dict(type='str',),nat_address=dict(type='str',),nat_port=dict(type='int',),flags=dict(type='str',),EIF=dict(type='int',),EIM=dict(type='int',),cpu=dict(type='int',)),graceful=dict(type='bool',),inside_port=dict(type='int',),nat_addr_end=dict(type='str',),nat_addr_start=dict(type='str',),nat_addr=dict(type='str',),inside_addr=dict(type='str',),inside_addr_v6_end=dict(type='str',)),
+        oper=dict(type='dict',all_paritions=dict(type='str',choices=['true']),partition=dict(type='str',),session_list=dict(type='list',protocol=dict(type='str',),inside_v6_address=dict(type='str',),age=dict(type='str',),inside_port=dict(type='int',),inside_address=dict(type='str',),nat_address=dict(type='str',),nat_port=dict(type='int',),flags=dict(type='str',),EIF=dict(type='int',),EIM=dict(type='int',),cpu=dict(type='int',)),session_type=dict(type='str',choices=['nat44','nat64','ds-lite'])),
         uuid=dict(type='str',)
     ))
    

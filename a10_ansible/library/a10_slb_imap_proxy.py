@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_imap_proxy
 description:
-    - Configure IMAP Proxy global
+    - Show IMAP Proxy global Statistics
 short_description: Configures A10 slb.imap-proxy
 author: A10 Networks 2018 
 version_added: 2.4
@@ -48,17 +48,6 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
-    oper:
-        description:
-        - "Field oper"
-        required: False
-        suboptions:
-            l4_cpu_list:
-                description:
-                - "Field l4_cpu_list"
-            cpu_count:
-                description:
-                - "Field cpu_count"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -243,7 +232,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -272,7 +261,6 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',l4_cpu_list=dict(type='list',serv_sel_smpv4_fail=dict(type='int',),client_est_state_err=dict(type='int',),inv_start_line=dict(type='int',),server_selection_failure=dict(type='int',),imap_line_too_long=dict(type='int',),login_packet=dict(type='int',),serv_sel_smpv6_fail=dict(type='int',),other_cmd=dict(type='int',),capability_packet=dict(type='int',),serv_sel_ins_tpl_fail=dict(type='int',),total_imap_request=dict(type='int',),serv_sel_persist_fail=dict(type='int',),source_nat_failure=dict(type='int',),serv_resp_state_err=dict(type='int',),total_proxy_conns=dict(type='int',),no_route_failure=dict(type='int',),client_rq_state_err=dict(type='int',),control_chn_ssl=dict(type='int',),bad_seq=dict(type='int',),current_proxy_conns=dict(type='int',),request_line_freed=dict(type='int',),serv_ctng_state_err=dict(type='int',),start_tls_cmd=dict(type='int',)),cpu_count=dict(type='int',)),
         sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num','curr','total','svrsel_fail','no_route','snat_fail','feat','cc','data_ssl','line_too_long','line_mem_freed','invalid_start_line','auth_tls','prot','pbsz','pasv','port','request_dont_care','client_auth_tls','cant_find_pasv','pasv_addr_ne_server','smp_create_fail','data_server_conn_fail','data_send_fail','epsv','cant_find_epsv','data_curr','data_total','auth_unsupported','adat','unsupported_pbsz_value','unsupported_prot_value','unsupported_command','control_to_clear','control_to_ssl','bad_sequence','rsv_persist_conn_fail','smp_v6_fail','smp_v4_fail','insert_tuple_fail','cl_est_err','ser_connecting_err','server_response_err','cl_request_err','data_conn_start_err','data_serv_connecting_err','data_serv_connected_err','request','capability','start_tls','login'])),
         stats=dict(type='dict',ser_connecting_err=dict(type='str',),svrsel_fail=dict(type='str',),curr=dict(type='str',),client_auth_tls=dict(type='str',),cc=dict(type='str',),adat=dict(type='str',),server_response_err=dict(type='str',),unsupported_pbsz_value=dict(type='str',),cant_find_pasv=dict(type='str',),pbsz=dict(type='str',),pasv=dict(type='str',),num=dict(type='str',),no_route=dict(type='str',),smp_v4_fail=dict(type='str',),total=dict(type='str',),feat=dict(type='str',),port=dict(type='str',),cant_find_epsv=dict(type='str',),auth_tls=dict(type='str',),unsupported_command=dict(type='str',),request_dont_care=dict(type='str',),cl_est_err=dict(type='str',),prot=dict(type='str',),insert_tuple_fail=dict(type='str',),line_mem_freed=dict(type='str',),start_tls=dict(type='str',),data_conn_start_err=dict(type='str',),invalid_start_line=dict(type='str',),epsv=dict(type='str',),rsv_persist_conn_fail=dict(type='str',),cl_request_err=dict(type='str',),data_total=dict(type='str',),smp_v6_fail=dict(type='str',),data_curr=dict(type='str',),snat_fail=dict(type='str',),data_ssl=dict(type='str',),data_serv_connecting_err=dict(type='str',),auth_unsupported=dict(type='str',),smp_create_fail=dict(type='str',),control_to_clear=dict(type='str',),pasv_addr_ne_server=dict(type='str',),data_serv_connected_err=dict(type='str',),unsupported_prot_value=dict(type='str',),request=dict(type='str',),bad_sequence=dict(type='str',),capability=dict(type='str',),data_send_fail=dict(type='str',),control_to_ssl=dict(type='str',),line_too_long=dict(type='str',),login=dict(type='str',),data_server_conn_fail=dict(type='str',)),
         uuid=dict(type='str',)
@@ -298,11 +286,6 @@ def existing_url(module):
     f_dict = {}
 
     return url_base.format(**f_dict)
-
-def oper_url(module):
-    """Return the URL for operational data of an existing resource"""
-    partial_url = existing_url(module)
-    return partial_url + "/oper"
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
@@ -387,15 +370,6 @@ def get(module):
 
 def get_list(module):
     return module.client.get(list_url(module))
-
-def get_oper(module):
-    if module.params.get("oper"):
-        query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
-    return module.client.get(oper_url(module))
 
 def get_stats(module):
     if module.params.get("stats"):
@@ -556,8 +530,6 @@ def run_command(module):
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
             result["result"] = get_list(module)
-        elif module.params.get("get_type") == "oper":
-            result["result"] = get_oper(module)
         elif module.params.get("get_type") == "stats":
             result["result"] = get_stats(module)
     module.client.session.close()

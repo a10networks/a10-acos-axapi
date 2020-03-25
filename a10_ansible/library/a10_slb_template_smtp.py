@@ -78,18 +78,6 @@ options:
         description:
         - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS command before mail transaction; "
         required: False
-    LF_to_CRLF:
-        description:
-        - "Change the LF to CRLF for smtp end of line"
-        required: False
-    template:
-        description:
-        - "Field template"
-        required: False
-        suboptions:
-            logging:
-                description:
-                - "Logging template (Logging Config name)"
     command_disable:
         description:
         - "Field command_disable"
@@ -101,10 +89,6 @@ options:
     server_starttls_type:
         description:
         - "'optional'= STARTTLS is optional requirement; 'enforced'= Must issue STARTTLS command before mail transaction; "
-        required: False
-    error_code_to_client:
-        description:
-        - "Would transfer error code(554) to client, when getting it from connection establishing with real-server"
         required: False
     service_ready_msg:
         description:
@@ -128,7 +112,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["client_domain_switching","client_starttls_type","command_disable","error_code_to_client","LF_to_CRLF","name","server_domain","server_starttls_type","service_ready_msg","template","user_tag","uuid",]
+AVAILABLE_PROPERTIES = ["client_domain_switching","client_starttls_type","command_disable","name","server_domain","server_starttls_type","service_ready_msg","user_tag","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -162,11 +146,8 @@ def get_argspec():
         server_domain=dict(type='str',),
         client_domain_switching=dict(type='list',service_group=dict(type='str',),match_string=dict(type='str',),switching_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
         client_starttls_type=dict(type='str',choices=['optional','enforced']),
-        LF_to_CRLF=dict(type='bool',),
-        template=dict(type='dict',logging=dict(type='str',)),
         command_disable=dict(type='list',disable_type=dict(type='str',choices=['expn','turn','vrfy'])),
         server_starttls_type=dict(type='str',choices=['optional','enforced']),
-        error_code_to_client=dict(type='bool',),
         service_ready_msg=dict(type='str',),
         uuid=dict(type='str',)
     ))

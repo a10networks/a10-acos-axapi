@@ -131,9 +131,6 @@ options:
             uuid:
                 description:
                 - "uuid of the object"
-            proto_aging_time:
-                description:
-                - "Specify GSLB Protocol aging time, default is 60"
             device_name:
                 description:
                 - "Specify SLB device name"
@@ -146,9 +143,9 @@ options:
             auto_map:
                 description:
                 - "Enable DNS Auto Mapping"
-            msg_format_acos_2x:
+            proto_aging_time:
                 description:
-                - "Run GSLB Protocol in compatible mode with a ACOS 2.x GSLB peer"
+                - "Specify GSLB Protocol aging time, default is 60"
             rdt_value:
                 description:
                 - "Specify Round-delay-time"
@@ -207,7 +204,7 @@ options:
         required: False
     template:
         description:
-        - "Specify template to collect site information (Specify GSLB SNMP template name)"
+        - "Specify template to collect site information (Specify template name)"
         required: False
     threshold:
         description:
@@ -334,7 +331,7 @@ def get_argspec():
         uuid=dict(type='str',),
         weight=dict(type='int',),
         site_name=dict(type='str',required=True,),
-        slb_dev_list=dict(type='list',health_check_action=dict(type='str',choices=['health-check','health-check-disable']),client_ip=dict(type='str',),uuid=dict(type='str',),proto_aging_time=dict(type='int',),device_name=dict(type='str',required=True,),proto_compatible=dict(type='bool',),user_tag=dict(type='str',),auto_map=dict(type='bool',),msg_format_acos_2x=dict(type='bool',),rdt_value=dict(type='int',),gateway_ip_addr=dict(type='str',),vip_server=dict(type='dict',vip_server_v4_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),ipv4=dict(type='str',required=True,),uuid=dict(type='str',)),vip_server_v6_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),uuid=dict(type='str',),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),vip_name=dict(type='str',required=True,),uuid=dict(type='str',))),ip_address=dict(type='str',),proto_aging_fast=dict(type='bool',),auto_detect=dict(type='str',choices=['ip','port','ip-and-port','disabled']),max_client=dict(type='int',),admin_preference=dict(type='int',)),
+        slb_dev_list=dict(type='list',health_check_action=dict(type='str',choices=['health-check','health-check-disable']),client_ip=dict(type='str',),uuid=dict(type='str',),device_name=dict(type='str',required=True,),proto_compatible=dict(type='bool',),user_tag=dict(type='str',),auto_map=dict(type='bool',),proto_aging_time=dict(type='int',),rdt_value=dict(type='int',),gateway_ip_addr=dict(type='str',),vip_server=dict(type='dict',vip_server_v4_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),ipv4=dict(type='str',required=True,),uuid=dict(type='str',)),vip_server_v6_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),uuid=dict(type='str',),ipv6=dict(type='str',required=True,)),vip_server_name_list=dict(type='list',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),vip_name=dict(type='str',required=True,),uuid=dict(type='str',))),ip_address=dict(type='str',),proto_aging_fast=dict(type='bool',),auto_detect=dict(type='str',choices=['ip','port','ip-and-port','disabled']),max_client=dict(type='int',),admin_preference=dict(type='int',)),
         controller=dict(type='str',),
         bw_cost=dict(type='bool',),
         auto_map=dict(type='bool',),

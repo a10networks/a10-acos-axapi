@@ -56,18 +56,12 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            hm_key:
-                description:
-                - "Field hm_key"
             state:
                 description:
                 - "Field state"
             name:
                 description:
                 - "Member name"
-            hm_index:
-                description:
-                - "Field hm_index"
             port:
                 description:
                 - "Port number"
@@ -78,7 +72,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'curr_conn'= Current connections; 'total_fwd_bytes'= Total forward bytes; 'total_fwd_pkts'= Total forward packets; 'total_rev_bytes'= Total reverse bytes; 'total_rev_pkts'= Total reverse packets; 'total_conn'= Total connections; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_status_code_2xx'= Total reverse packets inspected status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse packets inspected status code non 5xx; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total requests success; 'peak_conn'= Peak connections; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; 'curr_ssl_conn'= Current SSL connections; 'total_ssl_conn'= Total SSL connections; "
+                - "'all'= all; 'curr_conn'= Current connections; 'total_fwd_bytes'= Total forward bytes; 'total_fwd_pkts'= Total forward packets; 'total_rev_bytes'= Total reverse bytes; 'total_rev_pkts'= Total reverse packets; 'total_conn'= Total connections; 'total_rev_pkts_inspected'= Total reverse packets inspected; 'total_rev_pkts_inspected_status_code_2xx'= Total reverse packets inspected status code 2xx; 'total_rev_pkts_inspected_status_code_non_5xx'= Total reverse packets inspected status code non 5xx; 'curr_req'= Current requests; 'total_req'= Total requests; 'total_req_succ'= Total requests success; 'peak_conn'= Peak connections; 'response_time'= Response time; 'fastest_rsp_time'= Fastest response time; 'slowest_rsp_time'= Slowest response time; "
     stats:
         description:
         - "Field stats"
@@ -96,9 +90,6 @@ options:
             peak_conn:
                 description:
                 - "Peak connections"
-            total_ssl_conn:
-                description:
-                - "Total SSL connections"
             total_conn:
                 description:
                 - "Total connections"
@@ -117,9 +108,9 @@ options:
             port:
                 description:
                 - "Port number"
-            curr_ssl_conn:
+            total_rev_pkts_inspected_status_code_2xx:
                 description:
-                - "Current SSL connections"
+                - "Total reverse packets inspected status code 2xx"
             total_req_succ:
                 description:
                 - "Total requests success"
@@ -129,9 +120,6 @@ options:
             total_rev_pkts_inspected_status_code_non_5xx:
                 description:
                 - "Total reverse packets inspected status code non 5xx"
-            total_rev_pkts_inspected_status_code_2xx:
-                description:
-                - "Total reverse packets inspected status code 2xx"
             total_fwd_bytes:
                 description:
                 - "Total forward bytes"
@@ -203,9 +191,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',hm_key=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),name=dict(type='str',required=True,),hm_index=dict(type='int',),port=dict(type='int',required=True,)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),
-        stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),name=dict(type='str',required=True,),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),port=dict(type='int',required=True,),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),
+        oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','MAINTENANCE']),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time'])),
+        stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),name=dict(type='str',required=True,),peak_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),port=dict(type='int',required=True,),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),
         uuid=dict(type='str',),
         port=dict(type='int',required=True,),
         user_tag=dict(type='str',),

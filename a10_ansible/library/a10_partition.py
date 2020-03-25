@@ -73,18 +73,15 @@ options:
         - "Field shared_vlan"
         required: False
         suboptions:
+            vrid:
+                description:
+                - "Specify VRRP-A vrid"
             mgmt_floating_ip_address:
                 description:
                 - "IPv4 Address for Shared VLAN Mgmt IP Address"
             allowable_ip_range:
                 description:
                 - "Field allowable_ip_range"
-            vrid:
-                description:
-                - "Specify VRRP-A vrid"
-            allowable_ipv6_range:
-                description:
-                - "Field allowable_ipv6_range"
             vlan:
                 description:
                 - "Field vlan"
@@ -157,7 +154,7 @@ def get_argspec():
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         partition_name=dict(type='str',required=True,),
-        shared_vlan=dict(type='dict',mgmt_floating_ip_address=dict(type='str',),allowable_ip_range=dict(type='list',),vrid=dict(type='int',),allowable_ipv6_range=dict(type='list',),vlan=dict(type='int',),uuid=dict(type='str',)),
+        shared_vlan=dict(type='dict',vrid=dict(type='int',),mgmt_floating_ip_address=dict(type='str',),allowable_ip_range=dict(type='list',),vlan=dict(type='int',),uuid=dict(type='str',)),
         template=dict(type='dict',resource_accounting=dict(type='str',),uuid=dict(type='str',)),
         application_type=dict(type='str',choices=['adc','cgnv6']),
         id=dict(type='int',)

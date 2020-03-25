@@ -60,6 +60,10 @@ options:
         description:
         - "'primary'= Write to default Primary Configuration; 'secondary'= Write to default Secondary Configuration; 'local'= Local Configuration Profile Name; "
         required: False
+    cf:
+        description:
+        - "Write to compact flash"
+        required: False
     partition:
         description:
         - "'all'= All partition configurations; 'shared'= Shared partition; 'specified'= Specified partition; "
@@ -78,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["destination","partition","profile","specified_partition",]
+AVAILABLE_PROPERTIES = ["cf","destination","partition","profile","specified_partition",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -110,6 +114,7 @@ def get_argspec():
         profile=dict(type='str',),
         specified_partition=dict(type='str',),
         destination=dict(type='str',choices=['primary','secondary','local']),
+        cf=dict(type='bool',),
         partition=dict(type='str',choices=['all','shared','specified'])
     ))
    

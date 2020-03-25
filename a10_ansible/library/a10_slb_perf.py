@@ -55,7 +55,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'total-throughput-bits-per-sec'= Total Throughput in bits/sec; 'l4-conns-per-sec'= L4 Connections/sec; 'l7-conns-per-sec'= L7 Connections/sec; 'l7-trans-per-sec'= L7 Transactions/sec; 'ssl-conns-per-sec'= SSL Connections/sec; 'ip-nat-conns-per-sec'= IP NAT Connections/sec; 'total-new-conns-per-sec'= Total New Connections Established/sec; 'total-curr-conns'= Total Current Established Connections; 'l4-bandwidth'= L4 Bandwidth in bits/sec; 'l7-bandwidth'= L7 Bandwidth in bits/sec; 'serv-ssl-conns-per-sec'= Server SSL Connections/sec; 'fw-conns-per-sec'= FW Connections/sec; 'gifw-conns-per-sec'= GiFW Connections/sec; 'l7-proxy-conns-per-sec'= L7 Proxy Connections/sec; 'l7-proxy-trans-per-sec'= L7 Proxy Transactions/sec; "
+                - "'all'= all; 'total-throughput-bits-per-sec'= Total Throughput in bits/sec; 'l4-conns-per-sec'= L4 Connections/sec; 'l7-conns-per-sec'= L7 Connections/sec; 'l7-trans-per-sec'= L7 Transactions/sec; 'ssl-conns-per-sec'= SSL Connections/sec; 'ip-nat-conns-per-sec'= IP NAT Connections/sec; 'total-new-conns-per-sec'= Total New Connections Established/sec; 'total-curr-conns'= Total Current Established Connections; 'l4-bandwidth'= L4 Bandwidth in bits/sec; 'l7-bandwidth'= L7 Bandwidth in bits/sec; 'serv-ssl-conns-per-sec'= Server SSL Connections/sec; "
     stats:
         description:
         - "Field stats"
@@ -64,48 +64,36 @@ options:
             l7_trans_per_sec:
                 description:
                 - "L7 Transactions/sec"
-            l7_conns_per_sec:
+            serv_ssl_conns_per_sec:
                 description:
-                - "L7 Connections/sec"
+                - "Server SSL Connections/sec"
             total_curr_conns:
                 description:
                 - "Total Current Established Connections"
             ssl_conns_per_sec:
                 description:
                 - "SSL Connections/sec"
+            l7_conns_per_sec:
+                description:
+                - "L7 Connections/sec"
             l4_bandwidth:
                 description:
                 - "L4 Bandwidth in bits/sec"
-            serv_ssl_conns_per_sec:
+            l7_bandwidth:
                 description:
-                - "Server SSL Connections/sec"
-            gifw_conns_per_sec:
-                description:
-                - "GiFW Connections/sec"
+                - "L7 Bandwidth in bits/sec"
             total_new_conns_per_sec:
                 description:
                 - "Total New Connections Established/sec"
             total_throughput_bits_per_sec:
                 description:
                 - "Total Throughput in bits/sec"
-            l7_proxy_trans_per_sec:
-                description:
-                - "L7 Proxy Transactions/sec"
             l4_conns_per_sec:
                 description:
                 - "L4 Connections/sec"
-            l7_bandwidth:
-                description:
-                - "L7 Bandwidth in bits/sec"
-            l7_proxy_conns_per_sec:
-                description:
-                - "L7 Proxy Connections/sec"
             ip_nat_conns_per_sec:
                 description:
                 - "IP NAT Connections/sec"
-            fw_conns_per_sec:
-                description:
-                - "FW Connections/sec"
     uuid:
         description:
         - "uuid of the object"
@@ -153,8 +141,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec','fw-conns-per-sec','gifw-conns-per-sec','l7-proxy-conns-per-sec','l7-proxy-trans-per-sec'])),
-        stats=dict(type='dict',l7_trans_per_sec=dict(type='str',),l7_conns_per_sec=dict(type='str',),total_curr_conns=dict(type='str',),ssl_conns_per_sec=dict(type='str',),l4_bandwidth=dict(type='str',),serv_ssl_conns_per_sec=dict(type='str',),gifw_conns_per_sec=dict(type='str',),total_new_conns_per_sec=dict(type='str',),total_throughput_bits_per_sec=dict(type='str',),l7_proxy_trans_per_sec=dict(type='str',),l4_conns_per_sec=dict(type='str',),l7_bandwidth=dict(type='str',),l7_proxy_conns_per_sec=dict(type='str',),ip_nat_conns_per_sec=dict(type='str',),fw_conns_per_sec=dict(type='str',)),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec'])),
+        stats=dict(type='dict',l7_trans_per_sec=dict(type='str',),serv_ssl_conns_per_sec=dict(type='str',),total_curr_conns=dict(type='str',),ssl_conns_per_sec=dict(type='str',),l7_conns_per_sec=dict(type='str',),l4_bandwidth=dict(type='str',),l7_bandwidth=dict(type='str',),total_new_conns_per_sec=dict(type='str',),total_throughput_bits_per_sec=dict(type='str',),l4_conns_per_sec=dict(type='str',),ip_nat_conns_per_sec=dict(type='str',)),
         uuid=dict(type='str',)
     ))
    

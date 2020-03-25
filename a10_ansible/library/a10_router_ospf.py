@@ -64,7 +64,7 @@ options:
                 - "OSPF area ID as a decimal value"
             di_type:
                 description:
-                - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
+                - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
     distribute_lists:
         description:
         - "Field distribute_lists"
@@ -189,7 +189,7 @@ options:
                 - "OSPF area ID in IP address format"
     maximum_area:
         description:
-        - "Maximum number of non-backbone areas (OSPF area limit)"
+        - "Maximum number of OSPF area (OSPF area limit)"
         required: False
     summary_address_list:
         description:
@@ -222,18 +222,15 @@ options:
         - "Field passive_interface"
         required: False
         suboptions:
-            tunnel_cfg:
-                description:
-                - "Field tunnel_cfg"
-            loopback_cfg:
-                description:
-                - "Field loopback_cfg"
-            ve_cfg:
-                description:
-                - "Field ve_cfg"
             lif_cfg:
                 description:
                 - "Field lif_cfg"
+            ve_cfg:
+                description:
+                - "Field ve_cfg"
+            loopback_cfg:
+                description:
+                - "Field loopback_cfg"
             trunk_cfg:
                 description:
                 - "Field trunk_cfg"
@@ -423,7 +420,7 @@ def get_argspec():
         rfc1583_compatible=dict(type='bool',),
         max_concurrent_dd=dict(type='int',),
         process_id=dict(type='int',required=True,),
-        passive_interface=dict(type='dict',tunnel_cfg=dict(type='list',tunnel=dict(type='str',),tunnel_address=dict(type='str',)),loopback_cfg=dict(type='list',loopback_address=dict(type='str',),loopback=dict(type='str',)),ve_cfg=dict(type='list',ve_address=dict(type='str',),ve=dict(type='str',)),lif_cfg=dict(type='list',lif=dict(type='str',),lif_address=dict(type='str',)),trunk_cfg=dict(type='list',trunk_address=dict(type='str',),trunk=dict(type='str',)),eth_cfg=dict(type='list',ethernet=dict(type='str',),eth_address=dict(type='str',))),
+        passive_interface=dict(type='dict',lif_cfg=dict(type='list',lif=dict(type='str',),lif_address=dict(type='str',)),ve_cfg=dict(type='list',ve_address=dict(type='str',),ve=dict(type='str',)),loopback_cfg=dict(type='list',loopback_address=dict(type='str',),loopback=dict(type='str',)),trunk_cfg=dict(type='list',trunk_address=dict(type='str',),trunk=dict(type='str',)),eth_cfg=dict(type='list',ethernet=dict(type='str',),eth_address=dict(type='str',))),
         default_information=dict(type='dict',originate=dict(type='bool',),uuid=dict(type='str',),always=dict(type='bool',),metric=dict(type='int',),route_map=dict(type='str',),metric_type=dict(type='int',)),
         overflow=dict(type='dict',database=dict(type='dict',count=dict(type='int',),recovery_time=dict(type='int',),limit=dict(type='str',choices=['hard','soft']),db_external=dict(type='int',))),
         bfd_all_interfaces=dict(type='bool',),

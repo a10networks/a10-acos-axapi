@@ -103,7 +103,7 @@ options:
                 - "Disable Drop DNS CNAME Response"
             cache:
                 description:
-                - "Use a cached A-query response to provide AAAA query responses for the same hostname"
+                - "Generate Response by DNS Cache"
             passive_query_disable:
                 description:
                 - "Disable Generate A query upon empty or error Response"

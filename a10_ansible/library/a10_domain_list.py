@@ -56,9 +56,6 @@ options:
             domain_name:
                 description:
                 - "Domain name to be added to this domain list"
-            interval:
-                description:
-                - "DNS query interval (in minute, default is 10)"
     uuid:
         description:
         - "uuid of the object"
@@ -114,7 +111,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain_name_list=dict(type='list',domain_name=dict(type='str',),interval=dict(type='int',)),
+        domain_name_list=dict(type='list',domain_name=dict(type='str',)),
         uuid=dict(type='str',),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,)

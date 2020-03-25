@@ -53,60 +53,15 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            shared_partition:
+            all_paritions:
                 description:
-                - "Field shared_partition"
-            pool_shared:
+                - "Field all_paritions"
+            partition:
                 description:
-                - "Field pool_shared"
-            nat_pool_name:
-                description:
-                - "Field nat_pool_name"
-            all_partitions:
-                description:
-                - "Field all_partitions"
-            inside_addr_end:
-                description:
-                - "Field inside_addr_end"
-            pcp:
-                description:
-                - "Field pcp"
-            debug_session:
-                description:
-                - "Field debug_session"
-            inside_addr_start:
-                description:
-                - "Field inside_addr_start"
-            nat_addr:
-                description:
-                - "Field nat_addr"
-            partition_name:
-                description:
-                - "Field partition_name"
-            nat_addr_start:
-                description:
-                - "Field nat_addr_start"
-            nat_port:
-                description:
-                - "Field nat_port"
+                - "Field partition"
             session_list:
                 description:
                 - "Field session_list"
-            inside_port:
-                description:
-                - "Field inside_port"
-            graceful:
-                description:
-                - "Field graceful"
-            session_count:
-                description:
-                - "Field session_count"
-            inside_addr:
-                description:
-                - "Field inside_addr"
-            nat_addr_end:
-                description:
-                - "Field nat_addr_end"
     uuid:
         description:
         - "uuid of the object"
@@ -154,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_partition=dict(type='bool',),pool_shared=dict(type='bool',),nat_pool_name=dict(type='str',),all_partitions=dict(type='bool',),inside_addr_end=dict(type='str',),pcp=dict(type='bool',),debug_session=dict(type='bool',),inside_addr_start=dict(type='str',),nat_addr=dict(type='str',),partition_name=dict(type='str',),nat_addr_start=dict(type='str',),nat_port=dict(type='int',),session_list=dict(type='list',protocol=dict(type='str',),inbound=dict(type='int',),age=dict(type='str',),inside_address=dict(type='str',),nat_address=dict(type='str',),nat_port=dict(type='int',),flags=dict(type='str',),nat_pool_name=dict(type='str',),inside_port=dict(type='int',),outbound=dict(type='int',),cpu=dict(type='int',)),inside_port=dict(type='int',),graceful=dict(type='bool',),session_count=dict(type='int',),inside_addr=dict(type='str',),nat_addr_end=dict(type='str',)),
+        oper=dict(type='dict',all_paritions=dict(type='str',choices=['true']),partition=dict(type='str',),session_list=dict(type='list',protocol=dict(type='str',),inbound=dict(type='int',),age=dict(type='str',),inside_address=dict(type='str',),nat_address=dict(type='str',),nat_port=dict(type='int',),flags=dict(type='str',),nat_pool_name=dict(type='str',),inside_port=dict(type='int',),outbound=dict(type='int',),cpu=dict(type='int',))),
         uuid=dict(type='str',)
     ))
    

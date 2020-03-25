@@ -53,21 +53,9 @@ options:
         - "Field oper"
         required: False
         suboptions:
-            all:
-                description:
-                - "Field all"
             ddos_l4_entries_list:
                 description:
                 - "Field ddos_l4_entries_list"
-            nat_pool:
-                description:
-                - "Field nat_pool"
-            not_in_hardware:
-                description:
-                - "Field not_in_hardware"
-            v4_netmask:
-                description:
-                - "Field v4_netmask"
             total_entries:
                 description:
                 - "Field total_entries"
@@ -118,7 +106,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',all=dict(type='bool',),ddos_l4_entries_list=dict(type='list',is_deleted=dict(type='int',),hardware_index=dict(type='int',),l4_protocol=dict(type='str',),in_hardware=dict(type='int',),pps=dict(type='int',),v4_address=dict(type='str',),port=dict(type='int',)),nat_pool=dict(type='str',),not_in_hardware=dict(type='bool',),v4_netmask=dict(type='str',),total_entries=dict(type='int',)),
+        oper=dict(type='dict',ddos_l4_entries_list=dict(type='list',is_deleted=dict(type='int',),hardware_index=dict(type='int',),l4_protocol=dict(type='int',),in_hardware=dict(type='int',),pps=dict(type='int',),v4_address=dict(type='str',),port=dict(type='int',)),total_entries=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

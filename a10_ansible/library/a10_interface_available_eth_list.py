@@ -56,9 +56,6 @@ options:
             if_list:
                 description:
                 - "Field if_list"
-            tot_num_of_ports:
-                description:
-                - "Field tot_num_of_ports"
     uuid:
         description:
         - "uuid of the object"
@@ -106,7 +103,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',if_list=dict(type='list',IF_Status=dict(type='str',),state=dict(type='str',),IF_Num=dict(type='int',),IF_Type=dict(type='str',)),tot_num_of_ports=dict(type='int',)),
+        oper=dict(type='dict',if_list=dict(type='list',IF_Status=dict(type='str',),state=dict(type='str',),IF_Num=dict(type='int',),IF_Type=dict(type='str',))),
         uuid=dict(type='str',)
     ))
    

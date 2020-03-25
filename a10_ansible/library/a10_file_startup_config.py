@@ -82,7 +82,7 @@ options:
         required: False
     action:
         description:
-        - "'import'= import; "
+        - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
         required: False
     file_handle:
         description:
@@ -139,7 +139,7 @@ def get_argspec():
         dst_file=dict(type='str',),
         uuid=dict(type='str',),
         file=dict(type='str',),
-        action=dict(type='str',choices=['import']),
+        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
         file_handle=dict(type='str',),
         size=dict(type='int',)
     ))

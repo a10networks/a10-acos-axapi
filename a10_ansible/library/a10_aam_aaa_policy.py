@@ -71,9 +71,6 @@ options:
             user_tag:
                 description:
                 - "Customized tag"
-            user_agent:
-                description:
-                - "Field user_agent"
             host:
                 description:
                 - "Field host"
@@ -83,9 +80,9 @@ options:
             sampling_enable:
                 description:
                 - "Field sampling_enable"
-            auth_failure_bypass:
+            domain_name:
                 description:
-                - "Forward client’s request even though authentication has failed"
+                - "Specify domain name to bind to the AAA rule (ex= a10networks.com, www.a10networks.com)"
             authentication_template:
                 description:
                 - "Specify authentication template name to bind to the AAA rule"
@@ -95,9 +92,6 @@ options:
             port:
                 description:
                 - "Specify port number for aaa-rule, default is 0 for all port numbers"
-            domain_name:
-                description:
-                - "Specify domain name to bind to the AAA rule (ex= a10networks.com, www.a10networks.com)"
     stats:
         description:
         - "Field stats"
@@ -106,24 +100,21 @@ options:
             aaa_rule_list:
                 description:
                 - "Field aaa_rule_list"
-            req_bypass:
-                description:
-                - "Request Bypassed"
-            name:
-                description:
-                - "Specify AAA policy name"
-            failure_bypass:
-                description:
-                - "Auth Failure Bypass"
-            req:
-                description:
-                - "Request"
-            req_skip:
-                description:
-                - "Request Skipped"
             req_auth:
                 description:
                 - "Request Matching Authentication Template"
+            name:
+                description:
+                - "Specify AAA policy name"
+            req:
+                description:
+                - "Request"
+            req_allow:
+                description:
+                - "Request Allowed"
+            req_skip:
+                description:
+                - "Request Skipped"
             error:
                 description:
                 - "Error"
@@ -141,7 +132,7 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'req'= Request; 'req-reject'= Request Rejected; 'req-auth'= Request Matching Authentication Template; 'req-bypass'= Request Bypassed; 'req-skip'= Request Skipped; 'error'= Error; 'failure-bypass'= Auth Failure Bypass; "
+                - "'all'= all; 'req'= Request; 'req-reject'= Request Rejected; 'req-auth'= Request Matching Authentication Template; 'req-allow'= Request Allowed; 'req-skip'= Request Skipped; 'error'= Error; "
     user_tag:
         description:
         - "Customized tag"
@@ -193,10 +184,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        aaa_rule_list=dict(type='list',index=dict(type='int',required=True,),match_encoded_uri=dict(type='bool',),uuid=dict(type='str',),authorize_policy=dict(type='str',),uri=dict(type='list',match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),uri_str=dict(type='str',)),user_tag=dict(type='str',),user_agent=dict(type='list',user_agent_str=dict(type='str',),user_agent_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),host=dict(type='list',host_str=dict(type='str',),host_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),access_list=dict(type='dict',acl_name=dict(type='str',choices=['ip-name','ipv6-name']),acl_id=dict(type='int',),name=dict(type='str',)),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_count','hit_deny','hit_auth','hit_bypass','failure_bypass'])),auth_failure_bypass=dict(type='bool',),authentication_template=dict(type='str',),action=dict(type='str',choices=['allow','deny']),port=dict(type='int',),domain_name=dict(type='str',)),
-        stats=dict(type='dict',aaa_rule_list=dict(type='list',index=dict(type='int',required=True,),stats=dict(type='dict',total_count=dict(type='str',),failure_bypass=dict(type='str',),hit_auth=dict(type='str',),hit_bypass=dict(type='str',),hit_deny=dict(type='str',))),req_bypass=dict(type='str',),name=dict(type='str',required=True,),failure_bypass=dict(type='str',),req=dict(type='str',),req_skip=dict(type='str',),req_auth=dict(type='str',),error=dict(type='str',),req_reject=dict(type='str',)),
+        aaa_rule_list=dict(type='list',index=dict(type='int',required=True,),match_encoded_uri=dict(type='bool',),uuid=dict(type='str',),authorize_policy=dict(type='str',),uri=dict(type='list',match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with']),uri_str=dict(type='str',)),user_tag=dict(type='str',),host=dict(type='list',host_str=dict(type='str',),host_match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),access_list=dict(type='dict',acl_name=dict(type='str',choices=['ip-name','ipv6-name']),acl_id=dict(type='int',),name=dict(type='str',)),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_count','hit_count'])),domain_name=dict(type='str',),authentication_template=dict(type='str',),action=dict(type='str',choices=['allow','deny']),port=dict(type='int',)),
+        stats=dict(type='dict',aaa_rule_list=dict(type='list',index=dict(type='int',required=True,),stats=dict(type='dict',total_count=dict(type='str',),hit_count=dict(type='str',))),req_auth=dict(type='str',),name=dict(type='str',required=True,),req=dict(type='str',),req_allow=dict(type='str',),req_skip=dict(type='str',),error=dict(type='str',),req_reject=dict(type='str',)),
         uuid=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','req','req-reject','req-auth','req-bypass','req-skip','error','failure-bypass'])),
+        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','req','req-reject','req-auth','req-allow','req-skip','error'])),
         user_tag=dict(type='str',),
         name=dict(type='str',required=True,)
     ))

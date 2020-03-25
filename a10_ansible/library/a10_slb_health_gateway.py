@@ -12,7 +12,7 @@ REQUIRED_VALID = (True, "")
 DOCUMENTATION = """
 module: a10_slb_health_gateway
 description:
-    - Configure gateway health-check
+    - Show gateway health-check statistics
 short_description: Configures A10 slb.health-gateway
 author: A10 Networks 2018 
 version_added: 2.4

@@ -59,15 +59,15 @@ options:
             tls1_rsa_aes_256_sha256_successes:
                 description:
                 - "TLS1_RSA_AES_256_SHA256 Successes"
-            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures:
+            tls1_rsa_aes_256_sha256_failures:
                 description:
-                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Failures"
+                - "TLS1_RSA_AES_256_SHA256 Failures"
             tls11_successes:
                 description:
                 - "Successful TLS1.1 connections"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_failures:
+            kex_ecdhe_secp384r1_failures:
                 description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
+                - "Failed secp384r1 ECDHE key exchanges"
             tls1_dhe_rsa_aes_256_gcm_sha384_successes:
                 description:
                 - "TLS1_DHE_RSA_AES_256_GCM_SHA384 Successes"
@@ -77,9 +77,6 @@ options:
             tls1_rsa_aes_256_gcm_sha384_id:
                 description:
                 - "TLS1_RSA_AES_256_GCM_SHA384 Cipher ID"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher failures"
             tls1_ecdhe_ecdsa_aes_256_sha384_id:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Cipher ID"
@@ -110,9 +107,9 @@ options:
             cumulative_sessions:
                 description:
                 - "Cumulative SSL sessions"
-            tls1_rsa_aes_256_sha256_failures:
+            tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures:
                 description:
-                - "TLS1_RSA_AES_256_SHA256 Failures"
+                - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Failures"
             tls1_rsa_export1024_rc4_56_md5_successes:
                 description:
                 - "TLS1_RSA_EXPORT1024_RC4_56_MD5 Successes"
@@ -122,9 +119,6 @@ options:
             ssl3_rsa_des_40_cbc_sha_id:
                 description:
                 - "SSL3_RSA_DES_40_CBC_SHA Cipher ID"
-            kex_ecdhe_secp384r1_failures:
-                description:
-                - "Failed secp384r1 ECDHE key exchanges"
             tls1_ecdhe_ecdsa_aes_128_sha256_failures:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Failures"
@@ -218,9 +212,6 @@ options:
             ssl3_rsa_des_40_cbc_sha_successes:
                 description:
                 - "SSL3_RSA_DES_40_CBC_SHA Successes"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes:
-                description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher successes"
             tls1_ecdhe_ecdsa_aes_128_sha256_successes:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_128_SHA256 Successes"
@@ -299,9 +290,6 @@ options:
             tls1_ecdhe_rsa_aes_128_sha_failures:
                 description:
                 - "TLS1_ECDHE_RSA_AES_128_SHA Failures"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures:
-                description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher failures"
             renego_tls10_failures:
                 description:
                 - "Failed TLS1.0 renegotiations"
@@ -323,9 +311,6 @@ options:
             kex_rsa_512_failures:
                 description:
                 - "Failed 512-bit RSA key exchanges"
-            tls1_dhe_rsa_aes_128_sha256_successes:
-                description:
-                - "TLS1_DHE_RSA_AES_128_SHA256 Successes"
             tls1_ecdhe_rsa_aes_256_sha_failures:
                 description:
                 - "TLS1_ECDHE_RSA_AES_256_SHA Failures"
@@ -383,9 +368,6 @@ options:
             tls1_ecdhe_ecdsa_aes_256_sha384_successes:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_256_SHA384 Successes"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
             sess_cache_miss:
                 description:
                 - "Session cache misses"
@@ -395,18 +377,12 @@ options:
             tls1_rsa_aes_128_sha_failures:
                 description:
                 - "TLS1_RSA_AES_128_SHA Failures"
-            kex_dhe_512_successes:
-                description:
-                - "Successful 512-bit DHE key exchanges"
             renego_tls12_successes:
                 description:
                 - "Successful TLS1.2 renegotiations"
             kex_ecdhe_secp384r1_successes:
                 description:
                 - "Successful secp384r1 ECDHE key exchanges"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_id:
-                description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
             renego_tls11_successes:
                 description:
                 - "Successful TLS1.1 renegotiations"
@@ -416,9 +392,6 @@ options:
             tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_256_GCM_SHA384 Cipher ID"
-            tls1_ecdhe_rsa_chacha20_poly1305_sha256_id:
-                description:
-                - "TLS1_ECDHE_RSA_CHACHA20_POLY1305_SHA256 Cipher ID"
             ssl3_rsa_rc4_40_md5_successes:
                 description:
                 - "SSL3_RSA_RC4_40_MD5 Successes"
@@ -443,9 +416,9 @@ options:
             tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_128_GCM_SHA256 Cipher ID"
-            tls1_dhe_rsa_chacha20_poly1305_sha256_successes:
+            kex_dhe_512_successes:
                 description:
-                - "TLS1_DHE_RSA_CHACHA20_POLY1305_SHA256 Cipher successes"
+                - "Successful 512-bit DHE key exchanges"
             renegotiation_total:
                 description:
                 - "Total renegotiations"
@@ -473,9 +446,9 @@ options:
             tls1_ecdhe_ecdsa_aes_256_sha_failures:
                 description:
                 - "TLS1_ECDHE_ECDSA_AES_256_SHA Failures"
-            tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id:
+            tls1_dhe_rsa_aes_128_sha256_successes:
                 description:
-                - "TLS1_ECDHE_ECDSA_CHACHA20_POLY1305_SHA256 Cipher ID"
+                - "TLS1_DHE_RSA_AES_128_SHA256 Successes"
             ssl3_rsa_des_64_cbc_sha_successes:
                 description:
                 - "SSL3_RSA_DES_64_CBC_SHA Successes"
@@ -565,7 +538,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',tls1_dhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures=dict(type='int',),tls11_successes=dict(type='int',),tls1_dhe_rsa_chacha20_poly1305_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_successes=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_id=dict(type='str',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha384_id=dict(type='str',),vserver=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),ssl3_rsa_des_40_cbc_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_successes=dict(type='int',),kex_rsa_4096_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_failures=dict(type='int',),cumulative_sessions=dict(type='int',),tls1_rsa_aes_256_sha256_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_successes=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_rsa_des_40_cbc_sha_id=dict(type='str',),kex_ecdhe_secp384r1_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_failures=dict(type='int',),ssl3_rsa_rc4_40_md5_failures=dict(type='int',),tls1_rsa_aes_128_sha_id=dict(type='str',),tls1_dhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_successes=dict(type='int',),renego_ssl3_successes=dict(type='int',),kex_dhe_1024_successes=dict(type='int',),ssl3_rsa_rc4_128_md5_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_id=dict(type='str',),tls1_rsa_export1024_rc4_56_sha_id=dict(type='str',),kex_rsa_4096_failures=dict(type='int',),kex_dhe_512_failures=dict(type='int',),ssl3_rsa_des_64_cbc_sha_id=dict(type='str',),tls1_dhe_rsa_aes_256_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_rc4_128_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_id=dict(type='str',),port=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_rsa_aes_256_sha_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_id=dict(type='str',),ssl3_rsa_des_64_cbc_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_id=dict(type='str',),ssl3_rsa_rc4_128_md5_id=dict(type='str',),tls1_rsa_aes_128_gcm_sha256_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_id=dict(type='str',),sess_cache_hit=dict(type='int',),ssl3_rsa_des_40_cbc_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_successes=dict(type='int',),tls1_rsa_aes_128_sha256_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures=dict(type='int',),ssl3_rsa_rc4_128_md5_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_id=dict(type='str',),kex_dhe_2048_successes=dict(type='int',),hs_avg_time=dict(type='int',),tls12_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_successes=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_successes=dict(type='int',),renego_ssl2_successes=dict(type='int',),tls1_rsa_aes_256_sha_successes=dict(type='int',),renego_tls10_successes=dict(type='int',),renego_tls12_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),cert_vfy=dict(type='int',),tls1_rsa_aes_128_sha256_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_id=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_failures=dict(type='int',),renego_tls10_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_id=dict(type='str',),kex_rsa_1024_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),sess_cache_curr_conn=dict(type='int',),tls11_failures=dict(type='int',),kex_rsa_512_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_failures=dict(type='int',),tls10_successes=dict(type='int',),ssl3_rsa_rc4_40_md5_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha384_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),ssl2_successes=dict(type='int',),kex_ecdhe_secp256r1_failures=dict(type='int',),sess_cache_new=dict(type='int',),renego_tls11_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha_failures=dict(type='int',),tls12_successes=dict(type='int',),kex_rsa_2048_successes=dict(type='int',),kex_rsa_2048_failures=dict(type='int',),renego_ssl2_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_successes=dict(type='int',),sess_cache_miss=dict(type='int',),kex_dhe_2048_failures=dict(type='int',),tls1_rsa_aes_128_sha_failures=dict(type='int',),kex_dhe_512_successes=dict(type='int',),renego_tls12_successes=dict(type='int',),kex_ecdhe_secp384r1_successes=dict(type='int',),tls1_dhe_rsa_chacha20_poly1305_sha256_id=dict(type='str',),renego_tls11_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id=dict(type='str',),tls1_ecdhe_rsa_chacha20_poly1305_sha256_id=dict(type='str',),ssl3_rsa_rc4_40_md5_successes=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_successes=dict(type='int',),kex_rsa_1024_successes=dict(type='int',),renego_ssl3_failures=dict(type='int',),kex_dhe_1024_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id=dict(type='str',),tls1_dhe_rsa_chacha20_poly1305_sha256_successes=dict(type='int',),renegotiation_total=dict(type='int',),kex_rsa_512_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_id=dict(type='str',),tls10_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_chacha20_poly1305_sha256_id=dict(type='str',),ssl3_rsa_des_64_cbc_sha_successes=dict(type='int',),ssl3_failures=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_failures=dict(type='int',),hs_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_id=dict(type='str',),ssl2_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes=dict(type='int',),sess_cache_timeout=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha_id=dict(type='str',),tls1_rsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha256_failures=dict(type='int',),kex_ecdhe_secp256r1_successes=dict(type='int',)),
+        oper=dict(type='dict',tls1_dhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_successes=dict(type='int',),tls1_rsa_aes_256_sha256_failures=dict(type='int',),tls11_successes=dict(type='int',),kex_ecdhe_secp384r1_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_successes=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha384_id=dict(type='str',),vserver=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),ssl3_rsa_des_40_cbc_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_successes=dict(type='int',),kex_rsa_4096_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_failures=dict(type='int',),cumulative_sessions=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_successes=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_rsa_des_40_cbc_sha_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_128_sha256_failures=dict(type='int',),ssl3_rsa_rc4_40_md5_failures=dict(type='int',),tls1_rsa_aes_128_sha_id=dict(type='str',),tls1_dhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha256_id=dict(type='str',),tls1_rsa_aes_128_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_successes=dict(type='int',),renego_ssl3_successes=dict(type='int',),kex_dhe_1024_successes=dict(type='int',),ssl3_rsa_rc4_128_md5_successes=dict(type='int',),ssl3_rsa_rc4_128_sha_id=dict(type='str',),tls1_rsa_export1024_rc4_56_sha_id=dict(type='str',),kex_rsa_4096_failures=dict(type='int',),kex_dhe_512_failures=dict(type='int',),ssl3_rsa_des_64_cbc_sha_id=dict(type='str',),tls1_dhe_rsa_aes_256_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_rc4_128_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_id=dict(type='str',),port=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_rsa_aes_256_sha_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_id=dict(type='str',),ssl3_rsa_des_64_cbc_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_sha_failures=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_id=dict(type='str',),ssl3_rsa_rc4_128_md5_id=dict(type='str',),tls1_rsa_aes_128_gcm_sha256_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha384_id=dict(type='str',),sess_cache_hit=dict(type='int',),ssl3_rsa_des_40_cbc_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_successes=dict(type='int',),tls1_rsa_aes_128_sha256_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_failures=dict(type='int',),ssl3_rsa_rc4_128_md5_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_failures=dict(type='int',),tls1_rsa_aes_256_sha256_id=dict(type='str',),kex_dhe_2048_successes=dict(type='int',),hs_avg_time=dict(type='int',),tls12_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_successes=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_successes=dict(type='int',),renego_ssl2_successes=dict(type='int',),tls1_rsa_aes_256_sha_successes=dict(type='int',),renego_tls10_successes=dict(type='int',),renego_tls12_failures=dict(type='int',),tls1_dhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),cert_vfy=dict(type='int',),tls1_rsa_aes_128_sha256_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_sha256_id=dict(type='str',),tls1_dhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha_failures=dict(type='int',),renego_tls10_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha_id=dict(type='str',),kex_rsa_1024_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_successes=dict(type='int',),sess_cache_curr_conn=dict(type='int',),tls11_failures=dict(type='int',),kex_rsa_512_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_failures=dict(type='int',),tls10_successes=dict(type='int',),ssl3_rsa_rc4_40_md5_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha384_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_rsa_aes_256_gcm_sha384_id=dict(type='str',),ssl2_successes=dict(type='int',),kex_ecdhe_secp256r1_failures=dict(type='int',),sess_cache_new=dict(type='int',),renego_tls11_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha_failures=dict(type='int',),tls12_successes=dict(type='int',),kex_rsa_2048_successes=dict(type='int',),kex_rsa_2048_failures=dict(type='int',),renego_ssl2_failures=dict(type='int',),tls1_ecdhe_rsa_aes_128_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_sha384_successes=dict(type='int',),sess_cache_miss=dict(type='int',),kex_dhe_2048_failures=dict(type='int',),tls1_rsa_aes_128_sha_failures=dict(type='int',),renego_tls12_successes=dict(type='int',),kex_ecdhe_secp384r1_successes=dict(type='int',),renego_tls11_successes=dict(type='int',),tls1_dhe_rsa_aes_256_sha256_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_256_gcm_sha384_id=dict(type='str',),ssl3_rsa_rc4_40_md5_successes=dict(type='int',),tls1_ecdhe_rsa_aes_128_gcm_sha256_id=dict(type='str',),ssl3_successes=dict(type='int',),kex_rsa_1024_successes=dict(type='int',),renego_ssl3_failures=dict(type='int',),kex_dhe_1024_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_id=dict(type='str',),kex_dhe_512_successes=dict(type='int',),renegotiation_total=dict(type='int',),kex_rsa_512_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_successes=dict(type='int',),tls1_dhe_rsa_aes_128_sha_id=dict(type='str',),tls10_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_failures=dict(type='int',),ssl3_rsa_des_192_cbc3_sha_failures=dict(type='int',),tls1_rsa_aes_256_gcm_sha384_successes=dict(type='int',),tls1_ecdhe_ecdsa_aes_256_sha_failures=dict(type='int',),tls1_dhe_rsa_aes_128_sha256_successes=dict(type='int',),ssl3_rsa_des_64_cbc_sha_successes=dict(type='int',),ssl3_failures=dict(type='int',),tls1_rsa_aes_128_gcm_sha256_failures=dict(type='int',),hs_failures=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_id=dict(type='str',),ssl2_failures=dict(type='int',),tls1_ecdhe_ecdsa_aes_128_gcm_sha256_successes=dict(type='int',),sess_cache_timeout=dict(type='int',),tls1_ecdhe_rsa_aes_256_sha_successes=dict(type='int',),tls1_rsa_export1024_rc4_56_md5_failures=dict(type='int',),tls1_dhe_rsa_aes_256_sha_id=dict(type='str',),tls1_rsa_aes_256_sha_id=dict(type='str',),tls1_ecdhe_rsa_aes_128_sha256_failures=dict(type='int',),kex_ecdhe_secp256r1_successes=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

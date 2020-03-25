@@ -93,7 +93,7 @@ options:
         required: False
     cache:
         description:
-        - "Use a cached A-query response to provide AAAA query responses for the same hostname"
+        - "Generate Response by DNS Cache"
         required: False
     passive_query_disable:
         description:

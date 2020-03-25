@@ -52,10 +52,6 @@ options:
         description:
         - "Session Aging Template"
         required: False
-    override_nat_aging:
-        description:
-        - "Override NAT idle-timeout"
-        required: False
     name:
         description:
         - "Rule set name"
@@ -78,7 +74,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["name","override_nat_aging","session_aging","uuid",]
+AVAILABLE_PROPERTIES = ["name","session_aging","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -108,7 +104,6 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         session_aging=dict(type='str',),
-        override_nat_aging=dict(type='bool',),
         name=dict(type='str',),
         uuid=dict(type='str',)
     ))

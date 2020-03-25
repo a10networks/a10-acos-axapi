@@ -59,15 +59,6 @@ options:
             total_entries:
                 description:
                 - "Field total_entries"
-            all:
-                description:
-                - "Field all"
-            nat_pool:
-                description:
-                - "Field nat_pool"
-            v4_netmask:
-                description:
-                - "Field v4_netmask"
     uuid:
         description:
         - "uuid of the object"
@@ -115,7 +106,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ddos_ip_entries_list=dict(type='list',in_blacklist=dict(type='int',),sw_l3_drop_pps=dict(type='int',),expiration=dict(type='int',),hardware_index=dict(type='int',),hw_l4_drop_pps=dict(type='int',),sw_l4_drop_pps=dict(type='int',),in_hardware=dict(type='int',),v4_address=dict(type='str',),hw_l3_drop_pps=dict(type='int',),total_pps=dict(type='int',),sw_receive_pps=dict(type='int',),hints=dict(type='str',),l4_entries_count=dict(type='int',)),total_entries=dict(type='int',),all=dict(type='bool',),nat_pool=dict(type='str',),v4_netmask=dict(type='str',)),
+        oper=dict(type='dict',ddos_ip_entries_list=dict(type='list',in_blacklist=dict(type='int',),sw_l3_drop_pps=dict(type='int',),hardware_index=dict(type='int',),hw_l4_drop_pps=dict(type='int',),sw_l4_drop_pps=dict(type='int',),in_hardware=dict(type='int',),v4_address=dict(type='str',),hw_l3_drop_pps=dict(type='int',),total_pps=dict(type='int',),sw_receive_pps=dict(type='int',),l4_entries_count=dict(type='int',),expiration=dict(type='int',)),total_entries=dict(type='int',)),
         uuid=dict(type='str',)
     ))
    

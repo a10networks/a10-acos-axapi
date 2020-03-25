@@ -214,10 +214,6 @@ options:
         description:
         - "Append All A Records in Authoritative Section"
         required: False
-    server_any_with_metric:
-        description:
-        - "Provide All Records with GSLB Metrics applied to A/AAAA Records"
-        required: False
     dns_auto_map:
         description:
         - "Automatically build DNS Infrastructure"
@@ -303,7 +299,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","action_type","active_only","active_only_fail_safe","aging_time","backup_alias","backup_server","block_action","block_type","block_value","cache","cname_detect","delegation","dns_addition_mx","dns_auto_map","dynamic_preference","dynamic_weight","external_ip","external_soa","geoloc_action","geoloc_alias","geoloc_policy","hint","ip_replace","ipv6","logging","proxy_block_port_range_list","selected_only","selected_only_value","server","server_addition_mx","server_any","server_any_with_metric","server_authoritative","server_auto_ns","server_auto_ptr","server_cname","server_full_list","server_mode_only","server_mx","server_naptr","server_ns","server_ns_list","server_ptr","server_sec","server_srv","server_txt","sticky","sticky_aging_time","sticky_ipv6_mask","sticky_mask","template","ttl","use_server_ttl","uuid",]
+AVAILABLE_PROPERTIES = ["action","action_type","active_only","active_only_fail_safe","aging_time","backup_alias","backup_server","block_action","block_type","block_value","cache","cname_detect","delegation","dns_addition_mx","dns_auto_map","dynamic_preference","dynamic_weight","external_ip","external_soa","geoloc_action","geoloc_alias","geoloc_policy","hint","ip_replace","ipv6","logging","proxy_block_port_range_list","selected_only","selected_only_value","server","server_addition_mx","server_any","server_authoritative","server_auto_ns","server_auto_ptr","server_cname","server_full_list","server_mode_only","server_mx","server_naptr","server_ns","server_ns_list","server_ptr","server_sec","server_srv","server_txt","sticky","sticky_aging_time","sticky_ipv6_mask","sticky_mask","template","ttl","use_server_ttl","uuid",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -370,7 +366,6 @@ def get_argspec():
         server_cname=dict(type='bool',),
         server_authoritative=dict(type='bool',),
         server_full_list=dict(type='bool',),
-        server_any_with_metric=dict(type='bool',),
         dns_auto_map=dict(type='bool',),
         block_type=dict(type='str',choices=['a','aaaa','ns','mx','srv','cname','ptr','soa','txt']),
         sticky_mask=dict(type='str',),

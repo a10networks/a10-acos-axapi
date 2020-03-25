@@ -54,7 +54,7 @@ options:
         required: False
     send_icmpv6_on_error:
         description:
-        - "'disable'= Disable to send ICMPv6 when error discovered; "
+        - "Send ICMPv6 when error discovered (Default)"
         required: False
 
 
@@ -100,7 +100,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str',),
-        send_icmpv6_on_error=dict(type='str',choices=['disable'])
+        send_icmpv6_on_error=dict(type='bool',)
     ))
    
 

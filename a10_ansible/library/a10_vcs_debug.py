@@ -52,61 +52,21 @@ options:
         description:
         - "Information component"
         required: False
-    daemon_msg:
-        description:
-        - "Daemon message component"
-        required: False
     daemon:
         description:
         - "Daemon component"
-        required: False
-    lib:
-        description:
-        - "Lib component"
-        required: False
-    vblade:
-        description:
-        - "vBlade component"
-        required: False
-    election_pdu:
-        description:
-        - "Election pdu component"
-        required: False
-    util:
-        description:
-        - "Utility component"
-        required: False
-    ssl:
-        description:
-        - "SSL component"
-        required: False
-    handler:
-        description:
-        - "Handler component"
-        required: False
-    election:
-        description:
-        - "Election component"
         required: False
     vmaster:
         description:
         - "vMaster component"
         required: False
-    vblade_msg:
+    vblade:
         description:
-        - "vBlade Message component"
+        - "vBlade component"
         required: False
-    net:
+    election:
         description:
-        - "Net component"
-        required: False
-    encoder:
-        description:
-        - "Encoder component"
-        required: False
-    vmaster_msg:
-        description:
-        - "vMaster Message component"
+        - "Election component"
         required: False
 
 
@@ -122,7 +82,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["daemon","daemon_msg","election","election_pdu","encoder","handler","info","lib","net","ssl","util","vblade","vblade_msg","vmaster","vmaster_msg",]
+AVAILABLE_PROPERTIES = ["daemon","election","info","vblade","vmaster",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -152,20 +112,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         info=dict(type='bool',),
-        daemon_msg=dict(type='bool',),
         daemon=dict(type='bool',),
-        lib=dict(type='bool',),
-        vblade=dict(type='bool',),
-        election_pdu=dict(type='bool',),
-        util=dict(type='bool',),
-        ssl=dict(type='bool',),
-        handler=dict(type='bool',),
-        election=dict(type='bool',),
         vmaster=dict(type='bool',),
-        vblade_msg=dict(type='bool',),
-        net=dict(type='bool',),
-        encoder=dict(type='bool',),
-        vmaster_msg=dict(type='bool',)
+        vblade=dict(type='bool',),
+        election=dict(type='bool',)
     ))
    
 

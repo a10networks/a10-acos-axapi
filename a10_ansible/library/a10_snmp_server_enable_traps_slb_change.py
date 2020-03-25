@@ -68,10 +68,6 @@ options:
         description:
         - "Enable SSL certificate expiring trap"
         required: False
-    system_threshold:
-        description:
-        - "Enable slb system threshold trap"
-        required: False
     server:
         description:
         - "Enable slb server create/delete trap"
@@ -106,7 +102,7 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","connection_resource_event","resource_usage_warning","server","server_port","ssl_cert_change","ssl_cert_expire","system_threshold","uuid","vip","vip_port",]
+AVAILABLE_PROPERTIES = ["all","connection_resource_event","resource_usage_warning","server","server_port","ssl_cert_change","ssl_cert_expire","uuid","vip","vip_port",]
 
 # our imports go at the top so we fail fast.
 try:
@@ -140,7 +136,6 @@ def get_argspec():
         uuid=dict(type='str',),
         ssl_cert_change=dict(type='bool',),
         ssl_cert_expire=dict(type='bool',),
-        system_threshold=dict(type='bool',),
         server=dict(type='bool',),
         vip=dict(type='bool',),
         connection_resource_event=dict(type='bool',),
