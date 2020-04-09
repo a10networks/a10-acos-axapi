@@ -1,3 +1,0 @@
----
-- include_tasks: test_health_monitor.yml
-- include_tasks: cleanup.yml
