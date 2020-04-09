@@ -1,0 +1,32 @@
+---
+- name: create a realserver
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create a realserver
+      a10_server_v2:
+        host: "{{inventory_hostname}}"
+        username: admin
+        password: a10
+        partition: RCSIN_PRV
+        server_name: rip_server1
+        server_ip: 1.1.1.100
+        server_port: 80
+        server_protocol: tcp
+
+    - name: Create another realserver
+      a10_server_v2:
+        host: "{{inventory_hostname}}"
+        username: admin
+        password: a10
+        partition: RCSIN_PRV
+        server_name: rip_server2
+        server_ip: 1.1.1.101
+        server_port: 80
+        server_protocol: tcp

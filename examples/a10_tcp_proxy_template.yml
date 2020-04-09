@@ -1,0 +1,36 @@
+---
+- name: create a tcp proxy template
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create a TCP Proxy Template
+      a10_tcp_proxy_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: tcpproxytempl
+        reno: 0
+        idle_timeout: 1100
+        reset_fwd: 1
+        reset_rev: 1
+
+

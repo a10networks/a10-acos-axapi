@@ -1,0 +1,35 @@
+---
+- name: create a service group
+  user: fadi
+  hosts:  a10
+  connection: local
+  gather_facts: no
+  strategy: debug
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+    - name: Create a service group
+      a10_service_group_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        service_group: sg-v6-80-tcp
+        client_reset: True
+        servers:
+           - server: rip_server_v6_1
+             port: 80
+           - server: rip_server_v6_2
+             port: 80

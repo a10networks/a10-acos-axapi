@@ -1,0 +1,31 @@
+---
+- name: create a ssl sid persistence template
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_PRV
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create a ssl sid persistence Template
+      a10_sslid_persistence_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: my_ssl_sid_pers_templ
+        timeout: 20

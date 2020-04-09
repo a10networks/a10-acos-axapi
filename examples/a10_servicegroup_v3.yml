@@ -1,0 +1,34 @@
+---
+- name: create a service group
+  user: fadi
+  hosts:  a10-2
+  connection: local
+  gather_facts: no
+  strategy: debug
+  vars:
+    state: present
+    partition: ""
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+    - name: Create a service group
+      a10_service_group_v3:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        service_group: sg-v6-80-tcp
+        reset_on_server_selection_fail: yes
+        servers:
+           - name: s8
+             port: 80
+        overwrite: yes

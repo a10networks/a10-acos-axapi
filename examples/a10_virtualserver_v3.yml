@@ -1,0 +1,55 @@
+- name: create a pair of virtual servers, one of which is a wild card vip
+  user: fadi
+  hosts:  a10-2
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: ""
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+    - name: Create a virtual server
+      a10_virtual_server_v3:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: vs_server1
+        virtual_server_ip: 1.1.1.1
+        redistribution_flagged: True
+        disable_vserver_on_condition: enable
+        virtual_server_ports:
+          - port-number: 80
+            protocol: TCP
+            service-group: sg-80-tcp
+            tcp-template: ""
+            extended_stats: ""
+            ssl-session-id-persistence-template: "sslidtemplate"
+            source-nat: ""
+            send-reset: 1
+            ha-connection-mirror: 1
+          - port-number: 443
+            protocol: HTTPS
+            tcp-proxy-template: ""
+            aflex-scripts: [{aflex: 'abc'}]
+            no-auto-up-on-aflex: 0
+            service-group: sg-80-tcp
+            client-ssl-template: ""
+            template-http: "my_http_templ"
+          - port-number: 8080
+            protocol: http
+            service-group: sg-80-tcp
+            template-http: ""
+            template-persist-cookie: ""
+            acl-id-list: [{acl-id: 102, acl-id-src-nat-pool: "testingpool"}] 
+

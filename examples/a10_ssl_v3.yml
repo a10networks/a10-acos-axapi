@@ -1,0 +1,33 @@
+---
+- name: upload or download an SSL Cert in aXAPI 3.0
+  user: admin
+  hosts: a10-2
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: ""
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+#    - debug:
+#        msg: "{{inventory_hostname}}"
+
+    - name: Upload an SSL key
+      a10_ssl_v3: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        file_name: fadikey
+        file_type: certificate/key
+        method: upload
+        overwrite: yes

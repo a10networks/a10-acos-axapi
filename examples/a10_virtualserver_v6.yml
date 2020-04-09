@@ -1,0 +1,32 @@
+- name: create a pair of virtual servers, one of which is a wild card vip
+  user: fadi
+  hosts:  a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - name: Create an ipv6 virtual server
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: vs_v6_server1
+        virtual_server_ip: 0::0
+        acl_name: "v6acl_2"
+        virtual_server_ports:
+          - port: 443
+            protocol: TCP
+            direct_server_return: 1
+            default_selection: 1

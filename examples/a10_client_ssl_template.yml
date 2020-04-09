@@ -1,0 +1,35 @@
+---
+- name: create a client ssl template
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_PRV
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    # Create a new Client SSL Template
+    - name: Create a Client SSL Template
+      a10_client_ssl_template_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        name: my_client_ssl_templ
+        cert_name: cert_app
+        key_name: cert_app
+        cipher_list: [6, 7, 8, 9, 10]
+

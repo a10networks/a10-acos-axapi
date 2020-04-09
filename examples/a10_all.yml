@@ -1,0 +1,397 @@
+---
+- name: create a health monitors, servers, service-groups and VIPs
+  user: fadi
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+    validate_certs: no
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+
+
+  tasks:
+    - name: Create an icmp health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: hm_icmp
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        icmp: {}
+
+    - name: Create an http health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: ws_hm_http
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        http:
+          port: 8080
+          url: "GET /dir/to/hm.html"
+          expect_code: 200
+
+    - name: Create a tcp health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: ws_hm_tcp
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        tcp:
+          port: 8080
+
+    - name: Create a external health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: ws_hm_ext
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        external:
+          program: returnok
+          arguments: "abc"
+
+    - name: Create an aflex
+      a10_aflex_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        file_name: nxdomain_rl
+        method: upload
+
+    - name: Create a realserver
+      a10_server_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        validate_certs: "{{validate_certs}}"
+        server_name: rip_server1
+        server_ip: 1.1.1.100
+        server_hm: "hm_icmp"
+        server_ports:
+            - port_num: 80
+              protocol: tcp
+              health_monitor: "ws_hm_tcp"
+            - port_num: 8443
+              protocol: tcp
+              health_monitor: "ws_hm_tcp"
+
+    - name: Create another realserver
+      a10_server_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        validate_certs: no
+        server_name: rip_server2
+        server_ip: 1.1.1.101
+        health_monitor: "hm_icmp"
+        server_ports:
+            - port_num: 8080
+              protocol: tcp
+              health_monitor: "ws_hm_tcp"
+            - port_num: 443
+              protocol: tcp
+              health_monitor: "ws_hm_tcp"
+
+    - name: Create a generic service group
+      a10_service_group_v2:
+        validate_certs: "{{validate_certs}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        service_group: sg-80-tcp
+        health_monitor: "ws_hm_http"
+        client_reset: false
+        servers:
+           - server: rip_server1
+             port: 80
+           - server: rip_server2
+             port: 80
+
+    - name: Create english service group
+      a10_service_group_v2:
+        validate_certs: "{{validate_certs}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        service_group: sg-en-80-tcp
+        health_monitor: "ws_hm_http"
+        client_reset: false
+        servers:
+           - server: rip_server1
+             port: 80
+           - server: rip_server2
+             port: 80
+
+    - name: Create french service group
+      a10_service_group_v2:
+        validate_certs: "{{validate_certs}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        service_group: sg-fr-80-tcp
+        health_monitor: "ws_hm_http"
+        client_reset: false
+        servers:
+           - server: rip_server1
+             port: 80
+           - server: rip_server2
+             port: 80
+
+    - name: upload an SSL cert
+      a10_ssl_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        file_name: certapp.cert.pem
+        file_type: certificate
+        method: upload
+
+    - name: upload an SSL key
+      a10_ssl_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        file_name: certapp.key.pem
+        file_type: key
+        method: upload
+
+    - name: create an acl for the wild card vip
+      a10_acl_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        acl_id: 101
+        acl_item_list:
+          - seq_num: 20
+            action: 1
+            log: 0
+            protocol: 1
+            src_ip: "192.168.1.1"
+            src_mask: "0.0.0.0"
+            dst_ip: "0.0.0.0"
+            dst_mask: "255.255.255.255"
+            vlan_id: 120
+
+    - name: Create a nat pool
+      a10_nat_pool_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: natpool
+        start_ip_addr: 10.0.0.1
+        end_ip_addr: 10.0.0.1
+        netmask: 255.255.255.255
+
+    - name: Create a Client SSL Template
+      a10_client_ssl_template_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        name: clientssltemplate
+        chain_cert_name: certapp.cert.pem
+        cert_name: certapp.cert.pem
+        key_name: certapp.key.pem 
+        cipher_list: [6, 7, 8, 9, 10]
+
+    - name: Create an HTTP Template
+      a10_http_template_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: http_template
+        url_switching_list:
+          - url: english
+            service_group: sg-en-80-tcp
+            match_method: 0
+          - url: french
+            service_group: sg-fr-80-tcp
+            match_method: 0
+
+    - name: Create a src ip persistence Template
+      a10_src_ip_persistence_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: src_ip_persistence_template
+        timeout: 20
+        match_type: 1
+
+    - name: Create a cookie persistence Template
+      a10_cookie_persistence_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: cookie_persistence_template
+        cookie_name: testcookie
+        match_type: 1
+
+    - name: Create a ssl sid persistence Template
+      a10_sslid_persistence_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: sslid_persistence_template
+        timeout: 20
+
+    - name: Create a TCP Template
+      a10_tcp_template_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: tcptemplate
+        reset_fwd: True
+        reset_rec: True
+        force_del_timeout_unit: 1
+        idle_timeout: 60
+
+    - name: Create a wild card vip
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: wildcard_vip
+        virtual_server_ip: 0.0.0.0
+        acl_id: 108
+        redistribution_flagged: True
+        disable_vserver_on_condition: 0
+        virtual_server_ports:
+          - port: 443
+            protocol: HTTPS
+            service_group: sg-80-tcp
+            http_template: http_template
+            source_nat: natpool
+            client_ssl_template: clientssltemplate
+            source_ip_persistence_template: src_ip_persistence_template
+          - port: 8443
+            protocol: TCP
+            service_group: sg-80-tcp
+            source_nat: natpool
+            tcp_template: tcptemplate
+            ssl_session_id_persistence_template: sslid_persistence_template
+
+    - name: Create a standard vip
+      a10_virtual_server_v2:
+        validate_certs: "{{validate_certs}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        state: "{{state}}"
+        virtual_server: standard_vip1
+        virtual_server_ip: 192.168.200.102
+        virtual_server_ports:
+          - port: 80
+            protocol: TCP
+            service_group: sg-80-tcp
+          - port: 443
+            protocol: HTTPS
+            service_group: sg-80-tcp
+          - port: 8080
+            protocol: http
+            service_group: sg-80-tcp
+          - port: 53
+            protocol: dns-udp
+            aflex_list: ['nxdomain_rl']
+
+    - name: Create a standard vip
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: standard_vip2
+        virtual_server_ip: 10.100.100.100
+        redistribution_flagged: True
+        disable_vserver_on_condition: 0
+        virtual_server_ports:
+          - port: 80
+            protocol: HTTP
+            tcp_proxy_template: ""
+            service_group: sg-80-tcp
+            source_nat: natpool
+            cookie_persistence_template: cookie_persistence_template

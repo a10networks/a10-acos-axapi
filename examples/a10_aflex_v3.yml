@@ -1,0 +1,32 @@
+---
+- name: upload or download an aflex
+  user: admin
+  hosts: a10-2
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: ""
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+#    - debug:
+#        msg: "{{inventory_hostname}}"
+
+    - name: Create an aflex
+      a10_aflex_v3: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        file_name: redirect1
+        method: upload
+        overwrite: no

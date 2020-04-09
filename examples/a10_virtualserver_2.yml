@@ -1,0 +1,115 @@
+- name: create a pair of virtual servers, one of which is a wild card vip
+  user: fadi
+  hosts:  a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+    - name: Create a virtual server
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: vs_server1
+        virtual_server_ip: 1.1.1.1
+        redistribution_flagged: True
+        disable_vserver_on_condition: 0
+        virtual_server_ports:
+          - port: 80
+            protocol: TCP
+            service_group: sg-80-tcp
+            tcp_template: ""
+            extended_stats: ""
+            ssl_session_id_persistence_template: "sslidtemplate"
+            source_nat: ""
+            send_reset: 1
+            ha_connection_mirror: 1
+          - port: 443
+            protocol: HTTPS
+            tcp_proxy_template: ""
+            aflex_list: ['abc','def']
+            service_group: sg-80-tcp
+            client_ssl_template: ""
+            http_template: "my_http_templ"
+          - port: 8080
+            protocol: http
+            service_group: sg-80-tcp
+            http_template: ""
+            cookie_persistence_template: ""
+            acl_natpool_binding_list: [{acl_id: 102, nat_pool: "testingpool"}] 
+
+    - name: create an acl for the wild card vip
+      a10_acl_v2:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        acl_id: 108
+        acl_item_list:
+          - seq_num: 1
+            action: 1
+            log: 1
+            protocol: 2
+            src_ip: "192.168.1.1"
+            src_mask: "0.0.0.0"
+            dst_ip: "0.0.0.0"
+            dst_mask: "255.255.255.255"
+            vlan_id: 120
+
+    - name: Create a virtual server
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: vs_server2
+        virtual_server_ip: 0.0.0.0
+        acl_id: 108
+        redistribution_flagged: True
+        disable_vserver_on_condition: 0
+        virtual_server_ports:
+          - port: 443
+            protocol: HTTPS
+            tcp_proxy_template: ""
+#            aflex_list: ['abc','def']
+#            service_group: sg-80-tcp
+            client_ssl_template: ""
+            direct_server_return: 1
+            http_template: ""
+
+    - name: Create an ipv6 virtual server
+      a10_virtual_server_v2:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        virtual_server: vs_v6_server1
+        virtual_server_ip: 0::0
+        acl_id: v6acl
+        redistribution_flagged: True
+        disable_vserver_on_condition: 0
+        virtual_server_ports:
+          - port: 443
+            protocol: HTTPS
+            tcp_proxy_template: ""
+            service_group: sg-v6-80-tcp
+            client_ssl_template: ""
+            http_template: ""

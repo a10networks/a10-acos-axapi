@@ -1,0 +1,42 @@
+---
+- name: create a realserver in aXAPI 3.0
+  user: admin
+  hosts: a10-2
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: ""
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+#    - debug:
+#        msg: "{{inventory_hostname}}"
+
+    - name: Create a realserver
+      a10_server_v3:
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        server_name: s1
+        server_ip: 1.1.1.4
+        server_action: enable
+        server_ports:
+          - port-number: 1212
+            protocol: tcp
+            health-check: ws_hm_http
+          - port-number: 8080
+            protocol: tcp
+          - port-number: 53
+            protocol: udp
+        overwrite: no
+

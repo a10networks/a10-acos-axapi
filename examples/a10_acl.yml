@@ -1,0 +1,47 @@
+---
+- name: create an acl
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create an ACL
+      a10_acl_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        acl_id: 102
+        remark_list:
+          - seq_num: 12
+            remark_string: "something to allow"
+          - seq_num: 16
+            remark_string: "something to block"
+        acl_item_list:
+          - seq_num: 1
+            action: 1
+            log: 1
+            protocol: 2
+            src_ip: "192.168.1.1"
+            src_mask: "0.0.0.0"
+            dst_ip: "0.0.0.0"
+            dst_mask: "255.255.255.255"
+            dst_port_start: 3700
+            dst_port_end: 3900
+            vlan_id: 120

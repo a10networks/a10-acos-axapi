@@ -1,0 +1,145 @@
+- name: Health monitors only
+  user: fadi
+  hosts:  a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+
+  tasks:
+    - name: Create an icmp health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: hm_icmp
+        interval: 4
+        timeout: 4
+        retry: 5
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        tcp:
+          port: 80
+        
+
+    - name: Create a tcp health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: "{{state}}"
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: hm_tcp
+        interval: 4
+        timeout: 4
+        retry: 5
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        tcp:
+            port: 8080
+            half_open: 0
+            send: "OPTIONS / HTTP/1.1\r\nConnection: Close\r\n\r\n"
+            receive: "HTTP/1.1 200 OK"
+
+    - name: Create a health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: present
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: ws_hm_http
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        http:
+          port: 8080
+          url: "GET /dir/to/testpage.html"
+          expect_code: 220
+
+    - name: Create another health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: present
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: ws_hm_tcp
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        tcp:
+          port: 8080
+
+    - name: Create a third health monitor
+      a10_health_monitor_v2: 
+        validate_certs: no
+        state: present
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        hm_name: somethingtorun
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        external:
+          program: "returnok"
+          arguments: "abc"
+
+    - name: Create a fourth health monitor
+      a10_health_monitor_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        validate_certs: no
+        hm_name: ws_hm
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        external:
+          program: returnok
+          server_port: 8888
+          arguments: "nothing to pass"
+          preference: 1
+
+    - name: Create a fifth health monitor
+      a10_health_monitor_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+        validate_certs: no
+        hm_name: ws_hm_https
+        interval: 4
+        timeout: 4
+        retry: 2
+        disable_after_down: 0
+        consec_pass_reqd: 1
+        https:
+          port: 8443
+          expect_code: 200

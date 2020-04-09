@@ -1,0 +1,35 @@
+---
+- name: create an http template
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create an HTTP Template
+      a10_http_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: my_http_templ
+        compression: {}
+        url_switching_list: 
+          - url: french
+            service_group: sg-80-tcp
+            match_method: 0

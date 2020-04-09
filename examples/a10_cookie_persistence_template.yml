@@ -1,0 +1,34 @@
+---
+- name: create a cookie persistence template
+  user: admin
+  hosts: a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_DEMO
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+
+    - name: Create a cookie persistence Template
+      a10_cookie_persistence_template_v2: 
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        validate_certs: no
+        partition: "{{partition}}"
+        state: "{{state}}"
+        name: my_src_ip_pers_templ
+        cookie_name: testcookie
+        match_type: 1
+        expire_exist: 1
+        expire: 120

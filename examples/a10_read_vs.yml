@@ -1,0 +1,28 @@
+- name: list a virtual server
+  user: fadi
+  hosts:  a10
+  connection: local
+  gather_facts: no
+  vars:
+    state: present
+    partition: RCSIN_PRV
+  vars_prompt:
+    - name: username
+      prompt: username
+      private: no
+    - name: password
+      prompt: password
+      private: yes
+
+  tasks:
+    - debug:
+        msg: "{{inventory_hostname}}"
+    - name: Create a virtual server
+      a10_read_virtual_server:
+        validate_certs: no
+        host: "{{inventory_hostname}}"
+        username: "{{username}}"
+        password: "{{password}}"
+        partition: "{{partition}}"
+#        virtual_server: vs_server0
+#        virtual_server_ip: 1.1.1.1
