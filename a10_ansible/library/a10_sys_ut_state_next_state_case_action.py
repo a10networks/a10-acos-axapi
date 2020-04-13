@@ -44,9 +44,9 @@ options:
         description:
         - Protocol for AXAPI authentication
         required: True
-    device_id:
+    a10_device_context_id:
         description:
-        - Device ID for configuration
+        - Device ID for aVCS configuration
         choices: [1-8]
         required: False
     a10_partition:
@@ -258,7 +258,7 @@ def get_default_argspec():
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        device_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
@@ -513,7 +513,7 @@ def run_command(module):
     a10_port = module.params["a10_port"] 
     a10_protocol = module.params["a10_protocol"]
     a10_partition = module.params["a10_partition"]
-    device_id = module.params["device_id"]
+    a10_device_context_id = module.params["a10_device_context_id"]
 
     valid = True
 
@@ -529,11 +529,11 @@ def run_command(module):
 
     module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
     
-    if device_id:
-        module.client.change_context(device_id)
-
     if a10_partition:
         module.client.activate_partition(a10_partition)
+
+    if a10_device_context_id:
+        module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
 

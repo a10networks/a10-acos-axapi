@@ -33,7 +33,6 @@ else:
     import httplib as http_client
 
 
-
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
 
@@ -77,7 +76,7 @@ class HttpClient(object):
         pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
         reg_match = re.search(pattern, resp_text)
 
-        while reg_match != None:
+        while reg_match is not None:
             reg_found = reg_match.group(0)
             resp_text = resp_text.replace(reg_found, '')
 
@@ -104,7 +103,7 @@ class HttpClient(object):
         # Update params with axapi_args for currently unsupported configuration of objects
         if axapi_args is not None:
             formatted_axapi_args = dict([(k.replace('_', '-'), v) for k, v in
-                                        axapi_args.iteritems()])
+                                         axapi_args.iteritems()])
             params = self.merge_dicts(params, formatted_axapi_args)
 
         if (file_name is None and file_content is not None) or \
@@ -139,7 +138,7 @@ class HttpClient(object):
         try:
             if file_name is not None:
                 z = requests.request(method, self.url_base + api_url, verify=False,
-                                        files=files, headers=hdrs)
+                                     files=files, headers=hdrs)
             else:
                 if method == "GET":
                     z = requests.request(method, self.url_base + api_url, verify=False,
@@ -169,7 +168,7 @@ class HttpClient(object):
 
         if 'response' in r and 'status' in r['response']:
             if r['response']['status'] == 'fail':
-                    acos_responses.raise_axapi_ex(r, method, api_url)
+                acos_responses.raise_axapi_ex(r, method, api_url)
 
         if 'authorizationschema' in r:
             acos_responses.raise_axapi_auth_error(
@@ -186,7 +185,6 @@ class HttpClient(object):
             else:
                 d[k] = d2[k]
         return d
-
 
     def get(self, api_url, params={}, headers=None, **kwargs):
         return self.request("GET", api_url, params, headers, **kwargs)
@@ -210,6 +208,7 @@ class HttpClient(object):
             self.post(url, {"active-partition": payload})
         except Exception as ex:
             raise Exception("Could not activate due to: {0}".format(ex))
+
 
 class Session(object):
 
@@ -266,6 +265,7 @@ class Session(object):
 
         return r
 
+
 class A10Client(object):
     def __init__(self, session):
         self.session = session
@@ -274,7 +274,7 @@ class A10Client(object):
 
         try:
             return self.session.http.request(method, url, params,
-                                            self.session.get_auth_header(), **kwargs)
+                                             self.session.get_auth_header(), **kwargs)
         except (ae.InvalidSessionID) as e:
                 # try:
                 #     p = self.client.current_partition
@@ -300,25 +300,24 @@ class A10Client(object):
 
     def activate_partition(self, partition):
         url = "/axapi/v3/active-partition"
-        payload = { 
+        payload = {
             "curr_part_name": partition["name"],
             "shared": partition["shared"]
         }
         try:
             self.post(url, {"active-partition": payload})
         except Exception as ex:
-            raise Exception("Could not activate due to: {0}".format(ex)) 
+            raise Exception("Could not activate due to: {0}".format(ex))
 
-    def change_context(self, device_id):
+    def change_context(self, device_context_id):
+        url = "/axapi/v3/device-context"
         payload = {
             "device-context": {
-            "device-id": device_id
+                "device-id": device_context_id
             }
         }
-        if device_id:
-            url = "/axapi/v3/device-context"
         try:
-            self.post(url,payload)
+            self.post(url, payload)
         except Exception as ex:
             raise Exception("Could not change context due to: {0}".format(ex))
 
@@ -326,8 +325,10 @@ class A10Client(object):
 def http_factory(host, port, protocol):
     return HttpClient(host, port, protocol)
 
+
 def session_factory(http, username, password):
     return Session(http, username, password)
+
 
 def client_factory(host, port, protocol, username, password):
     http_cli = http_factory(host, port, protocol)
