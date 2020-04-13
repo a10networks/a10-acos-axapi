@@ -309,6 +309,20 @@ class A10Client(object):
         except Exception as ex:
             raise Exception("Could not activate due to: {0}".format(ex)) 
 
+    def change_context(self, device_id):
+        payload = {
+            "device-context": {
+            "device-id": device_id
+            }
+        }
+        if device_id:
+            url = "/axapi/v3/device-context"
+        try:
+            self.post(url,payload)
+        except Exception as ex:
+            raise Exception("Could not change context due to: {0}".format(ex))
+
+
 def http_factory(host, port, protocol):
     return HttpClient(host, port, protocol)
 
