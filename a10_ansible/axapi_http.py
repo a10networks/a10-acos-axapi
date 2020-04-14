@@ -76,7 +76,7 @@ class HttpClient(object):
         pattern = '(a10-url:)([A-Za-z\/1-9\-])+'
         reg_match = re.search(pattern, resp_text)
 
-        while reg_match is not None:
+        while reg_match != None:
             reg_found = reg_match.group(0)
             resp_text = resp_text.replace(reg_found, '')
 
