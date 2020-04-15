@@ -304,10 +304,7 @@ class A10Client(object):
             "curr_part_name": partition["name"],
             "shared": partition["shared"]
         }
-        try:
-            self.post(url, {"active-partition": payload})
-        except Exception as ex:
-            raise Exception("Could not activate due to: {0}".format(ex))
+        self.post(url, {"active-partition": payload})
 
     def change_context(self, device_context_id):
         url = "/axapi/v3/device-context"
@@ -316,10 +313,7 @@ class A10Client(object):
                 "device-id": device_context_id
             }
         }
-        try:
-            self.post(url, payload)
-        except Exception as ex:
-            raise Exception("Could not change context due to: {0}".format(ex))
+        self.post(url, payload)
 
 
 def http_factory(host, port, protocol):
