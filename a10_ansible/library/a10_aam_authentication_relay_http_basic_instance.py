@@ -95,7 +95,7 @@ options:
         required: False
     domain_format:
         description:
-        - "'user-principal-name'= Append domain with User Principal Name format. (e.g. user@domain); 'down-level-logon-name'= Append domain with Down-Level Logon Name format. (e.g. domain\user); "
+        - "'user-principal-name'= Append domain with User Principal Name format. (e.g. user@domain); 'down-level-logon-name'= Append domain with Down-Level Logon Name format. (e.g. domainuser); "
         required: False
     sampling_enable:
         description:
