@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_io_cpu
 description:
     - IO CPU cores
@@ -59,7 +59,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_tcp
 description:
     - Global TCP parameters
@@ -67,7 +67,7 @@ options:
                 - "SYN cookie expire threshold (seconds (default is 4))"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

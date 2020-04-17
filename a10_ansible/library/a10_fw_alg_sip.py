@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_alg_sip
 description:
     - Change Firewall SIP ALG Settings
@@ -127,7 +127,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

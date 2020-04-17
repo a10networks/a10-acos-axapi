@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_delete_startup_config
 description:
     - Startup Configuration profile
@@ -59,7 +59,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_session_filter
 description:
     - Create a convenience Filter to display/clear sessions
@@ -99,7 +99,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_l7session
 description:
     - Debug L7 session processing
@@ -63,7 +63,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

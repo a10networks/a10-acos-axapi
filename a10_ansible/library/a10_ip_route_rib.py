@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_route_rib
 description:
     - Establish static routes
@@ -126,7 +126,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

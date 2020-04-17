@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_link_capability
 description:
     - To enable/disable link capabilities
@@ -63,7 +63,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

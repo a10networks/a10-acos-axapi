@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rule_set_tag
 description:
     - Application Tag statistics in Rule Set
@@ -835,7 +835,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

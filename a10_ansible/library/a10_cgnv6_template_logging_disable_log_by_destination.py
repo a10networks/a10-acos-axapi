@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_template_logging_disable_log_by_destination
 description:
     - Disable logging by destination ip address protocol and port
@@ -144,7 +144,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

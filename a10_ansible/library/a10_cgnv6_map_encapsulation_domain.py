@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_map_encapsulation_domain
 description:
     - MAP Encapsulation domain
@@ -177,7 +177,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

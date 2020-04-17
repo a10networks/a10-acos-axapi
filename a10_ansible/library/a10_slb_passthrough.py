@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_passthrough
 description:
     - passthrough session stats
@@ -93,7 +93,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

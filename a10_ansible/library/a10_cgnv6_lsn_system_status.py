@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_system_status
 description:
     - Field system_status
@@ -97,7 +97,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

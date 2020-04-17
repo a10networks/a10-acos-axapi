@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_system_resources
 description:
     - Enter the system resource limits
@@ -147,7 +147,7 @@ options:
                 - "Enter the Concurrent Session limit (cps) (Concurrent-Session cps limit (no limits applied by default))"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

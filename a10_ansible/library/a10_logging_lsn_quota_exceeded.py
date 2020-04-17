@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_lsn_quota_exceeded
 description:
     - Set LSN quota exceeded log parameters
@@ -95,7 +95,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

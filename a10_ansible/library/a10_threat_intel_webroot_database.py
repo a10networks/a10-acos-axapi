@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_database
 description:
     - webroot database information
@@ -127,7 +127,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

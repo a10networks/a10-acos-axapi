@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_peer_group
 description:
     - VRRP-A peer group
@@ -70,7 +70,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_SNMPv3_user
 description:
     - Define a user who can access the SNMP engine
@@ -95,7 +95,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

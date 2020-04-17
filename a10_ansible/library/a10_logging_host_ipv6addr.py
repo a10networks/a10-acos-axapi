@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_host_ipv6addr
 description:
     - ipv6 address of remote syslog server
@@ -75,7 +75,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

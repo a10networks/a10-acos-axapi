@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_zone_local_zone_cfg
 description:
     - Local zone configuration
@@ -66,7 +66,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

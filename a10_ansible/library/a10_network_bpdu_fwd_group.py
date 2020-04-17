@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_network_bpdu_fwd_group
 description:
     - STP BPDU forward Group Settings
@@ -78,7 +78,7 @@ options:
                 - "Ethernet Port"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

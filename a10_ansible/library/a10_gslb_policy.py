@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_policy
 description:
     - Policy for GSLB zone, service or geo-location
@@ -518,7 +518,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

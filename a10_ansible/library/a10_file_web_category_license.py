@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_file_web_category_license
 description:
     - License file to enable web-category feature activation
@@ -79,7 +79,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

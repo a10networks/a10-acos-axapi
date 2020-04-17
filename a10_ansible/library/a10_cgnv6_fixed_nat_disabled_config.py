@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_disabled_config
 description:
     - Fixed NAT Disabled Configuration
@@ -67,7 +67,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

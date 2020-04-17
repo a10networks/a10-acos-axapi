@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_route_static_bfd
 description:
     - Bidirectional Forwarding Detection
@@ -67,7 +67,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

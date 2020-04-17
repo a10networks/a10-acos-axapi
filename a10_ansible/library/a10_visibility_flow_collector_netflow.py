@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_flow_collector_netflow
 description:
     - NetFlow/IPFIX collector
@@ -122,7 +122,7 @@ options:
                 - "Field detail"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

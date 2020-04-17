@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_ve_bfd
 description:
     - Configure BFD (Bidirectional Forwarding Detection)
@@ -101,7 +101,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

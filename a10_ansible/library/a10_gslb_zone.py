@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_zone
 description:
     - Specify the DNS zone name for which global SLB is provided
@@ -309,7 +309,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

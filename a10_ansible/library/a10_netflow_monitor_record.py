@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_netflow_monitor_record
 description:
     - Configure record types to be exported
@@ -138,7 +138,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

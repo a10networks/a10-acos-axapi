@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_file_auth_portal_image
 description:
     - Authentication portal image file information and management commands
@@ -87,7 +87,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

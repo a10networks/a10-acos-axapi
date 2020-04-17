@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_event_notification_kafka_server
 description:
     - Set remote kafka server ip address
@@ -254,7 +254,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

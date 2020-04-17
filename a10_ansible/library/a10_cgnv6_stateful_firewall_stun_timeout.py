@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_stun_timeout
 description:
     - Set STUN timeout for endpoint-independent filtering
@@ -71,7 +71,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

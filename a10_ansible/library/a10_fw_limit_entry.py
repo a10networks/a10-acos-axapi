@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_limit_entry
 description:
     - Rate Limit Information
@@ -91,7 +91,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

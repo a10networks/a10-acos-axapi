@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_tacacs_server_host_tacacs_hostname
 description:
     - Specify the hostname of TACACS+ server
@@ -98,7 +98,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

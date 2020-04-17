@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_inside_iplist
 description:
     - Configure Fixed NAT with Inside IP List
@@ -133,7 +133,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

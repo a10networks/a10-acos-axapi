@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_http2
 description:
     - Configure http2
@@ -413,7 +413,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

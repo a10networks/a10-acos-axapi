@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_template_csv
 description:
     - Specify csv template
@@ -90,7 +90,7 @@ options:
                 - "'ip-from'= Beginning address of IP range or subnet; 'ip-to-mask'= Ending address of IP range or Mask; 'continent'= Continent; 'country'= Country; 'state'= State or province; 'city'= City; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

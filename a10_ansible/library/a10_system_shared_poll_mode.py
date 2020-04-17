@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_shared_poll_mode
 description:
     - Configure shared poll mode
@@ -63,7 +63,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

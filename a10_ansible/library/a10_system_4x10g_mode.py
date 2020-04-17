@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_4x10g_mode
 description:
     - To enable/disable 40G port to split into 4x10g ports
@@ -63,7 +63,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

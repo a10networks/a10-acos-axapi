@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_sctp_permit_payload_protocol_protocol_name
 description:
     - Configure SCTP permitted payload protocols
@@ -63,7 +63,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

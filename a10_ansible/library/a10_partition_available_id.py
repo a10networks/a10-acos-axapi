@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_partition_available_id
 description:
     - Display the available id can be used to create partition
@@ -67,7 +67,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

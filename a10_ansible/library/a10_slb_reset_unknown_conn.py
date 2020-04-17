@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_reset_unknown_conn
 description:
     - Field reset_unknown_conn
@@ -73,7 +73,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

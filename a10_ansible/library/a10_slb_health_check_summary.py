@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_health_check_summary
 description:
     - Field health_check_summary
@@ -76,7 +76,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

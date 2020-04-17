@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_nat_inside_source_static
 description:
     - Static Address Translations
@@ -75,7 +75,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

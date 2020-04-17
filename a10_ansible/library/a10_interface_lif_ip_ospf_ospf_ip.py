@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_lif_ip_ospf_ospf_ip
 description:
     - IP address configuration for Open Shortest Path First for IPv4 (OSPF)
@@ -128,7 +128,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

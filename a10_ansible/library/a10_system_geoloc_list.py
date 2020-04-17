@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_geoloc_list
 description:
     - Configure geolocation list
@@ -123,7 +123,7 @@ options:
                 - "Geolocation name to add"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

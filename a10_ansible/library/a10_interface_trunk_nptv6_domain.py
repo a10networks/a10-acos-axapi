@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_trunk_nptv6_domain
 description:
     - Apply NPTv6 translation domain on interface
@@ -70,7 +70,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

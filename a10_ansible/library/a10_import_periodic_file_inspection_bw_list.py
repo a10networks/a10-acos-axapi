@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_import_periodic_file_inspection_bw_list
 description:
     - File Inspection Black white list files
@@ -75,7 +75,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

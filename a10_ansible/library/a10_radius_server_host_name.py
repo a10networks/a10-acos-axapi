@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_radius_server_host_name
 description:
     - Specify the hostname of RADIUS server
@@ -77,7 +77,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

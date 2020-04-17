@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_metadata_monitor
 description:
     - Configure SAML metadata out-of-sync detection and recovery options
@@ -75,7 +75,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

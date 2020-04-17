@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_Generates Show Tech file
 description:
     - Field Generates Show Tech file
@@ -55,7 +55,7 @@ options:
         required: False
     
 
-"""
+'''
 
 EXAMPLES = """
 """

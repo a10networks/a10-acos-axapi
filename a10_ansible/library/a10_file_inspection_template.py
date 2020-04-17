@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_file_inspection_template
 description:
     - Manage File Inspection template configuration
@@ -142,7 +142,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_l2_inline_peer_ip
 description:
     - Peer IP for Layer 2 inline mode
@@ -63,7 +63,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

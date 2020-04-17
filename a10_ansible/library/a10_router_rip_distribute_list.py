@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_rip_distribute_list
 description:
     - Filter networks in routing updates
@@ -96,7 +96,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

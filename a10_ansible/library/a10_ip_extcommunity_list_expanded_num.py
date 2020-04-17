@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_extcommunity_list_expanded_num
 description:
     - Configure Expanded number Community-list
@@ -74,7 +74,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

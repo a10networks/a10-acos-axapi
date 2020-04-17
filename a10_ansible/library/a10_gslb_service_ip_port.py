@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_service_ip_port
 description:
     - Server Port
@@ -161,7 +161,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_overlay_mgmt_info
 description:
     - Overlay management specific data
@@ -67,7 +67,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

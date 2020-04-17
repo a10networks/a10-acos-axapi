@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_monitored_entity_detail_debug
 description:
     - Display Monitoring entity detail
@@ -73,7 +73,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

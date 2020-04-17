@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ssl_certificate
 description:
     - ssl certificate file information and management commands
@@ -71,7 +71,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

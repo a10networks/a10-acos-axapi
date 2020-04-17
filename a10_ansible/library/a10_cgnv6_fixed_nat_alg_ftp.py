@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_alg_ftp
 description:
     - Change Fixed NAT FTP ALG Settings
@@ -90,7 +90,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

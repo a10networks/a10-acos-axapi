@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_email_address
 description:
     - Set the recipients address
@@ -67,7 +67,7 @@ options:
                 - "Email address information of recipients"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

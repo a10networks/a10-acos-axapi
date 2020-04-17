@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_template_policy
 description:
     - Policy config
@@ -90,7 +90,7 @@ options:
                 - "uuid of the object"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

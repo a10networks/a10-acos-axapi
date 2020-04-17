@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_map_list
 description:
     - Configure IP Map List name
@@ -85,7 +85,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

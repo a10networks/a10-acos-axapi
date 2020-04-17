@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_hsm_rfs_sync
 description:
     - Sync with RFS server
@@ -55,7 +55,7 @@ options:
         required: False
     
 
-"""
+'''
 
 EXAMPLES = """
 """

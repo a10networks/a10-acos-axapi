@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_import_store
 description:
     - Create store name for remote url
@@ -71,7 +71,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

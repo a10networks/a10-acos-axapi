@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_tap_monitor
 description:
     - Configure tap monitor port
@@ -74,7 +74,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

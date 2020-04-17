@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_server
 description:
     - Authentication server configuration
@@ -141,7 +141,7 @@ options:
                 - "Field instance_list"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

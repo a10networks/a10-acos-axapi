@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_server_radius_instance
 description:
     - RADIUS Authentication Server instance
@@ -183,7 +183,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

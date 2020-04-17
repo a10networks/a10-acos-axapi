@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_clock_show
 description:
     - Configure time-of-day Clock
@@ -82,7 +82,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

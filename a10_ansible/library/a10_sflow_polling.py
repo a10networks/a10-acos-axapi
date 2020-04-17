@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sflow_polling
 description:
     - Configure sFlow counter polling on specified source
@@ -89,7 +89,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

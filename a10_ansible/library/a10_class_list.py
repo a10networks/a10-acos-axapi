@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_class_list
 description:
     - Configure classification list
@@ -252,7 +252,7 @@ options:
                 - "LSN RADIUS Profile Index"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_geoloc_rdt
 description:
     - Field geoloc_rdt
@@ -79,7 +79,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_rip
 description:
     - Routing Information Protocol (RIP)
@@ -215,7 +215,7 @@ options:
                 - "IP prefix network/length, e.g., 35.0.0.0/8"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

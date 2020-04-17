@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp_network_ip_cidr
 description:
     - Specify a ip network to announce via BGP
@@ -82,7 +82,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

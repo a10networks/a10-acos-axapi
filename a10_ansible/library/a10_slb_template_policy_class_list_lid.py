@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_template_policy_class_list_lid
 description:
     - Limit ID
@@ -185,7 +185,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

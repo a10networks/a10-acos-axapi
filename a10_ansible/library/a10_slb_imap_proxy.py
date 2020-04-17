@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_imap_proxy
 description:
     - Configure IMAP Proxy global
@@ -236,7 +236,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

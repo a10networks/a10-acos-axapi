@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vcs_vcs_summary
 description:
     - VCS Summary Information
@@ -94,7 +94,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

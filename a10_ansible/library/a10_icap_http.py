@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_icap_http
 description:
     - Configure ICAP
@@ -272,7 +272,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

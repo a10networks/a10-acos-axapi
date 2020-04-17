@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_enable_management_service_snmp_acl_v4
 description:
     - IPv4 ACL for SNMP service
@@ -108,7 +108,7 @@ options:
                 - "Ethernet port"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

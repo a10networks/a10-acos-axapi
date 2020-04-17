@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_import_periodic_class_list_convert
 description:
     - Convert Class List File to A10 format
@@ -79,7 +79,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

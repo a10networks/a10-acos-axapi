@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_ds_lite_port_reservation
 description:
     - DS-Lite Static Port Reservation
@@ -91,7 +91,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ipv6_in_ipv4_frag
 description:
     - IPv6-in-IPv4 fragmentation parameters
@@ -207,7 +207,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

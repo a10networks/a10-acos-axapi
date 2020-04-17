@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_nat_pool
 description:
     - Configure CGNv6 NAT pool
@@ -223,7 +223,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_dns64_virtualserver
 description:
     - Create a DNS64 Virtual Server
@@ -203,7 +203,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

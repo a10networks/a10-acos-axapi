@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_route_map_match
 description:
     - Match values from routing table
@@ -208,7 +208,7 @@ options:
                 - "'up'= Scaleout is up and running; 'down'= Scaleout is down or disabled; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_route_map_set
 description:
     - Set values in destination routing protocol
@@ -255,7 +255,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

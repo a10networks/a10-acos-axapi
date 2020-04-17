@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_backup_log
 description:
     - Backup log files
@@ -103,7 +103,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

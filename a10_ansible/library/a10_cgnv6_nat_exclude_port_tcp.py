@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_nat_exclude_port_tcp
 description:
     - Set behavior for TCP
@@ -70,7 +70,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

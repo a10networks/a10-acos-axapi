@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_report
 description:
     - Report configurations
@@ -66,7 +66,7 @@ options:
                 - "Enable debugging logs of sFlow parser"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

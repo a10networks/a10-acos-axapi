@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_server_ssl_counters
 description:
     - Server side SSL Vport Statistics
@@ -529,7 +529,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

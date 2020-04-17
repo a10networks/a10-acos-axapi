@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_template_logging_source_address
 description:
     - Specify source address of logging packet
@@ -70,7 +70,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

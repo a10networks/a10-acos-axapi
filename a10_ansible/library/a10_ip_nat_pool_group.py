@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_nat_pool_group
 description:
     - IP pool group name
@@ -82,7 +82,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

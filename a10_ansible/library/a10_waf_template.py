@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_waf_template
 description:
     - Manage WAF template configuration
@@ -930,7 +930,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_policy_geo_location
 description:
     - Specify geo-location
@@ -98,7 +98,7 @@ options:
                 - "Specify IPv6 address range"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

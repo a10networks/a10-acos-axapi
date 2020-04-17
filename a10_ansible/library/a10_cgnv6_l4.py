@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_l4
 description:
     - CGNV6 L4 Statistics
@@ -111,7 +111,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

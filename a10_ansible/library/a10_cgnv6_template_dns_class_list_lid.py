@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_template_dns_class_list_lid
 description:
     - Limit ID
@@ -112,7 +112,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

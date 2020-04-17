@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_common_conn_rate_limit_src_ip
 description:
     - Set connection limit based on source IP address
@@ -87,7 +87,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

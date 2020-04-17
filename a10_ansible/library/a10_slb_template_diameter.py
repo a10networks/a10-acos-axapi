@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_template_diameter
 description:
     - diameter template
@@ -170,7 +170,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

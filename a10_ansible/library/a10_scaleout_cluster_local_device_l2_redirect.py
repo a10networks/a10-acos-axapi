@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_l2_redirect
 description:
     - Configure interface for redirection
@@ -78,7 +78,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

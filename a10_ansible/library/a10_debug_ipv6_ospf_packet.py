@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_ipv6_ospf_packet
 description:
     - OSPFv3 packets
@@ -91,7 +91,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

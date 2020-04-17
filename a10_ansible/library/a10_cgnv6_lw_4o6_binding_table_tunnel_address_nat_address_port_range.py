@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_binding_table_tunnel_address_nat_address_port_range
 description:
     - Single Port or Port Range Start
@@ -76,7 +76,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

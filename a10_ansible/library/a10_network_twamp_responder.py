@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_network_twamp_responder
 description:
     - Configure TWAMP responder
@@ -92,7 +92,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_harmony_controller_profile
 description:
     - Harmony controller profile
@@ -182,7 +182,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

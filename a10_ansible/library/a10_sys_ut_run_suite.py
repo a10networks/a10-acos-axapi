@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sys_ut_run_suite
 description:
     - Generate test cases and run them
@@ -55,7 +55,7 @@ options:
         required: False
     
 
-"""
+'''
 
 EXAMPLES = """
 """

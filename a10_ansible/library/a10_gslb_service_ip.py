@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_service_ip
 description:
     - Service IP
@@ -206,7 +206,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

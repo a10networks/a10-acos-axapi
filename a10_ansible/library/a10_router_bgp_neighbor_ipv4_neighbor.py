@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_ipv4_neighbor
 description:
     - Specify a ipv4 neighbor router
@@ -314,7 +314,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

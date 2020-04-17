@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_ipv6_rip
 description:
     - Routing Information Protocol (RIP) for IPv6
@@ -83,7 +83,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

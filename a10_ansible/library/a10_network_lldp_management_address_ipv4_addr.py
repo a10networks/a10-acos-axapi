@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_network_lldp_management_address_ipv4_addr
 description:
     - Configure lldp management-address ipv4 address
@@ -77,7 +77,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

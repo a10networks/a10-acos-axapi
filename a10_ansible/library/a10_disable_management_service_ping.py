@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_disable_management_service_ping
 description:
     - Ping service
@@ -100,7 +100,7 @@ options:
                 - "Ethernet port"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

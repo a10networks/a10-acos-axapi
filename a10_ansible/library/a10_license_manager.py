@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_license_manager
 description:
     - Configure license manager
@@ -154,7 +154,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_plat_cpu_drop
 description:
     - Miscellenious Information Used for CLI rendering
@@ -76,7 +76,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

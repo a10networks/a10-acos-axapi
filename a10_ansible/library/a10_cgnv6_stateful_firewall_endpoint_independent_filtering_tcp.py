@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_stateful_firewall_endpoint_independent_filtering_tcp
 description:
     - Set endpoint-independent filtering for TCP only
@@ -70,7 +70,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

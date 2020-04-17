@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_threat_intel_webroot_global
 description:
     - Global counters for webroot module
@@ -114,7 +114,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_nat64_alg_ftp
 description:
     - NAT64 FTP ALG (default= enabled)
@@ -83,7 +83,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

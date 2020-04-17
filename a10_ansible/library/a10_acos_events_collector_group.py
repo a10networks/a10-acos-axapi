@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_collector_group
 description:
     - Configure log servers group
@@ -130,7 +130,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

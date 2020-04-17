@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ipv6_nat_pool_group_member
 description:
     - Add a NAT pool to this pool-group
@@ -66,7 +66,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

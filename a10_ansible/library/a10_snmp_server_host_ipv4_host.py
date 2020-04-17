@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_host_ipv4_host
 description:
     - Specify IPV4 hosts to receive SNMP traps
@@ -79,7 +79,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

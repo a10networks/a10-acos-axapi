@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_delete_cgnv6
 description:
     - Delete cgnv6 related files
@@ -71,7 +71,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

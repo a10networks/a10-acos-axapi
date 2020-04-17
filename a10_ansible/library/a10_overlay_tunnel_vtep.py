@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep
 description:
     - Virtual Tunnel end point Configuration
@@ -249,7 +249,7 @@ options:
                 - "'nvgre'= Tunnel Encapsulation Type is NVGRE; 'vxlan'= Tunnel Encapsulation Type is VXLAN; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

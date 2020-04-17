@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_shared_pool_group
 description:
     - Field shared_pool_group
@@ -78,7 +78,7 @@ options:
                 - "uuid of the object"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

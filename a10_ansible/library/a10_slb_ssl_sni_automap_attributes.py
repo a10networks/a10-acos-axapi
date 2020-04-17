@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_ssl_sni_automap_attributes
 description:
     - Server Name Automap global settings
@@ -71,7 +71,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

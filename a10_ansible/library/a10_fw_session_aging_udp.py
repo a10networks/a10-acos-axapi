@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_session_aging_udp
 description:
     - UDP Aging options
@@ -77,7 +77,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

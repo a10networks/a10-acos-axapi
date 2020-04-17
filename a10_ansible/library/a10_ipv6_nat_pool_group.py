@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ipv6_nat_pool_group
 description:
     - IPv6 pool group name
@@ -82,7 +82,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

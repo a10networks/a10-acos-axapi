@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_template_gtp
 description:
     - Define a GTP template
@@ -124,7 +124,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

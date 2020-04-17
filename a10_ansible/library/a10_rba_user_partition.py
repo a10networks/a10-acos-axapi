@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rba_user_partition
 description:
     - RBA configuration for the access privilege of a user within one partition
@@ -89,7 +89,7 @@ options:
                 - "Lineage of object class for permitted operation"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_rip_distribute_list_prefix
 description:
     - Filter prefixes in routing updates
@@ -85,7 +85,7 @@ options:
                 - "Ethernet interface (Port number)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

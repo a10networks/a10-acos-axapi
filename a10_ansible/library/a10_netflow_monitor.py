@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_netflow_monitor
 description:
     - Configure NetFlow Monitor
@@ -566,7 +566,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

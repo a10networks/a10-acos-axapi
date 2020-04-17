@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sys_ut_event_action_l2
 description:
     - L2 packet paramters
@@ -113,7 +113,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

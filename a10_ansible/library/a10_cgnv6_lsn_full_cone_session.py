@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_full_cone_session
 description:
     - Full Cone Sessions
@@ -118,7 +118,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

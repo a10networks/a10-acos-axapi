@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_ipv6_ospf
 description:
     - Open Shortest Path First (OSPFv3)
@@ -238,7 +238,7 @@ options:
                 - "Do not inject inter-area routes into area"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

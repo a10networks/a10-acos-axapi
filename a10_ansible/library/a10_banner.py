@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_banner
 description:
     - Define a login banner
@@ -81,7 +81,7 @@ options:
                 - "Banner text, string \\n is taken as line break of multi-line banner text, use \\\\n to indicate \\n"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

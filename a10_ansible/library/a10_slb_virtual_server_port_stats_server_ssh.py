@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_server_ssh
 description:
     - Statistics for the object port
@@ -76,7 +76,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

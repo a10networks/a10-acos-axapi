@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_merge_mode_add_slb
 description:
     - Control block-merge mode behavior for slb objects
@@ -71,7 +71,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp
 description:
     - Border Gateway Protocol (BGP)
@@ -246,7 +246,7 @@ options:
                 - "Field ip_cidr_list"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_reporting
 description:
     - Configure reporting framework
@@ -112,7 +112,7 @@ options:
                 - "Monitored entity telemetry data export interval in mins (Default 5 mins)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

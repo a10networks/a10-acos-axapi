@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_backup_store
 description:
     - Save backup store information
@@ -80,7 +80,7 @@ options:
                 - "profile name to store remote url"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

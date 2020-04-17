@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_SNMPv1_v2c_user
 description:
     - Define configuration for SNMPv1/v2c user
@@ -106,7 +106,7 @@ options:
                 - "uuid of the object"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

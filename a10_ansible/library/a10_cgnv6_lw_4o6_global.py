@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lw_4o6_global
 description:
     - Configure LW-4over6 parameters
@@ -141,7 +141,7 @@ options:
                 - "No-Forward-Match ICMPv6 Sent"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

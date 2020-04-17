@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_crl_srcip
 description:
     - Configure connection rate limit
@@ -110,7 +110,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

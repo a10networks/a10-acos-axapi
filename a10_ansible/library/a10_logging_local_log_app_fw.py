@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_local_log_app_fw
 description:
     - Application firewall
@@ -104,7 +104,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

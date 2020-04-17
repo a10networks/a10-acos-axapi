@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sys_ut_state_next_state_case
 description:
     - Case number
@@ -112,7 +112,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_sip
 description:
     - Configure SIP
@@ -140,7 +140,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

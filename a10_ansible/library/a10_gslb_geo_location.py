@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_geo_location
 description:
     - Configure a GSLB global geo-location object
@@ -90,7 +90,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

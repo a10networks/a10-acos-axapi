@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_view_show_monitor
 description:
     - Show monitor threshold configuration
@@ -115,7 +115,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

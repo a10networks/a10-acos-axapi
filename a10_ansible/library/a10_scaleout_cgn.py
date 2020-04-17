@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cgn
 description:
     - Enable Scaleout for CGN
@@ -55,7 +55,7 @@ options:
         required: False
     
 
-"""
+'''
 
 EXAMPLES = """
 """

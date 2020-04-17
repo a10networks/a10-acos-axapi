@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_nat_inside_source_list_acl_name_list
 description:
     - Apply an access list
@@ -71,7 +71,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

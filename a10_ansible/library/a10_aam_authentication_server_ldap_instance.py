@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_server_ldap_instance
 description:
     - LDAP Authentication Server
@@ -230,7 +230,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

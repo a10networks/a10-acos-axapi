@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_jwt_authorization
 description:
     - AAM JWT authorization related configuration
@@ -143,7 +143,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

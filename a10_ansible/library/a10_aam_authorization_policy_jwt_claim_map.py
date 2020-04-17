@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authorization_policy_jwt_claim_map
 description:
     - Map attributes to JWT claims
@@ -98,7 +98,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_template_server_ssh
 description:
     - Server Side SSH Template
@@ -96,7 +96,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

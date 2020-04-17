@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_import
 description:
     - Get files from remote site
@@ -328,7 +328,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

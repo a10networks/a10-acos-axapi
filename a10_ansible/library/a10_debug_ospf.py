@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_ospf
 description:
     - Debug Open Shortest Path First (OSPF)
@@ -217,7 +217,7 @@ options:
                 - "uuid of the object"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

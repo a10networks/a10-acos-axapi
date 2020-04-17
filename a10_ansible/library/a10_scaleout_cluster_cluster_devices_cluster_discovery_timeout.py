@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_cluster_devices_cluster_discovery_timeout
 description:
     - Configure cluster discovery timeout
@@ -66,7 +66,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

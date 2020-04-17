@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_dns
 description:
     - DNS Global Options
@@ -183,7 +183,7 @@ options:
                 - "Number of replies with incorrect type"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

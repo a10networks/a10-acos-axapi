@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_radius_server
 description:
     - Configure system as a RADIUS server
@@ -233,7 +233,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

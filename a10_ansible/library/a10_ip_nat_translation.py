@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_nat_translation
 description:
     - Change or Disable NAT translation values
@@ -102,7 +102,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sflow_collector_ip
 description:
     - Configure sFlow IPv4 collector
@@ -67,7 +67,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

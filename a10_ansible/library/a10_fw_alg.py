@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_alg
 description:
     - Configure ALG
@@ -151,7 +151,7 @@ options:
                 - "uuid of the object"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

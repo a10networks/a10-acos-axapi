@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_alg_h323
 description:
     - Change LSN H323 ALG Settings
@@ -91,7 +91,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

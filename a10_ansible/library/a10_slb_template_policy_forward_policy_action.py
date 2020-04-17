@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_template_policy_forward_policy_action
 description:
     - action list
@@ -133,7 +133,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

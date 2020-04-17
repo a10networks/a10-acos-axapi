@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_ddos_protection_disable_nat_ip_by_bgp
 description:
     - Field disable_nat_ip_by_bgp
@@ -76,7 +76,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

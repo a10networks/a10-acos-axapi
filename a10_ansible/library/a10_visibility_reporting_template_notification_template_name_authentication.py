@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_reporting_template_notification_template_name_authentication
 description:
     - Configure authentication information
@@ -98,7 +98,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

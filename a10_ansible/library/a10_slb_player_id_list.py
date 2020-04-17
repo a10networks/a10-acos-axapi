@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_player_id_list
 description:
     - Player id records config
@@ -75,7 +75,7 @@ options:
                 - "64/32 bit player id based on config"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

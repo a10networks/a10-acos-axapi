@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_local_log_file_category_top_n
 description:
     - File category Info
@@ -88,7 +88,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

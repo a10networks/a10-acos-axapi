@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_prefix_list
 description:
     - Configure Prefix-list
@@ -89,7 +89,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

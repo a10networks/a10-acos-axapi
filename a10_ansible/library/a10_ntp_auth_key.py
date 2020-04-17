@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ntp_auth_key
 description:
     - authentication key
@@ -87,7 +87,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

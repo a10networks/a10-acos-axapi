@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev
 description:
     - Specify a SLB device for the GSLB site
@@ -177,7 +177,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

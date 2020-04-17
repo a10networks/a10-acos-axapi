@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_active_rdt
 description:
     - Active RDT Options
@@ -91,7 +91,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

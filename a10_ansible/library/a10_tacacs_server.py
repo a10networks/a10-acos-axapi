@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_tacacs_server
 description:
     - Configure TACACS+ servers
@@ -81,7 +81,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_pcp
 description:
     - Set Port Control Protocol parameters
@@ -172,7 +172,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

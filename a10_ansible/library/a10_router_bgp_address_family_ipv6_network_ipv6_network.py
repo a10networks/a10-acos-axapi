@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp_address_family_ipv6_network_ipv6_network
 description:
     - Specify a ip address mask network to announce via BGP
@@ -82,7 +82,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

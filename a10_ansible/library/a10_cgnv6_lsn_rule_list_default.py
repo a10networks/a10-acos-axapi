@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_rule_list_default
 description:
     - Configure the Generic Rule-Set
@@ -105,7 +105,7 @@ options:
                 - "'tcp'= TCP L4 Protoco; 'udp'= UDP L4 Protocol; 'icmp'= ICMP L4 Protocol; 'others'= Other L4 Protocl; 'dscp'= Match dscp value; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

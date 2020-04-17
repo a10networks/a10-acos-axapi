@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_netflow_monitor_sample_ve
 description:
     - select VE interface to monitor
@@ -66,7 +66,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

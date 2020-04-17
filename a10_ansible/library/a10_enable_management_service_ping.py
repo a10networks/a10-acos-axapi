@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_enable_management_service_ping
 description:
     - Ping service
@@ -117,7 +117,7 @@ options:
                 - "Field eth_cfg"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

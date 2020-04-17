@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_device_groups_device_group
 description:
     - Configure scaleout device groups
@@ -81,7 +81,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp_neighbor_peer_group_neighbor
 description:
     - Specify a peer-group neighbor router
@@ -286,7 +286,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

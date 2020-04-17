@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_disable_traps
 description:
     - Disable l3v partition SNMP traps
@@ -83,7 +83,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

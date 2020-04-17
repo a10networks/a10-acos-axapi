@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vpn_ipsec
 description:
     - IPsec settings
@@ -304,7 +304,7 @@ options:
                 - "Field ipv6"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

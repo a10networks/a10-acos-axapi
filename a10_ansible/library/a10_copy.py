@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_copy
 description:
     - Copy configuration to/from remote server
@@ -99,7 +99,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_dns_response_rate_limiting
 description:
     - Configure DNS Response-Rate-Limiting
@@ -131,7 +131,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

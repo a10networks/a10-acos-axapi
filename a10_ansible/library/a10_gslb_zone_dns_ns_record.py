@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_zone_dns_ns_record
 description:
     - Specify DNS NS Record
@@ -100,7 +100,7 @@ options:
                 - "Specify Domain Name"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

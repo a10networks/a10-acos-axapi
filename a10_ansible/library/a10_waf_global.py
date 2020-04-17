@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_waf_global
 description:
     - WAF global stats
@@ -471,7 +471,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """
