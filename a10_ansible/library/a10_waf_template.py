@@ -694,7 +694,7 @@ options:
         required: False
     decode_escaped_chars:
         description:
-        - "Decode escaped characters such as r n ' xXX u00YY in internal url"
+        - "Decode escaped characters such as \\r \\n \\' \\xXX \\u00YY in internal url"
         required: False
     json_format_check:
         description:
@@ -846,7 +846,7 @@ options:
         required: False
     decode_hex_chars:
         description:
-        - "Decode hex chars such as %xx and %u00yy in internal url"
+        - "Decode hex chars such as \\%xx and \\%u00yy in internal url"
         required: False
     max_line_len:
         description:
