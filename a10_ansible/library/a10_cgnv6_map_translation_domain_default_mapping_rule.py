@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_map_translation_domain_default_mapping_rule
 description:
     - Default mapping rule (DMR)
@@ -66,7 +66,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

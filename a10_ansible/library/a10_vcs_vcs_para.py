@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vcs_vcs_para
 description:
     - Virtual Chassis System Paramter
@@ -126,7 +126,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

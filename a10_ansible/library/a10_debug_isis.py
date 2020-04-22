@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_isis
 description:
     - Intermediate System - Intermediate System (IS-IS)
@@ -95,7 +95,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

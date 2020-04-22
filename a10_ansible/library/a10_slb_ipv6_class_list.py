@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_ipv6_class_list
 description:
     - IPv6 subnet add remove config
@@ -86,7 +86,7 @@ options:
                 - "LSN RADIUS Profile Index"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

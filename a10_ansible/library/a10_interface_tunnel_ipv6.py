@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_tunnel_ipv6
 description:
     - Global IPv6 configuration subcommands
@@ -129,7 +129,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

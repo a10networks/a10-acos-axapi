@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_srv_record
 description:
     - Specify DNS SRV Record
@@ -110,7 +110,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

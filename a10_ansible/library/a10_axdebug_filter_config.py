@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_axdebug_filter_config
 description:
     - Global debug filter
@@ -211,7 +211,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

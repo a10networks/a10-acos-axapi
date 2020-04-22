@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_health_check_details
 description:
     - Display Health Monitor Information for a given PIN and PID
@@ -274,7 +274,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

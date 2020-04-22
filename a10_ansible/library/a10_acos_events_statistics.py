@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_statistics
 description:
     - acos events global statistics
@@ -114,7 +114,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

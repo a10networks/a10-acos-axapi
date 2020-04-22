@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_kerberos_instance
 description:
     - Kerberos Authentication Relay
@@ -144,7 +144,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

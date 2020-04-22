@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rule_set_rules_by_zone
 description:
     - Field rules_by_zone
@@ -86,7 +86,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

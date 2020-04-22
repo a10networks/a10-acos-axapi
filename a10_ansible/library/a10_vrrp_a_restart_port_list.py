@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_restart_port_list
 description:
     - Ports to be restarted on standby system after transition
@@ -87,7 +87,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

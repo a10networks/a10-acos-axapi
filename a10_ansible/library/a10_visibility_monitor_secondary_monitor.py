@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_monitor_secondary_monitor
 description:
     - Configure secondary monitoring key
@@ -116,7 +116,7 @@ options:
                 - "'TCP'= TCP; 'UDP'= UDP; 'ICMP'= ICMP; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

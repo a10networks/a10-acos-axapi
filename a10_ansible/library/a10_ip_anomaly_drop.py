@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_anomaly_drop
 description:
     - Set IP anomaly drop policy
@@ -252,7 +252,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_template_message_selector
 description:
     - Specify the message selector
@@ -84,7 +84,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

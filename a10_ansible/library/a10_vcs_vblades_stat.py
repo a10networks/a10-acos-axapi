@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vcs_vblades_stat
 description:
     - Show aVCS vBlade box statistics information
@@ -121,7 +121,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

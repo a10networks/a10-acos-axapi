@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_fail_over_policy_template
 description:
     - Define a VRRP-A failover policy template
@@ -139,7 +139,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

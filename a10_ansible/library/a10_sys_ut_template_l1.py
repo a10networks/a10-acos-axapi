@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sys_ut_template_l1
 description:
     - L1 packet paramters
@@ -100,7 +100,7 @@ options:
                 - "Trunk Group"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

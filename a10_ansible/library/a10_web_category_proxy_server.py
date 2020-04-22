@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_web_category_proxy_server
 description:
     - Commands to connect web-category through proxy server
@@ -95,7 +95,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

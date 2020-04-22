@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_policy_connection_load
 description:
     - Select Service-IP with the lowest connection-load
@@ -86,7 +86,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

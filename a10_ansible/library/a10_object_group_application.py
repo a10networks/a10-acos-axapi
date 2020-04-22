@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_object_group_application
 description:
     - Configure Application Object Group
@@ -78,7 +78,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

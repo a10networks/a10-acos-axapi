@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev_vip_server_vip_server_name
 description:
     - Specify a VIP for the SLB device
@@ -105,7 +105,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

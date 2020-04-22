@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_tracking_template_template
 description:
     - Configure tracking template to be used by scaleout [OBSOLETED!]
@@ -81,7 +81,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

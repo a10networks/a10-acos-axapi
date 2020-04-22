@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_view_hardware_view
 description:
     - Field hardware_view
@@ -160,7 +160,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

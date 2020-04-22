@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_zone_service_dns_a_record_dns_a_record_ipv6
 description:
     - Specify DNS Address Record
@@ -123,7 +123,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

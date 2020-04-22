@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_bgp_redistribute
 description:
     - Redistribute information from another routing protocol
@@ -183,7 +183,7 @@ options:
                 - "NAT MAP Prefix"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_local_device_session_sync_interface
 description:
     - Interface for scaleout session sync
@@ -86,7 +86,7 @@ options:
                 - "Ethernet Interface (Ethernet interface number)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

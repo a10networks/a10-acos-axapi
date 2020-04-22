@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_app
 description:
     - Show application firewall supported protocols
@@ -92,7 +92,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

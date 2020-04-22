@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_debug_bgp
 description:
     - Debug Border Gateway Protocol (BGP)
@@ -107,7 +107,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

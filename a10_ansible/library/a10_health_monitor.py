@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_health_monitor
 description:
     - Define the Health Monitor object
@@ -199,7 +199,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

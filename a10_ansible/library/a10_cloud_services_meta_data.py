@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cloud_services_meta_data
 description:
     - user-data Services configuration only works in shared partition
@@ -99,7 +99,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

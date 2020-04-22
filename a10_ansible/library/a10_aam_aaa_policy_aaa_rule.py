@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_aaa_policy_aaa_rule
 description:
     - Rules of AAA policy
@@ -176,7 +176,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

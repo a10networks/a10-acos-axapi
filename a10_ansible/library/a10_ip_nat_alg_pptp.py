@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_nat_alg_pptp
 description:
     - PPTP ALG Settings
@@ -112,7 +112,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

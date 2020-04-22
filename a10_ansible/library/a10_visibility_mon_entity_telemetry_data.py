@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_mon_entity_telemetry_data
 description:
     - dummy schema for sflow exports
@@ -156,7 +156,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

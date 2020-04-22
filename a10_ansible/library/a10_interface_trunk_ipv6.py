@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_trunk_ipv6
 description:
     - Global IPv6 configuration subcommands
@@ -236,7 +236,7 @@ options:
                 - "Field dead_interval_cfg"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

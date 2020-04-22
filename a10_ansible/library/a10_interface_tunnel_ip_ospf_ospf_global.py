@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_tunnel_ip_ospf_ospf_global
 description:
     - Global setting for Open Shortest Path First for IPv4 (OSPF)
@@ -166,7 +166,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

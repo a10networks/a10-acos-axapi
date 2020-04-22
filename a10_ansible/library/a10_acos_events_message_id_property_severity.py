@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_message_id_property_severity
 description:
     - Configure Serverity of log message(s)
@@ -66,7 +66,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

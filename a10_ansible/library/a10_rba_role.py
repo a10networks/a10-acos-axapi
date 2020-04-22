@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rba_role
 description:
     - Role configuration for RBA support
@@ -86,7 +86,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

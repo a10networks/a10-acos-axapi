@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_gui_image_list
 description:
     - Get Gui Image List
@@ -76,7 +76,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

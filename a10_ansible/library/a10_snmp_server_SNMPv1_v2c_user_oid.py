@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_SNMPv1_v2c_user_oid
 description:
     - Define a remote entity to which user belongs
@@ -84,7 +84,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

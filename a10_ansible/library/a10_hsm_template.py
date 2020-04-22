@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_hsm_template
 description:
     - HSM Template
@@ -141,7 +141,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

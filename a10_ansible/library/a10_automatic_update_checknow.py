@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_automatic_update_checknow
 description:
     - Manually check for update from axapi
@@ -78,7 +78,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rba_group
 description:
     - RBA configuration for a group
@@ -95,7 +95,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

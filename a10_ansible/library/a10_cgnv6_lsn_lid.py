@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_lid
 description:
     - Create an LSN Lid
@@ -146,7 +146,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

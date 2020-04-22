@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_logging_local_log_global
 description:
     - Field global
@@ -177,7 +177,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vcs_device
 description:
     - VCS Device
@@ -111,7 +111,7 @@ options:
                 - "Trunk interface (Trunk interface number)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

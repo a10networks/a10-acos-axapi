@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_nat_pool
 description:
     - Configure IP pool name
@@ -130,7 +130,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

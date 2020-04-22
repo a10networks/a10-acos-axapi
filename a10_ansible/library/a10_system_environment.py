@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_environment
 description:
     - Field environment
@@ -253,7 +253,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

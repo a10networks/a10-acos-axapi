@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_object_group_service
 description:
     - Configure Service Object Group
@@ -163,7 +163,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

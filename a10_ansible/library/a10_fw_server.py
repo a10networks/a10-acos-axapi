@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_fw_server
 description:
     - Firewall logging Server
@@ -172,7 +172,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

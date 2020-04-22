@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_glm_proxy_server
 description:
     - Connect to GLM through proxy server
@@ -83,7 +83,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

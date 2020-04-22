@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_app_resources
 description:
     - Enter the application resource limits
@@ -242,7 +242,7 @@ options:
                 - "Minimum guaranteed value ( Minimum guaranteed value)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

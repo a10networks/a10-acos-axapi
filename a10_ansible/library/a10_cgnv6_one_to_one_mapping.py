@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_mapping
 description:
     - One to One Mapping
@@ -106,7 +106,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

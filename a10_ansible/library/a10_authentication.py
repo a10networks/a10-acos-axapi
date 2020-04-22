@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_authentication
 description:
     - Configure authentication feature
@@ -109,7 +109,7 @@ options:
                 - "The enable-password authentication type"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

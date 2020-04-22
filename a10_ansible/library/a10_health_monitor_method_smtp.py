@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_health_monitor_method_smtp
 description:
     - SMTP type
@@ -86,7 +86,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

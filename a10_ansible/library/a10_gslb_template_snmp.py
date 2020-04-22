@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_template_snmp
 description:
     - Specify SNMP template
@@ -131,7 +131,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

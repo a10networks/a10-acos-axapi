@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_reboot
 description:
     - Reboot the System
@@ -107,7 +107,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

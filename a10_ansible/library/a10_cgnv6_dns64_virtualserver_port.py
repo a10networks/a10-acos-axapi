@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_dns64_virtualserver_port
 description:
     - Virtual Port
@@ -289,7 +289,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

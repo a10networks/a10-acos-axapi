@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_site_ip_server
 description:
     - Specify a real server for the GSLB site
@@ -105,7 +105,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ldap_server_host_ldap_hostname
 description:
     - Specify the hostname of LDAP server
@@ -111,7 +111,7 @@ options:
                 - "Specify the LDAP server's timeout (default 3)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

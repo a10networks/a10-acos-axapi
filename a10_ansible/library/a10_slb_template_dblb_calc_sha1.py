@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_template_dblb_calc_sha1
 description:
     - Calculate sha1 value of a cleartext password
@@ -62,7 +62,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

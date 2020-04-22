@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vpn_ike_gateway
 description:
     - IKE-gateway settings
@@ -400,7 +400,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

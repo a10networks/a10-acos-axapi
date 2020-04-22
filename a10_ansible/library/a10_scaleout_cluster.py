@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster
 description:
     - Configure scaleout cluster
@@ -148,7 +148,7 @@ options:
                 - "Field template_list"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

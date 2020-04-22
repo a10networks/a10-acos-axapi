@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_nat46_stateless_global
 description:
     - Stateless NAT46 Statistics
@@ -129,7 +129,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_overlay_tunnel_options
 description:
     - Global overlay-tunnel configuration options
@@ -83,7 +83,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps_routing_ospf
 description:
     - Enable OSPFv2 traps
@@ -123,7 +123,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_session_attr
 description:
     - Field session_attr
@@ -73,7 +73,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

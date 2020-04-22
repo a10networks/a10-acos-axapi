@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_netflow_monitor_destination
 description:
     - Configure destination where netflow records will be sent
@@ -88,7 +88,7 @@ options:
                 - "IPv6 address of netflow collector"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

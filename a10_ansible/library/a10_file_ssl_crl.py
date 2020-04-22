@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_file_ssl_crl
 description:
     - ssl crl file information and management commands
@@ -90,7 +90,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

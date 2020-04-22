@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_destination_ip_address
 description:
     - Configure remote tunnel end point parameters
@@ -85,7 +85,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

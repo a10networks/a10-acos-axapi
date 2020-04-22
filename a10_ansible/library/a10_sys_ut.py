@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sys_ut
 description:
     - System unit test
@@ -155,7 +155,7 @@ options:
                 - "'basic'= Run Basic mode; 'fault-injection'= Run FI mode. This will also run Basic mode to gather data; 'cpu-rr'= Run CPU RR mode; 'frag'= Run IP frag mode; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

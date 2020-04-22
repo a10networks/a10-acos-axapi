@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vpn_ike_stats_global
 description:
     - IKE-stats-global statistic
@@ -219,7 +219,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

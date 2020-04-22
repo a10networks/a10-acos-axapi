@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_trunk_ipv6_ospf
 description:
     - Open Shortest Path First for IPv6 (OSPFv3)
@@ -181,7 +181,7 @@ options:
                 - "Specify the interface instance ID"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

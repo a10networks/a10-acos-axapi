@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_overlay_tunnel_vtep_destination_ip_address_vni
 description:
     - Virtual Segment Id configured on the remote VTEP
@@ -69,7 +69,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

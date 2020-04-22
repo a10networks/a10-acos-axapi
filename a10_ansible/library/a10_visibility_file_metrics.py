@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_visibility_file_metrics
 description:
     - Persistent storage for metrics
@@ -107,7 +107,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

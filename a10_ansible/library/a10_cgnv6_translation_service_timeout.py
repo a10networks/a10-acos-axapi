@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_translation_service_timeout
 description:
     - Specify any custom service timeout
@@ -79,7 +79,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

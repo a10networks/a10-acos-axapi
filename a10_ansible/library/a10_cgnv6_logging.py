@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_logging
 description:
     - CGNV6 Logging Statistics
@@ -251,7 +251,7 @@ options:
                 - "'warning'= Log level Warning; 'critical'= Log level Critical (Default); 'notice'= Log level Notice; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

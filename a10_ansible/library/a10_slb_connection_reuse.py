@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_connection_reuse
 description:
     - Configure Connection Reuse
@@ -128,7 +128,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

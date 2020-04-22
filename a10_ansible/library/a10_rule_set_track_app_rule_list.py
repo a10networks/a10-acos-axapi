@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_rule_set_track_app_rule_list
 description:
     - Field track_app_rule_list
@@ -78,7 +78,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_telemetry_log_device_status
 description:
     - Device status
@@ -85,7 +85,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

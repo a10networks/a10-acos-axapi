@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_fixed_nat_port_mapping_files
 description:
     - Fixed NAT Port Mapping Files
@@ -76,7 +76,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

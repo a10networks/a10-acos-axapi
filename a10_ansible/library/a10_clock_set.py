@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_clock_set
 description:
     - Set the Time and Date
@@ -78,7 +78,7 @@ options:
                 - "Day of the Month"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_pki_scep_cert
 description:
     - SCEP Certificate enrollment object
@@ -150,7 +150,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

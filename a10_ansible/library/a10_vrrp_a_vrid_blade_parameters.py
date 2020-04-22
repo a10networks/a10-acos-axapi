@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid_blade_parameters
 description:
     - blade parameters of VRRP-A vrid
@@ -96,7 +96,7 @@ options:
                 - "Field trunk_cfg"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_relay_http_basic_instance
 description:
     - HTTP Basic Authentication Relay instance
@@ -95,7 +95,7 @@ options:
         required: False
     domain_format:
         description:
-        - "'user-principal-name'= Append domain with User Principal Name format. (e.g. user@domain); 'down-level-logon-name'= Append domain with Down-Level Logon Name format. (e.g. domain\user); "
+        - "'user-principal-name'= Append domain with User Principal Name format. (e.g. user@domain); 'down-level-logon-name'= Append domain with Down-Level Logon Name format. (e.g. domain\\user); "
         required: False
     sampling_enable:
         description:
@@ -111,7 +111,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

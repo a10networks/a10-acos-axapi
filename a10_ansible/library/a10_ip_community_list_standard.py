@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_ip_community_list_standard
 description:
     - Configure Standard Community-list
@@ -74,7 +74,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

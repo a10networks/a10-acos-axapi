@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_state
 description:
     - HA VRRP-A Global Commands
@@ -390,7 +390,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

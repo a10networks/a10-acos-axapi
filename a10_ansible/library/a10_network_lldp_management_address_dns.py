@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_network_lldp_management_address_dns
 description:
     - Configure lldp management-address dns address
@@ -77,7 +77,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

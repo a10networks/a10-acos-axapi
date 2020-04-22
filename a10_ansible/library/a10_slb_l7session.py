@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_l7session
 description:
     - Configure l7session
@@ -134,7 +134,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_sflow_sampling
 description:
     - Configure sFlow sampling on specified interfaces
@@ -81,7 +81,7 @@ options:
                 - "VE interface to sample"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

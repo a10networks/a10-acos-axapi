@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_banner
 description:
     - Define a login banner
@@ -60,7 +60,7 @@ options:
         suboptions:
             exec_banner:
                 description:
-                - "Banner text, string \n is taken as line break of multi-line banner text, use \\n for \n, \077 for ? and \011 for tab"
+                - "Banner text, string \\n is taken as line break of multi-line banner text, use \\\\n for \\n, \\077 for ? and \\011 for tab"
             nexec:
                 description:
                 - "Set EXEC process creation banner"
@@ -78,10 +78,10 @@ options:
                 - "Set login banner"
             login_banner:
                 description:
-                - "Banner text, string \n is taken as line break of multi-line banner text, use \\n to indicate \n"
+                - "Banner text, string \\n is taken as line break of multi-line banner text, use \\\\n to indicate \\n"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

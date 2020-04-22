@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_message_selector_rule
 description:
     - Configure rules to select messages for which logging is enabled/blocked
@@ -90,7 +90,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

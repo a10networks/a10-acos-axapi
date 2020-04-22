@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_snmp_server_community_read
 description:
     - Define a read only community string
@@ -98,7 +98,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

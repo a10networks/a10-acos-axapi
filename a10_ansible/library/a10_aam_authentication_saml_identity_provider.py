@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authentication_saml_identity_provider
 description:
     - Authentication identity provider
@@ -140,7 +140,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

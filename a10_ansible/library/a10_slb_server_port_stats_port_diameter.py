@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_slb_server_port_stats_port_diameter
 description:
     - Statistics for the object port
@@ -72,7 +72,7 @@ options:
                 - "Field port_diameter"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

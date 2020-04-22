@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_scaleout_cluster_db_config
 description:
     - Configure zk prarameters
@@ -62,7 +62,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

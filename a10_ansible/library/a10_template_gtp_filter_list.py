@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_template_gtp_filter_list
 description:
     - Configure APN and IMSI filter list
@@ -84,7 +84,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_health_monitor_method_snmp
 description:
     - SNMP type
@@ -93,7 +93,7 @@ options:
                 - "'getnext'= Get-Next-Request command; 'get'= Get-Request command; "
 
 
-"""
+'''
 
 EXAMPLES = """
 """

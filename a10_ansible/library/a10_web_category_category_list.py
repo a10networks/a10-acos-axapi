@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_web_category_category_list
 description:
     - List of web categories
@@ -671,7 +671,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

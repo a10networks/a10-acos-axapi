@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_interface_trunk
 description:
     - VRRP-A interface trunk
@@ -87,7 +87,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

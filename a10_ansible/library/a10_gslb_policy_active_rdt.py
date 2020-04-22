@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_policy_active_rdt
 description:
     - Select SLB device with the shortest round delay time to local DNS
@@ -114,7 +114,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

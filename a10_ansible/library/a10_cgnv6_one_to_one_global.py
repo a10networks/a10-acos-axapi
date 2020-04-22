@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_one_to_one_global
 description:
     - Set one-to-one NAT config parameters
@@ -85,7 +85,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

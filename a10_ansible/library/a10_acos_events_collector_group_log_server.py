@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_acos_events_collector_group_log_server
 description:
     - Configure log server DNS Name/ip-address and optional port
@@ -70,7 +70,7 @@ options:
         required: True
 
 
-"""
+'''
 
 EXAMPLES = """
 """

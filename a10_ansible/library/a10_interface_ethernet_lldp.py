@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_ethernet_lldp
 description:
     - Interface lldp configuration
@@ -127,7 +127,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_interface_trunk
 description:
     - Trunk interface
@@ -496,7 +496,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

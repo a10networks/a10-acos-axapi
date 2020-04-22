@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_system_ipmi
 description:
     - Perform IPMI related operations
@@ -133,7 +133,7 @@ options:
                 - "Change an existing IPMI user privilege (IPMI User Name)"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

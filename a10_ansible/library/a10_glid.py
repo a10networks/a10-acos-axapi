@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_glid
 description:
     - Configure global limit ID
@@ -143,7 +143,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

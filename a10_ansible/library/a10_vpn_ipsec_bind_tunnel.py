@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vpn_ipsec_bind_tunnel
 description:
     - Binds tunnel interface to the IPsec connection
@@ -74,7 +74,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

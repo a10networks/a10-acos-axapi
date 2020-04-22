@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_vrrp_a_vrid_blade_parameters_tracking_options
 description:
     - VRRP-A tracking
@@ -134,7 +134,7 @@ options:
                 - "per port priority"
 
 
-"""
+'''
 
 EXAMPLES = """
 """

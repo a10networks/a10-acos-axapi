@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_router_ipv6_rip_offset_list
 description:
     - Modify RIP metric
@@ -88,7 +88,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

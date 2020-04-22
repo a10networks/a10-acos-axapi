@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_aam_authorization_policy
 description:
     - Authorization-policy configuration
@@ -185,7 +185,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

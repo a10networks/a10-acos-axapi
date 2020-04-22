@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_cgnv6_lsn_enhanced_user_tracking
 description:
     - LSN Enhanced User Data
@@ -88,7 +88,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_environment
 description:
     - environment status colletion parameters
@@ -81,7 +81,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

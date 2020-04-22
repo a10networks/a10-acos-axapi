@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_gslb_policy_capacity
 description:
     - Select Service-IP for the device having highest available connection capacity
@@ -74,7 +74,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """

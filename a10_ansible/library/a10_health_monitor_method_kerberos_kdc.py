@@ -9,7 +9,7 @@ REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
 
 
-DOCUMENTATION = """
+DOCUMENTATION = r'''
 module: a10_health_monitor_method_kerberos_kdc
 description:
     - Kerberos KDC type
@@ -124,7 +124,7 @@ options:
         required: False
 
 
-"""
+'''
 
 EXAMPLES = """
 """
