@@ -937,18 +937,6 @@ def report_changes(module, result, existing_config, payload):
         result.update(**payload)
     return result
 
-def create(module, result, payload):
-    try:
-        post_result = module.client.post(new_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -975,19 +963,6 @@ def update(module, result, existing_config, payload):
     except Exception as gex:
         raise gex
     return result
-
-def present(module, result, existing_config):
-    payload = build_json("ethernet", module)
-    changed_config = report_changes(module, result, existing_config, payload)
-    if module.check_mode:
-        return changed_config
-    elif not existing_config:
-        return create(module, result, payload)
-    elif existing_config and not changed_config.get('changed'):
-        return update(module, result, existing_config, payload)
-    else:
-        result["changed"] = True
-        return result
 
 def absent(module, result, existing_config):
     if module.check_mode:

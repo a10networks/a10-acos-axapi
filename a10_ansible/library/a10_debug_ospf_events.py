@@ -280,21 +280,6 @@ def delete(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config, payload):
-    try:
-        post_result = module.client.post(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def present(module, result, existing_config):
     payload = build_json("events", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -318,21 +303,6 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
-
-def replace(module, result, existing_config, payload):
-    try:
-        post_result = module.client.put(existing_url(module), payload)
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
 
 def run_command(module):
     run_errors = []

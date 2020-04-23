@@ -1788,21 +1788,6 @@ def create(module, result):
         raise gex
     return result
 
-def update(module, result, existing_config):
-    try:
-        post_result = module.client.post(existing_url(module))
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def present(module, result, existing_config):
     if module.check_mode:
         return report_changes(module, result, existing_config)
@@ -1810,32 +1795,6 @@ def present(module, result, existing_config):
         return create(module, result)
     else:
         return update(module, result, existing_config)
-
-def absent(module, result, existing_config):
-    if module.check_mode:
-        if existing_config:
-            result["changed"] = True
-            return result
-        else:
-            result["changed"] = False
-            return result
-    else:
-        return delete(module, result)
-
-def replace(module, result, existing_config):
-    try:
-        post_result = module.client.put(existing_url(module))
-        if post_result:
-            result.update(**post_result)
-        if post_result == existing_config:
-            result["changed"] = False
-        else:
-            result["changed"] = True
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
 
 def run_command(module):
     run_errors = []
