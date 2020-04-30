@@ -22,6 +22,7 @@ options:
         - State of the object to be created.
         choices:
           - noop
+          - present
         required: True
     a10_host:
         description:
@@ -151,7 +152,7 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="noop", choices=['noop']),
+        state=dict(type='str', default="present", choices=['noop', 'present']),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
