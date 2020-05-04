@@ -135,9 +135,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',interval=dict(type='str',),start_time=dict(type='str',),top_n=dict(type='dict',oper=dict(type='dict',file_category=dict(type='str',),interval=dict(type='str',),interval_position=dict(type='str',),top=dict(type='str',),log_list=dict(type='list',counter=dict(type='int',),name=dict(type='str',)),max_entries=dict(type='int',),start_time=dict(type='str',),total=dict(type='int',))),log_list=dict(type='list',file_category=dict(type='str',),file_name=dict(type='str',),url=dict(type='str',),file_size=dict(type='int',),source_ip=dict(type='str',),file_ext=dict(type='str',),destination_ip=dict(type='str',),time=dict(type='str',)),max_entries=dict(type='int',),interval_position=dict(type='str',),total=dict(type='int',)),
-        top_n=dict(type='dict',uuid=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', interval=dict(type='str', ),start_time=dict(type='str', ),top_n=dict(type='dict', oper=dict(type='dict', file_category=dict(type='str', ),interval=dict(type='str', ),interval_position=dict(type='str', ),top=dict(type='str', ),log_list=dict(type='list', counter=dict(type='int', ),name=dict(type='str', )),max_entries=dict(type='int', ),start_time=dict(type='str', ),total=dict(type='int', ))),log_list=dict(type='list', file_category=dict(type='str', ),file_name=dict(type='str', ),url=dict(type='str', ),file_size=dict(type='int', ),source_ip=dict(type='str', ),file_ext=dict(type='str', ),destination_ip=dict(type='str', ),time=dict(type='str', )),max_entries=dict(type='int', ),interval_position=dict(type='str', ),total=dict(type='int', )),
+        top_n=dict(type='dict', uuid=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

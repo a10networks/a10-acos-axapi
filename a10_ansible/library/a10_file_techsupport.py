@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        dst_file=dict(type='str',),
-        file=dict(type='str',),
-        size=dict(type='int',)
+        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        dst_file=dict(type='str', ),
+        file=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dnssec_key_type=dict(type='str',choices=['ZSK','KSK']),
-        zsk_start=dict(type='bool',),
-        ksk_start=dict(type='bool',),
-        ds_ready_in_parent_zone=dict(type='bool',),
-        zone_name=dict(type='str',)
+        dnssec_key_type=dict(type='str', choices=['ZSK','KSK']),
+        zsk_start=dict(type='bool', ),
+        ksk_start=dict(type='bool', ),
+        ds_ready_in_parent_zone=dict(type='bool', ),
+        zone_name=dict(type='str', )
     ))
    
 

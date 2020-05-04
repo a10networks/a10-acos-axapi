@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        cli=dict(type='bool',),
-        detail=dict(type='bool',),
-        timer=dict(type='bool',),
-        sync=dict(type='bool',),
-        packet=dict(type='bool',),
-        ha=dict(type='bool',),
-        event=dict(type='bool',),
-        uuid=dict(type='str',)
+        all=dict(type='bool', ),
+        cli=dict(type='bool', ),
+        detail=dict(type='bool', ),
+        timer=dict(type='bool', ),
+        sync=dict(type='bool', ),
+        packet=dict(type='bool', ),
+        ha=dict(type='bool', ),
+        event=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

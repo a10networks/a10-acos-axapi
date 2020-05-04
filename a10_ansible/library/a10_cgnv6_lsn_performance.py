@@ -155,10 +155,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',user_quotas=dict(type='int',),data_sessions=dict(type='int',),full_cone_sessions=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','data-sessions-current-epoch','fullcone-created-current-epoch','user-quote-created-current-epoch','data-sessions-previous-epoch-first','fullcone-created-previous-epoch-first','user-quote-created-previous-epoch-first','data-sessions-previous-epoch-last','fullcone-created-previous-epoch-last','user-quote-created-previous-epoch-last'])),
-        stats=dict(type='dict',fullcone_created_previous_epoch_first=dict(type='str',),fullcone_created_previous_epoch_last=dict(type='str',),data_sessions_previous_epoch_first=dict(type='str',),user_quote_created_current_epoch=dict(type='str',),user_quote_created_previous_epoch_first=dict(type='str',),data_sessions_previous_epoch_last=dict(type='str',),fullcone_created_current_epoch=dict(type='str',),user_quote_created_previous_epoch_last=dict(type='str',),data_sessions_current_epoch=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', user_quotas=dict(type='int', ),data_sessions=dict(type='int', ),full_cone_sessions=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','data-sessions-current-epoch','fullcone-created-current-epoch','user-quote-created-current-epoch','data-sessions-previous-epoch-first','fullcone-created-previous-epoch-first','user-quote-created-previous-epoch-first','data-sessions-previous-epoch-last','fullcone-created-previous-epoch-last','user-quote-created-previous-epoch-last'])),
+        stats=dict(type='dict', fullcone_created_previous_epoch_first=dict(type='str', ),fullcone_created_previous_epoch_last=dict(type='str', ),data_sessions_previous_epoch_first=dict(type='str', ),user_quote_created_current_epoch=dict(type='str', ),user_quote_created_previous_epoch_first=dict(type='str', ),data_sessions_previous_epoch_last=dict(type='str', ),fullcone_created_current_epoch=dict(type='str', ),user_quote_created_previous_epoch_last=dict(type='str', ),data_sessions_current_epoch=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

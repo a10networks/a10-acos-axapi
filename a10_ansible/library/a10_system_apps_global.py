@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        msl_time=dict(type='int',),
-        uuid=dict(type='str',),
-        log_session_on_established=dict(type='bool',)
+        msl_time=dict(type='int', ),
+        uuid=dict(type='str', ),
+        log_session_on_established=dict(type='bool', )
     ))
    
 

@@ -112,9 +112,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rpn_string=dict(type='str',),
-        uuid=dict(type='str',),
-        compound=dict(type='bool',)
+        rpn_string=dict(type='str', ),
+        uuid=dict(type='str', ),
+        compound=dict(type='bool', )
     ))
    
     # Parent keys

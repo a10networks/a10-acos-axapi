@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_pool_list=dict(type='list',vird=dict(type='int',),netmask=dict(type='str',),end_address=dict(type='str',),start_address=dict(type='str',),pool_name=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', shared_pool_list=dict(type='list', vird=dict(type='int', ),netmask=dict(type='str', ),end_address=dict(type='str', ),start_address=dict(type='str', ),pool_name=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

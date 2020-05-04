@@ -156,14 +156,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        retry=dict(type='int',),
-        stats=dict(type='dict',spn_krb_success=dict(type='str',),spn_krb_request=dict(type='str',),name=dict(type='str',required=True,),spn_krb_faiure=dict(type='str',)),
-        uuid=dict(type='str',),
-        name=dict(type='str',required=True,),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','spn_krb_request','spn_krb_success','spn_krb_faiure'])),
-        account_lock=dict(type='bool',),
-        duration=dict(type='int',),
-        auth_method=dict(type='dict',ntlm=dict(type='dict',ntlm_enable=dict(type='bool',)),negotiate=dict(type='dict',negotiate_enable=dict(type='bool',)),basic=dict(type='dict',new_pin_page=dict(type='str',),basic_enable=dict(type='bool',),challenge_page=dict(type='str',),next_token_variable=dict(type='str',),next_token_page=dict(type='str',),challenge_variable=dict(type='str',),basic_realm=dict(type='str',),new_pin_variable=dict(type='str',),challenge_response_form=dict(type='str',)))
+        retry=dict(type='int', ),
+        stats=dict(type='dict', spn_krb_success=dict(type='str', ),spn_krb_request=dict(type='str', ),name=dict(type='str', required=True, ),spn_krb_faiure=dict(type='str', )),
+        uuid=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','spn_krb_request','spn_krb_success','spn_krb_faiure'])),
+        account_lock=dict(type='bool', ),
+        duration=dict(type='int', ),
+        auth_method=dict(type='dict', ntlm=dict(type='dict', ntlm_enable=dict(type='bool', )),negotiate=dict(type='dict', negotiate_enable=dict(type='bool', )),basic=dict(type='dict', new_pin_page=dict(type='str', ),basic_enable=dict(type='bool', ),challenge_page=dict(type='str', ),next_token_variable=dict(type='str', ),next_token_page=dict(type='str', ),challenge_variable=dict(type='str', ),basic_realm=dict(type='str', ),new_pin_variable=dict(type='str', ),challenge_response_form=dict(type='str', )))
     ))
    
 

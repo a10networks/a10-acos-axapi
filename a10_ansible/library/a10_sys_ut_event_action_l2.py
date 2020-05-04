@@ -155,12 +155,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='str',choices=['arp','ipv4','ipv6']),
-        uuid=dict(type='str',),
-        ethertype=dict(type='bool',),
-        mac_list=dict(type='list',ethernet=dict(type='str',),ve=dict(type='str',),src_dst=dict(type='str',required=True,choices=['dest','src']),address_type=dict(type='str',choices=['broadcast','multicast']),nat_pool=dict(type='str',),value=dict(type='str',),trunk=dict(type='str',),virtual_server=dict(type='str',),uuid=dict(type='str',)),
-        vlan=dict(type='int',),
-        value=dict(type='int',)
+        protocol=dict(type='str', choices=['arp','ipv4','ipv6']),
+        uuid=dict(type='str', ),
+        ethertype=dict(type='bool', ),
+        mac_list=dict(type='list', ethernet=dict(type='str', ),ve=dict(type='str', ),src_dst=dict(type='str', required=True, choices=['dest','src']),address_type=dict(type='str', choices=['broadcast','multicast']),nat_pool=dict(type='str', ),value=dict(type='str', ),trunk=dict(type='str', ),virtual_server=dict(type='str', ),uuid=dict(type='str', )),
+        vlan=dict(type='int', ),
+        value=dict(type='int', )
     ))
    
     # Parent keys

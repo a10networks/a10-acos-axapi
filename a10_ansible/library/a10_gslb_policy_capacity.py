@@ -116,10 +116,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        threshold=dict(type='int',),
-        capacity_enable=dict(type='bool',),
-        capacity_fail_break=dict(type='bool',),
-        uuid=dict(type='str',)
+        threshold=dict(type='int', ),
+        capacity_enable=dict(type='bool', ),
+        capacity_fail_break=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

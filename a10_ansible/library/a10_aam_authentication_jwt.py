@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        signature_secret=dict(type='bool',),
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        user_tag=dict(type='str',),
-        token_lifetime=dict(type='int',),
-        action=dict(type='str',choices=['redirect','relay']),
-        issuer=dict(type='str',),
-        secret_string=dict(type='str',),
-        name=dict(type='str',required=True,)
+        signature_secret=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        token_lifetime=dict(type='int', ),
+        action=dict(type='str', choices=['redirect','relay']),
+        issuer=dict(type='str', ),
+        secret_string=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
 

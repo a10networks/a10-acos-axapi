@@ -209,22 +209,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',sent_successful=dict(type='str',),send_fail=dict(type='str',),name=dict(type='str',required=True,),response_fail=dict(type='str',)),
-        protocol=dict(type='str',choices=['http','https']),
-        name=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
-        https_port=dict(type='int',),
-        debug_mode=dict(type='bool',),
-        relative_uri=dict(type='str',),
-        authentication=dict(type='dict',uuid=dict(type='str',),encrypted=dict(type='str',),relative_logoff_uri=dict(type='str',),api_key_encrypted=dict(type='str',),api_key=dict(type='bool',),auth_password_string=dict(type='str',),auth_password=dict(type='bool',),api_key_string=dict(type='str',),relative_login_uri=dict(type='str',),auth_username=dict(type='str',)),
-        host_name=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sent_successful','send_fail','response_fail'])),
-        http_port=dict(type='int',),
-        ipv6_address=dict(type='str',),
-        test_connectivity=dict(type='bool',),
-        ipv4_address=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
-        uuid=dict(type='str',)
+        stats=dict(type='dict', sent_successful=dict(type='str', ),send_fail=dict(type='str', ),name=dict(type='str', required=True, ),response_fail=dict(type='str', )),
+        protocol=dict(type='str', choices=['http','https']),
+        name=dict(type='str', required=True, ),
+        use_mgmt_port=dict(type='bool', ),
+        https_port=dict(type='int', ),
+        debug_mode=dict(type='bool', ),
+        relative_uri=dict(type='str', ),
+        authentication=dict(type='dict', uuid=dict(type='str', ),encrypted=dict(type='str', ),relative_logoff_uri=dict(type='str', ),api_key_encrypted=dict(type='str', ),api_key=dict(type='bool', ),auth_password_string=dict(type='str', ),auth_password=dict(type='bool', ),api_key_string=dict(type='str', ),relative_login_uri=dict(type='str', ),auth_username=dict(type='str', )),
+        host_name=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','sent_successful','send_fail','response_fail'])),
+        http_port=dict(type='int', ),
+        ipv6_address=dict(type='str', ),
+        test_connectivity=dict(type='bool', ),
+        ipv4_address=dict(type='str', ),
+        action=dict(type='str', choices=['enable','disable']),
+        uuid=dict(type='str', )
     ))
    
 

@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        private_key=dict(type='str',),
-        name=dict(type='str',required=True,)
+        private_key=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
 

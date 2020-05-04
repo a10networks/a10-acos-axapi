@@ -236,21 +236,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ve_num=dict(type='int',),vlan_name=dict(type='str',),un_tagg_logical_ports=dict(type='dict',ports=dict(type='int',)),tagg_logical_ports=dict(type='dict',ports=dict(type='int',)),vlan_num=dict(type='int',required=True,),tagg_eth_ports=dict(type='dict',ports=dict(type='int',)),is_shared_vlan=dict(type='str',),un_tagg_eth_ports=dict(type='dict',ports=dict(type='int',))),
-        traffic_distribution_mode=dict(type='str',choices=['sip','dip','primary','blade','l4-src-port','l4-dst-port']),
-        stats=dict(type='dict',shared_vlan_partition_switched_counter=dict(type='str',),unknown_unicast_count=dict(type='str',),broadcast_count=dict(type='str',),mac_movement_count=dict(type='str',),vlan_num=dict(type='int',required=True,),multicast_count=dict(type='str',),ip_multicast_count=dict(type='str',)),
-        uuid=dict(type='str',),
-        untagged_trunk_list=dict(type='list',untagged_trunk_start=dict(type='int',),untagged_trunk_end=dict(type='int',)),
-        untagged_lif=dict(type='int',),
-        untagged_eth_list=dict(type='list',untagged_ethernet_end=dict(type='str',),untagged_ethernet_start=dict(type='str',)),
-        user_tag=dict(type='str',),
-        name=dict(type='str',),
-        vlan_num=dict(type='int',required=True,),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','broadcast_count','multicast_count','ip_multicast_count','unknown_unicast_count','mac_movement_count','shared_vlan_partition_switched_counter'])),
-        tagged_trunk_list=dict(type='list',tagged_trunk_start=dict(type='int',),tagged_trunk_end=dict(type='int',)),
-        shared_vlan=dict(type='bool',),
-        tagged_eth_list=dict(type='list',tagged_ethernet_end=dict(type='str',),tagged_ethernet_start=dict(type='str',)),
-        ve=dict(type='int',)
+        oper=dict(type='dict', ve_num=dict(type='int', ),vlan_name=dict(type='str', ),un_tagg_logical_ports=dict(type='dict', ports=dict(type='int', )),tagg_logical_ports=dict(type='dict', ports=dict(type='int', )),vlan_num=dict(type='int', required=True, ),tagg_eth_ports=dict(type='dict', ports=dict(type='int', )),is_shared_vlan=dict(type='str', ),un_tagg_eth_ports=dict(type='dict', ports=dict(type='int', ))),
+        traffic_distribution_mode=dict(type='str', choices=['sip','dip','primary','blade','l4-src-port','l4-dst-port']),
+        stats=dict(type='dict', shared_vlan_partition_switched_counter=dict(type='str', ),unknown_unicast_count=dict(type='str', ),broadcast_count=dict(type='str', ),mac_movement_count=dict(type='str', ),vlan_num=dict(type='int', required=True, ),multicast_count=dict(type='str', ),ip_multicast_count=dict(type='str', )),
+        uuid=dict(type='str', ),
+        untagged_trunk_list=dict(type='list', untagged_trunk_start=dict(type='int', ),untagged_trunk_end=dict(type='int', )),
+        untagged_lif=dict(type='int', ),
+        untagged_eth_list=dict(type='list', untagged_ethernet_end=dict(type='str', ),untagged_ethernet_start=dict(type='str', )),
+        user_tag=dict(type='str', ),
+        name=dict(type='str', ),
+        vlan_num=dict(type='int', required=True, ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','broadcast_count','multicast_count','ip_multicast_count','unknown_unicast_count','mac_movement_count','shared_vlan_partition_switched_counter'])),
+        tagged_trunk_list=dict(type='list', tagged_trunk_start=dict(type='int', ),tagged_trunk_end=dict(type='int', )),
+        shared_vlan=dict(type='bool', ),
+        tagged_eth_list=dict(type='list', tagged_ethernet_end=dict(type='str', ),tagged_ethernet_start=dict(type='str', )),
+        ve=dict(type='int', )
     ))
    
 

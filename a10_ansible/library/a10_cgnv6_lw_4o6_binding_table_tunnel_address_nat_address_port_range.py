@@ -118,9 +118,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_start=dict(type='int',required=True,),
-        tunnel_endpoint_address=dict(type='str',required=True,),
-        port_end=dict(type='int',required=True,)
+        port_start=dict(type='int', required=True, ),
+        tunnel_endpoint_address=dict(type='str', required=True, ),
+        port_end=dict(type='int', required=True, )
     ))
    
     # Parent keys

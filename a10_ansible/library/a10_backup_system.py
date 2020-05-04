@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        password=dict(type='str',),
-        encrypt=dict(type='bool',),
-        use_mgmt_port=dict(type='bool',),
-        remote_file=dict(type='str',),
-        store_name=dict(type='str',)
+        password=dict(type='str', ),
+        encrypt=dict(type='bool', ),
+        use_mgmt_port=dict(type='bool', ),
+        remote_file=dict(type='str', ),
+        store_name=dict(type='str', )
     ))
    
 

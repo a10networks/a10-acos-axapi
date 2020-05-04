@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv6_subnet=dict(type='str',),
-        subnet=dict(type='str',),
-        description=dict(type='str',),
-        ip_range_end=dict(type='str',),
-        user_tag=dict(type='str',),
-        ipv6_range_start=dict(type='str',),
-        net_name=dict(type='str',required=True,),
-        ipv6_range_end=dict(type='str',),
-        ip_range_start=dict(type='str',),
-        uuid=dict(type='str',)
+        ipv6_subnet=dict(type='str', ),
+        subnet=dict(type='str', ),
+        description=dict(type='str', ),
+        ip_range_end=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        ipv6_range_start=dict(type='str', ),
+        net_name=dict(type='str', required=True, ),
+        ipv6_range_end=dict(type='str', ),
+        ip_range_start=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

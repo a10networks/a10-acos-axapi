@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',interfaces=dict(type='list',rxpkts256to511_counts=dict(type='int',),rxpkts4096to9216_counts=dict(type='int',),txpkts1519to2047_counts=dict(type='int',),txpkts2048to4095_counts=dict(type='int',),rxpkts1519to2047_counts=dict(type='int',),port_num=dict(type='int',),rxpkts1024to1518_counts=dict(type='int',),rxpkts512to1023_counts=dict(type='int',),rxpkts64_counts=dict(type='int',),rxpkts65to127_counts=dict(type='int',),txpkts512to1023_counts=dict(type='int',),txpkts65to127_counts=dict(type='int',),rxpkts128to255_counts=dict(type='int',),txpkts128to255_counts=dict(type='int',),rxpkts2048to4095_counts=dict(type='int',),txpkts1024to1518_counts=dict(type='int',),txpkts64_counts=dict(type='int',),txpkts256to511_counts=dict(type='int',),IF_Type=dict(type='str',),txpkts4096to9216_counts=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', interfaces=dict(type='list', rxpkts256to511_counts=dict(type='int', ),rxpkts4096to9216_counts=dict(type='int', ),txpkts1519to2047_counts=dict(type='int', ),txpkts2048to4095_counts=dict(type='int', ),rxpkts1519to2047_counts=dict(type='int', ),port_num=dict(type='int', ),rxpkts1024to1518_counts=dict(type='int', ),rxpkts512to1023_counts=dict(type='int', ),rxpkts64_counts=dict(type='int', ),rxpkts65to127_counts=dict(type='int', ),txpkts512to1023_counts=dict(type='int', ),txpkts65to127_counts=dict(type='int', ),rxpkts128to255_counts=dict(type='int', ),txpkts128to255_counts=dict(type='int', ),rxpkts2048to4095_counts=dict(type='int', ),txpkts1024to1518_counts=dict(type='int', ),txpkts64_counts=dict(type='int', ),txpkts256to511_counts=dict(type='int', ),IF_Type=dict(type='str', ),txpkts4096to9216_counts=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

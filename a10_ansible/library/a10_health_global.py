@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        disable_auto_adjust=dict(type='bool',),
-        uuid=dict(type='str',),
-        external_rate=dict(type='int',),
-        multi_process=dict(type='int',),
-        interval=dict(type='int',),
-        check_rate=dict(type='int',),
-        per=dict(type='int',),
-        retry=dict(type='int',),
-        up_retry=dict(type='int',),
-        timeout=dict(type='int',)
+        disable_auto_adjust=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        external_rate=dict(type='int', ),
+        multi_process=dict(type='int', ),
+        interval=dict(type='int', ),
+        check_rate=dict(type='int', ),
+        per=dict(type='int', ),
+        retry=dict(type='int', ),
+        up_retry=dict(type='int', ),
+        timeout=dict(type='int', )
     ))
    
 

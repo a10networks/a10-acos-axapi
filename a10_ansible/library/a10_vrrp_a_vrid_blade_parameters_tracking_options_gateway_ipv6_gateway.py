@@ -112,9 +112,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv6_address=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        priority_cost=dict(type='int',)
+        ipv6_address=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        priority_cost=dict(type='int', )
     ))
    
     # Parent keys

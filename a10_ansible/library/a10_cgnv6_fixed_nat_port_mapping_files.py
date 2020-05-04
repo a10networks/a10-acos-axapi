@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ntype=dict(type='str',choices=['all','archive','regular']),contain_case_sensitive=dict(type='str',),file_list=dict(type='list',write_status=dict(type='str',),file_name=dict(type='str',)),contain=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', ntype=dict(type='str', choices=['all','archive','regular']),contain_case_sensitive=dict(type='str', ),file_list=dict(type='list', write_status=dict(type='str', ),file_name=dict(type='str', )),contain=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

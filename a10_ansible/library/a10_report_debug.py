@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        log=dict(type='bool',),
-        sflow=dict(type='bool',)
+        log=dict(type='bool', ),
+        sflow=dict(type='bool', )
     ))
    
 

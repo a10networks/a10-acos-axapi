@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        profile=dict(type='str',),
-        specified_partition=dict(type='str',),
-        destination=dict(type='str',choices=['primary','secondary','local']),
-        partition=dict(type='str',choices=['all','shared','specified'])
+        profile=dict(type='str', ),
+        specified_partition=dict(type='str', ),
+        destination=dict(type='str', choices=['primary','secondary','local']),
+        partition=dict(type='str', choices=['all','shared','specified'])
     ))
    
 

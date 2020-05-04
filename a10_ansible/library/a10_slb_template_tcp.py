@@ -177,26 +177,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        del_session_on_server_down=dict(type='bool',),
-        initial_window_size=dict(type='int',),
-        half_open_idle_timeout=dict(type='int',),
-        logging=dict(type='str',choices=['init','term','both']),
-        name=dict(type='str',required=True,),
-        reset_fwd=dict(type='bool',),
-        reset_follow_fin=dict(type='bool',),
-        alive_if_active=dict(type='bool',),
-        idle_timeout=dict(type='int',),
-        force_delete_timeout=dict(type='int',),
-        user_tag=dict(type='str',),
-        down=dict(type='bool',),
-        disable=dict(type='bool',),
-        reset_rev=dict(type='bool',),
-        insert_client_ip=dict(type='bool',),
-        lan_fast_ack=dict(type='bool',),
-        half_close_idle_timeout=dict(type='int',),
-        force_delete_timeout_100ms=dict(type='int',),
-        qos=dict(type='int',),
-        uuid=dict(type='str',)
+        del_session_on_server_down=dict(type='bool', ),
+        initial_window_size=dict(type='int', ),
+        half_open_idle_timeout=dict(type='int', ),
+        logging=dict(type='str', choices=['init','term','both']),
+        name=dict(type='str', required=True, ),
+        reset_fwd=dict(type='bool', ),
+        reset_follow_fin=dict(type='bool', ),
+        alive_if_active=dict(type='bool', ),
+        idle_timeout=dict(type='int', ),
+        force_delete_timeout=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        down=dict(type='bool', ),
+        disable=dict(type='bool', ),
+        reset_rev=dict(type='bool', ),
+        insert_client_ip=dict(type='bool', ),
+        lan_fast_ack=dict(type='bool', ),
+        half_close_idle_timeout=dict(type='int', ),
+        force_delete_timeout_100ms=dict(type='int', ),
+        qos=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

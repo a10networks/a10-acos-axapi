@@ -157,21 +157,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        source_ipv6=dict(type='str',),
-        allow_third_party_from_lan=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        map=dict(type='bool',),
-        allow_third_party_from_wan=dict(type='bool',),
-        maximum=dict(type='int',),
-        disable_map_filter=dict(type='bool',),
-        check_client_nonce=dict(type='bool',),
-        minimum=dict(type='int',),
-        user_tag=dict(type='str',),
-        peer=dict(type='bool',),
-        announce=dict(type='bool',),
-        source_ip=dict(type='str',),
-        pcp_server_port=dict(type='int',),
-        uuid=dict(type='str',)
+        source_ipv6=dict(type='str', ),
+        allow_third_party_from_lan=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        map=dict(type='bool', ),
+        allow_third_party_from_wan=dict(type='bool', ),
+        maximum=dict(type='int', ),
+        disable_map_filter=dict(type='bool', ),
+        check_client_nonce=dict(type='bool', ),
+        minimum=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        peer=dict(type='bool', ),
+        announce=dict(type='bool', ),
+        source_ip=dict(type='str', ),
+        pcp_server_port=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

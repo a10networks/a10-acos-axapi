@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv6_default_gateway=dict(type='str',),
-        uuid=dict(type='str',)
+        ipv6_default_gateway=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

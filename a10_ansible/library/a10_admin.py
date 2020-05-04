@@ -221,23 +221,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ssh_pubkey=dict(type='dict',nimport=dict(type='bool',),list=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',),delete=dict(type='int',)),
-        uuid=dict(type='str',),
-        privilege_global=dict(type='str',choices=['read','write','hm']),
-        trusted_host=dict(type='bool',),
-        user=dict(type='str',required=True,),
-        privilege_list=dict(type='list',partition_name=dict(type='str',),privilege_partition=dict(type='str',choices=['partition-enable-disable','partition-read','partition-write'])),
-        aws_accesskey=dict(type='dict',nimport=dict(type='bool',),delete=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',),show=dict(type='bool',)),
-        access=dict(type='dict',access_type=dict(type='str',choices=['axapi','cli','web']),uuid=dict(type='str',)),
-        access_list=dict(type='bool',),
-        unlock=dict(type='bool',),
-        user_tag=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
-        trusted_host_acl_id=dict(type='int',),
-        password=dict(type='dict',password_in_module=dict(type='str',),uuid=dict(type='str',),encrypted_in_module=dict(type='str',)),
-        passwd_string=dict(type='str',),
-        trusted_host_cidr=dict(type='str',),
-        password_key=dict(type='bool',)
+        ssh_pubkey=dict(type='dict', nimport=dict(type='bool', ),list=dict(type='bool', ),use_mgmt_port=dict(type='bool', ),file_url=dict(type='str', ),delete=dict(type='int', )),
+        uuid=dict(type='str', ),
+        privilege_global=dict(type='str', choices=['read','write','hm']),
+        trusted_host=dict(type='bool', ),
+        user=dict(type='str', required=True, ),
+        privilege_list=dict(type='list', partition_name=dict(type='str', ),privilege_partition=dict(type='str', choices=['partition-enable-disable','partition-read','partition-write'])),
+        aws_accesskey=dict(type='dict', nimport=dict(type='bool', ),delete=dict(type='bool', ),use_mgmt_port=dict(type='bool', ),file_url=dict(type='str', ),show=dict(type='bool', )),
+        access=dict(type='dict', access_type=dict(type='str', choices=['axapi','cli','web']),uuid=dict(type='str', )),
+        access_list=dict(type='bool', ),
+        unlock=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        action=dict(type='str', choices=['enable','disable']),
+        trusted_host_acl_id=dict(type='int', ),
+        password=dict(type='dict', password_in_module=dict(type='str', ),uuid=dict(type='str', ),encrypted_in_module=dict(type='str', )),
+        passwd_string=dict(type='str', ),
+        trusted_host_cidr=dict(type='str', ),
+        password_key=dict(type='bool', )
     ))
    
 

@@ -153,12 +153,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        cookie_name=dict(type='str',),
-        name=dict(type='str',required=True,),
-        http_policy_match=dict(type='list',match_string=dict(type='str',),template_name=dict(type='str',),service_group=dict(type='str',),template=dict(type='str',choices=['waf']),ntype=dict(type='str',choices=['cookie','host','url']),match_type=dict(type='str',choices=['contains','ends-with','equals','starts-with'])),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        geo_location_match=dict(type='list',geo_location=dict(type='str',),geo_location_service_group=dict(type='str',),geo_location_template=dict(type='str',choices=['waf']),geo_location_template_name=dict(type='str',))
+        cookie_name=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        http_policy_match=dict(type='list', match_string=dict(type='str', ),template_name=dict(type='str', ),service_group=dict(type='str', ),template=dict(type='str', choices=['waf']),ntype=dict(type='str', choices=['cookie','host','url']),match_type=dict(type='str', choices=['contains','ends-with','equals','starts-with'])),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        geo_location_match=dict(type='list', geo_location=dict(type='str', ),geo_location_service_group=dict(type='str', ),geo_location_template=dict(type='str', choices=['waf']),geo_location_template_name=dict(type='str', ))
     ))
    
 

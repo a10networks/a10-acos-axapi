@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',end_time=dict(type='int',),start_time=dict(type='int',),total_disk=dict(type='str',),disk_usage=dict(type='list',time=dict(type='int',),disk_usage=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', end_time=dict(type='int', ),start_time=dict(type='int', ),total_disk=dict(type='str', ),disk_usage=dict(type='list', time=dict(type='int', ),disk_usage=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -191,20 +191,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        algorithm=dict(type='str',choices=['RSASHA1','RSASHA256','RSASHA512']),
-        combinations_limit=dict(type='int',),
-        dnskey_ttl_k=dict(type='bool',),
-        user_tag=dict(type='str',),
-        hsm=dict(type='str',),
-        enable_nsec3=dict(type='bool',),
-        return_nsec_on_failure=dict(type='bool',),
-        dnskey_ttl_v=dict(type='int',),
-        signature_validity_period_k=dict(type='bool',),
-        dnssec_template_ksk=dict(type='dict',ksk_keysize_k=dict(type='bool',),zsk_rollover_time_v=dict(type='int',),ksk_keysize_v=dict(type='int',),ksk_lifetime_v=dict(type='int',),ksk_rollover_time_k=dict(type='bool',),ksk_lifetime_k=dict(type='bool',)),
-        dnssec_template_zsk=dict(type='dict',zsk_keysize_v=dict(type='int',),zsk_rollover_time_v=dict(type='int',),zsk_lifetime_v=dict(type='int',),zsk_lifetime_k=dict(type='bool',),zsk_keysize_k=dict(type='bool',),zsk_rollover_time_k=dict(type='bool',)),
-        signature_validity_period_v=dict(type='int',),
-        dnssec_temp_name=dict(type='str',required=True,)
+        uuid=dict(type='str', ),
+        algorithm=dict(type='str', choices=['RSASHA1','RSASHA256','RSASHA512']),
+        combinations_limit=dict(type='int', ),
+        dnskey_ttl_k=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        hsm=dict(type='str', ),
+        enable_nsec3=dict(type='bool', ),
+        return_nsec_on_failure=dict(type='bool', ),
+        dnskey_ttl_v=dict(type='int', ),
+        signature_validity_period_k=dict(type='bool', ),
+        dnssec_template_ksk=dict(type='dict', ksk_keysize_k=dict(type='bool', ),zsk_rollover_time_v=dict(type='int', ),ksk_keysize_v=dict(type='int', ),ksk_lifetime_v=dict(type='int', ),ksk_rollover_time_k=dict(type='bool', ),ksk_lifetime_k=dict(type='bool', )),
+        dnssec_template_zsk=dict(type='dict', zsk_keysize_v=dict(type='int', ),zsk_rollover_time_v=dict(type='int', ),zsk_lifetime_v=dict(type='int', ),zsk_lifetime_k=dict(type='bool', ),zsk_keysize_k=dict(type='bool', ),zsk_rollover_time_k=dict(type='bool', )),
+        signature_validity_period_v=dict(type='int', ),
+        dnssec_temp_name=dict(type='str', required=True, )
     ))
    
 

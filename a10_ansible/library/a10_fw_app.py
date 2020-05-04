@@ -134,10 +134,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',category=dict(type='str',),group_list=dict(type='list',category_name=dict(type='str',),app_name=dict(type='str',),app_desc=dict(type='str',)),contains=dict(type='str',),related=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dummy'])),
-        stats=dict(type='dict',dummy=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', category=dict(type='str', ),group_list=dict(type='list', category_name=dict(type='str', ),app_name=dict(type='str', ),app_desc=dict(type='str', )),contains=dict(type='str', ),related=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','dummy'])),
+        stats=dict(type='dict', dummy=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

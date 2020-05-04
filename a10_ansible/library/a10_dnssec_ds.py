@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ds_delete=dict(type='bool',),
-        zone_name=dict(type='str',)
+        ds_delete=dict(type='bool', ),
+        zone_name=dict(type='str', )
     ))
    
 

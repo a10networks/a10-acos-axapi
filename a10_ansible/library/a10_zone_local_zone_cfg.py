@@ -108,8 +108,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        local_type=dict(type='bool',),
-        uuid=dict(type='str',)
+        local_type=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

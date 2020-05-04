@@ -130,10 +130,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_cfg=dict(type='dict',ip=dict(type='str',),port4=dict(type='int',)),
-        service_group=dict(type='str',),
-        uuid=dict(type='str',),
-        ipv6_cfg=dict(type='dict',port6=dict(type='int',),ipv6=dict(type='str',))
+        ip_cfg=dict(type='dict', ip=dict(type='str', ),port4=dict(type='int', )),
+        service_group=dict(type='str', ),
+        uuid=dict(type='str', ),
+        ipv6_cfg=dict(type='dict', port6=dict(type='int', ),ipv6=dict(type='str', ))
     ))
    
     # Parent keys

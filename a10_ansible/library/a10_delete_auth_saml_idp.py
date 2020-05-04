@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        saml_idp_name=dict(type='str',)
+        saml_idp_name=dict(type='str', )
     ))
    
 

@@ -181,15 +181,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vlan_cfg=dict(type='list',vlan=dict(type='int',),timeout=dict(type='int',),weight=dict(type='int',)),
-        name=dict(type='str',required=True,),
-        route=dict(type='dict',ipv6_destination_cfg=dict(type='list',ipv6_destination=dict(type='str',),distance=dict(type='int',),protocol=dict(type='str',choices=['any','static','dynamic']),weight=dict(type='int',),gatewayv6=dict(type='str',)),ip_destination_cfg=dict(type='list',distance=dict(type='int',),protocol=dict(type='str',choices=['any','static','dynamic']),weight=dict(type='int',),mask=dict(type='str',),ip_destination=dict(type='str',),gateway=dict(type='str',))),
-        user_tag=dict(type='str',),
-        bgp=dict(type='dict',bgp_ipv4_address_cfg=dict(type='list',bgp_ipv4_address=dict(type='str',),weight=dict(type='int',)),bgp_ipv6_address_cfg=dict(type='list',bgp_ipv6_address=dict(type='str',),weight=dict(type='int',))),
-        interface=dict(type='list',ethernet=dict(type='str',),weight=dict(type='int',)),
-        gateway=dict(type='dict',gw_ipv4_address_cfg=dict(type='list',gw_ipv4_address=dict(type='str',),weight=dict(type='int',)),gw_ipv6_address_cfg=dict(type='list',gw_ipv6_address=dict(type='str',),weight=dict(type='int',))),
-        trunk_cfg=dict(type='list',per_port_weight=dict(type='int',),weight=dict(type='int',),trunk=dict(type='int',)),
-        uuid=dict(type='str',)
+        vlan_cfg=dict(type='list', vlan=dict(type='int', ),timeout=dict(type='int', ),weight=dict(type='int', )),
+        name=dict(type='str', required=True, ),
+        route=dict(type='dict', ipv6_destination_cfg=dict(type='list', ipv6_destination=dict(type='str', ),distance=dict(type='int', ),protocol=dict(type='str', choices=['any','static','dynamic']),weight=dict(type='int', ),gatewayv6=dict(type='str', )),ip_destination_cfg=dict(type='list', distance=dict(type='int', ),protocol=dict(type='str', choices=['any','static','dynamic']),weight=dict(type='int', ),mask=dict(type='str', ),ip_destination=dict(type='str', ),gateway=dict(type='str', ))),
+        user_tag=dict(type='str', ),
+        bgp=dict(type='dict', bgp_ipv4_address_cfg=dict(type='list', bgp_ipv4_address=dict(type='str', ),weight=dict(type='int', )),bgp_ipv6_address_cfg=dict(type='list', bgp_ipv6_address=dict(type='str', ),weight=dict(type='int', ))),
+        interface=dict(type='list', ethernet=dict(type='str', ),weight=dict(type='int', )),
+        gateway=dict(type='dict', gw_ipv4_address_cfg=dict(type='list', gw_ipv4_address=dict(type='str', ),weight=dict(type='int', )),gw_ipv6_address_cfg=dict(type='list', gw_ipv6_address=dict(type='str', ),weight=dict(type='int', ))),
+        trunk_cfg=dict(type='list', per_port_weight=dict(type='int', ),weight=dict(type='int', ),trunk=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

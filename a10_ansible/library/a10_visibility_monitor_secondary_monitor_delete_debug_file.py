@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        debug_port=dict(type='int',),
-        debug_ip_addr=dict(type='str',required=True,),
-        debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])
+        debug_port=dict(type='int', ),
+        debug_ip_addr=dict(type='str', required=True, ),
+        debug_protocol=dict(type='str', choices=['TCP','UDP','ICMP'])
     ))
    
 

@@ -276,18 +276,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action_url=dict(type='str',),
-        submit_text=dict(type='str',),
-        passcode_cfg=dict(type='dict',passcode_font_custom=dict(type='str',),passcode_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),passcode_color=dict(type='bool',),passcode_text=dict(type='str',),passcode_color_value=dict(type='str',),passcode_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),passcode_font=dict(type='bool',),passcode=dict(type='bool',),passcode_size=dict(type='int',)),
-        username_cfg=dict(type='dict',username=dict(type='bool',),user_font=dict(type='bool',),user_text=dict(type='str',),user_size=dict(type='int',),user_color_value=dict(type='str',),user_font_custom=dict(type='str',),user_color=dict(type='bool',),user_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),user_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),
-        username_var=dict(type='str',),
-        password_var=dict(type='str',),
-        background=dict(type='dict',bgfile=dict(type='str',),bgstyle=dict(type='str',choices=['tile','stretch','fit']),bgcolor_value=dict(type='str',),bgcolor_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),
-        passcode_var=dict(type='str',),
-        fail_msg_cfg=dict(type='dict',fail_font_custom=dict(type='str',),fail_color=dict(type='bool',),fail_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),fail_size=dict(type='int',),fail_msg=dict(type='bool',),fail_text=dict(type='str',),fail_color_value=dict(type='str',),fail_font=dict(type='bool',),fail_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),authz_fail_msg=dict(type='str',)),
-        password_cfg=dict(type='dict',pass_color_value=dict(type='str',),password=dict(type='bool',),pass_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),pass_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),pass_font_custom=dict(type='str',),pass_size=dict(type='int',),pass_text=dict(type='str',),pass_font=dict(type='bool',),pass_color=dict(type='bool',)),
-        enable_passcode=dict(type='bool',),
-        uuid=dict(type='str',)
+        action_url=dict(type='str', ),
+        submit_text=dict(type='str', ),
+        passcode_cfg=dict(type='dict', passcode_font_custom=dict(type='str', ),passcode_face=dict(type='str', choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),passcode_color=dict(type='bool', ),passcode_text=dict(type='str', ),passcode_color_value=dict(type='str', ),passcode_color_name=dict(type='str', choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),passcode_font=dict(type='bool', ),passcode=dict(type='bool', ),passcode_size=dict(type='int', )),
+        username_cfg=dict(type='dict', username=dict(type='bool', ),user_font=dict(type='bool', ),user_text=dict(type='str', ),user_size=dict(type='int', ),user_color_value=dict(type='str', ),user_font_custom=dict(type='str', ),user_color=dict(type='bool', ),user_face=dict(type='str', choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),user_color_name=dict(type='str', choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),
+        username_var=dict(type='str', ),
+        password_var=dict(type='str', ),
+        background=dict(type='dict', bgfile=dict(type='str', ),bgstyle=dict(type='str', choices=['tile','stretch','fit']),bgcolor_value=dict(type='str', ),bgcolor_name=dict(type='str', choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),
+        passcode_var=dict(type='str', ),
+        fail_msg_cfg=dict(type='dict', fail_font_custom=dict(type='str', ),fail_color=dict(type='bool', ),fail_face=dict(type='str', choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),fail_size=dict(type='int', ),fail_msg=dict(type='bool', ),fail_text=dict(type='str', ),fail_color_value=dict(type='str', ),fail_font=dict(type='bool', ),fail_color_name=dict(type='str', choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),authz_fail_msg=dict(type='str', )),
+        password_cfg=dict(type='dict', pass_color_value=dict(type='str', ),password=dict(type='bool', ),pass_color_name=dict(type='str', choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),pass_face=dict(type='str', choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),pass_font_custom=dict(type='str', ),pass_size=dict(type='int', ),pass_text=dict(type='str', ),pass_font=dict(type='bool', ),pass_color=dict(type='bool', )),
+        enable_passcode=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

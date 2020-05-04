@@ -130,8 +130,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        suppress_protocols=dict(type='dict',isis=dict(type='bool',),uuid=dict(type='str',),ospf=dict(type='bool',),rip=dict(type='bool',),ibgp=dict(type='bool',),ebgp=dict(type='bool',),static=dict(type='bool',),connected=dict(type='bool',)),
-        uuid=dict(type='str',)
+        suppress_protocols=dict(type='dict', isis=dict(type='bool', ),uuid=dict(type='str', ),ospf=dict(type='bool', ),rip=dict(type='bool', ),ibgp=dict(type='bool', ),ebgp=dict(type='bool', ),static=dict(type='bool', ),connected=dict(type='bool', )),
+        uuid=dict(type='str', )
     ))
    
 

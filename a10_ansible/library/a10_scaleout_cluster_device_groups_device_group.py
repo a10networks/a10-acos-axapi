@@ -123,10 +123,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        device_group=dict(type='int',required=True,),
-        device_id_list=dict(type='list',device_id_start=dict(type='int',),device_id_end=dict(type='int',)),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',)
+        device_group=dict(type='int', required=True, ),
+        device_id_list=dict(type='list', device_id_start=dict(type='int', ),device_id_end=dict(type='int', )),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', )
     ))
    
     # Parent keys

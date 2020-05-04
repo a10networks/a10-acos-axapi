@@ -131,10 +131,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',if_stats_list=dict(type='list',if_num=dict(type='int',),packet_sample_records=dict(type='int',),counter_sample_records=dict(type='int',),if_type=dict(type='str',choices=['Ethernet','VE']))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-packet-sample-records','total-counter-sample-records','total-sflow-packets-sent'])),
-        stats=dict(type='dict',total_packet_sample_records=dict(type='str',),total_counter_sample_records=dict(type='str',),total_sflow_packets_sent=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', if_stats_list=dict(type='list', if_num=dict(type='int', ),packet_sample_records=dict(type='int', ),counter_sample_records=dict(type='int', ),if_type=dict(type='str', choices=['Ethernet','VE']))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','total-packet-sample-records','total-counter-sample-records','total-sflow-packets-sent'])),
+        stats=dict(type='dict', total_packet_sample_records=dict(type='str', ),total_counter_sample_records=dict(type='str', ),total_sflow_packets_sent=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

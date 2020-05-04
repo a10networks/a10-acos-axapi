@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',mon_entity_list=dict(type='list',l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),session_list=dict(type='list',rev_src_ip=dict(type='str',),fwd_src_ip=dict(type='str',),fwd_src_port=dict(type='int',),proto=dict(type='str',),rev_src_port=dict(type='int',),fwd_dst_port=dict(type='int',),rev_dst_port=dict(type='int',),rev_dst_ip=dict(type='str',),fwd_dst_ip=dict(type='str',)),l4_proto=dict(type='str',),sec_entity_list=dict(type='list',l4_port=dict(type='int',),entity_key=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),session_list=dict(type='list',rev_src_ip=dict(type='str',),fwd_src_ip=dict(type='str',),fwd_src_port=dict(type='int',),proto=dict(type='str',),rev_src_port=dict(type='int',),fwd_dst_port=dict(type='int',),rev_dst_port=dict(type='int',),rev_dst_ip=dict(type='str',),fwd_dst_ip=dict(type='str',)),l4_proto=dict(type='str',)))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', mon_entity_list=dict(type='list', l4_port=dict(type='int', ),entity_key=dict(type='str', ),ipv4_addr=dict(type='str', ),ipv6_addr=dict(type='str', ),session_list=dict(type='list', rev_src_ip=dict(type='str', ),fwd_src_ip=dict(type='str', ),fwd_src_port=dict(type='int', ),proto=dict(type='str', ),rev_src_port=dict(type='int', ),fwd_dst_port=dict(type='int', ),rev_dst_port=dict(type='int', ),rev_dst_ip=dict(type='str', ),fwd_dst_ip=dict(type='str', )),l4_proto=dict(type='str', ),sec_entity_list=dict(type='list', l4_port=dict(type='int', ),entity_key=dict(type='str', ),ipv4_addr=dict(type='str', ),ipv6_addr=dict(type='str', ),session_list=dict(type='list', rev_src_ip=dict(type='str', ),fwd_src_ip=dict(type='str', ),fwd_src_port=dict(type='int', ),proto=dict(type='str', ),rev_src_port=dict(type='int', ),fwd_dst_port=dict(type='int', ),rev_dst_port=dict(type='int', ),rev_dst_ip=dict(type='str', ),fwd_dst_ip=dict(type='str', )),l4_proto=dict(type='str', )))),
+        uuid=dict(type='str', )
     ))
    
 

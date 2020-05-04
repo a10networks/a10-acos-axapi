@@ -142,14 +142,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',forwarding_errors=dict(type='str',),successful_handshakes=dict(type='str',),failed_handshakes=dict(type='str',),name=dict(type='str',required=True,)),
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        user_tag=dict(type='str',),
-        forward_proxy_enable=dict(type='bool',),
-        passphrase=dict(type='str',),
-        forward_proxy_hostkey=dict(type='str',),
-        name=dict(type='str',required=True,)
+        stats=dict(type='dict', forwarding_errors=dict(type='str', ),successful_handshakes=dict(type='str', ),failed_handshakes=dict(type='str', ),name=dict(type='str', required=True, )),
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        forward_proxy_enable=dict(type='bool', ),
+        passphrase=dict(type='str', ),
+        forward_proxy_hostkey=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
 

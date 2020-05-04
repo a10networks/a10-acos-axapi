@@ -177,26 +177,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        conn_limit=dict(type='int',),
-        conn_rate_limit_no_logging=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        icmp_lockup_period=dict(type='int',),
-        conn_limit_reset=dict(type='bool',),
-        rate_interval=dict(type='str',choices=['100ms','second']),
-        user_tag=dict(type='str',),
-        icmpv6_rate_limit=dict(type='int',),
-        subnet_gratuitous_arp=dict(type='bool',),
-        icmpv6_lockup=dict(type='int',),
-        conn_rate_limit_reset=dict(type='bool',),
-        tcp_stack_tfo_backoff_time=dict(type='int',),
-        tcp_stack_tfo_cookie_time_limit=dict(type='int',),
-        conn_limit_no_logging=dict(type='bool',),
-        icmpv6_lockup_period=dict(type='int',),
-        conn_rate_limit=dict(type='int',),
-        tcp_stack_tfo_active_conn_limit=dict(type='int',),
-        icmp_lockup=dict(type='int',),
-        icmp_rate_limit=dict(type='int',),
-        uuid=dict(type='str',)
+        conn_limit=dict(type='int', ),
+        conn_rate_limit_no_logging=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        icmp_lockup_period=dict(type='int', ),
+        conn_limit_reset=dict(type='bool', ),
+        rate_interval=dict(type='str', choices=['100ms','second']),
+        user_tag=dict(type='str', ),
+        icmpv6_rate_limit=dict(type='int', ),
+        subnet_gratuitous_arp=dict(type='bool', ),
+        icmpv6_lockup=dict(type='int', ),
+        conn_rate_limit_reset=dict(type='bool', ),
+        tcp_stack_tfo_backoff_time=dict(type='int', ),
+        tcp_stack_tfo_cookie_time_limit=dict(type='int', ),
+        conn_limit_no_logging=dict(type='bool', ),
+        icmpv6_lockup_period=dict(type='int', ),
+        conn_rate_limit=dict(type='int', ),
+        tcp_stack_tfo_active_conn_limit=dict(type='int', ),
+        icmp_lockup=dict(type='int', ),
+        icmp_rate_limit=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

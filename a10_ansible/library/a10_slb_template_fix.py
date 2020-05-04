@@ -131,12 +131,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        logging=dict(type='str',choices=['init','term','both']),
-        name=dict(type='str',required=True,),
-        tag_switching=dict(type='list',service_group=dict(type='str',),equals=dict(type='str',),switching_type=dict(type='str',choices=['sender-comp-id','target-comp-id'])),
-        user_tag=dict(type='str',),
-        insert_client_ip=dict(type='bool',),
-        uuid=dict(type='str',)
+        logging=dict(type='str', choices=['init','term','both']),
+        name=dict(type='str', required=True, ),
+        tag_switching=dict(type='list', service_group=dict(type='str', ),equals=dict(type='str', ),switching_type=dict(type='str', choices=['sender-comp-id','target-comp-id'])),
+        user_tag=dict(type='str', ),
+        insert_client_ip=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

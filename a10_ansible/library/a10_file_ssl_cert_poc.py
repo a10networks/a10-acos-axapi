@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pfx_password=dict(type='str',),
-        dst_file=dict(type='str',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        pfx_password=dict(type='str', ),
+        dst_file=dict(type='str', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        certificate_type=dict(type='str', choices=['pem','der','pfx','p7b']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

@@ -127,8 +127,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',last=dict(type='int',),target=dict(type='str',),top=dict(type='int',),log_list=dict(type='list',destination_port=dict(type='int',),user_domain=dict(type='str',),user_name=dict(type='str',),auth_result=dict(type='str',),client_ip=dict(type='str',),counter=dict(type='int',),destination_ip=dict(type='str',),time=dict(type='str',),source_port=dict(type='int',),record_id=dict(type='int',)),tail=dict(type='int',),auth_status=dict(type='str',),total=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', last=dict(type='int', ),target=dict(type='str', ),top=dict(type='int', ),log_list=dict(type='list', destination_port=dict(type='int', ),user_domain=dict(type='str', ),user_name=dict(type='str', ),auth_result=dict(type='str', ),client_ip=dict(type='str', ),counter=dict(type='int', ),destination_ip=dict(type='str', ),time=dict(type='str', ),source_port=dict(type='int', ),record_id=dict(type='int', )),tail=dict(type='int', ),auth_status=dict(type='str', ),total=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

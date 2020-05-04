@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',interfaces=dict(type='list',ipv6_addr_count=dict(type='int',),ipv6_addr=dict(type='str',),duplexity=dict(type='str',),port_num=dict(type='str',),state=dict(type='str',),mac=dict(type='str',),ipv4_addr_count=dict(type='int',),ipv4_addr=dict(type='str',),ipv4_mask=dict(type='str',),intf_name=dict(type='str',),ipv6_prefix=dict(type='str',),vlan_info=dict(type='str',),speed=dict(type='str',),trunk_group=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', interfaces=dict(type='list', ipv6_addr_count=dict(type='int', ),ipv6_addr=dict(type='str', ),duplexity=dict(type='str', ),port_num=dict(type='str', ),state=dict(type='str', ),mac=dict(type='str', ),ipv4_addr_count=dict(type='int', ),ipv4_addr=dict(type='str', ),ipv4_mask=dict(type='str', ),intf_name=dict(type='str', ),ipv6_prefix=dict(type='str', ),vlan_info=dict(type='str', ),speed=dict(type='str', ),trunk_group=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

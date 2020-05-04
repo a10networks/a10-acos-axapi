@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dest=dict(type='bool',),
-        mac=dict(type='str',required=True,),
-        vlan=dict(type='int',required=True,),
-        port=dict(type='str',),
-        uuid=dict(type='str',)
+        dest=dict(type='bool', ),
+        mac=dict(type='str', required=True, ),
+        vlan=dict(type='int', required=True, ),
+        port=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

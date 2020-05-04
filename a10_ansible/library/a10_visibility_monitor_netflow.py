@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        template_active_timeout=dict(type='int',),
-        uuid=dict(type='str',),
-        listening_port=dict(type='int',)
+        template_active_timeout=dict(type='int', ),
+        uuid=dict(type='str', ),
+        listening_port=dict(type='int', )
     ))
    
 

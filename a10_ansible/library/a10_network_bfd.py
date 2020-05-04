@@ -123,10 +123,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        echo=dict(type='bool',)
+        interval_cfg=dict(type='dict', interval=dict(type='int', ),min_rx=dict(type='int', ),multiplier=dict(type='int', )),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        echo=dict(type='bool', )
     ))
    
 

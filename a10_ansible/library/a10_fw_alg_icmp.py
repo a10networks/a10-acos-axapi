@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        disable=dict(type='str',choices=['disable']),
-        uuid=dict(type='str',)
+        disable=dict(type='str', choices=['disable']),
+        uuid=dict(type='str', )
     ))
    
 

@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ls_request=dict(type='bool',),
-        dd=dict(type='bool',),
-        detail=dict(type='bool',),
-        send=dict(type='bool',),
-        ls_ack=dict(type='bool',),
-        ls_update=dict(type='bool',),
-        recv=dict(type='bool',),
-        hello=dict(type='bool',)
+        uuid=dict(type='str', ),
+        ls_request=dict(type='bool', ),
+        dd=dict(type='bool', ),
+        detail=dict(type='bool', ),
+        send=dict(type='bool', ),
+        ls_ack=dict(type='bool', ),
+        ls_update=dict(type='bool', ),
+        recv=dict(type='bool', ),
+        hello=dict(type='bool', )
     ))
    
 

@@ -139,8 +139,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',category=dict(type='str',),interval=dict(type='str',),interval_position=dict(type='str',),application_name=dict(type='str',),top=dict(type='str',),log_list=dict(type='list',counter=dict(type='int',),name=dict(type='str',)),max_entries=dict(type='int',),action=dict(type='str',),client_ip=dict(type='str',),total=dict(type='int',),start_time=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', category=dict(type='str', ),interval=dict(type='str', ),interval_position=dict(type='str', ),application_name=dict(type='str', ),top=dict(type='str', ),log_list=dict(type='list', counter=dict(type='int', ),name=dict(type='str', )),max_entries=dict(type='int', ),action=dict(type='str', ),client_ip=dict(type='str', ),total=dict(type='int', ),start_time=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

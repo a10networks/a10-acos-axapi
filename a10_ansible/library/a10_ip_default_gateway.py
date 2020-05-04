@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gateway_ip=dict(type='str',),
-        uuid=dict(type='str',)
+        gateway_ip=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

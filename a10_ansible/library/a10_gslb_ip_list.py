@@ -127,11 +127,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gslb_ip_list_obj_name=dict(type='str',required=True,),
-        gslb_ip_list_filename=dict(type='str',),
-        gslb_ip_list_addr_list=dict(type='list',ip=dict(type='str',),ip_mask=dict(type='str',),id=dict(type='int',)),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',)
+        gslb_ip_list_obj_name=dict(type='str', required=True, ),
+        gslb_ip_list_filename=dict(type='str', ),
+        gslb_ip_list_addr_list=dict(type='list', ip=dict(type='str', ),ip_mask=dict(type='str', ),id=dict(type='int', )),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', )
     ))
    
 

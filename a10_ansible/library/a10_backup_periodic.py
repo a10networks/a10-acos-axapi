@@ -141,17 +141,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        week=dict(type='int',),
-        encrypt=dict(type='bool',),
-        log=dict(type='bool',),
-        hour=dict(type='int',),
-        system=dict(type='bool',),
-        store_name=dict(type='str',),
-        remote_file=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        fixed_nat=dict(type='bool',),
-        day=dict(type='int',),
-        uuid=dict(type='str',)
+        week=dict(type='int', ),
+        encrypt=dict(type='bool', ),
+        log=dict(type='bool', ),
+        hour=dict(type='int', ),
+        system=dict(type='bool', ),
+        store_name=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        fixed_nat=dict(type='bool', ),
+        day=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

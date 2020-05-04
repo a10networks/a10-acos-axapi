@@ -151,13 +151,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        outside_prefix=dict(type='str',),
-        stats=dict(type='dict',inbound_packets=dict(type='str',),name=dict(type='str',required=True,),hairpin_packets=dict(type='str',),inbound_packets_no_map=dict(type='str',),outbound_packets=dict(type='str',),address_not_valid_for_translation=dict(type='str',),packets_dest_unreachable=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        inside_prefix=dict(type='str',),
-        user_tag=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','outbound-packets','inbound-packets','hairpin-packets','address-not-valid-for-translation','inbound-packets-no-map','packets-dest-unreachable'])),
-        uuid=dict(type='str',)
+        outside_prefix=dict(type='str', ),
+        stats=dict(type='dict', inbound_packets=dict(type='str', ),name=dict(type='str', required=True, ),hairpin_packets=dict(type='str', ),inbound_packets_no_map=dict(type='str', ),outbound_packets=dict(type='str', ),address_not_valid_for_translation=dict(type='str', ),packets_dest_unreachable=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        inside_prefix=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','outbound-packets','inbound-packets','hairpin-packets','address-not-valid-for-translation','inbound-packets-no-map','packets-dest-unreachable'])),
+        uuid=dict(type='str', )
     ))
    
 

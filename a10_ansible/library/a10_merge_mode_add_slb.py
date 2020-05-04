@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        member=dict(type='bool',),
-        virtual_server_port=dict(type='bool',),
-        server_port=dict(type='bool',),
-        uuid=dict(type='str',)
+        member=dict(type='bool', ),
+        virtual_server_port=dict(type='bool', ),
+        server_port=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

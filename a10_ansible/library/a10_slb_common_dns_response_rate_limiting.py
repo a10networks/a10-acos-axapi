@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        max_table_entries=dict(type='int',)
+        uuid=dict(type='str', ),
+        max_table_entries=dict(type='int', )
     ))
    
 

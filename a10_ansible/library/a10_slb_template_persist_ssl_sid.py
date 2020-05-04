@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dont_honor_conn_rules=dict(type='bool',),
-        timeout=dict(type='int',),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        uuid=dict(type='str',)
+        dont_honor_conn_rules=dict(type='bool', ),
+        timeout=dict(type='int', ),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

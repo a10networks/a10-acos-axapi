@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_num','port_out_of_range'])),
-        stats=dict(type='dict',sessions_num=dict(type='str',),port_out_of_range=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','sessions_num','port_out_of_range'])),
+        stats=dict(type='dict', sessions_num=dict(type='str', ),port_out_of_range=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

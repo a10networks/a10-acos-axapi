@@ -242,24 +242,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nat=dict(type='dict',inside=dict(type='bool',),outside=dict(type='bool',)),
-        uuid=dict(type='str',),
-        address_list=dict(type='list',ipv4_address=dict(type='str',),ipv4_netmask=dict(type='str',)),
-        generate_membership_query=dict(type='bool',),
-        cache_spoofing_port=dict(type='bool',),
-        router=dict(type='dict',isis=dict(type='dict',tag=dict(type='str',),uuid=dict(type='str',))),
-        allow_promiscuous_vip=dict(type='bool',),
-        server=dict(type='bool',),
-        max_resp_time=dict(type='int',),
-        query_interval=dict(type='int',),
-        helper_address_list=dict(type='list',helper_address=dict(type='str',)),
-        stateful_firewall=dict(type='dict',uuid=dict(type='str',),class_list=dict(type='str',),inside=dict(type='bool',),outside=dict(type='bool',),acl_id=dict(type='int',),access_list=dict(type='bool',)),
-        client=dict(type='bool',),
-        rip=dict(type='dict',receive_cfg=dict(type='dict',receive=dict(type='bool',),version=dict(type='str',choices=['1','2','1-2'])),uuid=dict(type='str',),receive_packet=dict(type='bool',),split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),authentication=dict(type='dict',key_chain=dict(type='dict',key_chain=dict(type='str',)),mode=dict(type='dict',mode=dict(type='str',choices=['md5','text'])),str=dict(type='dict',string=dict(type='str',))),send_cfg=dict(type='dict',version=dict(type='str',choices=['1','2','1-compatible','1-2']),send=dict(type='bool',)),send_packet=dict(type='bool',)),
-        ttl_ignore=dict(type='bool',),
-        dhcp=dict(type='bool',),
-        ospf=dict(type='dict',ospf_ip_list=dict(type='list',dead_interval=dict(type='int',),authentication_key=dict(type='str',),uuid=dict(type='str',),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),value=dict(type='str',choices=['message-digest','null']),priority=dict(type='int',),authentication=dict(type='bool',),cost=dict(type='int',),database_filter=dict(type='str',choices=['all']),hello_interval=dict(type='int',),ip_addr=dict(type='str',required=True,),retransmit_interval=dict(type='int',),message_digest_cfg=dict(type='list',md5_value=dict(type='str',),message_digest_key=dict(type='int',),encrypted=dict(type='str',)),out=dict(type='bool',)),ospf_global=dict(type='dict',cost=dict(type='int',),dead_interval=dict(type='int',),authentication_key=dict(type='str',),network=dict(type='dict',broadcast=dict(type='bool',),point_to_multipoint=dict(type='bool',),non_broadcast=dict(type='bool',),point_to_point=dict(type='bool',),p2mp_nbma=dict(type='bool',)),mtu_ignore=dict(type='bool',),transmit_delay=dict(type='int',),authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),retransmit_interval=dict(type='int',),bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),disable=dict(type='str',choices=['all']),hello_interval=dict(type='int',),database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),priority=dict(type='int',),mtu=dict(type='int',),message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),uuid=dict(type='str',))),
-        slb_partition_redirect=dict(type='bool',)
+        nat=dict(type='dict', inside=dict(type='bool', ),outside=dict(type='bool', )),
+        uuid=dict(type='str', ),
+        address_list=dict(type='list', ipv4_address=dict(type='str', ),ipv4_netmask=dict(type='str', )),
+        generate_membership_query=dict(type='bool', ),
+        cache_spoofing_port=dict(type='bool', ),
+        router=dict(type='dict', isis=dict(type='dict', tag=dict(type='str', ),uuid=dict(type='str', ))),
+        allow_promiscuous_vip=dict(type='bool', ),
+        server=dict(type='bool', ),
+        max_resp_time=dict(type='int', ),
+        query_interval=dict(type='int', ),
+        helper_address_list=dict(type='list', helper_address=dict(type='str', )),
+        stateful_firewall=dict(type='dict', uuid=dict(type='str', ),class_list=dict(type='str', ),inside=dict(type='bool', ),outside=dict(type='bool', ),acl_id=dict(type='int', ),access_list=dict(type='bool', )),
+        client=dict(type='bool', ),
+        rip=dict(type='dict', receive_cfg=dict(type='dict', receive=dict(type='bool', ),version=dict(type='str', choices=['1','2','1-2'])),uuid=dict(type='str', ),receive_packet=dict(type='bool', ),split_horizon_cfg=dict(type='dict', state=dict(type='str', choices=['poisoned','disable','enable'])),authentication=dict(type='dict', key_chain=dict(type='dict', key_chain=dict(type='str', )),mode=dict(type='dict', mode=dict(type='str', choices=['md5','text'])),str=dict(type='dict', string=dict(type='str', ))),send_cfg=dict(type='dict', version=dict(type='str', choices=['1','2','1-compatible','1-2']),send=dict(type='bool', )),send_packet=dict(type='bool', )),
+        ttl_ignore=dict(type='bool', ),
+        dhcp=dict(type='bool', ),
+        ospf=dict(type='dict', ospf_ip_list=dict(type='list', dead_interval=dict(type='int', ),authentication_key=dict(type='str', ),uuid=dict(type='str', ),mtu_ignore=dict(type='bool', ),transmit_delay=dict(type='int', ),value=dict(type='str', choices=['message-digest','null']),priority=dict(type='int', ),authentication=dict(type='bool', ),cost=dict(type='int', ),database_filter=dict(type='str', choices=['all']),hello_interval=dict(type='int', ),ip_addr=dict(type='str', required=True, ),retransmit_interval=dict(type='int', ),message_digest_cfg=dict(type='list', md5_value=dict(type='str', ),message_digest_key=dict(type='int', ),encrypted=dict(type='str', )),out=dict(type='bool', )),ospf_global=dict(type='dict', cost=dict(type='int', ),dead_interval=dict(type='int', ),authentication_key=dict(type='str', ),network=dict(type='dict', broadcast=dict(type='bool', ),point_to_multipoint=dict(type='bool', ),non_broadcast=dict(type='bool', ),point_to_point=dict(type='bool', ),p2mp_nbma=dict(type='bool', )),mtu_ignore=dict(type='bool', ),transmit_delay=dict(type='int', ),authentication_cfg=dict(type='dict', authentication=dict(type='bool', ),value=dict(type='str', choices=['message-digest','null'])),retransmit_interval=dict(type='int', ),bfd_cfg=dict(type='dict', disable=dict(type='bool', ),bfd=dict(type='bool', )),disable=dict(type='str', choices=['all']),hello_interval=dict(type='int', ),database_filter_cfg=dict(type='dict', database_filter=dict(type='str', choices=['all']),out=dict(type='bool', )),priority=dict(type='int', ),mtu=dict(type='int', ),message_digest_cfg=dict(type='list', message_digest_key=dict(type='int', ),md5=dict(type='dict', md5_value=dict(type='str', ),encrypted=dict(type='str', ))),uuid=dict(type='str', ))),
+        slb_partition_redirect=dict(type='bool', )
     ))
    
     # Parent keys

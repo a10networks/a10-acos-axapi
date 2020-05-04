@@ -346,24 +346,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        oper=dict(type='dict',Status=dict(type='str',),Hash_Algorithm=dict(type='str',),Protocol=dict(type='str',),name=dict(type='str',required=True,),DH_Group=dict(type='int',),Remote_SPI=dict(type='str',),Local_IP=dict(type='str',),Anti_Replay=dict(type='str',),Lifebytes=dict(type='str',),SA_Index=dict(type='int',),Peer_IP=dict(type='str',),Mode=dict(type='str',),NAT_Traversal=dict(type='int',),Local_SPI=dict(type='str',),Encryption_Algorithm=dict(type='str',),Lifetime=dict(type='int',)),
-        lifebytes=dict(type='int',),
-        bind_tunnel=dict(type='dict',tunnel=dict(type='int',),next_hop=dict(type='str',),uuid=dict(type='str',),next_hop_v6=dict(type='str',)),
-        stats=dict(type='dict',anti_replay_num=dict(type='str',),packets_decrypted=dict(type='str',),tunnel_intf_down=dict(type='str',),pkt_fail_to_send=dict(type='str',),packets_encrypted=dict(type='str',),bytes_encrypted=dict(type='str',),packets_err_nh_check=dict(type='str',),no_tunnel_found=dict(type='str',),cavium_packets_decrypted=dict(type='str',),prefrag_error=dict(type='str',),bytes_decrypted=dict(type='str',),invalid_tunnel_id=dict(type='str',),pkt_fail_prep_to_send=dict(type='str',),cavium_packets_encrypted=dict(type='str',),packets_err_icv_check=dict(type='str',),packets_err_inactive=dict(type='str',),cavium_bytes_decrypted=dict(type='str',),sequence_num_rollover=dict(type='str',),packets_err_pkt_sanity=dict(type='str',),frag_after_encap_frag_packets=dict(type='str',),cavium_bytes_encrypted=dict(type='str',),sequence_num=dict(type='str',),packets_err_lifetime_lifebytes=dict(type='str',),name=dict(type='str',required=True,),packets_err_encryption=dict(type='str',),rekey_num=dict(type='str',),prefrag_success=dict(type='str',),packets_err_pad_check=dict(type='str',),no_next_hop=dict(type='str',),frag_received=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        dh_group=dict(type='str',choices=['0','1','2','5','14','15','16','18','19','20']),
-        proto=dict(type='str',choices=['esp']),
-        up=dict(type='bool',),
-        user_tag=dict(type='str',),
-        anti_replay_window=dict(type='str',choices=['0','32','64','128','256','512','1024']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','packets-encrypted','packets-decrypted','anti-replay-num','rekey-num','packets-err-inactive','packets-err-encryption','packets-err-pad-check','packets-err-pkt-sanity','packets-err-icv-check','packets-err-lifetime-lifebytes','bytes-encrypted','bytes-decrypted','prefrag-success','prefrag-error','cavium-bytes-encrypted','cavium-bytes-decrypted','cavium-packets-encrypted','cavium-packets-decrypted','tunnel-intf-down','pkt-fail-prep-to-send','no-next-hop','invalid-tunnel-id','no-tunnel-found','pkt-fail-to-send','frag-after-encap-frag-packets','frag-received','sequence-num','sequence-num-rollover','packets-err-nh-check'])),
-        ike_gateway=dict(type='str',),
-        mode=dict(type='str',choices=['tunnel']),
-        sequence_number_disable=dict(type='bool',),
-        lifetime=dict(type='int',),
-        enc_cfg=dict(type='list',priority=dict(type='int',),encryption=dict(type='str',choices=['des','3des','aes-128','aes-192','aes-256','aes-gcm-128','aes-gcm-192','aes-gcm-256','null']),gcm_priority=dict(type='int',),hash=dict(type='str',choices=['md5','sha1','sha256','sha384','sha512','null'])),
-        traffic_selector=dict(type='dict',ipv4=dict(type='dict',remote=dict(type='str',),local_port=dict(type='int',),remote_port=dict(type='int',),local_netmask=dict(type='str',),remote_netmask=dict(type='str',),protocol=dict(type='int',),local=dict(type='str',)),ipv6=dict(type='dict',local_portv6=dict(type='int',),protocolv6=dict(type='int',),localv6=dict(type='str',),remotev6=dict(type='str',),remote_portv6=dict(type='int',)))
+        uuid=dict(type='str', ),
+        oper=dict(type='dict', Status=dict(type='str', ),Hash_Algorithm=dict(type='str', ),Protocol=dict(type='str', ),name=dict(type='str', required=True, ),DH_Group=dict(type='int', ),Remote_SPI=dict(type='str', ),Local_IP=dict(type='str', ),Anti_Replay=dict(type='str', ),Lifebytes=dict(type='str', ),SA_Index=dict(type='int', ),Peer_IP=dict(type='str', ),Mode=dict(type='str', ),NAT_Traversal=dict(type='int', ),Local_SPI=dict(type='str', ),Encryption_Algorithm=dict(type='str', ),Lifetime=dict(type='int', )),
+        lifebytes=dict(type='int', ),
+        bind_tunnel=dict(type='dict', tunnel=dict(type='int', ),next_hop=dict(type='str', ),uuid=dict(type='str', ),next_hop_v6=dict(type='str', )),
+        stats=dict(type='dict', anti_replay_num=dict(type='str', ),packets_decrypted=dict(type='str', ),tunnel_intf_down=dict(type='str', ),pkt_fail_to_send=dict(type='str', ),packets_encrypted=dict(type='str', ),bytes_encrypted=dict(type='str', ),packets_err_nh_check=dict(type='str', ),no_tunnel_found=dict(type='str', ),cavium_packets_decrypted=dict(type='str', ),prefrag_error=dict(type='str', ),bytes_decrypted=dict(type='str', ),invalid_tunnel_id=dict(type='str', ),pkt_fail_prep_to_send=dict(type='str', ),cavium_packets_encrypted=dict(type='str', ),packets_err_icv_check=dict(type='str', ),packets_err_inactive=dict(type='str', ),cavium_bytes_decrypted=dict(type='str', ),sequence_num_rollover=dict(type='str', ),packets_err_pkt_sanity=dict(type='str', ),frag_after_encap_frag_packets=dict(type='str', ),cavium_bytes_encrypted=dict(type='str', ),sequence_num=dict(type='str', ),packets_err_lifetime_lifebytes=dict(type='str', ),name=dict(type='str', required=True, ),packets_err_encryption=dict(type='str', ),rekey_num=dict(type='str', ),prefrag_success=dict(type='str', ),packets_err_pad_check=dict(type='str', ),no_next_hop=dict(type='str', ),frag_received=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        dh_group=dict(type='str', choices=['0','1','2','5','14','15','16','18','19','20']),
+        proto=dict(type='str', choices=['esp']),
+        up=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        anti_replay_window=dict(type='str', choices=['0','32','64','128','256','512','1024']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','packets-encrypted','packets-decrypted','anti-replay-num','rekey-num','packets-err-inactive','packets-err-encryption','packets-err-pad-check','packets-err-pkt-sanity','packets-err-icv-check','packets-err-lifetime-lifebytes','bytes-encrypted','bytes-decrypted','prefrag-success','prefrag-error','cavium-bytes-encrypted','cavium-bytes-decrypted','cavium-packets-encrypted','cavium-packets-decrypted','tunnel-intf-down','pkt-fail-prep-to-send','no-next-hop','invalid-tunnel-id','no-tunnel-found','pkt-fail-to-send','frag-after-encap-frag-packets','frag-received','sequence-num','sequence-num-rollover','packets-err-nh-check'])),
+        ike_gateway=dict(type='str', ),
+        mode=dict(type='str', choices=['tunnel']),
+        sequence_number_disable=dict(type='bool', ),
+        lifetime=dict(type='int', ),
+        enc_cfg=dict(type='list', priority=dict(type='int', ),encryption=dict(type='str', choices=['des','3des','aes-128','aes-192','aes-256','aes-gcm-128','aes-gcm-192','aes-gcm-256','null']),gcm_priority=dict(type='int', ),hash=dict(type='str', choices=['md5','sha1','sha256','sha384','sha512','null'])),
+        traffic_selector=dict(type='dict', ipv4=dict(type='dict', remote=dict(type='str', ),local_port=dict(type='int', ),remote_port=dict(type='int', ),local_netmask=dict(type='str', ),remote_netmask=dict(type='str', ),protocol=dict(type='int', ),local=dict(type='str', )),ipv6=dict(type='dict', local_portv6=dict(type='int', ),protocolv6=dict(type='int', ),localv6=dict(type='str', ),remotev6=dict(type='str', ),remote_portv6=dict(type='int', )))
     ))
    
 

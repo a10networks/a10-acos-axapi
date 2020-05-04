@@ -129,14 +129,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='str',required=True,choices=['tcp','udp']),
-        log=dict(type='bool',),
-        lock_out=dict(type='int',),
-        limit_period=dict(type='str',choices=['100','1000']),
-        limit=dict(type='int',),
-        exceed_action=dict(type='bool',),
-        shared=dict(type='bool',),
-        uuid=dict(type='str',)
+        protocol=dict(type='str', required=True, choices=['tcp','udp']),
+        log=dict(type='bool', ),
+        lock_out=dict(type='int', ),
+        limit_period=dict(type='str', choices=['100','1000']),
+        limit=dict(type='int', ),
+        exceed_action=dict(type='bool', ),
+        shared=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

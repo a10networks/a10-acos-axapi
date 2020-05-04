@@ -140,11 +140,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_multiple_fields=dict(type='list',ip_addr2_sub=dict(type='str',),ip_sub=dict(type='str',),ip_mask_sub=dict(type='str',)),
-        uuid=dict(type='str',),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        ipv6_multiple_fields=dict(type='list',ipv6_mask_sub=dict(type='int',),ipv6_sub=dict(type='str',),ipv6_addr2_sub=dict(type='str',))
+        ip_multiple_fields=dict(type='list', ip_addr2_sub=dict(type='str', ),ip_sub=dict(type='str', ),ip_mask_sub=dict(type='str', )),
+        uuid=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        ipv6_multiple_fields=dict(type='list', ipv6_mask_sub=dict(type='int', ),ipv6_sub=dict(type='str', ),ipv6_addr2_sub=dict(type='str', ))
     ))
    
     # Parent keys

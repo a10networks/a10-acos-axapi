@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        kb=dict(type='int',),
-        uuid=dict(type='str',),
-        mb=dict(type='int',),
-        seconds=dict(type='int',),
-        bytes=dict(type='int',),
-        days=dict(type='int',),
-        hours=dict(type='int',),
-        gb=dict(type='int',),
-        minutes=dict(type='int',)
+        kb=dict(type='int', ),
+        uuid=dict(type='str', ),
+        mb=dict(type='int', ),
+        seconds=dict(type='int', ),
+        bytes=dict(type='int', ),
+        days=dict(type='int', ),
+        hours=dict(type='int', ),
+        gb=dict(type='int', ),
+        minutes=dict(type='int', )
     ))
    
 

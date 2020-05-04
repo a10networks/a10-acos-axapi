@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        on_threshold=dict(type='int',),
-        enable=dict(type='bool',),
-        off_threshold=dict(type='int',),
-        uuid=dict(type='str',)
+        on_threshold=dict(type='int', ),
+        enable=dict(type='bool', ),
+        off_threshold=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

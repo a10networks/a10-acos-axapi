@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vip_name=dict(type='str',),
-        port=dict(type='int',)
+        vip_name=dict(type='str', ),
+        port=dict(type='int', )
     ))
    
 

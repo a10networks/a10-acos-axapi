@@ -177,26 +177,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pass_phrase=dict(type='str',),
-        domain=dict(type='str',),
-        cookie_name=dict(type='str',),
-        secure=dict(type='bool',),
-        encrypted=dict(type='str',),
-        dont_honor_conn_rules=dict(type='bool',),
-        encrypt_level=dict(type='int',),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        server=dict(type='bool',),
-        server_service_group=dict(type='bool',),
-        service_group=dict(type='bool',),
-        expire=dict(type='int',),
-        httponly=dict(type='bool',),
-        path=dict(type='str',),
-        pass_thru=dict(type='bool',),
-        scan_all_members=dict(type='bool',),
-        insert_always=dict(type='bool',),
-        match_type=dict(type='bool',),
-        name=dict(type='str',required=True,)
+        pass_phrase=dict(type='str', ),
+        domain=dict(type='str', ),
+        cookie_name=dict(type='str', ),
+        secure=dict(type='bool', ),
+        encrypted=dict(type='str', ),
+        dont_honor_conn_rules=dict(type='bool', ),
+        encrypt_level=dict(type='int', ),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        server=dict(type='bool', ),
+        server_service_group=dict(type='bool', ),
+        service_group=dict(type='bool', ),
+        expire=dict(type='int', ),
+        httponly=dict(type='bool', ),
+        path=dict(type='str', ),
+        pass_thru=dict(type='bool', ),
+        scan_all_members=dict(type='bool', ),
+        insert_always=dict(type='bool', ),
+        match_type=dict(type='bool', ),
+        name=dict(type='str', required=True, )
     ))
    
 

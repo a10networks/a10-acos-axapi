@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        unknown_ucast=dict(type='int',),
-        bcast=dict(type='int',),
-        mcast=dict(type='int',),
-        ipmcast=dict(type='int',),
-        uuid=dict(type='str',)
+        unknown_ucast=dict(type='int', ),
+        bcast=dict(type='int', ),
+        mcast=dict(type='int', ),
+        ipmcast=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

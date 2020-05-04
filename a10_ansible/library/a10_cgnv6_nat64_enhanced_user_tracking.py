@@ -133,8 +133,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',prefix_filter=dict(type='str',),pool_shared=dict(type='bool',),all_partitions=dict(type='bool',),user_list=dict(type='list',udp_peak=dict(type='int',),tcp_peak=dict(type='int',),icmp_peak=dict(type='int',),upl_packets=dict(type='int',),tcp_quota=dict(type='int',),prefix_len=dict(type='int',),dwl_packets=dict(type='int',),nat_address=dict(type='str',),icmp_quota=dict(type='int',),nat_pool_name=dict(type='str',),session_peak=dict(type='int',),upl_bytes=dict(type='int',),session_count=dict(type='int',),total_session_count=dict(type='int',),inside_address=dict(type='str',),dwl_bytes=dict(type='int',),udp_quota=dict(type='int',)),shared_partition=dict(type='bool',),inside_addr_v6=dict(type='str',),partition_name=dict(type='str',),user_count=dict(type='int',),nat_pool_name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', prefix_filter=dict(type='str', ),pool_shared=dict(type='bool', ),all_partitions=dict(type='bool', ),user_list=dict(type='list', udp_peak=dict(type='int', ),tcp_peak=dict(type='int', ),icmp_peak=dict(type='int', ),upl_packets=dict(type='int', ),tcp_quota=dict(type='int', ),prefix_len=dict(type='int', ),dwl_packets=dict(type='int', ),nat_address=dict(type='str', ),icmp_quota=dict(type='int', ),nat_pool_name=dict(type='str', ),session_peak=dict(type='int', ),upl_bytes=dict(type='int', ),session_count=dict(type='int', ),total_session_count=dict(type='int', ),inside_address=dict(type='str', ),dwl_bytes=dict(type='int', ),udp_quota=dict(type='int', )),shared_partition=dict(type='bool', ),inside_addr_v6=dict(type='str', ),partition_name=dict(type='str', ),user_count=dict(type='int', ),nat_pool_name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sni_lower_limit=dict(type='int',),
-        uuid=dict(type='str',),
-        sni_upper_limit=dict(type='int',),
-        sni_delete_factor=dict(type='int',)
+        sni_lower_limit=dict(type='int', ),
+        uuid=dict(type='str', ),
+        sni_upper_limit=dict(type='int', ),
+        sni_delete_factor=dict(type='int', )
     ))
    
 

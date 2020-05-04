@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        host_ipv6=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
-        port=dict(type='int',),
-        tcp=dict(type='bool',),
-        uuid=dict(type='str',)
+        host_ipv6=dict(type='str', required=True, ),
+        use_mgmt_port=dict(type='bool', ),
+        port=dict(type='int', ),
+        tcp=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

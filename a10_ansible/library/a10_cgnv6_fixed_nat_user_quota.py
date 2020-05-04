@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',inside_user_v4=dict(type='str',),quota_usage_list=dict(type='list',udp_ports_available=dict(type='int',),udp_ports_used=dict(type='int',),nat_address=dict(type='str',),icmp_resources_used=dict(type='int',),tcp_ports_available=dict(type='int',),session_quota_used=dict(type='int',),inside_user=dict(type='str',),icmp_resources_available=dict(type='int',),tcp_ports_used=dict(type='int',)),inside_user_v6=dict(type='str',),partition=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', inside_user_v4=dict(type='str', ),quota_usage_list=dict(type='list', udp_ports_available=dict(type='int', ),udp_ports_used=dict(type='int', ),nat_address=dict(type='str', ),icmp_resources_used=dict(type='int', ),tcp_ports_available=dict(type='int', ),session_quota_used=dict(type='int', ),inside_user=dict(type='str', ),icmp_resources_available=dict(type='int', ),tcp_ports_used=dict(type='int', )),inside_user_v6=dict(type='str', ),partition=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

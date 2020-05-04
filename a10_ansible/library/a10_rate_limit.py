@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        maxPktNum=dict(type='int',),
-        rl_type=dict(type='str',choices=['ctrl']),
-        uuid=dict(type='str',)
+        maxPktNum=dict(type='int', ),
+        rl_type=dict(type='str', choices=['ctrl']),
+        uuid=dict(type='str', )
     ))
    
 

@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        slb_change=dict(type='bool',),
-        uuid=dict(type='str',),
-        vrrp_a=dict(type='bool',),
-        snmp=dict(type='bool',),
-        gslb=dict(type='bool',),
-        slb=dict(type='bool',)
+        all=dict(type='bool', ),
+        slb_change=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        vrrp_a=dict(type='bool', ),
+        snmp=dict(type='bool', ),
+        gslb=dict(type='bool', ),
+        slb=dict(type='bool', )
     ))
    
 

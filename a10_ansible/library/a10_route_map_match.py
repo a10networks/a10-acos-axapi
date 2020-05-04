@@ -250,20 +250,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        extcommunity=dict(type='dict',extcommunity_l_name=dict(type='dict',exact_match=dict(type='bool',),name=dict(type='str',))),
-        origin=dict(type='dict',egp=dict(type='bool',),incomplete=dict(type='bool',),igp=dict(type='bool',)),
-        group=dict(type='dict',group_id=dict(type='int',),ha_state=dict(type='str',choices=['active','standby'])),
-        uuid=dict(type='str',),
-        ip=dict(type='dict',peer=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',)),next_hop=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',),prefix_list_1=dict(type='dict',name=dict(type='str',))),address=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),prefix_list=dict(type='dict',name=dict(type='str',)),name=dict(type='str',))),
-        metric=dict(type='dict',value=dict(type='int',)),
-        as_path=dict(type='dict',name=dict(type='str',)),
-        community=dict(type='dict',name_cfg=dict(type='dict',exact_match=dict(type='bool',),name=dict(type='str',))),
-        local_preference=dict(type='dict',val=dict(type='int',)),
-        route_type=dict(type='dict',external=dict(type='dict',value=dict(type='str',choices=['type-1','type-2']))),
-        tag=dict(type='dict',value=dict(type='int',)),
-        ipv6=dict(type='dict',next_hop_1=dict(type='dict',prefix_list_name=dict(type='str',),v6_addr=dict(type='str',),next_hop_acl_name=dict(type='str',)),peer_1=dict(type='dict',acl1=dict(type='int',),acl2=dict(type='int',),name=dict(type='str',)),address_1=dict(type='dict',name=dict(type='str',),prefix_list_2=dict(type='dict',name=dict(type='str',)))),
-        interface=dict(type='dict',tunnel=dict(type='str',),ethernet=dict(type='str',),loopback=dict(type='int',),ve=dict(type='int',),trunk=dict(type='int',)),
-        scaleout=dict(type='dict',cluster_id=dict(type='int',),operational_state=dict(type='str',choices=['up','down']))
+        extcommunity=dict(type='dict', extcommunity_l_name=dict(type='dict', exact_match=dict(type='bool', ),name=dict(type='str', ))),
+        origin=dict(type='dict', egp=dict(type='bool', ),incomplete=dict(type='bool', ),igp=dict(type='bool', )),
+        group=dict(type='dict', group_id=dict(type='int', ),ha_state=dict(type='str', choices=['active','standby'])),
+        uuid=dict(type='str', ),
+        ip=dict(type='dict', peer=dict(type='dict', acl1=dict(type='int', ),acl2=dict(type='int', ),name=dict(type='str', )),next_hop=dict(type='dict', acl1=dict(type='int', ),acl2=dict(type='int', ),name=dict(type='str', ),prefix_list_1=dict(type='dict', name=dict(type='str', ))),address=dict(type='dict', acl1=dict(type='int', ),acl2=dict(type='int', ),prefix_list=dict(type='dict', name=dict(type='str', )),name=dict(type='str', ))),
+        metric=dict(type='dict', value=dict(type='int', )),
+        as_path=dict(type='dict', name=dict(type='str', )),
+        community=dict(type='dict', name_cfg=dict(type='dict', exact_match=dict(type='bool', ),name=dict(type='str', ))),
+        local_preference=dict(type='dict', val=dict(type='int', )),
+        route_type=dict(type='dict', external=dict(type='dict', value=dict(type='str', choices=['type-1','type-2']))),
+        tag=dict(type='dict', value=dict(type='int', )),
+        ipv6=dict(type='dict', next_hop_1=dict(type='dict', prefix_list_name=dict(type='str', ),v6_addr=dict(type='str', ),next_hop_acl_name=dict(type='str', )),peer_1=dict(type='dict', acl1=dict(type='int', ),acl2=dict(type='int', ),name=dict(type='str', )),address_1=dict(type='dict', name=dict(type='str', ),prefix_list_2=dict(type='dict', name=dict(type='str', )))),
+        interface=dict(type='dict', tunnel=dict(type='str', ),ethernet=dict(type='str', ),loopback=dict(type='int', ),ve=dict(type='int', ),trunk=dict(type='int', )),
+        scaleout=dict(type='dict', cluster_id=dict(type='int', ),operational_state=dict(type='str', choices=['up','down']))
     ))
    
     # Parent keys

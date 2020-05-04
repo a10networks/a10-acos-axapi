@@ -116,10 +116,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        tunnel=dict(type='int',),
-        next_hop=dict(type='str',),
-        uuid=dict(type='str',),
-        next_hop_v6=dict(type='str',)
+        tunnel=dict(type='int', ),
+        next_hop=dict(type='str', ),
+        uuid=dict(type='str', ),
+        next_hop_v6=dict(type='str', )
     ))
    
     # Parent keys

@@ -181,27 +181,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        data_cpu_high=dict(type='bool',),
-        uuid=dict(type='str',),
-        power=dict(type='bool',),
-        high_disk_use=dict(type='bool',),
-        high_memory_use=dict(type='bool',),
-        control_cpu_high=dict(type='bool',),
-        file_sys_read_only=dict(type='bool',),
-        low_temp=dict(type='bool',),
-        high_temp=dict(type='bool',),
-        sec_disk=dict(type='bool',),
-        license_management=dict(type='bool',),
-        start=dict(type='bool',),
-        fan=dict(type='bool',),
-        shutdown=dict(type='bool',),
-        pri_disk=dict(type='bool',),
-        syslog_severity_one=dict(type='bool',),
-        tacacs_server_up_down=dict(type='bool',),
-        smp_resource_event=dict(type='bool',),
-        restart=dict(type='bool',),
-        packet_drop=dict(type='bool',)
+        all=dict(type='bool', ),
+        data_cpu_high=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        power=dict(type='bool', ),
+        high_disk_use=dict(type='bool', ),
+        high_memory_use=dict(type='bool', ),
+        control_cpu_high=dict(type='bool', ),
+        file_sys_read_only=dict(type='bool', ),
+        low_temp=dict(type='bool', ),
+        high_temp=dict(type='bool', ),
+        sec_disk=dict(type='bool', ),
+        license_management=dict(type='bool', ),
+        start=dict(type='bool', ),
+        fan=dict(type='bool', ),
+        shutdown=dict(type='bool', ),
+        pri_disk=dict(type='bool', ),
+        syslog_severity_one=dict(type='bool', ),
+        tacacs_server_up_down=dict(type='bool', ),
+        smp_resource_event=dict(type='bool', ),
+        restart=dict(type='bool', ),
+        packet_drop=dict(type='bool', )
     ))
    
 

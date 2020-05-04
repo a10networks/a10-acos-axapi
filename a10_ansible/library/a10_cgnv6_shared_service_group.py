@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_service_group_list=dict(type='list',service_group_name=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', shared_service_group_list=dict(type='list', service_group_name=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

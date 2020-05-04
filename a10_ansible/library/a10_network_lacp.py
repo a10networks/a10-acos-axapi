@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        system_priority=dict(type='int',),
-        uuid=dict(type='str',)
+        system_priority=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

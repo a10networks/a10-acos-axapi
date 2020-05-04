@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        preserve_accounts=dict(type='bool',),
-        reload=dict(type='bool',),
-        all_partitions=dict(type='bool',),
-        preserve_management=dict(type='bool',)
+        preserve_accounts=dict(type='bool', ),
+        reload=dict(type='bool', ),
+        all_partitions=dict(type='bool', ),
+        preserve_management=dict(type='bool', )
     ))
    
 

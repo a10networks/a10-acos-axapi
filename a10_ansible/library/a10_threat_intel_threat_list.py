@@ -213,24 +213,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        web_attacks=dict(type='bool',),
-        botnets=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        spam_sources=dict(type='bool',),
-        windows_exploits=dict(type='bool',),
-        phishing=dict(type='bool',),
-        mobile_threats=dict(type='bool',),
-        tor_proxy=dict(type='bool',),
-        user_tag=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','spam-sources','windows-exploits','web-attacks','botnets','scanners','dos-attacks','reputation','phishing','proxy','mobile-threats','tor-proxy','total-hits'])),
-        reputation=dict(type='bool',),
-        proxy=dict(type='bool',),
-        dos_attacks=dict(type='bool',),
-        all_categories=dict(type='bool',),
-        stats=dict(type='dict',web_attacks=dict(type='str',),total_hits=dict(type='str',),botnets=dict(type='str',),name=dict(type='str',required=True,),spam_sources=dict(type='str',),windows_exploits=dict(type='str',),phishing=dict(type='str',),dos_attacks=dict(type='str',),reputation=dict(type='str',),proxy=dict(type='str',),mobile_threats=dict(type='str',),scanners=dict(type='str',),tor_proxy=dict(type='str',)),
-        ntype=dict(type='str',choices=['webroot']),
-        scanners=dict(type='bool',),
-        uuid=dict(type='str',)
+        web_attacks=dict(type='bool', ),
+        botnets=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        spam_sources=dict(type='bool', ),
+        windows_exploits=dict(type='bool', ),
+        phishing=dict(type='bool', ),
+        mobile_threats=dict(type='bool', ),
+        tor_proxy=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','spam-sources','windows-exploits','web-attacks','botnets','scanners','dos-attacks','reputation','phishing','proxy','mobile-threats','tor-proxy','total-hits'])),
+        reputation=dict(type='bool', ),
+        proxy=dict(type='bool', ),
+        dos_attacks=dict(type='bool', ),
+        all_categories=dict(type='bool', ),
+        stats=dict(type='dict', web_attacks=dict(type='str', ),total_hits=dict(type='str', ),botnets=dict(type='str', ),name=dict(type='str', required=True, ),spam_sources=dict(type='str', ),windows_exploits=dict(type='str', ),phishing=dict(type='str', ),dos_attacks=dict(type='str', ),reputation=dict(type='str', ),proxy=dict(type='str', ),mobile_threats=dict(type='str', ),scanners=dict(type='str', ),tor_proxy=dict(type='str', )),
+        ntype=dict(type='str', choices=['webroot']),
+        scanners=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

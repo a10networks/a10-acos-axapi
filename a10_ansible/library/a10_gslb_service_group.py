@@ -166,18 +166,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_sessions=dict(type='int',),service_group_name=dict(type='str',required=True,),session_list=dict(type='list',aging=dict(type='int',),hits=dict(type='int',),update=dict(type='int',),client=dict(type='str',),last_second_hits=dict(type='int',),mode=dict(type='str',),ttl=dict(type='str',),best=dict(type='str',)),matched=dict(type='int',)),
-        service_group_name=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        dependency_site=dict(type='bool',),
-        disable_site_list=dict(type='list',disable_site=dict(type='str',)),
-        user_tag=dict(type='str',),
-        persistent_mask=dict(type='str',),
-        member=dict(type='list',member_name=dict(type='str',)),
-        disable=dict(type='bool',),
-        persistent_ipv6_mask=dict(type='int',),
-        persistent_aging_time=dict(type='int',),
-        persistent_site=dict(type='bool',)
+        oper=dict(type='dict', total_sessions=dict(type='int', ),service_group_name=dict(type='str', required=True, ),session_list=dict(type='list', aging=dict(type='int', ),hits=dict(type='int', ),update=dict(type='int', ),client=dict(type='str', ),last_second_hits=dict(type='int', ),mode=dict(type='str', ),ttl=dict(type='str', ),best=dict(type='str', )),matched=dict(type='int', )),
+        service_group_name=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        dependency_site=dict(type='bool', ),
+        disable_site_list=dict(type='list', disable_site=dict(type='str', )),
+        user_tag=dict(type='str', ),
+        persistent_mask=dict(type='str', ),
+        member=dict(type='list', member_name=dict(type='str', )),
+        disable=dict(type='bool', ),
+        persistent_ipv6_mask=dict(type='int', ),
+        persistent_aging_time=dict(type='int', ),
+        persistent_site=dict(type='bool', )
     ))
    
 

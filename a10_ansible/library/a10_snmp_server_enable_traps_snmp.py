@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        linkup=dict(type='bool',),
-        all=dict(type='bool',),
-        linkdown=dict(type='bool',),
-        uuid=dict(type='str',)
+        linkup=dict(type='bool', ),
+        all=dict(type='bool', ),
+        linkdown=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

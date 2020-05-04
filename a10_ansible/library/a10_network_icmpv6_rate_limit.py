@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        icmpv6_lockup_period=dict(type='int',),
-        icmpv6_lockup=dict(type='int',),
-        uuid=dict(type='str',),
-        icmpv6_normal_rate_limit=dict(type='int',)
+        icmpv6_lockup_period=dict(type='int', ),
+        icmpv6_lockup=dict(type='int', ),
+        uuid=dict(type='str', ),
+        icmpv6_normal_rate_limit=dict(type='int', )
     ))
    
 

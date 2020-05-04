@@ -142,13 +142,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        authentication_uri=dict(type='str',),
-        stats=dict(type='dict',failure=dict(type='str',),request=dict(type='str',),name=dict(type='str',required=True,),success=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request','success','failure'])),
-        application_server=dict(type='str',choices=['sharepoint','exchange-owa']),
-        uuid=dict(type='str',)
+        authentication_uri=dict(type='str', ),
+        stats=dict(type='dict', failure=dict(type='str', ),request=dict(type='str', ),name=dict(type='str', required=True, ),success=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','request','success','failure'])),
+        application_server=dict(type='str', choices=['sharepoint','exchange-owa']),
+        uuid=dict(type='str', )
     ))
    
 

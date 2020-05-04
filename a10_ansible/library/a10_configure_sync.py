@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all_partitions=dict(type='bool',),
-        private_key=dict(type='str',),
-        partition_name=dict(type='str',),
-        pwd=dict(type='str',),
-        auto_authentication=dict(type='bool',),
-        address=dict(type='str',),
-        shared=dict(type='bool',),
-        ntype=dict(type='str',choices=['running','all']),
-        pwd_enc=dict(type='str',),
-        usr=dict(type='str',)
+        all_partitions=dict(type='bool', ),
+        private_key=dict(type='str', ),
+        partition_name=dict(type='str', ),
+        pwd=dict(type='str', ),
+        auto_authentication=dict(type='bool', ),
+        address=dict(type='str', ),
+        shared=dict(type='bool', ),
+        ntype=dict(type='str', choices=['running','all']),
+        pwd_enc=dict(type='str', ),
+        usr=dict(type='str', )
     ))
    
 

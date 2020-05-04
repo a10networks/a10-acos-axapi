@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        current_slot=dict(type='bool',),
-        outgoing=dict(type='bool',),
-        non_display=dict(type='bool',),
-        incoming=dict(type='bool',),
-        port_num=dict(type='str',),
-        brief=dict(type='bool',),
-        detail=dict(type='bool',),
-        save=dict(type='str',),
-        max_packets=dict(type='int',)
+        current_slot=dict(type='bool', ),
+        outgoing=dict(type='bool', ),
+        non_display=dict(type='bool', ),
+        incoming=dict(type='bool', ),
+        port_num=dict(type='str', ),
+        brief=dict(type='bool', ),
+        detail=dict(type='bool', ),
+        save=dict(type='str', ),
+        max_packets=dict(type='int', )
     ))
    
 

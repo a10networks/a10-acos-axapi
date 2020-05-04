@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        partition_name=dict(type='str',required=True,),
-        follow_vrid=dict(type='int',),
-        application_type=dict(type='str',choices=['adc']),
-        id=dict(type='int',)
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        partition_name=dict(type='str', required=True, ),
+        follow_vrid=dict(type='int', ),
+        application_type=dict(type='str', choices=['adc']),
+        id=dict(type='int', )
     ))
    
 

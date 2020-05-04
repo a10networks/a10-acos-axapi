@@ -112,8 +112,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_list=dict(type='list',port=dict(type='int',),port_end=dict(type='int',)),
-        uuid=dict(type='str',)
+        port_list=dict(type='list', port=dict(type='int', ),port_end=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

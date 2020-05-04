@@ -147,12 +147,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        eth_list=dict(type='list',ethernet_start=dict(type='str',),ethernet_end=dict(type='str',)),
-        uuid=dict(type='str',),
-        auto=dict(type='bool',),
-        value=dict(type='int',),
-        length=dict(type='bool',),
-        trunk_list=dict(type='list',trunk_start=dict(type='int',),trunk_end=dict(type='int',))
+        eth_list=dict(type='list', ethernet_start=dict(type='str', ),ethernet_end=dict(type='str', )),
+        uuid=dict(type='str', ),
+        auto=dict(type='bool', ),
+        value=dict(type='int', ),
+        length=dict(type='bool', ),
+        trunk_list=dict(type='list', trunk_start=dict(type='int', ),trunk_end=dict(type='int', ))
     ))
    
     # Parent keys

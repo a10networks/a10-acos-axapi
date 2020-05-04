@@ -127,8 +127,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',control_cpu_usage=dict(type='int',),total_bytes_out=dict(type='int',),memory_usage=dict(type='str',),total_bytes_in=dict(type='int',),ratio_buffer_count=dict(type='str',),ratio_session_count=dict(type='str',),cpu_usage_overall=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', control_cpu_usage=dict(type='int', ),total_bytes_out=dict(type='int', ),memory_usage=dict(type='str', ),total_bytes_in=dict(type='int', ),ratio_buffer_count=dict(type='str', ),ratio_session_count=dict(type='str', ),cpu_usage_overall=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -153,9 +153,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec','fw-conns-per-sec','gifw-conns-per-sec'])),
-        stats=dict(type='dict',l7_trans_per_sec=dict(type='str',),l7_conns_per_sec=dict(type='str',),total_curr_conns=dict(type='str',),ssl_conns_per_sec=dict(type='str',),l4_bandwidth=dict(type='str',),serv_ssl_conns_per_sec=dict(type='str',),gifw_conns_per_sec=dict(type='str',),total_new_conns_per_sec=dict(type='str',),total_throughput_bits_per_sec=dict(type='str',),l4_conns_per_sec=dict(type='str',),l7_bandwidth=dict(type='str',),ip_nat_conns_per_sec=dict(type='str',),fw_conns_per_sec=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','total-throughput-bits-per-sec','l4-conns-per-sec','l7-conns-per-sec','l7-trans-per-sec','ssl-conns-per-sec','ip-nat-conns-per-sec','total-new-conns-per-sec','total-curr-conns','l4-bandwidth','l7-bandwidth','serv-ssl-conns-per-sec','fw-conns-per-sec','gifw-conns-per-sec'])),
+        stats=dict(type='dict', l7_trans_per_sec=dict(type='str', ),l7_conns_per_sec=dict(type='str', ),total_curr_conns=dict(type='str', ),ssl_conns_per_sec=dict(type='str', ),l4_bandwidth=dict(type='str', ),serv_ssl_conns_per_sec=dict(type='str', ),gifw_conns_per_sec=dict(type='str', ),total_new_conns_per_sec=dict(type='str', ),total_throughput_bits_per_sec=dict(type='str', ),l4_conns_per_sec=dict(type='str', ),l7_bandwidth=dict(type='str', ),ip_nat_conns_per_sec=dict(type='str', ),fw_conns_per_sec=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv4_address=dict(type='str',),
-        default_gateway=dict(type='str',),
-        ipv4_netmask=dict(type='str',)
+        ipv4_address=dict(type='str', ),
+        default_gateway=dict(type='str', ),
+        ipv4_netmask=dict(type='str', )
     ))
    
 

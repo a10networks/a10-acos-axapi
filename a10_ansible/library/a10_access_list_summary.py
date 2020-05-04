@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',acl_list=dict(type='list',mgmt_pkt_hit_count=dict(type='int',),v6flag=dict(type='int',),name=dict(type='str',),rule_list=dict(type='list',icmp_type=dict(type='int',),dst_obj_id=dict(type='str',),geo_location_name=dict(type='str',),src_host_mask=dict(type='str',),ip_frag=dict(type='int',),vlan_id=dict(type='int',),src_port_end=dict(type='int',),dst_port_end=dict(type='int',),log=dict(type='int',),src_obj_id=dict(type='str',),proto=dict(type='str',),tcp_established=dict(type='int',),svc_obj_id=dict(type='str',),icmp_code=dict(type='int',),dst_host_mask=dict(type='str',),data_plane_hits=dict(type='int',),dscp=dict(type='int',),trunk=dict(type='int',),sequence_num=dict(type='int',),log_transparent_sess_only=dict(type='int',),remark=dict(type='str',),dst_port_start=dict(type='int',),src_host=dict(type='str',),src_port_start=dict(type='int',),action=dict(type='str',),eth=dict(type='int',),dst_host=dict(type='str',)),id=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', acl_list=dict(type='list', mgmt_pkt_hit_count=dict(type='int', ),v6flag=dict(type='int', ),name=dict(type='str', ),rule_list=dict(type='list', icmp_type=dict(type='int', ),dst_obj_id=dict(type='str', ),geo_location_name=dict(type='str', ),src_host_mask=dict(type='str', ),ip_frag=dict(type='int', ),vlan_id=dict(type='int', ),src_port_end=dict(type='int', ),dst_port_end=dict(type='int', ),log=dict(type='int', ),src_obj_id=dict(type='str', ),proto=dict(type='str', ),tcp_established=dict(type='int', ),svc_obj_id=dict(type='str', ),icmp_code=dict(type='int', ),dst_host_mask=dict(type='str', ),data_plane_hits=dict(type='int', ),dscp=dict(type='int', ),trunk=dict(type='int', ),sequence_num=dict(type='int', ),log_transparent_sess_only=dict(type='int', ),remark=dict(type='str', ),dst_port_start=dict(type='int', ),src_host=dict(type='str', ),src_port_start=dict(type='int', ),action=dict(type='str', ),eth=dict(type='int', ),dst_host=dict(type='str', )),id=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

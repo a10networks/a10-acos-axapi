@@ -111,8 +111,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        segment=dict(type='int',required=True,),
-        uuid=dict(type='str',)
+        segment=dict(type='int', required=True, ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

@@ -132,10 +132,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        geo_locn_obj_name=dict(type='str',required=True,),
-        geo_locn_multiple_addresses=dict(type='list',first_ip_address=dict(type='str',),first_ipv6_address=dict(type='str',),geol_ipv4_mask=dict(type='str',),ip_addr2=dict(type='str',),ipv6_addr2=dict(type='str',),geol_ipv6_mask=dict(type='int',)),
-        user_tag=dict(type='str',),
-        uuid=dict(type='str',)
+        geo_locn_obj_name=dict(type='str', required=True, ),
+        geo_locn_multiple_addresses=dict(type='list', first_ip_address=dict(type='str', ),first_ipv6_address=dict(type='str', ),geol_ipv4_mask=dict(type='str', ),ip_addr2=dict(type='str', ),ipv6_addr2=dict(type='str', ),geol_ipv6_mask=dict(type='int', )),
+        user_tag=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

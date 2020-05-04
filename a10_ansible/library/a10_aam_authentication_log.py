@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        facility=dict(type='str',choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        format=dict(type='str',choices=['syslog','cef'])
+        facility=dict(type='str', choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        format=dict(type='str', choices=['syslog','cef'])
     ))
    
 

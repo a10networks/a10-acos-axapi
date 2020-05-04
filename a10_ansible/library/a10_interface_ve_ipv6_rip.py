@@ -112,8 +112,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        split_horizon_cfg=dict(type='dict',state=dict(type='str',choices=['poisoned','disable','enable'])),
-        uuid=dict(type='str',)
+        split_horizon_cfg=dict(type='dict', state=dict(type='str', choices=['poisoned','disable','enable'])),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

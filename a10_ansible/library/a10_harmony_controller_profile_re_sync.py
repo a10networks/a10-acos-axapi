@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        analytics_bus=dict(type='bool',),
-        schema_registry=dict(type='bool',)
+        analytics_bus=dict(type='bool', ),
+        schema_registry=dict(type='bool', )
     ))
    
 

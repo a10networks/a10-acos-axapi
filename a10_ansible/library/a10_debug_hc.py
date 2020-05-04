@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        per_connection=dict(type='bool',),
-        metrics=dict(type='bool',),
-        uuid=dict(type='str',),
-        registration=dict(type='bool',),
-        uri=dict(type='str',),
-        object_uuid=dict(type='str',),
-        error=dict(type='bool',),
-        app_svc_id=dict(type='str',),
-        per_request=dict(type='bool',),
-        anomaly=dict(type='bool',)
+        per_connection=dict(type='bool', ),
+        metrics=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        registration=dict(type='bool', ),
+        uri=dict(type='str', ),
+        object_uuid=dict(type='str', ),
+        error=dict(type='bool', ),
+        app_svc_id=dict(type='str', ),
+        per_request=dict(type='bool', ),
+        anomaly=dict(type='bool', )
     ))
    
 

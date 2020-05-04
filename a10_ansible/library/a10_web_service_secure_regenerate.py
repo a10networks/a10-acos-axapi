@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        country=dict(type='str',),
-        state=dict(type='str',),
-        domain_name=dict(type='str',)
+        country=dict(type='str', ),
+        state=dict(type='str', ),
+        domain_name=dict(type='str', )
     ))
    
 

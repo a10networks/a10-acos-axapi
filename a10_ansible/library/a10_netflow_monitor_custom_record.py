@@ -115,8 +115,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        custom_cfg=dict(type='list',event=dict(type='str',choices=['sesn-event-nat44-creation','sesn-event-nat44-deletion','sesn-event-nat64-creation','sesn-event-nat64-deletion','sesn-event-dslite-creation','sesn-event-dslite-deletion','sesn-event-fw4-creation','sesn-event-fw4-deletion','sesn-event-fw6-creation','sesn-event-fw6-deletion','deny-reset-event-fw4','deny-reset-event-fw6','port-mapping-nat44-creation','port-mapping-nat44-deletion','port-mapping-nat64-creation','port-mapping-nat64-deletion','port-mapping-dslite-creation','port-mapping-dslite-deletion','port-batch-nat44-creation','port-batch-nat44-deletion','port-batch-nat64-creation','port-batch-nat64-deletion','port-batch-dslite-creation','port-batch-dslite-deletion','port-batch-v2-nat44-creation','port-batch-v2-nat44-deletion','port-batch-v2-nat64-creation','port-batch-v2-nat64-deletion','port-batch-v2-dslite-creation','port-batch-v2-dslite-deletion']),ipfix_template=dict(type='str',)),
-        uuid=dict(type='str',)
+        custom_cfg=dict(type='list', event=dict(type='str', choices=['sesn-event-nat44-creation','sesn-event-nat44-deletion','sesn-event-nat64-creation','sesn-event-nat64-deletion','sesn-event-dslite-creation','sesn-event-dslite-deletion','sesn-event-fw4-creation','sesn-event-fw4-deletion','sesn-event-fw6-creation','sesn-event-fw6-deletion','deny-reset-event-fw4','deny-reset-event-fw6','port-mapping-nat44-creation','port-mapping-nat44-deletion','port-mapping-nat64-creation','port-mapping-nat64-deletion','port-mapping-dslite-creation','port-mapping-dslite-deletion','port-batch-nat44-creation','port-batch-nat44-deletion','port-batch-nat64-creation','port-batch-nat64-deletion','port-batch-dslite-creation','port-batch-dslite-deletion','port-batch-v2-nat44-creation','port-batch-v2-nat44-deletion','port-batch-v2-nat64-creation','port-batch-v2-nat64-deletion','port-batch-v2-dslite-creation','port-batch-v2-dslite-deletion']),ipfix_template=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

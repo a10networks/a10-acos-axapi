@@ -182,22 +182,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        forward_l4_packet_on_standby=dict(type='bool',),
-        get_ready_time=dict(type='int',),
-        hello_interval=dict(type='int',),
-        uuid=dict(type='str',),
-        preemption_delay=dict(type='int',),
-        set_id=dict(type='int',),
-        device_id=dict(type='int',),
-        arp_retry=dict(type='int',),
-        dead_timer=dict(type='int',),
-        disable_default_vrid=dict(type='bool',),
-        track_event_delay=dict(type='int',),
-        action=dict(type='str',choices=['enable','disable']),
-        stats=dict(type='dict',vrrp_common_dummy=dict(type='str',)),
-        hostid_append_to_vrid=dict(type='dict',hostid_append_to_vrid_value=dict(type='int',),hostid_append_to_vrid_default=dict(type='bool',)),
-        restart_time=dict(type='int',),
-        inline_mode_cfg=dict(type='dict',inline_mode=dict(type='bool',),preferred_trunk=dict(type='int',),preferred_port=dict(type='str',))
+        forward_l4_packet_on_standby=dict(type='bool', ),
+        get_ready_time=dict(type='int', ),
+        hello_interval=dict(type='int', ),
+        uuid=dict(type='str', ),
+        preemption_delay=dict(type='int', ),
+        set_id=dict(type='int', ),
+        device_id=dict(type='int', ),
+        arp_retry=dict(type='int', ),
+        dead_timer=dict(type='int', ),
+        disable_default_vrid=dict(type='bool', ),
+        track_event_delay=dict(type='int', ),
+        action=dict(type='str', choices=['enable','disable']),
+        stats=dict(type='dict', vrrp_common_dummy=dict(type='str', )),
+        hostid_append_to_vrid=dict(type='dict', hostid_append_to_vrid_value=dict(type='int', ),hostid_append_to_vrid_default=dict(type='bool', )),
+        restart_time=dict(type='int', ),
+        inline_mode_cfg=dict(type='dict', inline_mode=dict(type='bool', ),preferred_trunk=dict(type='int', ),preferred_port=dict(type='str', ))
     ))
    
 

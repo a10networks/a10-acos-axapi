@@ -168,21 +168,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        multicast_port=dict(type='int',),
-        dead_interval=dict(type='int',),
-        forever=dict(type='bool',),
-        ssl_enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        multicast_ip=dict(type='str',),
-        multicast_ipv6=dict(type='str',),
-        force_wait_interval=dict(type='int',),
-        floating_ip_cfg=dict(type='list',floating_ip_mask=dict(type='str',),floating_ip=dict(type='str',)),
-        failure_retry_count_value=dict(type='int',),
-        time_interval=dict(type='int',),
-        speed_limit=dict(type='int',),
-        config_seq=dict(type='str',),
-        floating_ipv6_cfg=dict(type='list',floating_ipv6=dict(type='str',)),
-        size=dict(type='int',)
+        multicast_port=dict(type='int', ),
+        dead_interval=dict(type='int', ),
+        forever=dict(type='bool', ),
+        ssl_enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        multicast_ip=dict(type='str', ),
+        multicast_ipv6=dict(type='str', ),
+        force_wait_interval=dict(type='int', ),
+        floating_ip_cfg=dict(type='list', floating_ip_mask=dict(type='str', ),floating_ip=dict(type='str', )),
+        failure_retry_count_value=dict(type='int', ),
+        time_interval=dict(type='int', ),
+        speed_limit=dict(type='int', ),
+        config_seq=dict(type='str', ),
+        floating_ipv6_cfg=dict(type='list', floating_ipv6=dict(type='str', )),
+        size=dict(type='int', )
     ))
    
 

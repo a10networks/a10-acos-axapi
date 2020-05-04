@@ -128,9 +128,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        ipv6_list=dict(type='list',lid=dict(type='int',),glid=dict(type='int',),ipv6_addr=dict(type='str',),lsn_lid=dict(type='int',),action=dict(type='str',choices=['add','delete']),lsn_radius_profile=dict(type='int',))
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        ipv6_list=dict(type='list', lid=dict(type='int', ),glid=dict(type='int', ),ipv6_addr=dict(type='str', ),lsn_lid=dict(type='int', ),action=dict(type='str', choices=['add','delete']),lsn_radius_profile=dict(type='int', ))
     ))
    
 

@@ -108,8 +108,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        tag=dict(type='str',),
-        uuid=dict(type='str',)
+        tag=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

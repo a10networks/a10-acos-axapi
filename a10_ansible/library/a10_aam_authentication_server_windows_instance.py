@@ -239,18 +239,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        health_check_string=dict(type='str',),
-        realm=dict(type='str',),
-        name=dict(type='str',required=True,),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),
-        host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),
-        timeout=dict(type='int',),
-        auth_protocol=dict(type='dict',ntlm_health_check=dict(type='str',),kport_hm_disable=dict(type='bool',),ntlm_health_check_disable=dict(type='bool',),kerberos_port=dict(type='int',),ntlm_version=dict(type='int',),kerberos_disable=dict(type='bool',),ntlm_disable=dict(type='bool',),kport_hm=dict(type='str',),kerberos_password_change_port=dict(type='int',)),
-        stats=dict(type='dict',krb_send_req_success=dict(type='str',),ntlm_auth_success=dict(type='str',),ntlm_prepare_req_error=dict(type='str',),ntlm_proto_nego_failure=dict(type='str',),ntlm_other_error=dict(type='str',),ntlm_auth_failure=dict(type='str',),name=dict(type='str',required=True,),krb_timeout_error=dict(type='str',),ntlm_session_setup_success=dict(type='str',),krb_other_error=dict(type='str',),ntlm_timeout_error=dict(type='str',),krb_pw_expiry=dict(type='str',),ntlm_session_setup_failure=dict(type='str',),krb_pw_change_failure=dict(type='str',),krb_get_resp_success=dict(type='str',),ntlm_proto_nego_success=dict(type='str',),ntlm_prepare_req_success=dict(type='str',),krb_pw_change_success=dict(type='str',)),
-        health_check_disable=dict(type='bool',),
-        support_apacheds_kdc=dict(type='bool',),
-        health_check=dict(type='bool',),
-        uuid=dict(type='str',)
+        health_check_string=dict(type='str', ),
+        realm=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','krb_send_req_success','krb_get_resp_success','krb_timeout_error','krb_other_error','krb_pw_expiry','krb_pw_change_success','krb_pw_change_failure','ntlm_proto_nego_success','ntlm_proto_nego_failure','ntlm_session_setup_success','ntlm_session_setup_failure','ntlm_prepare_req_success','ntlm_prepare_req_error','ntlm_auth_success','ntlm_auth_failure','ntlm_timeout_error','ntlm_other_error'])),
+        host=dict(type='dict', hostipv6=dict(type='str', ),hostip=dict(type='str', )),
+        timeout=dict(type='int', ),
+        auth_protocol=dict(type='dict', ntlm_health_check=dict(type='str', ),kport_hm_disable=dict(type='bool', ),ntlm_health_check_disable=dict(type='bool', ),kerberos_port=dict(type='int', ),ntlm_version=dict(type='int', ),kerberos_disable=dict(type='bool', ),ntlm_disable=dict(type='bool', ),kport_hm=dict(type='str', ),kerberos_password_change_port=dict(type='int', )),
+        stats=dict(type='dict', krb_send_req_success=dict(type='str', ),ntlm_auth_success=dict(type='str', ),ntlm_prepare_req_error=dict(type='str', ),ntlm_proto_nego_failure=dict(type='str', ),ntlm_other_error=dict(type='str', ),ntlm_auth_failure=dict(type='str', ),name=dict(type='str', required=True, ),krb_timeout_error=dict(type='str', ),ntlm_session_setup_success=dict(type='str', ),krb_other_error=dict(type='str', ),ntlm_timeout_error=dict(type='str', ),krb_pw_expiry=dict(type='str', ),ntlm_session_setup_failure=dict(type='str', ),krb_pw_change_failure=dict(type='str', ),krb_get_resp_success=dict(type='str', ),ntlm_proto_nego_success=dict(type='str', ),ntlm_prepare_req_success=dict(type='str', ),krb_pw_change_success=dict(type='str', )),
+        health_check_disable=dict(type='bool', ),
+        support_apacheds_kdc=dict(type='bool', ),
+        health_check=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

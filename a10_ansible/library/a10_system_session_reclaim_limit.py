@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        scan_freq=dict(type='int',),
-        nscan_limit=dict(type='int',),
-        uuid=dict(type='str',)
+        scan_freq=dict(type='int', ),
+        nscan_limit=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

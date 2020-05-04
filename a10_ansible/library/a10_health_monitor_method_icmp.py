@@ -120,11 +120,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip=dict(type='str',),
-        icmp=dict(type='bool',),
-        uuid=dict(type='str',),
-        ipv6=dict(type='str',),
-        transparent=dict(type='bool',)
+        ip=dict(type='str', ),
+        icmp=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ipv6=dict(type='str', ),
+        transparent=dict(type='bool', )
     ))
    
     # Parent keys

@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',system_audit_log=dict(type='list',log_audit_data=dict(type='str',),log_audit_search=dict(type='str',),partitions=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', system_audit_log=dict(type='list', log_audit_data=dict(type='str', ),log_audit_search=dict(type='str', ),partitions=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

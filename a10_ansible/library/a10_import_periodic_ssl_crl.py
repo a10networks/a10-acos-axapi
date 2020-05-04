@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ssl_crl=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
-        uuid=dict(type='str',),
-        remote_file=dict(type='str',),
-        period=dict(type='int',)
+        ssl_crl=dict(type='str', required=True, ),
+        use_mgmt_port=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        period=dict(type='int', )
     ))
    
 

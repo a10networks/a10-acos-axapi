@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        status=dict(type='bool',),
-        timers=dict(type='bool',),
-        events=dict(type='bool',),
-        uuid=dict(type='str',)
+        status=dict(type='bool', ),
+        timers=dict(type='bool', ),
+        events=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

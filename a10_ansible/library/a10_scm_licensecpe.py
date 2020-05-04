@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',platform=dict(type='str',),product=dict(type='str',),uuid=dict(type='str',),cpe=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', platform=dict(type='str', ),product=dict(type='str', ),uuid=dict(type='str', ),cpe=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

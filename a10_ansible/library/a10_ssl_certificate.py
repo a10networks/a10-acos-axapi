@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pfx_password=dict(type='str',),
-        certificate_type=dict(type='str',choices=['pem','der','pfx','p7b']),
-        public_key=dict(type='str',),
-        name=dict(type='str',required=True,)
+        pfx_password=dict(type='str', ),
+        certificate_type=dict(type='str', choices=['pem','der','pfx','p7b']),
+        public_key=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
 

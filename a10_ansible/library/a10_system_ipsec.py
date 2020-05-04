@@ -121,11 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        packet_round_robin=dict(type='bool',),
-        crypto_core=dict(type='int',),
-        uuid=dict(type='str',),
-        fpga_decrypt=dict(type='dict',action=dict(type='str',choices=['enable','disable'])),
-        crypto_mem=dict(type='int',)
+        packet_round_robin=dict(type='bool', ),
+        crypto_core=dict(type='int', ),
+        uuid=dict(type='str', ),
+        fpga_decrypt=dict(type='dict', action=dict(type='str', choices=['enable','disable'])),
+        crypto_mem=dict(type='int', )
     ))
    
 

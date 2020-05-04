@@ -143,11 +143,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        interval_cfg=dict(type='dict',interval=dict(type='int',),min_rx=dict(type='int',),multiplier=dict(type='int',)),
-        authentication=dict(type='dict',encrypted=dict(type='str',),password=dict(type='str',),method=dict(type='str',choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int',)),
-        echo=dict(type='bool',),
-        uuid=dict(type='str',),
-        demand=dict(type='bool',)
+        interval_cfg=dict(type='dict', interval=dict(type='int', ),min_rx=dict(type='int', ),multiplier=dict(type='int', )),
+        authentication=dict(type='dict', encrypted=dict(type='str', ),password=dict(type='str', ),method=dict(type='str', choices=['md5','meticulous-md5','meticulous-sha1','sha1','simple']),key_id=dict(type='int', )),
+        echo=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        demand=dict(type='bool', )
     ))
    
     # Parent keys

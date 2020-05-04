@@ -112,8 +112,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_entries=dict(type='int',),cached_entries=dict(type='list',status=dict(type='str',),hits=dict(type='int',),name=dict(type='str',),uri=dict(type='str',),length=dict(type='int',),expire=dict(type='int',),subject=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', total_entries=dict(type='int', ),cached_entries=dict(type='list', status=dict(type='str', ),hits=dict(type='int', ),name=dict(type='str', ),uri=dict(type='str', ),length=dict(type='int', ),expire=dict(type='int', ),subject=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

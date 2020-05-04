@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vrid_value=dict(type='int',),
-        uuid=dict(type='str',)
+        vrid_value=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

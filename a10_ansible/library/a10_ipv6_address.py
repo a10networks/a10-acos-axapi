@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv6_address=dict(type='str',),
-        link_local=dict(type='bool',),
-        anycast=dict(type='bool',),
-        uuid=dict(type='str',)
+        ipv6_address=dict(type='str', ),
+        link_local=dict(type='bool', ),
+        anycast=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

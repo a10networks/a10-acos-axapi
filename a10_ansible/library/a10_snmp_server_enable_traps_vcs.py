@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        state_change=dict(type='bool',),
-        uuid=dict(type='str',)
+        state_change=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

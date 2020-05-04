@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        uuid=dict(type='str',),
-        bfd=dict(type='bool',),
-        pdu=dict(type='bool',),
-        nfsm=dict(type='bool',),
-        nsm=dict(type='bool',),
-        lsp=dict(type='bool',),
-        events=dict(type='bool',),
-        spf=dict(type='bool',),
-        ifsm=dict(type='bool',)
+        all=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        bfd=dict(type='bool', ),
+        pdu=dict(type='bool', ),
+        nfsm=dict(type='bool', ),
+        nsm=dict(type='bool', ),
+        lsp=dict(type='bool', ),
+        events=dict(type='bool', ),
+        spf=dict(type='bool', ),
+        ifsm=dict(type='bool', )
     ))
    
 

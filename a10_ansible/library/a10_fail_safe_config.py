@@ -133,8 +133,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',fpga_mon_threshold=dict(type='str',),sw_error_mon=dict(type='str',),sw_recovery_timeout=dict(type='str',),hw_recovery_timeout=dict(type='str',),fpga_mon_interval=dict(type='str',),fpga_mon_forced_reboot=dict(type='str',),fpga_mon_enable=dict(type='str',),mem_mon=dict(type='str',),hw_error_mon=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', fpga_mon_threshold=dict(type='str', ),sw_error_mon=dict(type='str', ),sw_recovery_timeout=dict(type='str', ),hw_recovery_timeout=dict(type='str', ),fpga_mon_interval=dict(type='str', ),fpga_mon_forced_reboot=dict(type='str', ),fpga_mon_enable=dict(type='str', ),mem_mon=dict(type='str', ),hw_error_mon=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

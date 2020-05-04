@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        detailed=dict(type='bool',),
-        debug_status=dict(type='bool',),
-        debug_disable=dict(type='bool',),
-        debug_enable=dict(type='bool',),
-        system_sync_verify=dict(type='bool',),
-        sys_sync=dict(type='bool',)
+        detailed=dict(type='bool', ),
+        debug_status=dict(type='bool', ),
+        debug_disable=dict(type='bool', ),
+        debug_enable=dict(type='bool', ),
+        system_sync_verify=dict(type='bool', ),
+        sys_sync=dict(type='bool', )
     ))
    
 

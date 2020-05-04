@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_index=dict(type='int',),
-        pci_address=dict(type='str',),
-        mac_address=dict(type='str',)
+        port_index=dict(type='int', ),
+        pci_address=dict(type='str', ),
+        mac_address=dict(type='str', )
     ))
    
 

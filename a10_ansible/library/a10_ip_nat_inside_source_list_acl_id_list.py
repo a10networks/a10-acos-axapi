@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        msl=dict(type='int',),
-        acl_id=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        pool=dict(type='str',)
+        msl=dict(type='int', ),
+        acl_id=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        pool=dict(type='str', )
     ))
    
 

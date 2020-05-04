@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        source_ip_use_mgmt=dict(type='bool',),
-        uuid=dict(type='str',),
-        counter_polling_interval=dict(type='int',),
-        packet_sampling_rate=dict(type='int',),
-        local_collection=dict(type='bool',),
-        max_header=dict(type='int',)
+        source_ip_use_mgmt=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        counter_polling_interval=dict(type='int', ),
+        packet_sampling_rate=dict(type='int', ),
+        local_collection=dict(type='bool', ),
+        max_header=dict(type='int', )
     ))
    
 

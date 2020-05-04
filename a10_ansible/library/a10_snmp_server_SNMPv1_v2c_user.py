@@ -148,13 +148,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        remote=dict(type='dict',host_list=dict(type='list',dns_host=dict(type='str',),ipv4_mask=dict(type='str',)),ipv4_list=dict(type='list',ipv4_host=dict(type='str',),ipv4_mask=dict(type='str',)),ipv6_list=dict(type='list',ipv6_host=dict(type='str',),ipv6_mask=dict(type='int',))),
-        uuid=dict(type='str',),
-        passwd=dict(type='str',),
-        encrypted=dict(type='str',),
-        user_tag=dict(type='str',),
-        user=dict(type='str',required=True,),
-        oid_list=dict(type='list',remote=dict(type='dict',host_list=dict(type='list',dns_host=dict(type='str',),ipv4_mask=dict(type='str',)),ipv4_list=dict(type='list',ipv4_host=dict(type='str',),ipv4_mask=dict(type='str',)),ipv6_list=dict(type='list',ipv6_host=dict(type='str',),ipv6_mask=dict(type='int',))),oid_val=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',))
+        remote=dict(type='dict', host_list=dict(type='list', dns_host=dict(type='str', ),ipv4_mask=dict(type='str', )),ipv4_list=dict(type='list', ipv4_host=dict(type='str', ),ipv4_mask=dict(type='str', )),ipv6_list=dict(type='list', ipv6_host=dict(type='str', ),ipv6_mask=dict(type='int', ))),
+        uuid=dict(type='str', ),
+        passwd=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        user=dict(type='str', required=True, ),
+        oid_list=dict(type='list', remote=dict(type='dict', host_list=dict(type='list', dns_host=dict(type='str', ),ipv4_mask=dict(type='str', )),ipv4_list=dict(type='list', ipv4_host=dict(type='str', ),ipv4_mask=dict(type='str', )),ipv6_list=dict(type='list', ipv6_host=dict(type='str', ),ipv6_mask=dict(type='int', ))),oid_val=dict(type='str', required=True, ),user_tag=dict(type='str', ),uuid=dict(type='str', ))
     ))
    
 

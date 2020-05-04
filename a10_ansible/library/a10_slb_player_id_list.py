@@ -117,7 +117,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        player_record=dict(type='list',game_server_port_v6=dict(type='int',),game_server_ipv6=dict(type='str',),game_server_port_v4=dict(type='int',),game_server_ipv4=dict(type='str',),player_id=dict(type='int',))
+        player_record=dict(type='list', game_server_port_v6=dict(type='int', ),game_server_ipv6=dict(type='str', ),game_server_port_v4=dict(type='int', ),game_server_ipv4=dict(type='str', ),player_id=dict(type='int', ))
     ))
    
 

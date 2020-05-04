@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',disabled_config_list=dict(type='list',inside_netmask=dict(type='int',),partition=dict(type='str',),inside_ip_list=dict(type='str',),active_users=dict(type='int',),inside_start_address=dict(type='str',),clear_session=dict(type='int',),inside_end_address=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', disabled_config_list=dict(type='list', inside_netmask=dict(type='int', ),partition=dict(type='str', ),inside_ip_list=dict(type='str', ),active_users=dict(type='int', ),inside_start_address=dict(type='str', ),clear_session=dict(type='int', ),inside_end_address=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

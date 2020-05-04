@@ -225,18 +225,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_nat_list_cfg=dict(type='dict',ip_nat_list=dict(type='bool',),route_map=dict(type='str',)),
-        lw4o6_cfg=dict(type='dict',route_map=dict(type='str',),lw4o6=dict(type='bool',)),
-        uuid=dict(type='str',),
-        connected_cfg=dict(type='dict',route_map=dict(type='str',),connected=dict(type='bool',)),
-        ip_nat_cfg=dict(type='dict',route_map=dict(type='str',),ip_nat=dict(type='bool',)),
-        floating_ip_cfg=dict(type='dict',floating_ip=dict(type='bool',),route_map=dict(type='str',)),
-        isis_cfg=dict(type='dict',route_map=dict(type='str',),isis=dict(type='bool',)),
-        vip=dict(type='dict',only_not_flagged_cfg=dict(type='dict',route_map=dict(type='str',),only_not_flagged=dict(type='bool',)),only_flagged_cfg=dict(type='dict',route_map=dict(type='str',),only_flagged=dict(type='bool',))),
-        rip_cfg=dict(type='dict',route_map=dict(type='str',),rip=dict(type='bool',)),
-        ospf_cfg=dict(type='dict',route_map=dict(type='str',),ospf=dict(type='bool',)),
-        static_cfg=dict(type='dict',route_map=dict(type='str',),static=dict(type='bool',)),
-        nat_map_cfg=dict(type='dict',route_map=dict(type='str',),nat_map=dict(type='bool',))
+        ip_nat_list_cfg=dict(type='dict', ip_nat_list=dict(type='bool', ),route_map=dict(type='str', )),
+        lw4o6_cfg=dict(type='dict', route_map=dict(type='str', ),lw4o6=dict(type='bool', )),
+        uuid=dict(type='str', ),
+        connected_cfg=dict(type='dict', route_map=dict(type='str', ),connected=dict(type='bool', )),
+        ip_nat_cfg=dict(type='dict', route_map=dict(type='str', ),ip_nat=dict(type='bool', )),
+        floating_ip_cfg=dict(type='dict', floating_ip=dict(type='bool', ),route_map=dict(type='str', )),
+        isis_cfg=dict(type='dict', route_map=dict(type='str', ),isis=dict(type='bool', )),
+        vip=dict(type='dict', only_not_flagged_cfg=dict(type='dict', route_map=dict(type='str', ),only_not_flagged=dict(type='bool', )),only_flagged_cfg=dict(type='dict', route_map=dict(type='str', ),only_flagged=dict(type='bool', ))),
+        rip_cfg=dict(type='dict', route_map=dict(type='str', ),rip=dict(type='bool', )),
+        ospf_cfg=dict(type='dict', route_map=dict(type='str', ),ospf=dict(type='bool', )),
+        static_cfg=dict(type='dict', route_map=dict(type='str', ),static=dict(type='bool', )),
+        nat_map_cfg=dict(type='dict', route_map=dict(type='str', ),nat_map=dict(type='bool', ))
     ))
    
     # Parent keys

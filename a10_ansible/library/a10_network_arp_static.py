@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vlan=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        mac_addr=dict(type='str',),
-        trunk=dict(type='int',),
-        ethernet=dict(type='str',),
-        ip_addr=dict(type='str',required=True,)
+        vlan=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        mac_addr=dict(type='str', ),
+        trunk=dict(type='int', ),
+        ethernet=dict(type='str', ),
+        ip_addr=dict(type='str', required=True, )
     ))
    
 

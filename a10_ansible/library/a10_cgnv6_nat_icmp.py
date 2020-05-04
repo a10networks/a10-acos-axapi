@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        always_source_nat_errors=dict(type='bool',),
-        respond_to_ping=dict(type='bool',),
-        uuid=dict(type='str',)
+        always_source_nat_errors=dict(type='bool', ),
+        respond_to_ping=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

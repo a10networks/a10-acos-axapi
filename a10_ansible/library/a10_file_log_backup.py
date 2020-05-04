@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        week=dict(type='bool',),
-        all=dict(type='bool',),
-        period=dict(type='bool',),
-        month=dict(type='bool',),
-        stats_data=dict(type='bool',),
-        expedite=dict(type='bool',),
-        date=dict(type='int',),
-        day=dict(type='bool',),
-        file_handle=dict(type='str',)
+        week=dict(type='bool', ),
+        all=dict(type='bool', ),
+        period=dict(type='bool', ),
+        month=dict(type='bool', ),
+        stats_data=dict(type='bool', ),
+        expedite=dict(type='bool', ),
+        date=dict(type='int', ),
+        day=dict(type='bool', ),
+        file_handle=dict(type='str', )
     ))
    
 

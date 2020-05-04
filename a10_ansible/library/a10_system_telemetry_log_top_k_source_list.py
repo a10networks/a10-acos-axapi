@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',top_k_source_list=dict(type='list',indicator=dict(type='str',),indicator_list=dict(type='list',indicator_value=dict(type='int',),ip_address=dict(type='str',)))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', top_k_source_list=dict(type='list', indicator=dict(type='str', ),indicator_list=dict(type='list', indicator_value=dict(type='int', ),ip_address=dict(type='str', )))),
+        uuid=dict(type='str', )
     ))
    
 

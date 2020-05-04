@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dhcp=dict(type='bool',),
-        static=dict(type='bool',)
+        dhcp=dict(type='bool', ),
+        static=dict(type='bool', )
     ))
    
 

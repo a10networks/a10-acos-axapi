@@ -145,12 +145,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        ipv6_config=dict(type='list',ipv6_end_addr=dict(type='str',),ipv6_start_addr=dict(type='str',)),
-        user_tag=dict(type='str',),
-        ipv4_config=dict(type='list',ipv4_start_addr=dict(type='str',),ipv4_end_addr=dict(type='str',)),
-        ipv6_prefix_config=dict(type='list',ipv6_prefix_to=dict(type='str',),count=dict(type='int',),ipv6_addr_prefix=dict(type='str',)),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        ipv6_config=dict(type='list', ipv6_end_addr=dict(type='str', ),ipv6_start_addr=dict(type='str', )),
+        user_tag=dict(type='str', ),
+        ipv4_config=dict(type='list', ipv4_start_addr=dict(type='str', ),ipv4_end_addr=dict(type='str', )),
+        ipv6_prefix_config=dict(type='list', ipv6_prefix_to=dict(type='str', ),count=dict(type='int', ),ipv6_addr_prefix=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

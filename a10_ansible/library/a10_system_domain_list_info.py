@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',domain_list=dict(type='list',resolved=dict(type='int',),hit_count=dict(type='int',),name=dict(type='str',),ip=dict(type='str',),is_ipv6=dict(type='int',),domain_name=dict(type='str',),ip_number=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', domain_list=dict(type='list', resolved=dict(type='int', ),hit_count=dict(type='int', ),name=dict(type='str', ),ip=dict(type='str', ),is_ipv6=dict(type='int', ),domain_name=dict(type='str', ),ip_number=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

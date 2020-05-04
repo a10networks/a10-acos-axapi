@@ -116,10 +116,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        udp=dict(type='bool',),
-        uuid=dict(type='str',),
-        force_up_with_single_healthcheck=dict(type='bool',),
-        udp_port=dict(type='int',)
+        udp=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        force_up_with_single_healthcheck=dict(type='bool', ),
+        udp_port=dict(type='int', )
     ))
    
     # Parent keys

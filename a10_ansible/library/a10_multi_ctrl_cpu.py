@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        num_ctrl_cpus=dict(type='int',)
+        num_ctrl_cpus=dict(type='int', )
     ))
    
 

@@ -224,22 +224,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',heartbeat_status=dict(type='str',),overall_status=dict(type='str',),Number_of_tenant_unmapped_partitions=dict(type='int',),heartbeat_error_message=dict(type='str',),deregistration_error_message=dict(type='str',),service_registry=dict(type='str',),broker_info=dict(type='str',),kafka_broker_state=dict(type='str',choices=['Up','Down']),deregistration_status=dict(type='str',),Number_of_tenant_mapped_partitions=dict(type='int',),registration_status=dict(type='str',),registration_status_code=dict(type='int',),schema_registry_status=dict(type='str',),service_registry_error_message=dict(type='str',),deregistration_status_code=dict(type='int',),registration_error_message=dict(type='str',)),
-        user_name=dict(type='str',),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        auto_restart_action=dict(type='str',choices=['enable','disable']),
-        region=dict(type='str',),
-        interval=dict(type='int',),
-        host=dict(type='str',),
-        port=dict(type='int',),
-        thunder_mgmt_ip=dict(type='dict',uuid=dict(type='str',),ip_address=dict(type='str',)),
-        re_sync=dict(type='dict',analytics_bus=dict(type='bool',),schema_registry=dict(type='bool',)),
-        password_encrypted=dict(type='str',),
-        provider=dict(type='str',),
-        action=dict(type='str',choices=['register','deregister']),
-        secret_value=dict(type='str',),
-        availability_zone=dict(type='str',)
+        oper=dict(type='dict', heartbeat_status=dict(type='str', ),overall_status=dict(type='str', ),Number_of_tenant_unmapped_partitions=dict(type='int', ),heartbeat_error_message=dict(type='str', ),deregistration_error_message=dict(type='str', ),service_registry=dict(type='str', ),broker_info=dict(type='str', ),kafka_broker_state=dict(type='str', choices=['Up','Down']),deregistration_status=dict(type='str', ),Number_of_tenant_mapped_partitions=dict(type='int', ),registration_status=dict(type='str', ),registration_status_code=dict(type='int', ),schema_registry_status=dict(type='str', ),service_registry_error_message=dict(type='str', ),deregistration_status_code=dict(type='int', ),registration_error_message=dict(type='str', )),
+        user_name=dict(type='str', ),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        auto_restart_action=dict(type='str', choices=['enable','disable']),
+        region=dict(type='str', ),
+        interval=dict(type='int', ),
+        host=dict(type='str', ),
+        port=dict(type='int', ),
+        thunder_mgmt_ip=dict(type='dict', uuid=dict(type='str', ),ip_address=dict(type='str', )),
+        re_sync=dict(type='dict', analytics_bus=dict(type='bool', ),schema_registry=dict(type='bool', )),
+        password_encrypted=dict(type='str', ),
+        provider=dict(type='str', ),
+        action=dict(type='str', choices=['register','deregister']),
+        secret_value=dict(type='str', ),
+        availability_zone=dict(type='str', )
     ))
    
 

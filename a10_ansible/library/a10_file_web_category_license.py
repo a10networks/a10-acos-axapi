@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        use_mgmt_port=dict(type='bool',),
-        device=dict(type='int',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['import']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        use_mgmt_port=dict(type='bool', ),
+        device=dict(type='int', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['import']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

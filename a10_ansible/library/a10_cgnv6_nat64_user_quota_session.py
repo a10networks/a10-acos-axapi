@@ -154,8 +154,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',top_by_tcp_usage=dict(type='bool',),prefix_filter=dict(type='str',),pool_shared=dict(type='bool',),all_partitions=dict(type='bool',),top_by_icmp_usage=dict(type='bool',),top_by_udp_usage=dict(type='bool',),session_count=dict(type='int',),top_count=dict(type='int',),shared_partition=dict(type='bool',),nat_addr=dict(type='str',),partition_name=dict(type='str',),top_by_all_usage=dict(type='bool',),session_list=dict(type='list',lid_number=dict(type='int',),tcp_quota=dict(type='int',),prefix_len=dict(type='int',),nat_address=dict(type='str',),icmp_quota=dict(type='int',),flags=dict(type='str',),nat_pool_name=dict(type='str',),session_count=dict(type='int',),inside_address=dict(type='str',),udp_quota=dict(type='int',)),inside_addr_v6=dict(type='str',),display_debug=dict(type='str',choices=['true']),nat_pool_name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', top_by_tcp_usage=dict(type='bool', ),prefix_filter=dict(type='str', ),pool_shared=dict(type='bool', ),all_partitions=dict(type='bool', ),top_by_icmp_usage=dict(type='bool', ),top_by_udp_usage=dict(type='bool', ),session_count=dict(type='int', ),top_count=dict(type='int', ),shared_partition=dict(type='bool', ),nat_addr=dict(type='str', ),partition_name=dict(type='str', ),top_by_all_usage=dict(type='bool', ),session_list=dict(type='list', lid_number=dict(type='int', ),tcp_quota=dict(type='int', ),prefix_len=dict(type='int', ),nat_address=dict(type='str', ),icmp_quota=dict(type='int', ),flags=dict(type='str', ),nat_pool_name=dict(type='str', ),session_count=dict(type='int', ),inside_address=dict(type='str', ),udp_quota=dict(type='int', )),inside_addr_v6=dict(type='str', ),display_debug=dict(type='str', choices=['true']),nat_pool_name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

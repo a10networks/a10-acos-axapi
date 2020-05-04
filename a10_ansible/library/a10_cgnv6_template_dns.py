@@ -209,17 +209,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        class_list=dict(type='dict',lid_list=dict(type='list',action_value=dict(type='str',choices=['dns-cache-disable','dns-cache-enable','forward']),log=dict(type='bool',),lidnum=dict(type='int',required=True,),over_limit_action=dict(type='bool',),per=dict(type='int',),lockout=dict(type='int',),user_tag=dict(type='str',),dns=dict(type='dict',cache_action=dict(type='str',choices=['cache-disable','cache-enable']),weight=dict(type='int',),ttl=dict(type='int',)),conn_rate_limit=dict(type='int',),log_interval=dict(type='int',),uuid=dict(type='str',)),name=dict(type='str',),uuid=dict(type='str',)),
-        dns64=dict(type='dict',deep_check_rr_disable=dict(type='bool',),answer_only_disable=dict(type='bool',),enable=dict(type='bool',),single_response_disable=dict(type='bool',),uuid=dict(type='str',),max_qr_length=dict(type='int',),ignore_rcode3_disable=dict(type='bool',),auth_data=dict(type='bool',),change_query=dict(type='bool',),drop_cname_disable=dict(type='bool',),cache=dict(type='bool',),passive_query_disable=dict(type='bool',),retry=dict(type='int',),parallel_query=dict(type='bool',),timeout=dict(type='int',),ttl=dict(type='int',),trans_ptr_query=dict(type='bool',),trans_ptr=dict(type='bool',),compress_disable=dict(type='bool',)),
-        drop=dict(type='bool',),
-        period=dict(type='int',),
-        user_tag=dict(type='str',),
-        default_policy=dict(type='str',choices=['nocache','cache']),
-        disable_dns_template=dict(type='bool',),
-        forward=dict(type='str',),
-        max_cache_size=dict(type='int',),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        class_list=dict(type='dict', lid_list=dict(type='list', action_value=dict(type='str', choices=['dns-cache-disable','dns-cache-enable','forward']),log=dict(type='bool', ),lidnum=dict(type='int', required=True, ),over_limit_action=dict(type='bool', ),per=dict(type='int', ),lockout=dict(type='int', ),user_tag=dict(type='str', ),dns=dict(type='dict', cache_action=dict(type='str', choices=['cache-disable','cache-enable']),weight=dict(type='int', ),ttl=dict(type='int', )),conn_rate_limit=dict(type='int', ),log_interval=dict(type='int', ),uuid=dict(type='str', )),name=dict(type='str', ),uuid=dict(type='str', )),
+        dns64=dict(type='dict', deep_check_rr_disable=dict(type='bool', ),answer_only_disable=dict(type='bool', ),enable=dict(type='bool', ),single_response_disable=dict(type='bool', ),uuid=dict(type='str', ),max_qr_length=dict(type='int', ),ignore_rcode3_disable=dict(type='bool', ),auth_data=dict(type='bool', ),change_query=dict(type='bool', ),drop_cname_disable=dict(type='bool', ),cache=dict(type='bool', ),passive_query_disable=dict(type='bool', ),retry=dict(type='int', ),parallel_query=dict(type='bool', ),timeout=dict(type='int', ),ttl=dict(type='int', ),trans_ptr_query=dict(type='bool', ),trans_ptr=dict(type='bool', ),compress_disable=dict(type='bool', )),
+        drop=dict(type='bool', ),
+        period=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        default_policy=dict(type='str', choices=['nocache','cache']),
+        disable_dns_template=dict(type='bool', ),
+        forward=dict(type='str', ),
+        max_cache_size=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

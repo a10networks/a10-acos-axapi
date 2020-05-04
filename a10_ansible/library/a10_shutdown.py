@@ -141,17 +141,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        day_of_month=dict(type='int',),
-        reason_3=dict(type='str',),
-        reason_2=dict(type='str',),
-        time=dict(type='str',),
-        month_2=dict(type='str',choices=['January','February','March','April','May','June','July','August','September','October','November','December']),
-        month=dict(type='str',choices=['January','February','March','April','May','June','July','August','September','October','November','December']),
-        reason=dict(type='str',),
-        at=dict(type='bool',),
-        nin=dict(type='str',),
-        cancel=dict(type='bool',),
-        day_of_month_2=dict(type='int',)
+        day_of_month=dict(type='int', ),
+        reason_3=dict(type='str', ),
+        reason_2=dict(type='str', ),
+        time=dict(type='str', ),
+        month_2=dict(type='str', choices=['January','February','March','April','May','June','July','August','September','October','November','December']),
+        month=dict(type='str', choices=['January','February','March','April','May','June','July','August','September','October','November','December']),
+        reason=dict(type='str', ),
+        at=dict(type='bool', ),
+        nin=dict(type='str', ),
+        cancel=dict(type='bool', ),
+        day_of_month_2=dict(type='int', )
     ))
    
 

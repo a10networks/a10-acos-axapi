@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        timeout_val=dict(type='int',),
-        uuid=dict(type='str',),
-        service_type=dict(type='str',required=True,choices=['tcp','udp']),
-        timeout_type=dict(type='str',choices=['age','fast']),
-        port=dict(type='int',required=True,)
+        timeout_val=dict(type='int', ),
+        uuid=dict(type='str', ),
+        service_type=dict(type='str', required=True, choices=['tcp','udp']),
+        timeout_type=dict(type='str', choices=['age','fast']),
+        port=dict(type='int', required=True, )
     ))
    
 

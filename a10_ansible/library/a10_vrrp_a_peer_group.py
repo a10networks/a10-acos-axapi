@@ -112,8 +112,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        peer=dict(type='dict',ip_peer_address_cfg=dict(type='list',ip_peer_address=dict(type='str',)),ipv6_peer_address_cfg=dict(type='list',ipv6_peer_address=dict(type='str',))),
-        uuid=dict(type='str',)
+        peer=dict(type='dict', ip_peer_address_cfg=dict(type='list', ip_peer_address=dict(type='str', )),ipv6_peer_address_cfg=dict(type='list', ipv6_peer_address=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

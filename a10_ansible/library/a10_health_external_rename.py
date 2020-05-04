@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dst_file=dict(type='str',),
-        src_file=dict(type='str',)
+        dst_file=dict(type='str', ),
+        src_file=dict(type='str', )
     ))
    
 

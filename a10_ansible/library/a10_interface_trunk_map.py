@@ -120,11 +120,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        inside=dict(type='bool',),
-        map_t_inside=dict(type='bool',),
-        uuid=dict(type='str',),
-        map_t_outside=dict(type='bool',),
-        outside=dict(type='bool',)
+        inside=dict(type='bool', ),
+        map_t_inside=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        map_t_outside=dict(type='bool', ),
+        outside=dict(type='bool', )
     ))
    
     # Parent keys

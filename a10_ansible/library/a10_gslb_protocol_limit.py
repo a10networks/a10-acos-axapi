@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ardt_response=dict(type='int',),
-        uuid=dict(type='str',),
-        conn_response=dict(type='int',),
-        ardt_session=dict(type='int',),
-        ardt_query=dict(type='int',),
-        message=dict(type='int',),
-        response=dict(type='int',)
+        ardt_response=dict(type='int', ),
+        uuid=dict(type='str', ),
+        conn_response=dict(type='int', ),
+        ardt_session=dict(type='int', ),
+        ardt_query=dict(type='int', ),
+        message=dict(type='int', ),
+        response=dict(type='int', )
     ))
    
 

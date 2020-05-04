@@ -225,26 +225,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        auth_type=dict(type='str',choices=['pap','mschapv2','mschapv2-pap']),
-        health_check_string=dict(type='str',),
-        retry=dict(type='int',),
-        port_hm=dict(type='str',),
-        name=dict(type='str',required=True,),
-        port_hm_disable=dict(type='bool',),
-        encrypted=dict(type='str',),
-        interval=dict(type='int',),
-        accounting_port=dict(type='int',),
-        port=dict(type='int',),
-        health_check=dict(type='bool',),
-        acct_port_hm_disable=dict(type='bool',),
-        secret=dict(type='bool',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),
-        host=dict(type='dict',hostipv6=dict(type='str',),hostip=dict(type='str',)),
-        stats=dict(type='dict',authorize_failure=dict(type='str',),accounting_request_sent=dict(type='str',),other_error=dict(type='str',),request=dict(type='str',),accounting_success=dict(type='str',),accounting_failure=dict(type='str',),authen_success=dict(type='str',),access_challenge=dict(type='str',),authen_failure=dict(type='str',),timeout_error=dict(type='str',),authorize_success=dict(type='str',),name=dict(type='str',required=True,)),
-        health_check_disable=dict(type='bool',),
-        secret_string=dict(type='str',),
-        acct_port_hm=dict(type='str',),
-        uuid=dict(type='str',)
+        auth_type=dict(type='str', choices=['pap','mschapv2','mschapv2-pap']),
+        health_check_string=dict(type='str', ),
+        retry=dict(type='int', ),
+        port_hm=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        port_hm_disable=dict(type='bool', ),
+        encrypted=dict(type='str', ),
+        interval=dict(type='int', ),
+        accounting_port=dict(type='int', ),
+        port=dict(type='int', ),
+        health_check=dict(type='bool', ),
+        acct_port_hm_disable=dict(type='bool', ),
+        secret=dict(type='bool', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','authen_success','authen_failure','authorize_success','authorize_failure','access_challenge','timeout_error','other_error','request','accounting-request-sent','accounting-success','accounting-failure'])),
+        host=dict(type='dict', hostipv6=dict(type='str', ),hostip=dict(type='str', )),
+        stats=dict(type='dict', authorize_failure=dict(type='str', ),accounting_request_sent=dict(type='str', ),other_error=dict(type='str', ),request=dict(type='str', ),accounting_success=dict(type='str', ),accounting_failure=dict(type='str', ),authen_success=dict(type='str', ),access_challenge=dict(type='str', ),authen_failure=dict(type='str', ),timeout_error=dict(type='str', ),authorize_success=dict(type='str', ),name=dict(type='str', required=True, )),
+        health_check_disable=dict(type='bool', ),
+        secret_string=dict(type='str', ),
+        acct_port_hm=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

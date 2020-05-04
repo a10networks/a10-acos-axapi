@@ -108,8 +108,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        client_subnet_geographic=dict(type='bool',)
+        uuid=dict(type='str', ),
+        client_subnet_geographic=dict(type='bool', )
     ))
    
     # Parent keys

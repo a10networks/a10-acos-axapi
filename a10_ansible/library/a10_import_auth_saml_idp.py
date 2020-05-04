@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        remote_file=dict(type='str',),
-        saml_idp_name=dict(type='str',),
-        verify_xml_signature=dict(type='bool',),
-        password=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        overwrite=dict(type='bool',)
+        remote_file=dict(type='str', ),
+        saml_idp_name=dict(type='str', ),
+        verify_xml_signature=dict(type='bool', ),
+        password=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        overwrite=dict(type='bool', )
     ))
    
 

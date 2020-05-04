@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ddos_disabled_by_bgp_entries_list=dict(type='list',v4_address=dict(type='str',),nat_pool_name=dict(type='str',)),all=dict(type='bool',),v4_address=dict(type='str',),total_entries=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', ddos_disabled_by_bgp_entries_list=dict(type='list', v4_address=dict(type='str', ),nat_pool_name=dict(type='str', )),all=dict(type='bool', ),v4_address=dict(type='str', ),total_entries=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -128,13 +128,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        connection_load_enable=dict(type='bool',),
-        connection_load_interval=dict(type='int',),
-        limit=dict(type='bool',),
-        connection_load_samples=dict(type='int',),
-        connection_load_limit=dict(type='int',),
-        connection_load_fail_break=dict(type='bool',)
+        uuid=dict(type='str', ),
+        connection_load_enable=dict(type='bool', ),
+        connection_load_interval=dict(type='int', ),
+        limit=dict(type='bool', ),
+        connection_load_samples=dict(type='int', ),
+        connection_load_limit=dict(type='int', ),
+        connection_load_fail_break=dict(type='bool', )
     ))
    
     # Parent keys

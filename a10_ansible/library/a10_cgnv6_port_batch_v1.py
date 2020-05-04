@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable_port_batch_v1=dict(type='bool',),
-        uuid=dict(type='str',)
+        enable_port_batch_v1=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

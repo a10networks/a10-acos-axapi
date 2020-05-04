@@ -206,15 +206,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        info=dict(type='dict',uuid=dict(type='str',)),
-        reset=dict(type='dict',feature_name=dict(type='str',choices=['app-fw'])),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        checknow=dict(type='dict',uuid=dict(type='str',)),
-        revert=dict(type='dict',feature_name=dict(type='str',choices=['app-fw'])),
-        proxy_server=dict(type='dict',username=dict(type='str',),domain=dict(type='str',),uuid=dict(type='str',),https_port=dict(type='int',),encrypted=dict(type='str',),proxy_host=dict(type='str',),auth_type=dict(type='str',choices=['ntlm','basic']),password=dict(type='bool',),secret_string=dict(type='str',)),
-        check_now=dict(type='dict',feature_name=dict(type='str',choices=['app-fw'])),
-        config_list=dict(type='list',day_time=dict(type='str',),uuid=dict(type='str',),schedule=dict(type='bool',),feature_name=dict(type='str',required=True,choices=['app-fw']),week_day=dict(type='str',choices=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']),daily=dict(type='bool',),week_time=dict(type='str',),weekly=dict(type='bool',))
+        info=dict(type='dict', uuid=dict(type='str', )),
+        reset=dict(type='dict', feature_name=dict(type='str', choices=['app-fw'])),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        checknow=dict(type='dict', uuid=dict(type='str', )),
+        revert=dict(type='dict', feature_name=dict(type='str', choices=['app-fw'])),
+        proxy_server=dict(type='dict', username=dict(type='str', ),domain=dict(type='str', ),uuid=dict(type='str', ),https_port=dict(type='int', ),encrypted=dict(type='str', ),proxy_host=dict(type='str', ),auth_type=dict(type='str', choices=['ntlm','basic']),password=dict(type='bool', ),secret_string=dict(type='str', )),
+        check_now=dict(type='dict', feature_name=dict(type='str', choices=['app-fw'])),
+        config_list=dict(type='list', day_time=dict(type='str', ),uuid=dict(type='str', ),schedule=dict(type='bool', ),feature_name=dict(type='str', required=True, choices=['app-fw']),week_day=dict(type='str', choices=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']),daily=dict(type='bool', ),week_time=dict(type='str', ),weekly=dict(type='bool', ))
     ))
    
 

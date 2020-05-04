@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_end=dict(type='int',required=True,),
-        stun_timeout_val_port_range=dict(type='int',),
-        uuid=dict(type='str',),
-        port=dict(type='int',required=True,)
+        port_end=dict(type='int', required=True, ),
+        stun_timeout_val_port_range=dict(type='int', ),
+        uuid=dict(type='str', ),
+        port=dict(type='int', required=True, )
     ))
    
 

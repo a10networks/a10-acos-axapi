@@ -130,8 +130,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',boot_now=dict(type='int',),hour=dict(type='str',),epoch_time=dict(type='str',),hostname=dict(type='str',),uname=dict(type='str',),reason=dict(type='str',),boot_scheduled=dict(type='int',),min=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', boot_now=dict(type='int', ),hour=dict(type='str', ),epoch_time=dict(type='str', ),hostname=dict(type='str', ),uname=dict(type='str', ),reason=dict(type='str', ),boot_scheduled=dict(type='int', ),min=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

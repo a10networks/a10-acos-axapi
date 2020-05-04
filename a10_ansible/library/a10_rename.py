@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        object=dict(type='str',),
-        instance_name=dict(type='str',),
-        new_instance_name=dict(type='str',)
+        object=dict(type='str', ),
+        instance_name=dict(type='str', ),
+        new_instance_name=dict(type='str', )
     ))
    
 

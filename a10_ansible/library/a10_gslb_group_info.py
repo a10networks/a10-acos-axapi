@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',member_list=dict(type='list',status=dict(type='str',),sync_sequence_number=dict(type='int',),connect_success=dict(type='int',),group_name=dict(type='str',),learn=dict(type='int',),connect_fail=dict(type='int',),passive=dict(type='int',),member_name=dict(type='str',),open_out=dict(type='int',),address=dict(type='str',),is_master=dict(type='int',),open_success=dict(type='int',),open_in=dict(type='int',),sys_id=dict(type='int',),update_in=dict(type='int',),priority=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', member_list=dict(type='list', status=dict(type='str', ),sync_sequence_number=dict(type='int', ),connect_success=dict(type='int', ),group_name=dict(type='str', ),learn=dict(type='int', ),connect_fail=dict(type='int', ),passive=dict(type='int', ),member_name=dict(type='str', ),open_out=dict(type='int', ),address=dict(type='str', ),is_master=dict(type='int', ),open_success=dict(type='int', ),open_in=dict(type='int', ),sys_id=dict(type='int', ),update_in=dict(type='int', ),priority=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

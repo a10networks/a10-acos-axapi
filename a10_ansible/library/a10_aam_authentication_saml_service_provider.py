@@ -263,24 +263,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',login_auth_req=dict(type='str',),slo_error=dict(type='str',),name=dict(type='str',required=True,),sp_metadata_export_success=dict(type='str',),acs_authz_fail=dict(type='str',),slo_req=dict(type='str',),login_auth_resp=dict(type='str',),slo_success=dict(type='str',),acs_success=dict(type='str',),acs_error=dict(type='str',),other_error=dict(type='str',),acs_req=dict(type='str',),sp_metadata_export_req=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        certificate=dict(type='str',),
-        require_assertion_signed=dict(type='dict',require_assertion_signed_enable=dict(type='bool',)),
-        artifact_resolution_service=dict(type='list',artifact_location=dict(type='str',),artifact_binding=dict(type='str',choices=['soap']),artifact_index=dict(type='int',)),
-        service_url=dict(type='str',),
-        entity_id=dict(type='str',),
-        user_tag=dict(type='str',),
-        signature_algorithm=dict(type='str',choices=['SHA1','SHA256']),
-        assertion_consuming_service=dict(type='list',assertion_index=dict(type='int',),assertion_binding=dict(type='str',choices=['artifact','paos','post']),assertion_location=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sp-metadata-export-req','sp-metadata-export-success','login-auth-req','login-auth-resp','acs-req','acs-success','acs-authz-fail','acs-error','slo-req','slo-success','slo-error','other-error'])),
-        saml_request_signed=dict(type='dict',saml_request_signed_disable=dict(type='bool',)),
-        metadata_export_service=dict(type='dict',md_export_location=dict(type='str',),sign_xml=dict(type='bool',)),
-        adfs_ws_federation=dict(type='dict',ws_federation_enable=dict(type='bool',)),
-        soap_tls_certificate_validate=dict(type='dict',soap_tls_certificate_validate_disable=dict(type='bool',)),
-        single_logout_service=dict(type='list',SLO_binding=dict(type='str',choices=['post','redirect','soap']),SLO_location=dict(type='str',)),
-        acs_uri_bypass=dict(type='bool',),
-        uuid=dict(type='str',)
+        stats=dict(type='dict', login_auth_req=dict(type='str', ),slo_error=dict(type='str', ),name=dict(type='str', required=True, ),sp_metadata_export_success=dict(type='str', ),acs_authz_fail=dict(type='str', ),slo_req=dict(type='str', ),login_auth_resp=dict(type='str', ),slo_success=dict(type='str', ),acs_success=dict(type='str', ),acs_error=dict(type='str', ),other_error=dict(type='str', ),acs_req=dict(type='str', ),sp_metadata_export_req=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        certificate=dict(type='str', ),
+        require_assertion_signed=dict(type='dict', require_assertion_signed_enable=dict(type='bool', )),
+        artifact_resolution_service=dict(type='list', artifact_location=dict(type='str', ),artifact_binding=dict(type='str', choices=['soap']),artifact_index=dict(type='int', )),
+        service_url=dict(type='str', ),
+        entity_id=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        signature_algorithm=dict(type='str', choices=['SHA1','SHA256']),
+        assertion_consuming_service=dict(type='list', assertion_index=dict(type='int', ),assertion_binding=dict(type='str', choices=['artifact','paos','post']),assertion_location=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','sp-metadata-export-req','sp-metadata-export-success','login-auth-req','login-auth-resp','acs-req','acs-success','acs-authz-fail','acs-error','slo-req','slo-success','slo-error','other-error'])),
+        saml_request_signed=dict(type='dict', saml_request_signed_disable=dict(type='bool', )),
+        metadata_export_service=dict(type='dict', md_export_location=dict(type='str', ),sign_xml=dict(type='bool', )),
+        adfs_ws_federation=dict(type='dict', ws_federation_enable=dict(type='bool', )),
+        soap_tls_certificate_validate=dict(type='dict', soap_tls_certificate_validate_disable=dict(type='bool', )),
+        single_logout_service=dict(type='list', SLO_binding=dict(type='str', choices=['post','redirect','soap']),SLO_location=dict(type='str', )),
+        acs_uri_bypass=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

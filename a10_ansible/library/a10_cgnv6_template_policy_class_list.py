@@ -170,12 +170,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        header_name=dict(type='str',),
-        lid_list=dict(type='list',request_limit=dict(type='int',),conn_limit=dict(type='int',),lidnum=dict(type='int',required=True,),log=dict(type='bool',),dns64=dict(type='dict',prefix=dict(type='str',),exclusive_answer=dict(type='bool',),disable=dict(type='bool',)),interval=dict(type='int',),request_rate_limit=dict(type='int',),user_tag=dict(type='str',),conn_per=dict(type='int',),request_per=dict(type='int',),conn_rate_limit=dict(type='int',),lockout=dict(type='int',),action_value=dict(type='str',choices=['forward','reset']),over_limit_action=dict(type='bool',),uuid=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        client_ip_l3_dest=dict(type='bool',),
-        client_ip_l7_header=dict(type='bool',),
-        uuid=dict(type='str',)
+        header_name=dict(type='str', ),
+        lid_list=dict(type='list', request_limit=dict(type='int', ),conn_limit=dict(type='int', ),lidnum=dict(type='int', required=True, ),log=dict(type='bool', ),dns64=dict(type='dict', prefix=dict(type='str', ),exclusive_answer=dict(type='bool', ),disable=dict(type='bool', )),interval=dict(type='int', ),request_rate_limit=dict(type='int', ),user_tag=dict(type='str', ),conn_per=dict(type='int', ),request_per=dict(type='int', ),conn_rate_limit=dict(type='int', ),lockout=dict(type='int', ),action_value=dict(type='str', choices=['forward','reset']),over_limit_action=dict(type='bool', ),uuid=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        client_ip_l3_dest=dict(type='bool', ),
+        client_ip_l7_header=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

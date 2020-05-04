@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ia=dict(type='bool',),
-        ase=dict(type='bool',),
-        install=dict(type='bool',),
-        spf=dict(type='bool',),
-        uuid=dict(type='str',)
+        ia=dict(type='bool', ),
+        ase=dict(type='bool', ),
+        install=dict(type='bool', ),
+        spf=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

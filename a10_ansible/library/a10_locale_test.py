@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        locale=dict(type='str',choices=['zh_CN','zh_TW','ja_JP'])
+        locale=dict(type='str', choices=['zh_CN','zh_TW','ja_JP'])
     ))
    
 

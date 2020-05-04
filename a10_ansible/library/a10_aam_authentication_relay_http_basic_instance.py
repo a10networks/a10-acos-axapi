@@ -153,12 +153,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain=dict(type='str',),
-        stats=dict(type='dict',bad_req=dict(type='str',),unavailable=dict(type='str',),success=dict(type='str',),forbidden=dict(type='str',),no_creds=dict(type='str',),server_error=dict(type='str',),not_found=dict(type='str',),unauth=dict(type='str',),name=dict(type='str',required=True,)),
-        uuid=dict(type='str',),
-        domain_format=dict(type='str',choices=['user-principal-name','down-level-logon-name']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','success','no-creds','bad-req','unauth','forbidden','not-found','server-error','unavailable'])),
-        name=dict(type='str',required=True,)
+        domain=dict(type='str', ),
+        stats=dict(type='dict', bad_req=dict(type='str', ),unavailable=dict(type='str', ),success=dict(type='str', ),forbidden=dict(type='str', ),no_creds=dict(type='str', ),server_error=dict(type='str', ),not_found=dict(type='str', ),unauth=dict(type='str', ),name=dict(type='str', required=True, )),
+        uuid=dict(type='str', ),
+        domain_format=dict(type='str', choices=['user-principal-name','down-level-logon-name']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','success','no-creds','bad-req','unauth','forbidden','not-found','server-error','unavailable'])),
+        name=dict(type='str', required=True, )
     ))
    
 

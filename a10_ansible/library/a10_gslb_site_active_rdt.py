@@ -136,15 +136,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        range_factor=dict(type='int',),
-        smooth_factor=dict(type='int',),
-        mask=dict(type='str',),
-        overlap=dict(type='bool',),
-        limit=dict(type='int',),
-        ignore_count=dict(type='int',),
-        aging_time=dict(type='int',),
-        bind_geoloc=dict(type='bool',),
-        uuid=dict(type='str',)
+        range_factor=dict(type='int', ),
+        smooth_factor=dict(type='int', ),
+        mask=dict(type='str', ),
+        overlap=dict(type='bool', ),
+        limit=dict(type='int', ),
+        ignore_count=dict(type='int', ),
+        aging_time=dict(type='int', ),
+        bind_geoloc=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

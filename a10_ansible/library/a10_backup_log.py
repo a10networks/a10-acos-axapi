@@ -145,18 +145,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        week=dict(type='bool',),
-        all=dict(type='bool',),
-        password=dict(type='str',),
-        remote_file=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        period=dict(type='bool',),
-        month=dict(type='bool',),
-        stats_data=dict(type='bool',),
-        date=dict(type='int',),
-        store_name=dict(type='str',),
-        day=dict(type='bool',),
-        expedite=dict(type='bool',)
+        week=dict(type='bool', ),
+        all=dict(type='bool', ),
+        password=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        period=dict(type='bool', ),
+        month=dict(type='bool', ),
+        stats_data=dict(type='bool', ),
+        date=dict(type='int', ),
+        store_name=dict(type='str', ),
+        day=dict(type='bool', ),
+        expedite=dict(type='bool', )
     ))
    
 

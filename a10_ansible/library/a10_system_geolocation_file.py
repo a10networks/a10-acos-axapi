@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',geofiles=dict(type='list',comment=dict(type='int',),success=dict(type='int',),error_warning=dict(type='int',),lines=dict(type='int',),filename=dict(type='str',),template=dict(type='str',),percentage_loaded=dict(type='int',),ntype=dict(type='str',choices=['template','builtin'])),error_info=dict(type='dict',oper=dict(type='dict',error_list=dict(type='list',line=dict(type='int',),offset=dict(type='int',),error=dict(type='str',)),filename=dict(type='str',)))),
-        error_info=dict(type='dict',uuid=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', geofiles=dict(type='list', comment=dict(type='int', ),success=dict(type='int', ),error_warning=dict(type='int', ),lines=dict(type='int', ),filename=dict(type='str', ),template=dict(type='str', ),percentage_loaded=dict(type='int', ),ntype=dict(type='str', choices=['template','builtin'])),error_info=dict(type='dict', oper=dict(type='dict', error_list=dict(type='list', line=dict(type='int', ),offset=dict(type='int', ),error=dict(type='str', )),filename=dict(type='str', )))),
+        error_info=dict(type='dict', uuid=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -124,12 +124,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        class_list=dict(type='str',),
-        acl_name=dict(type='str',),
-        inside=dict(type='bool',),
-        outside=dict(type='bool',),
-        access_list=dict(type='bool',)
+        uuid=dict(type='str', ),
+        class_list=dict(type='str', ),
+        acl_name=dict(type='str', ),
+        inside=dict(type='bool', ),
+        outside=dict(type='bool', ),
+        access_list=dict(type='bool', )
     ))
    
     # Parent keys

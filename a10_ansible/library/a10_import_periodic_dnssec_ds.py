@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dnssec_ds=dict(type='str',required=True,),
-        use_mgmt_port=dict(type='bool',),
-        uuid=dict(type='str',),
-        remote_file=dict(type='str',),
-        period=dict(type='int',)
+        dnssec_ds=dict(type='str', required=True, ),
+        use_mgmt_port=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        period=dict(type='int', )
     ))
    
 

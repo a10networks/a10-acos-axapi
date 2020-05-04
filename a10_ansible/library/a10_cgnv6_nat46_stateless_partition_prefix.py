@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        partition=dict(type='str',required=True,),
-        vrid=dict(type='int',),
-        ipv6_prefix=dict(type='str',),
-        uuid=dict(type='str',)
+        partition=dict(type='str', required=True, ),
+        vrid=dict(type='int', ),
+        ipv6_prefix=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -137,16 +137,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        with_radius_attribute=dict(type='bool',),
-        msisdn=dict(type='bool',),
-        custom1=dict(type='bool',),
-        custom2=dict(type='bool',),
-        custom3=dict(type='bool',),
-        disable_pool_based=dict(type='bool',),
-        imei=dict(type='bool',),
-        ip_based=dict(type='bool',),
-        imsi=dict(type='bool',),
-        uuid=dict(type='str',)
+        with_radius_attribute=dict(type='bool', ),
+        msisdn=dict(type='bool', ),
+        custom1=dict(type='bool', ),
+        custom2=dict(type='bool', ),
+        custom3=dict(type='bool', ),
+        disable_pool_based=dict(type='bool', ),
+        imei=dict(type='bool', ),
+        ip_based=dict(type='bool', ),
+        imsi=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

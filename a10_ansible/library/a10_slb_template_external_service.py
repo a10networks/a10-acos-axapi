@@ -172,22 +172,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        shared_partition_persist_source_ip_template=dict(type='bool',),
-        ntype=dict(type='str',choices=['skyfire-icap','url-filter']),
-        source_ip=dict(type='str',),
-        request_header_forward_list=dict(type='list',request_header_forward=dict(type='str',)),
-        template_tcp_proxy_shared=dict(type='str',),
-        user_tag=dict(type='str',),
-        shared_partition_tcp_proxy_template=dict(type='bool',),
-        action=dict(type='str',choices=['continue','drop','reset']),
-        service_group=dict(type='str',),
-        failure_action=dict(type='str',choices=['continue','drop','reset']),
-        timeout=dict(type='int',),
-        tcp_proxy=dict(type='str',),
-        template_persist_source_ip_shared=dict(type='str',),
-        bypass_ip_cfg=dict(type='list',bypass_ip=dict(type='str',),mask=dict(type='str',)),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        shared_partition_persist_source_ip_template=dict(type='bool', ),
+        ntype=dict(type='str', choices=['skyfire-icap','url-filter']),
+        source_ip=dict(type='str', ),
+        request_header_forward_list=dict(type='list', request_header_forward=dict(type='str', )),
+        template_tcp_proxy_shared=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        shared_partition_tcp_proxy_template=dict(type='bool', ),
+        action=dict(type='str', choices=['continue','drop','reset']),
+        service_group=dict(type='str', ),
+        failure_action=dict(type='str', choices=['continue','drop','reset']),
+        timeout=dict(type='int', ),
+        tcp_proxy=dict(type='str', ),
+        template_persist_source_ip_shared=dict(type='str', ),
+        bypass_ip_cfg=dict(type='list', bypass_ip=dict(type='str', ),mask=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

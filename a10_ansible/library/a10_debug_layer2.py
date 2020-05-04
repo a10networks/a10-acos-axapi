@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        arp=dict(type='bool',),
-        all=dict(type='bool',),
-        uuid=dict(type='str',),
-        trace=dict(type='bool',),
-        vlan=dict(type='bool',),
-        misc=dict(type='bool',),
-        interface=dict(type='bool',)
+        arp=dict(type='bool', ),
+        all=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        trace=dict(type='bool', ),
+        vlan=dict(type='bool', ),
+        misc=dict(type='bool', ),
+        interface=dict(type='bool', )
     ))
    
 

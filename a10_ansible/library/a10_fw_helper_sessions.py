@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        idle_timeout=dict(type='int',),
-        limit=dict(type='int',),
-        mode=dict(type='str',choices=['disable']),
-        uuid=dict(type='str',)
+        idle_timeout=dict(type='int', ),
+        limit=dict(type='int', ),
+        mode=dict(type='str', choices=['disable']),
+        uuid=dict(type='str', )
     ))
    
 

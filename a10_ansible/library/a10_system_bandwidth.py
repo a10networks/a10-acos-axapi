@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','input-bytes-per-sec','output-bytes-per-sec'])),
-        stats=dict(type='dict',input_bytes_per_sec=dict(type='str',),output_bytes_per_sec=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','input-bytes-per-sec','output-bytes-per-sec'])),
+        stats=dict(type='dict', input_bytes_per_sec=dict(type='str', ),output_bytes_per_sec=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

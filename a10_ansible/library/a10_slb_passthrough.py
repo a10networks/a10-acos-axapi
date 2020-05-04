@@ -135,9 +135,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_conn','total_fwd_bytes','total_fwd_packets','total_rev_bytes','total_rev_packets','curr_pconn'])),
-        stats=dict(type='dict',total_fwd_bytes=dict(type='str',),total_conn=dict(type='str',),total_rev_bytes=dict(type='str',),total_fwd_packets=dict(type='str',),curr_pconn=dict(type='str',),curr_conn=dict(type='str',),total_rev_packets=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','curr_conn','total_conn','total_fwd_bytes','total_fwd_packets','total_rev_bytes','total_rev_packets','curr_pconn'])),
+        stats=dict(type='dict', total_fwd_bytes=dict(type='str', ),total_conn=dict(type='str', ),total_rev_bytes=dict(type='str', ),total_fwd_packets=dict(type='str', ),curr_pconn=dict(type='str', ),curr_conn=dict(type='str', ),total_rev_packets=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

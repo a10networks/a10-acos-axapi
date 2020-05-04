@@ -124,12 +124,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        mgmt_floating_ip_address=dict(type='str',),
-        allowable_ip_range=dict(type='list',),
-        vrid=dict(type='int',),
-        allowable_ipv6_range=dict(type='list',),
-        vlan=dict(type='int',),
-        uuid=dict(type='str',)
+        mgmt_floating_ip_address=dict(type='str', ),
+        allowable_ip_range=dict(type='list', ),
+        vrid=dict(type='int', ),
+        allowable_ipv6_range=dict(type='list', ),
+        vlan=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

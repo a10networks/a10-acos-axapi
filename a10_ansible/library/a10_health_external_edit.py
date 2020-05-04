@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        description=dict(type='str',),
-        file_name=dict(type='str',)
+        description=dict(type='str', ),
+        file_name=dict(type='str', )
     ))
    
 

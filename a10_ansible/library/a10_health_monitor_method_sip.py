@@ -124,12 +124,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sip=dict(type='bool',),
-        uuid=dict(type='str',),
-        register=dict(type='bool',),
-        expect_response_code=dict(type='str',),
-        sip_port=dict(type='int',),
-        sip_tcp=dict(type='bool',)
+        sip=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        register=dict(type='bool', ),
+        expect_response_code=dict(type='str', ),
+        sip_port=dict(type='int', ),
+        sip_tcp=dict(type='bool', )
     ))
    
     # Parent keys

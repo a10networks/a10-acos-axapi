@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nvgre_key_mode_lower24=dict(type='bool',),
-        uuid=dict(type='str',),
-        tcp_mss_adjust_disable=dict(type='bool',),
-        gateway_mac=dict(type='str',),
-        ip_dscp_preserve=dict(type='bool',),
-        nvgre_disable_flow_id=dict(type='bool',),
-        vxlan_dest_port=dict(type='int',)
+        nvgre_key_mode_lower24=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        tcp_mss_adjust_disable=dict(type='bool', ),
+        gateway_mac=dict(type='str', ),
+        ip_dscp_preserve=dict(type='bool', ),
+        nvgre_disable_flow_id=dict(type='bool', ),
+        vxlan_dest_port=dict(type='int', )
     ))
    
 

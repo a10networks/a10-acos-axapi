@@ -128,13 +128,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pop3_password_string=dict(type='str',),
-        uuid=dict(type='str',),
-        pop3_password=dict(type='bool',),
-        pop3_username=dict(type='str',),
-        pop3_encrypted=dict(type='str',),
-        pop3=dict(type='bool',),
-        pop3_port=dict(type='int',)
+        pop3_password_string=dict(type='str', ),
+        uuid=dict(type='str', ),
+        pop3_password=dict(type='bool', ),
+        pop3_username=dict(type='str', ),
+        pop3_encrypted=dict(type='str', ),
+        pop3=dict(type='bool', ),
+        pop3_port=dict(type='int', )
     ))
    
     # Parent keys

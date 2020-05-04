@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nat_address=dict(type='str',),
-        partition=dict(type='str',required=True,),
-        vrid=dict(type='int',),
-        src_address=dict(type='str',required=True,),
-        uuid=dict(type='str',)
+        nat_address=dict(type='str', ),
+        partition=dict(type='str', required=True, ),
+        vrid=dict(type='int', ),
+        src_address=dict(type='str', required=True, ),
+        uuid=dict(type='str', )
     ))
    
 

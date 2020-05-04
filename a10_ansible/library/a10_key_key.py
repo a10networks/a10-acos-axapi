@@ -119,10 +119,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        key_number=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        key_string=dict(type='str',)
+        key_number=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        key_string=dict(type='str', )
     ))
    
     # Parent keys

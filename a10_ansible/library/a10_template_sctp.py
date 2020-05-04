@@ -140,14 +140,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        checksum_check=dict(type='str',choices=['enable']),
-        log=dict(type='dict',payload_proto_filtering=dict(type='bool',)),
-        permit_payload_protocol=dict(type='dict',permit_config_id=dict(type='list',protocol_id=dict(type='int',)),permit_config_name=dict(type='list',protocol_name=dict(type='str',choices=['iua','m2ua','m3ua','sua','m2pa','h.323']))),
-        user_tag=dict(type='str',),
-        name=dict(type='str',required=True,),
-        sctp_idle_timeout=dict(type='int',),
-        sctp_half_open_idle_timeout=dict(type='int',),
-        uuid=dict(type='str',)
+        checksum_check=dict(type='str', choices=['enable']),
+        log=dict(type='dict', payload_proto_filtering=dict(type='bool', )),
+        permit_payload_protocol=dict(type='dict', permit_config_id=dict(type='list', protocol_id=dict(type='int', )),permit_config_name=dict(type='list', protocol_name=dict(type='str', choices=['iua','m2ua','m3ua','sua','m2pa','h.323']))),
+        user_tag=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        sctp_idle_timeout=dict(type='int', ),
+        sctp_half_open_idle_timeout=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

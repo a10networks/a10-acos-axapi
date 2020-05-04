@@ -145,18 +145,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        netmask6=dict(type='int',),
-        hash_persist=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        dont_honor_conn_rules=dict(type='bool',),
-        service_group=dict(type='bool',),
-        user_tag=dict(type='str',),
-        server=dict(type='bool',),
-        netmask=dict(type='str',),
-        timeout=dict(type='int',),
-        scan_all_members=dict(type='bool',),
-        match_type=dict(type='bool',),
-        uuid=dict(type='str',)
+        netmask6=dict(type='int', ),
+        hash_persist=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        dont_honor_conn_rules=dict(type='bool', ),
+        service_group=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        server=dict(type='bool', ),
+        netmask=dict(type='str', ),
+        timeout=dict(type='int', ),
+        scan_all_members=dict(type='bool', ),
+        match_type=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

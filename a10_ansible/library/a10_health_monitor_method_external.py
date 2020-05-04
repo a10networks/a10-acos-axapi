@@ -132,14 +132,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        external=dict(type='bool',),
-        ext_preference=dict(type='bool',),
-        ext_arguments=dict(type='str',),
-        shared_partition_program=dict(type='bool',),
-        ext_port=dict(type='int',),
-        ext_program_shared=dict(type='str',),
-        ext_program=dict(type='str',)
+        uuid=dict(type='str', ),
+        external=dict(type='bool', ),
+        ext_preference=dict(type='bool', ),
+        ext_arguments=dict(type='str', ),
+        shared_partition_program=dict(type='bool', ),
+        ext_port=dict(type='int', ),
+        ext_program_shared=dict(type='str', ),
+        ext_program=dict(type='str', )
     ))
    
     # Parent keys

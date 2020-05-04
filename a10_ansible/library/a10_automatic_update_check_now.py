@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        feature_name=dict(type='str',choices=['app-fw'])
+        feature_name=dict(type='str', choices=['app-fw'])
     ))
    
 

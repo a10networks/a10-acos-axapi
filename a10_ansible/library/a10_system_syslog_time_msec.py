@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable_flag=dict(type='bool',)
+        enable_flag=dict(type='bool', )
     ))
    
 

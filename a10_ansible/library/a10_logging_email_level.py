@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        email_levelname=dict(type='str',choices=['disable','emergency','alert','critical','notification']),
-        uuid=dict(type='str',)
+        email_levelname=dict(type='str', choices=['disable','emergency','alert','critical','notification']),
+        uuid=dict(type='str', )
     ))
    
 

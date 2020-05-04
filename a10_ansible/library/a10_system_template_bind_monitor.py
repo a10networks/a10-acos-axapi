@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        template_monitor=dict(type='int',required=True,),
-        uuid=dict(type='str',)
+        template_monitor=dict(type='int', required=True, ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        access_list=dict(type='str',required=True,),
-        action=dict(type='str',required=True,choices=['deny','permit']),
-        uuid=dict(type='str',),
-        value=dict(type='str',required=True,)
+        access_list=dict(type='str', required=True, ),
+        action=dict(type='str', required=True, choices=['deny','permit']),
+        uuid=dict(type='str', ),
+        value=dict(type='str', required=True, )
     ))
    
 

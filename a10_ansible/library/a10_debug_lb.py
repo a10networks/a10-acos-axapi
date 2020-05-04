@@ -129,14 +129,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        uuid=dict(type='str',),
-        cfg=dict(type='bool',),
-        flow=dict(type='bool',),
-        clb=dict(type='bool',),
-        fwlb=dict(type='bool',),
-        llb=dict(type='bool',),
-        slb=dict(type='bool',)
+        all=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        cfg=dict(type='bool', ),
+        flow=dict(type='bool', ),
+        clb=dict(type='bool', ),
+        fwlb=dict(type='bool', ),
+        llb=dict(type='bool', ),
+        slb=dict(type='bool', )
     ))
    
 

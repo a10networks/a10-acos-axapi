@@ -196,17 +196,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        reminder_list=dict(type='list',reminder_value=dict(type='int',required=True,),uuid=dict(type='str',)),
-        bandwidth_base=dict(type='int',),
-        use_mgmt_port=dict(type='bool',),
-        interval=dict(type='int',),
-        uuid=dict(type='str',),
-        overage=dict(type='dict',kb=dict(type='int',),uuid=dict(type='str',),mb=dict(type='int',),seconds=dict(type='int',),bytes=dict(type='int',),days=dict(type='int',),hours=dict(type='int',),gb=dict(type='int',),minutes=dict(type='int',)),
-        connect=dict(type='dict',connect=dict(type='bool',),uuid=dict(type='str',)),
-        host_list=dict(type='list',host_ipv6=dict(type='str',required=True,),host_ipv4=dict(type='str',required=True,),port=dict(type='int',),uuid=dict(type='str',)),
-        bandwidth_unrestricted=dict(type='bool',),
-        instance_name=dict(type='str',),
-        sn=dict(type='str',)
+        reminder_list=dict(type='list', reminder_value=dict(type='int', required=True, ),uuid=dict(type='str', )),
+        bandwidth_base=dict(type='int', ),
+        use_mgmt_port=dict(type='bool', ),
+        interval=dict(type='int', ),
+        uuid=dict(type='str', ),
+        overage=dict(type='dict', kb=dict(type='int', ),uuid=dict(type='str', ),mb=dict(type='int', ),seconds=dict(type='int', ),bytes=dict(type='int', ),days=dict(type='int', ),hours=dict(type='int', ),gb=dict(type='int', ),minutes=dict(type='int', )),
+        connect=dict(type='dict', connect=dict(type='bool', ),uuid=dict(type='str', )),
+        host_list=dict(type='list', host_ipv6=dict(type='str', required=True, ),host_ipv4=dict(type='str', required=True, ),port=dict(type='int', ),uuid=dict(type='str', )),
+        bandwidth_unrestricted=dict(type='bool', ),
+        instance_name=dict(type='str', ),
+        sn=dict(type='str', )
     ))
    
 

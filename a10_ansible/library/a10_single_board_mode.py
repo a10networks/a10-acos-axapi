@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        forced=dict(type='bool',),
-        fallback=dict(type='bool',),
-        uuid=dict(type='str',)
+        forced=dict(type='bool', ),
+        fallback=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

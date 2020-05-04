@@ -166,16 +166,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        mandatory_ie_filtering=dict(type='str',choices=['disable']),
-        name=dict(type='str',required=True,),
-        message_type=dict(type='list',message_type_v2=dict(type='str',choices=['bearer-resource','change-notification','context','config-transfer','create-bearer','create-data-forwarding','create-tunnel-forwarding','create-session','cs-paging','delete-bearer','delete-command','delete-data-forwarding','delete-pdn','delete-session','detach','downlink-notification','echo','fwd-access','fwd-relocation','identification','mbms-session-start','mbms-session-stop','mbms-session-update','modify-bearer','modify-command','release-access','relocation-cancel','resume','stop-paging','suspend','trace-session','update-bearer','update-pdn','version-not-supported']),drop_value=dict(type='str',choices=['drop']),message_type_v0=dict(type='str',choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','identification','node-alive','note-ms-present','pdu-notification','redirection','send-route','sgsn-context','gtp-pdu','update-pdp','create-aa-pdp','delete-aa-pdp','version-not-supported']),message_type_v1=dict(type='str',choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','fwd-relocation','fwd-srns-context','identification','node-alive','note-ms-present','pdu-notification','ran-info','redirection','relocation-cancel','send-route','sgsn-context','supported-extension','gtp-pdu','update-pdp','version-not-supported'])),
-        user_tag=dict(type='str',),
-        log=dict(type='dict',message_filtering=dict(type='bool',),information_filtering=dict(type='bool',),mandatory_ie_missing=dict(type='bool',),invalid_teid=dict(type='bool',),reserved_ie_present=dict(type='bool',)),
-        tunnel_timeout=dict(type='int',),
-        gtp_filter_list=dict(type='str',),
-        maximum_message_length=dict(type='int',),
-        protocol_anomaly_filtering=dict(type='str',choices=['disable']),
-        uuid=dict(type='str',)
+        mandatory_ie_filtering=dict(type='str', choices=['disable']),
+        name=dict(type='str', required=True, ),
+        message_type=dict(type='list', message_type_v2=dict(type='str', choices=['bearer-resource','change-notification','context','config-transfer','create-bearer','create-data-forwarding','create-tunnel-forwarding','create-session','cs-paging','delete-bearer','delete-command','delete-data-forwarding','delete-pdn','delete-session','detach','downlink-notification','echo','fwd-access','fwd-relocation','identification','mbms-session-start','mbms-session-stop','mbms-session-update','modify-bearer','modify-command','release-access','relocation-cancel','resume','stop-paging','suspend','trace-session','update-bearer','update-pdn','version-not-supported']),drop_value=dict(type='str', choices=['drop']),message_type_v0=dict(type='str', choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','identification','node-alive','note-ms-present','pdu-notification','redirection','send-route','sgsn-context','gtp-pdu','update-pdp','create-aa-pdp','delete-aa-pdp','version-not-supported']),message_type_v1=dict(type='str', choices=['create-pdp','data-record','delete-pdp','echo','error-indication','failure-report','fwd-relocation','fwd-srns-context','identification','node-alive','note-ms-present','pdu-notification','ran-info','redirection','relocation-cancel','send-route','sgsn-context','supported-extension','gtp-pdu','update-pdp','version-not-supported'])),
+        user_tag=dict(type='str', ),
+        log=dict(type='dict', message_filtering=dict(type='bool', ),information_filtering=dict(type='bool', ),mandatory_ie_missing=dict(type='bool', ),invalid_teid=dict(type='bool', ),reserved_ie_present=dict(type='bool', )),
+        tunnel_timeout=dict(type='int', ),
+        gtp_filter_list=dict(type='str', ),
+        maximum_message_length=dict(type='int', ),
+        protocol_anomaly_filtering=dict(type='str', choices=['disable']),
+        uuid=dict(type='str', )
     ))
    
 

@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        syn_cookie=dict(type='dict',threshold=dict(type='int',))
+        uuid=dict(type='str', ),
+        syn_cookie=dict(type='dict', threshold=dict(type='int', ))
     ))
    
 

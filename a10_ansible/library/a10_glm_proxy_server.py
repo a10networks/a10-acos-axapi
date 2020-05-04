@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        username=dict(type='str',),
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        host=dict(type='str',),
-        password=dict(type='bool',),
-        port=dict(type='int',),
-        secret_string=dict(type='str',)
+        username=dict(type='str', ),
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        host=dict(type='str', ),
+        password=dict(type='bool', ),
+        port=dict(type='int', ),
+        secret_string=dict(type='str', )
     ))
    
 

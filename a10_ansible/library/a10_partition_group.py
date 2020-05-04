@@ -117,10 +117,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        partition_group_name=dict(type='str',required=True,),
-        member_list=dict(type='list',member=dict(type='str',)),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',)
+        partition_group_name=dict(type='str', required=True, ),
+        member_list=dict(type='list', member=dict(type='str', )),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', )
     ))
    
 

@@ -184,18 +184,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        health_check_disable=dict(type='bool',),
-        port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent'])),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),health_check=dict(type='str',)),
-        stats=dict(type='dict',port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['tcp','udp']),stats=dict(type='dict',msgs_sent=dict(type='str',)),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,),msgs_sent=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msgs_sent'])),
-        user_tag=dict(type='str',),
-        host=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
-        server_ipv6_addr=dict(type='str',),
-        health_check=dict(type='str',),
-        uuid=dict(type='str',)
+        health_check_disable=dict(type='bool', ),
+        port_list=dict(type='list', health_check_disable=dict(type='bool', ),protocol=dict(type='str', required=True, choices=['tcp','udp']),uuid=dict(type='str', ),user_tag=dict(type='str', ),sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','msgs_sent'])),port_number=dict(type='int', required=True, ),action=dict(type='str', choices=['enable','disable']),health_check=dict(type='str', )),
+        stats=dict(type='dict', port_list=dict(type='list', protocol=dict(type='str', required=True, choices=['tcp','udp']),stats=dict(type='dict', msgs_sent=dict(type='str', )),port_number=dict(type='int', required=True, )),name=dict(type='str', required=True, ),msgs_sent=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        resolve_as=dict(type='str', choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','msgs_sent'])),
+        user_tag=dict(type='str', ),
+        host=dict(type='str', ),
+        action=dict(type='str', choices=['enable','disable']),
+        server_ipv6_addr=dict(type='str', ),
+        health_check=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -124,8 +124,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',expire_check_status=dict(type='str',choices=['Enabled','Disabled']),interval=dict(type='int',),email_address=dict(type='str',),email_address2=dict(type='str',),ssl_exception=dict(type='list',exception_cert=dict(type='str',)),before=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', expire_check_status=dict(type='str', choices=['Enabled','Disabled']),interval=dict(type='int', ),email_address=dict(type='str', ),email_address2=dict(type='str', ),ssl_exception=dict(type='list', exception_cert=dict(type='str', )),before=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

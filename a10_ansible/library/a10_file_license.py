@@ -139,14 +139,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',feature_list=dict(type='list',notice=dict(type='str',),Temporary=dict(type='str',),bandwidth=dict(type='str',),version=dict(type='str',),SN=dict(type='str',),expire_date=dict(type='str',),feature_installed=dict(type='str',)),file_list=dict(type='list',file_name=dict(type='str',)),host_id=dict(type='str',)),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        device=dict(type='int',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        oper=dict(type='dict', feature_list=dict(type='list', notice=dict(type='str', ),Temporary=dict(type='str', ),bandwidth=dict(type='str', ),version=dict(type='str', ),SN=dict(type='str', ),expire_date=dict(type='str', ),feature_installed=dict(type='str', )),file_list=dict(type='list', file_name=dict(type='str', )),host_id=dict(type='str', )),
+        dst_file=dict(type='str', ),
+        uuid=dict(type='str', ),
+        device=dict(type='int', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

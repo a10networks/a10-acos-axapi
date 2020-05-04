@@ -197,20 +197,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        health_check_string=dict(type='str',),
-        responder_ca=dict(type='str',),
-        stats=dict(type='dict',stapling_timeout=dict(type='str',),name=dict(type='str',required=True,),stapling_fail=dict(type='str',),certificate_revoked=dict(type='str',),request=dict(type='str',),stapling_certificate_revoked=dict(type='str',),certificate_unknown=dict(type='str',),stapling_certificate_unknown=dict(type='str',),stapling_certificate_good=dict(type='str',),timeout=dict(type='str',),fail=dict(type='str',),certificate_good=dict(type='str',),stapling_request=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        url=dict(type='str',),
-        responder_cert=dict(type='str',),
-        health_check_disable=dict(type='bool',),
-        http_version=dict(type='bool',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request','certificate-good','certificate-revoked','certificate-unknown','timeout','fail','stapling-request','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-timeout','stapling-fail'])),
-        version_type=dict(type='str',choices=['1.1']),
-        port_health_check_disable=dict(type='bool',),
-        port_health_check=dict(type='str',),
-        health_check=dict(type='bool',),
-        uuid=dict(type='str',)
+        health_check_string=dict(type='str', ),
+        responder_ca=dict(type='str', ),
+        stats=dict(type='dict', stapling_timeout=dict(type='str', ),name=dict(type='str', required=True, ),stapling_fail=dict(type='str', ),certificate_revoked=dict(type='str', ),request=dict(type='str', ),stapling_certificate_revoked=dict(type='str', ),certificate_unknown=dict(type='str', ),stapling_certificate_unknown=dict(type='str', ),stapling_certificate_good=dict(type='str', ),timeout=dict(type='str', ),fail=dict(type='str', ),certificate_good=dict(type='str', ),stapling_request=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        url=dict(type='str', ),
+        responder_cert=dict(type='str', ),
+        health_check_disable=dict(type='bool', ),
+        http_version=dict(type='bool', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','request','certificate-good','certificate-revoked','certificate-unknown','timeout','fail','stapling-request','stapling-certificate-good','stapling-certificate-revoked','stapling-certificate-unknown','stapling-timeout','stapling-fail'])),
+        version_type=dict(type='str', choices=['1.1']),
+        port_health_check_disable=dict(type='bool', ),
+        port_health_check=dict(type='str', ),
+        health_check=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

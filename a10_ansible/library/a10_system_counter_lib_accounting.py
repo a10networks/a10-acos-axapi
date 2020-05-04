@@ -157,8 +157,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',total_memblocks_free_avro=dict(type='str',),total_ctr_alloc=dict(type='str',),total_blocks_in_rml_hash=dict(type='str',),total_ctr_in_rml=dict(type='str',),total_oper_alloc=dict(type='str',),total_nodes_free=dict(type='str',),total_memblocks_alloc_avro=dict(type='str',),total_blocks_in_hash=dict(type='str',),total_nodes_unlink_failed=dict(type='str',),total_ctr_in_system=dict(type='str',),total_nodes_free_failed=dict(type='str',),total_nodes_alloc=dict(type='str',),total_oper_free=dict(type='str',),total_nodes_in_rml=dict(type='str',),total_memblocks_realloc_avro=dict(type='str',),total_nodes_in_system=dict(type='str',),total_ctr_freed=dict(type='str',)),
-        uuid=dict(type='str',)
+        stats=dict(type='dict', total_memblocks_free_avro=dict(type='str', ),total_ctr_alloc=dict(type='str', ),total_blocks_in_rml_hash=dict(type='str', ),total_ctr_in_rml=dict(type='str', ),total_oper_alloc=dict(type='str', ),total_nodes_free=dict(type='str', ),total_memblocks_alloc_avro=dict(type='str', ),total_blocks_in_hash=dict(type='str', ),total_nodes_unlink_failed=dict(type='str', ),total_ctr_in_system=dict(type='str', ),total_nodes_free_failed=dict(type='str', ),total_nodes_alloc=dict(type='str', ),total_oper_free=dict(type='str', ),total_nodes_in_rml=dict(type='str', ),total_memblocks_realloc_avro=dict(type='str', ),total_nodes_in_system=dict(type='str', ),total_ctr_freed=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

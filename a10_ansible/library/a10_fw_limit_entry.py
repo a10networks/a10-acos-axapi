@@ -133,8 +133,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',user_quota=dict(type='bool',),prefix_len4=dict(type='int',),prefix6=dict(type='str',),pps=dict(type='bool',),limit_entry_list=dict(type='list',ref_count=dict(type='int',),prefix_len=dict(type='int',),rule_name=dict(type='str',),curr_count=dict(type='int',),address=dict(type='str',),max_count=dict(type='int',),ntype=dict(type='str',)),throughput=dict(type='bool',),limit_entry_count=dict(type='int',),prefix_len6=dict(type='int',),prefix4=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', user_quota=dict(type='bool', ),prefix_len4=dict(type='int', ),prefix6=dict(type='str', ),pps=dict(type='bool', ),limit_entry_list=dict(type='list', ref_count=dict(type='int', ),prefix_len=dict(type='int', ),rule_name=dict(type='str', ),curr_count=dict(type='int', ),address=dict(type='str', ),max_count=dict(type='int', ),ntype=dict(type='str', )),throughput=dict(type='bool', ),limit_entry_count=dict(type='int', ),prefix_len6=dict(type='int', ),prefix4=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

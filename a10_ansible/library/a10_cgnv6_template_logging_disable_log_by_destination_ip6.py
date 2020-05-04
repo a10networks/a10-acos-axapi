@@ -142,13 +142,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ipv6_addr=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        tcp_list=dict(type='list',tcp_port_start=dict(type='int',),tcp_port_end=dict(type='int',)),
-        others=dict(type='bool',),
-        udp_list=dict(type='list',udp_port_start=dict(type='int',),udp_port_end=dict(type='int',)),
-        icmp=dict(type='bool',)
+        uuid=dict(type='str', ),
+        ipv6_addr=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        tcp_list=dict(type='list', tcp_port_start=dict(type='int', ),tcp_port_end=dict(type='int', )),
+        others=dict(type='bool', ),
+        udp_list=dict(type='list', udp_port_start=dict(type='int', ),udp_port_end=dict(type='int', )),
+        icmp=dict(type='bool', )
     ))
    
     # Parent keys

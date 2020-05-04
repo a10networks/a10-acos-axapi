@@ -129,14 +129,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        load=dict(type='bool',),
-        use_mgmt_port=dict(type='bool',),
-        regenerate=dict(type='bool',),
-        wipe=dict(type='bool',),
-        restart=dict(type='bool',),
-        generate=dict(type='bool',),
-        file_url=dict(type='str',),
-        size=dict(type='str',choices=['2048','4096'])
+        load=dict(type='bool', ),
+        use_mgmt_port=dict(type='bool', ),
+        regenerate=dict(type='bool', ),
+        wipe=dict(type='bool', ),
+        restart=dict(type='bool', ),
+        generate=dict(type='bool', ),
+        file_url=dict(type='str', ),
+        size=dict(type='str', choices=['2048','4096'])
     ))
    
 

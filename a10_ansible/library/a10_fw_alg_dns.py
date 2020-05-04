@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        default_port_disable=dict(type='str',choices=['default-port-disable']),
-        uuid=dict(type='str',)
+        default_port_disable=dict(type='str', choices=['default-port-disable']),
+        uuid=dict(type='str', )
     ))
    
 

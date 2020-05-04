@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        df_bit_value=dict(type='str',choices=['enable']),
-        uuid=dict(type='str',)
+        df_bit_value=dict(type='str', choices=['enable']),
+        uuid=dict(type='str', )
     ))
    
 

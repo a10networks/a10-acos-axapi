@@ -121,12 +121,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        group=dict(type='bool',),
-        uuid=dict(type='str',),
-        zone=dict(type='bool',),
-        site=dict(type='bool',),
-        service_ip=dict(type='bool',)
+        all=dict(type='bool', ),
+        group=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        zone=dict(type='bool', ),
+        site=dict(type='bool', ),
+        service_ip=dict(type='bool', )
     ))
    
 

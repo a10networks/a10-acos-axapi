@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l3_vlan_fwd_disable=dict(type='bool',),
-        uuid=dict(type='str',),
-        enable_def_vlan_l2_forwarding=dict(type='bool',)
+        l3_vlan_fwd_disable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        enable_def_vlan_l2_forwarding=dict(type='bool', )
     ))
    
 

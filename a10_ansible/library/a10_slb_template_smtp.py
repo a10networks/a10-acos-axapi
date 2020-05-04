@@ -163,18 +163,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        server_domain=dict(type='str',),
-        client_domain_switching=dict(type='list',service_group=dict(type='str',),match_string=dict(type='str',),switching_type=dict(type='str',choices=['contains','ends-with','starts-with'])),
-        client_starttls_type=dict(type='str',choices=['optional','enforced']),
-        LF_to_CRLF=dict(type='bool',),
-        template=dict(type='dict',logging=dict(type='str',)),
-        command_disable=dict(type='list',disable_type=dict(type='str',choices=['expn','turn','vrfy'])),
-        server_starttls_type=dict(type='str',choices=['optional','enforced']),
-        error_code_to_client=dict(type='bool',),
-        service_ready_msg=dict(type='str',),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        server_domain=dict(type='str', ),
+        client_domain_switching=dict(type='list', service_group=dict(type='str', ),match_string=dict(type='str', ),switching_type=dict(type='str', choices=['contains','ends-with','starts-with'])),
+        client_starttls_type=dict(type='str', choices=['optional','enforced']),
+        LF_to_CRLF=dict(type='bool', ),
+        template=dict(type='dict', logging=dict(type='str', )),
+        command_disable=dict(type='list', disable_type=dict(type='str', choices=['expn','turn','vrfy'])),
+        server_starttls_type=dict(type='str', choices=['optional','enforced']),
+        error_code_to_client=dict(type='bool', ),
+        service_ready_msg=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

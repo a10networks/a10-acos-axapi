@@ -141,17 +141,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        prevent_user_ops=dict(type='bool',),
-        prevent_webservice=dict(type='bool',),
-        prevent_license=dict(type='bool',),
-        prevent_admin_ssh_key=dict(type='bool',),
-        prevent_autofill=dict(type='bool',),
-        prevent_admin_passwd=dict(type='bool',),
-        prevent_cloud_service=dict(type='bool',),
-        provider=dict(type='str',choices=['aws','openstack']),
-        action=dict(type='str',choices=['enable','disable']),
-        prevent_blob=dict(type='bool',)
+        uuid=dict(type='str', ),
+        prevent_user_ops=dict(type='bool', ),
+        prevent_webservice=dict(type='bool', ),
+        prevent_license=dict(type='bool', ),
+        prevent_admin_ssh_key=dict(type='bool', ),
+        prevent_autofill=dict(type='bool', ),
+        prevent_admin_passwd=dict(type='bool', ),
+        prevent_cloud_service=dict(type='bool', ),
+        provider=dict(type='str', choices=['aws','openstack']),
+        action=dict(type='str', choices=['enable','disable']),
+        prevent_blob=dict(type='bool', )
     ))
    
 

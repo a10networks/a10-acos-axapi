@@ -125,13 +125,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',),
-        to=dict(type='int',),
-        active_mode_port=dict(type='bool',),
-        active_mode_port_val=dict(type='int',),
-        any=dict(type='bool',),
-        name=dict(type='str',required=True,)
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        to=dict(type='int', ),
+        active_mode_port=dict(type='bool', ),
+        active_mode_port_val=dict(type='int', ),
+        any=dict(type='bool', ),
+        name=dict(type='str', required=True, )
     ))
    
 

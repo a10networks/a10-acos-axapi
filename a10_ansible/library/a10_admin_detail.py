@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',user_list=dict(type='list',status=dict(type='str',),priviledge=dict(type='str',),lock_time=dict(type='str',),partition=dict(type='str',),trusted_host=dict(type='str',),unlock_time=dict(type='str',),access_type=dict(type='str',),password_type=dict(type='str',),gui_role=dict(type='str',),lock_status=dict(type='str',),password=dict(type='str',),user_name=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', user_list=dict(type='list', status=dict(type='str', ),priviledge=dict(type='str', ),lock_time=dict(type='str', ),partition=dict(type='str', ),trusted_host=dict(type='str', ),unlock_time=dict(type='str', ),access_type=dict(type='str', ),password_type=dict(type='str', ),gui_role=dict(type='str', ),lock_status=dict(type='str', ),password=dict(type='str', ),user_name=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

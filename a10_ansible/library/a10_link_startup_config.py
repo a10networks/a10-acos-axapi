@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        default=dict(type='bool',),
-        file_name=dict(type='str',),
-        primary=dict(type='bool',),
-        all_partitions=dict(type='bool',),
-        secondary=dict(type='bool',)
+        default=dict(type='bool', ),
+        file_name=dict(type='str', ),
+        primary=dict(type='bool', ),
+        all_partitions=dict(type='bool', ),
+        secondary=dict(type='bool', )
     ))
    
 

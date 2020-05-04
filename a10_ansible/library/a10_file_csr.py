@@ -132,13 +132,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ssl_csr=dict(type='list',status=dict(type='str',),name=dict(type='str',),common_name=dict(type='str',),organization=dict(type='str',),ntype=dict(type='str',),subject=dict(type='str',)),sortby_name=dict(type='bool',)),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['export']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        oper=dict(type='dict', ssl_csr=dict(type='list', status=dict(type='str', ),name=dict(type='str', ),common_name=dict(type='str', ),organization=dict(type='str', ),ntype=dict(type='str', ),subject=dict(type='str', )),sortby_name=dict(type='bool', )),
+        dst_file=dict(type='str', ),
+        uuid=dict(type='str', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['export']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

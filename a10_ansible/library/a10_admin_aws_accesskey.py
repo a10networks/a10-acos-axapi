@@ -120,11 +120,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nimport=dict(type='bool',),
-        delete=dict(type='bool',),
-        use_mgmt_port=dict(type='bool',),
-        file_url=dict(type='str',),
-        show=dict(type='bool',)
+        nimport=dict(type='bool', ),
+        delete=dict(type='bool', ),
+        use_mgmt_port=dict(type='bool', ),
+        file_url=dict(type='str', ),
+        show=dict(type='bool', )
     ))
    
     # Parent keys

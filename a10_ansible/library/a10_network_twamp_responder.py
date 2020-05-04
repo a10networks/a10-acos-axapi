@@ -134,11 +134,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port=dict(type='int',),
-        ip=dict(type='dict',acl_name=dict(type='str',),acl_id=dict(type='int',),uuid=dict(type='str',)),
-        ipv6=dict(type='dict',uuid=dict(type='str',),v6_acl_name=dict(type='str',)),
-        uuid=dict(type='str',),
-        both=dict(type='bool',)
+        port=dict(type='int', ),
+        ip=dict(type='dict', acl_name=dict(type='str', ),acl_id=dict(type='int', ),uuid=dict(type='str', )),
+        ipv6=dict(type='dict', uuid=dict(type='str', ),v6_acl_name=dict(type='str', )),
+        uuid=dict(type='str', ),
+        both=dict(type='bool', )
     ))
    
 

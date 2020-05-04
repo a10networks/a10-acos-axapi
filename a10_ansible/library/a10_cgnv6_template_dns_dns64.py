@@ -176,25 +176,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        deep_check_rr_disable=dict(type='bool',),
-        answer_only_disable=dict(type='bool',),
-        enable=dict(type='bool',),
-        single_response_disable=dict(type='bool',),
-        uuid=dict(type='str',),
-        max_qr_length=dict(type='int',),
-        ignore_rcode3_disable=dict(type='bool',),
-        auth_data=dict(type='bool',),
-        change_query=dict(type='bool',),
-        drop_cname_disable=dict(type='bool',),
-        cache=dict(type='bool',),
-        passive_query_disable=dict(type='bool',),
-        retry=dict(type='int',),
-        parallel_query=dict(type='bool',),
-        timeout=dict(type='int',),
-        ttl=dict(type='int',),
-        trans_ptr_query=dict(type='bool',),
-        trans_ptr=dict(type='bool',),
-        compress_disable=dict(type='bool',)
+        deep_check_rr_disable=dict(type='bool', ),
+        answer_only_disable=dict(type='bool', ),
+        enable=dict(type='bool', ),
+        single_response_disable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        max_qr_length=dict(type='int', ),
+        ignore_rcode3_disable=dict(type='bool', ),
+        auth_data=dict(type='bool', ),
+        change_query=dict(type='bool', ),
+        drop_cname_disable=dict(type='bool', ),
+        cache=dict(type='bool', ),
+        passive_query_disable=dict(type='bool', ),
+        retry=dict(type='int', ),
+        parallel_query=dict(type='bool', ),
+        timeout=dict(type='int', ),
+        ttl=dict(type='int', ),
+        trans_ptr_query=dict(type='bool', ),
+        trans_ptr=dict(type='bool', ),
+        compress_disable=dict(type='bool', )
     ))
    
     # Parent keys

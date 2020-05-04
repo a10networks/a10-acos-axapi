@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        accounting_exec_type=dict(type='str',choices=['start-stop','stop-only']),
-        accounting_exec_method=dict(type='str',choices=['tacplus','radius']),
-        uuid=dict(type='str',)
+        accounting_exec_type=dict(type='str', choices=['start-stop','stop-only']),
+        accounting_exec_method=dict(type='str', choices=['tacplus','radius']),
+        uuid=dict(type='str', )
     ))
    
 

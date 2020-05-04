@@ -133,15 +133,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        inside_end_v6address=dict(type='str',),
-        inside_start_v4address=dict(type='str',),
-        partition=dict(type='str',),
-        inside_start_v6address=dict(type='str',),
-        v4_netmask=dict(type='str',),
-        ip_list=dict(type='str',),
-        v6_netmask=dict(type='int',),
-        clear_session=dict(type='bool',),
-        inside_end_v4address=dict(type='str',)
+        inside_end_v6address=dict(type='str', ),
+        inside_start_v4address=dict(type='str', ),
+        partition=dict(type='str', ),
+        inside_start_v6address=dict(type='str', ),
+        v4_netmask=dict(type='str', ),
+        ip_list=dict(type='str', ),
+        v6_netmask=dict(type='int', ),
+        clear_session=dict(type='bool', ),
+        inside_end_v4address=dict(type='str', )
     ))
    
 

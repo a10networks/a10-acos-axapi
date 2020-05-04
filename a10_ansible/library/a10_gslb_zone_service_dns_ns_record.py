@@ -148,12 +148,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ns_name=dict(type='str',required=True,),last_server=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
-        ns_name=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        ttl=dict(type='int',),
-        stats=dict(type='dict',hits=dict(type='str',),ns_name=dict(type='str',required=True,))
+        oper=dict(type='dict', ns_name=dict(type='str', required=True, ),last_server=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
+        ns_name=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        ttl=dict(type='int', ),
+        stats=dict(type='dict', hits=dict(type='str', ),ns_name=dict(type='str', required=True, ))
     ))
    
     # Parent keys

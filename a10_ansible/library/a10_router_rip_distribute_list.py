@@ -138,9 +138,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        acl_cfg=dict(type='list',acl_direction=dict(type='str',choices=['in','out']),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),
-        prefix=dict(type='dict',uuid=dict(type='str',),prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))),
-        uuid=dict(type='str',)
+        acl_cfg=dict(type='list', acl_direction=dict(type='str', choices=['in','out']),ve=dict(type='str', ),loopback=dict(type='str', ),tunnel=dict(type='str', ),acl=dict(type='str', ),trunk=dict(type='str', ),ethernet=dict(type='str', )),
+        prefix=dict(type='dict', uuid=dict(type='str', ),prefix_cfg=dict(type='list', ve=dict(type='str', ),loopback=dict(type='str', ),tunnel=dict(type='str', ),prefix_list=dict(type='str', ),trunk=dict(type='str', ),prefix_list_direction=dict(type='str', choices=['in','out']),ethernet=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

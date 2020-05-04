@@ -173,16 +173,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        min_expiration=dict(type='int',),
-        oper=dict(type='dict',time_to_active=dict(type='int',),state=dict(type='str',choices=['Active','Passive','Forced Passive']),table_count=dict(type='int',)),
-        stats=dict(type='dict',total_playerids_deleted=dict(type='str',),total_invalid_playerid_drops=dict(type='str',),total_playerids_created=dict(type='str',),total_pkt_activity_age_outs=dict(type='str',),total_abs_max_age_outs=dict(type='str',),total_valid_playerid_pkts=dict(type='str',),total_invalid_playerid_pkts=dict(type='str',)),
-        uuid=dict(type='str',),
-        pkt_activity_expiration=dict(type='int',),
-        force_passive=dict(type='bool',),
-        abs_max_expiration=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','total_playerids_created','total_playerids_deleted','total_abs_max_age_outs','total_pkt_activity_age_outs','total_invalid_playerid_pkts','total_invalid_playerid_drops','total_valid_playerid_pkts'])),
-        enforcement_timer=dict(type='int',),
-        enable_64bit_player_id=dict(type='bool',)
+        min_expiration=dict(type='int', ),
+        oper=dict(type='dict', time_to_active=dict(type='int', ),state=dict(type='str', choices=['Active','Passive','Forced Passive']),table_count=dict(type='int', )),
+        stats=dict(type='dict', total_playerids_deleted=dict(type='str', ),total_invalid_playerid_drops=dict(type='str', ),total_playerids_created=dict(type='str', ),total_pkt_activity_age_outs=dict(type='str', ),total_abs_max_age_outs=dict(type='str', ),total_valid_playerid_pkts=dict(type='str', ),total_invalid_playerid_pkts=dict(type='str', )),
+        uuid=dict(type='str', ),
+        pkt_activity_expiration=dict(type='int', ),
+        force_passive=dict(type='bool', ),
+        abs_max_expiration=dict(type='int', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','total_playerids_created','total_playerids_deleted','total_abs_max_age_outs','total_pkt_activity_age_outs','total_invalid_playerid_pkts','total_invalid_playerid_drops','total_valid_playerid_pkts'])),
+        enforcement_timer=dict(type='int', ),
+        enable_64bit_player_id=dict(type='bool', )
     ))
    
 

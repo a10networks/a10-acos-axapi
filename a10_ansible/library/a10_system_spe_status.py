@@ -121,8 +121,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ipv4_allowed=dict(type='int',),spe_profile=dict(type='str',),enable=dict(type='str',),ipv6_allowed=dict(type='int',),spe_setup_status=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', ipv4_allowed=dict(type='int', ),spe_profile=dict(type='str', ),enable=dict(type='str', ),ipv6_allowed=dict(type='int', ),spe_setup_status=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

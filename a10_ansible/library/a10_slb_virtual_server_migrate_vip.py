@@ -132,13 +132,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',state=dict(type='str',choices=['Sync started','Sync complete','Quiet mode','Not in migration'])),
-        target_data_cpu=dict(type='int',),
-        uuid=dict(type='str',),
-        finish_migration=dict(type='bool',),
-        target_floating_ipv6=dict(type='str',),
-        target_floating_ipv4=dict(type='str',),
-        cancel_migration=dict(type='bool',)
+        oper=dict(type='dict', state=dict(type='str', choices=['Sync started','Sync complete','Quiet mode','Not in migration'])),
+        target_data_cpu=dict(type='int', ),
+        uuid=dict(type='str', ),
+        finish_migration=dict(type='bool', ),
+        target_floating_ipv6=dict(type='str', ),
+        target_floating_ipv4=dict(type='str', ),
+        cancel_migration=dict(type='bool', )
     ))
    
     # Parent keys

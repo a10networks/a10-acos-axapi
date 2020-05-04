@@ -188,19 +188,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        user_quota_prefix_length=dict(type='int',),
-        extended_user_quota=dict(type='dict',udp=dict(type='list',udp_sessions=dict(type='int',),udp_service_port=dict(type='int',)),tcp=dict(type='list',tcp_service_port=dict(type='int',),tcp_sessions=dict(type='int',))),
-        lid_number=dict(type='int',required=True,),
-        ds_lite=dict(type='dict',inside_src_permit_list=dict(type='str',)),
-        user_quota=dict(type='dict',quota_udp=dict(type='dict',udp_reserve=dict(type='int',),udp_quota=dict(type='int',)),icmp=dict(type='int',),session=dict(type='int',),quota_tcp=dict(type='dict',tcp_quota=dict(type='int',),tcp_reserve=dict(type='int',))),
-        user_tag=dict(type='str',),
-        name=dict(type='str',),
-        respond_to_user_mac=dict(type='bool',),
-        source_nat_pool=dict(type='dict',shared=dict(type='bool',),pool_name=dict(type='str',)),
-        conn_rate_limit=dict(type='dict',conn_rate_limit_val=dict(type='int',)),
-        lsn_rule_list=dict(type='dict',destination=dict(type='str',)),
-        override=dict(type='str',choices=['none','drop','pass-through']),
-        uuid=dict(type='str',)
+        user_quota_prefix_length=dict(type='int', ),
+        extended_user_quota=dict(type='dict', udp=dict(type='list', udp_sessions=dict(type='int', ),udp_service_port=dict(type='int', )),tcp=dict(type='list', tcp_service_port=dict(type='int', ),tcp_sessions=dict(type='int', ))),
+        lid_number=dict(type='int', required=True, ),
+        ds_lite=dict(type='dict', inside_src_permit_list=dict(type='str', )),
+        user_quota=dict(type='dict', quota_udp=dict(type='dict', udp_reserve=dict(type='int', ),udp_quota=dict(type='int', )),icmp=dict(type='int', ),session=dict(type='int', ),quota_tcp=dict(type='dict', tcp_quota=dict(type='int', ),tcp_reserve=dict(type='int', ))),
+        user_tag=dict(type='str', ),
+        name=dict(type='str', ),
+        respond_to_user_mac=dict(type='bool', ),
+        source_nat_pool=dict(type='dict', shared=dict(type='bool', ),pool_name=dict(type='str', )),
+        conn_rate_limit=dict(type='dict', conn_rate_limit_val=dict(type='int', )),
+        lsn_rule_list=dict(type='dict', destination=dict(type='str', )),
+        override=dict(type='str', choices=['none','drop','pass-through']),
+        uuid=dict(type='str', )
     ))
    
 

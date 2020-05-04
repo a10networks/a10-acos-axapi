@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',nf_template_list=dict(type='list',nflow_version=dict(type='int',),template_id=dict(type='int',),exporter_address=dict(type='str',),template_field_list=dict(type='list',length=dict(type='int',),id=dict(type='int',),enterprise_field=dict(type='str',),variable_length=dict(type='str',)),partition_id=dict(type='int',),observation_domain_id=dict(type='int',),seconds_to_expire=dict(type='int',),field_count=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', nf_template_list=dict(type='list', nflow_version=dict(type='int', ),template_id=dict(type='int', ),exporter_address=dict(type='str', ),template_field_list=dict(type='list', length=dict(type='int', ),id=dict(type='int', ),enterprise_field=dict(type='str', ),variable_length=dict(type='str', )),partition_id=dict(type='int', ),observation_domain_id=dict(type='int', ),seconds_to_expire=dict(type='int', ),field_count=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

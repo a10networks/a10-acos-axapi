@@ -124,8 +124,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',webroot_log_over=dict(type='int',),from_start=dict(type='bool',),follow=dict(type='bool',),webroot_log_offset=dict(type='int',),webroot_log_list=dict(type='list',webroot_log_data=dict(type='str',)),num_lines=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', webroot_log_over=dict(type='int', ),from_start=dict(type='bool', ),follow=dict(type='bool', ),webroot_log_offset=dict(type='int', ),webroot_log_list=dict(type='list', webroot_log_data=dict(type='str', )),num_lines=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

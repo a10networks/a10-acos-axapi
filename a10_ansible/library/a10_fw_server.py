@@ -214,20 +214,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),port_list=dict(type='list',oper=dict(type='dict',vrid=dict(type='int',),ha_group_id=dict(type='int',),alloc_failed=dict(type='int',),ports_consumed=dict(type='int',),ipv6=dict(type='str',),state=dict(type='str',choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),ip=dict(type='str',),ports_freed_total=dict(type='int',),ports_consumed_total=dict(type='int',)),protocol=dict(type='str',required=True,choices=['tcp','udp']),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,)),
-        health_check_disable=dict(type='bool',),
-        port_list=dict(type='list',health_check_disable=dict(type='bool',),protocol=dict(type='str',required=True,choices=['tcp','udp']),uuid=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time'])),port_number=dict(type='int',required=True,),action=dict(type='str',choices=['enable','disable']),health_check=dict(type='str',)),
-        stats=dict(type='dict',peak_conn=dict(type='str',),curr_conn=dict(type='str',),port_list=dict(type='list',protocol=dict(type='str',required=True,choices=['tcp','udp']),stats=dict(type='dict',es_resp_invalid_http=dict(type='str',),curr_req=dict(type='str',),total_rev_pkts_inspected_good_status_code=dict(type='str',),es_resp_count=dict(type='str',),total_fwd_bytes=dict(type='str',),es_resp_other=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),es_req_count=dict(type='str',),es_resp_500=dict(type='str',),peak_conn=dict(type='str',),total_req=dict(type='str',),es_resp_400=dict(type='str',),es_resp_300=dict(type='str',),curr_conn=dict(type='str',),es_resp_200=dict(type='str',),total_rev_bytes=dict(type='str',),response_time=dict(type='str',),total_conn=dict(type='str',),total_rev_pkts=dict(type='str',),total_req_succ=dict(type='str',),last_total_conn=dict(type='str',),total_rev_pkts_inspected=dict(type='str',),slowest_rsp_time=dict(type='str',)),port_number=dict(type='int',required=True,)),name=dict(type='str',required=True,),fwd_pkt=dict(type='str',),rev_pkt=dict(type='str',),total_conn=dict(type='str',)),
-        uuid=dict(type='str',),
-        fqdn_name=dict(type='str',),
-        resolve_as=dict(type='str',choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr-conn','total-conn','fwd-pkt','rev-pkt','peak-conn'])),
-        user_tag=dict(type='str',),
-        host=dict(type='str',),
-        action=dict(type='str',choices=['enable','disable']),
-        server_ipv6_addr=dict(type='str',),
-        health_check=dict(type='str',),
-        name=dict(type='str',required=True,)
+        oper=dict(type='dict', state=dict(type='str', choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),port_list=dict(type='list', oper=dict(type='dict', vrid=dict(type='int', ),ha_group_id=dict(type='int', ),alloc_failed=dict(type='int', ),ports_consumed=dict(type='int', ),ipv6=dict(type='str', ),state=dict(type='str', choices=['UP','DOWN','DELETE','DISABLED','MAINTENANCE']),ip=dict(type='str', ),ports_freed_total=dict(type='int', ),ports_consumed_total=dict(type='int', )),protocol=dict(type='str', required=True, choices=['tcp','udp']),port_number=dict(type='int', required=True, )),name=dict(type='str', required=True, )),
+        health_check_disable=dict(type='bool', ),
+        port_list=dict(type='list', health_check_disable=dict(type='bool', ),protocol=dict(type='str', required=True, choices=['tcp','udp']),uuid=dict(type='str', ),user_tag=dict(type='str', ),sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','curr_conn','curr_req','total_req','total_req_succ','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','last_total_conn','peak_conn','es_resp_200','es_resp_300','es_resp_400','es_resp_500','es_resp_other','es_req_count','es_resp_count','es_resp_invalid_http','total_rev_pkts_inspected','total_rev_pkts_inspected_good_status_code','response_time','fastest_rsp_time','slowest_rsp_time'])),port_number=dict(type='int', required=True, ),action=dict(type='str', choices=['enable','disable']),health_check=dict(type='str', )),
+        stats=dict(type='dict', peak_conn=dict(type='str', ),curr_conn=dict(type='str', ),port_list=dict(type='list', protocol=dict(type='str', required=True, choices=['tcp','udp']),stats=dict(type='dict', es_resp_invalid_http=dict(type='str', ),curr_req=dict(type='str', ),total_rev_pkts_inspected_good_status_code=dict(type='str', ),es_resp_count=dict(type='str', ),total_fwd_bytes=dict(type='str', ),es_resp_other=dict(type='str', ),fastest_rsp_time=dict(type='str', ),total_fwd_pkts=dict(type='str', ),es_req_count=dict(type='str', ),es_resp_500=dict(type='str', ),peak_conn=dict(type='str', ),total_req=dict(type='str', ),es_resp_400=dict(type='str', ),es_resp_300=dict(type='str', ),curr_conn=dict(type='str', ),es_resp_200=dict(type='str', ),total_rev_bytes=dict(type='str', ),response_time=dict(type='str', ),total_conn=dict(type='str', ),total_rev_pkts=dict(type='str', ),total_req_succ=dict(type='str', ),last_total_conn=dict(type='str', ),total_rev_pkts_inspected=dict(type='str', ),slowest_rsp_time=dict(type='str', )),port_number=dict(type='int', required=True, )),name=dict(type='str', required=True, ),fwd_pkt=dict(type='str', ),rev_pkt=dict(type='str', ),total_conn=dict(type='str', )),
+        uuid=dict(type='str', ),
+        fqdn_name=dict(type='str', ),
+        resolve_as=dict(type='str', choices=['resolve-to-ipv4','resolve-to-ipv6','resolve-to-ipv4-and-ipv6']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','curr-conn','total-conn','fwd-pkt','rev-pkt','peak-conn'])),
+        user_tag=dict(type='str', ),
+        host=dict(type='str', ),
+        action=dict(type='str', choices=['enable','disable']),
+        server_ipv6_addr=dict(type='str', ),
+        health_check=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
 

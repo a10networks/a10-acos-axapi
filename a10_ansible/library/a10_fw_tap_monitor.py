@@ -116,9 +116,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        status=dict(type='str',choices=['enable','disable']),
-        tap_port_cfg=dict(type='list',tap_eth=dict(type='str',),tap_vlan=dict(type='int',)),
-        uuid=dict(type='str',)
+        status=dict(type='str', choices=['enable','disable']),
+        tap_port_cfg=dict(type='list', tap_eth=dict(type='str', ),tap_vlan=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

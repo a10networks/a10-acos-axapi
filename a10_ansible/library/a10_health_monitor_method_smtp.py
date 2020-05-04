@@ -128,13 +128,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        smtp_port=dict(type='int',),
-        smtp_starttls=dict(type='bool',),
-        uuid=dict(type='str',),
-        smtp_domain=dict(type='str',),
-        smtp=dict(type='bool',),
-        mail_from=dict(type='str',),
-        rcpt_to=dict(type='str',)
+        smtp_port=dict(type='int', ),
+        smtp_starttls=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        smtp_domain=dict(type='str', ),
+        smtp=dict(type='bool', ),
+        mail_from=dict(type='str', ),
+        rcpt_to=dict(type='str', )
     ))
    
     # Parent keys

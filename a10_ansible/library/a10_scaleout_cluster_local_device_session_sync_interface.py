@@ -128,10 +128,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ve_cfg=dict(type='list',ve=dict(type='int',)),
-        uuid=dict(type='str',),
-        trunk_cfg=dict(type='list',trunk=dict(type='int',)),
-        eth_cfg=dict(type='list',ethernet=dict(type='str',))
+        ve_cfg=dict(type='list', ve=dict(type='int', )),
+        uuid=dict(type='str', ),
+        trunk_cfg=dict(type='list', trunk=dict(type='int', )),
+        eth_cfg=dict(type='list', ethernet=dict(type='str', ))
     ))
    
     # Parent keys

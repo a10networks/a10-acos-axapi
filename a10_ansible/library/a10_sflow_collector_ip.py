@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        addr=dict(type='str',required=True,)
+        port=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        addr=dict(type='str', required=True, )
     ))
    
 

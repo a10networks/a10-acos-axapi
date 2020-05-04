@@ -127,8 +127,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        map_cfg=dict(type='list',map=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),route_map_direction=dict(type='str',choices=['in','out']),trunk=dict(type='str',),ethernet=dict(type='str',)),
-        uuid=dict(type='str',)
+        map_cfg=dict(type='list', map=dict(type='str', ),ve=dict(type='str', ),loopback=dict(type='str', ),tunnel=dict(type='str', ),route_map_direction=dict(type='str', choices=['in','out']),trunk=dict(type='str', ),ethernet=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

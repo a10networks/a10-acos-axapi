@@ -127,10 +127,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
-        stats=dict(type='dict',hits=dict(type='str',)),
-        uuid=dict(type='str',)
+        action=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
+        stats=dict(type='dict', hits=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

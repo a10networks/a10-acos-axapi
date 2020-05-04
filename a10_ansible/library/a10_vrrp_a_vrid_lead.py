@@ -123,10 +123,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vrid_lead_str=dict(type='str',required=True,),
-        partition=dict(type='dict',shared_cfg=dict(type='dict',shared=dict(type='bool',),vrid=dict(type='bool',),vrid_value=dict(type='int',)),name_cfg=dict(type='dict',vrid_value=dict(type='int',),vrid=dict(type='bool',),name=dict(type='str',)),partition=dict(type='bool',)),
-        uuid=dict(type='str',),
-        user_tag=dict(type='str',)
+        vrid_lead_str=dict(type='str', required=True, ),
+        partition=dict(type='dict', shared_cfg=dict(type='dict', shared=dict(type='bool', ),vrid=dict(type='bool', ),vrid_value=dict(type='int', )),name_cfg=dict(type='dict', vrid_value=dict(type='int', ),vrid=dict(type='bool', ),name=dict(type='str', )),partition=dict(type='bool', )),
+        uuid=dict(type='str', ),
+        user_tag=dict(type='str', )
     ))
    
 

@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        source_name=dict(type='str',),
-        id=dict(type='int',),
-        dest_name=dict(type='str',)
+        source_name=dict(type='str', ),
+        id=dict(type='int', ),
+        dest_name=dict(type='str', )
     ))
    
 

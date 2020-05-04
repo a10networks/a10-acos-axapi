@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ntype=dict(type='str',required=True,choices=['controller','device']),
-        uuid=dict(type='str',)
+        ntype=dict(type='str', required=True, choices=['controller','device']),
+        uuid=dict(type='str', )
     ))
    
 

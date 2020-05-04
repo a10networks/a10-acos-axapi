@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',config_sync_list=dict(type='list',partition_name=dict(type='str',),run_sync_status=dict(type='str',),startup_sync_status=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', config_sync_list=dict(type='list', partition_name=dict(type='str', ),run_sync_status=dict(type='str', ),startup_sync_status=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

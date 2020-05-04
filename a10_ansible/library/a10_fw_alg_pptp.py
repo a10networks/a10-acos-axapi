@@ -133,10 +133,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        default_port_disable=dict(type='str',choices=['default-port-disable']),
-        stats=dict(type='dict',call_req_pns_call_id_mismatch=dict(type='str',),calls_established=dict(type='str',),gre_session_freed=dict(type='str',),call_reply_pns_call_id_mismatch=dict(type='str',),gre_session_created=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','calls-established','call-req-pns-call-id-mismatch','call-reply-pns-call-id-mismatch','gre-session-created','gre-session-freed','call-req-retransmit','call-req-new','call-req-ext-alloc-failure','call-reply-call-id-unknown','call-reply-retransmit','call-reply-ext-ext-alloc-failure','smp-app-type-mismatch','smp-client-call-id-mismatch','smp-sessions-created','smp-sessions-freed','smp-alloc-failure','gre-conn-creation-failure','gre-conn-ext-creation-failure','gre-no-fwd-route','gre-no-rev-route','gre-no-control-conn','gre-conn-already-exists','gre-free-no-ext','gre-free-no-smp','gre-free-smp-app-type-mismatch','control-freed','control-free-no-ext','control-free-no-smp','control-free-smp-app-type-mismatch'])),
-        uuid=dict(type='str',)
+        default_port_disable=dict(type='str', choices=['default-port-disable']),
+        stats=dict(type='dict', call_req_pns_call_id_mismatch=dict(type='str', ),calls_established=dict(type='str', ),gre_session_freed=dict(type='str', ),call_reply_pns_call_id_mismatch=dict(type='str', ),gre_session_created=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','calls-established','call-req-pns-call-id-mismatch','call-reply-pns-call-id-mismatch','gre-session-created','gre-session-freed','call-req-retransmit','call-req-new','call-req-ext-alloc-failure','call-reply-call-id-unknown','call-reply-retransmit','call-reply-ext-ext-alloc-failure','smp-app-type-mismatch','smp-client-call-id-mismatch','smp-sessions-created','smp-sessions-freed','smp-alloc-failure','gre-conn-creation-failure','gre-conn-ext-creation-failure','gre-no-fwd-route','gre-no-rev-route','gre-no-control-conn','gre-conn-already-exists','gre-free-no-ext','gre-free-no-smp','gre-free-smp-app-type-mismatch','control-freed','control-free-no-ext','control-free-no-smp','control-free-smp-app-type-mismatch'])),
+        uuid=dict(type='str', )
     ))
    
 

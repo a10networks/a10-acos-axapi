@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        image_name=dict(type='str',)
+        image_name=dict(type='str', )
     ))
    
 

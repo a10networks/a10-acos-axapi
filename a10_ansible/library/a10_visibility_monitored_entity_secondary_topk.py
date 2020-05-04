@@ -132,9 +132,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',sources=dict(type='dict',oper=dict(type='dict',l4_proto=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',ip_addr=dict(type='str',),metric_value=dict(type='str',))),l4_port=dict(type='int',))),l4_port=dict(type='int',),l4_proto=dict(type='str',),ipv4_addr=dict(type='str',),ipv6_addr=dict(type='str',),metric_topk_list=dict(type='list',metric_name=dict(type='str',),topk_list=dict(type='list',protocol=dict(type='str',),ip_addr=dict(type='str',),metric_value=dict(type='str',),port=dict(type='int',)))),
-        sources=dict(type='dict',uuid=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', sources=dict(type='dict', oper=dict(type='dict', l4_proto=dict(type='str', ),ipv4_addr=dict(type='str', ),ipv6_addr=dict(type='str', ),metric_topk_list=dict(type='list', metric_name=dict(type='str', ),topk_list=dict(type='list', ip_addr=dict(type='str', ),metric_value=dict(type='str', ))),l4_port=dict(type='int', ))),l4_port=dict(type='int', ),l4_proto=dict(type='str', ),ipv4_addr=dict(type='str', ),ipv6_addr=dict(type='str', ),metric_topk_list=dict(type='list', metric_name=dict(type='str', ),topk_list=dict(type='list', protocol=dict(type='str', ),ip_addr=dict(type='str', ),metric_value=dict(type='str', ),port=dict(type='int', )))),
+        sources=dict(type='dict', uuid=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

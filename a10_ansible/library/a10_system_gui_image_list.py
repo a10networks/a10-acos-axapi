@@ -118,8 +118,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',pre_pri_gui=dict(type='str',),pre_sec_gui=dict(type='str',),gui_list_pri=dict(type='list',path=dict(type='str',),gui_image=dict(type='str',)),gui_list_sec=dict(type='list',path=dict(type='str',),gui_image=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', pre_pri_gui=dict(type='str', ),pre_sec_gui=dict(type='str', ),gui_list_pri=dict(type='list', path=dict(type='str', ),gui_image=dict(type='str', )),gui_list_sec=dict(type='list', path=dict(type='str', ),gui_image=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

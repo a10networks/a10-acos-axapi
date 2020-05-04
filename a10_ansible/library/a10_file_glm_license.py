@@ -117,11 +117,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        device=dict(type='int',),
-        action=dict(type='str',choices=['import']),
-        dst_file=dict(type='str',),
-        file=dict(type='str',),
-        file_handle=dict(type='str',)
+        device=dict(type='int', ),
+        action=dict(type='str', choices=['import']),
+        dst_file=dict(type='str', ),
+        file=dict(type='str', ),
+        file_handle=dict(type='str', )
     ))
    
 

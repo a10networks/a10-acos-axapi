@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        filename=dict(type='str',)
+        all=dict(type='bool', ),
+        filename=dict(type='str', )
     ))
    
 

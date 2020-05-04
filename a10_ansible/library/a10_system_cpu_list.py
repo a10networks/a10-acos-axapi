@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',system_cpu_list=dict(type='list',status=dict(type='str',),CPU_IDX=dict(type='str',),HT_CPU=dict(type='str',),CPU_Num=dict(type='str',),NUMA_NODE=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', system_cpu_list=dict(type='list', status=dict(type='str', ),CPU_IDX=dict(type='str', ),HT_CPU=dict(type='str', ),CPU_Num=dict(type='str', ),NUMA_NODE=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -130,8 +130,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',access_status=dict(type='str',),last=dict(type='int',),target=dict(type='str',),top=dict(type='int',),log_list=dict(type='list',destination_port=dict(type='int',),user_domain=dict(type='str',),user_name=dict(type='str',),vip_name=dict(type='str',),client_ip=dict(type='str',),policy=dict(type='str',),counter=dict(type='int',),uri=dict(type='str',),action=dict(type='str',),host=dict(type='str',),web_category=dict(type='str',),destination_ip=dict(type='str',),time=dict(type='str',),ssl_status=dict(type='str',),source_port=dict(type='int',),record_id=dict(type='int',),vip_port=dict(type='int',)),tail=dict(type='int',),host_name=dict(type='str',),total=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', access_status=dict(type='str', ),last=dict(type='int', ),target=dict(type='str', ),top=dict(type='int', ),log_list=dict(type='list', destination_port=dict(type='int', ),user_domain=dict(type='str', ),user_name=dict(type='str', ),vip_name=dict(type='str', ),client_ip=dict(type='str', ),policy=dict(type='str', ),counter=dict(type='int', ),uri=dict(type='str', ),action=dict(type='str', ),host=dict(type='str', ),web_category=dict(type='str', ),destination_ip=dict(type='str', ),time=dict(type='str', ),ssl_status=dict(type='str', ),source_port=dict(type='int', ),record_id=dict(type='int', ),vip_port=dict(type='int', )),tail=dict(type='int', ),host_name=dict(type='str', ),total=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

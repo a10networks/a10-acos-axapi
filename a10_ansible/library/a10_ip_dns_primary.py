@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_v4_addr=dict(type='str',),
-        ip_v6_addr=dict(type='str',),
-        uuid=dict(type='str',)
+        ip_v4_addr=dict(type='str', ),
+        ip_v6_addr=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

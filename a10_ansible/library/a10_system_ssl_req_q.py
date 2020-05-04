@@ -129,9 +129,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','num-ssl-queues','ssl-req-q-depth-tot','ssl-req-q-inuse-tot','ssl-hw-q-depth-tot','ssl-hw-q-inuse-tot'])),
-        stats=dict(type='dict',num_ssl_queues=dict(type='str',),ssl_req_q_inuse_tot=dict(type='str',),ssl_req_q_depth_tot=dict(type='str',),ssl_hw_q_depth_tot=dict(type='str',),ssl_hw_q_inuse_tot=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','num-ssl-queues','ssl-req-q-depth-tot','ssl-req-q-inuse-tot','ssl-hw-q-depth-tot','ssl-hw-q-inuse-tot'])),
+        stats=dict(type='dict', num_ssl_queues=dict(type='str', ),ssl_req_q_inuse_tot=dict(type='str', ),ssl_req_q_depth_tot=dict(type='str', ),ssl_hw_q_depth_tot=dict(type='str', ),ssl_hw_q_inuse_tot=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

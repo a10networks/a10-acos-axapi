@@ -133,14 +133,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_list=dict(type='list',events=dict(type='list',failures=dict(type='int',),event_type=dict(type='str',),total_executions=dict(type='int',),aborts=dict(type='int',)),vport_list=dict(type='list',vserver=dict(type='str',),port=dict(type='int',)),file=dict(type='str',),vport=dict(type='str',),syntax=dict(type='str',),waf_rule=dict(type='list',waf_rule_name=dict(type='str',),waf_rule_aborts=dict(type='int',),waf_rule_total=dict(type='int',),waf_rule_failures=dict(type='int',)))),
-        skip_backup=dict(type='bool',),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        oper=dict(type='dict', file_list=dict(type='list', events=dict(type='list', failures=dict(type='int', ),event_type=dict(type='str', ),total_executions=dict(type='int', ),aborts=dict(type='int', )),vport_list=dict(type='list', vserver=dict(type='str', ),port=dict(type='int', )),file=dict(type='str', ),vport=dict(type='str', ),syntax=dict(type='str', ),waf_rule=dict(type='list', waf_rule_name=dict(type='str', ),waf_rule_aborts=dict(type='int', ),waf_rule_total=dict(type='int', ),waf_rule_failures=dict(type='int', )))),
+        skip_backup=dict(type='bool', ),
+        dst_file=dict(type='str', ),
+        uuid=dict(type='str', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 
