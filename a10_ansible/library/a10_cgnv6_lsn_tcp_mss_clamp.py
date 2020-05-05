@@ -119,7 +119,7 @@ def get_argspec():
     rv.update(dict(
         mss_subtract=dict(type='int', ),
         mss_value=dict(type='int', ),
-        mss_clamp_type=dict(type='str', choices=['fixed','subtract','none']),
+        mss_clamp_type=dict(type='str', choices=['fixed', 'subtract', 'none']),
         uuid=dict(type='str', ),
         min=dict(type='int', )
     ))

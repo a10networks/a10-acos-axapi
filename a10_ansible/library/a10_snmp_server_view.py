@@ -117,7 +117,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ntype=dict(type='str', choices=['included','excluded']),
+        ntype=dict(type='str', choices=['included', 'excluded']),
         oid=dict(type='str', required=True, ),
         mask=dict(type='str', ),
         uuid=dict(type='str', ),

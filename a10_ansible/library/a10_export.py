@@ -324,7 +324,7 @@ def get_argspec():
         local_uri_file=dict(type='str', ),
         wsdl=dict(type='str', ),
         ssl_key=dict(type='str', ),
-        store=dict(type='dict', create=dict(type='bool', ),name=dict(type='str', ),remote_file=dict(type='str', ),delete=dict(type='bool', )),
+        store=dict(type='dict', create=dict(type='bool', ), name=dict(type='str', ), remote_file=dict(type='str', ), delete=dict(type='bool', )),
         externalfilename=dict(type='str', ),
         remote_file=dict(type='str', ),
         store_name=dict(type='str', ),

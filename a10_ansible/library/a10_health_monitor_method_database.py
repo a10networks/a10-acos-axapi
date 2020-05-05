@@ -165,7 +165,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         db_encrypted=dict(type='str', ),
         database=dict(type='bool', ),
-        database_name=dict(type='str', choices=['mssql','mysql','oracle','postgresql']),
+        database_name=dict(type='str', choices=['mssql', 'mysql', 'oracle', 'postgresql']),
         db_row_integer=dict(type='int', ),
         db_receive=dict(type='str', ),
         db_receive_integer=dict(type='int', ),

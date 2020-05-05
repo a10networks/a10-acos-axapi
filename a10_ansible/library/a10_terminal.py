@@ -164,10 +164,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        gslb_cfg=dict(type='dict', gslb_prompt=dict(type='bool', ),symbol=dict(type='bool', ),disable=dict(type='bool', ),group_role=dict(type='bool', )),
-        history_cfg=dict(type='dict', enable=dict(type='bool', ),size=dict(type='int', )),
+        gslb_cfg=dict(type='dict', gslb_prompt=dict(type='bool', ), symbol=dict(type='bool', ), disable=dict(type='bool', ), group_role=dict(type='bool', )),
+        history_cfg=dict(type='dict', enable=dict(type='bool', ), size=dict(type='int', )),
         idle_timeout=dict(type='int', ),
-        prompt_cfg=dict(type='dict', hostname=dict(type='bool', ),prompt=dict(type='bool', ),vcs_cfg=dict(type='dict', vcs_status=dict(type='bool', ))),
+        prompt_cfg=dict(type='dict', hostname=dict(type='bool', ), prompt=dict(type='bool', ), vcs_cfg=dict(type='dict', vcs_status=dict(type='bool', ))),
         width=dict(type='int', ),
         length=dict(type='int', ),
         editing=dict(type='bool', ),

@@ -211,18 +211,18 @@ def get_argspec():
         cost=dict(type='int', ),
         dead_interval=dict(type='int', ),
         authentication_key=dict(type='str', ),
-        network=dict(type='dict', broadcast=dict(type='bool', ),point_to_multipoint=dict(type='bool', ),non_broadcast=dict(type='bool', ),point_to_point=dict(type='bool', ),p2mp_nbma=dict(type='bool', )),
+        network=dict(type='dict', broadcast=dict(type='bool', ), point_to_multipoint=dict(type='bool', ), non_broadcast=dict(type='bool', ), point_to_point=dict(type='bool', ), p2mp_nbma=dict(type='bool', )),
         mtu_ignore=dict(type='bool', ),
         transmit_delay=dict(type='int', ),
-        authentication_cfg=dict(type='dict', authentication=dict(type='bool', ),value=dict(type='str', choices=['message-digest','null'])),
+        authentication_cfg=dict(type='dict', authentication=dict(type='bool', ), value=dict(type='str', choices=['message-digest', 'null'])),
         retransmit_interval=dict(type='int', ),
-        bfd_cfg=dict(type='dict', disable=dict(type='bool', ),bfd=dict(type='bool', )),
+        bfd_cfg=dict(type='dict', disable=dict(type='bool', ), bfd=dict(type='bool', )),
         disable=dict(type='str', choices=['all']),
         hello_interval=dict(type='int', ),
-        database_filter_cfg=dict(type='dict', database_filter=dict(type='str', choices=['all']),out=dict(type='bool', )),
+        database_filter_cfg=dict(type='dict', database_filter=dict(type='str', choices=['all']), out=dict(type='bool', )),
         priority=dict(type='int', ),
         mtu=dict(type='int', ),
-        message_digest_cfg=dict(type='list', message_digest_key=dict(type='int', ),md5=dict(type='dict', md5_value=dict(type='str', ),encrypted=dict(type='str', ))),
+        message_digest_cfg=dict(type='list', message_digest_key=dict(type='int', ), md5=dict(type='dict', md5_value=dict(type='str', ), encrypted=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

@@ -127,7 +127,7 @@ def get_argspec():
     rv.update(dict(
         username=dict(type='str', ),
         uuid=dict(type='str', ),
-        level=dict(type='str', choices=['1','2']),
+        level=dict(type='str', choices=['1', '2']),
         saml_sp=dict(type='str', ),
         saml=dict(type='bool', ),
         client_addr=dict(type='str', ),

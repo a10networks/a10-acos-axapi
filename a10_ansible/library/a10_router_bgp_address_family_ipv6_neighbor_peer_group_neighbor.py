@@ -209,10 +209,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         maximum_prefix=dict(type='int', ),
-        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in','out']),nbr_prefix_list=dict(type='str', )),
+        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in', 'out']), nbr_prefix_list=dict(type='str', )),
         activate=dict(type='bool', ),
         weight=dict(type='int', ),
-        send_community_val=dict(type='str', choices=['both','none','standard','extended']),
+        send_community_val=dict(type='str', choices=['both', 'none', 'standard', 'extended']),
         inbound=dict(type='bool', ),
         next_hop_self=dict(type='bool', ),
         maximum_prefix_thres=dict(type='int', ),
@@ -221,12 +221,12 @@ def get_argspec():
         remove_private_as=dict(type='bool', ),
         default_originate=dict(type='bool', ),
         allowas_in_count=dict(type='int', ),
-        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in','out']),distribute_list=dict(type='str', )),
-        prefix_list_direction=dict(type='str', choices=['both','receive','send']),
+        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in', 'out']), distribute_list=dict(type='str', )),
+        prefix_list_direction=dict(type='str', choices=['both', 'receive', 'send']),
         allowas_in=dict(type='bool', ),
         unsuppress_map=dict(type='str', ),
-        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ),filter_list_direction=dict(type='str', choices=['in','out'])),
-        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in','out']),nbr_route_map=dict(type='str', )),
+        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ), filter_list_direction=dict(type='str', choices=['in', 'out'])),
+        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in', 'out']), nbr_route_map=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

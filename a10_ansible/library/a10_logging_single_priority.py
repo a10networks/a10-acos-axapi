@@ -106,7 +106,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        levelname=dict(type='str', required=True, choices=['emergency','alert','critical','error','warning','notification','information','debugging'])
+        levelname=dict(type='str', required=True, choices=['emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging'])
     ))
    
 

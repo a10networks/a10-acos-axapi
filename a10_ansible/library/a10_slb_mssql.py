@@ -153,8 +153,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','curr_proxy','total_proxy','curr_be_enc','total_be_enc','curr_fe_enc','total_fe_enc','client_fin','server_fin','session_err','queries','commands','auth_success','auth_failure'])),
-        stats=dict(type='dict', server_fin=dict(type='str', ),curr_be_enc=dict(type='str', ),total_be_enc=dict(type='str', ),curr_fe_enc=dict(type='str', ),total_proxy=dict(type='str', ),curr_proxy=dict(type='str', ),commands=dict(type='str', ),client_fin=dict(type='str', ),auth_success=dict(type='str', ),queries=dict(type='str', ),session_err=dict(type='str', ),auth_failure=dict(type='str', ),total_fe_enc=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_proxy', 'total_proxy', 'curr_be_enc', 'total_be_enc', 'curr_fe_enc', 'total_fe_enc', 'client_fin', 'server_fin', 'session_err', 'queries', 'commands', 'auth_success', 'auth_failure'])),
+        stats=dict(type='dict', server_fin=dict(type='str', ), curr_be_enc=dict(type='str', ), total_be_enc=dict(type='str', ), curr_fe_enc=dict(type='str', ), total_proxy=dict(type='str', ), curr_proxy=dict(type='str', ), commands=dict(type='str', ), client_fin=dict(type='str', ), auth_success=dict(type='str', ), queries=dict(type='str', ), session_err=dict(type='str', ), auth_failure=dict(type='str', ), total_fe_enc=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

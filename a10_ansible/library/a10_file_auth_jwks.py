@@ -133,7 +133,7 @@ def get_argspec():
         dst_file=dict(type='str', ),
         uuid=dict(type='str', ),
         file=dict(type='str', ),
-        action=dict(type='str', choices=['create','import','copy','rename','check','replace','delete']),
+        action=dict(type='str', choices=['create', 'import', 'copy', 'rename', 'check', 'replace', 'delete']),
         file_handle=dict(type='str', ),
         size=dict(type='int', )
     ))

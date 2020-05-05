@@ -154,8 +154,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', ipv6rangestrt=dict(type='str', ),pol_name=dict(type='str', ),total_geolocs=dict(type='int', ),iprangestrt=dict(type='str', ),filter4=dict(type='str', choices=['ip','ipv6','ipstat','ipv6stat']),depth=dict(type='int', ),iprangeend=dict(type='str', ),filter1=dict(type='str', choices=['directory','statistics','global']),filter3=dict(type='str', choices=['directory','statistics','global']),filter2=dict(type='str', choices=['directory','statistics','global']),geo_name=dict(type='str', ),geoloc_list=dict(type='list', tomask=dict(type='str', ),hits=dict(type='int', ),from=dict(type='str', ),subcnt=dict(type='int', ),last=dict(type='str', ),ntype=dict(type='str', ),name=dict(type='str', ))),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','place-holder'])),
+        oper=dict(type='dict', ipv6rangestrt=dict(type='str', ), pol_name=dict(type='str', ), total_geolocs=dict(type='int', ), iprangestrt=dict(type='str', ), filter4=dict(type='str', choices=['ip', 'ipv6', 'ipstat', 'ipv6stat']), depth=dict(type='int', ), iprangeend=dict(type='str', ), filter1=dict(type='str', choices=['directory', 'statistics', 'global']), filter3=dict(type='str', choices=['directory', 'statistics', 'global']), filter2=dict(type='str', choices=['directory', 'statistics', 'global']), geo_name=dict(type='str', ), geoloc_list=dict(type='list', tomask=dict(type='str', ), hits=dict(type='int', ), from=dict(type='str', ), subcnt=dict(type='int', ), last=dict(type='str', ), ntype=dict(type='str', ), name=dict(type='str', ))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'place-holder'])),
         stats=dict(type='dict', ),
         uuid=dict(type='str', )
     ))

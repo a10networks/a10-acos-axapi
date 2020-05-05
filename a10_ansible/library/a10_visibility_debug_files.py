@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', debug_file_name_list=dict(type='list', protocol=dict(type='str', ),uuid=dict(type='str', ),entity_key=dict(type='str', ),ipv4_addr=dict(type='str', ),debug_file_name=dict(type='str', ),ipv6_addr=dict(type='str', ),flat_oid=dict(type='int', ),port=dict(type='int', ))),
+        oper=dict(type='dict', debug_file_name_list=dict(type='list', protocol=dict(type='str', ), uuid=dict(type='str', ), entity_key=dict(type='str', ), ipv4_addr=dict(type='str', ), debug_file_name=dict(type='str', ), ipv6_addr=dict(type='str', ), flat_oid=dict(type='int', ), port=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

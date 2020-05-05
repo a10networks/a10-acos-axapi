@@ -133,7 +133,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         schedule=dict(type='bool', ),
         feature_name=dict(type='str', required=True, choices=['app-fw']),
-        week_day=dict(type='str', choices=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']),
+        week_day=dict(type='str', choices=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
         daily=dict(type='bool', ),
         week_time=dict(type='str', ),
         weekly=dict(type='bool', )

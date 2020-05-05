@@ -135,11 +135,11 @@ def get_argspec():
         index=dict(type='int', required=True, ),
         message_id=dict(type='str', ),
         uuid=dict(type='str', ),
-        severity_val=dict(type='str', choices=['emergency','alert','critical','error','warning','notification','information','debugging']),
+        severity_val=dict(type='str', choices=['emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging']),
         user_tag=dict(type='str', ),
-        action=dict(type='str', choices=['send','drop']),
-        message_id_scope=dict(type='str', choices=['all','node-only','children-only','log-field-only']),
-        severity_oper=dict(type='str', choices=['equal-and-higher','equal'])
+        action=dict(type='str', choices=['send', 'drop']),
+        message_id_scope=dict(type='str', choices=['all', 'node-only', 'children-only', 'log-field-only']),
+        severity_oper=dict(type='str', choices=['equal-and-higher', 'equal'])
     ))
    
     # Parent keys

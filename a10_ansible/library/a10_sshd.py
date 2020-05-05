@@ -136,7 +136,7 @@ def get_argspec():
         restart=dict(type='bool', ),
         generate=dict(type='bool', ),
         file_url=dict(type='str', ),
-        size=dict(type='str', choices=['2048','4096'])
+        size=dict(type='str', choices=['2048', '4096'])
     ))
    
 

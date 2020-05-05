@@ -129,8 +129,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vrid_list=dict(type='list', ethernet_cfg=dict(type='list', flap_ethernet_end=dict(type='str', ),flap_ethernet_start=dict(type='str', )),vrid_val=dict(type='int', required=True, ),user_tag=dict(type='str', ),uuid=dict(type='str', )),
-        ethernet_cfg=dict(type='list', flap_ethernet_end=dict(type='str', ),flap_ethernet_start=dict(type='str', )),
+        vrid_list=dict(type='list', ethernet_cfg=dict(type='list', flap_ethernet_end=dict(type='str', ), flap_ethernet_start=dict(type='str', )), vrid_val=dict(type='int', required=True, ), user_tag=dict(type='str', ), uuid=dict(type='str', )),
+        ethernet_cfg=dict(type='list', flap_ethernet_end=dict(type='str', ), flap_ethernet_start=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

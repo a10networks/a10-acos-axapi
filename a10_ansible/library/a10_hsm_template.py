@@ -194,11 +194,11 @@ def get_argspec():
         template_name=dict(type='str', required=True, ),
         password_string=dict(type='str', ),
         protection_softcard_hash=dict(type='str', ),
-        softhsm_enum=dict(type='str', choices=['softHSM','thalesHSM']),
+        softhsm_enum=dict(type='str', choices=['softHSM', 'thalesHSM']),
         protection=dict(type='bool', ),
         rfs_port=dict(type='int', ),
         rfs_ip=dict(type='str', ),
-        hsm_dev=dict(type='list', hsm_ip=dict(type='str', ),hsm_port=dict(type='int', ),hsm_priority=dict(type='int', )),
+        hsm_dev=dict(type='list', hsm_ip=dict(type='str', ), hsm_port=dict(type='int', ), hsm_priority=dict(type='int', )),
         softcard=dict(type='bool', ),
         password=dict(type='bool', ),
         sec_world=dict(type='str', )

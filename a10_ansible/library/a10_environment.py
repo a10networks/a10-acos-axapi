@@ -124,7 +124,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         update_interval=dict(type='dict', interval=dict(type='int', )),
-        threshold_cfg=dict(type='dict', high=dict(type='int', ),medium=dict(type='int', ),low=dict(type='int', )),
+        threshold_cfg=dict(type='dict', high=dict(type='int', ), medium=dict(type='int', ), low=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

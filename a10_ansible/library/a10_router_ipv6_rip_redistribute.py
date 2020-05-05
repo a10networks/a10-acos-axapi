@@ -129,8 +129,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vip_list=dict(type='list', vip_metric=dict(type='int', ),vip_route_map=dict(type='str', ),vip_type=dict(type='str', choices=['only-flagged','only-not-flagged'])),
-        redist_list=dict(type='list', metric=dict(type='int', ),route_map=dict(type='str', ),ntype=dict(type='str', choices=['bgp','connected','floating-ip','ip-nat-list','ip-nat','isis','lw4o6','nat-map','nat64','ospf','static'])),
+        vip_list=dict(type='list', vip_metric=dict(type='int', ), vip_route_map=dict(type='str', ), vip_type=dict(type='str', choices=['only-flagged', 'only-not-flagged'])),
+        redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'isis', 'lw4o6', 'nat-map', 'nat64', 'ospf', 'static'])),
         uuid=dict(type='str', )
     ))
    

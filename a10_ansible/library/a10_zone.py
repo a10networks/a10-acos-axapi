@@ -155,10 +155,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         name=dict(type='str', required=True, ),
-        vlan=dict(type='dict', vlan_list=dict(type='list', vlan_start=dict(type='int', ),vlan_end=dict(type='int', )),uuid=dict(type='str', )),
+        vlan=dict(type='dict', vlan_list=dict(type='list', vlan_start=dict(type='int', ), vlan_end=dict(type='int', )), uuid=dict(type='str', )),
         user_tag=dict(type='str', ),
-        interface=dict(type='dict', tunnel_list=dict(type='list', interface_tunnel_end=dict(type='int', ),interface_tunnel_start=dict(type='int', )),trunk_list=dict(type='list', interface_trunk_start=dict(type='int', ),interface_trunk_end=dict(type='int', )),ve_list=dict(type='list', interface_ve_start=dict(type='int', ),interface_ve_end=dict(type='int', )),ethernet_list=dict(type='list', interface_ethernet_end=dict(type='str', ),interface_ethernet_start=dict(type='str', )),lif_list=dict(type='list', interface_lif_end=dict(type='int', ),interface_lif_start=dict(type='int', )),uuid=dict(type='str', )),
-        local_zone_cfg=dict(type='dict', local_type=dict(type='bool', ),uuid=dict(type='str', )),
+        interface=dict(type='dict', tunnel_list=dict(type='list', interface_tunnel_end=dict(type='int', ), interface_tunnel_start=dict(type='int', )), trunk_list=dict(type='list', interface_trunk_start=dict(type='int', ), interface_trunk_end=dict(type='int', )), ve_list=dict(type='list', interface_ve_start=dict(type='int', ), interface_ve_end=dict(type='int', )), ethernet_list=dict(type='list', interface_ethernet_end=dict(type='str', ), interface_ethernet_start=dict(type='str', )), lif_list=dict(type='list', interface_lif_end=dict(type='int', ), interface_lif_start=dict(type='int', )), uuid=dict(type='str', )),
+        local_zone_cfg=dict(type='dict', local_type=dict(type='bool', ), uuid=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

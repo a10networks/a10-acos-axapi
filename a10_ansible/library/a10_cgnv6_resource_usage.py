@@ -169,12 +169,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', fixed_nat_ip_addr_count_max=dict(type='int', ),fixed_nat_ip_addr_count_default=dict(type='int', ),lsn_nat_addr_count_min=dict(type='int', ),radius_table_size_max=dict(type='int', ),radius_table_size_default=dict(type='int', ),fixed_nat_inside_user_count_default=dict(type='int', ),fixed_nat_inside_user_count_min=dict(type='int', ),radius_table_size_min=dict(type='int', ),lsn_nat_addr_count_max=dict(type='int', ),lsn_nat_addr_count_default=dict(type='int', ),fixed_nat_ip_addr_count_min=dict(type='int', ),fixed_nat_inside_user_count_max=dict(type='int', )),
+        oper=dict(type='dict', fixed_nat_ip_addr_count_max=dict(type='int', ), fixed_nat_ip_addr_count_default=dict(type='int', ), lsn_nat_addr_count_min=dict(type='int', ), radius_table_size_max=dict(type='int', ), radius_table_size_default=dict(type='int', ), fixed_nat_inside_user_count_default=dict(type='int', ), fixed_nat_inside_user_count_min=dict(type='int', ), radius_table_size_min=dict(type='int', ), lsn_nat_addr_count_max=dict(type='int', ), lsn_nat_addr_count_default=dict(type='int', ), fixed_nat_ip_addr_count_min=dict(type='int', ), fixed_nat_inside_user_count_max=dict(type='int', )),
         uuid=dict(type='str', ),
         fixed_nat_inside_user_count=dict(type='int', ),
         lsn_nat_addr_count=dict(type='int', ),
         fixed_nat_ip_addr_count=dict(type='int', ),
-        stateless_entries=dict(type='dict', l4_session_count=dict(type='int', ),uuid=dict(type='str', )),
+        stateless_entries=dict(type='dict', l4_session_count=dict(type='int', ), uuid=dict(type='str', )),
         radius_table_size=dict(type='int', )
     ))
    

@@ -123,9 +123,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        exec_banner_cfg=dict(type='dict', exec_banner=dict(type='str', ),nexec=dict(type='bool', )),
+        exec_banner_cfg=dict(type='dict', exec_banner=dict(type='str', ), nexec=dict(type='bool', )),
         uuid=dict(type='str', ),
-        login_banner_cfg=dict(type='dict', login=dict(type='bool', ),login_banner=dict(type='str', ))
+        login_banner_cfg=dict(type='dict', login=dict(type='bool', ), login_banner=dict(type='str', ))
     ))
    
 

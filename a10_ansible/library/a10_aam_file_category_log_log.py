@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', tail=dict(type='int', ),total=dict(type='int', ),last=dict(type='int', ),log_list=dict(type='list', category=dict(type='str', ),file_name=dict(type='str', ),url=dict(type='str', ),file_size=dict(type='int', ),source_ip=dict(type='str', ),file_ext=dict(type='str', ),destination_ip=dict(type='str', ),time=dict(type='str', ),record_id=dict(type='int', ))),
+        oper=dict(type='dict', tail=dict(type='int', ), total=dict(type='int', ), last=dict(type='int', ), log_list=dict(type='list', category=dict(type='str', ), file_name=dict(type='str', ), url=dict(type='str', ), file_size=dict(type='int', ), source_ip=dict(type='str', ), file_ext=dict(type='str', ), destination_ip=dict(type='str', ), time=dict(type='str', ), record_id=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

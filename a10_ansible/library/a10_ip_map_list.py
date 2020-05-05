@@ -128,7 +128,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         file=dict(type='bool', ),
-        mapping_list=dict(type='list', count=dict(type='int', ),local_start_ip=dict(type='str', ),global_start_ip=dict(type='str', )),
+        mapping_list=dict(type='list', count=dict(type='int', ), local_start_ip=dict(type='str', ), global_start_ip=dict(type='str', )),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         uuid=dict(type='str', )

@@ -153,9 +153,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         priority=dict(type='int', ),
-        oper=dict(type='dict', mx_name=dict(type='str', required=True, ),last_server=dict(type='str', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
-        stats=dict(type='dict', hits=dict(type='str', ),mx_name=dict(type='str', required=True, )),
+        oper=dict(type='dict', mx_name=dict(type='str', required=True, ), last_server=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
+        stats=dict(type='dict', hits=dict(type='str', ), mx_name=dict(type='str', required=True, )),
         uuid=dict(type='str', ),
         mx_name=dict(type='str', required=True, ),
         ttl=dict(type='int', )

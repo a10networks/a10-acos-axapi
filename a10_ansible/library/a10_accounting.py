@@ -133,7 +133,7 @@ def get_argspec():
     rv.update(dict(
         commands=dict(type='int', ),
         uuid=dict(type='str', ),
-        nexec=dict(type='dict', accounting_exec_type=dict(type='str', choices=['start-stop','stop-only']),accounting_exec_method=dict(type='str', choices=['tacplus','radius']),uuid=dict(type='str', )),
+        nexec=dict(type='dict', accounting_exec_type=dict(type='str', choices=['start-stop', 'stop-only']), accounting_exec_method=dict(type='str', choices=['tacplus', 'radius']), uuid=dict(type='str', )),
         stop_only=dict(type='bool', ),
         tacplus=dict(type='bool', ),
         debug=dict(type='int', )

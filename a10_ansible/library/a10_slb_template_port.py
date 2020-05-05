@@ -286,7 +286,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         health_check_disable=dict(type='bool', ),
-        stats_data_action=dict(type='str', choices=['stats-data-enable','stats-data-disable']),
+        stats_data_action=dict(type='str', choices=['stats-data-enable', 'stats-data-disable']),
         resel_on_reset=dict(type='bool', ),
         dest_nat=dict(type='bool', ),
         restore_svc_time=dict(type='int', ),
@@ -300,7 +300,7 @@ def get_argspec():
         weight=dict(type='int', ),
         inband_health_check=dict(type='bool', ),
         resume=dict(type='int', ),
-        rate_interval=dict(type='str', choices=['100ms','second']),
+        rate_interval=dict(type='str', choices=['100ms', 'second']),
         no_ssl=dict(type='bool', ),
         till=dict(type='int', ),
         flap_period=dict(type='int', ),
@@ -310,7 +310,7 @@ def get_argspec():
         down_grace_period=dict(type='int', ),
         initial_slow_start=dict(type='int', ),
         dscp=dict(type='int', ),
-        request_rate_interval=dict(type='str', choices=['100ms','second']),
+        request_rate_interval=dict(type='str', choices=['100ms', 'second']),
         add=dict(type='int', ),
         every=dict(type='int', ),
         shared_partition_pool=dict(type='bool', ),

@@ -163,10 +163,10 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str', ),
         area_ipv4=dict(type='str', required=True, ),
-        virtual_link_list=dict(type='list', dead_interval=dict(type='int', ),hello_interval=dict(type='int', ),bfd=dict(type='bool', ),transmit_delay=dict(type='int', ),value=dict(type='str', ),retransmit_interval=dict(type='int', ),instance_id=dict(type='int', )),
+        virtual_link_list=dict(type='list', dead_interval=dict(type='int', ), hello_interval=dict(type='int', ), bfd=dict(type='bool', ), transmit_delay=dict(type='int', ), value=dict(type='str', ), retransmit_interval=dict(type='int', ), instance_id=dict(type='int', )),
         stub=dict(type='bool', ),
         area_num=dict(type='int', required=True, ),
-        range_list=dict(type='list', option=dict(type='str', choices=['advertise','not-advertise']),value=dict(type='str', )),
+        range_list=dict(type='list', option=dict(type='str', choices=['advertise', 'not-advertise']), value=dict(type='str', )),
         default_cost=dict(type='int', ),
         no_summary=dict(type='bool', )
     ))

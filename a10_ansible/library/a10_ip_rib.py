@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', Total=dict(type='int', ),Limit=dict(type='int', ),Description=dict(type='str', ),IPv4_routes=dict(type='list', Distance=dict(type='int', ),Metric=dict(type='int', ),Nexthop=dict(type='str', ),PrefixLen=dict(type='int', ),Subtype=dict(type='str', choices=['inter-area','nssa-type-1','nssa-type-2','external-type-1','external-type-2','level-1','level-2']),Prefix=dict(type='str', ),Interface=dict(type='str', ),Type=dict(type='str', choices=['kernel','connected','static','rip','ospf','bgp','isis','vip','selected-vip','ip-nat-list','ip-nat','floating-ip','a10'])),Total Paths=dict(type='int', )),
+        oper=dict(type='dict', Total=dict(type='int', ), Limit=dict(type='int', ), Description=dict(type='str', ), IPv4_routes=dict(type='list', Distance=dict(type='int', ), Metric=dict(type='int', ), Nexthop=dict(type='str', ), PrefixLen=dict(type='int', ), Subtype=dict(type='str', choices=['inter-area', 'nssa-type-1', 'nssa-type-2', 'external-type-1', 'external-type-2', 'level-1', 'level-2']), Prefix=dict(type='str', ), Interface=dict(type='str', ), Type=dict(type='str', choices=['kernel', 'connected', 'static', 'rip', 'ospf', 'bgp', 'isis', 'vip', 'selected-vip', 'ip-nat-list', 'ip-nat', 'floating-ip', 'a10'])), Total Paths=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

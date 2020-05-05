@@ -170,7 +170,7 @@ def get_argspec():
         timeout=dict(type='int', ),
         include_tunnel_ip=dict(type='bool', ),
         secret_string=dict(type='str', ),
-        method=dict(type='str', choices=['append','replace']),
+        method=dict(type='str', choices=['append', 'replace']),
         uuid=dict(type='str', )
     ))
    

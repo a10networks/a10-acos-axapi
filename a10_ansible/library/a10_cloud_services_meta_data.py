@@ -149,8 +149,8 @@ def get_argspec():
         prevent_autofill=dict(type='bool', ),
         prevent_admin_passwd=dict(type='bool', ),
         prevent_cloud_service=dict(type='bool', ),
-        provider=dict(type='str', choices=['aws','openstack']),
-        action=dict(type='str', choices=['enable','disable']),
+        provider=dict(type='str', choices=['aws', 'openstack']),
+        action=dict(type='str', choices=['enable', 'disable']),
         prevent_blob=dict(type='bool', )
     ))
    

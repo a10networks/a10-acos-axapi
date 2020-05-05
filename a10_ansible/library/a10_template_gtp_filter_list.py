@@ -126,7 +126,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        str_list=dict(type='list', apn=dict(type='str', ),selection_mode=dict(type='str', choices=['mobilestation','network','verified']),imsi_selection=dict(type='str', ),imsi=dict(type='str', )),
+        str_list=dict(type='list', apn=dict(type='str', ), selection_mode=dict(type='str', choices=['mobilestation', 'network', 'verified']), imsi_selection=dict(type='str', ), imsi=dict(type='str', )),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         uuid=dict(type='str', )

@@ -195,14 +195,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        clear_cfg=dict(type='list', clear_sequence=dict(type='int', ),clear_all_sequence=dict(type='int', ),sessions=dict(type='str', choices=['all','sequence'])),
+        clear_cfg=dict(type='list', clear_sequence=dict(type='int', ), clear_all_sequence=dict(type='int', ), sessions=dict(type='str', choices=['all', 'sequence'])),
         uuid=dict(type='str', ),
-        link_enable_cfg=dict(type='list', ena_sequence=dict(type='int', ),enaeth=dict(type='str', )),
-        link_up_cfg=dict(type='list', linkup_ethernet3=dict(type='str', ),linkup_ethernet2=dict(type='str', ),linkup_ethernet1=dict(type='str', ),link_up_sequence1=dict(type='int', ),link_up_sequence3=dict(type='int', ),link_up_sequence2=dict(type='int', )),
-        link_down_cfg=dict(type='list', link_down_sequence1=dict(type='int', ),link_down_sequence2=dict(type='int', ),link_down_sequence3=dict(type='int', ),linkdown_ethernet2=dict(type='str', ),linkdown_ethernet3=dict(type='str', ),linkdown_ethernet1=dict(type='str', )),
+        link_enable_cfg=dict(type='list', ena_sequence=dict(type='int', ), enaeth=dict(type='str', )),
+        link_up_cfg=dict(type='list', linkup_ethernet3=dict(type='str', ), linkup_ethernet2=dict(type='str', ), linkup_ethernet1=dict(type='str', ), link_up_sequence1=dict(type='int', ), link_up_sequence3=dict(type='int', ), link_up_sequence2=dict(type='int', )),
+        link_down_cfg=dict(type='list', link_down_sequence1=dict(type='int', ), link_down_sequence2=dict(type='int', ), link_down_sequence3=dict(type='int', ), linkdown_ethernet2=dict(type='str', ), linkdown_ethernet3=dict(type='str', ), linkdown_ethernet1=dict(type='str', )),
         user_tag=dict(type='str', ),
-        link_disable_cfg=dict(type='list', dis_sequence=dict(type='int', ),diseth=dict(type='str', )),
-        monitor_relation=dict(type='str', choices=['monitor-and','monitor-or']),
+        link_disable_cfg=dict(type='list', dis_sequence=dict(type='int', ), diseth=dict(type='str', )),
+        monitor_relation=dict(type='str', choices=['monitor-and', 'monitor-or']),
         id=dict(type='int', required=True, )
     ))
    

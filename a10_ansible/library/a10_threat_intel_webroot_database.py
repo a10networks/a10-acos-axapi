@@ -169,7 +169,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', status=dict(type='str', ),web_attacks=dict(type='int', ),botnets=dict(type='int', ),name=dict(type='str', ),spam_sources=dict(type='int', ),windows_exploits=dict(type='int', ),last_update_time=dict(type='str', ),dos_attacks=dict(type='int', ),next_update_time=dict(type='str', ),connection_status=dict(type='str', ),mobile_threats=dict(type='int', ),phishing=dict(type='int', ),last_successful_connection=dict(type='str', ),version=dict(type='int', ),reputation=dict(type='int', ),proxy=dict(type='int', ),tor_proxy=dict(type='int', ),size=dict(type='str', ),total_entries=dict(type='int', ),scanners=dict(type='int', ),failure_reason=dict(type='str', )),
+        oper=dict(type='dict', status=dict(type='str', ), web_attacks=dict(type='int', ), botnets=dict(type='int', ), name=dict(type='str', ), spam_sources=dict(type='int', ), windows_exploits=dict(type='int', ), last_update_time=dict(type='str', ), dos_attacks=dict(type='int', ), next_update_time=dict(type='str', ), connection_status=dict(type='str', ), mobile_threats=dict(type='int', ), phishing=dict(type='int', ), last_successful_connection=dict(type='str', ), version=dict(type='int', ), reputation=dict(type='int', ), proxy=dict(type='int', ), tor_proxy=dict(type='int', ), size=dict(type='str', ), total_entries=dict(type='int', ), scanners=dict(type='int', ), failure_reason=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

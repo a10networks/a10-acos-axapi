@@ -175,7 +175,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         mtu_ignore=dict(type='bool', ),
         transmit_delay=dict(type='int', ),
-        value=dict(type='str', choices=['message-digest','null']),
+        value=dict(type='str', choices=['message-digest', 'null']),
         priority=dict(type='int', ),
         authentication=dict(type='bool', ),
         cost=dict(type='int', ),
@@ -183,7 +183,7 @@ def get_argspec():
         hello_interval=dict(type='int', ),
         ip_addr=dict(type='str', required=True, ),
         retransmit_interval=dict(type='int', ),
-        message_digest_cfg=dict(type='list', md5_value=dict(type='str', ),message_digest_key=dict(type='int', ),encrypted=dict(type='str', )),
+        message_digest_cfg=dict(type='list', md5_value=dict(type='str', ), message_digest_key=dict(type='int', ), encrypted=dict(type='str', )),
         out=dict(type='bool', )
     ))
    

@@ -132,9 +132,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vlan_list=dict(type='list', vlan_start=dict(type='int', ),vlan_end=dict(type='int', )),
+        vlan_list=dict(type='list', vlan_start=dict(type='int', ), vlan_end=dict(type='int', )),
         ve=dict(type='int', ),
-        forward_traffic=dict(type='str', choices=['forward-all-traffic','forward-ip-traffic']),
+        forward_traffic=dict(type='str', choices=['forward-all-traffic', 'forward-ip-traffic']),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         bridge_vlan_group_number=dict(type='int', required=True, ),

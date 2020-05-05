@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', service_port_list=dict(type='list', current_connections=dict(type='int', ),service_port_name=dict(type='str', ),state=dict(type='str', ),active_real_server=dict(type='int', ),attributes=dict(type='str', ))),
+        oper=dict(type='dict', service_port_list=dict(type='list', current_connections=dict(type='int', ), service_port_name=dict(type='str', ), state=dict(type='str', ), active_real_server=dict(type='int', ), attributes=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

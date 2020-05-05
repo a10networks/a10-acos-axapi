@@ -180,7 +180,7 @@ def get_argspec():
         del_session_on_server_down=dict(type='bool', ),
         initial_window_size=dict(type='int', ),
         half_open_idle_timeout=dict(type='int', ),
-        logging=dict(type='str', choices=['init','term','both']),
+        logging=dict(type='str', choices=['init', 'term', 'both']),
         name=dict(type='str', required=True, ),
         reset_fwd=dict(type='bool', ),
         reset_follow_fin=dict(type='bool', ),

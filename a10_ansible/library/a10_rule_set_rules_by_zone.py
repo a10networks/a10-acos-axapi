@@ -128,8 +128,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', group_list=dict(type='list', to=dict(type='str', ),from=dict(type='str', ),rule_list=dict(type='list', dest_list=dict(type='list', dest=dict(type='str', )),action=dict(type='str', ),source_list=dict(type='list', source=dict(type='str', )),name=dict(type='str', ),service_list=dict(type='list', service=dict(type='str', ))))),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','dummy'])),
+        oper=dict(type='dict', group_list=dict(type='list', to=dict(type='str', ), from=dict(type='str', ), rule_list=dict(type='list', dest_list=dict(type='list', dest=dict(type='str', )), action=dict(type='str', ), source_list=dict(type='list', source=dict(type='str', )), name=dict(type='str', ), service_list=dict(type='list', service=dict(type='str', ))))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'dummy'])),
         stats=dict(type='dict', dummy=dict(type='str', )),
         uuid=dict(type='str', )
     ))

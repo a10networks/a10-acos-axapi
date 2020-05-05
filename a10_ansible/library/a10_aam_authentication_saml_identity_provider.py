@@ -183,8 +183,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         reload_metadata=dict(type='bool', ),
-        oper=dict(type='dict', md=dict(type='str', ),name=dict(type='str', required=True, ),sso_list=dict(type='list', sso_binding=dict(type='str', ),sso_location=dict(type='str', )),entity_id=dict(type='str', ),slo_list=dict(type='list', slo_binding=dict(type='str', ),slo_location=dict(type='str', )),cert=dict(type='str', ),ars_list=dict(type='list', ars_binding=dict(type='str', ),ars_location=dict(type='str', ),ars_index=dict(type='int', )),aqs_list=dict(type='list', aqs_binding=dict(type='str', ),aqs_location=dict(type='str', ))),
-        stats=dict(type='dict', valid_status=dict(type='str', ),md_state=dict(type='str', ),name=dict(type='str', required=True, ),md_update=dict(type='str', ),acs_fail=dict(type='str', ),acs_pass=dict(type='str', ),acs_state=dict(type='str', ),md_fail=dict(type='str', ),acs_req=dict(type='str', )),
+        oper=dict(type='dict', md=dict(type='str', ), name=dict(type='str', required=True, ), sso_list=dict(type='list', sso_binding=dict(type='str', ), sso_location=dict(type='str', )), entity_id=dict(type='str', ), slo_list=dict(type='list', slo_binding=dict(type='str', ), slo_location=dict(type='str', )), cert=dict(type='str', ), ars_list=dict(type='list', ars_binding=dict(type='str', ), ars_location=dict(type='str', ), ars_index=dict(type='int', )), aqs_list=dict(type='list', aqs_binding=dict(type='str', ), aqs_location=dict(type='str', ))),
+        stats=dict(type='dict', valid_status=dict(type='str', ), md_state=dict(type='str', ), name=dict(type='str', required=True, ), md_update=dict(type='str', ), acs_fail=dict(type='str', ), acs_pass=dict(type='str', ), acs_state=dict(type='str', ), md_fail=dict(type='str', ), acs_req=dict(type='str', )),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         reload_interval=dict(type='int', ),

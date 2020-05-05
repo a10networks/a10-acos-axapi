@@ -156,15 +156,15 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        facility=dict(type='str', choices=['kernel','user','mail','daemon','security-authorization','syslog','line-printer','news','uucp','cron','security-authorization-private','ftp','ntp','audit','alert','clock','local0','local1','local2','local3','local4','local5','local6','local7']),
+        facility=dict(type='str', choices=['kernel', 'user', 'mail', 'daemon', 'security-authorization', 'syslog', 'line-printer', 'news', 'uucp', 'cron', 'security-authorization-private', 'ftp', 'ntp', 'audit', 'alert', 'clock', 'local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']),
         include_destination=dict(type='bool', ),
         user_tag=dict(type='str', ),
         name=dict(type='str', required=True, ),
         service_group=dict(type='str', ),
-        log=dict(type='dict', port_mappings=dict(type='str', choices=['creation','disable'])),
-        source_port=dict(type='dict', source_port_num=dict(type='int', ),any=dict(type='bool', )),
+        log=dict(type='dict', port_mappings=dict(type='str', choices=['creation', 'disable'])),
+        source_port=dict(type='dict', source_port_num=dict(type='int', ), any=dict(type='bool', )),
         include_rip_rport=dict(type='bool', ),
-        severity=dict(type='dict', severity_string=dict(type='str', choices=['emergency','alert','critical','error','warning','notice','informational','debug']),severity_val=dict(type='int', ))
+        severity=dict(type='dict', severity_string=dict(type='str', choices=['emergency', 'alert', 'critical', 'error', 'warning', 'notice', 'informational', 'debug']), severity_val=dict(type='int', ))
     ))
    
 

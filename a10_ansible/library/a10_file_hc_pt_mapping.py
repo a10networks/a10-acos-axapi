@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str', choices=['import','export','copy','rename','check','replace','delete']),
+        action=dict(type='str', choices=['import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
         file=dict(type='str', ),
         file_handle=dict(type='str', )
     ))

@@ -146,9 +146,9 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         ipv6_address=dict(type='str', required=True, ),
-        ipv6_nexthop_tunnel=dict(type='list', tunnel=dict(type='int', ),distance_nexthop_tunnel=dict(type='int', ),ipv6_nexthop_tunnel_addr=dict(type='str', ),description=dict(type='str', )),
+        ipv6_nexthop_tunnel=dict(type='list', tunnel=dict(type='int', ), distance_nexthop_tunnel=dict(type='int', ), ipv6_nexthop_tunnel_addr=dict(type='str', ), description=dict(type='str', )),
         uuid=dict(type='str', ),
-        ipv6_nexthop_ipv6=dict(type='list', distance=dict(type='int', ),ipv6_nexthop=dict(type='str', ),ve=dict(type='str', ),trunk=dict(type='str', ),ethernet=dict(type='str', ),description=dict(type='str', ))
+        ipv6_nexthop_ipv6=dict(type='list', distance=dict(type='int', ), ipv6_nexthop=dict(type='str', ), ve=dict(type='str', ), trunk=dict(type='str', ), ethernet=dict(type='str', ), description=dict(type='str', ))
     ))
    
 

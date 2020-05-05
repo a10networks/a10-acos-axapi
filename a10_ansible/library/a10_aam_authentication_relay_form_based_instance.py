@@ -184,10 +184,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','request','invalid_srv_rsp','post_fail','invalid_cred','bad_req','not_fnd','error','other_error'])),
-        stats=dict(type='dict', invalid_cred=dict(type='str', ),bad_req=dict(type='str', ),name=dict(type='str', required=True, ),other_error=dict(type='str', ),request=dict(type='str', ),invalid_srv_rsp=dict(type='str', ),post_fail=dict(type='str', ),error=dict(type='str', ),not_fnd=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'request', 'invalid_srv_rsp', 'post_fail', 'invalid_cred', 'bad_req', 'not_fnd', 'error', 'other_error'])),
+        stats=dict(type='dict', invalid_cred=dict(type='str', ), bad_req=dict(type='str', ), name=dict(type='str', required=True, ), other_error=dict(type='str', ), request=dict(type='str', ), invalid_srv_rsp=dict(type='str', ), post_fail=dict(type='str', ), error=dict(type='str', ), not_fnd=dict(type='str', )),
         name=dict(type='str', required=True, ),
-        request_uri_list=dict(type='list', other_variables=dict(type='str', ),max_packet_collect_size=dict(type='int', ),action_uri=dict(type='str', ),uri=dict(type='str', required=True, ),user_tag=dict(type='str', ),cookie=dict(type='dict', cookie_value=dict(type='dict', cookie_value=dict(type='str', ))),user_variable=dict(type='str', ),domain_variable=dict(type='str', ),password_variable=dict(type='str', ),match_type=dict(type='str', required=True, choices=['equals','contains','starts-with','ends-with']),uuid=dict(type='str', ))
+        request_uri_list=dict(type='list', other_variables=dict(type='str', ), max_packet_collect_size=dict(type='int', ), action_uri=dict(type='str', ), uri=dict(type='str', required=True, ), user_tag=dict(type='str', ), cookie=dict(type='dict', cookie_value=dict(type='dict', cookie_value=dict(type='str', ))), user_variable=dict(type='str', ), domain_variable=dict(type='str', ), password_variable=dict(type='str', ), match_type=dict(type='str', required=True, choices=['equals', 'contains', 'starts-with', 'ends-with']), uuid=dict(type='str', ))
     ))
    
 

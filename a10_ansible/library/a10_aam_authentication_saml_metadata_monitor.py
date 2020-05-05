@@ -117,7 +117,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        status=dict(type='str', choices=['enable','disable']),
+        status=dict(type='str', choices=['enable', 'disable']),
         acs_continuous_fail_threshold=dict(type='int', ),
         acs_missing_period=dict(type='int', ),
         uuid=dict(type='str', ),

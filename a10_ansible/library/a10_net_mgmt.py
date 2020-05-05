@@ -108,7 +108,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        snmp=dict(type='dict', stats=dict(type='dict', uuid=dict(type='str', )),engineID=dict(type='dict', uuid=dict(type='str', )))
+        snmp=dict(type='dict', stats=dict(type='dict', uuid=dict(type='str', )), engineID=dict(type='dict', uuid=dict(type='str', )))
     ))
    
 

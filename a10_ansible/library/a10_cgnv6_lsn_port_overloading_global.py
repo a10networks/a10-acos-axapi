@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        unique=dict(type='str', choices=['destination-address','destination-address-and-port']),
+        unique=dict(type='str', choices=['destination-address', 'destination-address-and-port']),
         allow_different_user=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

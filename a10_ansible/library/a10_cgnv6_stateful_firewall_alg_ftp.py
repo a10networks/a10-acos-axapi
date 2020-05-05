@@ -130,9 +130,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','client-port-request','client-eprt-request','server-pasv-reply','server-epsv-reply','port-retransmits','pasv-retransmits','smp-app-type-mismatch','retransmit-sanity-check-failure','smp-conn-alloc-failure','port-helper-created','pasv-helper-created','port-helper-acquire-in-del-q','port-helper-acquire-already-used','pasv-helper-acquire-in-del-q','pasv-helper-acquire-already-used','port-helper-freed-used','port-helper-freed-unused','pasv-helper-freed-used','pasv-helper-freed-unused'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'client-port-request', 'client-eprt-request', 'server-pasv-reply', 'server-epsv-reply', 'port-retransmits', 'pasv-retransmits', 'smp-app-type-mismatch', 'retransmit-sanity-check-failure', 'smp-conn-alloc-failure', 'port-helper-created', 'pasv-helper-created', 'port-helper-acquire-in-del-q', 'port-helper-acquire-already-used', 'pasv-helper-acquire-in-del-q', 'pasv-helper-acquire-already-used', 'port-helper-freed-used', 'port-helper-freed-unused', 'pasv-helper-freed-used', 'pasv-helper-freed-unused'])),
         ftp_value=dict(type='str', choices=['disable']),
-        stats=dict(type='dict', client_eprt_request=dict(type='str', ),server_epsv_reply=dict(type='str', ),client_port_request=dict(type='str', ),server_pasv_reply=dict(type='str', )),
+        stats=dict(type='dict', client_eprt_request=dict(type='str', ), server_epsv_reply=dict(type='str', ), client_port_request=dict(type='str', ), server_pasv_reply=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

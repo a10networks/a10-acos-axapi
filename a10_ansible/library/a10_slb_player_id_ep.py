@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', player_id_ep_list=dict(type='list', age=dict(type='int', ),game_server_port=dict(type='int', ),idle_time=dict(type='int', ),game_server_address=dict(type='str', ),user_session_count=dict(type='int', ),player_id=dict(type='int', )),total_players=dict(type='int', ),filter_type=dict(type='str', choices=['all','specific']),player_id=dict(type='int', )),
+        oper=dict(type='dict', player_id_ep_list=dict(type='list', age=dict(type='int', ), game_server_port=dict(type='int', ), idle_time=dict(type='int', ), game_server_address=dict(type='str', ), user_session_count=dict(type='int', ), player_id=dict(type='int', )), total_players=dict(type='int', ), filter_type=dict(type='str', choices=['all', 'specific']), player_id=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

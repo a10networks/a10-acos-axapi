@@ -112,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', member_list=dict(type='list', pool_name=dict(type='str', )),pool_group_name=dict(type='str', )),
+        oper=dict(type='dict', member_list=dict(type='list', pool_name=dict(type='str', )), pool_group_name=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

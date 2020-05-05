@@ -130,7 +130,7 @@ def get_argspec():
     rv.update(dict(
         ip_address=dict(type='str', required=True, ),
         uuid=dict(type='str', ),
-        vni_list=dict(type='list', lif=dict(type='int', ),partition=dict(type='str', ),segment=dict(type='int', required=True, ),gateway=dict(type='bool', ),uuid=dict(type='str', ))
+        vni_list=dict(type='list', lif=dict(type='int', ), partition=dict(type='str', ), segment=dict(type='int', required=True, ), gateway=dict(type='bool', ), uuid=dict(type='str', ))
     ))
    
     # Parent keys

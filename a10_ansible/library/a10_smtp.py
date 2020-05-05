@@ -142,7 +142,7 @@ def get_argspec():
         smtp_server=dict(type='str', ),
         port=dict(type='int', ),
         needauthentication=dict(type='bool', ),
-        username_cfg=dict(type='dict', username=dict(type='str', ),password=dict(type='dict', encrypted=dict(type='str', ),smtp_password=dict(type='str', ))),
+        username_cfg=dict(type='dict', username=dict(type='str', ), password=dict(type='dict', encrypted=dict(type='str', ), smtp_password=dict(type='str', ))),
         smtp_server_v6=dict(type='str', )
     ))
    

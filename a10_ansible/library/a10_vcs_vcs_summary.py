@@ -136,7 +136,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', chassis_id=dict(type='int', ),multicast_port=dict(type='int', ),floating_ipv6_list=dict(type='list', floating_ipv6=dict(type='str', ),floating_ipv6_prefix=dict(type='int', )),multicast_addr=dict(type='str', ),vmaster_maintenance_interval=dict(type='int', ),version=dict(type='str', ),vmaster_maintenance_left=dict(type='int', ),member_list=dict(type='list', port=dict(type='int', ),priority=dict(type='int', ),state=dict(type='str', ),ip_list=dict(type='list', ip=dict(type='str', )),location=dict(type='str', ),id=dict(type='int', )),floating_ipv4_list=dict(type='list', floating_ipv4_mask=dict(type='str', ),floating_ipv4=dict(type='str', )),vcs_enabled=dict(type='str', )),
+        oper=dict(type='dict', chassis_id=dict(type='int', ), multicast_port=dict(type='int', ), floating_ipv6_list=dict(type='list', floating_ipv6=dict(type='str', ), floating_ipv6_prefix=dict(type='int', )), multicast_addr=dict(type='str', ), vmaster_maintenance_interval=dict(type='int', ), version=dict(type='str', ), vmaster_maintenance_left=dict(type='int', ), member_list=dict(type='list', port=dict(type='int', ), priority=dict(type='int', ), state=dict(type='str', ), ip_list=dict(type='list', ip=dict(type='str', )), location=dict(type='str', ), id=dict(type='int', )), floating_ipv4_list=dict(type='list', floating_ipv4_mask=dict(type='str', ), floating_ipv4=dict(type='str', )), vcs_enabled=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

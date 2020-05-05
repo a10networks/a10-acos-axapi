@@ -186,14 +186,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', ticket_cache=dict(type='str', ),default_principal=dict(type='str', ),name=dict(type='str', required=True, ),item_list=dict(type='list', client_principal=dict(type='str', ),end_time=dict(type='str', ),start_time=dict(type='str', ),service_principal=dict(type='str', ),renew_time=dict(type='str', ),flags=dict(type='str', ))),
+        oper=dict(type='dict', ticket_cache=dict(type='str', ), default_principal=dict(type='str', ), name=dict(type='str', required=True, ), item_list=dict(type='list', client_principal=dict(type='str', ), end_time=dict(type='str', ), start_time=dict(type='str', ), service_principal=dict(type='str', ), renew_time=dict(type='str', ), flags=dict(type='str', ))),
         kerberos_account=dict(type='str', ),
-        stats=dict(type='dict', current_requests_of_user=dict(type='str', ),response_receive=dict(type='str', ),request_send=dict(type='str', ),name=dict(type='str', required=True, ),tickets=dict(type='str', )),
+        stats=dict(type='dict', current_requests_of_user=dict(type='str', ), response_receive=dict(type='str', ), request_send=dict(type='str', ), name=dict(type='str', required=True, ), tickets=dict(type='str', )),
         uuid=dict(type='str', ),
         encrypted=dict(type='str', ),
         kerberos_realm=dict(type='str', ),
         kerberos_kdc_service_group=dict(type='str', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','request-send','response-receive','current-requests-of-user','tickets'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'request-send', 'response-receive', 'current-requests-of-user', 'tickets'])),
         timeout=dict(type='int', ),
         password=dict(type='bool', ),
         kerberos_kdc=dict(type='str', ),

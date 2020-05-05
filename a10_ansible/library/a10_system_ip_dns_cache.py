@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', domain_ip_list=dict(type='list', domain=dict(type='str', ),interval=dict(type='int', ),address=dict(type='str', ),ttl=dict(type='int', ))),
+        oper=dict(type='dict', domain_ip_list=dict(type='list', domain=dict(type='str', ), interval=dict(type='int', ), address=dict(type='str', ), ttl=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

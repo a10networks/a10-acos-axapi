@@ -133,7 +133,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', l2redirect_trunk=dict(type='int', ),device_list=dict(type='list', is_local=dict(type='int', ),state=dict(type='str', ),is_master=dict(type='int', ),id=dict(type='int', )),l2redirect_operational=dict(type='int', ),role=dict(type='str', ),db_role=dict(type='str', ),l2redirect=dict(type='int', ),l2redirect_valid=dict(type='int', ),l2redirect_eth=dict(type='int', ),l2redirect_vlan=dict(type='int', )),
+        oper=dict(type='dict', l2redirect_trunk=dict(type='int', ), device_list=dict(type='list', is_local=dict(type='int', ), state=dict(type='str', ), is_master=dict(type='int', ), id=dict(type='int', )), l2redirect_operational=dict(type='int', ), role=dict(type='str', ), db_role=dict(type='str', ), l2redirect=dict(type='int', ), l2redirect_valid=dict(type='int', ), l2redirect_eth=dict(type='int', ), l2redirect_vlan=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

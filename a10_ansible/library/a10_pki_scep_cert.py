@@ -192,16 +192,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        renew_every_type=dict(type='str', choices=['hour','day','week','month']),
+        renew_every_type=dict(type='str', choices=['hour', 'day', 'week', 'month']),
         encrypted=dict(type='str', ),
         log_level=dict(type='int', ),
         uuid=dict(type='str', ),
-        renew_before_type=dict(type='str', choices=['hour','day','week','month']),
+        renew_before_type=dict(type='str', choices=['hour', 'day', 'week', 'month']),
         renew_every=dict(type='bool', ),
-        key_length=dict(type='str', choices=['1024','2048','4096','8192']),
-        method=dict(type='str', choices=['GET','POST']),
+        key_length=dict(type='str', choices=['1024', '2048', '4096', '8192']),
+        method=dict(type='str', choices=['GET', 'POST']),
         dn=dict(type='str', ),
-        subject_alternate_name=dict(type='dict', san_type=dict(type='str', choices=['email','dns','ip']),san_value=dict(type='str', )),
+        subject_alternate_name=dict(type='dict', san_type=dict(type='str', choices=['email', 'dns', 'ip']), san_value=dict(type='str', )),
         renew_every_value=dict(type='int', ),
         max_polltime=dict(type='int', ),
         password=dict(type='bool', ),

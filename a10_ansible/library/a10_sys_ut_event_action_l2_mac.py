@@ -141,8 +141,8 @@ def get_argspec():
     rv.update(dict(
         ethernet=dict(type='str', ),
         ve=dict(type='str', ),
-        src_dst=dict(type='str', required=True, choices=['dest','src']),
-        address_type=dict(type='str', choices=['broadcast','multicast']),
+        src_dst=dict(type='str', required=True, choices=['dest', 'src']),
+        address_type=dict(type='str', choices=['broadcast', 'multicast']),
         nat_pool=dict(type='str', ),
         value=dict(type='str', ),
         trunk=dict(type='str', ),

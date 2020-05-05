@@ -117,7 +117,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str', choices=['enable','disable']),
+        action=dict(type='str', choices=['enable', 'disable']),
         nat_address=dict(type='str', required=True, ),
         vrid=dict(type='int', ),
         uuid=dict(type='str', ),

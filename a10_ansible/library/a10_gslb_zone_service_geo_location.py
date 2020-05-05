@@ -142,13 +142,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action_type=dict(type='str', choices=['allow','drop','forward','ignore','reject']),
+        action_type=dict(type='str', choices=['allow', 'drop', 'forward', 'ignore', 'reject']),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         alias=dict(type='list', alias=dict(type='str', )),
         geo_name=dict(type='str', required=True, ),
         policy=dict(type='str', ),
-        forward_type=dict(type='str', choices=['both','query','response']),
+        forward_type=dict(type='str', choices=['both', 'query', 'response']),
         action=dict(type='bool', )
     ))
    

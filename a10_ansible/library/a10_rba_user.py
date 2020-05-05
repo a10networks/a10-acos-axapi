@@ -129,7 +129,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        partition_list=dict(type='list', partition_name=dict(type='str', required=True, ),role_list=dict(type='list', role=dict(type='str', )),uuid=dict(type='str', ),user_tag=dict(type='str', ),rule_list=dict(type='list', operation=dict(type='str', choices=['no-access','read','oper','write']),object=dict(type='str', ))),
+        partition_list=dict(type='list', partition_name=dict(type='str', required=True, ), role_list=dict(type='list', role=dict(type='str', )), uuid=dict(type='str', ), user_tag=dict(type='str', ), rule_list=dict(type='list', operation=dict(type='str', choices=['no-access', 'read', 'oper', 'write']), object=dict(type='str', ))),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         uuid=dict(type='str', )

@@ -120,7 +120,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_config=dict(type='list', translated_port=dict(type='int', ),original_port=dict(type='int', )),
+        port_config=dict(type='list', translated_port=dict(type='int', ), original_port=dict(type='int', )),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         name=dict(type='str', required=True, )

@@ -145,13 +145,13 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         pfx_password=dict(type='str', ),
-        oper=dict(type='dict', partition=dict(type='str', ),file_list=dict(type='list', file=dict(type='str', ))),
+        oper=dict(type='dict', partition=dict(type='str', ), file_list=dict(type='list', file=dict(type='str', ))),
         dst_file=dict(type='str', ),
         uuid=dict(type='str', ),
         pfx_password_export=dict(type='str', ),
         file=dict(type='str', ),
-        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
-        certificate_type=dict(type='str', choices=['pem','der','pfx','p7b']),
+        action=dict(type='str', choices=['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
+        certificate_type=dict(type='str', choices=['pem', 'der', 'pfx', 'p7b']),
         file_handle=dict(type='str', ),
         size=dict(type='int', )
     ))

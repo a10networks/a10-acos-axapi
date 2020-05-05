@@ -112,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', debugging_switches=dict(type='str', ),debugging_buff_size=dict(type='int', )),
+        oper=dict(type='dict', debugging_switches=dict(type='str', ), debugging_buff_size=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

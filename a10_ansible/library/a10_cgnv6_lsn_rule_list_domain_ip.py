@@ -124,8 +124,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', ip_list=dict(type='list', domain=dict(type='str', ),domain_list=dict(type='str', ),ip_address=dict(type='str', ),ttl=dict(type='int', ))),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','placeholder'])),
+        oper=dict(type='dict', ip_list=dict(type='list', domain=dict(type='str', ), domain_list=dict(type='str', ), ip_address=dict(type='str', ), ttl=dict(type='int', ))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'placeholder'])),
         stats=dict(type='dict', ),
         uuid=dict(type='str', )
     ))

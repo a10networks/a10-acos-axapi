@@ -131,10 +131,10 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str', ),
         encrypted=dict(type='str', ),
-        key_type=dict(type='str', choices=['ascii','hex']),
+        key_type=dict(type='str', choices=['ascii', 'hex']),
         hex_encrypted=dict(type='str', ),
         hex_key=dict(type='str', ),
-        alg_type=dict(type='str', choices=['M','SHA','SHA1']),
+        alg_type=dict(type='str', choices=['M', 'SHA', 'SHA1']),
         key=dict(type='int', required=True, ),
         asc_key=dict(type='str', )
     ))

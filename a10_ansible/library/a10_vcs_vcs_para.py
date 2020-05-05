@@ -176,7 +176,7 @@ def get_argspec():
         multicast_ip=dict(type='str', ),
         multicast_ipv6=dict(type='str', ),
         force_wait_interval=dict(type='int', ),
-        floating_ip_cfg=dict(type='list', floating_ip_mask=dict(type='str', ),floating_ip=dict(type='str', )),
+        floating_ip_cfg=dict(type='list', floating_ip_mask=dict(type='str', ), floating_ip=dict(type='str', )),
         failure_retry_count_value=dict(type='int', ),
         time_interval=dict(type='int', ),
         speed_limit=dict(type='int', ),

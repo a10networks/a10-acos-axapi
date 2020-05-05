@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', cpu_usage=dict(type='list', cpu_id=dict(type='int', ),30_sec=dict(type='int', ),60_sec=dict(type='int', ),10_sec=dict(type='int', ),5_sec=dict(type='int', ),1_sec=dict(type='int', )),number_of_cpu=dict(type='int', ),current_time=dict(type='str', )),
+        oper=dict(type='dict', cpu_usage=dict(type='list', cpu_id=dict(type='int', ), 30_sec=dict(type='int', ), 60_sec=dict(type='int', ), 10_sec=dict(type='int', ), 5_sec=dict(type='int', ), 1_sec=dict(type='int', )), number_of_cpu=dict(type='int', ), current_time=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

@@ -177,7 +177,7 @@ def get_argspec():
         ttl=dict(type='int', ),
         slb_server=dict(type='bool', ),
         slb_virtual_server=dict(type='bool', ),
-        gslb_load_file_list=dict(type='list', geo_location_load_filename=dict(type='str', ),template_name=dict(type='str', )),
+        gslb_load_file_list=dict(type='list', geo_location_load_filename=dict(type='str', ), template_name=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

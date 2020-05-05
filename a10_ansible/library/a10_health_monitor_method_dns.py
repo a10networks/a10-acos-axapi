@@ -188,8 +188,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dns_domain_type=dict(type='str', choices=['A','CNAME','SOA','PTR','MX','TXT','AAAA']),
-        dns_ipv4_recurse=dict(type='str', choices=['enabled','disabled']),
+        dns_domain_type=dict(type='str', choices=['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']),
+        dns_ipv4_recurse=dict(type='str', choices=['enabled', 'disabled']),
         uuid=dict(type='str', ),
         dns_ipv6_port=dict(type='int', ),
         dns_ipv4_addr=dict(type='str', ),
@@ -198,9 +198,9 @@ def get_argspec():
         dns_ipv4_port=dict(type='int', ),
         dns_ipv6_expect=dict(type='dict', dns_ipv6_response=dict(type='str', )),
         dns_ip_key=dict(type='bool', ),
-        dns_ipv6_recurse=dict(type='str', choices=['enabled','disabled']),
+        dns_ipv6_recurse=dict(type='str', choices=['enabled', 'disabled']),
         dns_ipv6_tcp=dict(type='bool', ),
-        dns_domain_recurse=dict(type='str', choices=['enabled','disabled']),
+        dns_domain_recurse=dict(type='str', choices=['enabled', 'disabled']),
         dns_domain_tcp=dict(type='bool', ),
         dns=dict(type='bool', ),
         dns_ipv4_tcp=dict(type='bool', ),

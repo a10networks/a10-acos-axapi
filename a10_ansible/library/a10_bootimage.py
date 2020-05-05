@@ -149,9 +149,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', hd_sec=dict(type='str', ),cf_default=dict(type='str', ),hd_pri=dict(type='str', ),cf_pri=dict(type='str', ),cf_sec=dict(type='str', ),hd_default=dict(type='str', )),
-        hd_cfg=dict(type='dict', pri=dict(type='bool', ),sec=dict(type='bool', ),hd=dict(type='bool', )),
-        cf_cfg=dict(type='dict', cf_pri=dict(type='bool', ),cf=dict(type='bool', )),
+        oper=dict(type='dict', hd_sec=dict(type='str', ), cf_default=dict(type='str', ), hd_pri=dict(type='str', ), cf_pri=dict(type='str', ), cf_sec=dict(type='str', ), hd_default=dict(type='str', )),
+        hd_cfg=dict(type='dict', pri=dict(type='bool', ), sec=dict(type='bool', ), hd=dict(type='bool', )),
+        cf_cfg=dict(type='dict', cf_pri=dict(type='bool', ), cf=dict(type='bool', )),
         uuid=dict(type='str', )
     ))
    

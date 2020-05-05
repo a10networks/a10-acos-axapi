@@ -105,7 +105,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        console_levelname=dict(type='str', choices=['disable','emergency','alert','critical','error','warning','notification','information','debugging']),
+        console_levelname=dict(type='str', choices=['disable', 'emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging']),
         uuid=dict(type='str', )
     ))
    

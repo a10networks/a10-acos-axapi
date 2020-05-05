@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', backup_show_2=dict(type='str', ),backup_show_3=dict(type='str', ),backup_show_1=dict(type='str', )),
+        oper=dict(type='dict', backup_show_2=dict(type='str', ), backup_show_3=dict(type='str', ), backup_show_1=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

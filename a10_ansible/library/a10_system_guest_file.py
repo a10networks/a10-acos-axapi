@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', file_list=dict(type='list', File_Name=dict(type='str', ),update_time=dict(type='str', ),Size=dict(type='int', ))),
+        oper=dict(type='dict', file_list=dict(type='list', File_Name=dict(type='str', ), update_time=dict(type='str', ), Size=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

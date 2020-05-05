@@ -157,7 +157,7 @@ def get_argspec():
         user_variable=dict(type='str', ),
         domain_variable=dict(type='str', ),
         password_variable=dict(type='str', ),
-        match_type=dict(type='str', required=True, choices=['equals','contains','starts-with','ends-with']),
+        match_type=dict(type='str', required=True, choices=['equals', 'contains', 'starts-with', 'ends-with']),
         uuid=dict(type='str', )
     ))
    

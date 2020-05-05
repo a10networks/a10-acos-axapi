@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', cpu_usage=dict(type='list', Min_Sync_Msg_Per_Packet=dict(type='int', ),Min_Query_Msg_Per_Packet=dict(type='int', ),Max_Query_Msg_Per_Packet=dict(type='int', ),Max_Sync_Msg_Per_Packet=dict(type='int', ),cpu_id=dict(type='int', ))),
+        oper=dict(type='dict', cpu_usage=dict(type='list', Min_Sync_Msg_Per_Packet=dict(type='int', ), Min_Query_Msg_Per_Packet=dict(type='int', ), Max_Query_Msg_Per_Packet=dict(type='int', ), Max_Sync_Msg_Per_Packet=dict(type='int', ), cpu_id=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

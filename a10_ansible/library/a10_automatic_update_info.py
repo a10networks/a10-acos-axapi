@@ -117,7 +117,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', feature_list=dict(type='list', schedule=dict(type='str', ),feature_name=dict(type='str', ),version=dict(type='str', ),time=dict(type='str', ),last_update=dict(type='str', ),next_check=dict(type='str', ))),
+        oper=dict(type='dict', feature_list=dict(type='list', schedule=dict(type='str', ), feature_name=dict(type='str', ), version=dict(type='str', ), time=dict(type='str', ), last_update=dict(type='str', ), next_check=dict(type='str', ))),
         stats=dict(type='dict', dummy=dict(type='str', )),
         uuid=dict(type='str', )
     ))

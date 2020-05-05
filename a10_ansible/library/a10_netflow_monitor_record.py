@@ -182,24 +182,24 @@ def get_argspec():
     rv.update(dict(
         nat44=dict(type='bool', ),
         uuid=dict(type='str', ),
-        sesn_event_nat64=dict(type='str', choices=['both','creation','deletion']),
+        sesn_event_nat64=dict(type='str', choices=['both', 'creation', 'deletion']),
         nat64=dict(type='bool', ),
-        port_batch_v2_nat64=dict(type='str', choices=['both','creation','deletion']),
+        port_batch_v2_nat64=dict(type='str', choices=['both', 'creation', 'deletion']),
         dslite=dict(type='bool', ),
-        port_batch_v2_dslite=dict(type='str', choices=['both','creation','deletion']),
-        sesn_event_fw6=dict(type='str', choices=['both','creation','deletion']),
+        port_batch_v2_dslite=dict(type='str', choices=['both', 'creation', 'deletion']),
+        sesn_event_fw6=dict(type='str', choices=['both', 'creation', 'deletion']),
         netflow_v5_ext=dict(type='bool', ),
-        port_mapping_nat64=dict(type='str', choices=['both','creation','deletion']),
-        sesn_event_dslite=dict(type='str', choices=['both','creation','deletion']),
-        sesn_event_nat44=dict(type='str', choices=['both','creation','deletion']),
-        port_batch_v2_nat44=dict(type='str', choices=['both','creation','deletion']),
+        port_mapping_nat64=dict(type='str', choices=['both', 'creation', 'deletion']),
+        sesn_event_dslite=dict(type='str', choices=['both', 'creation', 'deletion']),
+        sesn_event_nat44=dict(type='str', choices=['both', 'creation', 'deletion']),
+        port_batch_v2_nat44=dict(type='str', choices=['both', 'creation', 'deletion']),
         netflow_v5=dict(type='bool', ),
-        port_batch_dslite=dict(type='str', choices=['both','creation','deletion']),
-        port_mapping_dslite=dict(type='str', choices=['both','creation','deletion']),
-        port_mapping_nat44=dict(type='str', choices=['both','creation','deletion']),
-        sesn_event_fw4=dict(type='str', choices=['both','creation','deletion']),
-        port_batch_nat64=dict(type='str', choices=['both','creation','deletion']),
-        port_batch_nat44=dict(type='str', choices=['both','creation','deletion'])
+        port_batch_dslite=dict(type='str', choices=['both', 'creation', 'deletion']),
+        port_mapping_dslite=dict(type='str', choices=['both', 'creation', 'deletion']),
+        port_mapping_nat44=dict(type='str', choices=['both', 'creation', 'deletion']),
+        sesn_event_fw4=dict(type='str', choices=['both', 'creation', 'deletion']),
+        port_batch_nat64=dict(type='str', choices=['both', 'creation', 'deletion']),
+        port_batch_nat44=dict(type='str', choices=['both', 'creation', 'deletion'])
     ))
    
     # Parent keys

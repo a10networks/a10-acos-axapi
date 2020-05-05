@@ -213,10 +213,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         maximum_prefix=dict(type='int', ),
-        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in','out']),nbr_prefix_list=dict(type='str', )),
+        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in', 'out']), nbr_prefix_list=dict(type='str', )),
         allowas_in_count=dict(type='int', ),
         peer_group_name=dict(type='str', ),
-        send_community_val=dict(type='str', choices=['both','none','standard','extended']),
+        send_community_val=dict(type='str', choices=['both', 'none', 'standard', 'extended']),
         neighbor_ipv4=dict(type='str', required=True, ),
         inbound=dict(type='bool', ),
         next_hop_self=dict(type='bool', ),
@@ -228,11 +228,11 @@ def get_argspec():
         default_originate=dict(type='bool', ),
         activate=dict(type='bool', ),
         remove_private_as=dict(type='bool', ),
-        prefix_list_direction=dict(type='str', choices=['both','receive','send']),
+        prefix_list_direction=dict(type='str', choices=['both', 'receive', 'send']),
         allowas_in=dict(type='bool', ),
-        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in','out']),nbr_route_map=dict(type='str', )),
-        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ),filter_list_direction=dict(type='str', choices=['in','out'])),
-        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in','out']),distribute_list=dict(type='str', ))
+        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in', 'out']), nbr_route_map=dict(type='str', )),
+        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ), filter_list_direction=dict(type='str', choices=['in', 'out'])),
+        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in', 'out']), distribute_list=dict(type='str', ))
     ))
    
     # Parent keys

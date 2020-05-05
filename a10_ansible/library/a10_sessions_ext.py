@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', session_ext_list=dict(type='list', fail=dict(type='int', ),alloc=dict(type='int', ),ntype=dict(type='str', ),free=dict(type='int', ),cpu_round_robin_fail=dict(type='int', ))),
+        oper=dict(type='dict', session_ext_list=dict(type='list', fail=dict(type='int', ), alloc=dict(type='int', ), ntype=dict(type='str', ), free=dict(type='int', ), cpu_round_robin_fail=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

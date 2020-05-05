@@ -213,10 +213,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         maximum_prefix=dict(type='int', ),
-        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in','out']),nbr_prefix_list=dict(type='str', )),
+        neighbor_prefix_lists=dict(type='list', nbr_prefix_list_direction=dict(type='str', choices=['in', 'out']), nbr_prefix_list=dict(type='str', )),
         allowas_in_count=dict(type='int', ),
         neighbor_ipv6=dict(type='str', required=True, ),
-        send_community_val=dict(type='str', choices=['both','none','standard','extended']),
+        send_community_val=dict(type='str', choices=['both', 'none', 'standard', 'extended']),
         inbound=dict(type='bool', ),
         next_hop_self=dict(type='bool', ),
         maximum_prefix_thres=dict(type='int', ),
@@ -224,14 +224,14 @@ def get_argspec():
         peer_group_name=dict(type='str', ),
         weight=dict(type='int', ),
         unsuppress_map=dict(type='str', ),
-        prefix_list_direction=dict(type='str', choices=['both','receive','send']),
+        prefix_list_direction=dict(type='str', choices=['both', 'receive', 'send']),
         default_originate=dict(type='bool', ),
         activate=dict(type='bool', ),
         remove_private_as=dict(type='bool', ),
-        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in','out']),distribute_list=dict(type='str', )),
+        distribute_lists=dict(type='list', distribute_list_direction=dict(type='str', choices=['in', 'out']), distribute_list=dict(type='str', )),
         allowas_in=dict(type='bool', ),
-        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in','out']),nbr_route_map=dict(type='str', )),
-        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ),filter_list_direction=dict(type='str', choices=['in','out'])),
+        neighbor_route_map_lists=dict(type='list', nbr_rmap_direction=dict(type='str', choices=['in', 'out']), nbr_route_map=dict(type='str', )),
+        neighbor_filter_lists=dict(type='list', filter_list=dict(type='str', ), filter_list_direction=dict(type='str', choices=['in', 'out'])),
         uuid=dict(type='str', )
     ))
    

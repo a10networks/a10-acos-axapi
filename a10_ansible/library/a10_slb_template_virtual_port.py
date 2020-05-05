@@ -215,8 +215,8 @@ def get_argspec():
         drop_unknown_conn=dict(type='bool', ),
         uuid=dict(type='str', ),
         reset_l7_on_failover=dict(type='bool', ),
-        pkt_rate_type=dict(type='str', choices=['src-ip-port','src-port']),
-        rate_interval=dict(type='str', choices=['100ms','second']),
+        pkt_rate_type=dict(type='str', choices=['src-ip-port', 'src-port']),
+        rate_interval=dict(type='str', choices=['100ms', 'second']),
         snat_port_preserve=dict(type='bool', ),
         conn_rate_limit_reset=dict(type='bool', ),
         when_rr_enable=dict(type='bool', ),
@@ -226,10 +226,10 @@ def get_argspec():
         pkt_rate_limit_reset=dict(type='int', ),
         conn_limit_no_logging=dict(type='bool', ),
         conn_rate_limit_no_logging=dict(type='bool', ),
-        log_options=dict(type='str', choices=['no-logging','no-repeat-logging']),
+        log_options=dict(type='str', choices=['no-logging', 'no-repeat-logging']),
         name=dict(type='str', required=True, ),
         allow_vip_to_rport_mapping=dict(type='bool', ),
-        pkt_rate_interval=dict(type='str', choices=['100ms','second']),
+        pkt_rate_interval=dict(type='str', choices=['100ms', 'second']),
         user_tag=dict(type='str', ),
         conn_rate_limit=dict(type='int', )
     ))

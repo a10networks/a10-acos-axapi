@@ -135,8 +135,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','alloc_sport','alloc_sportip','freed_sport','freed_sportip','total_drop','total_reset','total_log'])),
-        stats=dict(type='dict', total_reset=dict(type='str', ),freed_sportip=dict(type='str', ),freed_sport=dict(type='str', ),alloc_sportip=dict(type='str', ),total_drop=dict(type='str', ),alloc_sport=dict(type='str', ),total_log=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'alloc_sport', 'alloc_sportip', 'freed_sport', 'freed_sportip', 'total_drop', 'total_reset', 'total_log'])),
+        stats=dict(type='dict', total_reset=dict(type='str', ), freed_sportip=dict(type='str', ), freed_sport=dict(type='str', ), alloc_sportip=dict(type='str', ), total_drop=dict(type='str', ), alloc_sport=dict(type='str', ), total_log=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

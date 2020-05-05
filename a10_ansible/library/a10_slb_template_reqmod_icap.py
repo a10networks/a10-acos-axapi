@@ -213,7 +213,7 @@ def get_argspec():
         disable_http_server_reset=dict(type='bool', ),
         server_ssl=dict(type='str', ),
         fail_close=dict(type='bool', ),
-        bypass_ip_cfg=dict(type='list', bypass_ip=dict(type='str', ),mask=dict(type='str', )),
+        bypass_ip_cfg=dict(type='list', bypass_ip=dict(type='str', ), mask=dict(type='str', )),
         template_persist_source_ip_shared=dict(type='str', ),
         include_protocol_in_uri=dict(type='bool', ),
         logging=dict(type='str', ),
@@ -221,7 +221,7 @@ def get_argspec():
         user_tag=dict(type='str', ),
         x_auth_url=dict(type='bool', ),
         log_only_allowed_method=dict(type='bool', ),
-        action=dict(type='str', choices=['continue','drop','reset']),
+        action=dict(type='str', choices=['continue', 'drop', 'reset']),
         cylance=dict(type='bool', ),
         service_url=dict(type='str', )
     ))

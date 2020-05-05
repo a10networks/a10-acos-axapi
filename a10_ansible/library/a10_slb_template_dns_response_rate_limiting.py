@@ -132,7 +132,7 @@ def get_argspec():
         slip_rate=dict(type='int', ),
         response_rate=dict(type='int', ),
         window=dict(type='int', ),
-        action=dict(type='str', choices=['log-only','rate-limit','whitelist']),
+        action=dict(type='str', choices=['log-only', 'rate-limit', 'whitelist']),
         enable_log=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

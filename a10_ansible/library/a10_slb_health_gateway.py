@@ -137,9 +137,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', interval=dict(type='int', ),enabled=dict(type='int', ),timeout=dict(type='int', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','total_sent','total_retry_sent','total_timeout'])),
-        stats=dict(type='dict', total_sent=dict(type='str', ),total_retry_sent=dict(type='str', ),total_timeout=dict(type='str', )),
+        oper=dict(type='dict', interval=dict(type='int', ), enabled=dict(type='int', ), timeout=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'total_sent', 'total_retry_sent', 'total_timeout'])),
+        stats=dict(type='dict', total_sent=dict(type='str', ), total_retry_sent=dict(type='str', ), total_timeout=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

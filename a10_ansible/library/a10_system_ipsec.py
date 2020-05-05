@@ -124,7 +124,7 @@ def get_argspec():
         packet_round_robin=dict(type='bool', ),
         crypto_core=dict(type='int', ),
         uuid=dict(type='str', ),
-        fpga_decrypt=dict(type='dict', action=dict(type='str', choices=['enable','disable'])),
+        fpga_decrypt=dict(type='dict', action=dict(type='str', choices=['enable', 'disable'])),
         crypto_mem=dict(type='int', )
     ))
    

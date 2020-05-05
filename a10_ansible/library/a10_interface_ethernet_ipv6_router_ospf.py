@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        area_list=dict(type='list', area_id_addr=dict(type='str', ),tag=dict(type='str', ),instance_id=dict(type='int', ),area_id_num=dict(type='int', )),
+        area_list=dict(type='list', area_id_addr=dict(type='str', ), tag=dict(type='str', ), instance_id=dict(type='int', ), area_id_num=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

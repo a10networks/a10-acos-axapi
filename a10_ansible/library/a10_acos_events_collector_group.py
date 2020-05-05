@@ -172,16 +172,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='str', choices=['udp','tcp']),
+        protocol=dict(type='str', choices=['udp', 'tcp']),
         name=dict(type='str', required=True, ),
         use_mgmt_port=dict(type='bool', ),
-        format=dict(type='str', choices=['syslog','cef','leef']),
-        facility=dict(type='str', choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
+        format=dict(type='str', choices=['syslog', 'cef', 'leef']),
+        facility=dict(type='str', choices=['local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']),
         rate=dict(type='int', ),
         user_tag=dict(type='str', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','msgs_sent','msgs_rate_limited','msgs_dropped'])),
-        log_server_list=dict(type='list', port=dict(type='int', required=True, ),uuid=dict(type='str', ),name=dict(type='str', required=True, )),
-        stats=dict(type='dict', msgs_rate_limited=dict(type='str', ),name=dict(type='str', required=True, ),msgs_sent=dict(type='str', ),msgs_dropped=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'msgs_sent', 'msgs_rate_limited', 'msgs_dropped'])),
+        log_server_list=dict(type='list', port=dict(type='int', required=True, ), uuid=dict(type='str', ), name=dict(type='str', required=True, )),
+        stats=dict(type='dict', msgs_rate_limited=dict(type='str', ), name=dict(type='str', required=True, ), msgs_sent=dict(type='str', ), msgs_dropped=dict(type='str', )),
         health_check=dict(type='str', ),
         uuid=dict(type='str', )
     ))

@@ -116,7 +116,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nexthop_trigger=dict(type='dict', delay=dict(type='int', ),enable=dict(type='bool', )),
+        nexthop_trigger=dict(type='dict', delay=dict(type='int', ), enable=dict(type='bool', )),
         extended_asn_cap=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

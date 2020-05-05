@@ -130,7 +130,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', product=dict(type='str', ),billing_serial=dict(type='str', ),uuid=dict(type='str', ),usb_uuid=dict(type='str', ),glm_ping_interval=dict(type='int', ),platform=dict(type='str', ),token=dict(type='str', ),module_list=dict(type='list', notes=dict(type='str', ),module=dict(type='str', ),expiry=dict(type='str', ))),
+        oper=dict(type='dict', product=dict(type='str', ), billing_serial=dict(type='str', ), uuid=dict(type='str', ), usb_uuid=dict(type='str', ), glm_ping_interval=dict(type='int', ), platform=dict(type='str', ), token=dict(type='str', ), module_list=dict(type='list', notes=dict(type='str', ), module=dict(type='str', ), expiry=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

@@ -116,7 +116,7 @@ def get_argspec():
         health_check_disable=dict(type='bool', ),
         enable=dict(type='bool', ),
         uuid=dict(type='str', ),
-        service_down_action=dict(type='str', choices=['reset','allow'])
+        service_down_action=dict(type='str', choices=['reset', 'allow'])
     ))
    
 

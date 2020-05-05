@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        group=dict(type='str', choices=['query','db-mgr','db-write','queue']),
+        group=dict(type='str', choices=['query', 'db-mgr', 'db-write', 'queue']),
         uuid=dict(type='str', ),
         level=dict(type='int', )
     ))

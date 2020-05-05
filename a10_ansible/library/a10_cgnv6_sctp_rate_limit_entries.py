@@ -112,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', rate_limit_entries_list=dict(type='list', pps=dict(type='int', ),direction=dict(type='str', ),rate_limit=dict(type='int', ),address=dict(type='str', )),entry_count=dict(type='int', )),
+        oper=dict(type='dict', rate_limit_entries_list=dict(type='list', pps=dict(type='int', ), direction=dict(type='str', ), rate_limit=dict(type='int', ), address=dict(type='str', )), entry_count=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

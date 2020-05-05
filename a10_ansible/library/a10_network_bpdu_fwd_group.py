@@ -123,7 +123,7 @@ def get_argspec():
         bpdu_fwd_group_number=dict(type='int', required=True, ),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
-        ethernet_list=dict(type='list', ethernet_start=dict(type='str', ),ethernet_end=dict(type='str', ))
+        ethernet_list=dict(type='list', ethernet_start=dict(type='str', ), ethernet_end=dict(type='str', ))
     ))
    
 

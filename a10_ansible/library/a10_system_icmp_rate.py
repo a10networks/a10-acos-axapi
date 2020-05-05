@@ -150,8 +150,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','over_limit_drop','limit_intf_drop','limit_vserver_drop','limit_total_drop','lockup_time_left','curr_rate','v6_over_limit_drop','v6_limit_intf_drop','v6_limit_vserver_drop','v6_limit_total_drop','v6_lockup_time_left','v6_curr_rate'])),
-        stats=dict(type='dict', lockup_time_left=dict(type='str', ),v6_limit_intf_drop=dict(type='str', ),limit_vserver_drop=dict(type='str', ),v6_limit_vserver_drop=dict(type='str', ),over_limit_drop=dict(type='str', ),v6_over_limit_drop=dict(type='str', ),v6_lockup_time_left=dict(type='str', ),v6_curr_rate=dict(type='str', ),limit_total_drop=dict(type='str', ),v6_limit_total_drop=dict(type='str', ),curr_rate=dict(type='str', ),limit_intf_drop=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'over_limit_drop', 'limit_intf_drop', 'limit_vserver_drop', 'limit_total_drop', 'lockup_time_left', 'curr_rate', 'v6_over_limit_drop', 'v6_limit_intf_drop', 'v6_limit_vserver_drop', 'v6_limit_total_drop', 'v6_lockup_time_left', 'v6_curr_rate'])),
+        stats=dict(type='dict', lockup_time_left=dict(type='str', ), v6_limit_intf_drop=dict(type='str', ), limit_vserver_drop=dict(type='str', ), v6_limit_vserver_drop=dict(type='str', ), over_limit_drop=dict(type='str', ), v6_over_limit_drop=dict(type='str', ), v6_lockup_time_left=dict(type='str', ), v6_curr_rate=dict(type='str', ), limit_total_drop=dict(type='str', ), v6_limit_total_drop=dict(type='str', ), curr_rate=dict(type='str', ), limit_intf_drop=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

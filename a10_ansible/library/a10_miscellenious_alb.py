@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', crash_count=dict(type='int', ),uptime=dict(type='int', ),reboot_num=dict(type='int', )),
+        oper=dict(type='dict', crash_count=dict(type='int', ), uptime=dict(type='int', ), reboot_num=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

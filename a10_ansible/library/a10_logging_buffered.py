@@ -115,7 +115,7 @@ def get_argspec():
     rv.update(dict(
         buffersize=dict(type='int', ),
         partition_buffersize=dict(type='int', ),
-        levelname=dict(type='str', choices=['disable','emergency','alert','critical','error','warning','notification','information','debugging']),
+        levelname=dict(type='str', choices=['disable', 'emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging']),
         uuid=dict(type='str', )
     ))
    

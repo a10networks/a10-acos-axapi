@@ -138,7 +138,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         file=dict(type='str', ),
         verify_xml_signature=dict(type='bool', ),
-        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        action=dict(type='str', choices=['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
         file_handle=dict(type='str', ),
         size=dict(type='int', )
     ))

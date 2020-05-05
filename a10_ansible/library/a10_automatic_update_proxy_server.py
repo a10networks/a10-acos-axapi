@@ -139,7 +139,7 @@ def get_argspec():
         https_port=dict(type='int', ),
         encrypted=dict(type='str', ),
         proxy_host=dict(type='str', ),
-        auth_type=dict(type='str', choices=['ntlm','basic']),
+        auth_type=dict(type='str', choices=['ntlm', 'basic']),
         password=dict(type='bool', ),
         secret_string=dict(type='str', )
     ))

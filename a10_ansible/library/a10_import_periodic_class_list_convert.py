@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        class_list_type=dict(type='str', choices=['ac','ipv4','ipv6','string','string-case-insensitive']),
+        class_list_type=dict(type='str', choices=['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']),
         use_mgmt_port=dict(type='bool', ),
         period=dict(type='int', ),
         remote_file=dict(type='str', ),

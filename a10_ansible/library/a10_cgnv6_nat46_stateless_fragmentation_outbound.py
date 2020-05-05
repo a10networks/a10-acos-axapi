@@ -114,8 +114,8 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         count=dict(type='int', ),
-        action=dict(type='str', choices=['drop','ipv6']),
-        df_set=dict(type='str', choices=['drop','ipv6','send-icmp']),
+        action=dict(type='str', choices=['drop', 'ipv6']),
+        df_set=dict(type='str', choices=['drop', 'ipv6', 'send-icmp']),
         uuid=dict(type='str', )
     ))
    

@@ -133,7 +133,7 @@ def get_argspec():
         key_chain_flag=dict(type='bool', required=True, ),
         user_tag=dict(type='str', ),
         key_chain_name=dict(type='str', required=True, ),
-        key_list=dict(type='list', key_number=dict(type='int', required=True, ),uuid=dict(type='str', ),user_tag=dict(type='str', ),key_string=dict(type='str', )),
+        key_list=dict(type='list', key_number=dict(type='int', required=True, ), uuid=dict(type='str', ), user_tag=dict(type='str', ), key_string=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

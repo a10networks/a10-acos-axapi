@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', app_stat=dict(type='str', ),category_stat=dict(type='str', ),rule=dict(type='str', ),rule_list=dict(type='list', stat_list=dict(type='list', category=dict(type='str', ),conns=dict(type='int', ),bytes=dict(type='int', ),name=dict(type='str', ),ntype=dict(type='str', )),name=dict(type='str', ))),
+        oper=dict(type='dict', app_stat=dict(type='str', ), category_stat=dict(type='str', ), rule=dict(type='str', ), rule_list=dict(type='list', stat_list=dict(type='list', category=dict(type='str', ), conns=dict(type='int', ), bytes=dict(type='int', ), name=dict(type='str', ), ntype=dict(type='str', )), name=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

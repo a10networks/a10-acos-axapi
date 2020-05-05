@@ -151,13 +151,13 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         health_check_disable=dict(type='bool', ),
-        protocol=dict(type='str', required=True, choices=['tcp','udp']),
+        protocol=dict(type='str', required=True, choices=['tcp', 'udp']),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','msgs_sent'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'msgs_sent'])),
         port_number=dict(type='int', required=True, ),
-        action=dict(type='str', choices=['enable','disable']),
-        stats=dict(type='dict', protocol=dict(type='str', required=True, choices=['tcp','udp']),port_number=dict(type='int', required=True, ),msgs_sent=dict(type='str', )),
+        action=dict(type='str', choices=['enable', 'disable']),
+        stats=dict(type='dict', protocol=dict(type='str', required=True, choices=['tcp', 'udp']), port_number=dict(type='int', required=True, ), msgs_sent=dict(type='str', )),
         health_check=dict(type='str', )
     ))
    

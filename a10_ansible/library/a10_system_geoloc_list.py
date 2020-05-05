@@ -165,12 +165,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', geoloc_list=dict(type='list', active=dict(type='int', ),ntype=dict(type='str', ),geoloc_name=dict(type='str', ),hit_count=dict(type='int', )),name=dict(type='str', required=True, )),
-        stats=dict(type='dict', total_geoloc=dict(type='str', ),total_active=dict(type='str', ),hit_count=dict(type='str', ),name=dict(type='str', required=True, )),
+        oper=dict(type='dict', geoloc_list=dict(type='list', active=dict(type='int', ), ntype=dict(type='str', ), geoloc_name=dict(type='str', ), hit_count=dict(type='int', )), name=dict(type='str', required=True, )),
+        stats=dict(type='dict', total_geoloc=dict(type='str', ), total_active=dict(type='str', ), hit_count=dict(type='str', ), name=dict(type='str', required=True, )),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         name=dict(type='str', required=True, ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hit-count','total-geoloc','total-active'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hit-count', 'total-geoloc', 'total-active'])),
         shared=dict(type='bool', ),
         exclude_geoloc_name_list=dict(type='list', exclude_geoloc_name_val=dict(type='str', )),
         include_geoloc_name_list=dict(type='list', include_geoloc_name_val=dict(type='str', ))

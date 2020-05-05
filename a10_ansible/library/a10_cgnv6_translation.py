@@ -145,8 +145,8 @@ def get_argspec():
     rv.update(dict(
         tcp_timeout=dict(type='int', ),
         udp_timeout=dict(type='int', ),
-        service_timeout_list=dict(type='list', service_type=dict(type='str', required=True, choices=['tcp','udp']),uuid=dict(type='str', ),timeout_val=dict(type='int', ),port_end=dict(type='int', ),fast=dict(type='bool', ),port=dict(type='int', required=True, )),
-        icmp_timeout=dict(type='dict', icmp_timeout_val=dict(type='int', ),fast=dict(type='bool', )),
+        service_timeout_list=dict(type='list', service_type=dict(type='str', required=True, choices=['tcp', 'udp']), uuid=dict(type='str', ), timeout_val=dict(type='int', ), port_end=dict(type='int', ), fast=dict(type='bool', ), port=dict(type='int', required=True, )),
+        icmp_timeout=dict(type='dict', icmp_timeout_val=dict(type='int', ), fast=dict(type='bool', )),
         uuid=dict(type='str', )
     ))
    

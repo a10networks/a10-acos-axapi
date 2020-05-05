@@ -115,7 +115,7 @@ def get_argspec():
     rv.update(dict(
         read=dict(type='str', ),
         groupname=dict(type='str', required=True, ),
-        v3=dict(type='str', choices=['auth','noauth','priv']),
+        v3=dict(type='str', choices=['auth', 'noauth', 'priv']),
         uuid=dict(type='str', )
     ))
    

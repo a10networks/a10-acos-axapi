@@ -138,7 +138,7 @@ def get_argspec():
         ipv6_enable=dict(type='bool', ),
         delim_num=dict(type='int', ),
         delim_char=dict(type='str', ),
-        multiple_fields=dict(type='list', field=dict(type='int', ),csv_type=dict(type='str', choices=['ip-from','ip-to-mask','continent','country','state','city']))
+        multiple_fields=dict(type='list', field=dict(type='int', ), csv_type=dict(type='str', choices=['ip-from', 'ip-to-mask', 'continent', 'country', 'state', 'city']))
     ))
    
 

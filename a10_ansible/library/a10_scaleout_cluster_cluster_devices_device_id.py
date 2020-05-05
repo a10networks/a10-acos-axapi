@@ -120,7 +120,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str', choices=['enable','disable']),
+        action=dict(type='str', choices=['enable', 'disable']),
         device_id=dict(type='int', required=True, ),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),

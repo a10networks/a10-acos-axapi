@@ -138,8 +138,8 @@ def get_argspec():
         name=dict(type='str', required=True, ),
         ca=dict(type='str', ),
         user_tag=dict(type='str', ),
-        ocsp=dict(type='dict', ocsp_pri=dict(type='str', ),ocsp_sec=dict(type='str', )),
-        crl=dict(type='dict', crl_sec=dict(type='str', ),crl_pri=dict(type='str', )),
+        ocsp=dict(type='dict', ocsp_pri=dict(type='str', ), ocsp_sec=dict(type='str', )),
+        crl=dict(type='dict', crl_sec=dict(type='str', ), crl_pri=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

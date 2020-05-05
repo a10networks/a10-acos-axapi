@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', max_token_cache=dict(type='int', ),cache_list=dict(type='list', client_ip=dict(type='str', ),audience=dict(type='str', ),ttl=dict(type='int', ),cache_id=dict(type='int', ),subject=dict(type='str', ),issuer=dict(type='str', )),audience=dict(type='str', ),token_cached=dict(type='int', ),token_cache_hit=dict(type='int', )),
+        oper=dict(type='dict', max_token_cache=dict(type='int', ), cache_list=dict(type='list', client_ip=dict(type='str', ), audience=dict(type='str', ), ttl=dict(type='int', ), cache_id=dict(type='int', ), subject=dict(type='str', ), issuer=dict(type='str', )), audience=dict(type='str', ), token_cached=dict(type='int', ), token_cache_hit=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

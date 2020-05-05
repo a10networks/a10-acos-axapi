@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', port_list=dict(type='list', tunnel=dict(type='int', ),action=dict(type='str', ),management=dict(type='int', ),ve=dict(type='int', ),ethernet=dict(type='int', ))),
+        oper=dict(type='dict', port_list=dict(type='list', tunnel=dict(type='int', ), action=dict(type='str', ), management=dict(type='int', ), ve=dict(type='int', ), ethernet=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

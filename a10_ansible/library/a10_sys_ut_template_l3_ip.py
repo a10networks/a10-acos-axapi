@@ -146,7 +146,7 @@ def get_argspec():
     rv.update(dict(
         ipv4_end_address=dict(type='str', ),
         ipv6_start_address=dict(type='str', ),
-        src_dst=dict(type='str', required=True, choices=['dest','src']),
+        src_dst=dict(type='str', required=True, choices=['dest', 'src']),
         ve=dict(type='str', ),
         nat_pool=dict(type='str', ),
         ipv4_start_address=dict(type='str', ),

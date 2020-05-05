@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', virtual_server=dict(type='str', ),virtual_port=dict(type='int', ),map_entries_list_head=dict(type='list', service_type=dict(type='str', ),map_entries_list=dict(type='list', cur_standby=dict(type='int', ),new_standby=dict(type='int', ),new_active=dict(type='int', ),user_group=dict(type='int', ),cur_active=dict(type='int', )),service_name=dict(type='str', )),src_ip=dict(type='str', ),tbl_num=dict(type='int', )),
+        oper=dict(type='dict', virtual_server=dict(type='str', ), virtual_port=dict(type='int', ), map_entries_list_head=dict(type='list', service_type=dict(type='str', ), map_entries_list=dict(type='list', cur_standby=dict(type='int', ), new_standby=dict(type='int', ), new_active=dict(type='int', ), user_group=dict(type='int', ), cur_active=dict(type='int', )), service_name=dict(type='str', )), src_ip=dict(type='str', ), tbl_num=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', local_ip=dict(type='str', ),ike_gateway_name=dict(type='str', ),ipsec_sa_list=dict(type='list', lifebytes=dict(type='str', ),protocol=dict(type='str', ),remote_ts=dict(type='str', ),out_spi=dict(type='str', ),local_ts=dict(type='str', ),ipsec_sa_name=dict(type='str', ),in_spi=dict(type='str', ),mode=dict(type='str', ),encryption=dict(type='str', ),lifetime=dict(type='int', ),hash=dict(type='str', )),peer_ip=dict(type='str', )),
+        oper=dict(type='dict', local_ip=dict(type='str', ), ike_gateway_name=dict(type='str', ), ipsec_sa_list=dict(type='list', lifebytes=dict(type='str', ), protocol=dict(type='str', ), remote_ts=dict(type='str', ), out_spi=dict(type='str', ), local_ts=dict(type='str', ), ipsec_sa_name=dict(type='str', ), in_spi=dict(type='str', ), mode=dict(type='str', ), encryption=dict(type='str', ), lifetime=dict(type='int', ), hash=dict(type='str', )), peer_ip=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

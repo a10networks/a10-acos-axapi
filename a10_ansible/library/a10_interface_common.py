@@ -121,7 +121,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', interfaces=dict(type='list', type_vendor_part=dict(type='str', ),port_num=dict(type='str', ),transceivers_info=dict(type='list', lane=dict(type='int', ),hi_alarm=dict(type='str', ),curr=dict(type='str', ),hi_warn=dict(type='str', ),lo_warn=dict(type='str', ),lo_alarm=dict(type='str', ),transceiver_type=dict(type='str', )),is_part_default_vlan=dict(type='str', ),rate_pkt_rcvd=dict(type='int', ),rate_byte_sent=dict(type='int', ),total_lane=dict(type='int', ),rate_pkt_sent=dict(type='int', ),rate_byte_rcvd=dict(type='int', ),port_type=dict(type='str', )),interval=dict(type='int', ),tot_num_phy_intf=dict(type='int', ),vnp_id=dict(type='int', ),time=dict(type='str', )),
+        oper=dict(type='dict', interfaces=dict(type='list', type_vendor_part=dict(type='str', ), port_num=dict(type='str', ), transceivers_info=dict(type='list', lane=dict(type='int', ), hi_alarm=dict(type='str', ), curr=dict(type='str', ), hi_warn=dict(type='str', ), lo_warn=dict(type='str', ), lo_alarm=dict(type='str', ), transceiver_type=dict(type='str', )), is_part_default_vlan=dict(type='str', ), rate_pkt_rcvd=dict(type='int', ), rate_byte_sent=dict(type='int', ), total_lane=dict(type='int', ), rate_pkt_sent=dict(type='int', ), rate_byte_rcvd=dict(type='int', ), port_type=dict(type='str', )), interval=dict(type='int', ), tot_num_phy_intf=dict(type='int', ), vnp_id=dict(type='int', ), time=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

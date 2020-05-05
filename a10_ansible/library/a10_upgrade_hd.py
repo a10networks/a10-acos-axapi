@@ -136,7 +136,7 @@ def get_argspec():
         rollback=dict(type='bool', ),
         reboot_after_upgrade=dict(type='bool', ),
         use_mgmt_port=dict(type='bool', ),
-        image=dict(type='str', choices=['pri','sec']),
+        image=dict(type='str', choices=['pri', 'sec']),
         source_ip_address=dict(type='str', ),
         Device=dict(type='int', ),
         local=dict(type='str', ),

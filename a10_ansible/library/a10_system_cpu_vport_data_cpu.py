@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', vport_cpu_usage=dict(type='list', vport_type=dict(type='str', ),protocol=dict(type='str', ),vserver_name=dict(type='str', ),cpu_id=dict(type='int', ),30_sec=dict(type='int', ),dcpu_str=dict(type='str', ),60_sec=dict(type='int', ),10_sec=dict(type='int', ),portNumber=dict(type='int', ),5_sec=dict(type='int', ),1_sec=dict(type='int', ))),
+        oper=dict(type='dict', vport_cpu_usage=dict(type='list', vport_type=dict(type='str', ), protocol=dict(type='str', ), vserver_name=dict(type='str', ), cpu_id=dict(type='int', ), 30_sec=dict(type='int', ), dcpu_str=dict(type='str', ), 60_sec=dict(type='int', ), 10_sec=dict(type='int', ), portNumber=dict(type='int', ), 5_sec=dict(type='int', ), 1_sec=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

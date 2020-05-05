@@ -130,7 +130,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', active_node=dict(type='int', ),user_group=dict(type='int', ),standby_node=dict(type='int', ),ip=dict(type='str', ),nat_ip=dict(type='str', ),nat_pool=dict(type='str', ),ip_list=dict(type='list', start_nat_ip=dict(type='str', ),end_nat_ip=dict(type='str', )),ipv6=dict(type='str', )),
+        oper=dict(type='dict', active_node=dict(type='int', ), user_group=dict(type='int', ), standby_node=dict(type='int', ), ip=dict(type='str', ), nat_ip=dict(type='str', ), nat_pool=dict(type='str', ), ip_list=dict(type='list', start_nat_ip=dict(type='str', ), end_nat_ip=dict(type='str', )), ipv6=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

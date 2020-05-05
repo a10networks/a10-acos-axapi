@@ -138,7 +138,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        checksum=dict(type='str', choices=['valid','invalid']),
+        checksum=dict(type='str', choices=['valid', 'invalid']),
         nat_pool=dict(type='str', ),
         src_port=dict(type='int', ),
         length=dict(type='int', ),

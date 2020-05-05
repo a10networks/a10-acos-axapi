@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', msg_info_list=dict(type='list', descriptive_name=dict(type='str', ),message_id=dict(type='str', ),description=dict(type='str', ),cef_importance=dict(type='int', ),signature=dict(type='str', ),rate_limit_support=dict(type='str', ),configured_severity=dict(type='int', ),supported_formats=dict(type='str', ),message_number=dict(type='int', ),defined_severity=dict(type='int', ))),
+        oper=dict(type='dict', msg_info_list=dict(type='list', descriptive_name=dict(type='str', ), message_id=dict(type='str', ), description=dict(type='str', ), cef_importance=dict(type='int', ), signature=dict(type='str', ), rate_limit_support=dict(type='str', ), configured_severity=dict(type='int', ), supported_formats=dict(type='str', ), message_number=dict(type='int', ), defined_severity=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

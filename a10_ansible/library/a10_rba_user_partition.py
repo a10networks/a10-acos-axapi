@@ -135,7 +135,7 @@ def get_argspec():
         role_list=dict(type='list', role=dict(type='str', )),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
-        rule_list=dict(type='list', operation=dict(type='str', choices=['no-access','read','oper','write']),object=dict(type='str', ))
+        rule_list=dict(type='list', operation=dict(type='str', choices=['no-access', 'read', 'oper', 'write']), object=dict(type='str', ))
     ))
    
     # Parent keys

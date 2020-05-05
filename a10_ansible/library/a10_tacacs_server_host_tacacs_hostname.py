@@ -140,7 +140,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        secret=dict(type='dict', source_ipv6=dict(type='str', ),source_trunk=dict(type='str', ),source_ve=dict(type='str', ),encrypted=dict(type='str', ),source_ip=dict(type='str', ),source_eth=dict(type='str', ),port_cfg=dict(type='dict', username=dict(type='str', ),monitor=dict(type='bool', ),encrypted=dict(type='str', ),timeout=dict(type='int', ),password_value=dict(type='str', ),password=dict(type='bool', ),port=dict(type='int', )),source_lif=dict(type='int', ),source_loopback=dict(type='str', ),secret_value=dict(type='str', )),
+        secret=dict(type='dict', source_ipv6=dict(type='str', ), source_trunk=dict(type='str', ), source_ve=dict(type='str', ), encrypted=dict(type='str', ), source_ip=dict(type='str', ), source_eth=dict(type='str', ), port_cfg=dict(type='dict', username=dict(type='str', ), monitor=dict(type='bool', ), encrypted=dict(type='str', ), timeout=dict(type='int', ), password_value=dict(type='str', ), password=dict(type='bool', ), port=dict(type='int', )), source_lif=dict(type='int', ), source_loopback=dict(type='str', ), secret_value=dict(type='str', )),
         hostname=dict(type='str', required=True, ),
         uuid=dict(type='str', )
     ))

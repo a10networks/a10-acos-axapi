@@ -141,7 +141,7 @@ def get_argspec():
     rv.update(dict(
         ve=dict(type='str', ),
         virtual_server=dict(type='str', ),
-        src_dst=dict(type='str', required=True, choices=['dest','src']),
+        src_dst=dict(type='str', required=True, choices=['dest', 'src']),
         nat_pool=dict(type='str', ),
         trunk=dict(type='str', ),
         ipv6_address=dict(type='str', ),

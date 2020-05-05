@@ -105,7 +105,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str', choices=['enable-buff-debug','disable-buff-debug']),
+        action=dict(type='str', choices=['enable-buff-debug', 'disable-buff-debug']),
         uuid=dict(type='str', )
     ))
    

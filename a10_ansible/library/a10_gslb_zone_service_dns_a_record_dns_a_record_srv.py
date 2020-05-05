@@ -167,11 +167,11 @@ def get_argspec():
     rv.update(dict(
         as_backup=dict(type='bool', ),
         as_replace=dict(type='bool', ),
-        stats=dict(type='dict', hits=dict(type='str', ),svrname=dict(type='str', required=True, )),
+        stats=dict(type='dict', hits=dict(type='str', ), svrname=dict(type='str', required=True, )),
         uuid=dict(type='str', ),
         weight=dict(type='int', ),
         svrname=dict(type='str', required=True, ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
         disable=dict(type='bool', ),
         static=dict(type='bool', ),
         ttl=dict(type='int', ),

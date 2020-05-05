@@ -116,7 +116,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rules_list=dict(type='list', standard_action=dict(type='str', choices=['deny','permit']),standard_value=dict(type='str', )),
+        rules_list=dict(type='list', standard_action=dict(type='str', choices=['deny', 'permit']), standard_value=dict(type='str', )),
         uuid=dict(type='str', ),
         standard=dict(type='str', required=True, )
     ))

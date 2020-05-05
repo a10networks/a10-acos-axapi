@@ -142,7 +142,7 @@ def get_argspec():
     rv.update(dict(
         port_start=dict(type='int', ),
         name=dict(type='str', required=True, ),
-        ipv4_address_port_settings=dict(type='str', choices=['prefix-addr','single-addr','shared-addr']),
+        ipv4_address_port_settings=dict(type='str', choices=['prefix-addr', 'single-addr', 'shared-addr']),
         ipv4_netmask=dict(type='str', ),
         rule_ipv4_prefix=dict(type='str', ),
         user_tag=dict(type='str', ),

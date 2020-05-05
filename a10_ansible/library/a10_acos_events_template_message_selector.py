@@ -126,7 +126,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        collector_group_list=dict(type='list', name=dict(type='str', required=True, ),user_tag=dict(type='str', ),uuid=dict(type='str', )),
+        collector_group_list=dict(type='list', name=dict(type='str', required=True, ), user_tag=dict(type='str', ), uuid=dict(type='str', )),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         uuid=dict(type='str', )

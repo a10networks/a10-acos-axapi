@@ -112,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', entry_list=dict(type='list', nat_end_port=dict(type='int', ),tunnel_dest_address=dict(type='str', ),inside_start_port=dict(type='int', ),nat_address=dict(type='str', ),tunnel_src_address=dict(type='str', ),inside_end_port=dict(type='int', ),nat_start_port=dict(type='int', ),inside_address=dict(type='str', )),entry_count=dict(type='int', )),
+        oper=dict(type='dict', entry_list=dict(type='list', nat_end_port=dict(type='int', ), tunnel_dest_address=dict(type='str', ), inside_start_port=dict(type='int', ), nat_address=dict(type='str', ), tunnel_src_address=dict(type='str', ), inside_end_port=dict(type='int', ), nat_start_port=dict(type='int', ), inside_address=dict(type='str', )), entry_count=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

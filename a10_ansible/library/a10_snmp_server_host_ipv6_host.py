@@ -126,7 +126,7 @@ def get_argspec():
         udp_port=dict(type='int', ),
         v1_v2c_comm=dict(type='str', ),
         user=dict(type='str', ),
-        version=dict(type='str', required=True, choices=['v1','v2c','v3'])
+        version=dict(type='str', required=True, choices=['v1', 'v2c', 'v3'])
     ))
    
 

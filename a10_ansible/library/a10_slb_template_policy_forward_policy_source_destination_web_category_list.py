@@ -142,13 +142,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict', web_category_list=dict(type='str', required=True, ),hits=dict(type='str', )),
+        stats=dict(type='dict', web_category_list=dict(type='str', required=True, ), hits=dict(type='str', )),
         uuid=dict(type='str', ),
         web_category_list=dict(type='str', required=True, ),
         priority=dict(type='int', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
         action=dict(type='str', ),
-        ntype=dict(type='str', choices=['host','url'])
+        ntype=dict(type='str', choices=['host', 'url'])
     ))
    
     # Parent keys

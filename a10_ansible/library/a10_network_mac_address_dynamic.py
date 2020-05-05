@@ -112,7 +112,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', Age_time=dict(type='int', ),macoper=dict(type='list', Index=dict(type='int', ),Age=dict(type='int', ),Vlan=dict(type='int', ),MAC_Address=dict(type='str', ),Type=dict(type='str', choices=['Dynamic','Static']),Port=dict(type='int', ))),
+        oper=dict(type='dict', Age_time=dict(type='int', ), macoper=dict(type='list', Index=dict(type='int', ), Age=dict(type='int', ), Vlan=dict(type='int', ), MAC_Address=dict(type='str', ), Type=dict(type='str', choices=['Dynamic', 'Static']), Port=dict(type='int', ))),
         uuid=dict(type='str', )
     ))
    

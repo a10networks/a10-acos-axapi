@@ -141,7 +141,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         claim=dict(type='str', ),
-        bool_val=dict(type='str', choices=['true','false']),
+        bool_val=dict(type='str', choices=['true', 'false']),
         uuid=dict(type='str', ),
         string_type=dict(type='bool', ),
         str_val=dict(type='str', ),

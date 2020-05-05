@@ -124,7 +124,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', cluster_id=dict(type='str', ),tenant_name=dict(type='str', ),partition_name=dict(type='str', ),cluster_name=dict(type='str', ),tenant_id=dict(type='str', ),log_rate_per_sec=dict(type='int', )),
+        oper=dict(type='dict', cluster_id=dict(type='str', ), tenant_name=dict(type='str', ), partition_name=dict(type='str', ), cluster_name=dict(type='str', ), tenant_id=dict(type='str', ), log_rate_per_sec=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

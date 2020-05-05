@@ -113,7 +113,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         domain_name=dict(type='str', required=True, ),
-        bind_type=dict(type='str', required=True, choices=['inside','outside']),
+        bind_type=dict(type='str', required=True, choices=['inside', 'outside']),
         uuid=dict(type='str', )
     ))
    

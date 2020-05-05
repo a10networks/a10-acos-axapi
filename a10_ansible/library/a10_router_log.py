@@ -127,7 +127,7 @@ def get_argspec():
     rv.update(dict(
         log_buffer=dict(type='bool', ),
         uuid=dict(type='str', ),
-        file=dict(type='dict', size=dict(type='int', ),rotate=dict(type='int', ),uuid=dict(type='str', ),per_protocol=dict(type='bool', ),name=dict(type='str', ))
+        file=dict(type='dict', size=dict(type='int', ), rotate=dict(type='int', ), uuid=dict(type='str', ), per_protocol=dict(type='bool', ), name=dict(type='str', ))
     ))
    
 

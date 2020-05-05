@@ -182,7 +182,7 @@ def get_argspec():
         name=dict(type='str', required=True, ),
         icmp_lockup_period=dict(type='int', ),
         conn_limit_reset=dict(type='bool', ),
-        rate_interval=dict(type='str', choices=['100ms','second']),
+        rate_interval=dict(type='str', choices=['100ms', 'second']),
         user_tag=dict(type='str', ),
         icmpv6_rate_limit=dict(type='int', ),
         subnet_gratuitous_arp=dict(type='bool', ),

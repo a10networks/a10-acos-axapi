@@ -126,7 +126,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        audit_facility=dict(type='str', choices=['local0','local1','local2','local3','local4','local5','local6','local7']),
+        audit_facility=dict(type='str', choices=['local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7']),
         partition_name=dict(type='str', ),
         host6=dict(type='str', ),
         host4=dict(type='str', ),

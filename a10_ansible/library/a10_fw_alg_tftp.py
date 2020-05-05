@@ -123,7 +123,7 @@ def get_argspec():
     rv.update(dict(
         default_port_disable=dict(type='str', choices=['default-port-disable']),
         stats=dict(type='dict', session_created=dict(type='str', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','session-created','helper-created','helper-freed','helper-freed-used','helper-freed-unused','helper-already-used','helper-in-rml'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml'])),
         uuid=dict(type='str', )
     ))
    

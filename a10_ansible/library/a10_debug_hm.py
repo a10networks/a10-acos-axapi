@@ -116,7 +116,7 @@ def get_argspec():
         level=dict(type='int', ),
         pin_uid=dict(type='int', ),
         uuid=dict(type='str', ),
-        method_type=dict(type='str', choices=['icmp','tcp','udp','ftp','http','snmp','smtp','dns','dns-tcp','pop3','imap','sip','sip-tcp','radius','ldap','rtsp','kerberos-kdc','database','external','https','ntp','compound'])
+        method_type=dict(type='str', choices=['icmp', 'tcp', 'udp', 'ftp', 'http', 'snmp', 'smtp', 'dns', 'dns-tcp', 'pop3', 'imap', 'sip', 'sip-tcp', 'radius', 'ldap', 'rtsp', 'kerberos-kdc', 'database', 'external', 'https', 'ntp', 'compound'])
     ))
    
 

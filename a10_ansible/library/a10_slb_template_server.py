@@ -222,7 +222,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         health_check_disable=dict(type='bool', ),
-        stats_data_action=dict(type='str', choices=['stats-data-enable','stats-data-disable']),
+        stats_data_action=dict(type='str', choices=['stats-data-enable', 'stats-data-disable']),
         slow_start=dict(type='bool', ),
         weight=dict(type='int', ),
         bw_rate_limit=dict(type='int', ),
@@ -231,7 +231,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         resume=dict(type='int', ),
         max_dynamic_server=dict(type='int', ),
-        rate_interval=dict(type='str', choices=['100ms','second']),
+        rate_interval=dict(type='str', choices=['100ms', 'second']),
         till=dict(type='int', ),
         add=dict(type='int', ),
         min_ttl_ratio=dict(type='int', ),
@@ -245,7 +245,7 @@ def get_argspec():
         name=dict(type='str', required=True, ),
         bw_rate_limit_duration=dict(type='int', ),
         bw_rate_limit_resume=dict(type='int', ),
-        bw_rate_limit_acct=dict(type='str', choices=['to-server-only','from-server-only','all']),
+        bw_rate_limit_acct=dict(type='str', choices=['to-server-only', 'from-server-only', 'all']),
         user_tag=dict(type='str', ),
         times=dict(type='int', ),
         log_selection_failure=dict(type='bool', ),

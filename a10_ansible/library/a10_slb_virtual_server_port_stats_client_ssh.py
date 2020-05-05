@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict', client_ssh=dict(type='dict', forwarding_errors=dict(type='str', ),successful_handshakes=dict(type='str', ),failed_handshakes=dict(type='str', ))),
+        stats=dict(type='dict', client_ssh=dict(type='dict', forwarding_errors=dict(type='str', ), successful_handshakes=dict(type='str', ), failed_handshakes=dict(type='str', ))),
         name=dict(type='str', required=True, )
     ))
    

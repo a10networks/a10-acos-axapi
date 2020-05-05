@@ -175,10 +175,10 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         description=dict(type='str', ),
-        rules=dict(type='list', host_v6=dict(type='str', ),subnet=dict(type='str', ),host_v4=dict(type='str', ),ip_range_end=dict(type='str', ),any=dict(type='bool', ),slb_vserver=dict(type='str', ),fw_ipv6_subnet=dict(type='str', ),ipv6_subnet=dict(type='str', ),seq_num=dict(type='int', ),obj_network=dict(type='str', ),ipv6_range_end=dict(type='str', ),ipv6_range_start=dict(type='str', ),slb_server=dict(type='str', ),rev_subnet_mask=dict(type='str', ),fw_ipv4_address=dict(type='str', ),ip_range_start=dict(type='str', )),
+        rules=dict(type='list', host_v6=dict(type='str', ), subnet=dict(type='str', ), host_v4=dict(type='str', ), ip_range_end=dict(type='str', ), any=dict(type='bool', ), slb_vserver=dict(type='str', ), fw_ipv6_subnet=dict(type='str', ), ipv6_subnet=dict(type='str', ), seq_num=dict(type='int', ), obj_network=dict(type='str', ), ipv6_range_end=dict(type='str', ), ipv6_range_start=dict(type='str', ), slb_server=dict(type='str', ), rev_subnet_mask=dict(type='str', ), fw_ipv4_address=dict(type='str', ), ip_range_start=dict(type='str', )),
         user_tag=dict(type='str', ),
-        ip_version=dict(type='str', choices=['v4','v6']),
-        usage=dict(type='str', choices=['acl','fw']),
+        ip_version=dict(type='str', choices=['v4', 'v6']),
+        usage=dict(type='str', choices=['acl', 'fw']),
         net_name=dict(type='str', required=True, ),
         uuid=dict(type='str', )
     ))

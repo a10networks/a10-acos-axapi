@@ -121,7 +121,7 @@ def get_argspec():
     rv.update(dict(
         ipv6=dict(type='str', required=True, ),
         uuid=dict(type='str', ),
-        interface_ipv6=dict(type='dict', ipv6_ve=dict(type='int', ),ipv6_eth=dict(type='str', ),ipv6_mgmt=dict(type='bool', ))
+        interface_ipv6=dict(type='dict', ipv6_ve=dict(type='int', ), ipv6_eth=dict(type='str', ), ipv6_mgmt=dict(type='bool', ))
     ))
    
 

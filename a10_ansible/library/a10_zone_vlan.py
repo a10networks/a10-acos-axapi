@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vlan_list=dict(type='list', vlan_start=dict(type='int', ),vlan_end=dict(type='int', )),
+        vlan_list=dict(type='list', vlan_start=dict(type='int', ), vlan_end=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

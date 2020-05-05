@@ -149,8 +149,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str', choices=['enable','disable']),
-        oper=dict(type='dict', pri_type=dict(type='str', ),sec_l4_port=dict(type='int', ),sec_l4_proto=dict(type='int', ),file_name=dict(type='str', ),pri_ipv6_addr=dict(type='str', ),pri_l4_port=dict(type='int', ),pri_l4_proto=dict(type='int', ),pri_ipv4_addr=dict(type='str', ),monitor_type=dict(type='str', ),sec_ipv6_addr=dict(type='str', ),proc_metric_list=dict(type='list', metric_attr_list=dict(type='list', metric_attr_name=dict(type='str', ),metric_attr_value=dict(type='str', )),metric_name=dict(type='str', )),sec_ipv4_addr=dict(type='str', ),sec_type=dict(type='str', )),
+        action=dict(type='str', choices=['enable', 'disable']),
+        oper=dict(type='dict', pri_type=dict(type='str', ), sec_l4_port=dict(type='int', ), sec_l4_proto=dict(type='int', ), file_name=dict(type='str', ), pri_ipv6_addr=dict(type='str', ), pri_l4_port=dict(type='int', ), pri_l4_proto=dict(type='int', ), pri_ipv4_addr=dict(type='str', ), monitor_type=dict(type='str', ), sec_ipv6_addr=dict(type='str', ), proc_metric_list=dict(type='list', metric_attr_list=dict(type='list', metric_attr_name=dict(type='str', ), metric_attr_value=dict(type='str', )), metric_name=dict(type='str', )), sec_ipv4_addr=dict(type='str', ), sec_type=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

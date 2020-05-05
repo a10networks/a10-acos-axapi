@@ -262,7 +262,7 @@ def get_argspec():
         ipv4_address=dict(type='str', ),
         port=dict(type='bool', ),
         port_num_min=dict(type='int', ),
-        oper_range=dict(type='str', choices=['gt','gte','se','st','eq']),
+        oper_range=dict(type='str', choices=['gt', 'gte', 'se', 'st', 'eq']),
         ipv6_adddress=dict(type='str', ),
         WORD=dict(type='str', ),
         comp_hex=dict(type='str', ),

@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', if_list=dict(type='list', IF_Status=dict(type='str', choices=['pristine','owned']),IF_Num=dict(type='int', ),IF_Type=dict(type='str', choices=['trunk']))),
+        oper=dict(type='dict', if_list=dict(type='list', IF_Status=dict(type='str', choices=['pristine', 'owned']), IF_Num=dict(type='int', ), IF_Type=dict(type='str', choices=['trunk']))),
         uuid=dict(type='str', )
     ))
    

@@ -156,8 +156,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','requests-to-a10saml','responses-from-a10saml','sp-metadata-export-req','sp-metadata-export-success','login-auth-req','login-auth-resp','acs-req','acs-success','acs-authz-fail','acs-error','slo-req','slo-success','slo-error','other-error'])),
-        stats=dict(type='dict', responses_from_a10saml=dict(type='str', ),login_auth_req=dict(type='str', ),slo_error=dict(type='str', ),requests_to_a10saml=dict(type='str', ),sp_metadata_export_success=dict(type='str', ),acs_authz_fail=dict(type='str', ),slo_req=dict(type='str', ),login_auth_resp=dict(type='str', ),slo_success=dict(type='str', ),acs_success=dict(type='str', ),acs_error=dict(type='str', ),other_error=dict(type='str', ),acs_req=dict(type='str', ),sp_metadata_export_req=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'requests-to-a10saml', 'responses-from-a10saml', 'sp-metadata-export-req', 'sp-metadata-export-success', 'login-auth-req', 'login-auth-resp', 'acs-req', 'acs-success', 'acs-authz-fail', 'acs-error', 'slo-req', 'slo-success', 'slo-error', 'other-error'])),
+        stats=dict(type='dict', responses_from_a10saml=dict(type='str', ), login_auth_req=dict(type='str', ), slo_error=dict(type='str', ), requests_to_a10saml=dict(type='str', ), sp_metadata_export_success=dict(type='str', ), acs_authz_fail=dict(type='str', ), slo_req=dict(type='str', ), login_auth_resp=dict(type='str', ), slo_success=dict(type='str', ), acs_success=dict(type='str', ), acs_error=dict(type='str', ), other_error=dict(type='str', ), acs_req=dict(type='str', ), sp_metadata_export_req=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

@@ -111,7 +111,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        location=dict(type='str', choices=['top','before','after','bottom']),
+        location=dict(type='str', choices=['top', 'before', 'after', 'bottom']),
         target_rule=dict(type='str', )
     ))
    

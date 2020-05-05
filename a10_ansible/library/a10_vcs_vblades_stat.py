@@ -163,9 +163,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','slave_recv_err','slave_send_err','slave_recv_bytes','slave_sent_bytes','slave_n_recv','slave_n_sent','slave_msg_inval','slave_keepalive','slave_cfg_upd','slave_cfg_upd_l1_fail','slave_cfg_upd_r_fail','slave_cfg_upd_l2_fail','slave_cfg_upd_notif_err','slave_cfg_upd_result_err'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'slave_recv_err', 'slave_send_err', 'slave_recv_bytes', 'slave_sent_bytes', 'slave_n_recv', 'slave_n_sent', 'slave_msg_inval', 'slave_keepalive', 'slave_cfg_upd', 'slave_cfg_upd_l1_fail', 'slave_cfg_upd_r_fail', 'slave_cfg_upd_l2_fail', 'slave_cfg_upd_notif_err', 'slave_cfg_upd_result_err'])),
         vblade_id=dict(type='int', required=True, ),
-        stats=dict(type='dict', slave_recv_bytes=dict(type='str', ),slave_cfg_upd_r_fail=dict(type='str', ),slave_cfg_upd_result_err=dict(type='str', ),slave_cfg_upd=dict(type='str', ),slave_msg_inval=dict(type='str', ),slave_n_recv=dict(type='str', ),slave_cfg_upd_notif_err=dict(type='str', ),slave_keepalive=dict(type='str', ),slave_recv_err=dict(type='str', ),slave_n_sent=dict(type='str', ),vblade_id=dict(type='int', required=True, ),slave_send_err=dict(type='str', ),slave_cfg_upd_l1_fail=dict(type='str', ),slave_cfg_upd_l2_fail=dict(type='str', ),slave_sent_bytes=dict(type='str', )),
+        stats=dict(type='dict', slave_recv_bytes=dict(type='str', ), slave_cfg_upd_r_fail=dict(type='str', ), slave_cfg_upd_result_err=dict(type='str', ), slave_cfg_upd=dict(type='str', ), slave_msg_inval=dict(type='str', ), slave_n_recv=dict(type='str', ), slave_cfg_upd_notif_err=dict(type='str', ), slave_keepalive=dict(type='str', ), slave_recv_err=dict(type='str', ), slave_n_sent=dict(type='str', ), vblade_id=dict(type='int', required=True, ), slave_send_err=dict(type='str', ), slave_cfg_upd_l1_fail=dict(type='str', ), slave_cfg_upd_l2_fail=dict(type='str', ), slave_sent_bytes=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

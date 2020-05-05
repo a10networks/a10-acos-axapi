@@ -173,7 +173,7 @@ def get_argspec():
         send=dict(type='dict', license_request=dict(type='bool', )),
         token=dict(type='str', ),
         enterprise=dict(type='str', ),
-        proxy_server=dict(type='dict', username=dict(type='str', ),uuid=dict(type='str', ),encrypted=dict(type='str', ),host=dict(type='str', ),password=dict(type='bool', ),port=dict(type='int', ),secret_string=dict(type='str', )),
+        proxy_server=dict(type='dict', username=dict(type='str', ), uuid=dict(type='str', ), encrypted=dict(type='str', ), host=dict(type='str', ), password=dict(type='bool', ), port=dict(type='int', ), secret_string=dict(type='str', )),
         appliance_name=dict(type='str', ),
         enable_requests=dict(type='bool', ),
         allocate_bandwidth=dict(type='int', ),

@@ -170,10 +170,10 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str', ),
         system_description=dict(type='str', ),
-        management_address=dict(type='dict', ipv6_addr_list=dict(type='list', ipv6=dict(type='str', required=True, ),uuid=dict(type='str', ),interface_ipv6=dict(type='dict', ipv6_ve=dict(type='int', ),ipv6_eth=dict(type='str', ),ipv6_mgmt=dict(type='bool', ))),ipv4_addr_list=dict(type='list', interface_ipv4=dict(type='dict', ipv4_eth=dict(type='str', ),ipv4_mgmt=dict(type='bool', ),ipv4_ve=dict(type='int', )),uuid=dict(type='str', ),ipv4=dict(type='str', required=True, )),dns_list=dict(type='list', interface=dict(type='dict', ethernet=dict(type='str', ),management=dict(type='bool', ),ve=dict(type='int', )),uuid=dict(type='str', ),dns=dict(type='str', required=True, ))),
-        notification_cfg=dict(type='dict', notification=dict(type='bool', ),interval=dict(type='int', )),
-        tx_set=dict(type='dict', fast_interval=dict(type='int', ),fast_count=dict(type='int', ),hold=dict(type='int', ),tx_interval=dict(type='int', ),reinit_delay=dict(type='int', )),
-        enable_cfg=dict(type='dict', enable=dict(type='bool', ),rx=dict(type='bool', ),tx=dict(type='bool', )),
+        management_address=dict(type='dict', ipv6_addr_list=dict(type='list', ipv6=dict(type='str', required=True, ), uuid=dict(type='str', ), interface_ipv6=dict(type='dict', ipv6_ve=dict(type='int', ), ipv6_eth=dict(type='str', ), ipv6_mgmt=dict(type='bool', ))), ipv4_addr_list=dict(type='list', interface_ipv4=dict(type='dict', ipv4_eth=dict(type='str', ), ipv4_mgmt=dict(type='bool', ), ipv4_ve=dict(type='int', )), uuid=dict(type='str', ), ipv4=dict(type='str', required=True, )), dns_list=dict(type='list', interface=dict(type='dict', ethernet=dict(type='str', ), management=dict(type='bool', ), ve=dict(type='int', )), uuid=dict(type='str', ), dns=dict(type='str', required=True, ))),
+        notification_cfg=dict(type='dict', notification=dict(type='bool', ), interval=dict(type='int', )),
+        tx_set=dict(type='dict', fast_interval=dict(type='int', ), fast_count=dict(type='int', ), hold=dict(type='int', ), tx_interval=dict(type='int', ), reinit_delay=dict(type='int', )),
+        enable_cfg=dict(type='dict', enable=dict(type='bool', ), rx=dict(type='bool', ), tx=dict(type='bool', )),
         system_name=dict(type='str', )
     ))
    

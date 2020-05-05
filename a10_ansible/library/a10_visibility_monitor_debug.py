@@ -115,7 +115,7 @@ def get_argspec():
     rv.update(dict(
         debug_port=dict(type='int', required=True, ),
         debug_ip_addr=dict(type='str', required=True, ),
-        debug_protocol=dict(type='str', required=True, choices=['TCP','UDP','ICMP']),
+        debug_protocol=dict(type='str', required=True, choices=['TCP', 'UDP', 'ICMP']),
         uuid=dict(type='str', )
     ))
    

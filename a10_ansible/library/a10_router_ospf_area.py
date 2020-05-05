@@ -237,15 +237,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nssa_cfg=dict(type='dict', default_information_originate=dict(type='bool', ),translator_role=dict(type='str', choices=['always','candidate','never']),metric=dict(type='int', ),nssa=dict(type='bool', ),no_redistribution=dict(type='bool', ),no_summary=dict(type='bool', ),metric_type=dict(type='int', )),
+        nssa_cfg=dict(type='dict', default_information_originate=dict(type='bool', ), translator_role=dict(type='str', choices=['always', 'candidate', 'never']), metric=dict(type='int', ), nssa=dict(type='bool', ), no_redistribution=dict(type='bool', ), no_summary=dict(type='bool', ), metric_type=dict(type='int', )),
         uuid=dict(type='str', ),
-        filter_lists=dict(type='list', acl_name=dict(type='str', ),acl_direction=dict(type='str', choices=['in','out']),filter_list=dict(type='bool', ),plist_name=dict(type='str', ),plist_direction=dict(type='str', choices=['in','out'])),
+        filter_lists=dict(type='list', acl_name=dict(type='str', ), acl_direction=dict(type='str', choices=['in', 'out']), filter_list=dict(type='bool', ), plist_name=dict(type='str', ), plist_direction=dict(type='str', choices=['in', 'out'])),
         area_num=dict(type='int', required=True, ),
-        virtual_link_list=dict(type='list', dead_interval=dict(type='int', ),message_digest_key=dict(type='int', ),hello_interval=dict(type='int', ),bfd=dict(type='bool', ),transmit_delay=dict(type='int', ),virtual_link_authentication=dict(type='bool', ),virtual_link_ip_addr=dict(type='str', ),virtual_link_auth_type=dict(type='str', choices=['message-digest','null']),authentication_key=dict(type='str', ),retransmit_interval=dict(type='int', ),md5=dict(type='str', )),
-        stub_cfg=dict(type='dict', stub=dict(type='bool', ),no_summary=dict(type='bool', )),
-        shortcut=dict(type='str', choices=['default','disable','enable']),
-        auth_cfg=dict(type='dict', authentication=dict(type='bool', ),message_digest=dict(type='bool', )),
-        range_list=dict(type='list', area_range_prefix=dict(type='str', ),option=dict(type='str', choices=['advertise','not-advertise'])),
+        virtual_link_list=dict(type='list', dead_interval=dict(type='int', ), message_digest_key=dict(type='int', ), hello_interval=dict(type='int', ), bfd=dict(type='bool', ), transmit_delay=dict(type='int', ), virtual_link_authentication=dict(type='bool', ), virtual_link_ip_addr=dict(type='str', ), virtual_link_auth_type=dict(type='str', choices=['message-digest', 'null']), authentication_key=dict(type='str', ), retransmit_interval=dict(type='int', ), md5=dict(type='str', )),
+        stub_cfg=dict(type='dict', stub=dict(type='bool', ), no_summary=dict(type='bool', )),
+        shortcut=dict(type='str', choices=['default', 'disable', 'enable']),
+        auth_cfg=dict(type='dict', authentication=dict(type='bool', ), message_digest=dict(type='bool', )),
+        range_list=dict(type='list', area_range_prefix=dict(type='str', ), option=dict(type='str', choices=['advertise', 'not-advertise'])),
         default_cost=dict(type='int', ),
         area_ipv4=dict(type='str', required=True, )
     ))

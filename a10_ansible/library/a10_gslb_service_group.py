@@ -166,7 +166,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', total_sessions=dict(type='int', ),service_group_name=dict(type='str', required=True, ),session_list=dict(type='list', aging=dict(type='int', ),hits=dict(type='int', ),update=dict(type='int', ),client=dict(type='str', ),last_second_hits=dict(type='int', ),mode=dict(type='str', ),ttl=dict(type='str', ),best=dict(type='str', )),matched=dict(type='int', )),
+        oper=dict(type='dict', total_sessions=dict(type='int', ), service_group_name=dict(type='str', required=True, ), session_list=dict(type='list', aging=dict(type='int', ), hits=dict(type='int', ), update=dict(type='int', ), client=dict(type='str', ), last_second_hits=dict(type='int', ), mode=dict(type='str', ), ttl=dict(type='str', ), best=dict(type='str', )), matched=dict(type='int', )),
         service_group_name=dict(type='str', required=True, ),
         uuid=dict(type='str', ),
         dependency_site=dict(type='bool', ),

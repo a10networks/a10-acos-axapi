@@ -116,7 +116,7 @@ def get_argspec():
         ethernet=dict(type='str', ),
         uuid=dict(type='str', ),
         mirror_index=dict(type='int', required=True, ),
-        mirror_dir=dict(type='str', choices=['input','output','both'])
+        mirror_dir=dict(type='str', choices=['input', 'output', 'both'])
     ))
    
 

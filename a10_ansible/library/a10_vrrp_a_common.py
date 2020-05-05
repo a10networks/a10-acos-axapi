@@ -193,11 +193,11 @@ def get_argspec():
         dead_timer=dict(type='int', ),
         disable_default_vrid=dict(type='bool', ),
         track_event_delay=dict(type='int', ),
-        action=dict(type='str', choices=['enable','disable']),
+        action=dict(type='str', choices=['enable', 'disable']),
         stats=dict(type='dict', vrrp_common_dummy=dict(type='str', )),
-        hostid_append_to_vrid=dict(type='dict', hostid_append_to_vrid_value=dict(type='int', ),hostid_append_to_vrid_default=dict(type='bool', )),
+        hostid_append_to_vrid=dict(type='dict', hostid_append_to_vrid_value=dict(type='int', ), hostid_append_to_vrid_default=dict(type='bool', )),
         restart_time=dict(type='int', ),
-        inline_mode_cfg=dict(type='dict', inline_mode=dict(type='bool', ),preferred_trunk=dict(type='int', ),preferred_port=dict(type='str', ))
+        inline_mode_cfg=dict(type='dict', inline_mode=dict(type='bool', ), preferred_trunk=dict(type='int', ), preferred_port=dict(type='str', ))
     ))
    
 

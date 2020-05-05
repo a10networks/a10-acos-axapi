@@ -199,8 +199,8 @@ def get_argspec():
     rv.update(dict(
         dnssec_service_group=dict(type='str', ),
         name=dict(type='str', required=True, ),
-        class_list=dict(type='dict', lid_list=dict(type='list', action_value=dict(type='str', choices=['dns-cache-disable','dns-cache-enable','forward']),log=dict(type='bool', ),lidnum=dict(type='int', required=True, ),over_limit_action=dict(type='bool', ),per=dict(type='int', ),lockout=dict(type='int', ),user_tag=dict(type='str', ),dns=dict(type='dict', cache_action=dict(type='str', choices=['cache-disable','cache-enable']),honor_server_response_ttl=dict(type='bool', ),weight=dict(type='int', ),ttl=dict(type='int', )),conn_rate_limit=dict(type='int', ),log_interval=dict(type='int', ),uuid=dict(type='str', )),name=dict(type='str', ),uuid=dict(type='str', )),
-        response_rate_limiting=dict(type='dict', filter_response_rate=dict(type='int', ),slip_rate=dict(type='int', ),response_rate=dict(type='int', ),window=dict(type='int', ),action=dict(type='str', choices=['log-only','rate-limit','whitelist']),enable_log=dict(type='bool', ),uuid=dict(type='str', )),
+        class_list=dict(type='dict', lid_list=dict(type='list', action_value=dict(type='str', choices=['dns-cache-disable', 'dns-cache-enable', 'forward']), log=dict(type='bool', ), lidnum=dict(type='int', required=True, ), over_limit_action=dict(type='bool', ), per=dict(type='int', ), lockout=dict(type='int', ), user_tag=dict(type='str', ), dns=dict(type='dict', cache_action=dict(type='str', choices=['cache-disable', 'cache-enable']), honor_server_response_ttl=dict(type='bool', ), weight=dict(type='int', ), ttl=dict(type='int', )), conn_rate_limit=dict(type='int', ), log_interval=dict(type='int', ), uuid=dict(type='str', )), name=dict(type='str', ), uuid=dict(type='str', )),
+        response_rate_limiting=dict(type='dict', filter_response_rate=dict(type='int', ), slip_rate=dict(type='int', ), response_rate=dict(type='int', ), window=dict(type='int', ), action=dict(type='str', choices=['log-only', 'rate-limit', 'whitelist']), enable_log=dict(type='bool', ), uuid=dict(type='str', )),
         drop=dict(type='bool', ),
         period=dict(type='int', ),
         user_tag=dict(type='str', ),
@@ -211,7 +211,7 @@ def get_argspec():
         disable_dns_template=dict(type='bool', ),
         forward=dict(type='str', ),
         max_cache_size=dict(type='int', ),
-        default_policy=dict(type='str', choices=['nocache','cache']),
+        default_policy=dict(type='str', choices=['nocache', 'cache']),
         max_cache_entry_size=dict(type='int', ),
         uuid=dict(type='str', )
     ))

@@ -132,8 +132,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','port-requests','eprt-requests','lprt-requests','pasv-replies','epsv-replies','lpsv-replies','port-retransmits','pasv-retransmits','port-helper-created','pasv-helper-created','port-helper-freed','pasv-helper-freed','port-helper-unused','pasv-helper-unused','port-helper-creation-failure','pasv-helper-creation-failure','get-conn-ext-failure','smp-app-type-mismatch'])),
-        stats=dict(type='dict', lpsv_replies=dict(type='str', ),port_requests=dict(type='str', ),eprt_requests=dict(type='str', ),pasv_replies=dict(type='str', ),epsv_replies=dict(type='str', ),lprt_requests=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'port-requests', 'eprt-requests', 'lprt-requests', 'pasv-replies', 'epsv-replies', 'lpsv-replies', 'port-retransmits', 'pasv-retransmits', 'port-helper-created', 'pasv-helper-created', 'port-helper-freed', 'pasv-helper-freed', 'port-helper-unused', 'pasv-helper-unused', 'port-helper-creation-failure', 'pasv-helper-creation-failure', 'get-conn-ext-failure', 'smp-app-type-mismatch'])),
+        stats=dict(type='dict', lpsv_replies=dict(type='str', ), port_requests=dict(type='str', ), eprt_requests=dict(type='str', ), pasv_replies=dict(type='str', ), epsv_replies=dict(type='str', ), lprt_requests=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

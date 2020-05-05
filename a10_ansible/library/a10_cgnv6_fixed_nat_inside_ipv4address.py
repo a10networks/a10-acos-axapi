@@ -190,15 +190,15 @@ def get_argspec():
         vrid=dict(type='int', ),
         ports_per_user=dict(type='int', ),
         session_quota=dict(type='int', ),
-        method=dict(type='str', choices=['use-all-nat-ips','use-least-nat-ips']),
+        method=dict(type='str', choices=['use-all-nat-ips', 'use-least-nat-ips']),
         inside_start_address=dict(type='str', required=True, ),
         dest_rule_list=dict(type='str', ),
         nat_start_address=dict(type='str', ),
         nat_ip_list=dict(type='str', ),
-        offset=dict(type='dict', numeric_offset=dict(type='int', ),random=dict(type='bool', )),
+        offset=dict(type='dict', numeric_offset=dict(type='int', ), random=dict(type='bool', )),
         respond_to_user_mac=dict(type='bool', ),
         inside_end_address=dict(type='str', required=True, ),
-        usable_nat_ports=dict(type='dict', usable_start_port=dict(type='int', ),usable_end_port=dict(type='int', )),
+        usable_nat_ports=dict(type='dict', usable_start_port=dict(type='int', ), usable_end_port=dict(type='int', )),
         nat_netmask=dict(type='str', ),
         dynamic_pool_size=dict(type='int', )
     ))

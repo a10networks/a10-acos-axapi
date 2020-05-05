@@ -191,14 +191,14 @@ def get_argspec():
     rv.update(dict(
         uuid=dict(type='str', ),
         bfd=dict(type='bool', ),
-        cost_cfg=dict(type='list', cost=dict(type='int', ),instance_id=dict(type='int', )),
-        hello_interval_cfg=dict(type='list', hello_interval=dict(type='int', ),instance_id=dict(type='int', )),
-        priority_cfg=dict(type='list', priority=dict(type='int', ),instance_id=dict(type='int', )),
-        mtu_ignore_cfg=dict(type='list', mtu_ignore=dict(type='bool', ),instance_id=dict(type='int', )),
-        retransmit_interval_cfg=dict(type='list', retransmit_interval=dict(type='int', ),instance_id=dict(type='int', )),
+        cost_cfg=dict(type='list', cost=dict(type='int', ), instance_id=dict(type='int', )),
+        hello_interval_cfg=dict(type='list', hello_interval=dict(type='int', ), instance_id=dict(type='int', )),
+        priority_cfg=dict(type='list', priority=dict(type='int', ), instance_id=dict(type='int', )),
+        mtu_ignore_cfg=dict(type='list', mtu_ignore=dict(type='bool', ), instance_id=dict(type='int', )),
+        retransmit_interval_cfg=dict(type='list', retransmit_interval=dict(type='int', ), instance_id=dict(type='int', )),
         disable=dict(type='bool', ),
-        transmit_delay_cfg=dict(type='list', transmit_delay=dict(type='int', ),instance_id=dict(type='int', )),
-        dead_interval_cfg=dict(type='list', dead_interval=dict(type='int', ),instance_id=dict(type='int', ))
+        transmit_delay_cfg=dict(type='list', transmit_delay=dict(type='int', ), instance_id=dict(type='int', )),
+        dead_interval_cfg=dict(type='list', dead_interval=dict(type='int', ), instance_id=dict(type='int', ))
     ))
    
     # Parent keys

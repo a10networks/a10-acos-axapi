@@ -138,7 +138,7 @@ def get_argspec():
         encrypted=dict(type='str', ),
         user_tag=dict(type='str', ),
         token_lifetime=dict(type='int', ),
-        action=dict(type='str', choices=['redirect','relay']),
+        action=dict(type='str', choices=['redirect', 'relay']),
         issuer=dict(type='str', ),
         secret_string=dict(type='str', ),
         name=dict(type='str', required=True, )

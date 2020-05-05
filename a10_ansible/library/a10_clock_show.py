@@ -124,7 +124,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', time=dict(type='str', ),offset=dict(type='str', ),date=dict(type='str', ),timezone=dict(type='str', ),source_type=dict(type='int', ),day=dict(type='str', )),
+        oper=dict(type='dict', time=dict(type='str', ), offset=dict(type='str', ), date=dict(type='str', ), timezone=dict(type='str', ), source_type=dict(type='int', ), day=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

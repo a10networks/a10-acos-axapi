@@ -155,7 +155,7 @@ def get_argspec():
         uuid=dict(type='str', ),
         start_address=dict(type='str', ),
         vrid=dict(type='int', ),
-        stats=dict(type='dict', total_address=dict(type='str', ),pool_name=dict(type='str', required=True, ),used_address=dict(type='str', ),free_address=dict(type='str', )),
+        stats=dict(type='dict', total_address=dict(type='str', ), pool_name=dict(type='str', required=True, ), used_address=dict(type='str', ), free_address=dict(type='str', )),
         netmask=dict(type='str', ),
         end_address=dict(type='str', ),
         shared=dict(type='bool', ),

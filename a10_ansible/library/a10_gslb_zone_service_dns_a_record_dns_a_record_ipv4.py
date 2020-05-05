@@ -169,11 +169,11 @@ def get_argspec():
         dns_a_record_ip=dict(type='str', required=True, ),
         as_backup=dict(type='bool', ),
         weight=dict(type='int', ),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','hits'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
         disable=dict(type='bool', ),
         static=dict(type='bool', ),
         ttl=dict(type='int', ),
-        stats=dict(type='dict', hits=dict(type='str', ),dns_a_record_ip=dict(type='str', required=True, )),
+        stats=dict(type='dict', hits=dict(type='str', ), dns_a_record_ip=dict(type='str', required=True, )),
         no_resp=dict(type='bool', ),
         admin_ip=dict(type='int', ),
         uuid=dict(type='str', )

@@ -196,16 +196,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        redist_list=dict(type='list', metric=dict(type='int', ),route_map=dict(type='str', ),ntype=dict(type='str', choices=['bgp','connected','floating-ip','ip-nat-list','nat-map','nat64','lw4o6','isis','rip','static']),metric_type=dict(type='str', choices=['1','2'])),
-        ospf_list=dict(type='list', route_map_ospf=dict(type='str', ),metric_ospf=dict(type='int', ),metric_type_ospf=dict(type='str', choices=['1','2']),ospf=dict(type='bool', ),process_id=dict(type='str', )),
+        redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'nat64', 'lw4o6', 'isis', 'rip', 'static']), metric_type=dict(type='str', choices=['1', '2'])),
+        ospf_list=dict(type='list', route_map_ospf=dict(type='str', ), metric_ospf=dict(type='int', ), metric_type_ospf=dict(type='str', choices=['1', '2']), ospf=dict(type='bool', ), process_id=dict(type='str', )),
         uuid=dict(type='str', ),
-        ip_nat_floating_list=dict(type='list', ip_nat_floating_IP_forward=dict(type='str', ),ip_nat_prefix=dict(type='str', )),
-        vip_list=dict(type='list', metric_vip=dict(type='int', ),metric_type_vip=dict(type='str', choices=['1','2']),type_vip=dict(type='str', choices=['only-flagged','only-not-flagged']),route_map_vip=dict(type='str', )),
+        ip_nat_floating_list=dict(type='list', ip_nat_floating_IP_forward=dict(type='str', ), ip_nat_prefix=dict(type='str', )),
+        vip_list=dict(type='list', metric_vip=dict(type='int', ), metric_type_vip=dict(type='str', choices=['1', '2']), type_vip=dict(type='str', choices=['only-flagged', 'only-not-flagged']), route_map_vip=dict(type='str', )),
         ip_nat=dict(type='bool', ),
         metric_ip_nat=dict(type='int', ),
         route_map_ip_nat=dict(type='str', ),
-        vip_floating_list=dict(type='list', vip_address=dict(type='str', ),vip_floating_IP_forward=dict(type='str', )),
-        metric_type_ip_nat=dict(type='str', choices=['1','2'])
+        vip_floating_list=dict(type='list', vip_address=dict(type='str', ), vip_floating_IP_forward=dict(type='str', )),
+        metric_type_ip_nat=dict(type='str', choices=['1', '2'])
     ))
    
     # Parent keys

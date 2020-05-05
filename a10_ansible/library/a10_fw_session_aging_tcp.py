@@ -151,7 +151,7 @@ def get_argspec():
         tcp_idle_timeout=dict(type='int', ),
         half_open_idle_timeout=dict(type='int', ),
         force_delete_timeout=dict(type='int', ),
-        port_cfg=dict(type='list', tcp_port=dict(type='int', ),tcp_idle_timeout=dict(type='int', ),half_open_idle_timeout=dict(type='int', ),force_delete_timeout=dict(type='int', ),force_delete_timeout_100ms=dict(type='int', ),half_close_idle_timeout=dict(type='int', )),
+        port_cfg=dict(type='list', tcp_port=dict(type='int', ), tcp_idle_timeout=dict(type='int', ), half_open_idle_timeout=dict(type='int', ), force_delete_timeout=dict(type='int', ), force_delete_timeout_100ms=dict(type='int', ), half_close_idle_timeout=dict(type='int', )),
         force_delete_timeout_100ms=dict(type='int', ),
         half_close_idle_timeout=dict(type='int', )
     ))

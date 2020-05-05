@@ -126,7 +126,7 @@ def get_argspec():
     rv.update(dict(
         ipv6_address_list=dict(type='list', ipv6_gateway=dict(type='str', )),
         address_list=dict(type='list', ipv4_gateway=dict(type='str', )),
-        withdraw_route=dict(type='str', choices=['all-link-failure','any-link-failure']),
+        withdraw_route=dict(type='str', choices=['all-link-failure', 'any-link-failure']),
         uuid=dict(type='str', )
     ))
    

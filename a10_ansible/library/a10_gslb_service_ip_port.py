@@ -203,16 +203,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', use_gslb_state=dict(type='int', ),port_proto=dict(type='str', required=True, choices=['tcp','udp']),gslb_protocol=dict(type='int', ),port_num=dict(type='int', required=True, ),service_port=dict(type='int', ),dynamic=dict(type='int', ),tcp=dict(type='int', ),disabled=dict(type='int', ),state=dict(type='str', ),local_protocol=dict(type='int', ),manually_health_check=dict(type='int', )),
-        port_proto=dict(type='str', required=True, choices=['tcp','udp']),
-        stats=dict(type='dict', active=dict(type='str', ),current=dict(type='str', ),port_proto=dict(type='str', required=True, choices=['tcp','udp']),port_num=dict(type='int', required=True, )),
+        oper=dict(type='dict', use_gslb_state=dict(type='int', ), port_proto=dict(type='str', required=True, choices=['tcp', 'udp']), gslb_protocol=dict(type='int', ), port_num=dict(type='int', required=True, ), service_port=dict(type='int', ), dynamic=dict(type='int', ), tcp=dict(type='int', ), disabled=dict(type='int', ), state=dict(type='str', ), local_protocol=dict(type='int', ), manually_health_check=dict(type='int', )),
+        port_proto=dict(type='str', required=True, choices=['tcp', 'udp']),
+        stats=dict(type='dict', active=dict(type='str', ), current=dict(type='str', ), port_proto=dict(type='str', required=True, choices=['tcp', 'udp']), port_num=dict(type='int', required=True, )),
         uuid=dict(type='str', ),
         port_num=dict(type='int', required=True, ),
         health_check_disable=dict(type='bool', ),
         user_tag=dict(type='str', ),
-        follow_port_protocol=dict(type='str', choices=['tcp','udp']),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','active','current'])),
-        action=dict(type='str', choices=['enable','disable']),
+        follow_port_protocol=dict(type='str', choices=['tcp', 'udp']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'active', 'current'])),
+        action=dict(type='str', choices=['enable', 'disable']),
         health_check_follow_port=dict(type='int', ),
         health_check_protocol_disable=dict(type='bool', ),
         health_check=dict(type='str', )

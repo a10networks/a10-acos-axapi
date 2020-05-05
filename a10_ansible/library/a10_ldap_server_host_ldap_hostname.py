@@ -158,10 +158,10 @@ def get_argspec():
         group=dict(type='str', ),
         uuid=dict(type='str', ),
         cn_value=dict(type='str', ),
-        port_cfg=dict(type='dict', ssl=dict(type='bool', ),port=dict(type='int', ),timeout=dict(type='int', )),
+        port_cfg=dict(type='dict', ssl=dict(type='bool', ), port=dict(type='int', ), timeout=dict(type='int', )),
         dn_value=dict(type='str', ),
         base=dict(type='str', ),
-        domain_cfg=dict(type='dict', ssl=dict(type='bool', ),port=dict(type='int', ),timeout=dict(type='int', ))
+        domain_cfg=dict(type='dict', ssl=dict(type='bool', ), port=dict(type='int', ), timeout=dict(type='int', ))
     ))
    
 

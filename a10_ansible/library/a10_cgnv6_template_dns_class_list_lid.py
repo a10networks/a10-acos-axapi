@@ -154,14 +154,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action_value=dict(type='str', choices=['dns-cache-disable','dns-cache-enable','forward']),
+        action_value=dict(type='str', choices=['dns-cache-disable', 'dns-cache-enable', 'forward']),
         log=dict(type='bool', ),
         lidnum=dict(type='int', required=True, ),
         over_limit_action=dict(type='bool', ),
         per=dict(type='int', ),
         lockout=dict(type='int', ),
         user_tag=dict(type='str', ),
-        dns=dict(type='dict', cache_action=dict(type='str', choices=['cache-disable','cache-enable']),weight=dict(type='int', ),ttl=dict(type='int', )),
+        dns=dict(type='dict', cache_action=dict(type='str', choices=['cache-disable', 'cache-enable']), weight=dict(type='int', ), ttl=dict(type='int', )),
         conn_rate_limit=dict(type='int', ),
         log_interval=dict(type='int', ),
         uuid=dict(type='str', )

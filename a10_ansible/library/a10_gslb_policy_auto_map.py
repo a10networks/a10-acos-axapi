@@ -123,7 +123,7 @@ def get_argspec():
         all=dict(type='bool', ),
         ttl=dict(type='int', ),
         uuid=dict(type='str', ),
-        module_type=dict(type='str', choices=['slb-virtual-server','slb-device','slb-server','gslb-service-ip','gslb-site','gslb-group','hostname']),
+        module_type=dict(type='str', choices=['slb-virtual-server', 'slb-device', 'slb-server', 'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname']),
         module_disable=dict(type='bool', )
     ))
    

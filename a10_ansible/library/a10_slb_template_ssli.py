@@ -113,7 +113,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ntype=dict(type='str', choices=['http','xmpp','smtp','pop']),
+        ntype=dict(type='str', choices=['http', 'xmpp', 'smtp', 'pop']),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
         uuid=dict(type='str', )

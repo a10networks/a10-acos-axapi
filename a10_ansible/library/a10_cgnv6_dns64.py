@@ -159,8 +159,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','query','query-bad-pkt','query-chg','query-parallel','query-passive','resp','resp-bad-pkt','resp-bad-qr','resp-chg','resp-err','resp-empty','resp-local','adjust','cache','drop'])),
-        stats=dict(type='dict', query_passive=dict(type='str', ),resp_local=dict(type='str', ),drop=dict(type='str', ),query_bad_pkt=dict(type='str', ),resp=dict(type='str', ),cache=dict(type='str', ),resp_empty=dict(type='str', ),resp_chg=dict(type='str', ),query_parallel=dict(type='str', ),adjust=dict(type='str', ),resp_bad_qr=dict(type='str', ),query=dict(type='str', ),resp_err=dict(type='str', ),resp_bad_pkt=dict(type='str', ),query_chg=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'query', 'query-bad-pkt', 'query-chg', 'query-parallel', 'query-passive', 'resp', 'resp-bad-pkt', 'resp-bad-qr', 'resp-chg', 'resp-err', 'resp-empty', 'resp-local', 'adjust', 'cache', 'drop'])),
+        stats=dict(type='dict', query_passive=dict(type='str', ), resp_local=dict(type='str', ), drop=dict(type='str', ), query_bad_pkt=dict(type='str', ), resp=dict(type='str', ), cache=dict(type='str', ), resp_empty=dict(type='str', ), resp_chg=dict(type='str', ), query_parallel=dict(type='str', ), adjust=dict(type='str', ), resp_bad_qr=dict(type='str', ), query=dict(type='str', ), resp_err=dict(type='str', ), resp_bad_pkt=dict(type='str', ), query_chg=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

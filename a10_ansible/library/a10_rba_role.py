@@ -128,10 +128,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        default_privilege=dict(type='str', choices=['no-access','read','write']),
+        default_privilege=dict(type='str', choices=['no-access', 'read', 'write']),
         name=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
-        rule_list=dict(type='list', operation=dict(type='str', choices=['no-access','read','oper','write']),object=dict(type='str', )),
+        rule_list=dict(type='list', operation=dict(type='str', choices=['no-access', 'read', 'oper', 'write']), object=dict(type='str', )),
         partition_only=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

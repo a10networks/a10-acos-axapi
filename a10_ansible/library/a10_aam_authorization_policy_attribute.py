@@ -182,13 +182,13 @@ def get_argspec():
         attr_type=dict(type='bool', ),
         attr_num=dict(type='int', required=True, ),
         a10_dynamic_defined=dict(type='bool', ),
-        attr_int=dict(type='str', choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),
+        attr_int=dict(type='str', choices=['equal', 'not-equal', 'less-than', 'more-than', 'less-than-equal-to', 'more-than-equal-to']),
         ip_type=dict(type='bool', ),
-        attr_ip=dict(type='str', choices=['equal','not-equal']),
+        attr_ip=dict(type='str', choices=['equal', 'not-equal']),
         A10_AX_AUTH_URI=dict(type='bool', ),
-        attr_str=dict(type='str', choices=['match','sub-string']),
+        attr_str=dict(type='str', choices=['match', 'sub-string']),
         any=dict(type='bool', ),
-        custom_attr_str=dict(type='str', choices=['match','sub-string']),
+        custom_attr_str=dict(type='str', choices=['match', 'sub-string']),
         attr_int_val=dict(type='int', )
     ))
    

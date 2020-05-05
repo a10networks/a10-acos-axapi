@@ -124,7 +124,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', previous_successful_compilation_duration=dict(type='str', ),previous_successful_compilation_attempt=dict(type='str', ),most_recent_compilation_attempt=dict(type='str', ),current_active_rule_set=dict(type='str', ),most_recent_compilation_status=dict(type='str', ),internal=dict(type='bool', )),
+        oper=dict(type='dict', previous_successful_compilation_duration=dict(type='str', ), previous_successful_compilation_attempt=dict(type='str', ), most_recent_compilation_attempt=dict(type='str', ), current_active_rule_set=dict(type='str', ), most_recent_compilation_status=dict(type='str', ), internal=dict(type='bool', )),
         uuid=dict(type='str', )
     ))
    

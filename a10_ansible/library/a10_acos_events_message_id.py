@@ -118,7 +118,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         log_msg=dict(type='str', required=True, ),
-        property=dict(type='dict', severity=dict(type='dict', severity_val=dict(type='str', choices=['emergency','alert','critical','error','warning','notification','information','debugging']),uuid=dict(type='str', ))),
+        property=dict(type='dict', severity=dict(type='dict', severity_val=dict(type='str', choices=['emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging']), uuid=dict(type='str', ))),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', )
     ))

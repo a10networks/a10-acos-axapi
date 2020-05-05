@@ -131,7 +131,7 @@ def get_argspec():
     rv.update(dict(
         rollback=dict(type='str', ),
         use_mgmt_port=dict(type='bool', ),
-        image=dict(type='str', choices=['pri','sec']),
+        image=dict(type='str', choices=['pri', 'sec']),
         upload=dict(type='bool', ),
         source_ip_address=dict(type='str', ),
         local=dict(type='str', ),

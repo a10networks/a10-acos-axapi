@@ -156,12 +156,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        receive_cfg=dict(type='dict', receive=dict(type='bool', ),version=dict(type='str', choices=['2'])),
+        receive_cfg=dict(type='dict', receive=dict(type='bool', ), version=dict(type='str', choices=['2'])),
         uuid=dict(type='str', ),
         receive_packet=dict(type='bool', ),
-        split_horizon_cfg=dict(type='dict', state=dict(type='str', choices=['poisoned','disable','enable'])),
-        authentication=dict(type='dict', key_chain=dict(type='dict', key_chain=dict(type='str', )),mode=dict(type='dict', mode=dict(type='str', choices=['md5','text'])),str=dict(type='dict', string=dict(type='str', ))),
-        send_cfg=dict(type='dict', version=dict(type='str', choices=['2']),send=dict(type='bool', )),
+        split_horizon_cfg=dict(type='dict', state=dict(type='str', choices=['poisoned', 'disable', 'enable'])),
+        authentication=dict(type='dict', key_chain=dict(type='dict', key_chain=dict(type='str', )), mode=dict(type='dict', mode=dict(type='str', choices=['md5', 'text'])), str=dict(type='dict', string=dict(type='str', ))),
+        send_cfg=dict(type='dict', version=dict(type='str', choices=['2']), send=dict(type='bool', )),
         send_packet=dict(type='bool', )
     ))
    

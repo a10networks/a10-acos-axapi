@@ -105,7 +105,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        debug_system_enum=dict(type='str', choices=['all','aaa','import-export','ssl']),
+        debug_system_enum=dict(type='str', choices=['all', 'aaa', 'import-export', 'ssl']),
         uuid=dict(type='str', )
     ))
    

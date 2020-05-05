@@ -109,7 +109,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', images_list=dict(type='list', images_name=dict(type='str', ),ntype=dict(type='str', ))),
+        oper=dict(type='dict', images_list=dict(type='list', images_name=dict(type='str', ), ntype=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

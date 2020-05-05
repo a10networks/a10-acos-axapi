@@ -108,7 +108,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        access_type=dict(type='str', choices=['axapi','cli','web']),
+        access_type=dict(type='str', choices=['axapi', 'cli', 'web']),
         uuid=dict(type='str', )
     ))
    

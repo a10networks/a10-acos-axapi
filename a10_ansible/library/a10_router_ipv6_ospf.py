@@ -280,23 +280,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        timers=dict(type='dict', spf=dict(type='dict', exp=dict(type='dict', max_delay=dict(type='int', ),min_delay=dict(type='int', )))),
-        redistribute=dict(type='dict', redist_list=dict(type='list', metric=dict(type='int', ),route_map=dict(type='str', ),ntype=dict(type='str', choices=['bgp','connected','floating-ip','ip-nat-list','nat-map','nat64','lw4o6','isis','rip','static']),metric_type=dict(type='str', choices=['1','2'])),ospf_list=dict(type='list', route_map_ospf=dict(type='str', ),metric_ospf=dict(type='int', ),metric_type_ospf=dict(type='str', choices=['1','2']),ospf=dict(type='bool', ),process_id=dict(type='str', )),uuid=dict(type='str', ),ip_nat_floating_list=dict(type='list', ip_nat_floating_IP_forward=dict(type='str', ),ip_nat_prefix=dict(type='str', )),vip_list=dict(type='list', metric_vip=dict(type='int', ),metric_type_vip=dict(type='str', choices=['1','2']),type_vip=dict(type='str', choices=['only-flagged','only-not-flagged']),route_map_vip=dict(type='str', )),ip_nat=dict(type='bool', ),metric_ip_nat=dict(type='int', ),route_map_ip_nat=dict(type='str', ),vip_floating_list=dict(type='list', vip_address=dict(type='str', ),vip_floating_IP_forward=dict(type='str', )),metric_type_ip_nat=dict(type='str', choices=['1','2'])),
-        abr_type_option=dict(type='str', choices=['cisco','ibm','standard']),
+        timers=dict(type='dict', spf=dict(type='dict', exp=dict(type='dict', max_delay=dict(type='int', ), min_delay=dict(type='int', )))),
+        redistribute=dict(type='dict', redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'nat-map', 'nat64', 'lw4o6', 'isis', 'rip', 'static']), metric_type=dict(type='str', choices=['1', '2'])), ospf_list=dict(type='list', route_map_ospf=dict(type='str', ), metric_ospf=dict(type='int', ), metric_type_ospf=dict(type='str', choices=['1', '2']), ospf=dict(type='bool', ), process_id=dict(type='str', )), uuid=dict(type='str', ), ip_nat_floating_list=dict(type='list', ip_nat_floating_IP_forward=dict(type='str', ), ip_nat_prefix=dict(type='str', )), vip_list=dict(type='list', metric_vip=dict(type='int', ), metric_type_vip=dict(type='str', choices=['1', '2']), type_vip=dict(type='str', choices=['only-flagged', 'only-not-flagged']), route_map_vip=dict(type='str', )), ip_nat=dict(type='bool', ), metric_ip_nat=dict(type='int', ), route_map_ip_nat=dict(type='str', ), vip_floating_list=dict(type='list', vip_address=dict(type='str', ), vip_floating_IP_forward=dict(type='str', )), metric_type_ip_nat=dict(type='str', choices=['1', '2'])),
+        abr_type_option=dict(type='str', choices=['cisco', 'ibm', 'standard']),
         auto_cost_reference_bandwidth=dict(type='int', ),
         router_id=dict(type='str', ),
-        distribute_internal_list=dict(type='list', area_ipv4=dict(type='str', ),cost=dict(type='int', ),area_num=dict(type='int', ),ntype=dict(type='str', choices=['lw4o6','nat64','floating-ip','ip-nat','ip-nat-list','vip','vip-only-flagged'])),
+        distribute_internal_list=dict(type='list', area_ipv4=dict(type='str', ), cost=dict(type='int', ), area_num=dict(type='int', ), ntype=dict(type='str', choices=['lw4o6', 'nat64', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged'])),
         default_metric=dict(type='int', ),
         user_tag=dict(type='str', ),
         max_concurrent_dd=dict(type='int', ),
         process_id=dict(type='str', required=True, ),
-        log_adjacency_changes=dict(type='str', choices=['detail','disable']),
-        passive_interface=dict(type='dict', tunnel_cfg=dict(type='list', tunnel=dict(type='str', )),ve_cfg=dict(type='list', ve=dict(type='str', )),loopback_cfg=dict(type='list', loopback=dict(type='str', )),trunk_cfg=dict(type='list', trunk=dict(type='str', )),eth_cfg=dict(type='list', ethernet=dict(type='str', ))),
-        default_information=dict(type='dict', originate=dict(type='bool', ),uuid=dict(type='str', ),always=dict(type='bool', ),metric=dict(type='int', ),route_map=dict(type='str', ),metric_type=dict(type='int', )),
-        ha_standby_extra_cost=dict(type='list', group=dict(type='int', ),extra_cost=dict(type='int', )),
+        log_adjacency_changes=dict(type='str', choices=['detail', 'disable']),
+        passive_interface=dict(type='dict', tunnel_cfg=dict(type='list', tunnel=dict(type='str', )), ve_cfg=dict(type='list', ve=dict(type='str', )), loopback_cfg=dict(type='list', loopback=dict(type='str', )), trunk_cfg=dict(type='list', trunk=dict(type='str', )), eth_cfg=dict(type='list', ethernet=dict(type='str', ))),
+        default_information=dict(type='dict', originate=dict(type='bool', ), uuid=dict(type='str', ), always=dict(type='bool', ), metric=dict(type='int', ), route_map=dict(type='str', ), metric_type=dict(type='int', )),
+        ha_standby_extra_cost=dict(type='list', group=dict(type='int', ), extra_cost=dict(type='int', )),
         uuid=dict(type='str', ),
         bfd_all_interfaces=dict(type='bool', ),
-        area_list=dict(type='list', uuid=dict(type='str', ),area_ipv4=dict(type='str', required=True, ),virtual_link_list=dict(type='list', dead_interval=dict(type='int', ),hello_interval=dict(type='int', ),bfd=dict(type='bool', ),transmit_delay=dict(type='int', ),value=dict(type='str', ),retransmit_interval=dict(type='int', ),instance_id=dict(type='int', )),stub=dict(type='bool', ),area_num=dict(type='int', required=True, ),range_list=dict(type='list', option=dict(type='str', choices=['advertise','not-advertise']),value=dict(type='str', )),default_cost=dict(type='int', ),no_summary=dict(type='bool', ))
+        area_list=dict(type='list', uuid=dict(type='str', ), area_ipv4=dict(type='str', required=True, ), virtual_link_list=dict(type='list', dead_interval=dict(type='int', ), hello_interval=dict(type='int', ), bfd=dict(type='bool', ), transmit_delay=dict(type='int', ), value=dict(type='str', ), retransmit_interval=dict(type='int', ), instance_id=dict(type='int', )), stub=dict(type='bool', ), area_num=dict(type='int', required=True, ), range_list=dict(type='list', option=dict(type='str', choices=['advertise', 'not-advertise']), value=dict(type='str', )), default_cost=dict(type='int', ), no_summary=dict(type='bool', ))
     ))
    
 

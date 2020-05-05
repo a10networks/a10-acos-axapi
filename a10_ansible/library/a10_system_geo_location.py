@@ -152,9 +152,9 @@ def get_argspec():
         geolite2_city_include_ipv6=dict(type='bool', ),
         geolite2_country_include_ipv6=dict(type='bool', ),
         geo_location_geolite2_country=dict(type='bool', ),
-        entry_list=dict(type='list', geo_locn_obj_name=dict(type='str', required=True, ),geo_locn_multiple_addresses=dict(type='list', first_ip_address=dict(type='str', ),first_ipv6_address=dict(type='str', ),geol_ipv4_mask=dict(type='str', ),ip_addr2=dict(type='str', ),ipv6_addr2=dict(type='str', ),geol_ipv6_mask=dict(type='int', )),user_tag=dict(type='str', ),uuid=dict(type='str', )),
+        entry_list=dict(type='list', geo_locn_obj_name=dict(type='str', required=True, ), geo_locn_multiple_addresses=dict(type='list', first_ip_address=dict(type='str', ), first_ipv6_address=dict(type='str', ), geol_ipv4_mask=dict(type='str', ), ip_addr2=dict(type='str', ), ipv6_addr2=dict(type='str', ), geol_ipv6_mask=dict(type='int', )), user_tag=dict(type='str', ), uuid=dict(type='str', )),
         geo_location_geolite2_city=dict(type='bool', ),
-        geoloc_load_file_list=dict(type='list', geo_location_load_filename=dict(type='str', ),template_name=dict(type='str', )),
+        geoloc_load_file_list=dict(type='list', geo_location_load_filename=dict(type='str', ), template_name=dict(type='str', )),
         geo_location_iana=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

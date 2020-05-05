@@ -118,7 +118,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         logindisabled=dict(type='bool', ),
-        starttls=dict(type='str', choices=['disabled','optional','enforced']),
+        starttls=dict(type='str', choices=['disabled', 'optional', 'enforced']),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         name=dict(type='str', required=True, )

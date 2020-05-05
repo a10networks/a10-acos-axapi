@@ -174,7 +174,7 @@ def get_argspec():
         conn_limit=dict(type='int', ),
         lidnum=dict(type='int', required=True, ),
         log=dict(type='bool', ),
-        dns64=dict(type='dict', prefix=dict(type='str', ),exclusive_answer=dict(type='bool', ),disable=dict(type='bool', )),
+        dns64=dict(type='dict', prefix=dict(type='str', ), exclusive_answer=dict(type='bool', ), disable=dict(type='bool', )),
         interval=dict(type='int', ),
         request_rate_limit=dict(type='int', ),
         user_tag=dict(type='str', ),
@@ -182,7 +182,7 @@ def get_argspec():
         request_per=dict(type='int', ),
         conn_rate_limit=dict(type='int', ),
         lockout=dict(type='int', ),
-        action_value=dict(type='str', choices=['forward','reset']),
+        action_value=dict(type='str', choices=['forward', 'reset']),
         over_limit_action=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

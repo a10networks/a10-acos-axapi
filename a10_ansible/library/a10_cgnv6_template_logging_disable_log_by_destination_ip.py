@@ -145,9 +145,9 @@ def get_argspec():
         uuid=dict(type='str', ),
         ipv4_addr=dict(type='str', required=True, ),
         user_tag=dict(type='str', ),
-        tcp_list=dict(type='list', tcp_port_start=dict(type='int', ),tcp_port_end=dict(type='int', )),
+        tcp_list=dict(type='list', tcp_port_start=dict(type='int', ), tcp_port_end=dict(type='int', )),
         others=dict(type='bool', ),
-        udp_list=dict(type='list', udp_port_start=dict(type='int', ),udp_port_end=dict(type='int', )),
+        udp_list=dict(type='list', udp_port_start=dict(type='int', ), udp_port_end=dict(type='int', )),
         icmp=dict(type='bool', )
     ))
    

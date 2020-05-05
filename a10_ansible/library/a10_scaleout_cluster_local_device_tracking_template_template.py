@@ -124,7 +124,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         uuid=dict(type='str', ),
-        threshold_cfg=dict(type='list', threshold=dict(type='int', ),action=dict(type='str', choices=['down','exit-cluster'])),
+        threshold_cfg=dict(type='list', threshold=dict(type='int', ), action=dict(type='str', choices=['down', 'exit-cluster'])),
         user_tag=dict(type='str', ),
         template=dict(type='str', required=True, )
     ))

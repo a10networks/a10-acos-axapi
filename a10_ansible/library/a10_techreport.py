@@ -149,12 +149,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        max_logfile_size=dict(type='dict', uuid=dict(type='str', ),value=dict(type='int', )),
+        max_logfile_size=dict(type='dict', uuid=dict(type='str', ), value=dict(type='int', )),
         uuid=dict(type='str', ),
-        max_partitions=dict(type='dict', uuid=dict(type='str', ),value=dict(type='int', )),
-        interval=dict(type='dict', uuid=dict(type='str', ),value=dict(type='int', )),
+        max_partitions=dict(type='dict', uuid=dict(type='str', ), value=dict(type='int', )),
+        interval=dict(type='dict', uuid=dict(type='str', ), value=dict(type='int', )),
         disable=dict(type='bool', ),
-        priority_partition_list=dict(type='list', part_name=dict(type='str', required=True, ),uuid=dict(type='str', ))
+        priority_partition_list=dict(type='list', part_name=dict(type='str', required=True, ), uuid=dict(type='str', ))
     ))
    
 

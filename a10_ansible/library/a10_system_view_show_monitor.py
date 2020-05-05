@@ -157,7 +157,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', data_cpu=dict(type='int', ),buff_drop=dict(type='int', ),mem_value=dict(type='int', ),disk_value=dict(type='int', ),ctrl_cpu=dict(type='int', ),spm4=dict(type='int', ),warn_temp=dict(type='int', ),smp0=dict(type='int', ),smp1=dict(type='int', ),smp2=dict(type='int', ),smp3=dict(type='int', ),spm2=dict(type='int', ),buff_value=dict(type='int', ),spm0=dict(type='int', ),spm1=dict(type='int', ),smp4=dict(type='int', ),spm3=dict(type='int', )),
+        oper=dict(type='dict', data_cpu=dict(type='int', ), buff_drop=dict(type='int', ), mem_value=dict(type='int', ), disk_value=dict(type='int', ), ctrl_cpu=dict(type='int', ), spm4=dict(type='int', ), warn_temp=dict(type='int', ), smp0=dict(type='int', ), smp1=dict(type='int', ), smp2=dict(type='int', ), smp3=dict(type='int', ), spm2=dict(type='int', ), buff_value=dict(type='int', ), spm0=dict(type='int', ), spm1=dict(type='int', ), smp4=dict(type='int', ), spm3=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

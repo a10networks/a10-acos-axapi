@@ -125,7 +125,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         packets_per_second=dict(type='dict', min=dict(type='int', )),
-        cpu_usage=dict(type='dict', high=dict(type='int', ),low=dict(type='int', )),
+        cpu_usage=dict(type='dict', high=dict(type='int', ), low=dict(type='int', )),
         disable=dict(type='bool', ),
         uuid=dict(type='str', )
     ))

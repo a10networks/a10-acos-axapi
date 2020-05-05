@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', drop_seg=dict(type='list', drop_name=dict(type='str', ),drop_cnt=dict(type='list', drop_count=dict(type='str', ))),fpga_seg=dict(type='list', fpga_seg_name=dict(type='str', )),rate_limit=dict(type='int', ),rate_limit_drp=dict(type='list', rate_limit_drop=dict(type='str', ))),
+        oper=dict(type='dict', drop_seg=dict(type='list', drop_name=dict(type='str', ), drop_cnt=dict(type='list', drop_count=dict(type='str', ))), fpga_seg=dict(type='list', fpga_seg_name=dict(type='str', )), rate_limit=dict(type='int', ), rate_limit_drp=dict(type='list', rate_limit_drop=dict(type='str', ))),
         uuid=dict(type='str', )
     ))
    

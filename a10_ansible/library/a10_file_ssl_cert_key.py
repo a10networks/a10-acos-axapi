@@ -124,7 +124,7 @@ def get_argspec():
         dst_file=dict(type='str', ),
         secured=dict(type='bool', ),
         file=dict(type='str', ),
-        action=dict(type='str', choices=['create','import','export','copy','rename','check','replace','delete']),
+        action=dict(type='str', choices=['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
         file_handle=dict(type='str', ),
         size=dict(type='int', )
     ))

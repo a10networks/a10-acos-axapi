@@ -117,9 +117,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        aging=dict(type='str', choices=['Strict','Medium','Simple']),
-        complexity=dict(type='str', choices=['Strict','Medium','Simple']),
-        history=dict(type='str', choices=['Strict','Medium','Simple']),
+        aging=dict(type='str', choices=['Strict', 'Medium', 'Simple']),
+        complexity=dict(type='str', choices=['Strict', 'Medium', 'Simple']),
+        history=dict(type='str', choices=['Strict', 'Medium', 'Simple']),
         uuid=dict(type='str', ),
         min_pswd_len=dict(type='int', )
     ))

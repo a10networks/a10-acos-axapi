@@ -122,7 +122,7 @@ def get_argspec():
     rv.update(dict(
         debug=dict(type='int', ),
         commands=dict(type='int', ),
-        method=dict(type='dict', none=dict(type='bool', ),tacplus=dict(type='bool', )),
+        method=dict(type='dict', none=dict(type='bool', ), tacplus=dict(type='bool', )),
         uuid=dict(type='str', )
     ))
    

@@ -323,14 +323,14 @@ def get_argspec():
         save_config=dict(type='str', ),
         timeout=dict(type='int', ),
         sess_filter_dis=dict(type='bool', ),
-        outgoing_list=dict(type='dict', outgoing=dict(type='bool', ),out_port_num=dict(type='str', )),
+        outgoing_list=dict(type='dict', outgoing=dict(type='bool', ), out_port_num=dict(type='str', )),
         maxfile=dict(type='int', ),
-        capture=dict(type='dict', current_slot=dict(type='bool', ),outgoing=dict(type='bool', ),non_display=dict(type='bool', ),incoming=dict(type='bool', ),port_num=dict(type='str', ),brief=dict(type='bool', ),detail=dict(type='bool', ),save=dict(type='str', ),max_packets=dict(type='int', )),
+        capture=dict(type='dict', current_slot=dict(type='bool', ), outgoing=dict(type='bool', ), non_display=dict(type='bool', ), incoming=dict(type='bool', ), port_num=dict(type='str', ), brief=dict(type='bool', ), detail=dict(type='bool', ), save=dict(type='str', ), max_packets=dict(type='int', )),
         length=dict(type='int', ),
         exit=dict(type='bool', ),
-        delete_file_list=dict(type='dict', delete_config=dict(type='str', ),delete_capture=dict(type='str', ),delete=dict(type='bool', )),
-        filter_config=dict(type='dict', arp=dict(type='bool', ),ip=dict(type='bool', ),offset=dict(type='int', ),number=dict(type='int', ),tcp=dict(type='bool', ),l3_proto=dict(type='bool', ),ipv4_address=dict(type='str', ),port=dict(type='bool', ),port_num_min=dict(type='int', ),oper_range=dict(type='str', choices=['gt','gte','se','st','eq']),ipv6_adddress=dict(type='str', ),WORD=dict(type='str', ),comp_hex=dict(type='str', ),proto=dict(type='bool', ),dst=dict(type='bool', ),hex=dict(type='bool', ),integer_comp=dict(type='int', ),port_num_max=dict(type='int', ),exit=dict(type='bool', ),ipv6=dict(type='bool', ),length=dict(type='int', ),udp=dict(type='bool', ),neighbor=dict(type='bool', ),port_num=dict(type='int', ),max_hex=dict(type='str', ),mac=dict(type='bool', ),min_hex=dict(type='str', ),WORD1=dict(type='str', ),WORD2=dict(type='str', ),integer_max=dict(type='int', ),integer=dict(type='bool', ),icmp=dict(type='bool', ),src=dict(type='bool', ),mac_addr=dict(type='str', ),ipv4_netmask=dict(type='str', ),icmpv6=dict(type='bool', ),range=dict(type='bool', ),integer_min=dict(type='int', ),prot_num=dict(type='int', )),
-        incoming_list=dict(type='dict', incoming=dict(type='bool', ),inc_port_num=dict(type='str', )),
+        delete_file_list=dict(type='dict', delete_config=dict(type='str', ), delete_capture=dict(type='str', ), delete=dict(type='bool', )),
+        filter_config=dict(type='dict', arp=dict(type='bool', ), ip=dict(type='bool', ), offset=dict(type='int', ), number=dict(type='int', ), tcp=dict(type='bool', ), l3_proto=dict(type='bool', ), ipv4_address=dict(type='str', ), port=dict(type='bool', ), port_num_min=dict(type='int', ), oper_range=dict(type='str', choices=['gt', 'gte', 'se', 'st', 'eq']), ipv6_adddress=dict(type='str', ), WORD=dict(type='str', ), comp_hex=dict(type='str', ), proto=dict(type='bool', ), dst=dict(type='bool', ), hex=dict(type='bool', ), integer_comp=dict(type='int', ), port_num_max=dict(type='int', ), exit=dict(type='bool', ), ipv6=dict(type='bool', ), length=dict(type='int', ), udp=dict(type='bool', ), neighbor=dict(type='bool', ), port_num=dict(type='int', ), max_hex=dict(type='str', ), mac=dict(type='bool', ), min_hex=dict(type='str', ), WORD1=dict(type='str', ), WORD2=dict(type='str', ), integer_max=dict(type='int', ), integer=dict(type='bool', ), icmp=dict(type='bool', ), src=dict(type='bool', ), mac_addr=dict(type='str', ), ipv4_netmask=dict(type='str', ), icmpv6=dict(type='bool', ), range=dict(type='bool', ), integer_min=dict(type='int', ), prot_num=dict(type='int', )),
+        incoming_list=dict(type='dict', incoming=dict(type='bool', ), inc_port_num=dict(type='str', )),
         apply_config=dict(type='str', )
     ))
    

@@ -144,7 +144,7 @@ def get_argspec():
         auto_authentication=dict(type='bool', ),
         address=dict(type='str', ),
         shared=dict(type='bool', ),
-        ntype=dict(type='str', choices=['running','all']),
+        ntype=dict(type='str', choices=['running', 'all']),
         pwd_enc=dict(type='str', ),
         usr=dict(type='str', )
     ))

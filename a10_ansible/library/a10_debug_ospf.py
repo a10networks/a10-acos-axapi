@@ -260,14 +260,14 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         all=dict(type='dict', uuid=dict(type='str', )),
-        ifsm=dict(type='dict', status=dict(type='bool', ),timers=dict(type='bool', ),events=dict(type='bool', ),uuid=dict(type='str', )),
+        ifsm=dict(type='dict', status=dict(type='bool', ), timers=dict(type='bool', ), events=dict(type='bool', ), uuid=dict(type='str', )),
         bfd=dict(type='dict', uuid=dict(type='str', )),
-        route=dict(type='dict', ia=dict(type='bool', ),ase=dict(type='bool', ),install=dict(type='bool', ),spf=dict(type='bool', ),uuid=dict(type='str', )),
-        lsa=dict(type='dict', gererate=dict(type='bool', ),uuid=dict(type='str', ),maxage=dict(type='bool', ),refresh=dict(type='bool', ),install=dict(type='bool', ),flooding=dict(type='bool', )),
-        nfsm=dict(type='dict', status=dict(type='bool', ),timers=dict(type='bool', ),events=dict(type='bool', ),uuid=dict(type='str', )),
-        packet=dict(type='dict', uuid=dict(type='str', ),ls_request=dict(type='bool', ),dd=dict(type='bool', ),detail=dict(type='bool', ),send=dict(type='bool', ),ls_ack=dict(type='bool', ),ls_update=dict(type='bool', ),recv=dict(type='bool', ),hello=dict(type='bool', )),
-        events=dict(type='dict', asbr=dict(type='bool', ),uuid=dict(type='str', ),abr=dict(type='bool', ),router=dict(type='bool', ),vlink=dict(type='bool', ),os=dict(type='bool', )),
-        nsm=dict(type='dict', interface=dict(type='bool', ),redistribute=dict(type='bool', ),uuid=dict(type='str', ))
+        route=dict(type='dict', ia=dict(type='bool', ), ase=dict(type='bool', ), install=dict(type='bool', ), spf=dict(type='bool', ), uuid=dict(type='str', )),
+        lsa=dict(type='dict', gererate=dict(type='bool', ), uuid=dict(type='str', ), maxage=dict(type='bool', ), refresh=dict(type='bool', ), install=dict(type='bool', ), flooding=dict(type='bool', )),
+        nfsm=dict(type='dict', status=dict(type='bool', ), timers=dict(type='bool', ), events=dict(type='bool', ), uuid=dict(type='str', )),
+        packet=dict(type='dict', uuid=dict(type='str', ), ls_request=dict(type='bool', ), dd=dict(type='bool', ), detail=dict(type='bool', ), send=dict(type='bool', ), ls_ack=dict(type='bool', ), ls_update=dict(type='bool', ), recv=dict(type='bool', ), hello=dict(type='bool', )),
+        events=dict(type='dict', asbr=dict(type='bool', ), uuid=dict(type='str', ), abr=dict(type='bool', ), router=dict(type='bool', ), vlink=dict(type='bool', ), os=dict(type='bool', )),
+        nsm=dict(type='dict', interface=dict(type='bool', ), redistribute=dict(type='bool', ), uuid=dict(type='str', ))
     ))
    
 

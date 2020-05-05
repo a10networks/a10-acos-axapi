@@ -105,7 +105,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ve_mac_scheme_val=dict(type='str', choices=['hash-based','round-robin','system-mac']),
+        ve_mac_scheme_val=dict(type='str', choices=['hash-based', 'round-robin', 'system-mac']),
         uuid=dict(type='str', )
     ))
    

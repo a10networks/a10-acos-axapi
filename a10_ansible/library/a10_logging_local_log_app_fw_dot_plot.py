@@ -130,7 +130,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', interval=dict(type='str', ),client_ip=dict(type='str', ),application_name=dict(type='str', ),start_time=dict(type='str', ),log_list=dict(type='list', counter=dict(type='int', )),interval_position=dict(type='str', ),total=dict(type='int', ),data=dict(type='str', )),
+        oper=dict(type='dict', interval=dict(type='str', ), client_ip=dict(type='str', ), application_name=dict(type='str', ), start_time=dict(type='str', ), log_list=dict(type='list', counter=dict(type='int', )), interval_position=dict(type='str', ), total=dict(type='int', ), data=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

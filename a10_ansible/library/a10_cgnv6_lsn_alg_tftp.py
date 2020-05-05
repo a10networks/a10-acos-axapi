@@ -122,7 +122,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         stats=dict(type='dict', session_created=dict(type='str', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','session-created','helper-created','helper-freed','helper-freed-used','helper-freed-unused','helper-already-used','helper-in-rml'])),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'session-created', 'helper-created', 'helper-freed', 'helper-freed-used', 'helper-freed-unused', 'helper-already-used', 'helper-in-rml'])),
         tftp_value=dict(type='str', choices=['enable']),
         uuid=dict(type='str', )
     ))

@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', attr_list=dict(type='list', attr_name=dict(type='str', ),attr_value=dict(type='str', ),attr_type=dict(type='str', )),sid=dict(type='int', ),partition=dict(type='str', )),
+        oper=dict(type='dict', attr_list=dict(type='list', attr_name=dict(type='str', ), attr_value=dict(type='str', ), attr_type=dict(type='str', )), sid=dict(type='int', ), partition=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

@@ -133,7 +133,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', status=dict(type='str', ),inside_addr_start=dict(type='str', ),inside_addr_end=dict(type='str', ),inside_addr=dict(type='str', ),nat_addr=dict(type='str', ),nat_addr_start=dict(type='str', ),nat_port=dict(type='int', ),inside_port=dict(type='int', ),nat_addr_end=dict(type='str', )),
+        oper=dict(type='dict', status=dict(type='str', ), inside_addr_start=dict(type='str', ), inside_addr_end=dict(type='str', ), inside_addr=dict(type='str', ), nat_addr=dict(type='str', ), nat_addr_start=dict(type='str', ), nat_port=dict(type='int', ), inside_port=dict(type='int', ), nat_addr_end=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

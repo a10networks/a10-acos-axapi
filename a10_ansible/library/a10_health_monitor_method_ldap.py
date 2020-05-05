@@ -161,7 +161,7 @@ def get_argspec():
         ldap_password=dict(type='bool', ),
         ldap_binddn=dict(type='str', ),
         ldap_query=dict(type='str', ),
-        ldap_security=dict(type='str', choices=['overssl','StartTLS']),
+        ldap_security=dict(type='str', choices=['overssl', 'StartTLS']),
         ldap=dict(type='bool', ),
         ldap_run_search=dict(type='bool', ),
         AcceptNotFound=dict(type='bool', )

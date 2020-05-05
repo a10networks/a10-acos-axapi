@@ -120,7 +120,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain_name_list=dict(type='list', domain_name=dict(type='str', ),interval=dict(type='int', )),
+        domain_name_list=dict(type='list', domain_name=dict(type='str', ), interval=dict(type='int', )),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', ),
         name=dict(type='str', required=True, )

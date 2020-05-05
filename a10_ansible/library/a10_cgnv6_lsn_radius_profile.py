@@ -133,7 +133,7 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         lid_profile_index=dict(type='int', required=True, ),
-        radius=dict(type='list', exact_value_lsn_lid=dict(type='int', ),attribute=dict(type='str', choices=['custom1','custom2','custom3','imei','imsi','msisdn','default']),starts_with_lsn_lid=dict(type='int', ),exact_value=dict(type='str', ),starts_with=dict(type='str', ),default_lsn_lid=dict(type='int', )),
+        radius=dict(type='list', exact_value_lsn_lid=dict(type='int', ), attribute=dict(type='str', choices=['custom1', 'custom2', 'custom3', 'imei', 'imsi', 'msisdn', 'default']), starts_with_lsn_lid=dict(type='int', ), exact_value=dict(type='str', ), starts_with=dict(type='str', ), default_lsn_lid=dict(type='int', )),
         uuid=dict(type='str', ),
         user_tag=dict(type='str', )
     ))

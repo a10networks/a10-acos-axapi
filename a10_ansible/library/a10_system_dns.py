@@ -153,8 +153,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all','slb_req','slb_resp','slb_no_resp','slb_req_rexmit','slb_resp_no_match','slb_no_resource','nat_req','nat_resp','nat_no_resp','nat_req_rexmit','nat_resp_no_match','nat_no_resource','nat_xid_reused'])),
-        stats=dict(type='dict', slb_no_resource=dict(type='str', ),nat_resp=dict(type='str', ),slb_req=dict(type='str', ),nat_xid_reused=dict(type='str', ),slb_resp_no_match=dict(type='str', ),slb_no_resp=dict(type='str', ),nat_req=dict(type='str', ),slb_req_rexmit=dict(type='str', ),nat_no_resource=dict(type='str', ),nat_no_resp=dict(type='str', ),nat_req_rexmit=dict(type='str', ),nat_resp_no_match=dict(type='str', ),slb_resp=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'slb_req', 'slb_resp', 'slb_no_resp', 'slb_req_rexmit', 'slb_resp_no_match', 'slb_no_resource', 'nat_req', 'nat_resp', 'nat_no_resp', 'nat_req_rexmit', 'nat_resp_no_match', 'nat_no_resource', 'nat_xid_reused'])),
+        stats=dict(type='dict', slb_no_resource=dict(type='str', ), nat_resp=dict(type='str', ), slb_req=dict(type='str', ), nat_xid_reused=dict(type='str', ), slb_resp_no_match=dict(type='str', ), slb_no_resp=dict(type='str', ), nat_req=dict(type='str', ), slb_req_rexmit=dict(type='str', ), nat_no_resource=dict(type='str', ), nat_no_resp=dict(type='str', ), nat_req_rexmit=dict(type='str', ), nat_resp_no_match=dict(type='str', ), slb_resp=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

@@ -138,15 +138,15 @@ def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
         username=dict(type='str', required=True, ),
-        auth_val=dict(type='str', choices=['md5','sha']),
+        auth_val=dict(type='str', choices=['md5', 'sha']),
         group=dict(type='str', ),
         uuid=dict(type='str', ),
         encpasswd=dict(type='str', ),
         passwd=dict(type='str', ),
         priv_pw_encrypted=dict(type='str', ),
-        v3=dict(type='str', choices=['auth','noauth']),
+        v3=dict(type='str', choices=['auth', 'noauth']),
         pw_encrypted=dict(type='str', ),
-        priv=dict(type='str', choices=['des','aes'])
+        priv=dict(type='str', choices=['des', 'aes'])
     ))
    
 

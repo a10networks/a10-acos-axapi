@@ -115,7 +115,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', cgn_data=dict(type='list', lsn_user_quota_create=dict(type='int', ),lsn_user_quota_delete=dict(type='int', ),dslite_user_quota_delete=dict(type='int', ),dslite_user_quota_create=dict(type='int', ),nat64_user_quota_delete=dict(type='int', ),time=dict(type='int', ),nat64_user_quota_create=dict(type='int', )),end_time=dict(type='int', ),start_time=dict(type='int', )),
+        oper=dict(type='dict', cgn_data=dict(type='list', lsn_user_quota_create=dict(type='int', ), lsn_user_quota_delete=dict(type='int', ), dslite_user_quota_delete=dict(type='int', ), dslite_user_quota_create=dict(type='int', ), nat64_user_quota_delete=dict(type='int', ), time=dict(type='int', ), nat64_user_quota_create=dict(type='int', )), end_time=dict(type='int', ), start_time=dict(type='int', )),
         uuid=dict(type='str', )
     ))
    

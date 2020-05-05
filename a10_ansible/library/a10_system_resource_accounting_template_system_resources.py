@@ -189,16 +189,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_limit_cfg=dict(type='dict', l4_session_limit_max=dict(type='str', ),l4_session_limit_min_guarantee=dict(type='str', )),
+        l4_session_limit_cfg=dict(type='dict', l4_session_limit_max=dict(type='str', ), l4_session_limit_min_guarantee=dict(type='str', )),
         l7cps_limit_cfg=dict(type='dict', l7cps_limit_max=dict(type='int', )),
         l4cps_limit_cfg=dict(type='dict', l4cps_limit_max=dict(type='int', )),
         uuid=dict(type='str', ),
         natcps_limit_cfg=dict(type='dict', natcps_limit_max=dict(type='int', )),
         sslcps_limit_cfg=dict(type='dict', sslcps_limit_max=dict(type='int', )),
         fwcps_limit_cfg=dict(type='dict', fwcps_limit_max=dict(type='int', )),
-        ssl_throughput_limit_cfg=dict(type='dict', ssl_throughput_limit_watermark_disable=dict(type='bool', ),ssl_throughput_limit_max=dict(type='int', )),
+        ssl_throughput_limit_cfg=dict(type='dict', ssl_throughput_limit_watermark_disable=dict(type='bool', ), ssl_throughput_limit_max=dict(type='int', )),
         threshold=dict(type='int', ),
-        bw_limit_cfg=dict(type='dict', bw_limit_max=dict(type='int', ),bw_limit_watermark_disable=dict(type='bool', )),
+        bw_limit_cfg=dict(type='dict', bw_limit_max=dict(type='int', ), bw_limit_watermark_disable=dict(type='bool', )),
         concurrent_session_limit_cfg=dict(type='dict', concurrent_session_limit_max=dict(type='int', ))
     ))
    

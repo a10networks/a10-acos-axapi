@@ -118,7 +118,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict', slb_server_statistics=dict(type='list', out_bytes=dict(type='int', ),in_bytes=dict(type='int', ),p_conn=dict(type='int', ),out_pkts=dict(type='int', ),cur_conn=dict(type='int', ),time=dict(type='int', ),in_pkts=dict(type='int', )),end_time=dict(type='int', ),start_time=dict(type='int', ),slb_service_group_name=dict(type='str', )),
+        oper=dict(type='dict', slb_server_statistics=dict(type='list', out_bytes=dict(type='int', ), in_bytes=dict(type='int', ), p_conn=dict(type='int', ), out_pkts=dict(type='int', ), cur_conn=dict(type='int', ), time=dict(type='int', ), in_pkts=dict(type='int', )), end_time=dict(type='int', ), start_time=dict(type='int', ), slb_service_group_name=dict(type='str', )),
         uuid=dict(type='str', )
     ))
    

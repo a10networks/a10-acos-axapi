@@ -128,7 +128,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        exception=dict(type='dict', action=dict(type='str', choices=['add','delete','clean']),certificate_name=dict(type='str', )),
+        exception=dict(type='dict', action=dict(type='str', choices=['add', 'delete', 'clean']), certificate_name=dict(type='str', )),
         uuid=dict(type='str', ),
         ssl_expire_email_address=dict(type='str', ),
         interval_days=dict(type='int', ),

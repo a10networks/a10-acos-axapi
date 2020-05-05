@@ -215,7 +215,7 @@ def get_argspec():
         avp_string=dict(type='str', ),
         terminate_on_cca_t=dict(type='bool', ),
         message_code_list=dict(type='list', message_code=dict(type='int', )),
-        avp_list=dict(type='list', int32=dict(type='int', ),avp=dict(type='int', ),mandatory=dict(type='bool', ),string=dict(type='str', ),int64=dict(type='int', )),
+        avp_list=dict(type='list', int32=dict(type='int', ), avp=dict(type='int', ), mandatory=dict(type='bool', ), string=dict(type='str', ), int64=dict(type='int', )),
         service_group_name=dict(type='str', ),
         uuid=dict(type='str', ),
         idle_timeout=dict(type='int', ),
@@ -231,7 +231,7 @@ def get_argspec():
         dwr_time=dict(type='int', ),
         user_tag=dict(type='str', ),
         origin_realm=dict(type='str', ),
-        origin_host=dict(type='dict', uuid=dict(type='str', ),origin_host_name=dict(type='str', )),
+        origin_host=dict(type='dict', uuid=dict(type='str', ), origin_host_name=dict(type='str', )),
         multiple_origin_host=dict(type='bool', ),
         forward_to_latest_server=dict(type='bool', )
     ))
