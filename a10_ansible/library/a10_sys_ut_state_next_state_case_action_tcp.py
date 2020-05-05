@@ -205,18 +205,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        checksum=dict(type='str',choices=['valid','invalid']),
-        seq_number=dict(type='str',choices=['valid','invalid']),
-        nat_pool=dict(type='str',),
-        src_port=dict(type='int',),
-        urgent=dict(type='str',choices=['valid','invalid']),
-        window=dict(type='str',choices=['valid','invalid']),
-        ack_seq_number=dict(type='str',choices=['valid','invalid']),
-        flags=dict(type='dict',ece=dict(type='bool',),urg=dict(type='bool',),uuid=dict(type='str',),ack=dict(type='bool',),cwr=dict(type='bool',),psh=dict(type='bool',),syn=dict(type='bool',),rst=dict(type='bool',),fin=dict(type='bool',)),
-        dest_port=dict(type='bool',),
-        dest_port_value=dict(type='int',),
-        options=dict(type='dict',uuid=dict(type='str',),mss=dict(type='int',),sack_type=dict(type='str',choices=['permitted','block']),time_stamp_enable=dict(type='bool',),nop=dict(type='bool',),wscale=dict(type='int',))
+        uuid=dict(type='str', ),
+        checksum=dict(type='str', choices=['valid', 'invalid']),
+        seq_number=dict(type='str', choices=['valid', 'invalid']),
+        nat_pool=dict(type='str', ),
+        src_port=dict(type='int', ),
+        urgent=dict(type='str', choices=['valid', 'invalid']),
+        window=dict(type='str', choices=['valid', 'invalid']),
+        ack_seq_number=dict(type='str', choices=['valid', 'invalid']),
+        flags=dict(type='dict', ece=dict(type='bool', ), urg=dict(type='bool', ), uuid=dict(type='str', ), ack=dict(type='bool', ), cwr=dict(type='bool', ), psh=dict(type='bool', ), syn=dict(type='bool', ), rst=dict(type='bool', ), fin=dict(type='bool', )),
+        dest_port=dict(type='bool', ),
+        dest_port_value=dict(type='int', ),
+        options=dict(type='dict', uuid=dict(type='str', ), mss=dict(type='int', ), sack_type=dict(type='str', choices=['permitted', 'block']), time_stamp_enable=dict(type='bool', ), nop=dict(type='bool', ), wscale=dict(type='int', ))
     ))
    
     # Parent keys

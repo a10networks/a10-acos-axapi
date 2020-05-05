@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        curr_part_name=dict(type='str',),
-        shared=dict(type='bool',)
+        curr_part_name=dict(type='str', ),
+        shared=dict(type='bool', )
     ))
    
 

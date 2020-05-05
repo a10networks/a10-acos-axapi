@@ -165,18 +165,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        login_message=dict(type='str',),
-        gui_session_limit=dict(type='int',),
-        axapi_session_limit=dict(type='int',),
-        gui_idle=dict(type='int',),
-        uuid=dict(type='str',),
-        axapi_idle=dict(type='int',),
-        server_disable=dict(type='bool',),
-        secure_port=dict(type='int',),
-        auto_redirt_disable=dict(type='bool',),
-        secure_server_disable=dict(type='bool',),
-        port=dict(type='int',),
-        secure=dict(type='dict',certificate=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),regenerate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),wipe=dict(type='bool',),private_key=dict(type='dict',load=dict(type='bool',),use_mgmt_port=dict(type='bool',),file_url=dict(type='str',)),generate=dict(type='dict',country=dict(type='str',),state=dict(type='str',),domain_name=dict(type='str',)),restart=dict(type='bool',))
+        login_message=dict(type='str', ),
+        gui_session_limit=dict(type='int', ),
+        axapi_session_limit=dict(type='int', ),
+        gui_idle=dict(type='int', ),
+        uuid=dict(type='str', ),
+        axapi_idle=dict(type='int', ),
+        server_disable=dict(type='bool', ),
+        secure_port=dict(type='int', ),
+        auto_redirt_disable=dict(type='bool', ),
+        secure_server_disable=dict(type='bool', ),
+        port=dict(type='int', ),
+        secure=dict(type='dict', certificate=dict(type='dict', load=dict(type='bool', ), use_mgmt_port=dict(type='bool', ), file_url=dict(type='str', )), regenerate=dict(type='dict', country=dict(type='str', ), state=dict(type='str', ), domain_name=dict(type='str', )), wipe=dict(type='bool', ), private_key=dict(type='dict', load=dict(type='bool', ), use_mgmt_port=dict(type='bool', ), file_url=dict(type='str', )), generate=dict(type='dict', country=dict(type='str', ), state=dict(type='str', ), domain_name=dict(type='str', )), restart=dict(type='bool', ))
     ))
    
 

@@ -142,17 +142,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        profile=dict(type='str',),
-        dest_profile=dict(type='str',),
-        dest_remote_file=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        dest_use_mgmt_port=dict(type='bool',),
-        remote_file=dict(type='str',),
-        startup_config=dict(type='bool',),
-        to_profile=dict(type='str',),
-        to_startup_config=dict(type='bool',),
-        running_config=dict(type='bool',),
-        to_running_config=dict(type='bool',)
+        profile=dict(type='str', ),
+        dest_profile=dict(type='str', ),
+        dest_remote_file=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        dest_use_mgmt_port=dict(type='bool', ),
+        remote_file=dict(type='str', ),
+        startup_config=dict(type='bool', ),
+        to_profile=dict(type='str', ),
+        to_startup_config=dict(type='bool', ),
+        running_config=dict(type='bool', ),
+        to_running_config=dict(type='bool', )
     ))
    
 

@@ -159,13 +159,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        mon_entity_topk=dict(type='bool',),
-        debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),
-        uuid=dict(type='str',),
-        secondary_monitoring_key=dict(type='str',required=True,choices=['service']),
-        delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),
-        source_entity_topk=dict(type='bool',),
-        replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP']))
+        mon_entity_topk=dict(type='bool', ),
+        debug_list=dict(type='list', debug_port=dict(type='int', required=True, ), debug_ip_addr=dict(type='str', required=True, ), debug_protocol=dict(type='str', required=True, choices=['TCP', 'UDP', 'ICMP']), uuid=dict(type='str', )),
+        uuid=dict(type='str', ),
+        secondary_monitoring_key=dict(type='str', required=True, choices=['service']),
+        delete_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP'])),
+        source_entity_topk=dict(type='bool', ),
+        replay_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP']))
     ))
    
 

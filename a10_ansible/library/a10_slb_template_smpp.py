@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        server_enquire_link=dict(type='bool',),
-        server_selection_per_request=dict(type='bool',),
-        client_enquire_link=dict(type='bool',),
-        user_tag=dict(type='str',),
-        server_enquire_link_val=dict(type='int',),
-        user=dict(type='str',),
-        password=dict(type='str',),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        server_enquire_link=dict(type='bool', ),
+        server_selection_per_request=dict(type='bool', ),
+        client_enquire_link=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        server_enquire_link_val=dict(type='int', ),
+        user=dict(type='str', ),
+        password=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -113,9 +113,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        records=dict(type='int',),
-        uuid=dict(type='str',),
-        timeout=dict(type='int',)
+        records=dict(type='int', ),
+        uuid=dict(type='str', ),
+        timeout=dict(type='int', )
     ))
    
     # Parent keys

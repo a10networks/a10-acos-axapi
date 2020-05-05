@@ -282,20 +282,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        old_pwd_cfg=dict(type='dict',old_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),old_color=dict(type='bool',),old_color_value=dict(type='str',),old_password=dict(type='bool',),old_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),old_size=dict(type='int',),old_text=dict(type='str',),old_font_custom=dict(type='str',),old_font=dict(type='bool',)),
-        username_var=dict(type='str',),
-        new_pwd_cfg=dict(type='dict',new_password=dict(type='bool',),new_size=dict(type='int',),new_font=dict(type='bool',),new_text=dict(type='str',),new_color=dict(type='bool',),new_color_value=dict(type='str',),new_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),new_font_custom=dict(type='str',),new_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana'])),
-        uuid=dict(type='str',),
-        cfm_pwd_cfg=dict(type='dict',cfm_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']),cfm_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),cfm_color_value=dict(type='str',),cfm_font_custom=dict(type='str',),cfm_size=dict(type='int',),cfm_font=dict(type='bool',),cfm_text=dict(type='str',),confirm_password=dict(type='bool',),cfm_color=dict(type='bool',)),
-        confirm_password_var=dict(type='str',),
-        new_password_var=dict(type='str',),
-        change_url=dict(type='str',),
-        continue_url=dict(type='str',),
-        background=dict(type='dict',bgfile=dict(type='str',),bgstyle=dict(type='str',choices=['tile','stretch','fit']),bgcolor_value=dict(type='str',),bgcolor_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow'])),
-        old_password_var=dict(type='str',),
-        change_text=dict(type='str',),
-        continue_text=dict(type='str',),
-        username_cfg=dict(type='dict',username=dict(type='bool',),user_font=dict(type='bool',),user_text=dict(type='str',),user_size=dict(type='int',),user_color_value=dict(type='str',),user_font_custom=dict(type='str',),user_color=dict(type='bool',),user_face=dict(type='str',choices=['Arial','Courier_New','Georgia','Times_New_Roman','Verdana']),user_color_name=dict(type='str',choices=['aqua','black','blue','fuchsia','gray','green','lime','maroon','navy','olive','orange','purple','red','silver','teal','white','yellow']))
+        old_pwd_cfg=dict(type='dict', old_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), old_color=dict(type='bool', ), old_color_value=dict(type='str', ), old_password=dict(type='bool', ), old_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), old_size=dict(type='int', ), old_text=dict(type='str', ), old_font_custom=dict(type='str', ), old_font=dict(type='bool', )),
+        username_var=dict(type='str', ),
+        new_pwd_cfg=dict(type='dict', new_password=dict(type='bool', ), new_size=dict(type='int', ), new_font=dict(type='bool', ), new_text=dict(type='str', ), new_color=dict(type='bool', ), new_color_value=dict(type='str', ), new_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), new_font_custom=dict(type='str', ), new_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana'])),
+        uuid=dict(type='str', ),
+        cfm_pwd_cfg=dict(type='dict', cfm_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), cfm_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), cfm_color_value=dict(type='str', ), cfm_font_custom=dict(type='str', ), cfm_size=dict(type='int', ), cfm_font=dict(type='bool', ), cfm_text=dict(type='str', ), confirm_password=dict(type='bool', ), cfm_color=dict(type='bool', )),
+        confirm_password_var=dict(type='str', ),
+        new_password_var=dict(type='str', ),
+        change_url=dict(type='str', ),
+        continue_url=dict(type='str', ),
+        background=dict(type='dict', bgfile=dict(type='str', ), bgstyle=dict(type='str', choices=['tile', 'stretch', 'fit']), bgcolor_value=dict(type='str', ), bgcolor_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])),
+        old_password_var=dict(type='str', ),
+        change_text=dict(type='str', ),
+        continue_text=dict(type='str', ),
+        username_cfg=dict(type='dict', username=dict(type='bool', ), user_font=dict(type='bool', ), user_text=dict(type='str', ), user_size=dict(type='int', ), user_color_value=dict(type='str', ), user_font_custom=dict(type='str', ), user_color=dict(type='bool', ), user_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), user_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']))
     ))
    
     # Parent keys

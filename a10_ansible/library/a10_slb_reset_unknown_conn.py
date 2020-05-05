@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',unknown_conn_rate_limit_drop=dict(type='int',),unknown_conn_rate_limit=dict(type='int',),unknown_conn_current_rate=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', unknown_conn_rate_limit_drop=dict(type='int', ), unknown_conn_rate_limit=dict(type='int', ), unknown_conn_current_rate=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

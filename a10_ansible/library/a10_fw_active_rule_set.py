@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        session_aging=dict(type='str',),
-        override_nat_aging=dict(type='bool',),
-        name=dict(type='str',),
-        uuid=dict(type='str',)
+        session_aging=dict(type='str', ),
+        override_nat_aging=dict(type='bool', ),
+        name=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

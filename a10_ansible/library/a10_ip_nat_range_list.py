@@ -158,21 +158,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        global_start_ipv6_addr=dict(type='str',),
-        v4_vrid=dict(type='int',),
-        uuid=dict(type='str',),
-        v4_count=dict(type='int',),
-        local_start_ipv6_addr=dict(type='str',),
-        name=dict(type='str',required=True,),
-        global_start_ipv4_addr=dict(type='str',),
-        local_netmaskv4=dict(type='str',),
-        local_start_ipv4_addr=dict(type='str',),
-        v4_acl_name=dict(type='str',),
-        v6_vrid=dict(type='int',),
-        v6_acl_name=dict(type='str',),
-        v4_acl_id=dict(type='int',),
-        v6_count=dict(type='int',),
-        global_netmaskv4=dict(type='str',)
+        global_start_ipv6_addr=dict(type='str', ),
+        v4_vrid=dict(type='int', ),
+        uuid=dict(type='str', ),
+        v4_count=dict(type='int', ),
+        local_start_ipv6_addr=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        global_start_ipv4_addr=dict(type='str', ),
+        local_netmaskv4=dict(type='str', ),
+        local_start_ipv4_addr=dict(type='str', ),
+        v4_acl_name=dict(type='str', ),
+        v6_vrid=dict(type='int', ),
+        v6_acl_name=dict(type='str', ),
+        v4_acl_id=dict(type='int', ),
+        v6_count=dict(type='int', ),
+        global_netmaskv4=dict(type='str', )
     ))
    
 

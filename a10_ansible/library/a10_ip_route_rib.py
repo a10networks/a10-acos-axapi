@@ -169,13 +169,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_nexthop_lif=dict(type='list',lif=dict(type='int',),description_nexthop_lif=dict(type='str',)),
-        ip_nexthop_ipv4=dict(type='list',description_nexthop_ip=dict(type='str',),ip_next_hop=dict(type='str',),distance_nexthop_ip=dict(type='int',)),
-        uuid=dict(type='str',),
-        ip_dest_addr=dict(type='str',required=True,),
-        ip_nexthop_tunnel=dict(type='list',tunnel=dict(type='int',),ip_next_hop_tunnel=dict(type='str',),distance_nexthop_tunnel=dict(type='int',),description_nexthop_tunnel=dict(type='str',)),
-        ip_nexthop_partition=dict(type='list',partition_name=dict(type='str',),vrid_num_in_partition=dict(type='int',),description_nexthop_partition=dict(type='str',),description_partition_vrid=dict(type='str',)),
-        ip_mask=dict(type='str',required=True,)
+        ip_nexthop_lif=dict(type='list', lif=dict(type='int', ), description_nexthop_lif=dict(type='str', )),
+        ip_nexthop_ipv4=dict(type='list', description_nexthop_ip=dict(type='str', ), ip_next_hop=dict(type='str', ), distance_nexthop_ip=dict(type='int', )),
+        uuid=dict(type='str', ),
+        ip_dest_addr=dict(type='str', required=True, ),
+        ip_nexthop_tunnel=dict(type='list', tunnel=dict(type='int', ), ip_next_hop_tunnel=dict(type='str', ), distance_nexthop_tunnel=dict(type='int', ), description_nexthop_tunnel=dict(type='str', )),
+        ip_nexthop_partition=dict(type='list', partition_name=dict(type='str', ), vrid_num_in_partition=dict(type='int', ), description_nexthop_partition=dict(type='str', ), description_partition_vrid=dict(type='str', )),
+        ip_mask=dict(type='str', required=True, )
     ))
    
 

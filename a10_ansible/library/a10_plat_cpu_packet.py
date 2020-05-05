@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',pkt_stats=dict(type='list',pkt_drop=dict(type='int',),pkt_sent=dict(type='int',),pkt_rcvd=dict(type='int',),cpu_num=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', pkt_stats=dict(type='list', pkt_drop=dict(type='int', ), pkt_sent=dict(type='int', ), pkt_rcvd=dict(type='int', ), cpu_num=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

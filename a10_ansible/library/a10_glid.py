@@ -186,23 +186,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        request_limit=dict(type='int',),
-        conn_limit=dict(type='int',),
-        log=dict(type='bool',),
-        request_rate_limit_interval=dict(type='int',),
-        dns64=dict(type='dict',prefix=dict(type='str',),exclusive_answer=dict(type='bool',),disable=dict(type='bool',)),
-        request_rate_limit=dict(type='int',),
-        user_tag=dict(type='str',),
-        conn_rate_limit_interval=dict(type='int',),
-        num=dict(type='int',required=True,),
-        conn_rate_limit=dict(type='int',),
-        dns=dict(type='dict',action=dict(type='str',choices=['cache-disable','cache-enable']),weight=dict(type='int',),ttl=dict(type='int',)),
-        lockout=dict(type='int',),
-        action_value=dict(type='str',choices=['drop','dns-cache-disable','dns-cache-enable','forward','reset']),
-        over_limit_action=dict(type='bool',),
-        log_interval=dict(type='int',),
-        use_nat_pool=dict(type='str',),
-        uuid=dict(type='str',)
+        request_limit=dict(type='int', ),
+        conn_limit=dict(type='int', ),
+        log=dict(type='bool', ),
+        request_rate_limit_interval=dict(type='int', ),
+        dns64=dict(type='dict', prefix=dict(type='str', ), exclusive_answer=dict(type='bool', ), disable=dict(type='bool', )),
+        request_rate_limit=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        conn_rate_limit_interval=dict(type='int', ),
+        num=dict(type='int', required=True, ),
+        conn_rate_limit=dict(type='int', ),
+        dns=dict(type='dict', action=dict(type='str', choices=['cache-disable', 'cache-enable']), weight=dict(type='int', ), ttl=dict(type='int', )),
+        lockout=dict(type='int', ),
+        action_value=dict(type='str', choices=['drop', 'dns-cache-disable', 'dns-cache-enable', 'forward', 'reset']),
+        over_limit_action=dict(type='bool', ),
+        log_interval=dict(type='int', ),
+        use_nat_pool=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

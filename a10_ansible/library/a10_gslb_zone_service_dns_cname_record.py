@@ -146,13 +146,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        alias_name=dict(type='str',required=True,),
-        stats=dict(type='dict',alias_name=dict(type='str',required=True,),cname_hits=dict(type='str',)),
-        uuid=dict(type='str',),
-        as_backup=dict(type='bool',),
-        weight=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cname-hits'])),
-        admin_preference=dict(type='int',)
+        alias_name=dict(type='str', required=True, ),
+        stats=dict(type='dict', alias_name=dict(type='str', required=True, ), cname_hits=dict(type='str', )),
+        uuid=dict(type='str', ),
+        as_backup=dict(type='bool', ),
+        weight=dict(type='int', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'cname-hits'])),
+        admin_preference=dict(type='int', )
     ))
    
     # Parent keys

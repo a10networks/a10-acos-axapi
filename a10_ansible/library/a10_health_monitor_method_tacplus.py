@@ -145,17 +145,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        tacplus_encrypted=dict(type='str',),
-        secret_encrypted=dict(type='str',),
-        uuid=dict(type='str',),
-        tacplus_password_string=dict(type='str',),
-        tacplus_secret=dict(type='bool',),
-        tacplus_username=dict(type='str',),
-        tacplus=dict(type='bool',),
-        tacplus_secret_string=dict(type='str',),
-        tacplus_type=dict(type='str',choices=['inbound-ascii-login']),
-        tacplus_password=dict(type='bool',),
-        tacplus_port=dict(type='int',)
+        tacplus_encrypted=dict(type='str', ),
+        secret_encrypted=dict(type='str', ),
+        uuid=dict(type='str', ),
+        tacplus_password_string=dict(type='str', ),
+        tacplus_secret=dict(type='bool', ),
+        tacplus_username=dict(type='str', ),
+        tacplus=dict(type='bool', ),
+        tacplus_secret_string=dict(type='str', ),
+        tacplus_type=dict(type='str', choices=['inbound-ascii-login']),
+        tacplus_password=dict(type='bool', ),
+        tacplus_port=dict(type='int', )
     ))
    
     # Parent keys

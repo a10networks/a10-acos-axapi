@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        description=dict(type='str',),
-        remote_file=dict(type='str',),
-        externalfilename=dict(type='str',),
-        password=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        overwrite=dict(type='bool',)
+        description=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        externalfilename=dict(type='str', ),
+        password=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        overwrite=dict(type='bool', )
     ))
    
 

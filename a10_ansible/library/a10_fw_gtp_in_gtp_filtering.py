@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gtp_in_gtp_value=dict(type='str',choices=['disable']),
-        uuid=dict(type='str',)
+        gtp_in_gtp_value=dict(type='str', choices=['disable']),
+        uuid=dict(type='str', )
     ))
    
 

@@ -174,24 +174,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        config_save=dict(type='bool',),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        standalone=dict(type='bool',),
-        mgmt_interface=dict(type='bool',),
-        user_tag=dict(type='str',),
-        dns_discover=dict(type='bool',),
-        priority=dict(type='int',),
-        config_anywhere=dict(type='bool',),
-        data_interface=dict(type='bool',),
-        auto_map_primary=dict(type='bool',),
-        learn=dict(type='bool',),
-        primary_list=dict(type='list',primary=dict(type='str',)),
-        auto_map_learn=dict(type='bool',),
-        suffix=dict(type='str',),
-        config_merge=dict(type='bool',),
-        auto_map_smart=dict(type='bool',),
-        name=dict(type='str',required=True,)
+        config_save=dict(type='bool', ),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        standalone=dict(type='bool', ),
+        mgmt_interface=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        dns_discover=dict(type='bool', ),
+        priority=dict(type='int', ),
+        config_anywhere=dict(type='bool', ),
+        data_interface=dict(type='bool', ),
+        auto_map_primary=dict(type='bool', ),
+        learn=dict(type='bool', ),
+        primary_list=dict(type='list', primary=dict(type='str', )),
+        auto_map_learn=dict(type='bool', ),
+        suffix=dict(type='str', ),
+        config_merge=dict(type='bool', ),
+        auto_map_smart=dict(type='bool', ),
+        name=dict(type='str', required=True, )
     ))
    
 

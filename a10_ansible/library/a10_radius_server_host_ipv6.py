@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        secret=dict(type='dict',port_cfg=dict(type='dict',acct_port=dict(type='int',),retransmit=dict(type='int',),timeout=dict(type='int',),auth_port=dict(type='int',)),encrypted=dict(type='str',),secret_value=dict(type='str',)),
-        ipv6_addr=dict(type='str',required=True,),
-        uuid=dict(type='str',)
+        secret=dict(type='dict', port_cfg=dict(type='dict', acct_port=dict(type='int', ), retransmit=dict(type='int', ), timeout=dict(type='int', ), auth_port=dict(type='int', )), encrypted=dict(type='str', ), secret_value=dict(type='str', )),
+        ipv6_addr=dict(type='str', required=True, ),
+        uuid=dict(type='str', )
     ))
    
 

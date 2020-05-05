@@ -131,8 +131,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',license_status=dict(type='str',),grace_period=dict(type='str',),is_grace=dict(type='str',),license_expiry=dict(type='str',),serial_number=dict(type='str',),remaining_period=dict(type='str',),license_type=dict(type='str',),module_status=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', license_status=dict(type='str', ), grace_period=dict(type='str', ), is_grace=dict(type='str', ), license_expiry=dict(type='str', ), serial_number=dict(type='str', ), remaining_period=dict(type='str', ), license_type=dict(type='str', ), module_status=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

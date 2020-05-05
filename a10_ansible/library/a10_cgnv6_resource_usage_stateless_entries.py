@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        l4_session_count=dict(type='int',),
-        uuid=dict(type='str',)
+        l4_session_count=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

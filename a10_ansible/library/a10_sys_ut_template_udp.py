@@ -136,13 +136,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        src_port_range=dict(type='list',src_port_end=dict(type='int',),src_port_start=dict(type='int',)),
-        uuid=dict(type='str',),
-        checksum=dict(type='str',choices=['valid','invalid']),
-        nat_pool=dict(type='str',),
-        length=dict(type='int',),
-        dest_port=dict(type='bool',),
-        dest_port_value=dict(type='int',)
+        src_port_range=dict(type='list', src_port_end=dict(type='int', ), src_port_start=dict(type='int', )),
+        uuid=dict(type='str', ),
+        checksum=dict(type='str', choices=['valid', 'invalid']),
+        nat_pool=dict(type='str', ),
+        length=dict(type='int', ),
+        dest_port=dict(type='bool', ),
+        dest_port_value=dict(type='int', )
     ))
    
     # Parent keys

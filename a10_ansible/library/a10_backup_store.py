@@ -123,8 +123,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        delete_cfg=dict(type='dict',store_name_del=dict(type='str',),delete=dict(type='bool',)),
-        creat_cfg=dict(type='dict',create=dict(type='bool',),remote_file=dict(type='str',),store_name=dict(type='str',))
+        delete_cfg=dict(type='dict', store_name_del=dict(type='str', ), delete=dict(type='bool', )),
+        creat_cfg=dict(type='dict', create=dict(type='bool', ), remote_file=dict(type='str', ), store_name=dict(type='str', ))
     ))
    
 

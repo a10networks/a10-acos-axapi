@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',all_partition_list=dict(type='list',active_priority=dict(type='int',),vrid=dict(type='int',),local_device_ID=dict(type='int',),partition_name=dict(type='str',),active_device_id=dict(type='int',),active_weight=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', all_partition_list=dict(type='list', active_priority=dict(type='int', ), vrid=dict(type='int', ), local_device_ID=dict(type='int', ), partition_name=dict(type='str', ), active_device_id=dict(type='int', ), active_weight=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -128,12 +128,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        uuid=dict(type='str',),
-        l4=dict(type='bool',),
-        l2=dict(type='bool',),
-        l3=dict(type='bool',),
-        l1=dict(type='bool',)
+        all=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        l4=dict(type='bool', ),
+        l2=dict(type='bool', ),
+        l3=dict(type='bool', ),
+        l1=dict(type='bool', )
     ))
    
     # Parent keys

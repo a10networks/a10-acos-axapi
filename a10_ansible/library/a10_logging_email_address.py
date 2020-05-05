@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        email_list=dict(type='list',email_address=dict(type='str',))
+        uuid=dict(type='str', ),
+        email_list=dict(type='list', email_address=dict(type='str', ))
     ))
    
 

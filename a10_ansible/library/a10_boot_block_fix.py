@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        cf=dict(type='bool',),
-        hd=dict(type='bool',)
+        cf=dict(type='bool', ),
+        hd=dict(type='bool', )
     ))
    
 

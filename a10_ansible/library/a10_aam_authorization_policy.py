@@ -228,17 +228,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        jwt_authorization=dict(type='str',),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        server=dict(type='str',),
-        jwt_claim_map_list=dict(type='list',claim=dict(type='str',),bool_val=dict(type='str',choices=['true','false']),uuid=dict(type='str',),string_type=dict(type='bool',),str_val=dict(type='str',),num_val=dict(type='int',),attr_num=dict(type='int',required=True,),number_type=dict(type='bool',),boolean_type=dict(type='bool',),ntype=dict(type='bool',)),
-        service_group=dict(type='str',),
-        attribute_list=dict(type='list',attribute_name=dict(type='str',),integer_type=dict(type='bool',),custom_attr_type=dict(type='bool',),uuid=dict(type='str',),string_type=dict(type='bool',),attr_str_val=dict(type='str',),attr_ipv4=dict(type='str',),attr_type=dict(type='bool',),attr_num=dict(type='int',required=True,),a10_dynamic_defined=dict(type='bool',),attr_int=dict(type='str',choices=['equal','not-equal','less-than','more-than','less-than-equal-to','more-than-equal-to']),ip_type=dict(type='bool',),attr_ip=dict(type='str',choices=['equal','not-equal']),A10_AX_AUTH_URI=dict(type='bool',),attr_str=dict(type='str',choices=['match','sub-string']),any=dict(type='bool',),custom_attr_str=dict(type='str',choices=['match','sub-string']),attr_int_val=dict(type='int',)),
-        extended_filter=dict(type='str',),
-        attribute_rule=dict(type='str',),
-        forward_policy_authorize_only=dict(type='bool',),
-        uuid=dict(type='str',)
+        jwt_authorization=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        server=dict(type='str', ),
+        jwt_claim_map_list=dict(type='list', claim=dict(type='str', ), bool_val=dict(type='str', choices=['true', 'false']), uuid=dict(type='str', ), string_type=dict(type='bool', ), str_val=dict(type='str', ), num_val=dict(type='int', ), attr_num=dict(type='int', required=True, ), number_type=dict(type='bool', ), boolean_type=dict(type='bool', ), ntype=dict(type='bool', )),
+        service_group=dict(type='str', ),
+        attribute_list=dict(type='list', attribute_name=dict(type='str', ), integer_type=dict(type='bool', ), custom_attr_type=dict(type='bool', ), uuid=dict(type='str', ), string_type=dict(type='bool', ), attr_str_val=dict(type='str', ), attr_ipv4=dict(type='str', ), attr_type=dict(type='bool', ), attr_num=dict(type='int', required=True, ), a10_dynamic_defined=dict(type='bool', ), attr_int=dict(type='str', choices=['equal', 'not-equal', 'less-than', 'more-than', 'less-than-equal-to', 'more-than-equal-to']), ip_type=dict(type='bool', ), attr_ip=dict(type='str', choices=['equal', 'not-equal']), A10_AX_AUTH_URI=dict(type='bool', ), attr_str=dict(type='str', choices=['match', 'sub-string']), any=dict(type='bool', ), custom_attr_str=dict(type='str', choices=['match', 'sub-string']), attr_int_val=dict(type='int', )),
+        extended_filter=dict(type='str', ),
+        attribute_rule=dict(type='str', ),
+        forward_policy_authorize_only=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

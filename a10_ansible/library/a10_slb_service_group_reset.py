@@ -104,7 +104,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        auto_switch=dict(type='bool',)
+        auto_switch=dict(type='bool', )
     ))
    
     # Parent keys

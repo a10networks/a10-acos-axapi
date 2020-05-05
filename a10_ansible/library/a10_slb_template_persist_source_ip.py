@@ -162,22 +162,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        netmask6=dict(type='int',),
-        incl_dst_ip=dict(type='bool',),
-        hash_persist=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        enforce_higher_priority=dict(type='bool',),
-        dont_honor_conn_rules=dict(type='bool',),
-        primary_port=dict(type='int',),
-        user_tag=dict(type='str',),
-        server=dict(type='bool',),
-        service_group=dict(type='bool',),
-        timeout=dict(type='int',),
-        scan_all_members=dict(type='bool',),
-        netmask=dict(type='str',),
-        incl_sport=dict(type='bool',),
-        match_type=dict(type='bool',),
-        uuid=dict(type='str',)
+        netmask6=dict(type='int', ),
+        incl_dst_ip=dict(type='bool', ),
+        hash_persist=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        enforce_higher_priority=dict(type='bool', ),
+        dont_honor_conn_rules=dict(type='bool', ),
+        primary_port=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        server=dict(type='bool', ),
+        service_group=dict(type='bool', ),
+        timeout=dict(type='int', ),
+        scan_all_members=dict(type='bool', ),
+        netmask=dict(type='str', ),
+        incl_sport=dict(type='bool', ),
+        match_type=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -158,13 +158,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        icmp_idle_timeout=dict(type='int',),
-        udp=dict(type='dict',port_cfg=dict(type='list',udp_idle_timeout=dict(type='int',),udp_port=dict(type='int',)),udp_idle_timeout=dict(type='int',),uuid=dict(type='str',)),
-        ip_idle_timeout=dict(type='int',),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        tcp=dict(type='dict',uuid=dict(type='str',),tcp_idle_timeout=dict(type='int',),half_open_idle_timeout=dict(type='int',),force_delete_timeout=dict(type='int',),port_cfg=dict(type='list',tcp_port=dict(type='int',),tcp_idle_timeout=dict(type='int',),half_open_idle_timeout=dict(type='int',),force_delete_timeout=dict(type='int',),force_delete_timeout_100ms=dict(type='int',),half_close_idle_timeout=dict(type='int',)),force_delete_timeout_100ms=dict(type='int',),half_close_idle_timeout=dict(type='int',)),
-        uuid=dict(type='str',)
+        icmp_idle_timeout=dict(type='int', ),
+        udp=dict(type='dict', port_cfg=dict(type='list', udp_idle_timeout=dict(type='int', ), udp_port=dict(type='int', )), udp_idle_timeout=dict(type='int', ), uuid=dict(type='str', )),
+        ip_idle_timeout=dict(type='int', ),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        tcp=dict(type='dict', uuid=dict(type='str', ), tcp_idle_timeout=dict(type='int', ), half_open_idle_timeout=dict(type='int', ), force_delete_timeout=dict(type='int', ), port_cfg=dict(type='list', tcp_port=dict(type='int', ), tcp_idle_timeout=dict(type='int', ), half_open_idle_timeout=dict(type='int', ), force_delete_timeout=dict(type='int', ), force_delete_timeout_100ms=dict(type='int', ), half_close_idle_timeout=dict(type='int', )), force_delete_timeout_100ms=dict(type='int', ), half_close_idle_timeout=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

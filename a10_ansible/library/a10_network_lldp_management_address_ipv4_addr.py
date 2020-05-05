@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        interface_ipv4=dict(type='dict',ipv4_eth=dict(type='str',),ipv4_mgmt=dict(type='bool',),ipv4_ve=dict(type='int',)),
-        uuid=dict(type='str',),
-        ipv4=dict(type='str',required=True,)
+        interface_ipv4=dict(type='dict', ipv4_eth=dict(type='str', ), ipv4_mgmt=dict(type='bool', ), ipv4_ve=dict(type='int', )),
+        uuid=dict(type='str', ),
+        ipv4=dict(type='str', required=True, )
     ))
    
 

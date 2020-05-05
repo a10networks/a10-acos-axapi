@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',vserver=dict(type='str',),crl_info=dict(type='list',status=dict(type='str',choices=['Expired','Not Expired']),issuer=dict(type='str',)),port=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', vserver=dict(type='str', ), crl_info=dict(type='list', status=dict(type='str', choices=['Expired', 'Not Expired']), issuer=dict(type='str', )), port=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

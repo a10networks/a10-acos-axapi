@@ -209,16 +209,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ipv6_prefix=dict(type='str',),
-        stats=dict(type='dict',inbound_icmp_packets_received=dict(type='str',),outbound_udp_packets_received=dict(type='str',),vport_matched=dict(type='str',),inbound_ipv4_dest_unreachable=dict(type='str',),outbound_packets_drop=dict(type='str',),outbound_fragment_ipv6=dict(type='str',),not_local_ip=dict(type='str',),inbound_tcp_packets_received=dict(type='str',),fragment_error=dict(type='str',),other_error=dict(type='str',),unknown_delegated_prefix=dict(type='str',),outbound_tcp_packets_received=dict(type='str',),outbound_icmp_packets_received=dict(type='str',),name=dict(type='str',required=True,),packet_too_big=dict(type='str',),inbound_fragment_ipv4=dict(type='str',),inbound_tunnel_fragment_ipv6=dict(type='str',),outbound_ipv6_dest_unreachable=dict(type='str',),inbound_packets_drop=dict(type='str',),inbound_other_packets_received=dict(type='str',),inbound_udp_packets_received=dict(type='str',),outbound_other_packets_received=dict(type='str',)),
-        name=dict(type='str',required=True,),
-        ce_ipv4_network=dict(type='str',),
-        user_tag=dict(type='str',),
-        mtu=dict(type='int',),
-        ce_ipv4_netmask=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','outbound-tcp-packets-received','outbound-udp-packets-received','outbound-icmp-packets-received','outbound-other-packets-received','outbound-packets-drop','outbound-ipv6-dest-unreachable','outbound-fragment-ipv6','inbound-tcp-packets-received','inbound-udp-packets-received','inbound-icmp-packets-received','inbound-other-packets-received','inbound-packets-drop','inbound-ipv4-dest-unreachable','inbound-fragment-ipv4','inbound-tunnel-fragment-ipv6','vport-matched','unknown-delegated-prefix','packet-too-big','not-local-ip','fragment-error','other-error'])),
-        br_ipv4_address=dict(type='str',),
-        uuid=dict(type='str',)
+        ipv6_prefix=dict(type='str', ),
+        stats=dict(type='dict', inbound_icmp_packets_received=dict(type='str', ), outbound_udp_packets_received=dict(type='str', ), vport_matched=dict(type='str', ), inbound_ipv4_dest_unreachable=dict(type='str', ), outbound_packets_drop=dict(type='str', ), outbound_fragment_ipv6=dict(type='str', ), not_local_ip=dict(type='str', ), inbound_tcp_packets_received=dict(type='str', ), fragment_error=dict(type='str', ), other_error=dict(type='str', ), unknown_delegated_prefix=dict(type='str', ), outbound_tcp_packets_received=dict(type='str', ), outbound_icmp_packets_received=dict(type='str', ), name=dict(type='str', required=True, ), packet_too_big=dict(type='str', ), inbound_fragment_ipv4=dict(type='str', ), inbound_tunnel_fragment_ipv6=dict(type='str', ), outbound_ipv6_dest_unreachable=dict(type='str', ), inbound_packets_drop=dict(type='str', ), inbound_other_packets_received=dict(type='str', ), inbound_udp_packets_received=dict(type='str', ), outbound_other_packets_received=dict(type='str', )),
+        name=dict(type='str', required=True, ),
+        ce_ipv4_network=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        mtu=dict(type='int', ),
+        ce_ipv4_netmask=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'outbound-tcp-packets-received', 'outbound-udp-packets-received', 'outbound-icmp-packets-received', 'outbound-other-packets-received', 'outbound-packets-drop', 'outbound-ipv6-dest-unreachable', 'outbound-fragment-ipv6', 'inbound-tcp-packets-received', 'inbound-udp-packets-received', 'inbound-icmp-packets-received', 'inbound-other-packets-received', 'inbound-packets-drop', 'inbound-ipv4-dest-unreachable', 'inbound-fragment-ipv4', 'inbound-tunnel-fragment-ipv6', 'vport-matched', 'unknown-delegated-prefix', 'packet-too-big', 'not-local-ip', 'fragment-error', 'other-error'])),
+        br_ipv4_address=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

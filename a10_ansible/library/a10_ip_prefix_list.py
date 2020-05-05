@@ -132,9 +132,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rules=dict(type='list',le=dict(type='int',),description=dict(type='str',),seq=dict(type='int',),ipaddr=dict(type='str',),ge=dict(type='int',),action=dict(type='str',choices=['deny','permit']),any=dict(type='bool',)),
-        name=dict(type='str',required=True,),
-        uuid=dict(type='str',)
+        rules=dict(type='list', le=dict(type='int', ), description=dict(type='str', ), seq=dict(type='int', ), ipaddr=dict(type='str', ), ge=dict(type='int', ), action=dict(type='str', choices=['deny', 'permit']), any=dict(type='bool', )),
+        name=dict(type='str', required=True, ),
+        uuid=dict(type='str', )
     ))
    
 

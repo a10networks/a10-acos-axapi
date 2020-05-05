@@ -131,8 +131,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',auth_result=dict(type='str',),interval_position=dict(type='str',),top=dict(type='str',),log_list=dict(type='list',counter=dict(type='int',),name=dict(type='str',)),max_entries=dict(type='int',),interval=dict(type='str',),start_time=dict(type='str',),total=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', auth_result=dict(type='str', ), interval_position=dict(type='str', ), top=dict(type='str', ), log_list=dict(type='list', counter=dict(type='int', ), name=dict(type='str', )), max_entries=dict(type='int', ), interval=dict(type='str', ), start_time=dict(type='str', ), total=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

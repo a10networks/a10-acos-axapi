@@ -125,8 +125,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',vpn_log_offset=dict(type='int',),vpn_log_over=dict(type='int',),vpn_log_list=dict(type='list',vpn_log_data=dict(type='str',)),from_start=dict(type='bool',),follow=dict(type='bool',),num_lines=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', vpn_log_offset=dict(type='int', ), vpn_log_over=dict(type='int', ), vpn_log_list=dict(type='list', vpn_log_data=dict(type='str', )), from_start=dict(type='bool', ), follow=dict(type='bool', ), num_lines=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

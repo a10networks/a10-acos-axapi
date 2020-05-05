@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        display_route_single_line=dict(type='bool',),
-        uuid=dict(type='str',)
+        display_route_single_line=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

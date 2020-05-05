@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        redirect=dict(type='bool',),
-        unreachable=dict(type='bool',),
-        uuid=dict(type='str',)
+        redirect=dict(type='bool', ),
+        unreachable=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

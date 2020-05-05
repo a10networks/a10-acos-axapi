@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',Total=dict(type='int',),Total Paths=dict(type='int',),IPv4_fib=dict(type='list',Interface=dict(type='str',choices=['Management','ethernet','trunk']),Distance=dict(type='int',),Prefix=dict(type='str',),Nexthop=dict(type='str',),PrefixLen=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', Total=dict(type='int', ), Total Paths=dict(type='int', ), IPv4_fib=dict(type='list', Interface=dict(type='str', choices=['Management', 'ethernet', 'trunk']), Distance=dict(type='int', ), Prefix=dict(type='str', ), Nexthop=dict(type='str', ), PrefixLen=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

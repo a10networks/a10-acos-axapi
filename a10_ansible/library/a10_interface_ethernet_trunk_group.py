@@ -144,15 +144,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        trunk_number=dict(type='int',required=True,),
-        user_tag=dict(type='str',),
-        udld_timeout_cfg=dict(type='dict',slow=dict(type='int',),fast=dict(type='int',)),
-        mode=dict(type='str',choices=['active','passive']),
-        timeout=dict(type='str',choices=['long','short']),
-        ntype=dict(type='str',choices=['static','lacp','lacp-udld']),
-        admin_key=dict(type='int',),
-        port_priority=dict(type='int',)
+        uuid=dict(type='str', ),
+        trunk_number=dict(type='int', required=True, ),
+        user_tag=dict(type='str', ),
+        udld_timeout_cfg=dict(type='dict', slow=dict(type='int', ), fast=dict(type='int', )),
+        mode=dict(type='str', choices=['active', 'passive']),
+        timeout=dict(type='str', choices=['long', 'short']),
+        ntype=dict(type='str', choices=['static', 'lacp', 'lacp-udld']),
+        admin_key=dict(type='int', ),
+        port_priority=dict(type='int', )
     ))
    
     # Parent keys

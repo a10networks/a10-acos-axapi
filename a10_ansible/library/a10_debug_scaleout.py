@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        config=dict(type='bool',),
-        event=dict(type='bool',),
-        packet=dict(type='bool',),
-        uuid=dict(type='str',)
+        config=dict(type='bool', ),
+        event=dict(type='bool', ),
+        packet=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

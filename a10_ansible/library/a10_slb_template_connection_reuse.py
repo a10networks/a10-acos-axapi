@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        preopen=dict(type='bool',),
-        uuid=dict(type='str',),
-        keep_alive_conn=dict(type='bool',),
-        user_tag=dict(type='str',),
-        limit_per_server=dict(type='int',),
-        timeout=dict(type='int',),
-        num_conn_per_port=dict(type='int',),
-        name=dict(type='str',required=True,)
+        preopen=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        keep_alive_conn=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        limit_per_server=dict(type='int', ),
+        timeout=dict(type='int', ),
+        num_conn_per_port=dict(type='int', ),
+        name=dict(type='str', required=True, )
     ))
    
 

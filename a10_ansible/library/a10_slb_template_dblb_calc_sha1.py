@@ -105,7 +105,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sha1_value=dict(type='str',)
+        sha1_value=dict(type='str', )
     ))
    
     # Parent keys

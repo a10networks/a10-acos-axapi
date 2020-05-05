@@ -130,9 +130,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pkts-received','frag-dropped','agent-not-found','version-not-supported','unknown-dir'])),
-        stats=dict(type='dict',version_not_supported=dict(type='str',),pkts_received=dict(type='str',),agent_not_found=dict(type='str',),frag_dropped=dict(type='str',),unknown_dir=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'pkts-received', 'frag-dropped', 'agent-not-found', 'version-not-supported', 'unknown-dir'])),
+        stats=dict(type='dict', version_not_supported=dict(type='str', ), pkts_received=dict(type='str', ), agent_not_found=dict(type='str', ), frag_dropped=dict(type='str', ), unknown_dir=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

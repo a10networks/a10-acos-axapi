@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        use_mgmt_port=dict(type='bool',),
-        auth_portal=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        remote_file=dict(type='str',),
-        period=dict(type='int',)
+        use_mgmt_port=dict(type='bool', ),
+        auth_portal=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        period=dict(type='int', )
     ))
    
 

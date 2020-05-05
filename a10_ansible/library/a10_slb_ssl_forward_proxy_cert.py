@@ -125,8 +125,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',server_name=dict(type='str',),hashed_certificate=dict(type='list',protocol=dict(type='str',choices=['tcp','udp']),idle_time=dict(type='int',),expire_time=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),locality=dict(type='str',),server_name=dict(type='str',),state=dict(type='str',),version=dict(type='int',),issuer=dict(type='str',),timeout_after=dict(type='int',),division=dict(type='str',),start_time=dict(type='str',),server_ipv6=dict(type='str',),expires_after=dict(type='int',),country=dict(type='str',),real_port=dict(type='int',),state_province=dict(type='str',),email=dict(type='str',),common_name=dict(type='str',),server_ip=dict(type='str',),subject_alt_name=dict(type='str',),hit_times=dict(type='int',)),vserver=dict(type='str',),server_port=dict(type='int',),server_ip=dict(type='str',),port=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', server_name=dict(type='str', ), hashed_certificate=dict(type='list', protocol=dict(type='str', choices=['tcp', 'udp']), idle_time=dict(type='int', ), expire_time=dict(type='str', ), serial=dict(type='str', ), subject=dict(type='str', ), locality=dict(type='str', ), server_name=dict(type='str', ), state=dict(type='str', ), version=dict(type='int', ), issuer=dict(type='str', ), timeout_after=dict(type='int', ), division=dict(type='str', ), start_time=dict(type='str', ), server_ipv6=dict(type='str', ), expires_after=dict(type='int', ), country=dict(type='str', ), real_port=dict(type='int', ), state_province=dict(type='str', ), email=dict(type='str', ), common_name=dict(type='str', ), server_ip=dict(type='str', ), subject_alt_name=dict(type='str', ), hit_times=dict(type='int', )), vserver=dict(type='str', ), server_port=dict(type='int', ), server_ip=dict(type='str', ), port=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

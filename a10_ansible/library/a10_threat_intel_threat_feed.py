@@ -174,25 +174,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain=dict(type='str',),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        update_interval=dict(type='int',),
-        server_timeout=dict(type='int',),
-        proxy_port=dict(type='int',),
-        proxy_username=dict(type='str',),
-        log_level=dict(type='str',choices=['disable','error','warning','info','debug','trace']),
-        server=dict(type='str',),
-        proxy_host=dict(type='str',),
-        proxy_password=dict(type='bool',),
-        user_tag=dict(type='str',),
-        rtu_update_disable=dict(type='bool',),
-        encrypted=dict(type='str',),
-        proxy_auth_type=dict(type='str',choices=['ntlm','basic']),
-        ntype=dict(type='str',required=True,choices=['webroot']),
-        port=dict(type='int',),
-        secret_string=dict(type='str',)
+        domain=dict(type='str', ),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        update_interval=dict(type='int', ),
+        server_timeout=dict(type='int', ),
+        proxy_port=dict(type='int', ),
+        proxy_username=dict(type='str', ),
+        log_level=dict(type='str', choices=['disable', 'error', 'warning', 'info', 'debug', 'trace']),
+        server=dict(type='str', ),
+        proxy_host=dict(type='str', ),
+        proxy_password=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        rtu_update_disable=dict(type='bool', ),
+        encrypted=dict(type='str', ),
+        proxy_auth_type=dict(type='str', choices=['ntlm', 'basic']),
+        ntype=dict(type='str', required=True, choices=['webroot']),
+        port=dict(type='int', ),
+        secret_string=dict(type='str', )
     ))
    
 

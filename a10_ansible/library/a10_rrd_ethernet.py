@@ -119,8 +119,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',start_time=dict(type='int',),end_time=dict(type='int',),ethernet_index=dict(type='int',),ethernet_statistics=dict(type='list',tx_bits=dict(type='int',),rx_packets=dict(type='int',),rx_drop=dict(type='int',),tx_packets=dict(type='int',),tx_error=dict(type='int',),rx_error=dict(type='int',),time=dict(type='int',),tx_drop=dict(type='int',),rx_bits=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', start_time=dict(type='int', ), end_time=dict(type='int', ), ethernet_index=dict(type='int', ), ethernet_statistics=dict(type='list', tx_bits=dict(type='int', ), rx_packets=dict(type='int', ), rx_drop=dict(type='int', ), tx_packets=dict(type='int', ), tx_error=dict(type='int', ), rx_error=dict(type='int', ), time=dict(type='int', ), tx_drop=dict(type='int', ), rx_bits=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        appstring=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        plugin_name=dict(type='str',required=True,)
+        appstring=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        plugin_name=dict(type='str', required=True, )
     ))
    
 

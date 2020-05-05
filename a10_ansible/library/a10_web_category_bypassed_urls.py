@@ -119,8 +119,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',all_urls=dict(type='str',choices=['true']),url_list=dict(type='list',url_name=dict(type='str',)),number_of_urls=dict(type='int',),url_name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', all_urls=dict(type='str', choices=['true']), url_list=dict(type='list', url_name=dict(type='str', )), number_of_urls=dict(type='int', ), url_name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

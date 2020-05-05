@@ -129,13 +129,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ftp=dict(type='bool',),
-        uuid=dict(type='str',),
-        ftp_password_string=dict(type='str',),
-        ftp_password=dict(type='bool',),
-        ftp_port=dict(type='int',),
-        ftp_encrypted=dict(type='str',),
-        ftp_username=dict(type='str',)
+        ftp=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ftp_password_string=dict(type='str', ),
+        ftp_password=dict(type='bool', ),
+        ftp_port=dict(type='int', ),
+        ftp_encrypted=dict(type='str', ),
+        ftp_username=dict(type='str', )
     ))
    
     # Parent keys

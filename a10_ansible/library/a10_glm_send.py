@@ -102,7 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        license_request=dict(type='bool',)
+        license_request=dict(type='bool', )
     ))
    
 

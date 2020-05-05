@@ -266,27 +266,27 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',nat_ip_list=dict(type='list',udp_used=dict(type='int',),udp_hit_full=dict(type='int',),rtsp_used=dict(type='int',),ip_address=dict(type='str',),icmp_freed=dict(type='int',),icmp_hit_full=dict(type='int',),icmp_total=dict(type='int',),tcp_peak=dict(type='int',),icmp_reserved=dict(type='int',),udp_freed=dict(type='int',),udp_reserved=dict(type='int',),tcp_freed=dict(type='int',),users=dict(type='int',),tcp_hit_full=dict(type='int',),obsoleted=dict(type='int',),udp_peak=dict(type='int',),udp_total=dict(type='int',),icmp_peak=dict(type='int',),tcp_reserved=dict(type='int',),tcp_used=dict(type='int',),tcp_total=dict(type='int',),icmp_used=dict(type='int',)),pool_name=dict(type='str',required=True,)),
-        all=dict(type='bool',),
-        tcp_time_wait_interval=dict(type='int',),
-        group=dict(type='str',),
-        uuid=dict(type='str',),
-        start_address=dict(type='str',),
-        per_batch_port_usage_warning_threshold=dict(type='int',),
-        vrid=dict(type='int',),
-        usable_nat_ports_start=dict(type='int',),
-        usable_nat_ports_end=dict(type='int',),
-        stats=dict(type='dict',udp_hit_full=dict(type='str',),ip_free=dict(type='str',),ip_used=dict(type='str',),tcp=dict(type='str',),udp_rsvd=dict(type='str',),icmp_freed=dict(type='str',),icmp_hit_full=dict(type='str',),icmp_total=dict(type='str',),tcp_peak=dict(type='str',),icmp_rsvd=dict(type='str',),udp_freed=dict(type='str',),pool_name=dict(type='str',required=True,),tcp_freed=dict(type='str',),udp=dict(type='str',),users=dict(type='str',),tcp_hit_full=dict(type='str',),tcp_rsvd=dict(type='str',),icmp=dict(type='str',),udp_peak=dict(type='str',),udp_total=dict(type='str',),icmp_peak=dict(type='str',),ip_total=dict(type='str',),tcp_total=dict(type='str',)),
-        partition=dict(type='str',),
-        netmask=dict(type='str',),
-        max_users_per_ip=dict(type='int',),
-        simultaneous_batch_allocation=dict(type='bool',),
-        shared=dict(type='bool',),
-        port_batch_v2_size=dict(type='str',choices=['64','128','256','512','1024','2048','4096']),
-        end_address=dict(type='str',),
-        usable_nat_ports=dict(type='bool',),
-        exclude_ip=dict(type='list',exclude_ip_start=dict(type='str',),exclude_ip_end=dict(type='str',)),
-        pool_name=dict(type='str',required=True,)
+        oper=dict(type='dict', nat_ip_list=dict(type='list', udp_used=dict(type='int', ), udp_hit_full=dict(type='int', ), rtsp_used=dict(type='int', ), ip_address=dict(type='str', ), icmp_freed=dict(type='int', ), icmp_hit_full=dict(type='int', ), icmp_total=dict(type='int', ), tcp_peak=dict(type='int', ), icmp_reserved=dict(type='int', ), udp_freed=dict(type='int', ), udp_reserved=dict(type='int', ), tcp_freed=dict(type='int', ), users=dict(type='int', ), tcp_hit_full=dict(type='int', ), obsoleted=dict(type='int', ), udp_peak=dict(type='int', ), udp_total=dict(type='int', ), icmp_peak=dict(type='int', ), tcp_reserved=dict(type='int', ), tcp_used=dict(type='int', ), tcp_total=dict(type='int', ), icmp_used=dict(type='int', )), pool_name=dict(type='str', required=True, )),
+        all=dict(type='bool', ),
+        tcp_time_wait_interval=dict(type='int', ),
+        group=dict(type='str', ),
+        uuid=dict(type='str', ),
+        start_address=dict(type='str', ),
+        per_batch_port_usage_warning_threshold=dict(type='int', ),
+        vrid=dict(type='int', ),
+        usable_nat_ports_start=dict(type='int', ),
+        usable_nat_ports_end=dict(type='int', ),
+        stats=dict(type='dict', udp_hit_full=dict(type='str', ), ip_free=dict(type='str', ), ip_used=dict(type='str', ), tcp=dict(type='str', ), udp_rsvd=dict(type='str', ), icmp_freed=dict(type='str', ), icmp_hit_full=dict(type='str', ), icmp_total=dict(type='str', ), tcp_peak=dict(type='str', ), icmp_rsvd=dict(type='str', ), udp_freed=dict(type='str', ), pool_name=dict(type='str', required=True, ), tcp_freed=dict(type='str', ), udp=dict(type='str', ), users=dict(type='str', ), tcp_hit_full=dict(type='str', ), tcp_rsvd=dict(type='str', ), icmp=dict(type='str', ), udp_peak=dict(type='str', ), udp_total=dict(type='str', ), icmp_peak=dict(type='str', ), ip_total=dict(type='str', ), tcp_total=dict(type='str', )),
+        partition=dict(type='str', ),
+        netmask=dict(type='str', ),
+        max_users_per_ip=dict(type='int', ),
+        simultaneous_batch_allocation=dict(type='bool', ),
+        shared=dict(type='bool', ),
+        port_batch_v2_size=dict(type='str', choices=['64', '128', '256', '512', '1024', '2048', '4096']),
+        end_address=dict(type='str', ),
+        usable_nat_ports=dict(type='bool', ),
+        exclude_ip=dict(type='list', exclude_ip_start=dict(type='str', ), exclude_ip_end=dict(type='str', )),
+        pool_name=dict(type='str', required=True, )
     ))
    
 

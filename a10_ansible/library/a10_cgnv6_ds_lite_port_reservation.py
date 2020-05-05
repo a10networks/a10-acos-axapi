@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        nat_end_port=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        inside=dict(type='str',required=True,),
-        tunnel_dest_address=dict(type='str',required=True,),
-        inside_start_port=dict(type='int',required=True,),
-        nat=dict(type='str',required=True,),
-        inside_end_port=dict(type='int',required=True,),
-        nat_start_port=dict(type='int',required=True,),
-        inside_addr=dict(type='str',required=True,)
+        nat_end_port=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        inside=dict(type='str', required=True, ),
+        tunnel_dest_address=dict(type='str', required=True, ),
+        inside_start_port=dict(type='int', required=True, ),
+        nat=dict(type='str', required=True, ),
+        inside_end_port=dict(type='int', required=True, ),
+        nat_start_port=dict(type='int', required=True, ),
+        inside_addr=dict(type='str', required=True, )
     ))
    
 

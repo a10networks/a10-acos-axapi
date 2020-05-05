@@ -131,8 +131,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),metric=dict(type='int',),offset_list_direction=dict(type='str',choices=['in','out']),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),
-        uuid=dict(type='str',)
+        acl_cfg=dict(type='list', ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='str', ), metric=dict(type='int', ), offset_list_direction=dict(type='str', choices=['in', 'out']), acl=dict(type='str', ), trunk=dict(type='str', ), ethernet=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

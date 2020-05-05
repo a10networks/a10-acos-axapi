@@ -121,11 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        lif=dict(type='int',),
-        partition=dict(type='str',),
-        segment=dict(type='int',required=True,),
-        gateway=dict(type='bool',),
-        uuid=dict(type='str',)
+        lif=dict(type='int', ),
+        partition=dict(type='str', ),
+        segment=dict(type='int', required=True, ),
+        gateway=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

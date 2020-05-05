@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        load=dict(type='bool',),
-        use_mgmt_port=dict(type='bool',),
-        file_url=dict(type='str',)
+        load=dict(type='bool', ),
+        use_mgmt_port=dict(type='bool', ),
+        file_url=dict(type='str', )
     ))
    
 

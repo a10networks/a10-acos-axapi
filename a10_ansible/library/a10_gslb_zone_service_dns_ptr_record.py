@@ -138,11 +138,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ptr_name=dict(type='str',required=True,),
-        ttl=dict(type='int',),
-        stats=dict(type='dict',hits=dict(type='str',),ptr_name=dict(type='str',required=True,)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
-        uuid=dict(type='str',)
+        ptr_name=dict(type='str', required=True, ),
+        ttl=dict(type='int', ),
+        stats=dict(type='dict', hits=dict(type='str', ), ptr_name=dict(type='str', required=True, )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

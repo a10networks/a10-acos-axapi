@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable_http_forward_proxy=dict(type='bool',),
-        uuid=dict(type='str',),
-        enable_file_inspection=dict(type='bool',),
-        enable_all=dict(type='bool',),
-        enable_ssli=dict(type='bool',),
-        enable_cgn=dict(type='bool',),
-        enable_smtp=dict(type='bool',),
-        enable_fw=dict(type='bool',)
+        enable_http_forward_proxy=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        enable_file_inspection=dict(type='bool', ),
+        enable_all=dict(type='bool', ),
+        enable_ssli=dict(type='bool', ),
+        enable_cgn=dict(type='bool', ),
+        enable_smtp=dict(type='bool', ),
+        enable_fw=dict(type='bool', )
     ))
    
 

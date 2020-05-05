@@ -253,21 +253,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        primary_monitor=dict(type='str',required=True,choices=['traffic']),
-        mon_entity_topk=dict(type='bool',),
-        monitor_key=dict(type='str',choices=['source','dest','service','source-nat-ip']),
-        debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),
-        uuid=dict(type='str',),
-        sflow=dict(type='dict',uuid=dict(type='str',),listening_port=dict(type='int',)),
-        delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),
-        index_sessions=dict(type='bool',),
-        source_entity_topk=dict(type='bool',),
-        template=dict(type='dict',notification=dict(type='list',notif_template_name=dict(type='str',))),
-        replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),
-        netflow=dict(type='dict',template_active_timeout=dict(type='int',),uuid=dict(type='str',),listening_port=dict(type='int',)),
-        index_sessions_type=dict(type='str',choices=['per-cpu']),
-        secondary_monitor=dict(type='dict',mon_entity_topk=dict(type='bool',),debug_list=dict(type='list',debug_port=dict(type='int',required=True,),debug_ip_addr=dict(type='str',required=True,),debug_protocol=dict(type='str',required=True,choices=['TCP','UDP','ICMP']),uuid=dict(type='str',)),uuid=dict(type='str',),secondary_monitoring_key=dict(type='str',choices=['service']),delete_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP'])),source_entity_topk=dict(type='bool',),replay_debug_file=dict(type='dict',debug_port=dict(type='int',),debug_ip_addr=dict(type='str',),debug_protocol=dict(type='str',choices=['TCP','UDP','ICMP']))),
-        agent_list=dict(type='list',uuid=dict(type='str',),agent_v4_addr=dict(type='str',),agent_v6_addr=dict(type='str',),user_tag=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sflow-packets-received','sflow-samples-received','sflow-samples-bad-len','sflow-samples-non-std','sflow-samples-skipped','sflow-sample-record-bad-len','sflow-samples-sent-for-detection','sflow-sample-record-invalid-layer2','sflow-sample-ipv6-hdr-parse-fail','sflow-disabled','netflow-disabled','netflow-v5-packets-received','netflow-v5-samples-received','netflow-v5-samples-sent-for-detection','netflow-v5-sample-records-bad-len','netflow-v5-max-records-exceed','netflow-v9-packets-received','netflow-v9-samples-received','netflow-v9-samples-sent-for-detection','netflow-v9-sample-records-bad-len','netflow-v9-max-records-exceed','netflow-v10-packets-received','netflow-v10-samples-received','netflow-v10-samples-sent-for-detection','netflow-v10-sample-records-bad-len','netflow-v10-max-records-exceed','netflow-tcp-sample-received','netflow-udp-sample-received','netflow-icmp-sample-received','netflow-other-sample-received','netflow-record-copy-oom-error','netflow-record-rse-invalid','netflow-sample-flow-dur-error'])),agent_name=dict(type='str',required=True,))
+        primary_monitor=dict(type='str', required=True, choices=['traffic']),
+        mon_entity_topk=dict(type='bool', ),
+        monitor_key=dict(type='str', choices=['source', 'dest', 'service', 'source-nat-ip']),
+        debug_list=dict(type='list', debug_port=dict(type='int', required=True, ), debug_ip_addr=dict(type='str', required=True, ), debug_protocol=dict(type='str', required=True, choices=['TCP', 'UDP', 'ICMP']), uuid=dict(type='str', )),
+        uuid=dict(type='str', ),
+        sflow=dict(type='dict', uuid=dict(type='str', ), listening_port=dict(type='int', )),
+        delete_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP'])),
+        index_sessions=dict(type='bool', ),
+        source_entity_topk=dict(type='bool', ),
+        template=dict(type='dict', notification=dict(type='list', notif_template_name=dict(type='str', ))),
+        replay_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP'])),
+        netflow=dict(type='dict', template_active_timeout=dict(type='int', ), uuid=dict(type='str', ), listening_port=dict(type='int', )),
+        index_sessions_type=dict(type='str', choices=['per-cpu']),
+        secondary_monitor=dict(type='dict', mon_entity_topk=dict(type='bool', ), debug_list=dict(type='list', debug_port=dict(type='int', required=True, ), debug_ip_addr=dict(type='str', required=True, ), debug_protocol=dict(type='str', required=True, choices=['TCP', 'UDP', 'ICMP']), uuid=dict(type='str', )), uuid=dict(type='str', ), secondary_monitoring_key=dict(type='str', choices=['service']), delete_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP'])), source_entity_topk=dict(type='bool', ), replay_debug_file=dict(type='dict', debug_port=dict(type='int', ), debug_ip_addr=dict(type='str', ), debug_protocol=dict(type='str', choices=['TCP', 'UDP', 'ICMP']))),
+        agent_list=dict(type='list', uuid=dict(type='str', ), agent_v4_addr=dict(type='str', ), agent_v6_addr=dict(type='str', ), user_tag=dict(type='str', ), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'sflow-packets-received', 'sflow-samples-received', 'sflow-samples-bad-len', 'sflow-samples-non-std', 'sflow-samples-skipped', 'sflow-sample-record-bad-len', 'sflow-samples-sent-for-detection', 'sflow-sample-record-invalid-layer2', 'sflow-sample-ipv6-hdr-parse-fail', 'sflow-disabled', 'netflow-disabled', 'netflow-v5-packets-received', 'netflow-v5-samples-received', 'netflow-v5-samples-sent-for-detection', 'netflow-v5-sample-records-bad-len', 'netflow-v5-max-records-exceed', 'netflow-v9-packets-received', 'netflow-v9-samples-received', 'netflow-v9-samples-sent-for-detection', 'netflow-v9-sample-records-bad-len', 'netflow-v9-max-records-exceed', 'netflow-v10-packets-received', 'netflow-v10-samples-received', 'netflow-v10-samples-sent-for-detection', 'netflow-v10-sample-records-bad-len', 'netflow-v10-max-records-exceed', 'netflow-tcp-sample-received', 'netflow-udp-sample-received', 'netflow-icmp-sample-received', 'netflow-other-sample-received', 'netflow-record-copy-oom-error', 'netflow-record-rse-invalid', 'netflow-sample-flow-dur-error'])), agent_name=dict(type='str', required=True, ))
     ))
    
 

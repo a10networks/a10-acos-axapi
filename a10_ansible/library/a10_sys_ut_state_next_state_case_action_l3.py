@@ -166,13 +166,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='bool',),
-        uuid=dict(type='str',),
-        checksum=dict(type='str',choices=['valid','invalid']),
-        value=dict(type='int',),
-        ip_list=dict(type='list',ve=dict(type='str',),virtual_server=dict(type='str',),src_dst=dict(type='str',required=True,choices=['dest','src']),nat_pool=dict(type='str',),trunk=dict(type='str',),ipv6_address=dict(type='str',),ethernet=dict(type='str',),ipv4_address=dict(type='str',),uuid=dict(type='str',)),
-        ttl=dict(type='int',),
-        ntype=dict(type='str',choices=['tcp','udp','icmp'])
+        protocol=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        checksum=dict(type='str', choices=['valid', 'invalid']),
+        value=dict(type='int', ),
+        ip_list=dict(type='list', ve=dict(type='str', ), virtual_server=dict(type='str', ), src_dst=dict(type='str', required=True, choices=['dest', 'src']), nat_pool=dict(type='str', ), trunk=dict(type='str', ), ipv6_address=dict(type='str', ), ethernet=dict(type='str', ), ipv4_address=dict(type='str', ), uuid=dict(type='str', )),
+        ttl=dict(type='int', ),
+        ntype=dict(type='str', choices=['tcp', 'udp', 'icmp'])
     ))
    
     # Parent keys

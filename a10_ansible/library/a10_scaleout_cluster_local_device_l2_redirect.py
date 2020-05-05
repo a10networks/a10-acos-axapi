@@ -121,11 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ethernet_vlan=dict(type='int',),
-        redirect_eth=dict(type='str',),
-        redirect_trunk=dict(type='int',),
-        trunk_vlan=dict(type='int',),
-        uuid=dict(type='str',)
+        ethernet_vlan=dict(type='int', ),
+        redirect_eth=dict(type='str', ),
+        redirect_trunk=dict(type='int', ),
+        trunk_vlan=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

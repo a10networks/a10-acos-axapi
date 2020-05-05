@@ -191,15 +191,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        local_device=dict(type='dict',uuid=dict(type='str',),session_sync_interface=dict(type='dict',ve_cfg=dict(type='list',ve=dict(type='int',)),uuid=dict(type='str',),trunk_cfg=dict(type='list',trunk=dict(type='int',)),eth_cfg=dict(type='list',ethernet=dict(type='str',))),id=dict(type='int',),priority=dict(type='int',),action=dict(type='str',choices=['enable','disable']),l2_redirect=dict(type='dict',ethernet_vlan=dict(type='int',),redirect_eth=dict(type='str',),redirect_trunk=dict(type='int',),trunk_vlan=dict(type='int',),uuid=dict(type='str',)),tracking_template=dict(type='dict',template_list=dict(type='list',uuid=dict(type='str',),threshold_cfg=dict(type='list',threshold=dict(type='int',),action=dict(type='str',choices=['down','exit-cluster'])),user_tag=dict(type='str',),template=dict(type='str',required=True,))),start_delay=dict(type='int',)),
-        cluster_id=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        cluster_devices=dict(type='dict',cluster_discovery_timeout=dict(type='dict',timer_val=dict(type='int',),uuid=dict(type='str',)),device_id_list=dict(type='list',action=dict(type='str',choices=['enable','disable']),device_id=dict(type='int',required=True,),uuid=dict(type='str',),user_tag=dict(type='str',),ip=dict(type='str',)),uuid=dict(type='str',)),
-        follow_vcs=dict(type='bool',),
-        device_groups=dict(type='dict',device_group_list=dict(type='list',device_group=dict(type='int',required=True,),device_id_list=dict(type='list',device_id_start=dict(type='int',),device_id_end=dict(type='int',)),uuid=dict(type='str',),user_tag=dict(type='str',)),uuid=dict(type='str',)),
-        service_config=dict(type='dict',uuid=dict(type='str',),template_list=dict(type='list',device_group=dict(type='int',),bucket_count=dict(type='int',),name=dict(type='str',required=True,),user_tag=dict(type='str',),uuid=dict(type='str',))),
-        db_config=dict(type='dict',uuid=dict(type='str',)),
-        tracking_template=dict(type='dict',template_list=dict(type='list',uuid=dict(type='str',),threshold_cfg=dict(type='list',threshold=dict(type='int',),action=dict(type='str',choices=['down','exit-cluster'])),user_tag=dict(type='str',),template=dict(type='str',required=True,)))
+        local_device=dict(type='dict', uuid=dict(type='str', ), session_sync_interface=dict(type='dict', ve_cfg=dict(type='list', ve=dict(type='int', )), uuid=dict(type='str', ), trunk_cfg=dict(type='list', trunk=dict(type='int', )), eth_cfg=dict(type='list', ethernet=dict(type='str', ))), id=dict(type='int', ), priority=dict(type='int', ), action=dict(type='str', choices=['enable', 'disable']), l2_redirect=dict(type='dict', ethernet_vlan=dict(type='int', ), redirect_eth=dict(type='str', ), redirect_trunk=dict(type='int', ), trunk_vlan=dict(type='int', ), uuid=dict(type='str', )), tracking_template=dict(type='dict', template_list=dict(type='list', uuid=dict(type='str', ), threshold_cfg=dict(type='list', threshold=dict(type='int', ), action=dict(type='str', choices=['down', 'exit-cluster'])), user_tag=dict(type='str', ), template=dict(type='str', required=True, ))), start_delay=dict(type='int', )),
+        cluster_id=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        cluster_devices=dict(type='dict', cluster_discovery_timeout=dict(type='dict', timer_val=dict(type='int', ), uuid=dict(type='str', )), device_id_list=dict(type='list', action=dict(type='str', choices=['enable', 'disable']), device_id=dict(type='int', required=True, ), uuid=dict(type='str', ), user_tag=dict(type='str', ), ip=dict(type='str', )), uuid=dict(type='str', )),
+        follow_vcs=dict(type='bool', ),
+        device_groups=dict(type='dict', device_group_list=dict(type='list', device_group=dict(type='int', required=True, ), device_id_list=dict(type='list', device_id_start=dict(type='int', ), device_id_end=dict(type='int', )), uuid=dict(type='str', ), user_tag=dict(type='str', )), uuid=dict(type='str', )),
+        service_config=dict(type='dict', uuid=dict(type='str', ), template_list=dict(type='list', device_group=dict(type='int', ), bucket_count=dict(type='int', ), name=dict(type='str', required=True, ), user_tag=dict(type='str', ), uuid=dict(type='str', ))),
+        db_config=dict(type='dict', uuid=dict(type='str', )),
+        tracking_template=dict(type='dict', template_list=dict(type='list', uuid=dict(type='str', ), threshold_cfg=dict(type='list', threshold=dict(type='int', ), action=dict(type='str', choices=['down', 'exit-cluster'])), user_tag=dict(type='str', ), template=dict(type='str', required=True, )))
     ))
    
 

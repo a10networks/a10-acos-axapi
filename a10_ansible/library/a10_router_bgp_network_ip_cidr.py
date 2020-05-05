@@ -125,12 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        description=dict(type='str',),
-        route_map=dict(type='str',),
-        comm_value=dict(type='str',),
-        backdoor=dict(type='bool',),
-        network_ipv4_cidr=dict(type='str',required=True,),
-        uuid=dict(type='str',)
+        description=dict(type='str', ),
+        route_map=dict(type='str', ),
+        comm_value=dict(type='str', ),
+        backdoor=dict(type='bool', ),
+        network_ipv4_cidr=dict(type='str', required=True, ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

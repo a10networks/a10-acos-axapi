@@ -125,10 +125,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',geoloc=dict(type='str',),geoloc_candidate_list=dict(type='list',geoloc_name=dict(type='str',),has_subregion=dict(type='int',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','place-holder'])),
-        stats=dict(type='dict',),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', geoloc=dict(type='str', ), geoloc_candidate_list=dict(type='list', geoloc_name=dict(type='str', ), has_subregion=dict(type='int', ))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'place-holder'])),
+        stats=dict(type='dict', ),
+        uuid=dict(type='str', )
     ))
    
 

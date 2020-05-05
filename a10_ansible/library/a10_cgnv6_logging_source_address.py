@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',source_address_list=dict(type='dict',tcp_freed=dict(type='int',),tcp_allocated=dict(type='int',),udp_total=dict(type='int',),source_address=dict(type='str',),udp_allocated=dict(type='int',),tcp_failed=dict(type='int',),udp_failed=dict(type='int',),tcp_total=dict(type='int',),ref_count=dict(type='int',),udp_freed=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', source_address_list=dict(type='dict', tcp_freed=dict(type='int', ), tcp_allocated=dict(type='int', ), udp_total=dict(type='int', ), source_address=dict(type='str', ), udp_allocated=dict(type='int', ), tcp_failed=dict(type='int', ), udp_failed=dict(type='int', ), tcp_total=dict(type='int', ), ref_count=dict(type='int', ), udp_freed=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

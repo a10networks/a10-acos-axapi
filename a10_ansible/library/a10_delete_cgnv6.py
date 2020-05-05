@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        lw_filename=dict(type='str',),
-        lw_4o6_binding_table_validation_log=dict(type='bool',),
-        fixed_nat=dict(type='bool',),
-        filename=dict(type='str',)
+        lw_filename=dict(type='str', ),
+        lw_4o6_binding_table_validation_log=dict(type='bool', ),
+        fixed_nat=dict(type='bool', ),
+        filename=dict(type='str', )
     ))
    
 

@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        bgpEstablishedNotification=dict(type='bool',),
-        uuid=dict(type='str',),
-        bgpBackwardTransNotification=dict(type='bool',)
+        bgpEstablishedNotification=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        bgpBackwardTransNotification=dict(type='bool', )
     ))
    
 

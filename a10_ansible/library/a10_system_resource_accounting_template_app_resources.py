@@ -284,24 +284,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gslb_site_cfg=dict(type='dict',gslb_site_min_guarantee=dict(type='int',),gslb_site_max=dict(type='int',)),
-        gslb_policy_cfg=dict(type='dict',gslb_policy_min_guarantee=dict(type='int',),gslb_policy_max=dict(type='int',)),
-        gslb_service_cfg=dict(type='dict',gslb_service_min_guarantee=dict(type='int',),gslb_service_max=dict(type='int',)),
-        gslb_geo_location_cfg=dict(type='dict',gslb_geo_location_max=dict(type='int',),gslb_geo_location_min_guarantee=dict(type='int',)),
-        uuid=dict(type='str',),
-        real_server_cfg=dict(type='dict',real_server_max=dict(type='int',),real_server_min_guarantee=dict(type='int',)),
-        gslb_ip_list_cfg=dict(type='dict',gslb_ip_list_max=dict(type='int',),gslb_ip_list_min_guarantee=dict(type='int',)),
-        gslb_template_cfg=dict(type='dict',gslb_template_max=dict(type='int',),gslb_template_min_guarantee=dict(type='int',)),
-        gslb_zone_cfg=dict(type='dict',gslb_zone_min_guarantee=dict(type='int',),gslb_zone_max=dict(type='int',)),
-        gslb_device_cfg=dict(type='dict',gslb_device_min_guarantee=dict(type='int',),gslb_device_max=dict(type='int',)),
-        virtual_server_cfg=dict(type='dict',virtual_server_max=dict(type='int',),virtual_server_min_guarantee=dict(type='int',)),
-        real_port_cfg=dict(type='dict',real_port_min_guarantee=dict(type='int',),real_port_max=dict(type='int',)),
-        health_monitor_cfg=dict(type='dict',health_monitor_max=dict(type='int',),health_monitor_min_guarantee=dict(type='int',)),
-        threshold=dict(type='int',),
-        gslb_svc_group_cfg=dict(type='dict',gslb_svc_group_max=dict(type='int',),gslb_svc_group_min_guarantee=dict(type='int',)),
-        service_group_cfg=dict(type='dict',service_group_max=dict(type='int',),service_group_min_guarantee=dict(type='int',)),
-        gslb_service_port_cfg=dict(type='dict',gslb_service_port_max=dict(type='int',),gslb_service_port_min_guarantee=dict(type='int',)),
-        gslb_service_ip_cfg=dict(type='dict',gslb_service_ip_max=dict(type='int',),gslb_service_ip_min_guarantee=dict(type='int',))
+        gslb_site_cfg=dict(type='dict', gslb_site_min_guarantee=dict(type='int', ), gslb_site_max=dict(type='int', )),
+        gslb_policy_cfg=dict(type='dict', gslb_policy_min_guarantee=dict(type='int', ), gslb_policy_max=dict(type='int', )),
+        gslb_service_cfg=dict(type='dict', gslb_service_min_guarantee=dict(type='int', ), gslb_service_max=dict(type='int', )),
+        gslb_geo_location_cfg=dict(type='dict', gslb_geo_location_max=dict(type='int', ), gslb_geo_location_min_guarantee=dict(type='int', )),
+        uuid=dict(type='str', ),
+        real_server_cfg=dict(type='dict', real_server_max=dict(type='int', ), real_server_min_guarantee=dict(type='int', )),
+        gslb_ip_list_cfg=dict(type='dict', gslb_ip_list_max=dict(type='int', ), gslb_ip_list_min_guarantee=dict(type='int', )),
+        gslb_template_cfg=dict(type='dict', gslb_template_max=dict(type='int', ), gslb_template_min_guarantee=dict(type='int', )),
+        gslb_zone_cfg=dict(type='dict', gslb_zone_min_guarantee=dict(type='int', ), gslb_zone_max=dict(type='int', )),
+        gslb_device_cfg=dict(type='dict', gslb_device_min_guarantee=dict(type='int', ), gslb_device_max=dict(type='int', )),
+        virtual_server_cfg=dict(type='dict', virtual_server_max=dict(type='int', ), virtual_server_min_guarantee=dict(type='int', )),
+        real_port_cfg=dict(type='dict', real_port_min_guarantee=dict(type='int', ), real_port_max=dict(type='int', )),
+        health_monitor_cfg=dict(type='dict', health_monitor_max=dict(type='int', ), health_monitor_min_guarantee=dict(type='int', )),
+        threshold=dict(type='int', ),
+        gslb_svc_group_cfg=dict(type='dict', gslb_svc_group_max=dict(type='int', ), gslb_svc_group_min_guarantee=dict(type='int', )),
+        service_group_cfg=dict(type='dict', service_group_max=dict(type='int', ), service_group_min_guarantee=dict(type='int', )),
+        gslb_service_port_cfg=dict(type='dict', gslb_service_port_max=dict(type='int', ), gslb_service_port_min_guarantee=dict(type='int', )),
+        gslb_service_ip_cfg=dict(type='dict', gslb_service_ip_max=dict(type='int', ), gslb_service_ip_min_guarantee=dict(type='int', ))
     ))
    
     # Parent keys

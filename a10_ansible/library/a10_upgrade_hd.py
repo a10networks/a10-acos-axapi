@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rollback=dict(type='bool',),
-        reboot_after_upgrade=dict(type='bool',),
-        use_mgmt_port=dict(type='bool',),
-        image=dict(type='str',choices=['pri','sec']),
-        source_ip_address=dict(type='str',),
-        Device=dict(type='int',),
-        local=dict(type='str',),
-        staggered_upgrade_mode=dict(type='bool',),
-        file_url=dict(type='str',)
+        rollback=dict(type='bool', ),
+        reboot_after_upgrade=dict(type='bool', ),
+        use_mgmt_port=dict(type='bool', ),
+        image=dict(type='str', choices=['pri', 'sec']),
+        source_ip_address=dict(type='str', ),
+        Device=dict(type='int', ),
+        local=dict(type='str', ),
+        staggered_upgrade_mode=dict(type='bool', ),
+        file_url=dict(type='str', )
     ))
    
 

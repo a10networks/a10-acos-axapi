@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pre_eth=dict(type='str',required=True,),
-        pre_vlan=dict(type='int',),
-        uuid=dict(type='str',)
+        pre_eth=dict(type='str', required=True, ),
+        pre_vlan=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

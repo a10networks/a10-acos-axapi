@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        hashing_type=dict(type='str',choices=['route-aggregation','mod-user-groups']),
-        uuid=dict(type='str',)
+        hashing_type=dict(type='str', choices=['route-aggregation', 'mod-user-groups']),
+        uuid=dict(type='str', )
     ))
    
 

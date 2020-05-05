@@ -171,10 +171,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',cpu_count=dict(type='int',),connection_reuse_cpu_list=dict(type='list',miss_resp=dict(type='int',),nunbind=dict(type='int',),ntermi_err=dict(type='int',),nbind=dict(type='int',),current_active=dict(type='int',),pause_conn_fail=dict(type='int',),delay_unbind=dict(type='int',),long_resp=dict(type='int',),ntermi=dict(type='int',),pause_conn=dict(type='int',),unbound_data_rcv=dict(type='int',),resume_conn=dict(type='int',),current_open=dict(type='int',),not_remove_from_rport=dict(type='int',),nestab=dict(type='int',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','current_open','current_active','nbind','nunbind','nestab','ntermi','ntermi_err','delay_unbind','long_resp','miss_resp','unbound_data_rcv','pause_conn','pause_conn_fail','resume_conn','not_remove_from_rport'])),
-        stats=dict(type='dict',miss_resp=dict(type='str',),nunbind=dict(type='str',),ntermi_err=dict(type='str',),nbind=dict(type='str',),current_active=dict(type='str',),pause_conn_fail=dict(type='str',),delay_unbind=dict(type='str',),long_resp=dict(type='str',),ntermi=dict(type='str',),pause_conn=dict(type='str',),unbound_data_rcv=dict(type='str',),resume_conn=dict(type='str',),current_open=dict(type='str',),not_remove_from_rport=dict(type='str',),nestab=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', cpu_count=dict(type='int', ), connection_reuse_cpu_list=dict(type='list', miss_resp=dict(type='int', ), nunbind=dict(type='int', ), ntermi_err=dict(type='int', ), nbind=dict(type='int', ), current_active=dict(type='int', ), pause_conn_fail=dict(type='int', ), delay_unbind=dict(type='int', ), long_resp=dict(type='int', ), ntermi=dict(type='int', ), pause_conn=dict(type='int', ), unbound_data_rcv=dict(type='int', ), resume_conn=dict(type='int', ), current_open=dict(type='int', ), not_remove_from_rport=dict(type='int', ), nestab=dict(type='int', ))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'current_open', 'current_active', 'nbind', 'nunbind', 'nestab', 'ntermi', 'ntermi_err', 'delay_unbind', 'long_resp', 'miss_resp', 'unbound_data_rcv', 'pause_conn', 'pause_conn_fail', 'resume_conn', 'not_remove_from_rport'])),
+        stats=dict(type='dict', miss_resp=dict(type='str', ), nunbind=dict(type='str', ), ntermi_err=dict(type='str', ), nbind=dict(type='str', ), current_active=dict(type='str', ), pause_conn_fail=dict(type='str', ), delay_unbind=dict(type='str', ), long_resp=dict(type='str', ), ntermi=dict(type='str', ), pause_conn=dict(type='str', ), unbound_data_rcv=dict(type='str', ), resume_conn=dict(type='str', ), current_open=dict(type='str', ), not_remove_from_rport=dict(type='str', ), nestab=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

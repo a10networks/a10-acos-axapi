@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',udp_list=dict(type='dict',start_port_udp=dict(type='int',),status_udp=dict(type='str',),end_port_udp=dict(type='int',)),unique=dict(type='str',),tcp_list=dict(type='dict',status_tcp=dict(type='str',),start_port_tcp=dict(type='int',),end_port_tcp=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', udp_list=dict(type='dict', start_port_udp=dict(type='int', ), status_udp=dict(type='str', ), end_port_udp=dict(type='int', )), unique=dict(type='str', ), tcp_list=dict(type='dict', status_tcp=dict(type='str', ), start_port_tcp=dict(type='int', ), end_port_tcp=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -158,21 +158,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        info=dict(type='bool',),
-        daemon_msg=dict(type='bool',),
-        daemon=dict(type='bool',),
-        lib=dict(type='bool',),
-        vblade=dict(type='bool',),
-        election_pdu=dict(type='bool',),
-        util=dict(type='bool',),
-        ssl=dict(type='bool',),
-        handler=dict(type='bool',),
-        election=dict(type='bool',),
-        vmaster=dict(type='bool',),
-        vblade_msg=dict(type='bool',),
-        net=dict(type='bool',),
-        encoder=dict(type='bool',),
-        vmaster_msg=dict(type='bool',)
+        info=dict(type='bool', ),
+        daemon_msg=dict(type='bool', ),
+        daemon=dict(type='bool', ),
+        lib=dict(type='bool', ),
+        vblade=dict(type='bool', ),
+        election_pdu=dict(type='bool', ),
+        util=dict(type='bool', ),
+        ssl=dict(type='bool', ),
+        handler=dict(type='bool', ),
+        election=dict(type='bool', ),
+        vmaster=dict(type='bool', ),
+        vblade_msg=dict(type='bool', ),
+        net=dict(type='bool', ),
+        encoder=dict(type='bool', ),
+        vmaster_msg=dict(type='bool', )
     ))
    
 

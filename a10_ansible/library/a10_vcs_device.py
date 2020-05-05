@@ -154,17 +154,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        ethernet_cfg=dict(type='list',ethernet=dict(type='str',)),
-        user_tag=dict(type='str',),
-        priority=dict(type='int',),
-        management=dict(type='bool',),
-        ve_cfg=dict(type='list',ve=dict(type='int',)),
-        device=dict(type='int',required=True,),
-        affinity_vrrp_a_vrid=dict(type='int',),
-        unicast_port=dict(type='int',),
-        trunk_cfg=dict(type='list',trunk=dict(type='int',))
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ethernet_cfg=dict(type='list', ethernet=dict(type='str', )),
+        user_tag=dict(type='str', ),
+        priority=dict(type='int', ),
+        management=dict(type='bool', ),
+        ve_cfg=dict(type='list', ve=dict(type='int', )),
+        device=dict(type='int', required=True, ),
+        affinity_vrrp_a_vrid=dict(type='int', ),
+        unicast_port=dict(type='int', ),
+        trunk_cfg=dict(type='list', trunk=dict(type='int', ))
     ))
    
 

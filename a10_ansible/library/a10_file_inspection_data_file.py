@@ -134,14 +134,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_list=dict(type='list',status=dict(type='str',),timestamp=dict(type='str',),ntype=dict(type='str',),name=dict(type='str',),size=dict(type='str',))),
-        name=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        source_ip_address=dict(type='str',),
-        action=dict(type='str',),
-        ntype=dict(type='str',),
-        file_url=dict(type='str',),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', file_list=dict(type='list', status=dict(type='str', ), timestamp=dict(type='str', ), ntype=dict(type='str', ), name=dict(type='str', ), size=dict(type='str', ))),
+        name=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        source_ip_address=dict(type='str', ),
+        action=dict(type='str', ),
+        ntype=dict(type='str', ),
+        file_url=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

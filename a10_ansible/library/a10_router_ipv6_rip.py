@@ -220,20 +220,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        default_metric=dict(type='int',),
-        recv_buffer_size=dict(type='int',),
-        cisco_metric_behavior=dict(type='str',choices=['enable','disable']),
-        uuid=dict(type='str',),
-        offset_list=dict(type='dict',acl_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),metric=dict(type='int',),offset_list_direction=dict(type='str',choices=['in','out']),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),uuid=dict(type='str',)),
-        route_map=dict(type='dict',map_cfg=dict(type='list',map=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),route_map_direction=dict(type='str',choices=['in','out']),trunk=dict(type='str',),ethernet=dict(type='str',)),uuid=dict(type='str',)),
-        passive_interface_list=dict(type='list',tunnel=dict(type='str',),ethernet=dict(type='str',),trunk=dict(type='str',),ve=dict(type='str',),loopback=dict(type='str',)),
-        redistribute=dict(type='dict',vip_list=dict(type='list',vip_metric=dict(type='int',),vip_route_map=dict(type='str',),vip_type=dict(type='str',choices=['only-flagged','only-not-flagged'])),redist_list=dict(type='list',metric=dict(type='int',),route_map=dict(type='str',),ntype=dict(type='str',choices=['bgp','connected','floating-ip','ip-nat-list','ip-nat','isis','lw4o6','nat-map','nat64','ospf','static'])),uuid=dict(type='str',)),
-        route_cfg=dict(type='list',route=dict(type='str',)),
-        timers=dict(type='dict',timers_cfg=dict(type='dict',val_3=dict(type='int',),val_2=dict(type='int',),basic=dict(type='int',))),
-        aggregate_address_cfg=dict(type='list',aggregate_address=dict(type='str',)),
-        default_information=dict(type='str',choices=['originate']),
-        ripng_neighbor=dict(type='dict',ripng_neighbor_cfg=dict(type='list',ve=dict(type='str',),neighbor_link_local_addr=dict(type='str',),tunnel=dict(type='str',),loopback=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',))),
-        distribute_list=dict(type='dict',acl_cfg=dict(type='list',acl_direction=dict(type='str',choices=['in','out']),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),acl=dict(type='str',),trunk=dict(type='str',),ethernet=dict(type='str',)),prefix=dict(type='dict',uuid=dict(type='str',),prefix_cfg=dict(type='list',ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='str',),prefix_list=dict(type='str',),trunk=dict(type='str',),prefix_list_direction=dict(type='str',choices=['in','out']),ethernet=dict(type='str',))),uuid=dict(type='str',))
+        default_metric=dict(type='int', ),
+        recv_buffer_size=dict(type='int', ),
+        cisco_metric_behavior=dict(type='str', choices=['enable', 'disable']),
+        uuid=dict(type='str', ),
+        offset_list=dict(type='dict', acl_cfg=dict(type='list', ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='str', ), metric=dict(type='int', ), offset_list_direction=dict(type='str', choices=['in', 'out']), acl=dict(type='str', ), trunk=dict(type='str', ), ethernet=dict(type='str', )), uuid=dict(type='str', )),
+        route_map=dict(type='dict', map_cfg=dict(type='list', map=dict(type='str', ), ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='str', ), route_map_direction=dict(type='str', choices=['in', 'out']), trunk=dict(type='str', ), ethernet=dict(type='str', )), uuid=dict(type='str', )),
+        passive_interface_list=dict(type='list', tunnel=dict(type='str', ), ethernet=dict(type='str', ), trunk=dict(type='str', ), ve=dict(type='str', ), loopback=dict(type='str', )),
+        redistribute=dict(type='dict', vip_list=dict(type='list', vip_metric=dict(type='int', ), vip_route_map=dict(type='str', ), vip_type=dict(type='str', choices=['only-flagged', 'only-not-flagged'])), redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'isis', 'lw4o6', 'nat-map', 'nat64', 'ospf', 'static'])), uuid=dict(type='str', )),
+        route_cfg=dict(type='list', route=dict(type='str', )),
+        timers=dict(type='dict', timers_cfg=dict(type='dict', val_3=dict(type='int', ), val_2=dict(type='int', ), basic=dict(type='int', ))),
+        aggregate_address_cfg=dict(type='list', aggregate_address=dict(type='str', )),
+        default_information=dict(type='str', choices=['originate']),
+        ripng_neighbor=dict(type='dict', ripng_neighbor_cfg=dict(type='list', ve=dict(type='str', ), neighbor_link_local_addr=dict(type='str', ), tunnel=dict(type='str', ), loopback=dict(type='str', ), trunk=dict(type='str', ), ethernet=dict(type='str', ))),
+        distribute_list=dict(type='dict', acl_cfg=dict(type='list', acl_direction=dict(type='str', choices=['in', 'out']), ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='str', ), acl=dict(type='str', ), trunk=dict(type='str', ), ethernet=dict(type='str', )), prefix=dict(type='dict', uuid=dict(type='str', ), prefix_cfg=dict(type='list', ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='str', ), prefix_list=dict(type='str', ), trunk=dict(type='str', ), prefix_list_direction=dict(type='str', choices=['in', 'out']), ethernet=dict(type='str', ))), uuid=dict(type='str', ))
     ))
    
 

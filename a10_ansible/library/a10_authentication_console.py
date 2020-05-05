@@ -113,8 +113,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        type_cfg=dict(type='dict',console_type=dict(type='str',choices=['ldap','local','radius','tacplus']),ntype=dict(type='bool',)),
-        uuid=dict(type='str',)
+        type_cfg=dict(type='dict', console_type=dict(type='str', choices=['ldap', 'local', 'radius', 'tacplus']), ntype=dict(type='bool', )),
+        uuid=dict(type='str', )
     ))
    
 

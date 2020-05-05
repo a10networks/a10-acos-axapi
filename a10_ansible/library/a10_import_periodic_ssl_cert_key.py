@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ssl_cert_key=dict(type='str',required=True,choices=['bulk']),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        secured=dict(type='bool',),
-        period=dict(type='int',),
-        remote_file=dict(type='str',)
+        ssl_cert_key=dict(type='str', required=True, choices=['bulk']),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        secured=dict(type='bool', ),
+        period=dict(type='int', ),
+        remote_file=dict(type='str', )
     ))
    
 

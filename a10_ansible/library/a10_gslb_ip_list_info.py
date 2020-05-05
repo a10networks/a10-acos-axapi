@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',ip_lists=dict(type='list',listname=dict(type='str',),hits=dict(type='int',),errors=dict(type='int',),last=dict(type='str',),total_entries_in_list=dict(type='int',),ipaddr=dict(type='str',),filename=dict(type='str',),file_lines=dict(type='int',),ipmask=dict(type='str',),ipaddr_filter=dict(type='int',),ntype=dict(type='str',choices=['manual','file']),group_id=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', ip_lists=dict(type='list', listname=dict(type='str', ), hits=dict(type='int', ), errors=dict(type='int', ), last=dict(type='str', ), total_entries_in_list=dict(type='int', ), ipaddr=dict(type='str', ), filename=dict(type='str', ), file_lines=dict(type='int', ), ipmask=dict(type='str', ), ipaddr_filter=dict(type='int', ), ntype=dict(type='str', choices=['manual', 'file']), group_id=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

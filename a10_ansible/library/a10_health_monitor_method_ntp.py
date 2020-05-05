@@ -113,9 +113,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ntp=dict(type='bool',),
-        uuid=dict(type='str',),
-        ntp_port=dict(type='int',)
+        ntp=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ntp_port=dict(type='int', )
     ))
    
     # Parent keys

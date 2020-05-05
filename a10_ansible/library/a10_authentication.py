@@ -152,13 +152,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        console=dict(type='dict',type_cfg=dict(type='dict',console_type=dict(type='str',choices=['ldap','local','radius','tacplus']),ntype=dict(type='bool',)),uuid=dict(type='str',)),
-        uuid=dict(type='str',),
-        mode_cfg=dict(type='dict',mode=dict(type='str',choices=['multiple','single'])),
-        type_cfg=dict(type='dict',ntype=dict(type='str',choices=['ldap','local','radius','tacplus'])),
-        multiple_auth_reject=dict(type='bool',),
-        login_cfg=dict(type='dict',local=dict(type='bool',),privilege_mode=dict(type='bool',)),
-        enable_cfg=dict(type='dict',enable_auth_type=dict(type='str',choices=['local','tacplus']))
+        console=dict(type='dict', type_cfg=dict(type='dict', console_type=dict(type='str', choices=['ldap', 'local', 'radius', 'tacplus']), ntype=dict(type='bool', )), uuid=dict(type='str', )),
+        uuid=dict(type='str', ),
+        mode_cfg=dict(type='dict', mode=dict(type='str', choices=['multiple', 'single'])),
+        type_cfg=dict(type='dict', ntype=dict(type='str', choices=['ldap', 'local', 'radius', 'tacplus'])),
+        multiple_auth_reject=dict(type='bool', ),
+        login_cfg=dict(type='dict', local=dict(type='bool', ), privilege_mode=dict(type='bool', )),
+        enable_cfg=dict(type='dict', enable_auth_type=dict(type='str', choices=['local', 'tacplus']))
     ))
    
 

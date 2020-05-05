@@ -189,21 +189,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        dead_interval=dict(type='int',),
-        authentication_key=dict(type='str',),
-        uuid=dict(type='str',),
-        mtu_ignore=dict(type='bool',),
-        transmit_delay=dict(type='int',),
-        authentication_cfg=dict(type='dict',authentication=dict(type='bool',),value=dict(type='str',choices=['message-digest','null'])),
-        retransmit_interval=dict(type='int',),
-        bfd_cfg=dict(type='dict',disable=dict(type='bool',),bfd=dict(type='bool',)),
-        disable=dict(type='str',choices=['all']),
-        hello_interval=dict(type='int',),
-        database_filter_cfg=dict(type='dict',database_filter=dict(type='str',choices=['all']),out=dict(type='bool',)),
-        priority=dict(type='int',),
-        mtu=dict(type='int',),
-        message_digest_cfg=dict(type='list',message_digest_key=dict(type='int',),md5=dict(type='dict',md5_value=dict(type='str',),encrypted=dict(type='str',))),
-        cost=dict(type='int',)
+        dead_interval=dict(type='int', ),
+        authentication_key=dict(type='str', ),
+        uuid=dict(type='str', ),
+        mtu_ignore=dict(type='bool', ),
+        transmit_delay=dict(type='int', ),
+        authentication_cfg=dict(type='dict', authentication=dict(type='bool', ), value=dict(type='str', choices=['message-digest', 'null'])),
+        retransmit_interval=dict(type='int', ),
+        bfd_cfg=dict(type='dict', disable=dict(type='bool', ), bfd=dict(type='bool', )),
+        disable=dict(type='str', choices=['all']),
+        hello_interval=dict(type='int', ),
+        database_filter_cfg=dict(type='dict', database_filter=dict(type='str', choices=['all']), out=dict(type='bool', )),
+        priority=dict(type='int', ),
+        mtu=dict(type='int', ),
+        message_digest_cfg=dict(type='list', message_digest_key=dict(type='int', ), md5=dict(type='dict', md5_value=dict(type='str', ), encrypted=dict(type='str', ))),
+        cost=dict(type='int', )
     ))
    
     # Parent keys

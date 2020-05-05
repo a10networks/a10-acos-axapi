@@ -157,20 +157,20 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ignore_id=dict(type='int',),
-        keep_tracking=dict(type='bool',),
-        enable=dict(type='bool',),
-        timeout=dict(type='int',),
-        skip=dict(type='int',),
-        fail_break=dict(type='bool',),
-        controller=dict(type='bool',),
-        limit=dict(type='int',),
-        samples=dict(type='int',),
-        proto_rdt_enable=dict(type='bool',),
-        single_shot=dict(type='bool',),
-        difference=dict(type='int',),
-        tolerance=dict(type='int',),
-        uuid=dict(type='str',)
+        ignore_id=dict(type='int', ),
+        keep_tracking=dict(type='bool', ),
+        enable=dict(type='bool', ),
+        timeout=dict(type='int', ),
+        skip=dict(type='int', ),
+        fail_break=dict(type='bool', ),
+        controller=dict(type='bool', ),
+        limit=dict(type='int', ),
+        samples=dict(type='int', ),
+        proto_rdt_enable=dict(type='bool', ),
+        single_shot=dict(type='bool', ),
+        difference=dict(type='int', ),
+        tolerance=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

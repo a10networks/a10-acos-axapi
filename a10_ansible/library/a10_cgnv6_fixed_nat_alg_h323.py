@@ -130,9 +130,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','h225ras-message','h225cs-message','h245ctl-message','h245-tunneled','fast-start','parse-error','message-cross-multi-packets','conn-ext-creation-failure','rewrite-failure','tcp-out-of-order-drop','h245-dynamic-addr-exceed'])),
-        stats=dict(type='dict',h225ras_message=dict(type='str',),h245_tunneled=dict(type='str',),fast_start=dict(type='str',),h225cs_message=dict(type='str',),h245ctl_message=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'h225ras-message', 'h225cs-message', 'h245ctl-message', 'h245-tunneled', 'fast-start', 'parse-error', 'message-cross-multi-packets', 'conn-ext-creation-failure', 'rewrite-failure', 'tcp-out-of-order-drop', 'h245-dynamic-addr-exceed'])),
+        stats=dict(type='dict', h225ras_message=dict(type='str', ), h245_tunneled=dict(type='str', ), fast_start=dict(type='str', ), h225cs_message=dict(type='str', ), h245ctl_message=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

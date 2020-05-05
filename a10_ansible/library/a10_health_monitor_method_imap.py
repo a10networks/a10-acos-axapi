@@ -145,17 +145,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        imap_cram_md5=dict(type='bool',),
-        imap_port=dict(type='int',),
-        imap_login=dict(type='bool',),
-        imap_password=dict(type='bool',),
-        imap_password_string=dict(type='str',),
-        imap_username=dict(type='str',),
-        imap_encrypted=dict(type='str',),
-        pwd_auth=dict(type='bool',),
-        imap_plain=dict(type='bool',),
-        imap=dict(type='bool',),
-        uuid=dict(type='str',)
+        imap_cram_md5=dict(type='bool', ),
+        imap_port=dict(type='int', ),
+        imap_login=dict(type='bool', ),
+        imap_password=dict(type='bool', ),
+        imap_password_string=dict(type='str', ),
+        imap_username=dict(type='str', ),
+        imap_encrypted=dict(type='str', ),
+        pwd_auth=dict(type='bool', ),
+        imap_plain=dict(type='bool', ),
+        imap=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

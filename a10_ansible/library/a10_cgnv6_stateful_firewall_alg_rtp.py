@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rtp_stun_timeout=dict(type='int',),
-        uuid=dict(type='str',)
+        rtp_stun_timeout=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

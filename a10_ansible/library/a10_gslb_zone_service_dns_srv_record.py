@@ -153,14 +153,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        srv_name=dict(type='str',required=True,),
-        stats=dict(type='dict',srv_name=dict(type='str',required=True,),hits=dict(type='str',),port=dict(type='int',required=True,)),
-        uuid=dict(type='str',),
-        weight=dict(type='int',),
-        priority=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
-        ttl=dict(type='int',),
-        port=dict(type='int',required=True,)
+        srv_name=dict(type='str', required=True, ),
+        stats=dict(type='dict', srv_name=dict(type='str', required=True, ), hits=dict(type='str', ), port=dict(type='int', required=True, )),
+        uuid=dict(type='str', ),
+        weight=dict(type='int', ),
+        priority=dict(type='int', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
+        ttl=dict(type='int', ),
+        port=dict(type='int', required=True, )
     ))
    
     # Parent keys

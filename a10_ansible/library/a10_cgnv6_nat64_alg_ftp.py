@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        trans_epsv_to_pasv=dict(type='str',choices=['disable']),
-        trans_lprt_to_port=dict(type='str',choices=['disable']),
-        trans_eprt_to_port=dict(type='str',choices=['disable']),
-        xlat_no_trans_pasv=dict(type='str',choices=['enable']),
-        ftp_enable=dict(type='str',choices=['disable']),
-        trans_lpsv_to_pasv=dict(type='str',choices=['disable']),
-        uuid=dict(type='str',)
+        trans_epsv_to_pasv=dict(type='str', choices=['disable']),
+        trans_lprt_to_port=dict(type='str', choices=['disable']),
+        trans_eprt_to_port=dict(type='str', choices=['disable']),
+        xlat_no_trans_pasv=dict(type='str', choices=['enable']),
+        ftp_enable=dict(type='str', choices=['disable']),
+        trans_lpsv_to_pasv=dict(type='str', choices=['disable']),
+        uuid=dict(type='str', )
     ))
    
 

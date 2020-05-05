@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gererate=dict(type='bool',),
-        uuid=dict(type='str',),
-        maxage=dict(type='bool',),
-        refresh=dict(type='bool',),
-        install=dict(type='bool',),
-        flooding=dict(type='bool',)
+        gererate=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        maxage=dict(type='bool', ),
+        refresh=dict(type='bool', ),
+        install=dict(type='bool', ),
+        flooding=dict(type='bool', )
     ))
    
 

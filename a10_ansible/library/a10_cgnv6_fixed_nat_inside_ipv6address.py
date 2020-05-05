@@ -184,24 +184,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        partition=dict(type='str',required=True,),
-        inside_netmask=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        nat_end_address=dict(type='str',),
-        vrid=dict(type='int',),
-        ports_per_user=dict(type='int',),
-        session_quota=dict(type='int',),
-        method=dict(type='str',choices=['use-all-nat-ips','use-least-nat-ips']),
-        inside_start_address=dict(type='str',required=True,),
-        dest_rule_list=dict(type='str',),
-        nat_start_address=dict(type='str',),
-        nat_ip_list=dict(type='str',),
-        offset=dict(type='dict',numeric_offset=dict(type='int',),random=dict(type='bool',)),
-        respond_to_user_mac=dict(type='bool',),
-        inside_end_address=dict(type='str',required=True,),
-        usable_nat_ports=dict(type='dict',usable_start_port=dict(type='int',),usable_end_port=dict(type='int',)),
-        nat_netmask=dict(type='str',),
-        dynamic_pool_size=dict(type='int',)
+        partition=dict(type='str', required=True, ),
+        inside_netmask=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        nat_end_address=dict(type='str', ),
+        vrid=dict(type='int', ),
+        ports_per_user=dict(type='int', ),
+        session_quota=dict(type='int', ),
+        method=dict(type='str', choices=['use-all-nat-ips', 'use-least-nat-ips']),
+        inside_start_address=dict(type='str', required=True, ),
+        dest_rule_list=dict(type='str', ),
+        nat_start_address=dict(type='str', ),
+        nat_ip_list=dict(type='str', ),
+        offset=dict(type='dict', numeric_offset=dict(type='int', ), random=dict(type='bool', )),
+        respond_to_user_mac=dict(type='bool', ),
+        inside_end_address=dict(type='str', required=True, ),
+        usable_nat_ports=dict(type='dict', usable_start_port=dict(type='int', ), usable_end_port=dict(type='int', )),
+        nat_netmask=dict(type='str', ),
+        dynamic_pool_size=dict(type='int', )
     ))
    
 

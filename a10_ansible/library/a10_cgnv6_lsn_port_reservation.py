@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        inside_port_start=dict(type='int',required=True,),
-        uuid=dict(type='str',),
-        nat_port_start=dict(type='int',required=True,),
-        inside_port_end=dict(type='int',required=True,),
-        inside=dict(type='str',required=True,),
-        nat=dict(type='str',required=True,),
-        nat_port_end=dict(type='int',required=True,)
+        inside_port_start=dict(type='int', required=True, ),
+        uuid=dict(type='str', ),
+        nat_port_start=dict(type='int', required=True, ),
+        inside_port_end=dict(type='int', required=True, ),
+        inside=dict(type='str', required=True, ),
+        nat=dict(type='str', required=True, ),
+        nat_port_end=dict(type='int', required=True, )
     ))
    
 

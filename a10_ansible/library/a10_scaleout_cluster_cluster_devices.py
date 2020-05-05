@@ -135,9 +135,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        cluster_discovery_timeout=dict(type='dict',timer_val=dict(type='int',),uuid=dict(type='str',)),
-        device_id_list=dict(type='list',action=dict(type='str',choices=['enable','disable']),device_id=dict(type='int',required=True,),uuid=dict(type='str',),user_tag=dict(type='str',),ip=dict(type='str',)),
-        uuid=dict(type='str',)
+        cluster_discovery_timeout=dict(type='dict', timer_val=dict(type='int', ), uuid=dict(type='str', )),
+        device_id_list=dict(type='list', action=dict(type='str', choices=['enable', 'disable']), device_id=dict(type='int', required=True, ), uuid=dict(type='str', ), user_tag=dict(type='str', ), ip=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

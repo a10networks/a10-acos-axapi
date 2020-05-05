@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        respond_to_ping=dict(type='bool',),
-        uuid=dict(type='str',)
+        respond_to_ping=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

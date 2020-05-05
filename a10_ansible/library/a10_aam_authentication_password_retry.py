@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',logon_name=dict(type='str',),entry_list=dict(type='list',logon=dict(type='str',),account=dict(type='str',),locked_out=dict(type='str',),pw_failure=dict(type='int',),ttl=dict(type='int',)),name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', logon_name=dict(type='str', ), entry_list=dict(type='list', logon=dict(type='str', ), account=dict(type='str', ), locked_out=dict(type='str', ), pw_failure=dict(type='int', ), ttl=dict(type='int', )), name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

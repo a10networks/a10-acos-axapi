@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        health_check_disable=dict(type='bool',),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        service_down_action=dict(type='str',choices=['reset','allow'])
+        health_check_disable=dict(type='bool', ),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        service_down_action=dict(type='str', choices=['reset', 'allow'])
     ))
    
 

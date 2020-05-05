@@ -153,10 +153,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',l4_cpu_list=dict(type='list',max_outstanding_request_count=dict(type='int',),failure_count=dict(type='int',),response_count=dict(type='int',),ring_full_count=dict(type='int',),submit_count=dict(type='int',),request_count=dict(type='int',),max_outstanding_submit_count=dict(type='int',),failure_code=dict(type='int',)),cpu_count=dict(type='int',),hw_compress_disabled=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request_count','submit_count','response_count','failure_count','failure_code','ring_full_count','max_outstanding_request_count','max_outstanding_submit_count'])),
-        stats=dict(type='dict',max_outstanding_request_count=dict(type='str',),failure_count=dict(type='str',),response_count=dict(type='str',),ring_full_count=dict(type='str',),submit_count=dict(type='str',),request_count=dict(type='str',),max_outstanding_submit_count=dict(type='str',),failure_code=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', l4_cpu_list=dict(type='list', max_outstanding_request_count=dict(type='int', ), failure_count=dict(type='int', ), response_count=dict(type='int', ), ring_full_count=dict(type='int', ), submit_count=dict(type='int', ), request_count=dict(type='int', ), max_outstanding_submit_count=dict(type='int', ), failure_code=dict(type='int', )), cpu_count=dict(type='int', ), hw_compress_disabled=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'request_count', 'submit_count', 'response_count', 'failure_count', 'failure_code', 'ring_full_count', 'max_outstanding_request_count', 'max_outstanding_submit_count'])),
+        stats=dict(type='dict', max_outstanding_request_count=dict(type='str', ), failure_count=dict(type='str', ), response_count=dict(type='str', ), ring_full_count=dict(type='str', ), submit_count=dict(type='str', ), request_count=dict(type='str', ), max_outstanding_submit_count=dict(type='str', ), failure_code=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

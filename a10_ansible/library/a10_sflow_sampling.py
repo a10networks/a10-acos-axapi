@@ -124,9 +124,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        eth_list=dict(type='list',eth_end=dict(type='str',),eth_start=dict(type='str',)),
-        uuid=dict(type='str',),
-        ve_list=dict(type='list',ve_end=dict(type='int',),ve_start=dict(type='int',))
+        eth_list=dict(type='list', eth_end=dict(type='str', ), eth_start=dict(type='str', )),
+        uuid=dict(type='str', ),
+        ve_list=dict(type='list', ve_end=dict(type='int', ), ve_start=dict(type='int', ))
     ))
    
 

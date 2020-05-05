@@ -102,7 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        max_cores=dict(type='int',)
+        max_cores=dict(type='int', )
     ))
    
 

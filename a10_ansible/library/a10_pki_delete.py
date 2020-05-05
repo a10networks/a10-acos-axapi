@@ -125,12 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='str',required=false,filename=dict(type='str',)),
-        cert_name=dict(type='str',),
-        private_key=dict(type='str',),
-        ca=dict(type='str',),
-        crl=dict(type='str',),
-        csr=dict(type='str',)
+        oper=dict(type='str', required=False, filename=dict(type='str', )),
+        cert_name=dict(type='str', ),
+        private_key=dict(type='str', ),
+        ca=dict(type='str', ),
+        crl=dict(type='str', ),
+        csr=dict(type='str', )
     ))
    
 

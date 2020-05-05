@@ -129,12 +129,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        tcp_port=dict(type='int',),
-        port_resp=dict(type='dict',port_contains=dict(type='str',)),
-        method_tcp=dict(type='bool',),
-        port_send=dict(type='str',),
-        port_halfopen=dict(type='bool',)
+        uuid=dict(type='str', ),
+        tcp_port=dict(type='int', ),
+        port_resp=dict(type='dict', port_contains=dict(type='str', )),
+        method_tcp=dict(type='bool', ),
+        port_send=dict(type='str', ),
+        port_halfopen=dict(type='bool', )
     ))
    
     # Parent keys

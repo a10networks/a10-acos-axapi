@@ -174,25 +174,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        username=dict(type='str',),
-        oid=dict(type='str',),
-        priv_proto=dict(type='str',choices=['aes','des']),
-        uuid=dict(type='str',),
-        context_name=dict(type='str',),
-        auth_key=dict(type='str',),
-        interval=dict(type='int',),
-        context_engine_id=dict(type='str',),
-        security_level=dict(type='str',choices=['no-auth','auth-no-priv','auth-priv']),
-        community=dict(type='str',),
-        auth_proto=dict(type='str',choices=['sha','md5']),
-        host=dict(type='str',),
-        version=dict(type='str',choices=['v1','v2c','v3']),
-        user_tag=dict(type='str',),
-        interface=dict(type='int',),
-        priv_key=dict(type='str',),
-        security_engine_id=dict(type='str',),
-        port=dict(type='int',),
-        snmp_name=dict(type='str',required=True,)
+        username=dict(type='str', ),
+        oid=dict(type='str', ),
+        priv_proto=dict(type='str', choices=['aes', 'des']),
+        uuid=dict(type='str', ),
+        context_name=dict(type='str', ),
+        auth_key=dict(type='str', ),
+        interval=dict(type='int', ),
+        context_engine_id=dict(type='str', ),
+        security_level=dict(type='str', choices=['no-auth', 'auth-no-priv', 'auth-priv']),
+        community=dict(type='str', ),
+        auth_proto=dict(type='str', choices=['sha', 'md5']),
+        host=dict(type='str', ),
+        version=dict(type='str', choices=['v1', 'v2c', 'v3']),
+        user_tag=dict(type='str', ),
+        interface=dict(type='int', ),
+        priv_key=dict(type='str', ),
+        security_engine_id=dict(type='str', ),
+        port=dict(type='int', ),
+        snmp_name=dict(type='str', required=True, )
     ))
    
 

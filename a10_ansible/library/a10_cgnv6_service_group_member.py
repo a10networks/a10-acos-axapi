@@ -210,13 +210,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',hm_key=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),name=dict(type='str',required=True,),hm_index=dict(type='int',),port=dict(type='int',required=True,)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),
-        stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),name=dict(type='str',required=True,),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),port=dict(type='int',required=True,),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),
-        uuid=dict(type='str',),
-        port=dict(type='int',required=True,),
-        user_tag=dict(type='str',),
-        name=dict(type='str',required=True,)
+        oper=dict(type='dict', hm_key=dict(type='int', ), state=dict(type='str', choices=['UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE', 'DIS-DAMP']), name=dict(type='str', required=True, ), hm_index=dict(type='int', ), port=dict(type='int', required=True, )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn'])),
+        stats=dict(type='dict', curr_req=dict(type='str', ), total_rev_bytes=dict(type='str', ), name=dict(type='str', required=True, ), peak_conn=dict(type='str', ), total_ssl_conn=dict(type='str', ), total_conn=dict(type='str', ), fastest_rsp_time=dict(type='str', ), total_fwd_pkts=dict(type='str', ), total_req=dict(type='str', ), total_rev_pkts=dict(type='str', ), port=dict(type='int', required=True, ), curr_ssl_conn=dict(type='str', ), total_req_succ=dict(type='str', ), curr_conn=dict(type='str', ), total_rev_pkts_inspected_status_code_non_5xx=dict(type='str', ), total_rev_pkts_inspected_status_code_2xx=dict(type='str', ), total_fwd_bytes=dict(type='str', ), slowest_rsp_time=dict(type='str', ), response_time=dict(type='str', ), total_rev_pkts_inspected=dict(type='str', )),
+        uuid=dict(type='str', ),
+        port=dict(type='int', required=True, ),
+        user_tag=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
     # Parent keys

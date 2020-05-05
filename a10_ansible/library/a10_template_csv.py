@@ -133,13 +133,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        csv_name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        ipv6_enable=dict(type='bool',),
-        delim_num=dict(type='int',),
-        delim_char=dict(type='str',),
-        multiple_fields=dict(type='list',field=dict(type='int',),csv_type=dict(type='str',choices=['ip-from','ip-to-mask','continent','country','state','city']))
+        uuid=dict(type='str', ),
+        csv_name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        ipv6_enable=dict(type='bool', ),
+        delim_num=dict(type='int', ),
+        delim_char=dict(type='str', ),
+        multiple_fields=dict(type='list', field=dict(type='int', ), csv_type=dict(type='str', choices=['ip-from', 'ip-to-mask', 'continent', 'country', 'state', 'city']))
     ))
    
 

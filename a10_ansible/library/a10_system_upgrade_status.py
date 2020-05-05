@@ -119,8 +119,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',status=dict(type='int',),rollback_sec=dict(type='str',),message=dict(type='str',),rollback_pri=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', status=dict(type='int', ), rollback_sec=dict(type='str', ), message=dict(type='str', ), rollback_pri=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -167,8 +167,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        kerberos_cfg=dict(type='dict',tcp_only=dict(type='bool',),kpasswd_password=dict(type='str',),kadmin_server=dict(type='str',),kinit_password=dict(type='str',),kpasswd=dict(type='bool',),kinit_pricipal_name=dict(type='str',),kpasswd_server=dict(type='str',),kadmin_encrypted=dict(type='str',),kinit=dict(type='bool',),kadmin_pricipal_name=dict(type='str',),kadmin_realm=dict(type='str',),kinit_kdc=dict(type='str',),kpasswd_pricipal_name=dict(type='str',),kadmin=dict(type='bool',),kadmin_kdc=dict(type='str',),kpasswd_kdc=dict(type='str',),kadmin_password=dict(type='str',),kpasswd_encrypted=dict(type='str',),kinit_encrypted=dict(type='str',)),
-        uuid=dict(type='str',)
+        kerberos_cfg=dict(type='dict', tcp_only=dict(type='bool', ), kpasswd_password=dict(type='str', ), kadmin_server=dict(type='str', ), kinit_password=dict(type='str', ), kpasswd=dict(type='bool', ), kinit_pricipal_name=dict(type='str', ), kpasswd_server=dict(type='str', ), kadmin_encrypted=dict(type='str', ), kinit=dict(type='bool', ), kadmin_pricipal_name=dict(type='str', ), kadmin_realm=dict(type='str', ), kinit_kdc=dict(type='str', ), kpasswd_pricipal_name=dict(type='str', ), kadmin=dict(type='bool', ), kadmin_kdc=dict(type='str', ), kpasswd_kdc=dict(type='str', ), kadmin_password=dict(type='str', ), kpasswd_encrypted=dict(type='str', ), kinit_encrypted=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

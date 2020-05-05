@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',system_port_info=dict(type='list',Pci_Addr=dict(type='str',),Info=dict(type='str',),Port_Num=dict(type='str',),Dev=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', system_port_info=dict(type='list', Pci_Addr=dict(type='str', ), Info=dict(type='str', ), Port_Num=dict(type='str', ), Dev=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

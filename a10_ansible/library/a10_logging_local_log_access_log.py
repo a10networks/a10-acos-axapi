@@ -125,8 +125,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',interval=dict(type='str',),start_time=dict(type='str',),log_list=dict(type='list',destination_port=dict(type='int',),user_domain=dict(type='str',),user_name=dict(type='str',),vip_name=dict(type='str',),client_ip=dict(type='str',),ssl_status=dict(type='str',),uri=dict(type='str',),policy=dict(type='str',),web_category=dict(type='str',),destination_ip=dict(type='str',),web_domain=dict(type='str',),time=dict(type='str',),action=dict(type='str',),source_port=dict(type='int',),vip_port=dict(type='int',)),max_entries=dict(type='int',),interval_position=dict(type='str',),total=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', interval=dict(type='str', ), start_time=dict(type='str', ), log_list=dict(type='list', destination_port=dict(type='int', ), user_domain=dict(type='str', ), user_name=dict(type='str', ), vip_name=dict(type='str', ), client_ip=dict(type='str', ), ssl_status=dict(type='str', ), uri=dict(type='str', ), policy=dict(type='str', ), web_category=dict(type='str', ), destination_ip=dict(type='str', ), web_domain=dict(type='str', ), time=dict(type='str', ), action=dict(type='str', ), source_port=dict(type='int', ), vip_port=dict(type='int', )), max_entries=dict(type='int', ), interval_position=dict(type='str', ), total=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

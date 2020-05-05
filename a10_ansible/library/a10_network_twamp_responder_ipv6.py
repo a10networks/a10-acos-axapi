@@ -132,9 +132,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',no_route_err_v6=dict(type='str',),twamp_hdr_len_err_v6=dict(type='str',),tx_pkts_v6=dict(type='str',),other_err_v6=dict(type='str',),rx_drop_not_enabled_v6=dict(type='str',),rx_pkts_v6=dict(type='str',),rx_acl_drop_v6=dict(type='str',)),
-        uuid=dict(type='str',),
-        v6_acl_name=dict(type='str',)
+        stats=dict(type='dict', no_route_err_v6=dict(type='str', ), twamp_hdr_len_err_v6=dict(type='str', ), tx_pkts_v6=dict(type='str', ), other_err_v6=dict(type='str', ), rx_drop_not_enabled_v6=dict(type='str', ), rx_pkts_v6=dict(type='str', ), rx_acl_drop_v6=dict(type='str', )),
+        uuid=dict(type='str', ),
+        v6_acl_name=dict(type='str', )
     ))
    
 

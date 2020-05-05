@@ -137,14 +137,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        mailfrom=dict(type='str',),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        smtp_server=dict(type='str',),
-        port=dict(type='int',),
-        needauthentication=dict(type='bool',),
-        username_cfg=dict(type='dict',username=dict(type='str',),password=dict(type='dict',encrypted=dict(type='str',),smtp_password=dict(type='str',))),
-        smtp_server_v6=dict(type='str',)
+        mailfrom=dict(type='str', ),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        smtp_server=dict(type='str', ),
+        port=dict(type='int', ),
+        needauthentication=dict(type='bool', ),
+        username_cfg=dict(type='dict', username=dict(type='str', ), password=dict(type='dict', encrypted=dict(type='str', ), smtp_password=dict(type='str', ))),
+        smtp_server_v6=dict(type='str', )
     ))
    
 

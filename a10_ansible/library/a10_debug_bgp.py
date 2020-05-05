@@ -150,19 +150,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        dampening=dict(type='bool',),
-        nsm=dict(type='bool',),
-        bfd=dict(type='bool',),
-        fsm=dict(type='bool',),
-        nht=dict(type='bool',),
-        updates=dict(type='bool',),
-        filters=dict(type='bool',),
-        nin=dict(type='bool',),
-        keepalives=dict(type='bool',),
-        out=dict(type='bool',),
-        events=dict(type='bool',),
-        uuid=dict(type='str',)
+        all=dict(type='bool', ),
+        dampening=dict(type='bool', ),
+        nsm=dict(type='bool', ),
+        bfd=dict(type='bool', ),
+        fsm=dict(type='bool', ),
+        nht=dict(type='bool', ),
+        updates=dict(type='bool', ),
+        filters=dict(type='bool', ),
+        nin=dict(type='bool', ),
+        keepalives=dict(type='bool', ),
+        out=dict(type='bool', ),
+        events=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

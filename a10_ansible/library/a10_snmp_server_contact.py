@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        contact_name=dict(type='str',),
-        uuid=dict(type='str',)
+        contact_name=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -207,17 +207,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        static_ipv6_route_cfg=dict(type='dict',static_ipv6_route_max=dict(type='int',),static_ipv6_route_min_guarantee=dict(type='int',)),
-        uuid=dict(type='str',),
-        ipv4_acl_line_cfg=dict(type='dict',ipv4_acl_line_min_guarantee=dict(type='int',),ipv4_acl_line_max=dict(type='int',)),
-        static_ipv4_route_cfg=dict(type='dict',static_ipv4_route_max=dict(type='int',),static_ipv4_route_min_guarantee=dict(type='int',)),
-        static_arp_cfg=dict(type='dict',static_arp_min_guarantee=dict(type='int',),static_arp_max=dict(type='int',)),
-        object_group_clause_cfg=dict(type='dict',object_group_clause_min_guarantee=dict(type='int',),object_group_clause_max=dict(type='int',)),
-        static_mac_cfg=dict(type='dict',static_mac_min_guarantee=dict(type='int',),static_mac_max=dict(type='int',)),
-        object_group_cfg=dict(type='dict',object_group_min_guarantee=dict(type='int',),object_group_max=dict(type='int',)),
-        static_neighbor_cfg=dict(type='dict',static_neighbor_max=dict(type='int',),static_neighbor_min_guarantee=dict(type='int',)),
-        threshold=dict(type='int',),
-        ipv6_acl_line_cfg=dict(type='dict',ipv6_acl_line_max=dict(type='int',),ipv6_acl_line_min_guarantee=dict(type='int',))
+        static_ipv6_route_cfg=dict(type='dict', static_ipv6_route_max=dict(type='int', ), static_ipv6_route_min_guarantee=dict(type='int', )),
+        uuid=dict(type='str', ),
+        ipv4_acl_line_cfg=dict(type='dict', ipv4_acl_line_min_guarantee=dict(type='int', ), ipv4_acl_line_max=dict(type='int', )),
+        static_ipv4_route_cfg=dict(type='dict', static_ipv4_route_max=dict(type='int', ), static_ipv4_route_min_guarantee=dict(type='int', )),
+        static_arp_cfg=dict(type='dict', static_arp_min_guarantee=dict(type='int', ), static_arp_max=dict(type='int', )),
+        object_group_clause_cfg=dict(type='dict', object_group_clause_min_guarantee=dict(type='int', ), object_group_clause_max=dict(type='int', )),
+        static_mac_cfg=dict(type='dict', static_mac_min_guarantee=dict(type='int', ), static_mac_max=dict(type='int', )),
+        object_group_cfg=dict(type='dict', object_group_min_guarantee=dict(type='int', ), object_group_max=dict(type='int', )),
+        static_neighbor_cfg=dict(type='dict', static_neighbor_max=dict(type='int', ), static_neighbor_min_guarantee=dict(type='int', )),
+        threshold=dict(type='int', ),
+        ipv6_acl_line_cfg=dict(type='dict', ipv6_acl_line_max=dict(type='int', ), ipv6_acl_line_min_guarantee=dict(type='int', ))
     ))
    
     # Parent keys

@@ -174,25 +174,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        count=dict(type='int',),
-        arp=dict(type='bool',),
-        all=dict(type='bool',),
-        uuid=dict(type='str',),
-        ip=dict(type='bool',),
-        l4_protocol=dict(type='bool',),
-        detail=dict(type='bool',),
-        tcp=dict(type='bool',),
-        port_range=dict(type='int',),
-        icmpv6=dict(type='bool',),
-        ipv4ad=dict(type='str',),
-        neighbor=dict(type='bool',),
-        ipv6=dict(type='bool',),
-        interface=dict(type='bool',),
-        ethernet=dict(type='str',),
-        icmp=dict(type='bool',),
-        udp=dict(type='bool',),
-        ipv6ad=dict(type='str',),
-        l3_protocol=dict(type='bool',)
+        count=dict(type='int', ),
+        arp=dict(type='bool', ),
+        all=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ip=dict(type='bool', ),
+        l4_protocol=dict(type='bool', ),
+        detail=dict(type='bool', ),
+        tcp=dict(type='bool', ),
+        port_range=dict(type='int', ),
+        icmpv6=dict(type='bool', ),
+        ipv4ad=dict(type='str', ),
+        neighbor=dict(type='bool', ),
+        ipv6=dict(type='bool', ),
+        interface=dict(type='bool', ),
+        ethernet=dict(type='str', ),
+        icmp=dict(type='bool', ),
+        udp=dict(type='bool', ),
+        ipv6ad=dict(type='str', ),
+        l3_protocol=dict(type='bool', )
     ))
    
 

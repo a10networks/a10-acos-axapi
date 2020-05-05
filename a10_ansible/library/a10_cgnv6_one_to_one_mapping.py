@@ -149,8 +149,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',shared_partition=dict(type='bool',),all_partitions=dict(type='bool',),inside_addr_end=dict(type='str',),inside_addr_start=dict(type='str',),partition_name=dict(type='str',),nat_addr_val=dict(type='str',),nat_addr_start=dict(type='str',),nat_addr_end=dict(type='str',),inside_address_ipv6=dict(type='str',),inside_address_ipv4=dict(type='str',),shared_pool_name=dict(type='str',),session_mapping_list=dict(type='list',sessions=dict(type='int',),age=dict(type='str',),inside_ipv6_address=dict(type='str',),nat_address=dict(type='str',),inside_ipv4_address=dict(type='str',),pool=dict(type='str',)),total=dict(type='int',),pool_name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', shared_partition=dict(type='bool', ), all_partitions=dict(type='bool', ), inside_addr_end=dict(type='str', ), inside_addr_start=dict(type='str', ), partition_name=dict(type='str', ), nat_addr_val=dict(type='str', ), nat_addr_start=dict(type='str', ), nat_addr_end=dict(type='str', ), inside_address_ipv6=dict(type='str', ), inside_address_ipv4=dict(type='str', ), shared_pool_name=dict(type='str', ), session_mapping_list=dict(type='list', sessions=dict(type='int', ), age=dict(type='str', ), inside_ipv6_address=dict(type='str', ), nat_address=dict(type='str', ), inside_ipv4_address=dict(type='str', ), pool=dict(type='str', )), total=dict(type='int', ), pool_name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -165,21 +165,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        gslb_service_ip=dict(type='bool',),
-        gslb_site=dict(type='bool',),
-        ip_ttl=dict(type='int',),
-        gslb_group=dict(type='bool',),
-        slb_device=dict(type='bool',),
-        hostname=dict(type='bool',),
-        module=dict(type='bool',),
-        wait=dict(type='int',),
-        age_interval=dict(type='int',),
-        geo_location_iana=dict(type='bool',),
-        ttl=dict(type='int',),
-        slb_server=dict(type='bool',),
-        slb_virtual_server=dict(type='bool',),
-        gslb_load_file_list=dict(type='list',geo_location_load_filename=dict(type='str',),template_name=dict(type='str',)),
-        uuid=dict(type='str',)
+        gslb_service_ip=dict(type='bool', ),
+        gslb_site=dict(type='bool', ),
+        ip_ttl=dict(type='int', ),
+        gslb_group=dict(type='bool', ),
+        slb_device=dict(type='bool', ),
+        hostname=dict(type='bool', ),
+        module=dict(type='bool', ),
+        wait=dict(type='int', ),
+        age_interval=dict(type='int', ),
+        geo_location_iana=dict(type='bool', ),
+        ttl=dict(type='int', ),
+        slb_server=dict(type='bool', ),
+        slb_virtual_server=dict(type='bool', ),
+        gslb_load_file_list=dict(type='list', geo_location_load_filename=dict(type='str', ), template_name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

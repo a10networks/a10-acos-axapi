@@ -170,24 +170,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        data_cpu=dict(type='int',),
-        smp_type1=dict(type='int',),
-        buffer_usage=dict(type='int',),
-        uuid=dict(type='str',),
-        buffer_drop=dict(type='int',),
-        ctrl_cpu=dict(type='int',),
-        warn_temp=dict(type='int',),
-        disk=dict(type='int',),
-        conn_type3=dict(type='int',),
-        conn_type2=dict(type='int',),
-        memory=dict(type='int',),
-        smp_type2=dict(type='int',),
-        smp_type3=dict(type='int',),
-        conn_type1=dict(type='int',),
-        conn_type0=dict(type='int',),
-        smp_type0=dict(type='int',),
-        smp_type4=dict(type='int',),
-        conn_type4=dict(type='int',)
+        data_cpu=dict(type='int', ),
+        smp_type1=dict(type='int', ),
+        buffer_usage=dict(type='int', ),
+        uuid=dict(type='str', ),
+        buffer_drop=dict(type='int', ),
+        ctrl_cpu=dict(type='int', ),
+        warn_temp=dict(type='int', ),
+        disk=dict(type='int', ),
+        conn_type3=dict(type='int', ),
+        conn_type2=dict(type='int', ),
+        memory=dict(type='int', ),
+        smp_type2=dict(type='int', ),
+        smp_type3=dict(type='int', ),
+        conn_type1=dict(type='int', ),
+        conn_type0=dict(type='int', ),
+        smp_type0=dict(type='int', ),
+        smp_type4=dict(type='int', ),
+        conn_type4=dict(type='int', )
     ))
    
 

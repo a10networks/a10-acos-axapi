@@ -149,17 +149,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        other_variables=dict(type='str',),
-        max_packet_collect_size=dict(type='int',),
-        action_uri=dict(type='str',),
-        uri=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        cookie=dict(type='dict',cookie_value=dict(type='dict',cookie_value=dict(type='str',))),
-        user_variable=dict(type='str',),
-        domain_variable=dict(type='str',),
-        password_variable=dict(type='str',),
-        match_type=dict(type='str',required=True,choices=['equals','contains','starts-with','ends-with']),
-        uuid=dict(type='str',)
+        other_variables=dict(type='str', ),
+        max_packet_collect_size=dict(type='int', ),
+        action_uri=dict(type='str', ),
+        uri=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        cookie=dict(type='dict', cookie_value=dict(type='dict', cookie_value=dict(type='str', ))),
+        user_variable=dict(type='str', ),
+        domain_variable=dict(type='str', ),
+        password_variable=dict(type='str', ),
+        match_type=dict(type='str', required=True, choices=['equals', 'contains', 'starts-with', 'ends-with']),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

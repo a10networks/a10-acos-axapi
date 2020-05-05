@@ -139,10 +139,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        user_tag=dict(type='str',),
-        name=dict(type='str',required=True,),
-        rule_list=dict(type='list',index=dict(type='int',required=True,),message_id=dict(type='str',),uuid=dict(type='str',),severity_val=dict(type='str',choices=['emergency','alert','critical','error','warning','notification','information','debugging']),user_tag=dict(type='str',),action=dict(type='str',choices=['send','drop']),message_id_scope=dict(type='str',choices=['all','node-only','children-only','log-field-only']),severity_oper=dict(type='str',choices=['equal-and-higher','equal'])),
-        uuid=dict(type='str',)
+        user_tag=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        rule_list=dict(type='list', index=dict(type='int', required=True, ), message_id=dict(type='str', ), uuid=dict(type='str', ), severity_val=dict(type='str', choices=['emergency', 'alert', 'critical', 'error', 'warning', 'notification', 'information', 'debugging']), user_tag=dict(type='str', ), action=dict(type='str', choices=['send', 'drop']), message_id_scope=dict(type='str', choices=['all', 'node-only', 'children-only', 'log-field-only']), severity_oper=dict(type='str', choices=['equal-and-higher', 'equal'])),
+        uuid=dict(type='str', )
     ))
    
 

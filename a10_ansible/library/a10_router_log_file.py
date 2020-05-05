@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        size=dict(type='int',),
-        rotate=dict(type='int',),
-        uuid=dict(type='str',),
-        per_protocol=dict(type='bool',),
-        name=dict(type='str',)
+        size=dict(type='int', ),
+        rotate=dict(type='int', ),
+        uuid=dict(type='str', ),
+        per_protocol=dict(type='bool', ),
+        name=dict(type='str', )
     ))
    
 

@@ -148,11 +148,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',dev_vip_addr=dict(type='str',),ipv6=dict(type='str',required=True,),dev_vip_state=dict(type='str',),dev_vip_port_list=dict(type='list',dev_vip_port_num=dict(type='int',),dev_vip_port_state=dict(type='str',))),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','dev_vip_hits'])),
-        stats=dict(type='dict',dev_vip_hits=dict(type='str',),ipv6=dict(type='str',required=True,)),
-        uuid=dict(type='str',),
-        ipv6=dict(type='str',required=True,)
+        oper=dict(type='dict', dev_vip_addr=dict(type='str', ), ipv6=dict(type='str', required=True, ), dev_vip_state=dict(type='str', ), dev_vip_port_list=dict(type='list', dev_vip_port_num=dict(type='int', ), dev_vip_port_state=dict(type='str', ))),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'dev_vip_hits'])),
+        stats=dict(type='dict', dev_vip_hits=dict(type='str', ), ipv6=dict(type='str', required=True, )),
+        uuid=dict(type='str', ),
+        ipv6=dict(type='str', required=True, )
     ))
    
     # Parent keys

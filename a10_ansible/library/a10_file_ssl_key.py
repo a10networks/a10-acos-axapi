@@ -137,14 +137,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',partition=dict(type='str',),file_list=dict(type='list',file=dict(type='str',))),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        secured=dict(type='bool',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['create','import','export','copy','rename','check','replace','delete']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        oper=dict(type='dict', partition=dict(type='str', ), file_list=dict(type='list', file=dict(type='str', ))),
+        dst_file=dict(type='str', ),
+        uuid=dict(type='str', ),
+        secured=dict(type='bool', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

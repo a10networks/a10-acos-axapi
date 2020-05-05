@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        protocol=dict(type='str',required=True,choices=['iua','m2ua','m3ua','sua','m2pa','h.323']),
-        uuid=dict(type='str',)
+        protocol=dict(type='str', required=True, choices=['iua', 'm2ua', 'm3ua', 'sua', 'm2pa', 'h.323']),
+        uuid=dict(type='str', )
     ))
    
 

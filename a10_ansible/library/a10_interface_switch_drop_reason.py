@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',interfaces=dict(type='list',IfOutTnlDrop=dict(type='int',),IfInQueueDrop=dict(type='int',),IfInErrorDrop=dict(type='int',),IfOutIpv4Drop=dict(type='int',),IfInPortDrop=dict(type='int',),IfOutMcDrop=dict(type='int',),IfInBitmapZeroDrop=dict(type='int',),IfOutIpv6Drop=dict(type='int',),IfInMcDrop=dict(type='int',),IfOutVlanDrop=dict(type='int',),IfOutCondDrop=dict(type='int',),IfInIpv4Drop=dict(type='int',),IfInUnderSizeDrop=dict(type='int',),IfOutParityDrop=dict(type='int',),IfInEventDrop=dict(type='int',),IfInJabberDrop=dict(type='int',),IfInCondDrop=dict(type='int',),IfInFCSDrop=dict(type='int',),IfInFragDrop=dict(type='int',),port_num=dict(type='int',),IF_Type=dict(type='str',),IfInMTUExceedDrop=dict(type='int',),IfInVlanDrop=dict(type='int',),IfInIpv6Drop=dict(type='int',),IfOutStgDrop=dict(type='int',),IfInFilterDrop=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', interfaces=dict(type='list', IfOutTnlDrop=dict(type='int', ), IfInQueueDrop=dict(type='int', ), IfInErrorDrop=dict(type='int', ), IfOutIpv4Drop=dict(type='int', ), IfInPortDrop=dict(type='int', ), IfOutMcDrop=dict(type='int', ), IfInBitmapZeroDrop=dict(type='int', ), IfOutIpv6Drop=dict(type='int', ), IfInMcDrop=dict(type='int', ), IfOutVlanDrop=dict(type='int', ), IfOutCondDrop=dict(type='int', ), IfInIpv4Drop=dict(type='int', ), IfInUnderSizeDrop=dict(type='int', ), IfOutParityDrop=dict(type='int', ), IfInEventDrop=dict(type='int', ), IfInJabberDrop=dict(type='int', ), IfInCondDrop=dict(type='int', ), IfInFCSDrop=dict(type='int', ), IfInFragDrop=dict(type='int', ), port_num=dict(type='int', ), IF_Type=dict(type='str', ), IfInMTUExceedDrop=dict(type='int', ), IfInVlanDrop=dict(type='int', ), IfInIpv6Drop=dict(type='int', ), IfOutStgDrop=dict(type='int', ), IfInFilterDrop=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        log_rate=dict(type='int',),
-        uuid=dict(type='str',)
+        log_rate=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

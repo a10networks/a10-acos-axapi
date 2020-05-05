@@ -138,16 +138,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        username=dict(type='str',),
-        domain=dict(type='str',),
-        uuid=dict(type='str',),
-        https_port=dict(type='int',),
-        encrypted=dict(type='str',),
-        proxy_host=dict(type='str',),
-        auth_type=dict(type='str',choices=['ntlm','basic']),
-        http_port=dict(type='int',),
-        password=dict(type='bool',),
-        secret_string=dict(type='str',)
+        username=dict(type='str', ),
+        domain=dict(type='str', ),
+        uuid=dict(type='str', ),
+        https_port=dict(type='int', ),
+        encrypted=dict(type='str', ),
+        proxy_host=dict(type='str', ),
+        auth_type=dict(type='str', choices=['ntlm', 'basic']),
+        http_port=dict(type='int', ),
+        password=dict(type='bool', ),
+        secret_string=dict(type='str', )
     ))
    
 

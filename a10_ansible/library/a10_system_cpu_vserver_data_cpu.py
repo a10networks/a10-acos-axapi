@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',vserver_cpu_usage=dict(type='list',vserver_name=dict(type='str',),cpu_id=dict(type='int',),30_sec=dict(type='int',),1_sec=dict(type='int',),60_sec=dict(type='int',),10_sec=dict(type='int',),5_sec=dict(type='int',),dcpu_str=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', vserver_cpu_usage=dict(type='list', vserver_name=dict(type='str', ), cpu_id=dict(type='int', ), 30_sec=dict(type='int', ), 1_sec=dict(type='int', ), 60_sec=dict(type='int', ), 10_sec=dict(type='int', ), 5_sec=dict(type='int', ), dcpu_str=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

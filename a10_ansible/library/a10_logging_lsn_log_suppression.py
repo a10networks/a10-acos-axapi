@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        count=dict(type='int',),
-        uuid=dict(type='str',),
-        time=dict(type='int',)
+        count=dict(type='int', ),
+        uuid=dict(type='str', ),
+        time=dict(type='int', )
     ))
    
 

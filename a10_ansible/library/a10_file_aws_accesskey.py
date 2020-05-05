@@ -118,10 +118,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',file_list=dict(type='list',comment=dict(type='str',),index=dict(type='str',),content=dict(type='str',),ntype=dict(type='str',),user=dict(type='str',))),
-        user=dict(type='str',),
-        file_handle=dict(type='str',),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', file_list=dict(type='list', comment=dict(type='str', ), index=dict(type='str', ), content=dict(type='str', ), ntype=dict(type='str', ), user=dict(type='str', ))),
+        user=dict(type='str', ),
+        file_handle=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

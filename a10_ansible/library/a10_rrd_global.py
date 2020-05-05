@@ -116,8 +116,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',global_data=dict(type='list',conn_smp_alloc=dict(type='int',),snat_udp_count=dict(type='int',),tcp_est_count=dict(type='int',),free_buff_count=dict(type='int',),snat_tcp_count=dict(type='int',),other_conn_count=dict(type='int',),udp_conn_count=dict(type='int',),tcp_half_open=dict(type='int',),curr_free_conn=dict(type='int',),ip_conn_count=dict(type='int',),syn_half_open=dict(type='int',),time=dict(type='int',),conn_smp_aged=dict(type='int',),conn_smp_free=dict(type='int',),conn_get_cnt=dict(type='int',),conn_free_cnt=dict(type='int',)),end_time=dict(type='int',),start_time=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', global_data=dict(type='list', conn_smp_alloc=dict(type='int', ), snat_udp_count=dict(type='int', ), tcp_est_count=dict(type='int', ), free_buff_count=dict(type='int', ), snat_tcp_count=dict(type='int', ), other_conn_count=dict(type='int', ), udp_conn_count=dict(type='int', ), tcp_half_open=dict(type='int', ), curr_free_conn=dict(type='int', ), ip_conn_count=dict(type='int', ), syn_half_open=dict(type='int', ), time=dict(type='int', ), conn_smp_aged=dict(type='int', ), conn_smp_free=dict(type='int', ), conn_get_cnt=dict(type='int', ), conn_free_cnt=dict(type='int', )), end_time=dict(type='int', ), start_time=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

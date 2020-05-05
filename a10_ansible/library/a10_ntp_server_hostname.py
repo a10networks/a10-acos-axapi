@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['enable','disable']),
-        host_servername=dict(type='str',required=True,),
-        prefer=dict(type='bool',),
-        uuid=dict(type='str',),
-        key=dict(type='int',)
+        action=dict(type='str', choices=['enable', 'disable']),
+        host_servername=dict(type='str', required=True, ),
+        prefer=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        key=dict(type='int', )
     ))
    
 

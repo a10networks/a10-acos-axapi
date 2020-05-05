@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        create=dict(type='bool',),
-        name=dict(type='str',),
-        remote_file=dict(type='str',),
-        delete=dict(type='bool',)
+        create=dict(type='bool', ),
+        name=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        delete=dict(type='bool', )
     ))
    
 

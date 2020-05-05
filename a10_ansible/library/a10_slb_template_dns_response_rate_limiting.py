@@ -129,13 +129,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        filter_response_rate=dict(type='int',),
-        slip_rate=dict(type='int',),
-        response_rate=dict(type='int',),
-        window=dict(type='int',),
-        action=dict(type='str',choices=['log-only','rate-limit','whitelist']),
-        enable_log=dict(type='bool',),
-        uuid=dict(type='str',)
+        filter_response_rate=dict(type='int', ),
+        slip_rate=dict(type='int', ),
+        response_rate=dict(type='int', ),
+        window=dict(type='int', ),
+        action=dict(type='str', choices=['log-only', 'rate-limit', 'whitelist']),
+        enable_log=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

@@ -140,15 +140,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ece=dict(type='bool',),
-        urg=dict(type='bool',),
-        uuid=dict(type='str',),
-        ack=dict(type='bool',),
-        cwr=dict(type='bool',),
-        psh=dict(type='bool',),
-        syn=dict(type='bool',),
-        rst=dict(type='bool',),
-        fin=dict(type='bool',)
+        ece=dict(type='bool', ),
+        urg=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ack=dict(type='bool', ),
+        cwr=dict(type='bool', ),
+        psh=dict(type='bool', ),
+        syn=dict(type='bool', ),
+        rst=dict(type='bool', ),
+        fin=dict(type='bool', )
     ))
    
     # Parent keys

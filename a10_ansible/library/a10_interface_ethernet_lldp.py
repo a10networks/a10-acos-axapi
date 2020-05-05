@@ -170,11 +170,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        tx_dot1_cfg=dict(type='dict',link_aggregation=dict(type='bool',),vlan=dict(type='bool',),tx_dot1_tlvs=dict(type='bool',)),
-        notification_cfg=dict(type='dict',notification=dict(type='bool',),notif_enable=dict(type='bool',)),
-        enable_cfg=dict(type='dict',rx=dict(type='bool',),tx=dict(type='bool',),rt_enable=dict(type='bool',)),
-        tx_tlvs_cfg=dict(type='dict',system_capabilities=dict(type='bool',),system_description=dict(type='bool',),management_address=dict(type='bool',),tx_tlvs=dict(type='bool',),exclude=dict(type='bool',),port_description=dict(type='bool',),system_name=dict(type='bool',)),
-        uuid=dict(type='str',)
+        tx_dot1_cfg=dict(type='dict', link_aggregation=dict(type='bool', ), vlan=dict(type='bool', ), tx_dot1_tlvs=dict(type='bool', )),
+        notification_cfg=dict(type='dict', notification=dict(type='bool', ), notif_enable=dict(type='bool', )),
+        enable_cfg=dict(type='dict', rx=dict(type='bool', ), tx=dict(type='bool', ), rt_enable=dict(type='bool', )),
+        tx_tlvs_cfg=dict(type='dict', system_capabilities=dict(type='bool', ), system_description=dict(type='bool', ), management_address=dict(type='bool', ), tx_tlvs=dict(type='bool', ), exclude=dict(type='bool', ), port_description=dict(type='bool', ), system_name=dict(type='bool', )),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

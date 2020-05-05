@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sensitivity=dict(type='str',choices=['high','low']),
-        logging=dict(type='str',choices=['per-entity','per-metric','disable']),
-        uuid=dict(type='str',),
-        feature_status=dict(type='str',choices=['enable','disable'])
+        sensitivity=dict(type='str', choices=['high', 'low']),
+        logging=dict(type='str', choices=['per-entity', 'per-metric', 'disable']),
+        uuid=dict(type='str', ),
+        feature_status=dict(type='str', choices=['enable', 'disable'])
     ))
    
 

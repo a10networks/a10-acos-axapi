@@ -158,21 +158,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        header_name_client_ip=dict(type='str',),
-        retry=dict(type='int',),
-        retry_svr_num=dict(type='int',),
-        name=dict(type='str',required=True,),
-        request_insert_msisdn=dict(type='bool',),
-        radius_sg=dict(type='str',),
-        encrypted=dict(type='str',),
-        user_tag=dict(type='str',),
-        request_insert_client_ip=dict(type='bool',),
-        header_name_msisdn=dict(type='str',),
-        timeout=dict(type='int',),
-        include_tunnel_ip=dict(type='bool',),
-        secret_string=dict(type='str',),
-        method=dict(type='str',choices=['append','replace']),
-        uuid=dict(type='str',)
+        header_name_client_ip=dict(type='str', ),
+        retry=dict(type='int', ),
+        retry_svr_num=dict(type='int', ),
+        name=dict(type='str', required=True, ),
+        request_insert_msisdn=dict(type='bool', ),
+        radius_sg=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        request_insert_client_ip=dict(type='bool', ),
+        header_name_msisdn=dict(type='str', ),
+        timeout=dict(type='int', ),
+        include_tunnel_ip=dict(type='bool', ),
+        secret_string=dict(type='str', ),
+        method=dict(type='str', choices=['append', 'replace']),
+        uuid=dict(type='str', )
     ))
    
 

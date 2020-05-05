@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',health_monitor_list=dict(type='list',status=dict(type='str',),retries=dict(type='int',),interval=dict(type='int',),name=dict(type='str',),partition=dict(type='str',),up_retries=dict(type='int',),pin_id=dict(type='int',),pin_process_index=dict(type='int',),timeout=dict(type='int',),method=dict(type='str',),all_partitions=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', health_monitor_list=dict(type='list', status=dict(type='str', ), retries=dict(type='int', ), interval=dict(type='int', ), name=dict(type='str', ), partition=dict(type='str', ), up_retries=dict(type='int', ), pin_id=dict(type='int', ), pin_process_index=dict(type='int', ), timeout=dict(type='int', ), method=dict(type='str', ), all_partitions=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

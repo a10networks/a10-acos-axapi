@@ -114,9 +114,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','cross_cpu_helper_created','cross_cpu_helper_free','cross_cpu_sent','cross_cpu_rcv','cross_cpu_helper_nat_pool_standby','cross_cpu_helper_cpu_mismatch','cross_cpu_bad_l3','cross_cpu_bad_l4','cross_cpu_no_session','cross_cpu_helper_deleted','cross_cpu_helper_free_retry_lookup','cross_cpu_helper_free_not_found'])),
-        stats=dict(type='dict',),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'cross_cpu_helper_created', 'cross_cpu_helper_free', 'cross_cpu_sent', 'cross_cpu_rcv', 'cross_cpu_helper_nat_pool_standby', 'cross_cpu_helper_cpu_mismatch', 'cross_cpu_bad_l3', 'cross_cpu_bad_l4', 'cross_cpu_no_session', 'cross_cpu_helper_deleted', 'cross_cpu_helper_free_retry_lookup', 'cross_cpu_helper_free_not_found'])),
+        stats=dict(type='dict', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -162,22 +162,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        INFO=dict(type='bool',),
-        uuid=dict(type='str',),
-        REFER=dict(type='bool',),
-        ACK=dict(type='bool',),
-        REGISTER=dict(type='bool',),
-        PRACK=dict(type='bool',),
-        UPDATE=dict(type='bool',),
-        PUBLISH=dict(type='bool',),
-        method=dict(type='bool',),
-        SUBSCRIBE=dict(type='bool',),
-        NOTIFY=dict(type='bool',),
-        CANCEL=dict(type='bool',),
-        MESSAGE=dict(type='bool',),
-        BYE=dict(type='bool',),
-        OPTIONS=dict(type='bool',),
-        INVITE=dict(type='bool',)
+        INFO=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        REFER=dict(type='bool', ),
+        ACK=dict(type='bool', ),
+        REGISTER=dict(type='bool', ),
+        PRACK=dict(type='bool', ),
+        UPDATE=dict(type='bool', ),
+        PUBLISH=dict(type='bool', ),
+        method=dict(type='bool', ),
+        SUBSCRIBE=dict(type='bool', ),
+        NOTIFY=dict(type='bool', ),
+        CANCEL=dict(type='bool', ),
+        MESSAGE=dict(type='bool', ),
+        BYE=dict(type='bool', ),
+        OPTIONS=dict(type='bool', ),
+        INVITE=dict(type='bool', )
     ))
    
 

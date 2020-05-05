@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        both=dict(type='bool',),
-        uuid=dict(type='str',),
-        vlan=dict(type='int',),
-        user_tag=dict(type='str',),
-        ethernet_val=dict(type='str',required=True,),
-        router_interface=dict(type='bool',),
-        no_heartbeat=dict(type='bool',),
-        server_interface=dict(type='bool',)
+        both=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        vlan=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        ethernet_val=dict(type='str', required=True, ),
+        router_interface=dict(type='bool', ),
+        no_heartbeat=dict(type='bool', ),
+        server_interface=dict(type='bool', )
     ))
    
 

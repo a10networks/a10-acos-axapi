@@ -146,8 +146,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',source2=dict(type='str',),product=dict(type='str',),source3_module_list=dict(type='list',source3_module=dict(type='str',),source3_notes=dict(type='str',),source3_expiry=dict(type='str',)),billing_serial=dict(type='str',),uuid=dict(type='str',),usb_uuid=dict(type='str',),platform=dict(type='str',),source2_module_list=dict(type='list',source2_notes=dict(type='str',),source2_module=dict(type='str',),source2_expiry=dict(type='str',)),source3=dict(type='str',),token=dict(type='str',),source1=dict(type='str',),glm_ping_interval=dict(type='int',),source1_module_list=dict(type='list',source1_module=dict(type='str',),source1_notes=dict(type='str',),source1_expiry=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', source2=dict(type='str', ), product=dict(type='str', ), source3_module_list=dict(type='list', source3_module=dict(type='str', ), source3_notes=dict(type='str', ), source3_expiry=dict(type='str', )), billing_serial=dict(type='str', ), uuid=dict(type='str', ), usb_uuid=dict(type='str', ), platform=dict(type='str', ), source2_module_list=dict(type='list', source2_notes=dict(type='str', ), source2_module=dict(type='str', ), source2_expiry=dict(type='str', )), source3=dict(type='str', ), token=dict(type='str', ), source1=dict(type='str', ), glm_ping_interval=dict(type='int', ), source1_module_list=dict(type='list', source1_module=dict(type='str', ), source1_notes=dict(type='str', ), source1_expiry=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

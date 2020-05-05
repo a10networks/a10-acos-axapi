@@ -141,16 +141,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        radius_username=dict(type='str',),
-        radius_password_string=dict(type='str',),
-        radius_encrypted=dict(type='str',),
-        radius_response_code=dict(type='str',),
-        radius_expect=dict(type='bool',),
-        radius=dict(type='bool',),
-        radius_secret=dict(type='str',),
-        radius_password=dict(type='bool',),
-        radius_port=dict(type='int',),
-        uuid=dict(type='str',)
+        radius_username=dict(type='str', ),
+        radius_password_string=dict(type='str', ),
+        radius_encrypted=dict(type='str', ),
+        radius_response_code=dict(type='str', ),
+        radius_expect=dict(type='bool', ),
+        radius=dict(type='bool', ),
+        radius_secret=dict(type='str', ),
+        radius_password=dict(type='bool', ),
+        radius_port=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

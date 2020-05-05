@@ -126,12 +126,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        server_version=dict(type='str',choices=['MSSQL2008','MSSQL2012','MySQL']),
-        name=dict(type='str',required=True,),
-        class_list=dict(type='str',),
-        user_tag=dict(type='str',),
-        calc_sha1=dict(type='dict',sha1_value=dict(type='str',)),
-        uuid=dict(type='str',)
+        server_version=dict(type='str', choices=['MSSQL2008', 'MSSQL2012', 'MySQL']),
+        name=dict(type='str', required=True, ),
+        class_list=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        calc_sha1=dict(type='dict', sha1_value=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

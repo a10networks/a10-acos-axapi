@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',v6neighbor_list=dict(type='list',Age=dict(type='int',),Vlan=dict(type='int',),IPV6_Address=dict(type='str',),State=dict(type='str',),Interface=dict(type='str',choices=['Management','ethernet','trunk']),Type=dict(type='str',choices=['Incomplete','Dynamic','Static']),MAC_Address=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', v6neighbor_list=dict(type='list', Age=dict(type='int', ), Vlan=dict(type='int', ), IPV6_Address=dict(type='str', ), State=dict(type='str', ), Interface=dict(type='str', choices=['Management', 'ethernet', 'trunk']), Type=dict(type='str', choices=['Incomplete', 'Dynamic', 'Static']), MAC_Address=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

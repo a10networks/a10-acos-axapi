@@ -136,12 +136,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        snmp_port=dict(type='int',),
-        uuid=dict(type='str',),
-        oid=dict(type='dict',mib=dict(type='str',choices=['sysDescr','sysUpTime','sysName']),asn=dict(type='str',)),
-        snmp=dict(type='bool',),
-        community=dict(type='str',),
-        operation=dict(type='dict',oper_type=dict(type='str',choices=['getnext','get']))
+        snmp_port=dict(type='int', ),
+        uuid=dict(type='str', ),
+        oid=dict(type='dict', mib=dict(type='str', choices=['sysDescr', 'sysUpTime', 'sysName']), asn=dict(type='str', )),
+        snmp=dict(type='bool', ),
+        community=dict(type='str', ),
+        operation=dict(type='dict', oper_type=dict(type='str', choices=['getnext', 'get']))
     ))
    
     # Parent keys

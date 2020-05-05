@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        pool_name=dict(type='str',required=True,)
+        uuid=dict(type='str', ),
+        pool_name=dict(type='str', required=True, )
     ))
    
     # Parent keys

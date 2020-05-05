@@ -121,11 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        ttl=dict(type='int',),
-        uuid=dict(type='str',),
-        module_type=dict(type='str',choices=['slb-virtual-server','slb-device','slb-server','gslb-service-ip','gslb-site','gslb-group','hostname']),
-        module_disable=dict(type='bool',)
+        all=dict(type='bool', ),
+        ttl=dict(type='int', ),
+        uuid=dict(type='str', ),
+        module_type=dict(type='str', choices=['slb-virtual-server', 'slb-device', 'slb-server', 'gslb-service-ip', 'gslb-site', 'gslb-group', 'hostname']),
+        module_disable=dict(type='bool', )
     ))
    
     # Parent keys

@@ -122,8 +122,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',geoloc_rdt_list=dict(type='list',rdt=dict(type='int',),site_name=dict(type='str',),gl_name=dict(type='str',),age=dict(type='int',),ntype=dict(type='str',)),geo_name=dict(type='str',),site_name=dict(type='str',),active_status=dict(type='str',),total_rdt=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', geoloc_rdt_list=dict(type='list', rdt=dict(type='int', ), site_name=dict(type='str', ), gl_name=dict(type='str', ), age=dict(type='int', ), ntype=dict(type='str', )), geo_name=dict(type='str', ), site_name=dict(type='str', ), active_status=dict(type='str', ), total_rdt=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

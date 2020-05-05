@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        asbr=dict(type='bool',),
-        uuid=dict(type='str',),
-        abr=dict(type='bool',),
-        router=dict(type='bool',),
-        vlink=dict(type='bool',),
-        os=dict(type='bool',)
+        asbr=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        abr=dict(type='bool', ),
+        router=dict(type='bool', ),
+        vlink=dict(type='bool', ),
+        os=dict(type='bool', )
     ))
    
 

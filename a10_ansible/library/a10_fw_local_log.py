@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        local_logging=dict(type='bool',),
-        uuid=dict(type='str',)
+        local_logging=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

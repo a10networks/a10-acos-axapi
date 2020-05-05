@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ethernet=dict(type='str',),
-        uuid=dict(type='str',),
-        mirror_index=dict(type='int',required=True,),
-        mirror_dir=dict(type='str',choices=['input','output','both'])
+        ethernet=dict(type='str', ),
+        uuid=dict(type='str', ),
+        mirror_index=dict(type='int', required=True, ),
+        mirror_dir=dict(type='str', choices=['input', 'output', 'both'])
     ))
    
 

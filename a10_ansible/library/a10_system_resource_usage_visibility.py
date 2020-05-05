@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        monitored_entity_count=dict(type='int',),
-        uuid=dict(type='str',)
+        monitored_entity_count=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

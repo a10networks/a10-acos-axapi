@@ -168,10 +168,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request-normal','request-dropped','response-success','response-failure','response-error','response-timeout','response-other'])),
-        kerberos_spn_list=dict(type='list',account=dict(type='str',),realm=dict(type='str',),name=dict(type='str',required=True,),encrypted=dict(type='str',),user_tag=dict(type='str',),secret_string=dict(type='str',),password=dict(type='bool',),service_principal_name=dict(type='str',),uuid=dict(type='str',)),
-        stats=dict(type='dict',request_normal=dict(type='str',),response_success=dict(type='str',),response_other=dict(type='str',),response_failure=dict(type='str',),request_dropped=dict(type='str',),response_timeout=dict(type='str',),response_error=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'request-normal', 'request-dropped', 'response-success', 'response-failure', 'response-error', 'response-timeout', 'response-other'])),
+        kerberos_spn_list=dict(type='list', account=dict(type='str', ), realm=dict(type='str', ), name=dict(type='str', required=True, ), encrypted=dict(type='str', ), user_tag=dict(type='str', ), secret_string=dict(type='str', ), password=dict(type='bool', ), service_principal_name=dict(type='str', ), uuid=dict(type='str', )),
+        stats=dict(type='dict', request_normal=dict(type='str', ), response_success=dict(type='str', ), response_other=dict(type='str', ), response_failure=dict(type='str', ), request_dropped=dict(type='str', ), response_timeout=dict(type='str', ), response_error=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

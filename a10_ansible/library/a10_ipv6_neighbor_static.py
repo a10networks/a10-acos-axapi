@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        tunnel=dict(type='int',),
-        vlan=dict(type='int',required=True,),
-        ipv6_addr=dict(type='str',required=True,),
-        mac=dict(type='str',),
-        trunk=dict(type='int',),
-        ethernet=dict(type='str',)
+        uuid=dict(type='str', ),
+        tunnel=dict(type='int', ),
+        vlan=dict(type='int', required=True, ),
+        ipv6_addr=dict(type='str', required=True, ),
+        mac=dict(type='str', ),
+        trunk=dict(type='int', ),
+        ethernet=dict(type='str', )
     ))
    
 

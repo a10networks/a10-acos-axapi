@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        disable_partition_name=dict(type='bool',),
-        uuid=dict(type='str',)
+        disable_partition_name=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

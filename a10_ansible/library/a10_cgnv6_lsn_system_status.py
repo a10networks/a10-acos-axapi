@@ -140,8 +140,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',smp_sessions_free=dict(type='int',),udp_nat_ports_used=dict(type='int',),tcp_nat_ports_free=dict(type='int',),radius_entries_free=dict(type='int',),smp_sessions_used=dict(type='int',),data_sessions_free=dict(type='int',),udp_nat_ports_free=dict(type='int',),data_sessions_used=dict(type='int',),tcp_nat_ports_used=dict(type='int',),lsn_cps=dict(type='int',),radius_entries_used=dict(type='int',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', smp_sessions_free=dict(type='int', ), udp_nat_ports_used=dict(type='int', ), tcp_nat_ports_free=dict(type='int', ), radius_entries_free=dict(type='int', ), smp_sessions_used=dict(type='int', ), data_sessions_free=dict(type='int', ), udp_nat_ports_free=dict(type='int', ), data_sessions_used=dict(type='int', ), tcp_nat_ports_used=dict(type='int', ), lsn_cps=dict(type='int', ), radius_entries_used=dict(type='int', )),
+        uuid=dict(type='str', )
     ))
    
 

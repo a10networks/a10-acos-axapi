@@ -146,15 +146,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ve=dict(type='str',),
-        virtual_server=dict(type='str',),
-        src_dst=dict(type='str',required=True,choices=['dest','src']),
-        nat_pool=dict(type='str',),
-        trunk=dict(type='str',),
-        ipv6_address=dict(type='str',),
-        ethernet=dict(type='str',),
-        ipv4_address=dict(type='str',),
-        uuid=dict(type='str',)
+        ve=dict(type='str', ),
+        virtual_server=dict(type='str', ),
+        src_dst=dict(type='str', required=True, choices=['dest', 'src']),
+        nat_pool=dict(type='str', ),
+        trunk=dict(type='str', ),
+        ipv6_address=dict(type='str', ),
+        ethernet=dict(type='str', ),
+        ipv4_address=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

@@ -121,11 +121,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        destination_vtep=dict(type='str',required=True,),
-        ip_addr=dict(type='str',required=True,),
-        overlay_mac_addr=dict(type='str',required=True,),
-        vni=dict(type='int',required=True,),
-        uuid=dict(type='str',)
+        destination_vtep=dict(type='str', required=True, ),
+        ip_addr=dict(type='str', required=True, ),
+        overlay_mac_addr=dict(type='str', required=True, ),
+        vni=dict(type='int', required=True, ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

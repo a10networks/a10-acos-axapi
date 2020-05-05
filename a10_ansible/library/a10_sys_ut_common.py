@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        delay=dict(type='int',),
-        proceed_on_error=dict(type='bool',),
-        uuid=dict(type='str',)
+        delay=dict(type='int', ),
+        proceed_on_error=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

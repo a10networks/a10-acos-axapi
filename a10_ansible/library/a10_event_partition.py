@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vnp_events=dict(type='str',required=True,choices=['part-create','part-del']),
-        logging=dict(type='str',choices=['on','off']),
-        email=dict(type='str',choices=['on','off']),
-        user_tag=dict(type='str',),
-        uuid=dict(type='str',)
+        vnp_events=dict(type='str', required=True, choices=['part-create', 'part-del']),
+        logging=dict(type='str', choices=['on', 'off']),
+        email=dict(type='str', choices=['on', 'off']),
+        user_tag=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

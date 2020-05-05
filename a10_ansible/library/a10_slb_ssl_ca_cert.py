@@ -122,8 +122,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',exact_match=dict(type='bool',),sortby_exp=dict(type='bool',),ssl_certs=dict(type='list',status=dict(type='str',),name=dict(type='str',),notbefore=dict(type='str',),notafter_number=dict(type='int',),notafter=dict(type='str',),keysize=dict(type='int',),common_name=dict(type='str',),organization=dict(type='str',),serial=dict(type='str',),subject=dict(type='str',),ntype=dict(type='str',),issuer=dict(type='str',)),sortby_name=dict(type='bool',),partition=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', exact_match=dict(type='bool', ), sortby_exp=dict(type='bool', ), ssl_certs=dict(type='list', status=dict(type='str', ), name=dict(type='str', ), notbefore=dict(type='str', ), notafter_number=dict(type='int', ), notafter=dict(type='str', ), keysize=dict(type='int', ), common_name=dict(type='str', ), organization=dict(type='str', ), serial=dict(type='str', ), subject=dict(type='str', ), ntype=dict(type='str', ), issuer=dict(type='str', )), sortby_name=dict(type='bool', ), partition=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

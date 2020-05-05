@@ -102,7 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        big_buff_pool=dict(type='bool',)
+        big_buff_pool=dict(type='bool', )
     ))
    
 

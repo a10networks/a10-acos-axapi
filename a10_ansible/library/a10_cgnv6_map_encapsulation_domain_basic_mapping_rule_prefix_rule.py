@@ -141,16 +141,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_start=dict(type='int',),
-        name=dict(type='str',required=True,),
-        ipv4_address_port_settings=dict(type='str',choices=['prefix-addr','single-addr','shared-addr']),
-        ipv4_netmask=dict(type='str',),
-        rule_ipv4_prefix=dict(type='str',),
-        user_tag=dict(type='str',),
-        share_ratio=dict(type='int',),
-        rule_ipv6_prefix=dict(type='str',),
-        ea_length=dict(type='int',),
-        uuid=dict(type='str',)
+        port_start=dict(type='int', ),
+        name=dict(type='str', required=True, ),
+        ipv4_address_port_settings=dict(type='str', choices=['prefix-addr', 'single-addr', 'shared-addr']),
+        ipv4_netmask=dict(type='str', ),
+        rule_ipv4_prefix=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        share_ratio=dict(type='int', ),
+        rule_ipv6_prefix=dict(type='str', ),
+        ea_length=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

@@ -145,9 +145,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','good_recv','periodic_sent','rate_limit','bad_hop_limit','truncated','bad_icmpv6_csum','bad_icmpv6_code','bad_icmpv6_option','l2_addr_and_unspec','no_free_buffers'])),
-        stats=dict(type='dict',bad_hop_limit=dict(type='str',),bad_icmpv6_code=dict(type='str',),no_free_buffers=dict(type='str',),truncated=dict(type='str',),rate_limit=dict(type='str',),l2_addr_and_unspec=dict(type='str',),bad_icmpv6_option=dict(type='str',),periodic_sent=dict(type='str',),good_recv=dict(type='str',),bad_icmpv6_csum=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'good_recv', 'periodic_sent', 'rate_limit', 'bad_hop_limit', 'truncated', 'bad_icmpv6_csum', 'bad_icmpv6_code', 'bad_icmpv6_option', 'l2_addr_and_unspec', 'no_free_buffers'])),
+        stats=dict(type='dict', bad_hop_limit=dict(type='str', ), bad_icmpv6_code=dict(type='str', ), no_free_buffers=dict(type='str', ), truncated=dict(type='str', ), rate_limit=dict(type='str', ), l2_addr_and_unspec=dict(type='str', ), bad_icmpv6_option=dict(type='str', ), periodic_sent=dict(type='str', ), good_recv=dict(type='str', ), bad_icmpv6_csum=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

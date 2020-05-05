@@ -166,14 +166,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        session_sync_interface=dict(type='dict',ve_cfg=dict(type='list',ve=dict(type='int',)),uuid=dict(type='str',),trunk_cfg=dict(type='list',trunk=dict(type='int',)),eth_cfg=dict(type='list',ethernet=dict(type='str',))),
-        id=dict(type='int',),
-        priority=dict(type='int',),
-        action=dict(type='str',choices=['enable','disable']),
-        l2_redirect=dict(type='dict',ethernet_vlan=dict(type='int',),redirect_eth=dict(type='str',),redirect_trunk=dict(type='int',),trunk_vlan=dict(type='int',),uuid=dict(type='str',)),
-        tracking_template=dict(type='dict',template_list=dict(type='list',uuid=dict(type='str',),threshold_cfg=dict(type='list',threshold=dict(type='int',),action=dict(type='str',choices=['down','exit-cluster'])),user_tag=dict(type='str',),template=dict(type='str',required=True,))),
-        start_delay=dict(type='int',)
+        uuid=dict(type='str', ),
+        session_sync_interface=dict(type='dict', ve_cfg=dict(type='list', ve=dict(type='int', )), uuid=dict(type='str', ), trunk_cfg=dict(type='list', trunk=dict(type='int', )), eth_cfg=dict(type='list', ethernet=dict(type='str', ))),
+        id=dict(type='int', ),
+        priority=dict(type='int', ),
+        action=dict(type='str', choices=['enable', 'disable']),
+        l2_redirect=dict(type='dict', ethernet_vlan=dict(type='int', ), redirect_eth=dict(type='str', ), redirect_trunk=dict(type='int', ), trunk_vlan=dict(type='int', ), uuid=dict(type='str', )),
+        tracking_template=dict(type='dict', template_list=dict(type='list', uuid=dict(type='str', ), threshold_cfg=dict(type='list', threshold=dict(type='int', ), action=dict(type='str', choices=['down', 'exit-cluster'])), user_tag=dict(type='str', ), template=dict(type='str', required=True, ))),
+        start_delay=dict(type='int', )
     ))
    
     # Parent keys

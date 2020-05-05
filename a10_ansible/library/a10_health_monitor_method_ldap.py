@@ -153,19 +153,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        AcceptResRef=dict(type='bool',),
-        ldap_port=dict(type='int',),
-        uuid=dict(type='str',),
-        ldap_password_string=dict(type='str',),
-        ldap_encrypted=dict(type='str',),
-        BaseDN=dict(type='str',),
-        ldap_password=dict(type='bool',),
-        ldap_binddn=dict(type='str',),
-        ldap_query=dict(type='str',),
-        ldap_security=dict(type='str',choices=['overssl','StartTLS']),
-        ldap=dict(type='bool',),
-        ldap_run_search=dict(type='bool',),
-        AcceptNotFound=dict(type='bool',)
+        AcceptResRef=dict(type='bool', ),
+        ldap_port=dict(type='int', ),
+        uuid=dict(type='str', ),
+        ldap_password_string=dict(type='str', ),
+        ldap_encrypted=dict(type='str', ),
+        BaseDN=dict(type='str', ),
+        ldap_password=dict(type='bool', ),
+        ldap_binddn=dict(type='str', ),
+        ldap_query=dict(type='str', ),
+        ldap_security=dict(type='str', choices=['overssl', 'StartTLS']),
+        ldap=dict(type='bool', ),
+        ldap_run_search=dict(type='bool', ),
+        AcceptNotFound=dict(type='bool', )
     ))
    
     # Parent keys

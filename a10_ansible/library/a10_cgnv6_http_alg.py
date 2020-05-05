@@ -148,9 +148,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','request-processed','request-insert-msisdn-performed','request-insert-client-ip-performed','request-insert-msisdn-unavailable','queued-session-too-many','radius-query-succeed','radius-query-failed','radius-requst-sent','radius-requst-dropped','radius-response-received','radius-response-dropped','out-of-memory-dropped','queue-len-exceed-dropped','out-of-order-dropped','buff-resent','buff-spilt-failed','header-insertion-failed','header-removal-failed','no-queue'])),
-        stats=dict(type='dict',radius_response_dropped=dict(type='str',),radius_requst_sent=dict(type='str',),radius_requst_dropped=dict(type='str',),request_insert_client_ip_performed=dict(type='str',),request_insert_msisdn_performed=dict(type='str',),request_insert_msisdn_unavailable=dict(type='str',),request_processed=dict(type='str',),radius_query_succeed=dict(type='str',),radius_query_failed=dict(type='str',),queued_session_too_many=dict(type='str',),radius_response_received=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'request-processed', 'request-insert-msisdn-performed', 'request-insert-client-ip-performed', 'request-insert-msisdn-unavailable', 'queued-session-too-many', 'radius-query-succeed', 'radius-query-failed', 'radius-requst-sent', 'radius-requst-dropped', 'radius-response-received', 'radius-response-dropped', 'out-of-memory-dropped', 'queue-len-exceed-dropped', 'out-of-order-dropped', 'buff-resent', 'buff-spilt-failed', 'header-insertion-failed', 'header-removal-failed', 'no-queue'])),
+        stats=dict(type='dict', radius_response_dropped=dict(type='str', ), radius_requst_sent=dict(type='str', ), radius_requst_dropped=dict(type='str', ), request_insert_client_ip_performed=dict(type='str', ), request_insert_msisdn_performed=dict(type='str', ), request_insert_msisdn_unavailable=dict(type='str', ), request_processed=dict(type='str', ), radius_query_succeed=dict(type='str', ), radius_query_failed=dict(type='str', ), queued_session_too_many=dict(type='str', ), radius_response_received=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

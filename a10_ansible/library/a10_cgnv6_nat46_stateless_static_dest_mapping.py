@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        count=dict(type='int',),
-        v6_address=dict(type='str',required=True,),
-        uuid=dict(type='str',),
-        to_shared=dict(type='bool',),
-        vrid=dict(type='int',),
-        v4_address=dict(type='str',required=True,),
-        shared=dict(type='bool',)
+        count=dict(type='int', ),
+        v6_address=dict(type='str', required=True, ),
+        uuid=dict(type='str', ),
+        to_shared=dict(type='bool', ),
+        vrid=dict(type='int', ),
+        v4_address=dict(type='str', required=True, ),
+        shared=dict(type='bool', )
     ))
    
 

@@ -139,9 +139,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_num','alg_pkts_num','alg_pkts_xmitted_num','alg_port_helper_created','alg_pasv_helper_created','alg_port_helper_freed_unused','alg_pasv_helper_freed_unused','alg_port_helper_nat_free'])),
-        stats=dict(type='dict',alg_pkts_xmitted_num=dict(type='str',),alg_pasv_helper_freed_unused=dict(type='str',),alg_pasv_helper_created=dict(type='str',),alg_port_helper_created=dict(type='str',),sessions_num=dict(type='str',),alg_port_helper_nat_free=dict(type='str',),alg_port_helper_freed_unused=dict(type='str',),alg_pkts_num=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'sessions_num', 'alg_pkts_num', 'alg_pkts_xmitted_num', 'alg_port_helper_created', 'alg_pasv_helper_created', 'alg_port_helper_freed_unused', 'alg_pasv_helper_freed_unused', 'alg_port_helper_nat_free'])),
+        stats=dict(type='dict', alg_pkts_xmitted_num=dict(type='str', ), alg_pasv_helper_freed_unused=dict(type='str', ), alg_pasv_helper_created=dict(type='str', ), alg_port_helper_created=dict(type='str', ), sessions_num=dict(type='str', ), alg_port_helper_nat_free=dict(type='str', ), alg_port_helper_freed_unused=dict(type='str', ), alg_pkts_num=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

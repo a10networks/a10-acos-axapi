@@ -109,9 +109,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['enable','disable']),
-        vrid=dict(type='int',),
-        all_partitions=dict(type='bool',)
+        action=dict(type='str', choices=['enable', 'disable']),
+        vrid=dict(type='int', ),
+        all_partitions=dict(type='bool', )
     ))
    
 

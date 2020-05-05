@@ -102,7 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        core_index=dict(type='int',)
+        core_index=dict(type='int', )
     ))
    
 

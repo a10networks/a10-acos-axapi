@@ -113,9 +113,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        password_in_module=dict(type='str',),
-        uuid=dict(type='str',),
-        encrypted_in_module=dict(type='str',)
+        password_in_module=dict(type='str', ),
+        uuid=dict(type='str', ),
+        encrypted_in_module=dict(type='str', )
     ))
    
     # Parent keys

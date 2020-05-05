@@ -154,15 +154,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain=dict(type='str',),
-        group=dict(type='str',),
-        uuid=dict(type='str',),
-        ipv4_addr=dict(type='str',required=True,),
-        cn_value=dict(type='str',),
-        port_cfg=dict(type='dict',ssl=dict(type='bool',),port=dict(type='int',),timeout=dict(type='int',)),
-        dn_value=dict(type='str',),
-        base=dict(type='str',),
-        domain_cfg=dict(type='dict',ssl=dict(type='bool',),port=dict(type='int',),timeout=dict(type='int',))
+        domain=dict(type='str', ),
+        group=dict(type='str', ),
+        uuid=dict(type='str', ),
+        ipv4_addr=dict(type='str', required=True, ),
+        cn_value=dict(type='str', ),
+        port_cfg=dict(type='dict', ssl=dict(type='bool', ), port=dict(type='int', ), timeout=dict(type='int', )),
+        dn_value=dict(type='str', ),
+        base=dict(type='str', ),
+        domain_cfg=dict(type='dict', ssl=dict(type='bool', ), port=dict(type='int', ), timeout=dict(type='int', ))
     ))
    
 

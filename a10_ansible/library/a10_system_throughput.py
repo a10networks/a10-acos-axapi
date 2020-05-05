@@ -121,9 +121,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','global-system-throughput-bits-per-sec','per-part-throughput-bits-per-sec'])),
-        stats=dict(type='dict',global_system_throughput_bits_per_sec=dict(type='str',),per_part_throughput_bits_per_sec=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'global-system-throughput-bits-per-sec', 'per-part-throughput-bits-per-sec'])),
+        stats=dict(type='dict', global_system_throughput_bits_per_sec=dict(type='str', ), per_part_throughput_bits_per_sec=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

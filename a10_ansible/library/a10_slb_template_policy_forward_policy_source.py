@@ -171,16 +171,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        match_any=dict(type='bool',),
-        stats=dict(type='dict',destination_match_not_found=dict(type='str',),hits=dict(type='str',),destination=dict(type='dict',),no_host_info=dict(type='str',),name=dict(type='str',required=True,)),
-        name=dict(type='str',required=True,),
-        match_authorize_policy=dict(type='str',),
-        destination=dict(type='dict',class_list_list=dict(type='list',uuid=dict(type='str',),dest_class_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url','ip'])),web_category_list_list=dict(type='list',uuid=dict(type='str',),web_category_list=dict(type='str',required=True,),priority=dict(type='int',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),action=dict(type='str',),ntype=dict(type='str',choices=['host','url'])),any=dict(type='dict',action=dict(type='str',),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),uuid=dict(type='str',))),
-        user_tag=dict(type='str',),
-        priority=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','destination-match-not-found','no-host-info'])),
-        match_class_list=dict(type='str',),
-        uuid=dict(type='str',)
+        match_any=dict(type='bool', ),
+        stats=dict(type='dict', destination_match_not_found=dict(type='str', ), hits=dict(type='str', ), destination=dict(type='dict', ), no_host_info=dict(type='str', ), name=dict(type='str', required=True, )),
+        name=dict(type='str', required=True, ),
+        match_authorize_policy=dict(type='str', ),
+        destination=dict(type='dict', class_list_list=dict(type='list', uuid=dict(type='str', ), dest_class_list=dict(type='str', required=True, ), priority=dict(type='int', ), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])), action=dict(type='str', ), ntype=dict(type='str', choices=['host', 'url', 'ip'])), web_category_list_list=dict(type='list', uuid=dict(type='str', ), web_category_list=dict(type='str', required=True, ), priority=dict(type='int', ), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])), action=dict(type='str', ), ntype=dict(type='str', choices=['host', 'url'])), any=dict(type='dict', action=dict(type='str', ), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])), uuid=dict(type='str', ))),
+        user_tag=dict(type='str', ),
+        priority=dict(type='int', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits', 'destination-match-not-found', 'no-host-info'])),
+        match_class_list=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

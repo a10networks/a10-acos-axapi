@@ -159,10 +159,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',fix_cpu_list=dict(type='list',svrsel_fail=dict(type='int',),curr_proxy=dict(type='int',),default_switching=dict(type='int',),total_proxy=dict(type='int',),noroute=dict(type='int',),sender_switching=dict(type='int',),client_err=dict(type='int',),target_switching=dict(type='int',),server_err=dict(type='int',),snat_fail=dict(type='int',),insert_clientip=dict(type='int',)),cpu_count=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_proxy','total_proxy','svrsel_fail','noroute','snat_fail','client_err','server_err','insert_clientip','default_switching','sender_switching','target_switching'])),
-        stats=dict(type='dict',svrsel_fail=dict(type='str',),curr_proxy=dict(type='str',),default_switching=dict(type='str',),total_proxy=dict(type='str',),noroute=dict(type='str',),sender_switching=dict(type='str',),client_err=dict(type='str',),target_switching=dict(type='str',),server_err=dict(type='str',),snat_fail=dict(type='str',),insert_clientip=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', fix_cpu_list=dict(type='list', svrsel_fail=dict(type='int', ), curr_proxy=dict(type='int', ), default_switching=dict(type='int', ), total_proxy=dict(type='int', ), noroute=dict(type='int', ), sender_switching=dict(type='int', ), client_err=dict(type='int', ), target_switching=dict(type='int', ), server_err=dict(type='int', ), snat_fail=dict(type='int', ), insert_clientip=dict(type='int', )), cpu_count=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_proxy', 'total_proxy', 'svrsel_fail', 'noroute', 'snat_fail', 'client_err', 'server_err', 'insert_clientip', 'default_switching', 'sender_switching', 'target_switching'])),
+        stats=dict(type='dict', svrsel_fail=dict(type='str', ), curr_proxy=dict(type='str', ), default_switching=dict(type='str', ), total_proxy=dict(type='str', ), noroute=dict(type='str', ), sender_switching=dict(type='str', ), client_err=dict(type='str', ), target_switching=dict(type='str', ), server_err=dict(type='str', ), snat_fail=dict(type='str', ), insert_clientip=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

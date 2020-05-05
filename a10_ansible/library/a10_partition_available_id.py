@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',range_list=dict(type='list',start=dict(type='str',),end=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', range_list=dict(type='list', start=dict(type='str', ), end=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

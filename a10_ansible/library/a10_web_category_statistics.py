@@ -165,10 +165,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_req_processed=dict(type='int',),num_dplane_threads=dict(type='int',),num_lookup_threads=dict(type='int',),total_req_dropped=dict(type='int',),total_req_queue=dict(type='int',),per_cpu_list=dict(type='list',req_dropped=dict(type='int',),req_queue=dict(type='int',),req_lookup_processed=dict(type='int',),req_processed=dict(type='int',)),total_req_lookup_processed=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','db-lookup','cloud-cache-lookup','cloud-lookup','rtu-lookup','lookup-latency','db-mem','rtu-cache-mem','lookup-cache-mem'])),
-        stats=dict(type='dict',db_lookup=dict(type='str',),lookup_latency=dict(type='str',),rtu_cache_mem=dict(type='str',),lookup_cache_mem=dict(type='str',),cloud_cache_lookup=dict(type='str',),db_mem=dict(type='str',),cloud_lookup=dict(type='str',),rtu_lookup=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', total_req_processed=dict(type='int', ), num_dplane_threads=dict(type='int', ), num_lookup_threads=dict(type='int', ), total_req_dropped=dict(type='int', ), total_req_queue=dict(type='int', ), per_cpu_list=dict(type='list', req_dropped=dict(type='int', ), req_queue=dict(type='int', ), req_lookup_processed=dict(type='int', ), req_processed=dict(type='int', )), total_req_lookup_processed=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'db-lookup', 'cloud-cache-lookup', 'cloud-lookup', 'rtu-lookup', 'lookup-latency', 'db-mem', 'rtu-cache-mem', 'lookup-cache-mem'])),
+        stats=dict(type='dict', db_lookup=dict(type='str', ), lookup_latency=dict(type='str', ), rtu_cache_mem=dict(type='str', ), lookup_cache_mem=dict(type='str', ), cloud_cache_lookup=dict(type='str', ), db_mem=dict(type='str', ), cloud_lookup=dict(type='str', ), rtu_lookup=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

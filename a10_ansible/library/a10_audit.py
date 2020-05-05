@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        privilege=dict(type='bool',),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        size=dict(type='int',)
+        privilege=dict(type='bool', ),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

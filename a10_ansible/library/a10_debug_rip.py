@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        nsm=dict(type='bool',),
-        detail=dict(type='bool',),
-        send=dict(type='bool',),
-        packet=dict(type='bool',),
-        recv=dict(type='bool',),
-        events=dict(type='bool',)
+        all=dict(type='bool', ),
+        nsm=dict(type='bool', ),
+        detail=dict(type='bool', ),
+        send=dict(type='bool', ),
+        packet=dict(type='bool', ),
+        recv=dict(type='bool', ),
+        events=dict(type='bool', )
     ))
    
 

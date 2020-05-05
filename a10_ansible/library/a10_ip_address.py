@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip_addr=dict(type='str',),
-        ip_mask=dict(type='str',),
-        uuid=dict(type='str',)
+        ip_addr=dict(type='str', ),
+        ip_mask=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

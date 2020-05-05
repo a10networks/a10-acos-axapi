@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        icmp_normal_rate_limit=dict(type='int',),
-        icmp_lockup=dict(type='int',),
-        icmp_lockup_period=dict(type='int',),
-        uuid=dict(type='str',)
+        icmp_normal_rate_limit=dict(type='int', ),
+        icmp_lockup=dict(type='int', ),
+        icmp_lockup_period=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

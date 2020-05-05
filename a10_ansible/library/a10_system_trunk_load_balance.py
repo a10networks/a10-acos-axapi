@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        use_l4=dict(type='bool',),
-        uuid=dict(type='str',),
-        use_l3=dict(type='bool',)
+        use_l4=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        use_l3=dict(type='bool', )
     ))
    
 

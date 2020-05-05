@@ -164,16 +164,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',flag=dict(type='str',required=True,),naptr_hits=dict(type='str',),service_proto=dict(type='str',required=True,),naptr_target=dict(type='str',required=True,)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','naptr-hits'])),
-        naptr_target=dict(type='str',required=True,),
-        service_proto=dict(type='str',required=True,),
-        flag=dict(type='str',required=True,),
-        preference=dict(type='int',),
-        ttl=dict(type='int',),
-        regexp=dict(type='bool',),
-        order=dict(type='int',),
-        uuid=dict(type='str',)
+        stats=dict(type='dict', flag=dict(type='str', required=True, ), naptr_hits=dict(type='str', ), service_proto=dict(type='str', required=True, ), naptr_target=dict(type='str', required=True, )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'naptr-hits'])),
+        naptr_target=dict(type='str', required=True, ),
+        service_proto=dict(type='str', required=True, ),
+        flag=dict(type='str', required=True, ),
+        preference=dict(type='int', ),
+        ttl=dict(type='int', ),
+        regexp=dict(type='bool', ),
+        order=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

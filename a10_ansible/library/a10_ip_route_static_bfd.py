@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        local_ip=dict(type='str',required=True,),
-        nexthop_ip=dict(type='str',required=True,),
-        uuid=dict(type='str',)
+        local_ip=dict(type='str', required=True, ),
+        nexthop_ip=dict(type='str', required=True, ),
+        uuid=dict(type='str', )
     ))
    
 

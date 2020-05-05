@@ -289,25 +289,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        stats=dict(type='dict',nm_response=dict(type='str',),rsp_type_304=dict(type='str',),rsp_other=dict(type='str',),content_toosmall=dict(type='str',),entry_create_failures=dict(type='str',),nocache_match=dict(type='str',),content_toobig=dict(type='str',),replaced_entry=dict(type='str',),miss=dict(type='str',),nc_req_header=dict(type='str',),aging_entry=dict(type='str',),mem_size=dict(type='str',),rsp_deflate=dict(type='str',),invalidate_match=dict(type='str',),match=dict(type='str',),cleaned_entry=dict(type='str',),entry_num=dict(type='str',),total_req=dict(type='str',),bytes_served=dict(type='str',),rv_success=dict(type='str',),rv_failure=dict(type='str',),rsp_gzip=dict(type='str',),hits=dict(type='str',),rsp_type_other=dict(type='str',),name=dict(type='str',required=True,),rsp_type_CE=dict(type='str',),rsp_type_CL=dict(type='str',),rsp_no_compress=dict(type='str',),nc_res_header=dict(type='str',),caching_req=dict(type='str',),ims_request=dict(type='str',)),
-        accept_reload_req=dict(type='bool',),
-        name=dict(type='str',required=True,),
-        default_policy_nocache=dict(type='bool',),
-        age=dict(type='int',),
-        disable_insert_via=dict(type='bool',),
-        user_tag=dict(type='str',),
-        local_uri_policy=dict(type='list',local_uri=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits','miss','bytes_served','total_req','caching_req','nc_req_header','nc_res_header','rv_success','rv_failure','ims_request','nm_response','rsp_type_CL','rsp_type_CE','rsp_type_304','rsp_type_other','rsp_no_compress','rsp_gzip','rsp_deflate','rsp_other','nocache_match','match','invalidate_match','content_toobig','content_toosmall','entry_create_failures','mem_size','entry_num','replaced_entry','aging_entry','cleaned_entry'])),
-        replacement_policy=dict(type='str',choices=['LFU']),
-        disable_insert_age=dict(type='bool',),
-        max_content_size=dict(type='int',),
-        max_cache_size=dict(type='int',),
-        logging=dict(type='str',),
-        uri_policy=dict(type='list',cache_action=dict(type='str',choices=['cache','nocache']),cache_value=dict(type='int',),uri=dict(type='str',),invalidate=dict(type='str',)),
-        remove_cookies=dict(type='bool',),
-        verify_host=dict(type='bool',),
-        min_content_size=dict(type='int',),
-        uuid=dict(type='str',)
+        stats=dict(type='dict', nm_response=dict(type='str', ), rsp_type_304=dict(type='str', ), rsp_other=dict(type='str', ), content_toosmall=dict(type='str', ), entry_create_failures=dict(type='str', ), nocache_match=dict(type='str', ), content_toobig=dict(type='str', ), replaced_entry=dict(type='str', ), miss=dict(type='str', ), nc_req_header=dict(type='str', ), aging_entry=dict(type='str', ), mem_size=dict(type='str', ), rsp_deflate=dict(type='str', ), invalidate_match=dict(type='str', ), match=dict(type='str', ), cleaned_entry=dict(type='str', ), entry_num=dict(type='str', ), total_req=dict(type='str', ), bytes_served=dict(type='str', ), rv_success=dict(type='str', ), rv_failure=dict(type='str', ), rsp_gzip=dict(type='str', ), hits=dict(type='str', ), rsp_type_other=dict(type='str', ), name=dict(type='str', required=True, ), rsp_type_CE=dict(type='str', ), rsp_type_CL=dict(type='str', ), rsp_no_compress=dict(type='str', ), nc_res_header=dict(type='str', ), caching_req=dict(type='str', ), ims_request=dict(type='str', )),
+        accept_reload_req=dict(type='bool', ),
+        name=dict(type='str', required=True, ),
+        default_policy_nocache=dict(type='bool', ),
+        age=dict(type='int', ),
+        disable_insert_via=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        local_uri_policy=dict(type='list', local_uri=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match', 'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry'])),
+        replacement_policy=dict(type='str', choices=['LFU']),
+        disable_insert_age=dict(type='bool', ),
+        max_content_size=dict(type='int', ),
+        max_cache_size=dict(type='int', ),
+        logging=dict(type='str', ),
+        uri_policy=dict(type='list', cache_action=dict(type='str', choices=['cache', 'nocache']), cache_value=dict(type='int', ), uri=dict(type='str', ), invalidate=dict(type='str', )),
+        remove_cookies=dict(type='bool', ),
+        verify_host=dict(type='bool', ),
+        min_content_size=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

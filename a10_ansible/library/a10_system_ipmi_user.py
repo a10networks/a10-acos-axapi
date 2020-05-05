@@ -146,18 +146,18 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        administrator=dict(type='bool',),
-        setname=dict(type='str',),
-        newname=dict(type='str',),
-        newpass=dict(type='str',),
-        callback=dict(type='bool',),
-        add=dict(type='str',),
-        disable=dict(type='str',),
-        setpass=dict(type='str',),
-        user=dict(type='bool',),
-        operator=dict(type='bool',),
-        password=dict(type='str',),
-        privilege=dict(type='str',)
+        administrator=dict(type='bool', ),
+        setname=dict(type='str', ),
+        newname=dict(type='str', ),
+        newpass=dict(type='str', ),
+        callback=dict(type='bool', ),
+        add=dict(type='str', ),
+        disable=dict(type='str', ),
+        setpass=dict(type='str', ),
+        user=dict(type='bool', ),
+        operator=dict(type='bool', ),
+        password=dict(type='str', ),
+        privilege=dict(type='str', )
     ))
    
 

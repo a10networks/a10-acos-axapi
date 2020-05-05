@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        hashing_type=dict(type='str',choices=['4-tuple-hash']),
-        uuid=dict(type='str',)
+        hashing_type=dict(type='str', choices=['4-tuple-hash']),
+        uuid=dict(type='str', )
     ))
    
 

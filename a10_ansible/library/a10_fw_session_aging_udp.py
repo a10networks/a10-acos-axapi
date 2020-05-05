@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port_cfg=dict(type='list',udp_idle_timeout=dict(type='int',),udp_port=dict(type='int',)),
-        udp_idle_timeout=dict(type='int',),
-        uuid=dict(type='str',)
+        port_cfg=dict(type='list', udp_idle_timeout=dict(type='int', ), udp_port=dict(type='int', )),
+        udp_idle_timeout=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

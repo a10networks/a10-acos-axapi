@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ntype=dict(type='str',choices=['adc','cgnv6']),
-        uuid=dict(type='str',)
+        ntype=dict(type='str', choices=['adc', 'cgnv6']),
+        uuid=dict(type='str', )
     ))
    
 

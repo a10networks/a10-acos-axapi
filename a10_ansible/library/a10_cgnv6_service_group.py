@@ -226,19 +226,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',pri_affinity_priority=dict(type='int',),name=dict(type='str',required=True,),stateless_current_rate=dict(type='int',),servers_down=dict(type='int',),stateless_state=dict(type='int',),servers_disable=dict(type='int',),stateless_type=dict(type='int',),servers_total=dict(type='int',),state=dict(type='str',choices=['All Up','Functional Up','Down','Disb','Unkn']),member_list=dict(type='list',oper=dict(type='dict',hm_key=dict(type='int',),state=dict(type='str',choices=['UP','DOWN','MAINTENANCE','DIS-UP','DIS-DOWN','DIS-MAINTENANCE','DIS-DAMP']),hm_index=dict(type='int',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),servers_up=dict(type='int',),stateless_current_usage=dict(type='int',),hm_dsr_enable_all_vip=dict(type='int',)),
-        shared_partition=dict(type='str',),
-        stats=dict(type='dict',member_list=dict(type='list',stats=dict(type='dict',curr_req=dict(type='str',),total_rev_bytes=dict(type='str',),peak_conn=dict(type='str',),total_ssl_conn=dict(type='str',),total_conn=dict(type='str',),fastest_rsp_time=dict(type='str',),total_fwd_pkts=dict(type='str',),total_req=dict(type='str',),total_rev_pkts=dict(type='str',),curr_ssl_conn=dict(type='str',),total_req_succ=dict(type='str',),curr_conn=dict(type='str',),total_rev_pkts_inspected_status_code_non_5xx=dict(type='str',),total_rev_pkts_inspected_status_code_2xx=dict(type='str',),total_fwd_bytes=dict(type='str',),slowest_rsp_time=dict(type='str',),response_time=dict(type='str',),total_rev_pkts_inspected=dict(type='str',)),name=dict(type='str',required=True,),port=dict(type='int',required=True,)),server_selection_fail_drop=dict(type='str',),server_selection_fail_reset=dict(type='str',),service_peak_conn=dict(type='str',),name=dict(type='str',required=True,)),
-        protocol=dict(type='str',choices=['tcp','udp']),
-        name=dict(type='str',required=True,),
-        user_tag=dict(type='str',),
-        shared_group=dict(type='str',),
-        traffic_replication_mirror_ip_repl=dict(type='bool',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','server_selection_fail_drop','server_selection_fail_reset','service_peak_conn'])),
-        member_list=dict(type='list',port=dict(type='int',required=True,),sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','curr_conn','total_fwd_bytes','total_fwd_pkts','total_rev_bytes','total_rev_pkts','total_conn','total_rev_pkts_inspected','total_rev_pkts_inspected_status_code_2xx','total_rev_pkts_inspected_status_code_non_5xx','curr_req','total_req','total_req_succ','peak_conn','response_time','fastest_rsp_time','slowest_rsp_time','curr_ssl_conn','total_ssl_conn'])),uuid=dict(type='str',),user_tag=dict(type='str',),name=dict(type='str',required=True,)),
-        shared=dict(type='bool',),
-        health_check=dict(type='str',),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', pri_affinity_priority=dict(type='int', ), name=dict(type='str', required=True, ), stateless_current_rate=dict(type='int', ), servers_down=dict(type='int', ), stateless_state=dict(type='int', ), servers_disable=dict(type='int', ), stateless_type=dict(type='int', ), servers_total=dict(type='int', ), state=dict(type='str', choices=['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']), member_list=dict(type='list', oper=dict(type='dict', hm_key=dict(type='int', ), state=dict(type='str', choices=['UP', 'DOWN', 'MAINTENANCE', 'DIS-UP', 'DIS-DOWN', 'DIS-MAINTENANCE', 'DIS-DAMP']), hm_index=dict(type='int', )), name=dict(type='str', required=True, ), port=dict(type='int', required=True, )), servers_up=dict(type='int', ), stateless_current_usage=dict(type='int', ), hm_dsr_enable_all_vip=dict(type='int', )),
+        shared_partition=dict(type='str', ),
+        stats=dict(type='dict', member_list=dict(type='list', stats=dict(type='dict', curr_req=dict(type='str', ), total_rev_bytes=dict(type='str', ), peak_conn=dict(type='str', ), total_ssl_conn=dict(type='str', ), total_conn=dict(type='str', ), fastest_rsp_time=dict(type='str', ), total_fwd_pkts=dict(type='str', ), total_req=dict(type='str', ), total_rev_pkts=dict(type='str', ), curr_ssl_conn=dict(type='str', ), total_req_succ=dict(type='str', ), curr_conn=dict(type='str', ), total_rev_pkts_inspected_status_code_non_5xx=dict(type='str', ), total_rev_pkts_inspected_status_code_2xx=dict(type='str', ), total_fwd_bytes=dict(type='str', ), slowest_rsp_time=dict(type='str', ), response_time=dict(type='str', ), total_rev_pkts_inspected=dict(type='str', )), name=dict(type='str', required=True, ), port=dict(type='int', required=True, )), server_selection_fail_drop=dict(type='str', ), server_selection_fail_reset=dict(type='str', ), service_peak_conn=dict(type='str', ), name=dict(type='str', required=True, )),
+        protocol=dict(type='str', choices=['tcp', 'udp']),
+        name=dict(type='str', required=True, ),
+        user_tag=dict(type='str', ),
+        shared_group=dict(type='str', ),
+        traffic_replication_mirror_ip_repl=dict(type='bool', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'server_selection_fail_drop', 'server_selection_fail_reset', 'service_peak_conn'])),
+        member_list=dict(type='list', port=dict(type='int', required=True, ), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_conn', 'total_rev_pkts_inspected', 'total_rev_pkts_inspected_status_code_2xx', 'total_rev_pkts_inspected_status_code_non_5xx', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'response_time', 'fastest_rsp_time', 'slowest_rsp_time', 'curr_ssl_conn', 'total_ssl_conn'])), uuid=dict(type='str', ), user_tag=dict(type='str', ), name=dict(type='str', required=True, )),
+        shared=dict(type='bool', ),
+        health_check=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

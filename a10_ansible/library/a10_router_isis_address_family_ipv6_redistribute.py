@@ -156,10 +156,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vip_list=dict(type='list',vip_metric=dict(type='int',),vip_level=dict(type='str',choices=['level-1','level-1-2','level-2']),vip_metric_type=dict(type='str',choices=['external','internal']),vip_type=dict(type='str',choices=['only-flagged','only-not-flagged']),vip_route_map=dict(type='str',)),
-        redist_list=dict(type='list',metric=dict(type='int',),route_map=dict(type='str',),ntype=dict(type='str',choices=['bgp','connected','floating-ip','ip-nat-list','ip-nat','lw4o6','nat-map','nat64','ospf','rip','static']),metric_type=dict(type='str',choices=['external','internal']),level=dict(type='str',choices=['level-1','level-1-2','level-2'])),
-        isis=dict(type='dict',level_2_from=dict(type='dict',into_2=dict(type='dict',distribute_list=dict(type='str',),level_1=dict(type='bool',))),level_1_from=dict(type='dict',into_1=dict(type='dict',level_2=dict(type='bool',),distribute_list=dict(type='str',)))),
-        uuid=dict(type='str',)
+        vip_list=dict(type='list', vip_metric=dict(type='int', ), vip_level=dict(type='str', choices=['level-1', 'level-1-2', 'level-2']), vip_metric_type=dict(type='str', choices=['external', 'internal']), vip_type=dict(type='str', choices=['only-flagged', 'only-not-flagged']), vip_route_map=dict(type='str', )),
+        redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'ip-nat', 'lw4o6', 'nat-map', 'nat64', 'ospf', 'rip', 'static']), metric_type=dict(type='str', choices=['external', 'internal']), level=dict(type='str', choices=['level-1', 'level-1-2', 'level-2'])),
+        isis=dict(type='dict', level_2_from=dict(type='dict', into_2=dict(type='dict', distribute_list=dict(type='str', ), level_1=dict(type='bool', ))), level_1_from=dict(type='dict', into_1=dict(type='dict', level_2=dict(type='bool', ), distribute_list=dict(type='str', )))),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

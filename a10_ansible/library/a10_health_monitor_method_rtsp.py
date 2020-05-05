@@ -117,10 +117,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rtsp_port=dict(type='int',),
-        rtsp=dict(type='bool',),
-        rtspurl=dict(type='str',),
-        uuid=dict(type='str',)
+        rtsp_port=dict(type='int', ),
+        rtsp=dict(type='bool', ),
+        rtspurl=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

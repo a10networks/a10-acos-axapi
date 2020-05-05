@@ -102,7 +102,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        portal_name=dict(type='str',)
+        portal_name=dict(type='str', )
     ))
    
 

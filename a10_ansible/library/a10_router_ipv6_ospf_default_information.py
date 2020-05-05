@@ -125,12 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        originate=dict(type='bool',),
-        uuid=dict(type='str',),
-        always=dict(type='bool',),
-        metric=dict(type='int',),
-        route_map=dict(type='str',),
-        metric_type=dict(type='int',)
+        originate=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        always=dict(type='bool', ),
+        metric=dict(type='int', ),
+        route_map=dict(type='str', ),
+        metric_type=dict(type='int', )
     ))
    
     # Parent keys

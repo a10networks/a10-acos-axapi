@@ -128,11 +128,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ip_address=dict(type='str',required=True,),
-        vni_list=dict(type='list',segment=dict(type='int',required=True,),uuid=dict(type='str',)),
-        user_tag=dict(type='str',),
-        encap=dict(type='str',choices=['nvgre','vxlan'])
+        uuid=dict(type='str', ),
+        ip_address=dict(type='str', required=True, ),
+        vni_list=dict(type='list', segment=dict(type='int', required=True, ), uuid=dict(type='str', )),
+        user_tag=dict(type='str', ),
+        encap=dict(type='str', choices=['nvgre', 'vxlan'])
     ))
    
     # Parent keys

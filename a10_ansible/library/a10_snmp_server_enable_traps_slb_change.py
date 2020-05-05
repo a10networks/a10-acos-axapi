@@ -142,17 +142,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        resource_usage_warning=dict(type='bool',),
-        uuid=dict(type='str',),
-        ssl_cert_change=dict(type='bool',),
-        ssl_cert_expire=dict(type='bool',),
-        system_threshold=dict(type='bool',),
-        server=dict(type='bool',),
-        vip=dict(type='bool',),
-        connection_resource_event=dict(type='bool',),
-        server_port=dict(type='bool',),
-        vip_port=dict(type='bool',)
+        all=dict(type='bool', ),
+        resource_usage_warning=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ssl_cert_change=dict(type='bool', ),
+        ssl_cert_expire=dict(type='bool', ),
+        system_threshold=dict(type='bool', ),
+        server=dict(type='bool', ),
+        vip=dict(type='bool', ),
+        connection_resource_event=dict(type='bool', ),
+        server_port=dict(type='bool', ),
+        vip_port=dict(type='bool', )
     ))
    
 

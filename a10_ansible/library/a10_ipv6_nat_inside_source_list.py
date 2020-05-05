@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        list_name=dict(type='str',required=True,),
-        pool=dict(type='str',),
-        uuid=dict(type='str',)
+        list_name=dict(type='str', required=True, ),
+        pool=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

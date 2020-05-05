@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rotation=dict(type='int',),
-        src_cert=dict(type='str',),
-        dest_cert=dict(type='str',),
-        overwrite=dict(type='bool',)
+        rotation=dict(type='int', ),
+        src_cert=dict(type='str', ),
+        dest_cert=dict(type='str', ),
+        overwrite=dict(type='bool', )
     ))
    
 

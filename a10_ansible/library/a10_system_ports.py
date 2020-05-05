@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        link_detection_interval=dict(type='int',),
-        uuid=dict(type='str',)
+        link_detection_interval=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

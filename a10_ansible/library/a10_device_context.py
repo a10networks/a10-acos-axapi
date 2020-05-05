@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        device_id=dict(type='int',)
+        device_id=dict(type='int', )
     ))
    
 

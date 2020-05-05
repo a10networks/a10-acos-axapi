@@ -129,9 +129,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        traffic_type=dict(type='str',required=True,choices=['all','ftp','ntp','snmp-trap','ssh','syslog','telnet','tftp','web']),
-        source_interface=dict(type='dict',lif=dict(type='int',),ve=dict(type='str',),loopback=dict(type='str',),tunnel=dict(type='int',),trunk=dict(type='str',),ethernet=dict(type='str',)),
-        uuid=dict(type='str',)
+        traffic_type=dict(type='str', required=True, choices=['all', 'ftp', 'ntp', 'snmp-trap', 'ssh', 'syslog', 'telnet', 'tftp', 'web']),
+        source_interface=dict(type='dict', lif=dict(type='int', ), ve=dict(type='str', ), loopback=dict(type='str', ), tunnel=dict(type='int', ), trunk=dict(type='str', ), ethernet=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

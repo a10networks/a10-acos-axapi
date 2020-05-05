@@ -217,23 +217,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',total_system_memory=dict(type='int',),fpga_stats_iochan=dict(type='list',fpga_stats_iochan_tx=dict(type='int',),fpga_stats_iochan_rx=dict(type='int',),fpga_stats_iochan_id=dict(type='int',)),total_free_fpga_buff=dict(type='int',),total_fpga_buffers=dict(type='int',),free_fpga_buffers=dict(type='int',),config=dict(type='dict',oper=dict(type='dict',fpga_mon_threshold=dict(type='str',),sw_error_mon=dict(type='str',),sw_recovery_timeout=dict(type='str',),hw_recovery_timeout=dict(type='str',),fpga_mon_interval=dict(type='str',),fpga_mon_forced_reboot=dict(type='str',),fpga_mon_enable=dict(type='str',),mem_mon=dict(type='str',),hw_error_mon=dict(type='str',))),fpga_stats_num_cntrs=dict(type='int',),free_session_memory=dict(type='int',),avail_fpga_buff_domain1=dict(type='int',),avail_fpga_buff_domain2=dict(type='int',),total_session_memory=dict(type='int',),fpga_buff_recovery_threshold=dict(type='int',),sess_mem_recovery_threshold=dict(type='int',)),
-        session_mem_recovery_threshold=dict(type='int',),
-        log=dict(type='bool',),
-        fpga_buff_recovery_threshold=dict(type='int',),
-        hw_error_monitor=dict(type='str',choices=['hw-error-monitor-disable','hw-error-monitor-enable']),
-        hw_error_recovery_timeout=dict(type='int',),
-        sw_error_monitor_enable=dict(type='bool',),
-        fpga_monitor_enable=dict(type='bool',),
-        fpga_monitor_threshold=dict(type='int',),
-        fpga_monitor_forced_reboot=dict(type='bool',),
-        kill=dict(type='bool',),
-        disable_failsafe=dict(type='dict',action=dict(type='str',choices=['all','io-buffer','session-memory','system-memory']),uuid=dict(type='str',)),
-        total_memory_size_check=dict(type='int',),
-        fpga_monitor_interval=dict(type='int',),
-        config=dict(type='dict',uuid=dict(type='str',)),
-        sw_error_recovery_timeout=dict(type='int',),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', total_system_memory=dict(type='int', ), fpga_stats_iochan=dict(type='list', fpga_stats_iochan_tx=dict(type='int', ), fpga_stats_iochan_rx=dict(type='int', ), fpga_stats_iochan_id=dict(type='int', )), total_free_fpga_buff=dict(type='int', ), total_fpga_buffers=dict(type='int', ), free_fpga_buffers=dict(type='int', ), config=dict(type='dict', oper=dict(type='dict', fpga_mon_threshold=dict(type='str', ), sw_error_mon=dict(type='str', ), sw_recovery_timeout=dict(type='str', ), hw_recovery_timeout=dict(type='str', ), fpga_mon_interval=dict(type='str', ), fpga_mon_forced_reboot=dict(type='str', ), fpga_mon_enable=dict(type='str', ), mem_mon=dict(type='str', ), hw_error_mon=dict(type='str', ))), fpga_stats_num_cntrs=dict(type='int', ), free_session_memory=dict(type='int', ), avail_fpga_buff_domain1=dict(type='int', ), avail_fpga_buff_domain2=dict(type='int', ), total_session_memory=dict(type='int', ), fpga_buff_recovery_threshold=dict(type='int', ), sess_mem_recovery_threshold=dict(type='int', )),
+        session_mem_recovery_threshold=dict(type='int', ),
+        log=dict(type='bool', ),
+        fpga_buff_recovery_threshold=dict(type='int', ),
+        hw_error_monitor=dict(type='str', choices=['hw-error-monitor-disable', 'hw-error-monitor-enable']),
+        hw_error_recovery_timeout=dict(type='int', ),
+        sw_error_monitor_enable=dict(type='bool', ),
+        fpga_monitor_enable=dict(type='bool', ),
+        fpga_monitor_threshold=dict(type='int', ),
+        fpga_monitor_forced_reboot=dict(type='bool', ),
+        kill=dict(type='bool', ),
+        disable_failsafe=dict(type='dict', action=dict(type='str', choices=['all', 'io-buffer', 'session-memory', 'system-memory']), uuid=dict(type='str', )),
+        total_memory_size_check=dict(type='int', ),
+        fpga_monitor_interval=dict(type='int', ),
+        config=dict(type='dict', uuid=dict(type='str', )),
+        sw_error_recovery_timeout=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -176,22 +176,22 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        log=dict(type='bool',),
-        http_status_code=dict(type='str',choices=['301','302']),
-        forward_snat=dict(type='str',),
-        uuid=dict(type='str',),
-        drop_response_code=dict(type='int',),
-        action1=dict(type='str',choices=['forward-to-internet','forward-to-service-group','forward-to-proxy','drop']),
-        fake_sg=dict(type='str',),
-        user_tag=dict(type='str',),
-        stats=dict(type='dict',hits=dict(type='str',),name=dict(type='str',required=True,)),
-        real_sg=dict(type='str',),
-        drop_message=dict(type='str',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','hits'])),
-        fall_back=dict(type='str',),
-        fall_back_snat=dict(type='str',),
-        drop_redirect_url=dict(type='str',),
-        name=dict(type='str',required=True,)
+        log=dict(type='bool', ),
+        http_status_code=dict(type='str', choices=['301', '302']),
+        forward_snat=dict(type='str', ),
+        uuid=dict(type='str', ),
+        drop_response_code=dict(type='int', ),
+        action1=dict(type='str', choices=['forward-to-internet', 'forward-to-service-group', 'forward-to-proxy', 'drop']),
+        fake_sg=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        stats=dict(type='dict', hits=dict(type='str', ), name=dict(type='str', required=True, )),
+        real_sg=dict(type='str', ),
+        drop_message=dict(type='str', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits'])),
+        fall_back=dict(type='str', ),
+        fall_back_snat=dict(type='str', ),
+        drop_redirect_url=dict(type='str', ),
+        name=dict(type='str', required=True, )
     ))
    
     # Parent keys

@@ -141,16 +141,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        claim=dict(type='str',),
-        bool_val=dict(type='str',choices=['true','false']),
-        uuid=dict(type='str',),
-        string_type=dict(type='bool',),
-        str_val=dict(type='str',),
-        num_val=dict(type='int',),
-        attr_num=dict(type='int',required=True,),
-        number_type=dict(type='bool',),
-        boolean_type=dict(type='bool',),
-        ntype=dict(type='bool',)
+        claim=dict(type='str', ),
+        bool_val=dict(type='str', choices=['true', 'false']),
+        uuid=dict(type='str', ),
+        string_type=dict(type='bool', ),
+        str_val=dict(type='str', ),
+        num_val=dict(type='int', ),
+        attr_num=dict(type='int', required=True, ),
+        number_type=dict(type='bool', ),
+        boolean_type=dict(type='bool', ),
+        ntype=dict(type='bool', )
     ))
    
     # Parent keys

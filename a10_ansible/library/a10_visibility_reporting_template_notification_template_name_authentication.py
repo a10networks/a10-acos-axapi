@@ -141,16 +141,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        relative_logoff_uri=dict(type='str',),
-        api_key_encrypted=dict(type='str',),
-        api_key=dict(type='bool',),
-        auth_password_string=dict(type='str',),
-        auth_password=dict(type='bool',),
-        api_key_string=dict(type='str',),
-        relative_login_uri=dict(type='str',),
-        auth_username=dict(type='str',)
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        relative_logoff_uri=dict(type='str', ),
+        api_key_encrypted=dict(type='str', ),
+        api_key=dict(type='bool', ),
+        auth_password_string=dict(type='str', ),
+        auth_password=dict(type='bool', ),
+        api_key_string=dict(type='str', ),
+        relative_login_uri=dict(type='str', ),
+        auth_username=dict(type='str', )
     ))
    
     # Parent keys

@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        domain=dict(type='str',),
-        retry=dict(type='int',),
-        uuid=dict(type='str',),
-        track=dict(type='int',),
-        interval=dict(type='int',),
-        sleep=dict(type='int',),
-        timeout=dict(type='int',),
-        icmp=dict(type='bool',),
-        port=dict(type='int',)
+        domain=dict(type='str', ),
+        retry=dict(type='int', ),
+        uuid=dict(type='str', ),
+        track=dict(type='int', ),
+        interval=dict(type='int', ),
+        sleep=dict(type='int', ),
+        timeout=dict(type='int', ),
+        icmp=dict(type='bool', ),
+        port=dict(type='int', )
     ))
    
 

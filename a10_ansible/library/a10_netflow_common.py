@@ -110,9 +110,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        max_packet_queue_time=dict(type='int',),
-        reset_time_on_flow_record=dict(type='bool',),
-        uuid=dict(type='str',)
+        max_packet_queue_time=dict(type='int', ),
+        reset_time_on_flow_record=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

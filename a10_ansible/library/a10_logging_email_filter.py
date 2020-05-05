@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        filter_id=dict(type='int',required=True,),
-        trigger=dict(type='bool',),
-        expression=dict(type='str',),
-        uuid=dict(type='str',)
+        filter_id=dict(type='int', required=True, ),
+        trigger=dict(type='bool', ),
+        expression=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

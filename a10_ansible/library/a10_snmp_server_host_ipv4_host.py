@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ipv4_addr=dict(type='str',required=True,),
-        udp_port=dict(type='int',),
-        v1_v2c_comm=dict(type='str',),
-        user=dict(type='str',),
-        version=dict(type='str',required=True,choices=['v1','v2c','v3'])
+        uuid=dict(type='str', ),
+        ipv4_addr=dict(type='str', required=True, ),
+        udp_port=dict(type='int', ),
+        v1_v2c_comm=dict(type='str', ),
+        user=dict(type='str', ),
+        version=dict(type='str', required=True, choices=['v1', 'v2c', 'v3'])
     ))
    
 

@@ -166,23 +166,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pool_shared=dict(type='str',),
-        name=dict(type='str',required=True,),
-        format=dict(type='str',),
-        auto=dict(type='str',choices=['auto']),
-        keep_end=dict(type='int',),
-        local_logging=dict(type='int',),
-        mask=dict(type='str',),
-        template_tcp_proxy_shared=dict(type='str',),
-        shared_partition_tcp_proxy_template=dict(type='bool',),
-        keep_start=dict(type='int',),
-        service_group=dict(type='str',),
-        pcre_mask=dict(type='str',),
-        user_tag=dict(type='str',),
-        tcp_proxy=dict(type='str',),
-        shared_partition_pool=dict(type='bool',),
-        pool=dict(type='str',),
-        uuid=dict(type='str',)
+        pool_shared=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        format=dict(type='str', ),
+        auto=dict(type='str', choices=['auto']),
+        keep_end=dict(type='int', ),
+        local_logging=dict(type='int', ),
+        mask=dict(type='str', ),
+        template_tcp_proxy_shared=dict(type='str', ),
+        shared_partition_tcp_proxy_template=dict(type='bool', ),
+        keep_start=dict(type='int', ),
+        service_group=dict(type='str', ),
+        pcre_mask=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        tcp_proxy=dict(type='str', ),
+        shared_partition_pool=dict(type='bool', ),
+        pool=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

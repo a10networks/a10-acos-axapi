@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        aging_time=dict(type='int',),
-        uuid=dict(type='str',)
+        aging_time=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -170,24 +170,24 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        isisAuthenticationFailure=dict(type='bool',),
-        uuid=dict(type='str',),
-        isisProtocolsSupportedMismatch=dict(type='bool',),
-        isisRejectedAdjacency=dict(type='bool',),
-        isisMaxAreaAddressesMismatch=dict(type='bool',),
-        isisCorruptedLSPDetected=dict(type='bool',),
-        isisOriginatingLSPBufferSizeMismatch=dict(type='bool',),
-        isisAreaMismatch=dict(type='bool',),
-        isisLSPTooLargeToPropagate=dict(type='bool',),
-        isisOwnLSPPurge=dict(type='bool',),
-        isisSequenceNumberSkip=dict(type='bool',),
-        isisDatabaseOverload=dict(type='bool',),
-        isisAttemptToExceedMaxSequence=dict(type='bool',),
-        isisIDLenMismatch=dict(type='bool',),
-        isisAuthenticationTypeFailure=dict(type='bool',),
-        isisVersionSkew=dict(type='bool',),
-        isisManualAddressDrops=dict(type='bool',),
-        isisAdjacencyChange=dict(type='bool',)
+        isisAuthenticationFailure=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        isisProtocolsSupportedMismatch=dict(type='bool', ),
+        isisRejectedAdjacency=dict(type='bool', ),
+        isisMaxAreaAddressesMismatch=dict(type='bool', ),
+        isisCorruptedLSPDetected=dict(type='bool', ),
+        isisOriginatingLSPBufferSizeMismatch=dict(type='bool', ),
+        isisAreaMismatch=dict(type='bool', ),
+        isisLSPTooLargeToPropagate=dict(type='bool', ),
+        isisOwnLSPPurge=dict(type='bool', ),
+        isisSequenceNumberSkip=dict(type='bool', ),
+        isisDatabaseOverload=dict(type='bool', ),
+        isisAttemptToExceedMaxSequence=dict(type='bool', ),
+        isisIDLenMismatch=dict(type='bool', ),
+        isisAuthenticationTypeFailure=dict(type='bool', ),
+        isisVersionSkew=dict(type='bool', ),
+        isisManualAddressDrops=dict(type='bool', ),
+        isisAdjacencyChange=dict(type='bool', )
     ))
    
 

@@ -276,23 +276,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        accounting_start=dict(type='str',choices=['ignore','append-entry','replace-entry']),
-        oper=dict(type='dict',radius_table_entries_list=dict(type='list',msisdn=dict(type='str',),is_obsolete=dict(type='bool',),prefix_len=dict(type='int',),custom2_attr_value=dict(type='str',),custom3_attr_value=dict(type='str',),inside_ip=dict(type='str',),inside_ipv6=dict(type='str',),imei=dict(type='str',),custom1_attr_value=dict(type='str',),imsi=dict(type='str',)),custom_attr_value=dict(type='str',),starts_with=dict(type='bool',),custom_attr_name=dict(type='str',),case_insensitive=dict(type='bool',),total_entries=dict(type='int',)),
-        attribute_name=dict(type='str',choices=['msisdn','imei','imsi','custom1','custom2','custom3']),
-        vrid=dict(type='int',),
-        remote=dict(type='dict',ip_list=dict(type='list',ip_list_name=dict(type='str',),ip_list_encrypted=dict(type='str',),ip_list_secret_string=dict(type='str',),ip_list_secret=dict(type='bool',))),
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        disable_reply=dict(type='bool',),
-        accounting_interim_update=dict(type='str',choices=['ignore','append-entry','replace-entry']),
-        secret=dict(type='bool',),
-        stats=dict(type='dict',secret_not_configured_dropped=dict(type='str',),smp_created=dict(type='str',),radius_request_dropped=dict(type='str',),imsi_received=dict(type='str',),invalid_key=dict(type='str',),request_bad_secret_dropped=dict(type='str',),ha_standby_dropped=dict(type='str',),custom_received=dict(type='str',),radius_request_received=dict(type='str',),imei_received=dict(type='str',),request_no_key_vap_dropped=dict(type='str',),smp_deleted=dict(type='str',),radius_table_full=dict(type='str',),msisdn_received=dict(type='str',),request_ignored=dict(type='str',),ipv6_prefix_length_mismatch=dict(type='str',),request_malformed_dropped=dict(type='str',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','msisdn-received','imei-received','imsi-received','custom-received','radius-request-received','radius-request-dropped','request-bad-secret-dropped','request-no-key-vap-dropped','request-malformed-dropped','request-ignored','radius-table-full','secret-not-configured-dropped','ha-standby-dropped','ipv6-prefix-length-mismatch','invalid-key','smp-created','smp-deleted','smp-mem-allocated','smp-mem-alloc-failed','smp-mem-freed','smp-in-rml','mem-allocated','mem-alloc-failed','mem-freed','ha-sync-create-sent','ha-sync-delete-sent','ha-sync-create-recv','ha-sync-delete-recv','acct-on-filters-full','acct-on-dup-request','ip-mismatch-delete','ip-add-race-drop','ha-sync-no-key-vap-dropped','inter-card-msg-fail-drop'])),
-        accounting_stop=dict(type='str',choices=['ignore','delete-entry','delete-entry-and-sessions']),
-        attribute=dict(type='list',prefix_number=dict(type='int',),prefix_length=dict(type='str',choices=['32','48','64','80','96','112']),name=dict(type='str',),prefix_vendor=dict(type='int',),number=dict(type='int',),value=dict(type='str',choices=['hexadecimal']),custom_vendor=dict(type='int',),custom_number=dict(type='int',),vendor=dict(type='int',),attribute_value=dict(type='str',choices=['inside-ipv6-prefix','inside-ip','inside-ipv6','imei','imsi','msisdn','custom1','custom2','custom3'])),
-        listen_port=dict(type='int',),
-        accounting_on=dict(type='str',choices=['ignore','delete-entries-using-attribute']),
-        secret_string=dict(type='str',)
+        accounting_start=dict(type='str', choices=['ignore', 'append-entry', 'replace-entry']),
+        oper=dict(type='dict', radius_table_entries_list=dict(type='list', msisdn=dict(type='str', ), is_obsolete=dict(type='bool', ), prefix_len=dict(type='int', ), custom2_attr_value=dict(type='str', ), custom3_attr_value=dict(type='str', ), inside_ip=dict(type='str', ), inside_ipv6=dict(type='str', ), imei=dict(type='str', ), custom1_attr_value=dict(type='str', ), imsi=dict(type='str', )), custom_attr_value=dict(type='str', ), starts_with=dict(type='bool', ), custom_attr_name=dict(type='str', ), case_insensitive=dict(type='bool', ), total_entries=dict(type='int', )),
+        attribute_name=dict(type='str', choices=['msisdn', 'imei', 'imsi', 'custom1', 'custom2', 'custom3']),
+        vrid=dict(type='int', ),
+        remote=dict(type='dict', ip_list=dict(type='list', ip_list_name=dict(type='str', ), ip_list_encrypted=dict(type='str', ), ip_list_secret_string=dict(type='str', ), ip_list_secret=dict(type='bool', ))),
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        disable_reply=dict(type='bool', ),
+        accounting_interim_update=dict(type='str', choices=['ignore', 'append-entry', 'replace-entry']),
+        secret=dict(type='bool', ),
+        stats=dict(type='dict', secret_not_configured_dropped=dict(type='str', ), smp_created=dict(type='str', ), radius_request_dropped=dict(type='str', ), imsi_received=dict(type='str', ), invalid_key=dict(type='str', ), request_bad_secret_dropped=dict(type='str', ), ha_standby_dropped=dict(type='str', ), custom_received=dict(type='str', ), radius_request_received=dict(type='str', ), imei_received=dict(type='str', ), request_no_key_vap_dropped=dict(type='str', ), smp_deleted=dict(type='str', ), radius_table_full=dict(type='str', ), msisdn_received=dict(type='str', ), request_ignored=dict(type='str', ), ipv6_prefix_length_mismatch=dict(type='str', ), request_malformed_dropped=dict(type='str', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'msisdn-received', 'imei-received', 'imsi-received', 'custom-received', 'radius-request-received', 'radius-request-dropped', 'request-bad-secret-dropped', 'request-no-key-vap-dropped', 'request-malformed-dropped', 'request-ignored', 'radius-table-full', 'secret-not-configured-dropped', 'ha-standby-dropped', 'ipv6-prefix-length-mismatch', 'invalid-key', 'smp-created', 'smp-deleted', 'smp-mem-allocated', 'smp-mem-alloc-failed', 'smp-mem-freed', 'smp-in-rml', 'mem-allocated', 'mem-alloc-failed', 'mem-freed', 'ha-sync-create-sent', 'ha-sync-delete-sent', 'ha-sync-create-recv', 'ha-sync-delete-recv', 'acct-on-filters-full', 'acct-on-dup-request', 'ip-mismatch-delete', 'ip-add-race-drop', 'ha-sync-no-key-vap-dropped', 'inter-card-msg-fail-drop'])),
+        accounting_stop=dict(type='str', choices=['ignore', 'delete-entry', 'delete-entry-and-sessions']),
+        attribute=dict(type='list', prefix_number=dict(type='int', ), prefix_length=dict(type='str', choices=['32', '48', '64', '80', '96', '112']), name=dict(type='str', ), prefix_vendor=dict(type='int', ), number=dict(type='int', ), value=dict(type='str', choices=['hexadecimal']), custom_vendor=dict(type='int', ), custom_number=dict(type='int', ), vendor=dict(type='int', ), attribute_value=dict(type='str', choices=['inside-ipv6-prefix', 'inside-ip', 'inside-ipv6', 'imei', 'imsi', 'msisdn', 'custom1', 'custom2', 'custom3'])),
+        listen_port=dict(type='int', ),
+        accounting_on=dict(type='str', choices=['ignore', 'delete-entries-using-attribute']),
+        secret_string=dict(type='str', )
     ))
    
 

@@ -113,9 +113,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        outside=dict(type='bool',),
-        inside=dict(type='bool',),
-        uuid=dict(type='str',)
+        outside=dict(type='bool', ),
+        inside=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

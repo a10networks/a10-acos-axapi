@@ -125,12 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        name=dict(type='str',required=True,),
-        ipv4_netmask=dict(type='str',),
-        rule_ipv4_prefix=dict(type='str',),
-        user_tag=dict(type='str',),
-        rule_ipv6_prefix=dict(type='str',),
-        uuid=dict(type='str',)
+        name=dict(type='str', required=True, ),
+        ipv4_netmask=dict(type='str', ),
+        rule_ipv4_prefix=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        rule_ipv6_prefix=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

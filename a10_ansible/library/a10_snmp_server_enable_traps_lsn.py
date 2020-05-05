@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        all=dict(type='bool',),
-        fixed_nat_port_mapping_file_change=dict(type='bool',),
-        per_ip_port_usage_threshold=dict(type='bool',),
-        uuid=dict(type='str',),
-        total_port_usage_threshold=dict(type='bool',),
-        max_port_threshold=dict(type='int',),
-        max_ipport_threshold=dict(type='int',),
-        traffic_exceeded=dict(type='bool',)
+        all=dict(type='bool', ),
+        fixed_nat_port_mapping_file_change=dict(type='bool', ),
+        per_ip_port_usage_threshold=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        total_port_usage_threshold=dict(type='bool', ),
+        max_port_threshold=dict(type='int', ),
+        max_ipport_threshold=dict(type='int', ),
+        traffic_exceeded=dict(type='bool', )
     ))
    
 

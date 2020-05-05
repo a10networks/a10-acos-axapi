@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        network_synchronization=dict(type='bool',),
-        uuid=dict(type='str',)
+        network_synchronization=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
     # Parent keys

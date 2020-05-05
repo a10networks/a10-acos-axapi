@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        day_time=dict(type='str',),
-        uuid=dict(type='str',),
-        schedule=dict(type='bool',),
-        feature_name=dict(type='str',required=True,choices=['app-fw']),
-        week_day=dict(type='str',choices=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']),
-        daily=dict(type='bool',),
-        week_time=dict(type='str',),
-        weekly=dict(type='bool',)
+        day_time=dict(type='str', ),
+        uuid=dict(type='str', ),
+        schedule=dict(type='bool', ),
+        feature_name=dict(type='str', required=True, choices=['app-fw']),
+        week_day=dict(type='str', choices=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
+        daily=dict(type='bool', ),
+        week_time=dict(type='str', ),
+        weekly=dict(type='bool', )
     ))
    
 

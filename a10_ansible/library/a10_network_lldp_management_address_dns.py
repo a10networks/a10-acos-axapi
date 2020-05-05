@@ -120,9 +120,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        interface=dict(type='dict',ethernet=dict(type='str',),management=dict(type='bool',),ve=dict(type='int',)),
-        uuid=dict(type='str',),
-        dns=dict(type='str',required=True,)
+        interface=dict(type='dict', ethernet=dict(type='str', ), management=dict(type='bool', ), ve=dict(type='int', )),
+        uuid=dict(type='str', ),
+        dns=dict(type='str', required=True, )
     ))
    
 

@@ -174,10 +174,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',N2_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Used=dict(type='int',),ssl_memory_counts=dict(type='int',),Cached=dict(type='int',),TCP_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),system_memory_counts=dict(type='int',),Free=dict(type='int',),aFleX_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),tcp_memory_counts=dict(type='int',),System_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),n2_memory_counts=dict(type='int',),Shared=dict(type='int',),Usage=dict(type='str',),SSL_memory=dict(type='list',Max=dict(type='int',),Allocated=dict(type='int',),Object_size=dict(type='int',)),Total=dict(type='int',),aflex_memory_counts=dict(type='int',),Buffers=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','usage-percentage'])),
-        stats=dict(type='dict',usage_percentage=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', N2_memory=dict(type='list', Max=dict(type='int', ), Allocated=dict(type='int', ), Object_size=dict(type='int', )), Used=dict(type='int', ), ssl_memory_counts=dict(type='int', ), Cached=dict(type='int', ), TCP_memory=dict(type='list', Max=dict(type='int', ), Allocated=dict(type='int', ), Object_size=dict(type='int', )), system_memory_counts=dict(type='int', ), Free=dict(type='int', ), aFleX_memory=dict(type='list', Max=dict(type='int', ), Allocated=dict(type='int', ), Object_size=dict(type='int', )), tcp_memory_counts=dict(type='int', ), System_memory=dict(type='list', Max=dict(type='int', ), Allocated=dict(type='int', ), Object_size=dict(type='int', )), n2_memory_counts=dict(type='int', ), Shared=dict(type='int', ), Usage=dict(type='str', ), SSL_memory=dict(type='list', Max=dict(type='int', ), Allocated=dict(type='int', ), Object_size=dict(type='int', )), Total=dict(type='int', ), aflex_memory_counts=dict(type='int', ), Buffers=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'usage-percentage'])),
+        stats=dict(type='dict', usage_percentage=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

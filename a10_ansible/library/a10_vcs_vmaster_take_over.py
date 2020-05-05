@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        vmaster_take_over=dict(type='int',)
+        vmaster_take_over=dict(type='int', )
     ))
    
 

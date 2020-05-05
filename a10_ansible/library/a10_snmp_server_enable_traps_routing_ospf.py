@@ -166,23 +166,23 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ospfLsdbOverflow=dict(type='bool',),
-        uuid=dict(type='str',),
-        ospfNbrStateChange=dict(type='bool',),
-        ospfIfStateChange=dict(type='bool',),
-        ospfVirtNbrStateChange=dict(type='bool',),
-        ospfLsdbApproachingOverflow=dict(type='bool',),
-        ospfIfAuthFailure=dict(type='bool',),
-        ospfVirtIfAuthFailure=dict(type='bool',),
-        ospfVirtIfConfigError=dict(type='bool',),
-        ospfVirtIfRxBadPacket=dict(type='bool',),
-        ospfTxRetransmit=dict(type='bool',),
-        ospfVirtIfStateChange=dict(type='bool',),
-        ospfIfConfigError=dict(type='bool',),
-        ospfMaxAgeLsa=dict(type='bool',),
-        ospfIfRxBadPacket=dict(type='bool',),
-        ospfVirtIfTxRetransmit=dict(type='bool',),
-        ospfOriginateLsa=dict(type='bool',)
+        ospfLsdbOverflow=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        ospfNbrStateChange=dict(type='bool', ),
+        ospfIfStateChange=dict(type='bool', ),
+        ospfVirtNbrStateChange=dict(type='bool', ),
+        ospfLsdbApproachingOverflow=dict(type='bool', ),
+        ospfIfAuthFailure=dict(type='bool', ),
+        ospfVirtIfAuthFailure=dict(type='bool', ),
+        ospfVirtIfConfigError=dict(type='bool', ),
+        ospfVirtIfRxBadPacket=dict(type='bool', ),
+        ospfTxRetransmit=dict(type='bool', ),
+        ospfVirtIfStateChange=dict(type='bool', ),
+        ospfIfConfigError=dict(type='bool', ),
+        ospfMaxAgeLsa=dict(type='bool', ),
+        ospfIfRxBadPacket=dict(type='bool', ),
+        ospfVirtIfTxRetransmit=dict(type='bool', ),
+        ospfOriginateLsa=dict(type='bool', )
     ))
    
 

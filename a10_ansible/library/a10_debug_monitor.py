@@ -113,10 +113,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        cpuid=dict(type='int',),
-        all_slots=dict(type='bool',),
-        uuid=dict(type='str',),
-        filename=dict(type='str',)
+        cpuid=dict(type='int', ),
+        all_slots=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        filename=dict(type='str', )
     ))
    
 

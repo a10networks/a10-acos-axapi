@@ -131,11 +131,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        respond_to_user_mac=dict(type='bool',),
-        src_ip=dict(type='dict',concurrent_sessions=dict(type='int',),prefix_length=dict(type='int',),log=dict(type='bool',),enable_high_perf=dict(type='bool',)),
-        lid_number=dict(type='int',required=True,),
-        user_tag=dict(type='str',),
-        uuid=dict(type='str',)
+        respond_to_user_mac=dict(type='bool', ),
+        src_ip=dict(type='dict', concurrent_sessions=dict(type='int', ), prefix_length=dict(type='int', ), log=dict(type='bool', ), enable_high_perf=dict(type='bool', )),
+        lid_number=dict(type='int', required=True, ),
+        user_tag=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

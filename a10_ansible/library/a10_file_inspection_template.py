@@ -185,26 +185,26 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        bad_uploads_action=dict(type='str',choices=['reset','drop','allow']),
-        suspect_uploads_action=dict(type='str',choices=['reset','drop','allow']),
-        downloads_bad_log=dict(type='str',choices=['log','no-log']),
-        uploads_bad_log=dict(type='str',choices=['log','no-log']),
-        uploads_suspect_log=dict(type='str',choices=['log','no-log']),
-        good_uploads_action=dict(type='str',choices=['reset','drop','allow']),
-        inspect=dict(type='dict',download_icap=dict(type='str',),inspect_downloads=dict(type='bool',)),
-        uuid=dict(type='str',),
-        suspect_downloads_action=dict(type='str',choices=['reset','drop','allow']),
-        downloads_good_log=dict(type='str',choices=['log','no-log']),
-        uploads_external_inspect=dict(type='str',),
-        user_tag=dict(type='str',),
-        downloads_external_inspect=dict(type='str',),
-        downloads_external_suspect_log=dict(type='str',choices=['log','no-log']),
-        downloads_suspect_log=dict(type='str',choices=['log','no-log']),
-        good_downloads_action=dict(type='str',choices=['reset','drop','allow']),
-        bad_downloads_action=dict(type='str',choices=['reset','drop','allow']),
-        uploads_good_log=dict(type='str',choices=['log','no-log']),
-        uploads_external_suspect_log=dict(type='str',choices=['log','no-log']),
-        name=dict(type='str',required=True,)
+        bad_uploads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        suspect_uploads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        downloads_bad_log=dict(type='str', choices=['log', 'no-log']),
+        uploads_bad_log=dict(type='str', choices=['log', 'no-log']),
+        uploads_suspect_log=dict(type='str', choices=['log', 'no-log']),
+        good_uploads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        inspect=dict(type='dict', download_icap=dict(type='str', ), inspect_downloads=dict(type='bool', )),
+        uuid=dict(type='str', ),
+        suspect_downloads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        downloads_good_log=dict(type='str', choices=['log', 'no-log']),
+        uploads_external_inspect=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        downloads_external_inspect=dict(type='str', ),
+        downloads_external_suspect_log=dict(type='str', choices=['log', 'no-log']),
+        downloads_suspect_log=dict(type='str', choices=['log', 'no-log']),
+        good_downloads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        bad_downloads_action=dict(type='str', choices=['reset', 'drop', 'allow']),
+        uploads_good_log=dict(type='str', choices=['log', 'no-log']),
+        uploads_external_suspect_log=dict(type='str', choices=['log', 'no-log']),
+        name=dict(type='str', required=True, )
     ))
    
 

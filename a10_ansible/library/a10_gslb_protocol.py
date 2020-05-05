@@ -171,16 +171,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',session_list=dict(type='list',session_id=dict(type='int',),connection_succeeded=dict(type='int',),sessions_dropped=dict(type='int',),retry=dict(type='int',),update_packet_sent=dict(type='int',),open_packet_received=dict(type='int',),protocol_info=dict(type='str',),keepalive_packet_received=dict(type='int',),notify_packet_sent=dict(type='int',),open_packet_sent=dict(type='int',),update_packet_received=dict(type='int',),state=dict(type='str',),message_header_error=dict(type='int',),open_session_failed=dict(type='int',),notify_packet_received=dict(type='int',),connection_failed=dict(type='int',),open_session_succeeded=dict(type='int',),keepalive_packet_sent=dict(type='int',))),
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        msg_format_acos_2x=dict(type='bool',),
-        limit=dict(type='dict',ardt_response=dict(type='int',),uuid=dict(type='str',),conn_response=dict(type='int',),ardt_session=dict(type='int',),ardt_query=dict(type='int',),message=dict(type='int',),response=dict(type='int',)),
-        ping_site=dict(type='str',),
-        auto_detect=dict(type='bool',),
-        use_mgmt_port_for_all_partitions=dict(type='bool',),
-        enable_list=dict(type='list',ntype=dict(type='str',required=True,choices=['controller','device']),uuid=dict(type='str',)),
-        status_interval=dict(type='int',)
+        oper=dict(type='dict', session_list=dict(type='list', session_id=dict(type='int', ), connection_succeeded=dict(type='int', ), sessions_dropped=dict(type='int', ), retry=dict(type='int', ), update_packet_sent=dict(type='int', ), open_packet_received=dict(type='int', ), protocol_info=dict(type='str', ), keepalive_packet_received=dict(type='int', ), notify_packet_sent=dict(type='int', ), open_packet_sent=dict(type='int', ), update_packet_received=dict(type='int', ), state=dict(type='str', ), message_header_error=dict(type='int', ), open_session_failed=dict(type='int', ), notify_packet_received=dict(type='int', ), connection_failed=dict(type='int', ), open_session_succeeded=dict(type='int', ), keepalive_packet_sent=dict(type='int', ))),
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        msg_format_acos_2x=dict(type='bool', ),
+        limit=dict(type='dict', ardt_response=dict(type='int', ), uuid=dict(type='str', ), conn_response=dict(type='int', ), ardt_session=dict(type='int', ), ardt_query=dict(type='int', ), message=dict(type='int', ), response=dict(type='int', )),
+        ping_site=dict(type='str', ),
+        auto_detect=dict(type='bool', ),
+        use_mgmt_port_for_all_partitions=dict(type='bool', ),
+        enable_list=dict(type='list', ntype=dict(type='str', required=True, choices=['controller', 'device']), uuid=dict(type='str', )),
+        status_interval=dict(type='int', )
     ))
    
 

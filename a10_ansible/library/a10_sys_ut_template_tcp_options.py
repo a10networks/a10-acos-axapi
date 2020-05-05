@@ -125,12 +125,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        mss=dict(type='int',),
-        sack_type=dict(type='str',choices=['permitted','block']),
-        time_stamp_enable=dict(type='bool',),
-        nop=dict(type='bool',),
-        wscale=dict(type='int',)
+        uuid=dict(type='str', ),
+        mss=dict(type='int', ),
+        sack_type=dict(type='str', choices=['permitted', 'block']),
+        time_stamp_enable=dict(type='bool', ),
+        nop=dict(type='bool', ),
+        wscale=dict(type='int', )
     ))
    
     # Parent keys

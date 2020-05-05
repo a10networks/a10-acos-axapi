@@ -114,10 +114,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        application_flow=dict(type='int',),
-        basic_dpi_enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        application_mempool=dict(type='bool',)
+        application_flow=dict(type='int', ),
+        basic_dpi_enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        application_mempool=dict(type='bool', )
     ))
    
 

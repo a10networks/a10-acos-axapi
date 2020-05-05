@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',session_smp_list=dict(type='list',alloc=dict(type='int',),ntype=dict(type='str',),free=dict(type='int',),alloc_fail=dict(type='int',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', session_smp_list=dict(type='list', alloc=dict(type='int', ), ntype=dict(type='str', ), free=dict(type='int', ), alloc_fail=dict(type='int', ))),
+        uuid=dict(type='str', )
     ))
    
 

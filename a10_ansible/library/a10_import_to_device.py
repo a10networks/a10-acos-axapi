@@ -126,13 +126,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        web_category_license=dict(type='str',),
-        remote_file=dict(type='str',),
-        glm_license=dict(type='str',),
-        glm_cert=dict(type='str',),
-        device=dict(type='int',),
-        use_mgmt_port=dict(type='bool',),
-        overwrite=dict(type='bool',)
+        web_category_license=dict(type='str', ),
+        remote_file=dict(type='str', ),
+        glm_license=dict(type='str', ),
+        glm_cert=dict(type='str', ),
+        device=dict(type='int', ),
+        use_mgmt_port=dict(type='bool', ),
+        overwrite=dict(type='bool', )
     ))
    
 

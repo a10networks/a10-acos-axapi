@@ -132,11 +132,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        cpu_usage=dict(type='bool',),
-        eth_list=dict(type='list',eth_end=dict(type='str',),eth_start=dict(type='str',)),
-        ve_list=dict(type='list',ve_end=dict(type='int',),ve_start=dict(type='int',)),
-        uuid=dict(type='str',),
-        http_counter=dict(type='bool',)
+        cpu_usage=dict(type='bool', ),
+        eth_list=dict(type='list', eth_end=dict(type='str', ), eth_start=dict(type='str', )),
+        ve_list=dict(type='list', ve_end=dict(type='int', ), ve_start=dict(type='int', )),
+        uuid=dict(type='str', ),
+        http_counter=dict(type='bool', )
     ))
    
 

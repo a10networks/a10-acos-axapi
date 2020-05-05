@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        trap_levelname=dict(type='str',choices=['disable','emergency','alert','critical'])
+        uuid=dict(type='str', ),
+        trap_levelname=dict(type='str', choices=['disable', 'emergency', 'alert', 'critical'])
     ))
    
 

@@ -142,17 +142,17 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        short=dict(type='bool',),
-        qos=dict(type='int',),
-        name=dict(type='str',required=True,),
-        age=dict(type='int',),
-        stateless_conn_timeout=dict(type='int',),
-        idle_timeout=dict(type='int',),
-        re_select_if_server_down=dict(type='bool',),
-        immediate=dict(type='bool',),
-        user_tag=dict(type='str',),
-        disable_clear_session=dict(type='bool',),
-        uuid=dict(type='str',)
+        short=dict(type='bool', ),
+        qos=dict(type='int', ),
+        name=dict(type='str', required=True, ),
+        age=dict(type='int', ),
+        stateless_conn_timeout=dict(type='int', ),
+        idle_timeout=dict(type='int', ),
+        re_select_if_server_down=dict(type='bool', ),
+        immediate=dict(type='bool', ),
+        user_tag=dict(type='str', ),
+        disable_clear_session=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

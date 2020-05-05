@@ -184,16 +184,16 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        no_forward_match=dict(type='dict',send_icmpv6=dict(type='bool',)),
-        nat_prefix_list=dict(type='str',),
-        uuid=dict(type='str',),
-        hairpinning=dict(type='str',choices=['filter-all','filter-none','filter-self-ip','filter-self-ip-port']),
-        inside_src_access_list=dict(type='int',),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','entry_count','self_hairpinning_drop','all_hairpinning_drop','no_match_icmpv6_sent','no_match_icmp_sent','icmp_inbound_drop','fwd_lookup_failed','rev_lookup_failed','interface_not_configured','no_binding_table_matches_fwd','no_binding_table_matches_rev','session_count','system_address_drop'])),
-        icmp_inbound=dict(type='str',choices=['drop','handle']),
-        use_binding_table=dict(type='str',),
-        no_reverse_match=dict(type='dict',send_icmp=dict(type='bool',)),
-        stats=dict(type='dict',interface_not_configured=dict(type='str',),no_match_icmp_sent=dict(type='str',),no_binding_table_matches_rev=dict(type='str',),rev_lookup_failed=dict(type='str',),self_hairpinning_drop=dict(type='str',),entry_count=dict(type='str',),all_hairpinning_drop=dict(type='str',),icmp_inbound_drop=dict(type='str',),fwd_lookup_failed=dict(type='str',),no_binding_table_matches_fwd=dict(type='str',),no_match_icmpv6_sent=dict(type='str',))
+        no_forward_match=dict(type='dict', send_icmpv6=dict(type='bool', )),
+        nat_prefix_list=dict(type='str', ),
+        uuid=dict(type='str', ),
+        hairpinning=dict(type='str', choices=['filter-all', 'filter-none', 'filter-self-ip', 'filter-self-ip-port']),
+        inside_src_access_list=dict(type='int', ),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'entry_count', 'self_hairpinning_drop', 'all_hairpinning_drop', 'no_match_icmpv6_sent', 'no_match_icmp_sent', 'icmp_inbound_drop', 'fwd_lookup_failed', 'rev_lookup_failed', 'interface_not_configured', 'no_binding_table_matches_fwd', 'no_binding_table_matches_rev', 'session_count', 'system_address_drop'])),
+        icmp_inbound=dict(type='str', choices=['drop', 'handle']),
+        use_binding_table=dict(type='str', ),
+        no_reverse_match=dict(type='dict', send_icmp=dict(type='bool', )),
+        stats=dict(type='dict', interface_not_configured=dict(type='str', ), no_match_icmp_sent=dict(type='str', ), no_binding_table_matches_rev=dict(type='str', ), rev_lookup_failed=dict(type='str', ), self_hairpinning_drop=dict(type='str', ), entry_count=dict(type='str', ), all_hairpinning_drop=dict(type='str', ), icmp_inbound_drop=dict(type='str', ), fwd_lookup_failed=dict(type='str', ), no_binding_table_matches_fwd=dict(type='str', ), no_match_icmpv6_sent=dict(type='str', ))
     ))
    
 

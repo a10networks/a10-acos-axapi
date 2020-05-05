@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        port=dict(type='int',required=True,),
-        port_end=dict(type='int',required=True,),
-        idle_timeout_val_port_range=dict(type='int',),
-        fast=dict(type='bool',),
-        uuid=dict(type='str',)
+        port=dict(type='int', required=True, ),
+        port_end=dict(type='int', required=True, ),
+        idle_timeout_val_port_range=dict(type='int', ),
+        fast=dict(type='bool', ),
+        uuid=dict(type='str', )
     ))
    
 

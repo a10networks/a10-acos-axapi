@@ -113,8 +113,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',sp_list=dict(type='list',sp_id=dict(type='str',),session_count=dict(type='int',),session_list=dict(type='list',nameid=dict(type='str',),client_addr=dict(type='str',),id_provider=dict(type='str',),expire_time=dict(type='str',),auth_instant=dict(type='str',))),name=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', sp_list=dict(type='list', sp_id=dict(type='str', ), session_count=dict(type='int', ), session_list=dict(type='list', nameid=dict(type='str', ), client_addr=dict(type='str', ), id_provider=dict(type='str', ), expire_time=dict(type='str', ), auth_instant=dict(type='str', ))), name=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        account=dict(type='str',),
-        realm=dict(type='str',),
-        name=dict(type='str',required=True,),
-        encrypted=dict(type='str',),
-        user_tag=dict(type='str',),
-        secret_string=dict(type='str',),
-        password=dict(type='bool',),
-        service_principal_name=dict(type='str',),
-        uuid=dict(type='str',)
+        account=dict(type='str', ),
+        realm=dict(type='str', ),
+        name=dict(type='str', required=True, ),
+        encrypted=dict(type='str', ),
+        user_tag=dict(type='str', ),
+        secret_string=dict(type='str', ),
+        password=dict(type='bool', ),
+        service_principal_name=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

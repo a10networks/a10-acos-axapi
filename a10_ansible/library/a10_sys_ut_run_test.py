@@ -101,7 +101,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        mode=dict(type='str',choices=['basic','fault-injection','cpu-rr','frag'])
+        mode=dict(type='str', choices=['basic', 'fault-injection', 'cpu-rr', 'frag'])
     ))
    
 

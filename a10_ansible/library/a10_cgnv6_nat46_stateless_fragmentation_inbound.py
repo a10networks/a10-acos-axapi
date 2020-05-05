@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        action=dict(type='str',choices=['drop','ipv4','send-icmpv6']),
-        uuid=dict(type='str',)
+        action=dict(type='str', choices=['drop', 'ipv4', 'send-icmpv6']),
+        uuid=dict(type='str', )
     ))
    
 

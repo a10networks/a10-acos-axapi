@@ -176,11 +176,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        reset=dict(type='bool',),
-        ip=dict(type='dict',ipv4_address=dict(type='str',),default_gateway=dict(type='str',),ipv4_netmask=dict(type='str',)),
-        ipsrc=dict(type='dict',dhcp=dict(type='bool',),static=dict(type='bool',)),
-        tool=dict(type='dict',cmd=dict(type='str',)),
-        user=dict(type='dict',administrator=dict(type='bool',),setname=dict(type='str',),newname=dict(type='str',),newpass=dict(type='str',),callback=dict(type='bool',),add=dict(type='str',),disable=dict(type='str',),setpass=dict(type='str',),user=dict(type='bool',),operator=dict(type='bool',),password=dict(type='str',),privilege=dict(type='str',))
+        reset=dict(type='bool', ),
+        ip=dict(type='dict', ipv4_address=dict(type='str', ), default_gateway=dict(type='str', ), ipv4_netmask=dict(type='str', )),
+        ipsrc=dict(type='dict', dhcp=dict(type='bool', ), static=dict(type='bool', )),
+        tool=dict(type='dict', cmd=dict(type='str', )),
+        user=dict(type='dict', administrator=dict(type='bool', ), setname=dict(type='str', ), newname=dict(type='str', ), newpass=dict(type='str', ), callback=dict(type='bool', ), add=dict(type='str', ), disable=dict(type='str', ), setpass=dict(type='str', ), user=dict(type='bool', ), operator=dict(type='bool', ), password=dict(type='str', ), privilege=dict(type='str', ))
     ))
    
 

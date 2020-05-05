@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        duration=dict(type='int',),
-        threshold=dict(type='int',),
-        enable=dict(type='bool',),
-        uuid=dict(type='str',),
-        reset_time=dict(type='int',)
+        duration=dict(type='int', ),
+        threshold=dict(type='int', ),
+        enable=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        reset_time=dict(type='int', )
     ))
    
 

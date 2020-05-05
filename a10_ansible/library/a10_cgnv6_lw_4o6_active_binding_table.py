@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',entry_list=dict(type='list',port_start=dict(type='int',),rev_match_count=dict(type='int',),fwd_match_count=dict(type='int',),port_end=dict(type='int',),tunnel_address=dict(type='str',),nat_address=dict(type='str',),aftr_tunnel_address=dict(type='str',))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', entry_list=dict(type='list', port_start=dict(type='int', ), rev_match_count=dict(type='int', ), fwd_match_count=dict(type='int', ), port_end=dict(type='int', ), tunnel_address=dict(type='str', ), nat_address=dict(type='str', ), aftr_tunnel_address=dict(type='str', ))),
+        uuid=dict(type='str', )
     ))
    
 

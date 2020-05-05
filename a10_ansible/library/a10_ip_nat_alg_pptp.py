@@ -155,10 +155,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        pptp=dict(type='str',choices=['disable','enable']),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','current-smp-sessions','current-gre-sessions','smp-session-creation-failure','truncated-pns-message','truncated-pac-message','mismatched-pns-call-id','mismatched-pac-call-id','retransmitted-pns-message','retransmitted-pac-message','truncated-gre-packet','unknown-gre-version','no-matching-gre-session'])),
-        stats=dict(type='dict',retransmitted_pac_message=dict(type='str',),smp_session_creation_failure=dict(type='str',),truncated_gre_packet=dict(type='str',),truncated_pns_message=dict(type='str',),current_gre_sessions=dict(type='str',),no_matching_gre_session=dict(type='str',),truncated_pac_message=dict(type='str',),mismatched_pac_call_id=dict(type='str',),unknown_gre_version=dict(type='str',),current_smp_sessions=dict(type='str',),retransmitted_pns_message=dict(type='str',),mismatched_pns_call_id=dict(type='str',)),
-        uuid=dict(type='str',)
+        pptp=dict(type='str', choices=['disable', 'enable']),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'current-smp-sessions', 'current-gre-sessions', 'smp-session-creation-failure', 'truncated-pns-message', 'truncated-pac-message', 'mismatched-pns-call-id', 'mismatched-pac-call-id', 'retransmitted-pns-message', 'retransmitted-pac-message', 'truncated-gre-packet', 'unknown-gre-version', 'no-matching-gre-session'])),
+        stats=dict(type='dict', retransmitted_pac_message=dict(type='str', ), smp_session_creation_failure=dict(type='str', ), truncated_gre_packet=dict(type='str', ), truncated_pns_message=dict(type='str', ), current_gre_sessions=dict(type='str', ), no_matching_gre_session=dict(type='str', ), truncated_pac_message=dict(type='str', ), mismatched_pac_call_id=dict(type='str', ), unknown_gre_version=dict(type='str', ), current_smp_sessions=dict(type='str', ), retransmitted_pns_message=dict(type='str', ), mismatched_pns_call_id=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

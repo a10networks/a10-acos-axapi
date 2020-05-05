@@ -113,9 +113,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        ip=dict(type='str',),
-        uuid=dict(type='str',),
-        ipv6=dict(type='str',)
+        ip=dict(type='str', ),
+        uuid=dict(type='str', ),
+        ipv6=dict(type='str', )
     ))
    
     # Parent keys

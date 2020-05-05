@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        key_type=dict(type='str',choices=['ascii','hex']),
-        hex_encrypted=dict(type='str',),
-        hex_key=dict(type='str',),
-        alg_type=dict(type='str',choices=['M','SHA','SHA1']),
-        key=dict(type='int',required=True,),
-        asc_key=dict(type='str',)
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        key_type=dict(type='str', choices=['ascii', 'hex']),
+        hex_encrypted=dict(type='str', ),
+        hex_key=dict(type='str', ),
+        alg_type=dict(type='str', choices=['M', 'SHA', 'SHA1']),
+        key=dict(type='int', required=True, ),
+        asc_key=dict(type='str', )
     ))
    
 

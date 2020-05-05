@@ -117,10 +117,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        match_first=dict(type='str',choices=['global','policy']),
-        uuid=dict(type='str',),
-        geo_type_overlap=dict(type='str',choices=['global','policy']),
-        overlap=dict(type='bool',)
+        match_first=dict(type='str', choices=['global', 'policy']),
+        uuid=dict(type='str', ),
+        geo_type_overlap=dict(type='str', choices=['global', 'policy']),
+        overlap=dict(type='bool', )
     ))
    
     # Parent keys

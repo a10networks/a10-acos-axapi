@@ -184,25 +184,25 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        health_check_interval=dict(type='int',),
-        protection_ocs=dict(type='bool',),
-        protection_module=dict(type='bool',),
-        enroll_timeout=dict(type='int',),
-        uuid=dict(type='str',),
-        encrypted=dict(type='str',),
-        worker=dict(type='int',),
-        user_tag=dict(type='str',),
-        template_name=dict(type='str',required=True,),
-        password_string=dict(type='str',),
-        protection_softcard_hash=dict(type='str',),
-        softhsm_enum=dict(type='str',choices=['softHSM','thalesHSM']),
-        protection=dict(type='bool',),
-        rfs_port=dict(type='int',),
-        rfs_ip=dict(type='str',),
-        hsm_dev=dict(type='list',hsm_ip=dict(type='str',),hsm_port=dict(type='int',),hsm_priority=dict(type='int',)),
-        softcard=dict(type='bool',),
-        password=dict(type='bool',),
-        sec_world=dict(type='str',)
+        health_check_interval=dict(type='int', ),
+        protection_ocs=dict(type='bool', ),
+        protection_module=dict(type='bool', ),
+        enroll_timeout=dict(type='int', ),
+        uuid=dict(type='str', ),
+        encrypted=dict(type='str', ),
+        worker=dict(type='int', ),
+        user_tag=dict(type='str', ),
+        template_name=dict(type='str', required=True, ),
+        password_string=dict(type='str', ),
+        protection_softcard_hash=dict(type='str', ),
+        softhsm_enum=dict(type='str', choices=['softHSM', 'thalesHSM']),
+        protection=dict(type='bool', ),
+        rfs_port=dict(type='int', ),
+        rfs_ip=dict(type='str', ),
+        hsm_dev=dict(type='list', hsm_ip=dict(type='str', ), hsm_port=dict(type='int', ), hsm_priority=dict(type='int', )),
+        softcard=dict(type='bool', ),
+        password=dict(type='bool', ),
+        sec_world=dict(type='str', )
     ))
    
 

@@ -142,13 +142,13 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',current_startup_config=dict(type='str',),pri_startup_config=dict(type='str',),sec_startup_config=dict(type='str',),dirty=dict(type='int',),file_list=dict(type='list',update_time=dict(type='str',),Profile_Name=dict(type='str',),Size=dict(type='int',))),
-        dst_file=dict(type='str',),
-        uuid=dict(type='str',),
-        file=dict(type='str',),
-        action=dict(type='str',choices=['import']),
-        file_handle=dict(type='str',),
-        size=dict(type='int',)
+        oper=dict(type='dict', current_startup_config=dict(type='str', ), pri_startup_config=dict(type='str', ), sec_startup_config=dict(type='str', ), dirty=dict(type='int', ), file_list=dict(type='list', update_time=dict(type='str', ), Profile_Name=dict(type='str', ), Size=dict(type='int', ))),
+        dst_file=dict(type='str', ),
+        uuid=dict(type='str', ),
+        file=dict(type='str', ),
+        action=dict(type='str', choices=['import']),
+        file_handle=dict(type='str', ),
+        size=dict(type='int', )
     ))
    
 

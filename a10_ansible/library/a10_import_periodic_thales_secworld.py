@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        period=dict(type='int',),
-        remote_file=dict(type='str',),
-        thales_secworld=dict(type='str',required=True,),
-        overwrite=dict(type='bool',)
+        uuid=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        period=dict(type='int', ),
+        remote_file=dict(type='str', ),
+        thales_secworld=dict(type='str', required=True, ),
+        overwrite=dict(type='bool', )
     ))
    
 

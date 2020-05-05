@@ -138,9 +138,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        std=dict(type='int',required=True,),
-        stdrules=dict(type='list',subnet=dict(type='str',),std_remark=dict(type='str',),log=dict(type='bool',),transparent_session_only=dict(type='bool',),seq_num=dict(type='int',),rev_subnet_mask=dict(type='str',),host=dict(type='str',),action=dict(type='str',choices=['deny','permit','l3-vlan-fwd-disable']),any=dict(type='bool',)),
-        uuid=dict(type='str',)
+        std=dict(type='int', required=True, ),
+        stdrules=dict(type='list', subnet=dict(type='str', ), std_remark=dict(type='str', ), log=dict(type='bool', ), transparent_session_only=dict(type='bool', ), seq_num=dict(type='int', ), rev_subnet_mask=dict(type='str', ), host=dict(type='str', ), action=dict(type='str', choices=['deny', 'permit', 'l3-vlan-fwd-disable']), any=dict(type='bool', )),
+        uuid=dict(type='str', )
     ))
    
 

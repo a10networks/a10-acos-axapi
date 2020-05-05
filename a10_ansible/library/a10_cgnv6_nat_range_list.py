@@ -134,15 +134,15 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        v4_vrid=dict(type='int',),
-        uuid=dict(type='str',),
-        partition=dict(type='str',required=True,),
-        name=dict(type='str',required=True,),
-        local_netmaskv4=dict(type='str',),
-        local_start_ipv4_addr=dict(type='str',),
-        global_start_ipv4_addr=dict(type='str',),
-        v4_count=dict(type='int',),
-        global_netmaskv4=dict(type='str',)
+        v4_vrid=dict(type='int', ),
+        uuid=dict(type='str', ),
+        partition=dict(type='str', required=True, ),
+        name=dict(type='str', required=True, ),
+        local_netmaskv4=dict(type='str', ),
+        local_start_ipv4_addr=dict(type='str', ),
+        global_start_ipv4_addr=dict(type='str', ),
+        v4_count=dict(type='int', ),
+        global_netmaskv4=dict(type='str', )
     ))
    
 

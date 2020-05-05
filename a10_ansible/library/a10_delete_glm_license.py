@@ -118,11 +118,11 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        qosmos=dict(type='bool',),
-        webroot_ti=dict(type='bool',),
-        cylance=dict(type='bool',),
-        ipsec_vpn=dict(type='bool',),
-        threatstop=dict(type='bool',)
+        qosmos=dict(type='bool', ),
+        webroot_ti=dict(type='bool', ),
+        cylance=dict(type='bool', ),
+        ipsec_vpn=dict(type='bool', ),
+        threatstop=dict(type='bool', )
     ))
    
 

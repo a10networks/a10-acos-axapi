@@ -110,8 +110,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',top_k_app_svc_list=dict(type='list',indicator=dict(type='str',),indicator_list=dict(type='list',indicator_value=dict(type='int',),app_svc_uuid=dict(type='str',),app_svc_name=dict(type='str',)))),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', top_k_app_svc_list=dict(type='list', indicator=dict(type='str', ), indicator_list=dict(type='list', indicator_value=dict(type='int', ), app_svc_uuid=dict(type='str', ), app_svc_name=dict(type='str', )))),
+        uuid=dict(type='str', )
     ))
    
 

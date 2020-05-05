@@ -173,19 +173,19 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',nat_pool_addr_list=dict(type='list',Failed=dict(type='int',),Total_Used=dict(type='int',),Total_Freed=dict(type='int',),Port_Usage=dict(type='int',),Address=dict(type='str',)),pool_name=dict(type='str',required=True,)),
-        use_if_ip=dict(type='bool',),
-        stats=dict(type='dict',Failed=dict(type='str',),Total_Used=dict(type='str',),Total_Freed=dict(type='str',),Port_Usage=dict(type='str',),pool_name=dict(type='str',required=True,)),
-        uuid=dict(type='str',),
-        start_address=dict(type='str',),
-        vrid=dict(type='int',),
-        netmask=dict(type='str',),
-        end_address=dict(type='str',),
-        ip_rr=dict(type='bool',),
-        ethernet=dict(type='str',),
-        scaleout_device_id=dict(type='int',),
-        gateway=dict(type='str',),
-        pool_name=dict(type='str',required=True,)
+        oper=dict(type='dict', nat_pool_addr_list=dict(type='list', Failed=dict(type='int', ), Total_Used=dict(type='int', ), Total_Freed=dict(type='int', ), Port_Usage=dict(type='int', ), Address=dict(type='str', )), pool_name=dict(type='str', required=True, )),
+        use_if_ip=dict(type='bool', ),
+        stats=dict(type='dict', Failed=dict(type='str', ), Total_Used=dict(type='str', ), Total_Freed=dict(type='str', ), Port_Usage=dict(type='str', ), pool_name=dict(type='str', required=True, )),
+        uuid=dict(type='str', ),
+        start_address=dict(type='str', ),
+        vrid=dict(type='int', ),
+        netmask=dict(type='str', ),
+        end_address=dict(type='str', ),
+        ip_rr=dict(type='bool', ),
+        ethernet=dict(type='str', ),
+        scaleout_device_id=dict(type='int', ),
+        gateway=dict(type='str', ),
+        pool_name=dict(type='str', required=True, )
     ))
    
 

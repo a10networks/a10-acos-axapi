@@ -161,21 +161,21 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        db_send=dict(type='str',),
-        db_password=dict(type='bool',),
-        uuid=dict(type='str',),
-        db_encrypted=dict(type='str',),
-        database=dict(type='bool',),
-        database_name=dict(type='str',choices=['mssql','mysql','oracle','postgresql']),
-        db_row_integer=dict(type='int',),
-        db_receive=dict(type='str',),
-        db_receive_integer=dict(type='int',),
-        db_password_str=dict(type='str',),
-        db_column=dict(type='int',),
-        db_name=dict(type='str',),
-        db_column_integer=dict(type='int',),
-        db_username=dict(type='str',),
-        db_row=dict(type='int',)
+        db_send=dict(type='str', ),
+        db_password=dict(type='bool', ),
+        uuid=dict(type='str', ),
+        db_encrypted=dict(type='str', ),
+        database=dict(type='bool', ),
+        database_name=dict(type='str', choices=['mssql', 'mysql', 'oracle', 'postgresql']),
+        db_row_integer=dict(type='int', ),
+        db_receive=dict(type='str', ),
+        db_receive_integer=dict(type='int', ),
+        db_password_str=dict(type='str', ),
+        db_column=dict(type='int', ),
+        db_name=dict(type='str', ),
+        db_column_integer=dict(type='int', ),
+        db_username=dict(type='str', ),
+        db_row=dict(type='int', )
     ))
    
     # Parent keys

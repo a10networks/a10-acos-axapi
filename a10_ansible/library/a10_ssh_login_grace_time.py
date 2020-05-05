@@ -106,8 +106,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        grace_time=dict(type='int',),
-        uuid=dict(type='str',)
+        grace_time=dict(type='int', ),
+        uuid=dict(type='str', )
     ))
    
 

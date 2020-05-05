@@ -105,8 +105,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        password=dict(type='str',),
-        uuid=dict(type='str',)
+        password=dict(type='str', ),
+        uuid=dict(type='str', )
     ))
    
 

@@ -122,12 +122,12 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        service_type=dict(type='str',required=True,choices=['tcp','udp']),
-        uuid=dict(type='str',),
-        timeout_val=dict(type='int',),
-        port_end=dict(type='int',),
-        fast=dict(type='bool',),
-        port=dict(type='int',required=True,)
+        service_type=dict(type='str', required=True, choices=['tcp', 'udp']),
+        uuid=dict(type='str', ),
+        timeout_val=dict(type='int', ),
+        port_end=dict(type='int', ),
+        fast=dict(type='bool', ),
+        port=dict(type='int', required=True, )
     ))
    
 

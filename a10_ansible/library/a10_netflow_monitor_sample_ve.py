@@ -109,8 +109,8 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        uuid=dict(type='str',),
-        ve_num=dict(type='int',required=True,)
+        uuid=dict(type='str', ),
+        ve_num=dict(type='int', required=True, )
     ))
    
     # Parent keys

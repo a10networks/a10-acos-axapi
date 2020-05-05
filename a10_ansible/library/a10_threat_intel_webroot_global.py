@@ -157,9 +157,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','spam-sources','windows-exploits','web-attacks','botnets','scanners','dos-attacks','reputation','phishing','proxy','mobile-threats','tor-proxy','rtu-lookup','database-lookup','non-malicious-ips'])),
-        stats=dict(type='dict',web_attacks=dict(type='str',),botnets=dict(type='str',),spam_sources=dict(type='str',),windows_exploits=dict(type='str',),phishing=dict(type='str',),dos_attacks=dict(type='str',),mobile_threats=dict(type='str',),non_malicious_ips=dict(type='str',),reputation=dict(type='str',),proxy=dict(type='str',),rtu_lookup=dict(type='str',),scanners=dict(type='str',),database_lookup=dict(type='str',),tor_proxy=dict(type='str',)),
-        uuid=dict(type='str',)
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'spam-sources', 'windows-exploits', 'web-attacks', 'botnets', 'scanners', 'dos-attacks', 'reputation', 'phishing', 'proxy', 'mobile-threats', 'tor-proxy', 'rtu-lookup', 'database-lookup', 'non-malicious-ips'])),
+        stats=dict(type='dict', web_attacks=dict(type='str', ), botnets=dict(type='str', ), spam_sources=dict(type='str', ), windows_exploits=dict(type='str', ), phishing=dict(type='str', ), dos_attacks=dict(type='str', ), mobile_threats=dict(type='str', ), non_malicious_ips=dict(type='str', ), reputation=dict(type='str', ), proxy=dict(type='str', ), rtu_lookup=dict(type='str', ), scanners=dict(type='str', ), database_lookup=dict(type='str', ), tor_proxy=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

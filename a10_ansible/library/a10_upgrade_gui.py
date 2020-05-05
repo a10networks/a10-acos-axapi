@@ -130,14 +130,14 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        rollback=dict(type='str',),
-        use_mgmt_port=dict(type='bool',),
-        image=dict(type='str',choices=['pri','sec']),
-        upload=dict(type='bool',),
-        source_ip_address=dict(type='str',),
-        local=dict(type='str',),
-        file_url=dict(type='str',),
-        delete=dict(type='str',)
+        rollback=dict(type='str', ),
+        use_mgmt_port=dict(type='bool', ),
+        image=dict(type='str', choices=['pri', 'sec']),
+        upload=dict(type='bool', ),
+        source_ip_address=dict(type='str', ),
+        local=dict(type='str', ),
+        file_url=dict(type='str', ),
+        delete=dict(type='str', )
     ))
    
 

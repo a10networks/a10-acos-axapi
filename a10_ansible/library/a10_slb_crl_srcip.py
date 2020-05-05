@@ -153,10 +153,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        oper=dict(type='dict',crl_srcip_lockedout_ips=dict(type='list',active=dict(type='int',),start=dict(type='str',),client_ip=dict(type='str',),drops=dict(type='int',),end=dict(type='str',)),lockedout_ips_count=dict(type='int',)),
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','sessions_alloc','sessions_freed','out_of_sessions','too_many_sessions','called','permitted','threshold_exceed','lockout_drop','log_msg_sent'])),
-        stats=dict(type='dict',threshold_exceed=dict(type='str',),lockout_drop=dict(type='str',),called=dict(type='str',),sessions_freed=dict(type='str',),permitted=dict(type='str',),log_msg_sent=dict(type='str',),sessions_alloc=dict(type='str',),out_of_sessions=dict(type='str',),too_many_sessions=dict(type='str',)),
-        uuid=dict(type='str',)
+        oper=dict(type='dict', crl_srcip_lockedout_ips=dict(type='list', active=dict(type='int', ), start=dict(type='str', ), client_ip=dict(type='str', ), drops=dict(type='int', ), end=dict(type='str', )), lockedout_ips_count=dict(type='int', )),
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'sessions_alloc', 'sessions_freed', 'out_of_sessions', 'too_many_sessions', 'called', 'permitted', 'threshold_exceed', 'lockout_drop', 'log_msg_sent'])),
+        stats=dict(type='dict', threshold_exceed=dict(type='str', ), lockout_drop=dict(type='str', ), called=dict(type='str', ), sessions_freed=dict(type='str', ), permitted=dict(type='str', ), log_msg_sent=dict(type='str', ), sessions_alloc=dict(type='str', ), out_of_sessions=dict(type='str', ), too_many_sessions=dict(type='str', )),
+        uuid=dict(type='str', )
     ))
    
 

@@ -165,10 +165,10 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
-        sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','pkts-rcvd','v9-templates-created','v9-templates-deleted','v10-templates-created','v10-templates-deleted','template-drop-exceeded','template-drop-out-of-memory','frag-dropped','agent-not-found','version-not-supported','unknown-dir'])),
-        stats=dict(type='dict',template_drop_exceeded=dict(type='str',),pkts_rcvd=dict(type='str',),agent_not_found=dict(type='str',),v10_templates_deleted=dict(type='str',),template_drop_out_of_memory=dict(type='str',),template=dict(type='dict',stats=dict(type='dict',templates_removed_from_delq=dict(type='str',),templates_added_to_delq=dict(type='str',))),v9_templates_deleted=dict(type='str',),version_not_supported=dict(type='str',),frag_dropped=dict(type='str',),v9_templates_created=dict(type='str',),v10_templates_created=dict(type='str',),unknown_dir=dict(type='str',)),
-        uuid=dict(type='str',),
-        template=dict(type='dict',sampling_enable=dict(type='list',counters1=dict(type='str',choices=['all','templates-added-to-delq','templates-removed-from-delq'])),uuid=dict(type='str',),detail=dict(type='dict',uuid=dict(type='str',)))
+        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'pkts-rcvd', 'v9-templates-created', 'v9-templates-deleted', 'v10-templates-created', 'v10-templates-deleted', 'template-drop-exceeded', 'template-drop-out-of-memory', 'frag-dropped', 'agent-not-found', 'version-not-supported', 'unknown-dir'])),
+        stats=dict(type='dict', template_drop_exceeded=dict(type='str', ), pkts_rcvd=dict(type='str', ), agent_not_found=dict(type='str', ), v10_templates_deleted=dict(type='str', ), template_drop_out_of_memory=dict(type='str', ), template=dict(type='dict', stats=dict(type='dict', templates_removed_from_delq=dict(type='str', ), templates_added_to_delq=dict(type='str', ))), v9_templates_deleted=dict(type='str', ), version_not_supported=dict(type='str', ), frag_dropped=dict(type='str', ), v9_templates_created=dict(type='str', ), v10_templates_created=dict(type='str', ), unknown_dir=dict(type='str', )),
+        uuid=dict(type='str', ),
+        template=dict(type='dict', sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'templates-added-to-delq', 'templates-removed-from-delq'])), uuid=dict(type='str', ), detail=dict(type='dict', uuid=dict(type='str', )))
     ))
    
 
