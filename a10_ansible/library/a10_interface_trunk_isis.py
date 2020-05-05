@@ -21,8 +21,9 @@ options:
         description:
         - State of the object to be created.
         choices:
-        - present
-        - absent
+          - noop
+          - present
+          - absent
         required: True
     a10_host:
         description:
@@ -237,7 +238,7 @@ def get_default_argspec():
         a10_host=dict(type='str', required=True),
         a10_username=dict(type='str', required=True),
         a10_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=["present", "absent", "noop"]),
+        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
         a10_port=dict(type='int', required=True),
         a10_protocol=dict(type='str', choices=["http", "https"]),
         a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
@@ -274,16 +275,6 @@ def get_argspec():
 
     return rv
 
-def new_url(module):
-    """Return the URL for creating a resource"""
-    # To create the URL, we need to take the format string and return it with no params
-    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/isis"
-
-    f_dict = {}
-    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
-
-    return url_base.format(**f_dict)
-
 def existing_url(module):
     """Return the URL for an existing resource"""
     # Build the format dictionary
@@ -299,10 +290,17 @@ def list_url(module):
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
-def build_envelope(title, data):
-    return {
-        title: data
-    }
+def get(module):
+    return module.client.get(existing_url(module))
+
+def get_list(module):
+    return module.client.get(list_url(module))
+
+def exists(module):
+    try:
+        return get(module)
+    except a10_ex.NotFound:
+        return None
 
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
@@ -323,24 +321,20 @@ def _build_dict_from_param(param):
 
     return rv
 
-def build_json(title, module):
-    rv = {}
+def build_envelope(title, data):
+    return {
+        title: data
+    }
 
-    for x in AVAILABLE_PROPERTIES:
-        v = module.params.get(x)
-        if v is not None:
-            rx = _to_axapi(x)
+def new_url(module):
+    """Return the URL for creating a resource"""
+    # To create the URL, we need to take the format string and return it with no params
+    url_base = "/axapi/v3/interface/trunk/{trunk_ifnum}/isis"
 
-            if isinstance(v, dict):
-                nv = _build_dict_from_param(v)
-                rv[rx] = nv
-            elif isinstance(v, list):
-                nv = [_build_dict_from_param(x) for x in v]
-                rv[rx] = nv
-            else:
-                rv[rx] = module.params[x]
+    f_dict = {}
+    f_dict["trunk_ifnum"] = module.params["trunk_ifnum"]
 
-    return build_envelope(title, rv)
+    return url_base.format(**f_dict)
 
 def validate(params):
     # Ensure that params contains all the keys.
@@ -367,17 +361,24 @@ def validate(params):
     
     return rc,errors
 
-def get(module):
-    return module.client.get(existing_url(module))
+def build_json(title, module):
+    rv = {}
 
-def get_list(module):
-    return module.client.get(list_url(module))
+    for x in AVAILABLE_PROPERTIES:
+        v = module.params.get(x)
+        if v is not None:
+            rx = _to_axapi(x)
 
-def exists(module):
-    try:
-        return get(module)
-    except a10_ex.NotFound:
-        return None
+            if isinstance(v, dict):
+                nv = _build_dict_from_param(v)
+                rv[rx] = nv
+            elif isinstance(v, list):
+                nv = [_build_dict_from_param(x) for x in v]
+                rv[rx] = nv
+            else:
+                rv[rx] = module.params[x]
+
+    return build_envelope(title, rv)
 
 def report_changes(module, result, existing_config, payload):
     if existing_config:
@@ -412,18 +413,6 @@ def create(module, result, payload):
         raise gex
     return result
 
-def delete(module, result):
-    try:
-        module.client.delete(existing_url(module))
-        result["changed"] = True
-    except a10_ex.NotFound:
-        result["changed"] = False
-    except a10_ex.ACOSException as ex:
-        module.fail_json(msg=ex.msg, **result)
-    except Exception as gex:
-        raise gex
-    return result
-
 def update(module, result, existing_config, payload):
     try:
         post_result = module.client.post(existing_url(module), payload)
@@ -451,6 +440,18 @@ def present(module, result, existing_config):
     else:
         result["changed"] = True
         return result
+
+def delete(module, result):
+    try:
+        module.client.delete(existing_url(module))
+        result["changed"] = True
+    except a10_ex.NotFound:
+        result["changed"] = False
+    except a10_ex.ACOSException as ex:
+        module.fail_json(msg=ex.msg, **result)
+    except Exception as gex:
+        raise gex
+    return result
 
 def absent(module, result, existing_config):
     if module.check_mode:
@@ -518,11 +519,13 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-
+    
     if state == 'present':
         result = present(module, result, existing_config)
+
     elif state == 'absent':
         result = absent(module, result, existing_config)
+    
     elif state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
