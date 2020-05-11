@@ -1,5 +1,5 @@
 # A10 Ansible AXAPI Collection
-Repository of for ansible modules which interact with the AXAPI
+Repository of for ansible modules which interacts with the AXAPI
 
 ## Table of Contents
 1. [Overview](#Overview)
