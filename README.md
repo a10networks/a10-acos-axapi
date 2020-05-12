@@ -3,7 +3,7 @@
 
 2. [Installation](#Installation)
 
-3. [How to use collection Modules ](#How-to-use-Collection-Modules)
+3. [Collection module usage options](#Collection-module-usage-options)
 
 4. [Usage information](#Usage-Information)
 
