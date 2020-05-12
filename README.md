@@ -1,14 +1,11 @@
-# A10 Ansible AXAPI Collection
-Repository of for ansible modules which interacts with the AXAPI
-
 ## Table of Contents
 1. [Overview](#Overview)
 
 2. [Installation](#Installation)
 
-3. [How to use collection Modules ](#How%20to%20use%20Collection%20Modules)
+3. [How to use collection Modules ](#How-to-use-Collection-Modules)
 
-4. [Usage information](#Usage%20Information)
+4. [Usage information](#Usage-Information)
 
 5. [Examples](#Examples)
 
@@ -74,7 +71,7 @@ In this example the collection directory path is: `/opt/.ansible/collections/ans
       │                   └── acos_axapi/<collection structure lives here>
       ~~~
 
-## How to use Collection Modules
+## Collection module usage options
 
 ### Any one of the following option can be used for writing playbooks for Collection modules:
 ### Option 1 (Ansbile >=2.8):  Use the 'collections' keyword
