@@ -41,10 +41,6 @@ options:
         description:
         - Port for AXAPI authentication
         required: True
-    ansible_protocol:
-        description:
-        - Protocol for AXAPI authentication
-        required: True
     a10_device_context_id:
         description:
         - Device ID for aVCS configuration
@@ -218,8 +214,7 @@ def get_default_argspec():
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
-        ansible_port=dict(type='int', required=True),
-        ansible_protocol=dict(type='str', choices=["http", "https"]),
+        ansible_port=dict(type='int', choices=[80, 443], required=True),
         a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
         a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
@@ -484,9 +479,13 @@ def run_command(module):
     ansible_username = module.params["ansible_username"]
     ansible_password = module.params["ansible_password"]
     ansible_port = module.params["ansible_port"]
-    ansible_protocol = module.params["ansible_protocol"]
     a10_partition = module.params["a10_partition"]
     a10_device_context_id = module.params["a10_device_context_id"]
+
+    if ansible_port == 80:
+        protocol = "http"
+    elif ansible_port == 443:
+        protocol = "https"
 
     valid = True
 
@@ -500,7 +499,7 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, ansible_protocol, ansible_username, ansible_password)
+    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
     
     if a10_partition:
         module.client.activate_partition(a10_partition)

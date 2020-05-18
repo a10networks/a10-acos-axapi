@@ -28,20 +28,16 @@ class ActionModule(ActionBase):
 
     # function return required argument by parsing inventory_file for given host
     def _get_required_params(self, task_vars):
-        ip       = task_vars.get("ansible_host", None)
+        ip = task_vars.get("ansible_host", None)
         username = task_vars.get("ansible_username", None)
         password = task_vars.get("ansible_password", None)
-        port     = task_vars.get("ansible_port", None)
-        protocol = task_vars.get("ansible_protocol", None)
-        if port == 80: protocol = "http"
-        elif port == 443: protocol = "https"
+        port = task_vars.get("ansible_port", None)
 
-        return ip, username, password, protocol, port
+        return ip, username, password, port
 
     def _append_module_args(self, old_mod_args, required_args):
-        ip, username, password, protocol, port  = required_args
-        old_mod_args['ansible_host']     = ip
+        ip, username, password, port = required_args
+        old_mod_args['ansible_host'] = ip
         old_mod_args['ansible_username'] = username
         old_mod_args['ansible_password'] = password
-        old_mod_args['ansible_port']     = port
-        old_mod_args['ansible_protocol'] = protocol
+        old_mod_args['ansible_port'] = port
