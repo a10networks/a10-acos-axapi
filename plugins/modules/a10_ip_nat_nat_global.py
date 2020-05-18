@@ -25,23 +25,23 @@ options:
           - present
           - absent
         required: True
-    a10_host:
+    ansible_host:
         description:
         - Host for AXAPI authentication
         required: True
-    a10_username:
+    ansible_username:
         description:
         - Username for AXAPI authentication
         required: True
-    a10_password:
+    ansible_password:
         description:
         - Password for AXAPI authentication
         required: True
-    a10_port:
+    ansible_port:
         description:
         - Port for AXAPI authentication
         required: True
-    a10_protocol:
+    ansible_protocol:
         description:
         - Protocol for AXAPI authentication
         required: True
@@ -100,12 +100,12 @@ except (Exception) as ex:
 
 def get_default_argspec():
     return dict(
-        a10_host=dict(type='str', required=True),
-        a10_username=dict(type='str', required=True),
-        a10_password=dict(type='str', required=True, no_log=True),
+        ansible_host=dict(type='str', required=True),
+        ansible_username=dict(type='str', required=True),
+        ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
-        a10_port=dict(type='int', required=True),
-        a10_protocol=dict(type='str', choices=["http", "https"]),
+        ansible_port=dict(type='int', required=True),
+        ansible_protocol=dict(type='str', choices=["http", "https"]),
         a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
         a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
@@ -349,11 +349,11 @@ def run_command(module):
     )
 
     state = module.params["state"]
-    a10_host = module.params["a10_host"]
-    a10_username = module.params["a10_username"]
-    a10_password = module.params["a10_password"]
-    a10_port = module.params["a10_port"] 
-    a10_protocol = module.params["a10_protocol"]
+    ansible_host = module.params["ansible_host"]
+    ansible_username = module.params["ansible_username"]
+    ansible_password = module.params["ansible_password"]
+    ansible_port = module.params["ansible_port"]
+    ansible_protocol = module.params["ansible_protocol"]
     a10_partition = module.params["a10_partition"]
     a10_device_context_id = module.params["a10_device_context_id"]
 
@@ -369,7 +369,7 @@ def run_command(module):
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(a10_host, a10_port, a10_protocol, a10_username, a10_password)
+    module.client = client_factory(ansible_host, ansible_port, ansible_protocol, ansible_username, ansible_password)
     
     if a10_partition:
         module.client.activate_partition(a10_partition)

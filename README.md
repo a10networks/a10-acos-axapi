@@ -3,13 +3,17 @@
 
 2. [Installation](#Installation)
 
-3. [Collection module usage options](#Collection-module-usage-options)
+3. [Plugin Configuration](#Plugin-Configuration)
 
-4. [Usage information](#Usage-Information)
+4. [Collection module usage options ](#Collection-module-usage-options)
 
-5. [Examples](#Examples)
+5. [Setup and Configurations](#Setup-and-Configurations)
 
-6. [Issues and Inquiries](#Issues-and-Inquiries)
+6. [Usage information](#Usage-Information)
+
+7. [Examples](#Examples)
+
+8. [Issues and Inquiries](#Issues-and-Inquiries)
 
 ## Overview
 
@@ -71,6 +75,36 @@ In this example the collection directory path is: `/opt/.ansible/collections/ans
       │                   └── acos_axapi/<collection structure lives here>
       ~~~
 
+## Plugin Configuration
+
+#### 1. Set plugin path
+
+Add below line in the `/etc/ansible/ansible.cfg` file
+
+```bash
+action_plugins  = <collection-dir-path>/a10/acos_axapi/plugins/action
+```
+
+#### 2a. Alternative methods to set path
+
+  1. Copy action plugin into one of the following
+     - ~/.ansible/plugins
+     - /usr/share/ansible/plugins folder
+
+  2. Export following environment variables for new session
+
+  ```bash
+  export ANSIBLE_ACTION_PLUGINS=<collection-dir-path>/a10/acos_axapi/plugins/action
+  ```
+
+  3. Save this variable in .bashrc File
+
+  ```bash
+  export ANSIBLE_ACTION_PLUGINS=<collection-dir-path>/a10/acos_axapi/plugins/action
+  ```
+
+
+
 ## Collection module usage options
 
 ### Any one of the following option can be used for writing playbooks for Collection modules:
@@ -98,9 +132,76 @@ tasks:
 ```
 
 
-## Usage Information
-All actions are required to have `a10_host`, `a10_username`, `a10_password`, `a10_port`, and `a10_protocol` specified. Note that `a10_host` refers to the ip address of the Thunder device.
+## Setup and Configurations
 
+### 1. With Inventory file
+Sample Inventory file:
+
+```shell
+[vthunder]
+<vthunder host_name/ip_address>
+
+[vthunder:vars]
+ansible_username=<username>
+ansible_password=<password>
+ansible_port=<port>
+ansible_protocol=<protocol>
+```
+
+If you want to use an Inventory file to perform respective configurations through a playbook, you don't need to specify `ansible_host`, `ansible_username`, `ansible_password`, `ansible_port`, and `ansible_protocol` in the playbook.
+
+For example,
+```
+- name: <Description of playbook>
+  connection: local
+  hosts: <inventory_hostname>
+  collections:
+    <a10.acos_axapi>
+  tasks:
+    - name: <Description of task>
+      <module_name>:
+        <resource_key>: <resource_val>
+        <another_resource_key>: <another_resource_val>
+```
+
+Use the following command to run playbook using an Inventory file parameters:
+```shell
+ansible-playbook -i <path_to_inventory> <name_of_playbook>
+```
+
+### 2. Without Inventory file
+If you don't want to use Inventory file, then specify `ansible_host`, `ansible_username`, `ansible_password`, `ansible_port`, and `ansible_protocol` arguments into playbook itself with hosts as `localhost`. And then the configurations will be performed on provided `ansible_host`.
+
+For example,
+```
+- name: <Description of playbook>
+  connection: local
+  hosts: localhost
+  collections:
+    <a10.acos_axapi>
+  tasks:
+    - name: <Description of task>
+      <module_name>:
+        ansible_host: {{ ansible_host }}
+        ansible_username: {{ ansible_username }}
+        ansible_password: {{ ansible_password }}
+        ansible_port: {{ ansible_port }}
+        ansible_protocol: {{ ansible_protocol }}
+        <resource_key>: <resource_val>
+        <another_resource_key>: <another_resource_val>
+```
+
+Use the following command to run the playbook with local arguments:
+```shell
+ansible-playbook <name_of_playbook>
+```
+
+Use the following command to run the playbook:
+```shell
+ansible-playbook -i <path_to_inventory> <name_of_playbook>
+```
+
+## Usage Information
 Action and module names are formatted based upon their API endpoint. For example, the virtual server endpoint is as follows: `/axapi/v3/slb/virtual-server`. As such, the action name is `a10_slb_virtual_server` and the module is `a10_slb_virtual_server.py`.
 
 **Note that when getting information, changes made to the playbook will not result in a create, update or delete as the state has been put into no-op.
@@ -110,17 +211,12 @@ Action and module names are formatted based upon their API endpoint. For example
 ```
 - name: <Description of playbook>
   connection: local
-  hosts: <inventory>
+  hosts: <inventory_hostname>
   collections:
     <a10.acos_axapi>
   tasks:
     - name: <Description of task>
       <module_name>:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
 ```
@@ -129,15 +225,10 @@ Action and module names are formatted based upon their API endpoint. For example
 ```
 - name: <Description of playbook>
   connection: local
-  hosts: <inventory>
+  hosts: <inventory_hostname>
   tasks:
     - name: <Description of task>
       <a10.acos_axapi.module_name>:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
 ```
@@ -146,15 +237,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: absent</b>
@@ -164,15 +250,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: noop</b>
@@ -183,15 +264,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: noop</b>
@@ -202,15 +278,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: noop</b>
@@ -221,15 +292,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>state: noop</b>
@@ -240,15 +306,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         <b>a10_partition:</b>
           <b>name: {{ partition_name }}</b>
           <b>shared: 0</b>
@@ -260,15 +321,10 @@ Action and module names are formatted based upon their API endpoint. For example
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         <b>a10_device_context_id: {{ device_context_id }}</b>
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
@@ -280,15 +336,10 @@ Check mode can be specified in two ways:
 <pre>
 - name: &lt;Description of playbook&gt;
   connection: local
-  hosts: &lt;inventory&gt;
+  hosts: &lt;inventory_hostname&gt;
   tasks:
     - name: &lt;Description of task&gt;
       &lt;a10.acos_axapi.module_name&gt;:
-        a10_host: {{ a10_host }}
-        a10_username: {{ a10_username }}
-        a10_password: {{ a10_password }}
-        a10_port: {{ a10_port }}
-        a10_protocol: {{ a10_protocol }}
         &lt;resource_key&gt;: &lt;resource_val&gt;
         &lt;another_resource_key&gt;: &lt;another_resource_val&gt;
         <b>check_mode: yes</b>
@@ -297,7 +348,7 @@ Check mode can be specified in two ways:
 or
 
 ```bash
-$ ansible-playbook <playbook_name>.yml --check-mode
+$ ansible-playbook -i <path_to_inventory> <playbook_name>.yml --check-mode
 ```
 
 
