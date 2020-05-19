@@ -22,20 +22,23 @@ class ActionModule(ActionBase):
         if None in required_args:
             return self._execute_module(task_vars=task_vars)
 
-        # append required args we got from inventory file to module
+        # append required args we got from inventory file to module_args
         self._append_module_args(module_args, required_args)
         return self._execute_module(task_vars=task_vars, module_args=module_args)
 
-    # function return required argument by parsing inventory_file for given host
     def _get_required_params(self, task_vars):
-        ip = task_vars.get("ansible_host", None)
-        username = task_vars.get("ansible_username", None)
-        password = task_vars.get("ansible_password", None)
-        port = task_vars.get("ansible_port", None)
+        """ function returns required argument by parsing inventory_file for given host
+        """
+        ip = task_vars.get("ansible_host")
+        username = task_vars.get("ansible_username")
+        password = task_vars.get("ansible_password")
+        port = task_vars.get("ansible_port")
 
         return ip, username, password, port
 
     def _append_module_args(self, old_mod_args, required_args):
+        """ function appends required args we got from inventory file to module_args
+        """
         ip, username, password, port = required_args
         old_mod_args['ansible_host'] = ip
         old_mod_args['ansible_username'] = username

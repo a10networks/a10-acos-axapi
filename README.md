@@ -145,10 +145,9 @@ Sample Inventory file:
 ansible_username=<username>
 ansible_password=<password>
 ansible_port=<port>
-ansible_protocol=<protocol>
 ```
 
-If you want to use an Inventory file to perform respective configurations through a playbook, you don't need to specify `ansible_host`, `ansible_username`, `ansible_password`, `ansible_port`, and `ansible_protocol` in the playbook.
+If you want to use an Inventory file to perform respective configurations through a playbook, you don't need to specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` in the playbook.
 
 For example,
 ```
@@ -170,7 +169,7 @@ ansible-playbook -i <path_to_inventory> <name_of_playbook>
 ```
 
 ### 2. Without Inventory file
-If you don't want to use Inventory file, then specify `ansible_host`, `ansible_username`, `ansible_password`, `ansible_port`, and `ansible_protocol` arguments into playbook itself with hosts as `localhost`. And then the configurations will be performed on provided `ansible_host`.
+If you don't want to use Inventory file, then specify `ansible_host`, `ansible_username`, `ansible_password` and `ansible_port` arguments into playbook itself with hosts as `localhost`. And then the configurations will be performed on provided `ansible_host`.
 
 For example,
 ```
@@ -186,7 +185,6 @@ For example,
         ansible_username: {{ ansible_username }}
         ansible_password: {{ ansible_password }}
         ansible_port: {{ ansible_port }}
-        ansible_protocol: {{ ansible_protocol }}
         <resource_key>: <resource_val>
         <another_resource_key>: <another_resource_val>
 ```
