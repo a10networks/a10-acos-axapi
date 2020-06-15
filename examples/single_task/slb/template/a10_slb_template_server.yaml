@@ -1,0 +1,75 @@
+
+
+- name: Create a10_slb_template_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_server instance
+    a10_slb_template_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      dns_query_interval: 1
+      dynamic_server_prefix: DRS
+      max_dynamic_server: 1
+      min_ttl_ratio: 1
+      weight: 1
+      stats_data_action: stats-data-enable
+      initial_slow_start: 1
+      times: 2
+      every: 1
+      till: 1
+      bw_rate_limit_acct: all
+
+- name: Update a10_slb_template_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_server instance
+    a10_slb_template_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      dns_query_interval: 1
+      dynamic_server_prefix: DRS
+      max_dynamic_server: 1
+      min_ttl_ratio: 1
+      weight: 1
+      stats_data_action: stats-data-enable
+      initial_slow_start: 1
+      times: 2
+      every: 1
+      till: 1
+      bw_rate_limit_acct: all
+
+- name: Delete a10_slb_template_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_server instance
+    a10_slb_template_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: default
+      conn_limit: 1
+      rate_interval: second
+      dns_query_interval: 1
+      dynamic_server_prefix: DRS
+      max_dynamic_server: 1
+      min_ttl_ratio: 1
+      weight: 1
+      stats_data_action: stats-data-enable
+      initial_slow_start: 1
+      times: 2
+      every: 1
+      till: 1
+      bw_rate_limit_acct: all

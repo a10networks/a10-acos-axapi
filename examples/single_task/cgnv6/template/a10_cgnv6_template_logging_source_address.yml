@@ -1,0 +1,15 @@
+- name: a10_cgnv6_template_logging_source_address Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_logging_source_address
+    a10_cgnv6_template_logging_source_address:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      ip: "10.10.10.15"
+      ipv6: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+      logging_name: "LsnTemplate1"

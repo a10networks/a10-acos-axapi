@@ -1,0 +1,13 @@
+- name: A10 import ssl-cert example
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Import ssl-cert file 
+    a10_import:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_protocol: "{{ a10_protocol }}"
+      a10_port: "{{ a10_port }}"
+      ssl_cert: "ssl_cert_filename"
+      remote_file: "scp://username:password@host:/path/to/file"

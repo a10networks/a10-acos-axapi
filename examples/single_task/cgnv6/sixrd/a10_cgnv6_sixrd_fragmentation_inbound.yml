@@ -1,0 +1,15 @@
+- name: a10_cgnv6_sixrd_fragmentation_inbound Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_sixrd_fragmentation_inbound
+    a10_cgnv6_sixrd_fragmentation_inbound: 
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      partition: "MyPartition"
+      get_type: "single"
+      state: "present"
+      action: "drop"

@@ -1,0 +1,36 @@
+
+
+- name: Create a10_network_lldp_management_address_ipv4_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_network_lldp_management_address_ipv4_addr instance
+    a10_network_lldp_management_address_ipv4_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      ipv4: 10.0.0.1
+
+- name: Update a10_network_lldp_management_address_ipv4_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_network_lldp_management_address_ipv4_addr instance
+    a10_network_lldp_management_address_ipv4_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      ipv4: 10.0.0.1
+
+- name: Delete a10_network_lldp_management_address_ipv4_addr example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_network_lldp_management_address_ipv4_addr instance
+    a10_network_lldp_management_address_ipv4_addr:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      ipv4: 10.0.0.1

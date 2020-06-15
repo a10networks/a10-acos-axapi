@@ -1,0 +1,19 @@
+- name: a10_cgnv6_template_http_alg Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_http_alg
+    a10_cgnv6_template_http_alg:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      header_name_client_ip: "X-Forwarded-For"
+      name: "HttpTemplate"
+      request_insert_msisdn: "false"
+      user_tag: "TestTag"
+      request_insert_client_ip: "true"
+      include_tunnel_ip: "true"
+      method: "append"

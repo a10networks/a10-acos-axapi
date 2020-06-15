@@ -1,0 +1,12 @@
+- name: a10_cgnv6_nat_inside_source_statistics Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_nat_inside_source_statistics
+    a10_cgnv6_nat_inside_source_statistics:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: "present"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"

@@ -1,0 +1,26 @@
+- name: a10_cgnv6_template_pcp
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_pcp
+    a10_cgnv6_template_pcp:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      source_ipv6: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+      allow_third_party_from_lan: "false"
+      name: "TemplatePcp1"
+      map: "false"
+      allow_third_party_from_wan: "false"
+      maximum: 1440
+      disable_map_filter: "false"
+      check_client_nonce: "false"
+      minimum: 2
+      user_tag: "TestTag"
+      peer: "false"
+      announce: "false"
+      source_ip: "192.168.1.26"
+      pcp_server_port: 8080

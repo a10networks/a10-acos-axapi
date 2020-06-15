@@ -1,0 +1,16 @@
+- name: Update a10_slb_template_external_service example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_external_service instance
+    a10_slb_template_external_service:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: present
+      name: my_external-service
+      failure_action: continue
+      timeout: 1
+      action: continue

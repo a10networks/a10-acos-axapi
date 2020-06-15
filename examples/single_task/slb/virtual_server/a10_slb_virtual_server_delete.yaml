@@ -1,0 +1,17 @@
+- name: Delete a10_slb_virtual_server example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_virtual_server instance
+    a10_slb_virtual_server:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: absent
+      name: vs1
+      ip_address: 10.10.0.1
+      netmask: 255.255.255.0
+      enable_disable_action: enable
+      stats_data_action: stats-data-enable

@@ -1,0 +1,45 @@
+
+
+- name: Create a10_slb_template_connection_reuse example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_connection_reuse instance
+    a10_slb_template_connection_reuse:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_connection-reuse
+      limit_per_server: 0
+      timeout: 60
+      num_conn_per_port: 1
+
+- name: Update a10_slb_template_connection_reuse example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_connection_reuse instance
+    a10_slb_template_connection_reuse:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_connection-reuse
+      limit_per_server: 0
+      timeout: 60
+      num_conn_per_port: 1
+
+- name: Delete a10_slb_template_connection_reuse example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_connection_reuse instance
+    a10_slb_template_connection_reuse:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_connection-reuse
+      limit_per_server: 0
+      timeout: 60
+      num_conn_per_port: 1

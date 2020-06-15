@@ -1,0 +1,27 @@
+- name: a10_admin_partition_read_privilege Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_admin
+    a10_admin:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present" 
+      trusted_host: "false"
+      user: "admin"
+      privilege_list:
+      - partition_name: "MyPartition"
+        privilege_partition: "partition-read"
+      access:
+        access_type: "axapi"
+      access_list: "false"
+      unlock: "true"
+      user_tag: "TestTag"
+      action: "enable"
+      password:
+        password_in_module: "password"
+        encrypted_in_module: "password"
+      password_key: "false"

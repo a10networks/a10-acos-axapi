@@ -1,0 +1,18 @@
+- name: a10_cgnv6_lsn_radius_profile Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_lsn_radius_profile
+    a10_cgnv6_lsn_radius_profile:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      state: "present"
+      a10_protocol: "{{ a10_protocol }}"
+      lid_profile_index: 9 
+      radius: 
+        - attribute: "custom1"
+          starts_with_lsn_lid: 20
+          starts_with: "xy"
+      user_tag: "TestTag"

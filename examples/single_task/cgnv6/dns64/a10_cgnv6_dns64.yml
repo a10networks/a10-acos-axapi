@@ -1,0 +1,16 @@
+- name: a10_cgnv6_dns64 Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_dns64
+    a10_cgnv6_dns64:
+      a10_host: "{{ a10_host }}" 
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      partition: "MyPartition"
+      get_type: "single"
+      sampling_enable:
+      - counters1: "all" 

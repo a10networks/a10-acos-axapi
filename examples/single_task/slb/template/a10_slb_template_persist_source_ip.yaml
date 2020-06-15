@@ -1,0 +1,45 @@
+
+
+- name: Create a10_slb_template_persist_source_ip example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_persist_source_ip instance
+    a10_slb_template_persist_source_ip:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      name: my_source-ip
+      timeout: 1
+      netmask: 255.255.255.255
+      netmask6: 1
+
+- name: Update a10_slb_template_persist_source_ip example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_persist_source_ip instance
+    a10_slb_template_persist_source_ip:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      name: my_source-ip
+      timeout: 1
+      netmask: 255.255.255.255
+      netmask6: 1
+
+- name: Delete a10_slb_template_persist_source_ip example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_persist_source_ip instance
+    a10_slb_template_persist_source_ip:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      name: my_source-ip
+      timeout: 1
+      netmask: 255.255.255.255
+      netmask6: 1

@@ -1,0 +1,12 @@
+- name: a10_cgnv6_ddos_protection_ip_entries
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_ddos_protection_ip_entries
+    a10_cgnv6_ddos_protection_ip_entries:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: "present"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"

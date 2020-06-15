@@ -1,0 +1,39 @@
+
+
+- name: Create a10_slb_template_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_slb_template_monitor instance
+    a10_slb_template_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      id: 1
+      monitor_relation: monitor-and
+
+- name: Update a10_slb_template_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Update a10_slb_template_monitor instance
+    a10_slb_template_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: present
+      id: 1
+      monitor_relation: monitor-and
+
+- name: Delete a10_slb_template_monitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Delete a10_slb_template_monitor instance
+    a10_slb_template_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      state: absent
+      id: 1
+      monitor_relation: monitor-and
