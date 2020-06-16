@@ -1,11 +1,6 @@
 ---
 - name: Test service group create
-  a10_slb_service_group:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_service_group:
     name: sg1 
     protocol: tcp
     lb_method: 'weighted-rr'
@@ -17,12 +12,7 @@
       - "sg_resp['service-group']['lb-method'] == 'weighted-rr'"
 
 - name: Test server create 
-  a10_slb_server:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_server:
     name: sv1
     host: 10.0.0.1
   register: sv_resp
@@ -32,12 +22,7 @@
       - "sv_resp['server']['host'] == '10.0.0.1'"
 
 - name: Test association of member server
-  a10_slb_service_group_member:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_service_group_member:
     service_group_name: sg1
     name: sv1
     port: 80

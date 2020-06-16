@@ -1,11 +1,6 @@
 ---
 - name: (CHECK MODE) - Add health monitor
-  a10_health_monitor:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_health_monitor:
     name: hm1
   check_mode: yes
   register: hm_resp
@@ -14,12 +9,7 @@
       - "hm_resp['monitor']['name'] == 'hm1'"
  
 - name: (CHECK MODE) - Set health monitor method to tcp
-  a10_health_monitor_method_tcp:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_health_monitor_method_tcp:
     monitor_name: "hm1"
     method_tcp: 1
     tcp_port: 80
@@ -38,12 +28,7 @@
 - name: Ensure that health monitor doesn't exist
   block:
     - name: NotFound error expected (Health Monitor)
-      a10_health_monitor:
-        a10_host: "{{ a10_host }}"
-        a10_username: "{{ a10_username }}"
-        a10_password: "{{ a10_password }}"
-        a10_port: "{{ a10_port }}"
-        a10_protocol: "{{ a10_protocol }}"
+      a10.acos_axapi.a10_health_monitor:
         name: hm1
         state: noop
         get_type: single
@@ -54,12 +39,7 @@
           - "'NotFound' in ansible_failed_result['module_stderr']"
 
 - name: (CHECK MODE) - Test creation of a virtual server w/ vport
-  a10_slb_virtual_server:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_virtual_server:
     ip_address: 10.0.0.4
     netmask: 255.255.255.0
     name: vs1
@@ -71,12 +51,7 @@
 - name: Ensure that the virtual server doesn't exist
   block:
     - name: NotFound error expected (Virtual Server)
-      a10_slb_virtual_server:
-        a10_host: "{{ a10_host }}"
-        a10_username: "{{ a10_username }}"
-        a10_password: "{{ a10_password }}"
-        a10_port: "{{ a10_port }}"
-        a10_protocol: "{{ a10_protocol }}"
+      a10.acos_axapi.a10_slb_virtual_server:
         name: vs1
         state: noop
         get_type: single
@@ -89,12 +64,7 @@
 - name: Ensure that the vport doesn't exist
   block:
     - name: NotFound error expected (Virtual Port)
-      a10_slb_virtual_server_port:
-        a10_host: "{{ a10_host }}"
-        a10_username: "{{ a10_username }}"
-        a10_password: "{{ a10_password }}"
-        a10_port: "{{ a10_port }}"
-        a10_protocol: "{{ a10_protocol }}"
+      a10.acos_axapi.a10_slb_virtual_server_port:
         virtual_server_name: vs1
         port_number: 80
         protocol: "tcp"
