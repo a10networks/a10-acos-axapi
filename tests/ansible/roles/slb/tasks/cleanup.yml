@@ -1,11 +1,6 @@
 ---
 - name: Cleanup virtual server 
-  a10_slb_virtual_server:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_virtual_server:
     state: absent
     ip_address: 10.0.0.4
     netmask: 255.255.255.0
@@ -15,35 +10,20 @@
         protocol: "tcp"
 
 - name: Cleanup service group
-  a10_slb_service_group:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_service_group:
     state: absent
     name: sg1 
     protocol: tcp
     lb_method: 'weighted-rr'
 
 - name: Cleanup server
-  a10_slb_server:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_server:
     state: absent
     name: sv1
     host: 10.0.0.1
 
 - name: Cleanup member server
-  a10_slb_service_group_member:
-    a10_host: "{{ a10_host }}"
-    a10_username: "{{ a10_username }}"
-    a10_password: "{{ a10_password }}"
-    a10_port: "{{ a10_port }}"
-    a10_protocol: "{{ a10_protocol }}"
+  a10.acos_axapi.a10_slb_service_group_member:
     state: absent
     service_group_name: sg1
     name: sv1
