@@ -1,0 +1,11 @@
+- name: a10_cgnv6_sctp_rate_limit_entries example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: a10_cgnv6_sctp_rate_limit_entries
+    a10_cgnv6_sctp_rate_limit_entries:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"

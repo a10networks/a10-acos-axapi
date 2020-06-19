@@ -1,0 +1,26 @@
+- name: a10_cgnv6_ds_lite_global example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_cgnv6_ds_lite_global
+    a10_cgnv6_ds_lite_global:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      partition: "MyPartition"
+      inside:
+        source: 
+          class_list: "TestIPV6ClassList"
+      tcp:
+        reset_on_error:
+          outbound: "disable"
+      l4_checksum_error: "propagate"
+      ip_checksum_error: "fix"
+      sampling_enable:
+        - counters1: "all"
+          counters2: "ha_port_overloading_for_no_ports"
+      icmp:
+        send_on_user_quota_exceeded: "admin-filtered"
+        send_on_port_unavailable: "disable"

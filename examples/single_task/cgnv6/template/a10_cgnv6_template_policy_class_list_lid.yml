@@ -1,0 +1,28 @@
+- name: a10_cgnv6_template_policy_class_list_lid Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_policy_class_list_lid
+    a10_cgnv6_template_policy_class_list_lid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      policy_name: "TemplatePolicy1"
+      request_limit: 1000
+      conn_limit: 1000
+      lidnum: 10
+      log: "true"
+      dns64:
+        prefix: "2001:0DB8:0000:000b::/64"
+        exclusive_answer: "false"
+        disable: "false"
+      request_rate_limit: 100
+      user_tag: "TestTag"
+      conn_per: 100
+      request_per: 100
+      conn_rate_limit: 100
+      action_value: "forward"
+      over_limit_action: "true"

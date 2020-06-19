@@ -1,0 +1,26 @@
+- name: a10_cgnv6_template_dns_class_list_lid Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_template_dns_class_list_lid
+    a10_cgnv6_template_dns_class_list_lid:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      dns_name: "TestDns"
+      action_value: "dns-cache-disable"
+      log: "true"
+      lidnum: 12
+      over_limit_action: "true"
+      per: 1
+      lockout: 8
+      user_tag: "user1"
+      dns:
+        cache_action: "cache-disable"
+        weight: 2
+        ttl: 30
+      conn_rate_limit: 2
+      log_interval: 2

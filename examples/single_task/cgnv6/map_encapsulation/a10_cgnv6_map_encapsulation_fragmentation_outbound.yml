@@ -1,0 +1,14 @@
+- name: a10_cgnv6_map_encapsulation_fragmentation_outbound Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_map_encapsulation_fragmentation_outbound
+    a10_cgnv6_map_encapsulation_fragmentation_outbound:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      frag_action: "drop"
+      df_set: "drop"

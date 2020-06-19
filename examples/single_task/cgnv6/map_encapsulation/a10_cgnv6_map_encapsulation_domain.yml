@@ -1,0 +1,25 @@
+- name: a10_cgnv6_map_encapsulation_domain Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_map_encapsulation_domain
+    a10_cgnv6_map_encapsulation_domain:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      description: "MapDomainDesc"
+      format: "draft-03"
+      tunnel_endpoint_address: "2002:0db8:85a3:0000:0000:8a2e:0370:7334"
+      user_tag: "TestTag"
+      name: "TestDomainMap"
+      sampling_enable:
+        - counters1: "all"
+      health_check_gateway:
+        ipv6_address_list:
+          - ipv6_gateway: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+        address_list:
+          - ipv4_gateway: "10.10.10.15"
+        withdraw_route: "all-link-failure"

@@ -1,0 +1,19 @@
+- name: Create a10_health_motnitor example playbook
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: Create a10_health_monitor instance
+    a10_health_monitor:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: {{ a10_port }}
+      a10_protocol: "{{ a10_protocol }}"
+      name: tcp_443
+      method:
+        tcp:
+          method-tcp: 1
+          tcp-port: 80
+      retry: 3
+      interval: 3
+      timeout: 1

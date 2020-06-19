@@ -1,0 +1,23 @@
+- name: a10_cgnv6_server_port Example
+  connection: local
+  hosts: localhost
+  tasks:
+  - name: a10_cgnv6_server_port
+    a10_cgnv6_server_port: 
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      get_type: "single"
+      server_name: "s1"
+      health_check_disable: "true"
+      protocol: "tcp"
+      follow_port_protocol: "tcp"
+      port_number: 8090
+      sampling_enable:
+      - counters1: "all"
+      user_tag: "abs"
+      action: "enable"
+      health_check_follow_port: 8080

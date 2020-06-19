@@ -1,0 +1,17 @@
+- name: a10_cgnv6_port_list Example Playbook
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: a10_cgnv6_port_list
+    a10_cgnv6_port_list:
+      a10_host: "{{ a10_host }}"
+      a10_username: "{{ a10_username }}"
+      a10_password: "{{ a10_password }}"
+      a10_port: "{{ a10_port }}"
+      a10_protocol: "{{ a10_protocol }}"
+      state: "present"
+      port_config:
+      - translated_port: 8085
+        original_port: 8080
+      user_tag: "TestTag"
+      name: "PortList"
