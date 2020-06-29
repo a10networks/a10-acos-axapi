@@ -20,6 +20,8 @@
 #### Summary
 This repository is a set of Ansible modules and example playbooks for interacting with AXAPI v3 for configuration and monitoring of A10 ACOS-based hardware and virtual appliances. The module code and example playbooks are generated using a combination of Python code and Jinja templates.
 
+We only support Ansible version >=2.9
+
 This code is now being generated using the SDK generator at https://github.com/a10networks/sdkgenerator
 
 ## Installation
