@@ -1,6 +1,6 @@
-- hosts: "{{desired_inventory_group}}"
+- name: Create a10.acos_axapi.a10_slb_template_client_ssl example playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
-  name: "My thing"
   tasks:
   - name: "Create ssl cert "
     a10.acos_axapi.a10_slb_template_client_ssl:
