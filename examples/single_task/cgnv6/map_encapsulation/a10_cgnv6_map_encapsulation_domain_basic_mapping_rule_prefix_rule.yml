@@ -1,14 +1,9 @@
-- name: a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule
-    a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule
+    a10.acos_axapi.a10_cgnv6_map_encapsulation_domain_basic_mapping_rule_prefix_rule:
       state: "present"
       name: "RuleList1"
       ipv4_address_port_settings: "prefix-addr"

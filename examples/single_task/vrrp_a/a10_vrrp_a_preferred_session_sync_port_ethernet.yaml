@@ -1,36 +1,27 @@
 
 
-- name: Create a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
+- name: Create a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_vrrp_a_preferred_session_sync_port_ethernet instance
-    a10_vrrp_a_preferred_session_sync_port_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet instance
+    a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet:
       pre_eth: None
 
-- name: Update a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
+- name: Update a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_vrrp_a_preferred_session_sync_port_ethernet instance
-    a10_vrrp_a_preferred_session_sync_port_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet instance
+    a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet:
       state: present
       pre_eth: None
 
-- name: Delete a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
+- name: Delete a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_vrrp_a_preferred_session_sync_port_ethernet instance
-    a10_vrrp_a_preferred_session_sync_port_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet instance
+    a10.acos_axapi.a10_vrrp_a_preferred_session_sync_port_ethernet:
       state: absent
       pre_eth: None

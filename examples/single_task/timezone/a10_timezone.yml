@@ -1,14 +1,9 @@
 - name: Set timezone settings example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: a10_timezone settings 
-    a10_timezone:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_timezone settings 
+    a10.acos_axapi.a10_timezone:
       timezone_index_cfg: 
         timezone-index : "Asia/Calcutta"
         nodst : true

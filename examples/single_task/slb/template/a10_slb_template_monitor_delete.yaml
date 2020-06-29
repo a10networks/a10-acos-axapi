@@ -1,14 +1,9 @@
-- name: Delete a10_slb_template_monitor example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_monitor example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_monitor instance
-    a10_slb_template_monitor:
-      a10_host: 10.43.12.132
-      a10_username: admin
-      a10_password: a10
-      a10_port: 443
-      a10_protocol: https
+  - name: Delete a10.acos_axapi.a10_slb_template_monitor instance
+    a10.acos_axapi.a10_slb_template_monitor:
       state: absent
       id: 1
       monitor_relation: monitor-and

@@ -1,13 +1,8 @@
 - name: A10 export ssl-cert example
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
   - name: Export ssl-cert file 
-    a10_export:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_protocol: "{{ a10_protocol }}"
-      a10_port: "{{ a10_port }}"
+    a10.acos_axapi.a10_export:
       ssl_cert: "ssl_cert_filename"
       remote_file: "scp://username:password@host:/path/to/file"

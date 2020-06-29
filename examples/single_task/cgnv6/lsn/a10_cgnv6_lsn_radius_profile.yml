@@ -1,15 +1,10 @@
-- name: a10_cgnv6_lsn_radius_profile Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lsn_radius_profile Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lsn_radius_profile
-    a10_cgnv6_lsn_radius_profile:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
+  - name: a10.acos_axapi.a10_cgnv6_lsn_radius_profile
+    a10.acos_axapi.a10_cgnv6_lsn_radius_profile:
       state: "present"
-      a10_protocol: "{{ a10_protocol }}"
       lid_profile_index: 9 
       radius: 
         - attribute: "custom1"

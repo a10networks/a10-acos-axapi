@@ -1,13 +1,8 @@
 - name: Shutdown Vthunder instance example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: a10_shutdown vthunder instance
-    a10_shutdown:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_shutdown vthunder instance
+    a10.acos_axapi.a10_shutdown:
       at: 1
       time: "15.00" # Time in HH:MM format

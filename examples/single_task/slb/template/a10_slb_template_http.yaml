@@ -1,14 +1,11 @@
 
 
-- name: Create a10_slb_template_http example playbook
+- name: Create a10.acos_axapi.a10_slb_template_http example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_http instance
-    a10_slb_template_http:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_http instance
+    a10.acos_axapi.a10_slb_template_http:
       name: my_http
       compression_level: 1
       compression_minimum_content_length: 1
@@ -16,15 +13,12 @@
       retry_on_5xx_per_req_val: 1
       req_hdr_wait_time_val: 1
 
-- name: Update a10_slb_template_http example playbook
+- name: Update a10.acos_axapi.a10_slb_template_http example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_http instance
-    a10_slb_template_http:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_http instance
+    a10.acos_axapi.a10_slb_template_http:
       state: present
       name: my_http
       compression_level: 1
@@ -33,15 +27,12 @@
       retry_on_5xx_per_req_val: 1
       req_hdr_wait_time_val: 1
 
-- name: Delete a10_slb_template_http example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_http example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_http instance
-    a10_slb_template_http:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_http instance
+    a10.acos_axapi.a10_slb_template_http:
       state: absent
       name: my_http
       compression_level: 1

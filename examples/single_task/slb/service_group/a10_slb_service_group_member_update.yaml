@@ -1,14 +1,9 @@
-- name: Update a10_slb_service_group_member example playbook
+- name: Update a10.acos_axapi.a10_slb_service_group_member example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_service_group_member instance
-    a10_slb_service_group_member:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Update a10.acos_axapi.a10_slb_service_group_member instance
+    a10.acos_axapi.a10_slb_service_group_member:
       state: present
       name: server1
       port: 8080 

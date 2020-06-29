@@ -1,29 +1,23 @@
 
 
-- name: Create a10_slb_template_diameter example playbook
+- name: Create a10.acos_axapi.a10_slb_template_diameter example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_diameter instance
-    a10_slb_template_diameter:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_diameter instance
+    a10.acos_axapi.a10_slb_template_diameter:
       name: my_diameter
       dwr_time: 0
       idle_timeout: 1
       session_age: 1
       dwr_up_retry: 1
 
-- name: Update a10_slb_template_diameter example playbook
+- name: Update a10.acos_axapi.a10_slb_template_diameter example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_diameter instance
-    a10_slb_template_diameter:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_diameter instance
+    a10.acos_axapi.a10_slb_template_diameter:
       state: present
       name: my_diameter
       dwr_time: 0
@@ -31,15 +25,12 @@
       session_age: 1
       dwr_up_retry: 1
 
-- name: Delete a10_slb_template_diameter example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_diameter example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_diameter instance
-    a10_slb_template_diameter:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_diameter instance
+    a10.acos_axapi.a10_slb_template_diameter:
       state: absent
       name: my_diameter
       dwr_time: 0

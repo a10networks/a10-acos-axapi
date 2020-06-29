@@ -1,13 +1,8 @@
 - name: Save Configuration (Write Memory) example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: a10_write_memory instance
-    a10_write_memory:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}}"
+  - name: a10.acos_axapi.a10_write_memory instance
+    a10.acos_axapi.a10_write_memory:
       partition: "shared"
       destination: "primary"

@@ -1,13 +1,8 @@
 - name: A10 export aflex example 
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
   - name: Export aflex files 
-    a10_export:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_protocol: "{{ a10_protocol }}"
-      a10_port: "{{ a10_port }}"
+    a10.acos_axapi.a10_export:
       aflex: "aflex_scirpt_name"
       remote_file: "scp://username:password@host:/path/to/file"

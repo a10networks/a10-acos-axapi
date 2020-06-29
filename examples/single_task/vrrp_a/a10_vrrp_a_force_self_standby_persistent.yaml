@@ -1,36 +1,27 @@
 
 
-- name: Create a10_vrrp_a_force_self_standby_persistent example playbook
+- name: Create a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_vrrp_a_force_self_standby_persistent instance
-    a10_vrrp_a_force_self_standby_persistent:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent instance
+    a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent:
       vrid: 0
 
-- name: Update a10_vrrp_a_force_self_standby_persistent example playbook
+- name: Update a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_vrrp_a_force_self_standby_persistent instance
-    a10_vrrp_a_force_self_standby_persistent:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent instance
+    a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent:
       state: present
       vrid: 0
 
-- name: Delete a10_vrrp_a_force_self_standby_persistent example playbook
+- name: Delete a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_vrrp_a_force_self_standby_persistent instance
-    a10_vrrp_a_force_self_standby_persistent:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent instance
+    a10.acos_axapi.a10_vrrp_a_force_self_standby_persistent:
       state: absent
       vrid: 0

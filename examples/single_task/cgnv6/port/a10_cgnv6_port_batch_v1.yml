@@ -1,13 +1,8 @@
-- name: a10_cgnv6_port_batch_v1 Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_port_batch_v1 Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_port_batch_v1
-    a10_cgnv6_port_batch_v1:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_cgnv6_port_batch_v1
+    a10.acos_axapi.a10_cgnv6_port_batch_v1:
       state: "present"
       enable_port_batch_v1: "true"

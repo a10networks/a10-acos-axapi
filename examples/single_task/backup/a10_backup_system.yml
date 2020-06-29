@@ -1,12 +1,7 @@
 - name: Example playbook to backup system files
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
   - name: Backup system files
-    a10_backup_system:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+    a10.acos_axapi.a10_backup_system:
       remote_file: "scp://username:password@host:/path/to/file"

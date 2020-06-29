@@ -1,14 +1,9 @@
-- name: a10_cgnv6_lsn_lid Example PlayBook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lsn_lid Example PlayBook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lsn_lid
-    a10_cgnv6_lsn_lid:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_cgnv6_lsn_lid
+    a10.acos_axapi.a10_cgnv6_lsn_lid:
       partition: "MyPartition"
       user_quota_prefix_length:
       extended_user_quota:

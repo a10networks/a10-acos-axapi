@@ -1,14 +1,9 @@
-- name: a10_vrrp_a_fail_over_policy_template example playbook
+- name: a10.acos_axapi.a10_vrrp_a_fail_over_policy_template example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: a10_vrrp_a_fail_over_policy_template
-    a10_vrrp_a_fail_over_policy_template:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_vrrp_a_fail_over_policy_template
+    a10.acos_axapi.a10_vrrp_a_fail_over_policy_template:
       vlan_cfg:
         - vlan: 1
           timeout: "200"

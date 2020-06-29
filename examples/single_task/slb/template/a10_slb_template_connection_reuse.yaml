@@ -1,43 +1,34 @@
 
 
-- name: Create a10_slb_template_connection_reuse example playbook
+- name: Create a10.acos_axapi.a10_slb_template_connection_reuse example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_connection_reuse instance
-    a10_slb_template_connection_reuse:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_connection_reuse instance
+    a10.acos_axapi.a10_slb_template_connection_reuse:
       name: my_connection-reuse
       limit_per_server: 0
       timeout: 60
       num_conn_per_port: 1
 
-- name: Update a10_slb_template_connection_reuse example playbook
+- name: Update a10.acos_axapi.a10_slb_template_connection_reuse example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_connection_reuse instance
-    a10_slb_template_connection_reuse:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_connection_reuse instance
+    a10.acos_axapi.a10_slb_template_connection_reuse:
       state: present
       name: my_connection-reuse
       limit_per_server: 0
       timeout: 60
       num_conn_per_port: 1
 
-- name: Delete a10_slb_template_connection_reuse example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_connection_reuse example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_connection_reuse instance
-    a10_slb_template_connection_reuse:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_connection_reuse instance
+    a10.acos_axapi.a10_slb_template_connection_reuse:
       state: absent
       name: my_connection-reuse
       limit_per_server: 0

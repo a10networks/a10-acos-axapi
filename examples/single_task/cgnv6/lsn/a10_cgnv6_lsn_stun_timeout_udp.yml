@@ -1,15 +1,10 @@
-- name: a10_cgnv6_lsn_stun_timeout_udp Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lsn_stun_timeout_udp Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lsn_stun_timeout_udp
-    a10_cgnv6_lsn_stun_timeout_udp:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
+  - name: a10.acos_axapi.a10_cgnv6_lsn_stun_timeout_udp
+    a10.acos_axapi.a10_cgnv6_lsn_stun_timeout_udp:
       state: "present"
-      a10_protocol: "{{ a10_protocol }}"
       port_start: 8085
       port_end: 8095
       timeout: 4

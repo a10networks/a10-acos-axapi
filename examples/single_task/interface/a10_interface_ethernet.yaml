@@ -1,29 +1,23 @@
 
 
-- name: Create a10_interface_ethernet example playbook
+- name: Create a10.acos_axapi.a10_interface_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_interface_ethernet instance
-    a10_interface_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_interface_ethernet instance
+    a10.acos_axapi.a10_interface_ethernet:
       ifnum: None
       load_interval: 5
       duplexity: auto
       speed: auto
       action: disable
 
-- name: Update a10_interface_ethernet example playbook
+- name: Update a10.acos_axapi.a10_interface_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_interface_ethernet instance
-    a10_interface_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_interface_ethernet instance
+    a10.acos_axapi.a10_interface_ethernet:
       state: present
       ifnum: None
       load_interval: 5
@@ -31,15 +25,12 @@
       speed: auto
       action: disable
 
-- name: Delete a10_interface_ethernet example playbook
+- name: Delete a10.acos_axapi.a10_interface_ethernet example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_interface_ethernet instance
-    a10_interface_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_interface_ethernet instance
+    a10.acos_axapi.a10_interface_ethernet:
       state: absent
       ifnum: None
       load_interval: 5

@@ -1,12 +1,7 @@
-- name: a10_cgnv6_fixed_nat_user_quota Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_fixed_nat_user_quota Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_fixed_nat_user_quota
-    a10_cgnv6_fixed_nat_user_quota:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: a10.acos_axapi.a10_cgnv6_fixed_nat_user_quota
+    a10.acos_axapi.a10_cgnv6_fixed_nat_user_quota:
       state: "present"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"

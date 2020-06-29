@@ -1,14 +1,9 @@
-- name: a10_cgnv6_lsn_alg_ftp Example PlayBook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lsn_alg_ftp Example PlayBook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lsn_alg_ftp
-    a10_cgnv6_lsn_alg_ftp:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_cgnv6_lsn_alg_ftp
+    a10.acos_axapi.a10_cgnv6_lsn_alg_ftp:
       partition: "MyPartition"
       sampling_enable:
         - counters1: "all"

@@ -1,14 +1,11 @@
 
 
-- name: Create a10_slb_template_port example playbook
+- name: Create a10.acos_axapi.a10_slb_template_port example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_port instance
-    a10_slb_template_port:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_port instance
+    a10.acos_axapi.a10_slb_template_port:
       name: default
       conn_limit: 1
       rate_interval: second
@@ -23,15 +20,12 @@
       every: 1
       till: 1
 
-- name: Update a10_slb_template_port example playbook
+- name: Update a10.acos_axapi.a10_slb_template_port example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_port instance
-    a10_slb_template_port:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_port instance
+    a10.acos_axapi.a10_slb_template_port:
       state: present
       name: default
       conn_limit: 1
@@ -47,15 +41,12 @@
       every: 1
       till: 1
 
-- name: Delete a10_slb_template_port example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_port example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_port instance
-    a10_slb_template_port:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_port instance
+    a10.acos_axapi.a10_slb_template_port:
       state: absent
       name: default
       conn_limit: 1

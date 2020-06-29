@@ -1,14 +1,11 @@
 
 
-- name: Create a10_interface_loopback_ip_ospf_ospf_ip example playbook
+- name: Create a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_interface_loopback_ip_ospf_ospf_ip instance
-    a10_interface_loopback_ip_ospf_ospf_ip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip instance
+    a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip:
       ip_addr: 10.0.0.1
       dead_interval: 1
       hello_interval: 1
@@ -16,15 +13,12 @@
       retransmit_interval: 1
       transmit_delay: 1
 
-- name: Update a10_interface_loopback_ip_ospf_ospf_ip example playbook
+- name: Update a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_interface_loopback_ip_ospf_ospf_ip instance
-    a10_interface_loopback_ip_ospf_ospf_ip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip instance
+    a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip:
       state: present
       ip_addr: 10.0.0.1
       dead_interval: 1
@@ -33,15 +27,12 @@
       retransmit_interval: 1
       transmit_delay: 1
 
-- name: Delete a10_interface_loopback_ip_ospf_ospf_ip example playbook
+- name: Delete a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_interface_loopback_ip_ospf_ospf_ip instance
-    a10_interface_loopback_ip_ospf_ospf_ip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip instance
+    a10.acos_axapi.a10_interface_loopback_ip_ospf_ospf_ip:
       state: absent
       ip_addr: 10.0.0.1
       dead_interval: 1

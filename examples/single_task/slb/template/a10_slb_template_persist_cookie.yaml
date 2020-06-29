@@ -1,29 +1,23 @@
 
 
-- name: Create a10_slb_template_persist_cookie example playbook
+- name: Create a10.acos_axapi.a10_slb_template_persist_cookie example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_persist_cookie instance
-    a10_slb_template_persist_cookie:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_persist_cookie instance
+    a10.acos_axapi.a10_slb_template_persist_cookie:
       name: my_cookie
       encrypt_level: 0
       pass_phrase: ACOS4KEY
       cookie_name: sto-id
       path: /
 
-- name: Update a10_slb_template_persist_cookie example playbook
+- name: Update a10.acos_axapi.a10_slb_template_persist_cookie example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_persist_cookie instance
-    a10_slb_template_persist_cookie:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_persist_cookie instance
+    a10.acos_axapi.a10_slb_template_persist_cookie:
       state: present
       name: my_cookie
       encrypt_level: 0
@@ -31,15 +25,12 @@
       cookie_name: sto-id
       path: /
 
-- name: Delete a10_slb_template_persist_cookie example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_persist_cookie example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_persist_cookie instance
-    a10_slb_template_persist_cookie:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_persist_cookie instance
+    a10.acos_axapi.a10_slb_template_persist_cookie:
       state: absent
       name: my_cookie
       encrypt_level: 0
