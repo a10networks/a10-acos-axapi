@@ -1,36 +1,27 @@
 
 
-- name: Create a10_network_lldp_management_address_dns example playbook
+- name: Create a10.acos_axapi.a10_network_lldp_management_address_dns example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_network_lldp_management_address_dns instance
-    a10_network_lldp_management_address_dns:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_network_lldp_management_address_dns instance
+    a10.acos_axapi.a10_network_lldp_management_address_dns:
       dns: NO_EXAMPLE
 
-- name: Update a10_network_lldp_management_address_dns example playbook
+- name: Update a10.acos_axapi.a10_network_lldp_management_address_dns example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_network_lldp_management_address_dns instance
-    a10_network_lldp_management_address_dns:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_network_lldp_management_address_dns instance
+    a10.acos_axapi.a10_network_lldp_management_address_dns:
       state: present
       dns: NO_EXAMPLE
 
-- name: Delete a10_network_lldp_management_address_dns example playbook
+- name: Delete a10.acos_axapi.a10_network_lldp_management_address_dns example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_network_lldp_management_address_dns instance
-    a10_network_lldp_management_address_dns:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_network_lldp_management_address_dns instance
+    a10.acos_axapi.a10_network_lldp_management_address_dns:
       state: absent
       dns: NO_EXAMPLE

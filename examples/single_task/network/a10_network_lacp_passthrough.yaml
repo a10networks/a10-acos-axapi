@@ -1,39 +1,30 @@
 
 
-- name: Create a10_network_lacp_passthrough example playbook
+- name: Create a10.acos_axapi.a10_network_lacp_passthrough example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_network_lacp_passthrough instance
-    a10_network_lacp_passthrough:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_network_lacp_passthrough instance
+    a10.acos_axapi.a10_network_lacp_passthrough:
       peer_from: None
       peer_to: None
 
-- name: Update a10_network_lacp_passthrough example playbook
+- name: Update a10.acos_axapi.a10_network_lacp_passthrough example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_network_lacp_passthrough instance
-    a10_network_lacp_passthrough:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_network_lacp_passthrough instance
+    a10.acos_axapi.a10_network_lacp_passthrough:
       state: present
       peer_from: None
       peer_to: None
 
-- name: Delete a10_network_lacp_passthrough example playbook
+- name: Delete a10.acos_axapi.a10_network_lacp_passthrough example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_network_lacp_passthrough instance
-    a10_network_lacp_passthrough:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_network_lacp_passthrough instance
+    a10.acos_axapi.a10_network_lacp_passthrough:
       state: absent
       peer_from: None
       peer_to: None

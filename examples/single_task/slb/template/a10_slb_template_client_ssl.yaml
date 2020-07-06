@@ -1,14 +1,11 @@
 
 
-- name: Create a10_slb_template_client_ssl example playbook
+- name: Create a10.acos_axapi.a10_slb_template_client_ssl example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_client_ssl instance
-    a10_slb_template_client_ssl:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_client_ssl instance
+    a10.acos_axapi.a10_slb_template_client_ssl:
       name: my_client-ssl
       ocspst_srvr_hours: 1
       ocspst_srvr_timeout: 1
@@ -28,15 +25,12 @@
       version: 30
       dgversion: 30
 
-- name: Update a10_slb_template_client_ssl example playbook
+- name: Update a10.acos_axapi.a10_slb_template_client_ssl example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_client_ssl instance
-    a10_slb_template_client_ssl:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_client_ssl instance
+    a10.acos_axapi.a10_slb_template_client_ssl:
       state: present
       name: my_client-ssl
       ocspst_srvr_hours: 1
@@ -57,15 +51,12 @@
       version: 30
       dgversion: 30
 
-- name: Delete a10_slb_template_client_ssl example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_client_ssl example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_client_ssl instance
-    a10_slb_template_client_ssl:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_client_ssl instance
+    a10.acos_axapi.a10_slb_template_client_ssl:
       state: absent
       name: my_client-ssl
       ocspst_srvr_hours: 1

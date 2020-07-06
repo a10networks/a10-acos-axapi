@@ -1,29 +1,23 @@
 
 
-- name: Create a10_slb_template_external_service example playbook
+- name: Create a10.acos_axapi.a10_slb_template_external_service example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_external_service instance
-    a10_slb_template_external_service:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_external_service instance
+    a10.acos_axapi.a10_slb_template_external_service:
       name: my_external-service
       failure_action: continue
       timeout: 1
       action: continue
       type: url-filter
 
-- name: Update a10_slb_template_external_service example playbook
+- name: Update a10.acos_axapi.a10_slb_template_external_service example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_external_service instance
-    a10_slb_template_external_service:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_external_service instance
+    a10.acos_axapi.a10_slb_template_external_service:
       state: present
       name: my_external-service
       failure_action: continue
@@ -31,15 +25,12 @@
       action: continue
       type: url-filter
 
-- name: Delete a10_slb_template_external_service example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_external_service example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_external_service instance
-    a10_slb_template_external_service:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_external_service instance
+    a10.acos_axapi.a10_slb_template_external_service:
       state: absent
       name: my_external-service
       failure_action: continue

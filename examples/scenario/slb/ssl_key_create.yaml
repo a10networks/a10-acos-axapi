@@ -1,13 +1,8 @@
-- hosts: all
+- name: Create a10.acos_axapi.a10_file_ssl_key example playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
-  name: "My thing"
   tasks:
   - name: "Create ssl cert "
-    a10_file_ssl_key:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_protocol: "{{ a10_protocol }}"
-      a10_port: "{{ a10_port }}"
+    a10.acos_axapi.a10_file_ssl_key:
       file: myxc
       file_content: "{{lookup('file', '~/certs/new.cert.key')}}"

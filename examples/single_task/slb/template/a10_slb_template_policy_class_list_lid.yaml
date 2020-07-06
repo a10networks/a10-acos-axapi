@@ -1,41 +1,32 @@
 
 
-- name: Create a10_slb_template_policy_class_list_lid example playbook
+- name: Create a10.acos_axapi.a10_slb_template_policy_class_list_lid example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_policy_class_list_lid instance
-    a10_slb_template_policy_class_list_lid:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_policy_class_list_lid instance
+    a10.acos_axapi.a10_slb_template_policy_class_list_lid:
       lidnum: 1
       direct_pbslb_interval: 0
       direct_action_interval: 0
 
-- name: Update a10_slb_template_policy_class_list_lid example playbook
+- name: Update a10.acos_axapi.a10_slb_template_policy_class_list_lid example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_policy_class_list_lid instance
-    a10_slb_template_policy_class_list_lid:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_policy_class_list_lid instance
+    a10.acos_axapi.a10_slb_template_policy_class_list_lid:
       state: present
       lidnum: 1
       direct_pbslb_interval: 0
       direct_action_interval: 0
 
-- name: Delete a10_slb_template_policy_class_list_lid example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_policy_class_list_lid example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_policy_class_list_lid instance
-    a10_slb_template_policy_class_list_lid:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_policy_class_list_lid instance
+    a10.acos_axapi.a10_slb_template_policy_class_list_lid:
       state: absent
       lidnum: 1
       direct_pbslb_interval: 0

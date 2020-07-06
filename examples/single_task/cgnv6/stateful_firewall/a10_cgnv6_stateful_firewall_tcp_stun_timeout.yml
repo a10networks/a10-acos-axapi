@@ -1,14 +1,9 @@
-- name: a10_cgnv6_stateful_firewall_tcp_stun_timeout example playbook
+- name: a10.acos_axapi.a10_cgnv6_stateful_firewall_tcp_stun_timeout example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_cgnv6_stateful_firewall_tcp_stun_timeout
-    a10_cgnv6_stateful_firewall_tcp_stun_timeout:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Create a10.acos_axapi.a10_cgnv6_stateful_firewall_tcp_stun_timeout
+    a10.acos_axapi.a10_cgnv6_stateful_firewall_tcp_stun_timeout:
       partition: "MyPartition"
       port_end: "9000"
       stun_timeout_val_port_range: "3"

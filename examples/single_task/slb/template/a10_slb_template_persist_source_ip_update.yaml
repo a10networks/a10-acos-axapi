@@ -1,14 +1,9 @@
-- name: Update a10_slb_template_persist_source_ip example playbook
+- name: Update a10.acos_axapi.a10_slb_template_persist_source_ip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_persist_source_ip instance
-    a10_slb_template_persist_source_ip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Update a10.acos_axapi.a10_slb_template_persist_source_ip instance
+    a10.acos_axapi.a10_slb_template_persist_source_ip:
       state: present
       name: my_source-ip
       timeout: 1

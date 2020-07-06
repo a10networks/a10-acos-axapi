@@ -1,39 +1,30 @@
 
 
-- name: Create a10_network_bridge_vlan_group example playbook
+- name: Create a10.acos_axapi.a10_network_bridge_vlan_group example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_network_bridge_vlan_group instance
-    a10_network_bridge_vlan_group:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_network_bridge_vlan_group instance
+    a10.acos_axapi.a10_network_bridge_vlan_group:
       bridge_vlan_group_number: 1
       forward_traffic: forward-ip-traffic
 
-- name: Update a10_network_bridge_vlan_group example playbook
+- name: Update a10.acos_axapi.a10_network_bridge_vlan_group example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_network_bridge_vlan_group instance
-    a10_network_bridge_vlan_group:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_network_bridge_vlan_group instance
+    a10.acos_axapi.a10_network_bridge_vlan_group:
       state: present
       bridge_vlan_group_number: 1
       forward_traffic: forward-ip-traffic
 
-- name: Delete a10_network_bridge_vlan_group example playbook
+- name: Delete a10.acos_axapi.a10_network_bridge_vlan_group example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_network_bridge_vlan_group instance
-    a10_network_bridge_vlan_group:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_network_bridge_vlan_group instance
+    a10.acos_axapi.a10_network_bridge_vlan_group:
       state: absent
       bridge_vlan_group_number: 1
       forward_traffic: forward-ip-traffic

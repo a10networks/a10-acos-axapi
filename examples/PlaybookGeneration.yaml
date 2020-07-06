@@ -1,12 +1,9 @@
-- hosts: all
-  name: "Create a10_slb_virtual_server_port example playbook"
+- hosts: "{{desired_inventory_group}}"
+  name: "Create a10.acos_axapi.a10_slb_virtual_server_port example playbook"
   connection: local
   tasks:
   - name: Create playbooks 
-    a10_playbook_generator:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+    a10.acos_axapi.a10_playbook_generator:
       state: present
       output_path: "~/newplays"
       file_per_task: False

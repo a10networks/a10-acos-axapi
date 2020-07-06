@@ -1,13 +1,8 @@
-- name: a10_cgnv6_lw_4o6_binding_table_validate Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lw_4o6_binding_table_validate Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lw_4o6_binding_table_validate
-    a10_cgnv6_lw_4o6_binding_table_validate:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
+  - name: a10.acos_axapi.a10_cgnv6_lw_4o6_binding_table_validate
+    a10.acos_axapi.a10_cgnv6_lw_4o6_binding_table_validate:
       state: "present"
-      a10_protocol: "{{ a10_protocol }}"
       binding_name: "bindTest"

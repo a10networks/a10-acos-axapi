@@ -1,39 +1,30 @@
 
 
-- name: Create a10_interface_ve example playbook
+- name: Create a10.acos_axapi.a10_interface_ve example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_interface_ve instance
-    a10_interface_ve:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_interface_ve instance
+    a10.acos_axapi.a10_interface_ve:
       ifnum: 2
       action: enable
 
-- name: Update a10_interface_ve example playbook
+- name: Update a10.acos_axapi.a10_interface_ve example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_interface_ve instance
-    a10_interface_ve:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_interface_ve instance
+    a10.acos_axapi.a10_interface_ve:
       state: present
       ifnum: 2
       action: enable
 
-- name: Delete a10_interface_ve example playbook
+- name: Delete a10.acos_axapi.a10_interface_ve example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_interface_ve instance
-    a10_interface_ve:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_interface_ve instance
+    a10.acos_axapi.a10_interface_ve:
       state: absent
       ifnum: 2
       action: enable

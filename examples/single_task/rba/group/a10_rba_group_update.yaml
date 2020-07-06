@@ -1,15 +1,10 @@
 ---
 - name: Create rba group and add user to this group
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
     - name: Create rba group and add user to this group
-      a10_rba_group:
-        a10_host: "{{ a10_host }}"
-        a10_username: "{{ a10_username }}"
-        a10_password: "{{ a10_password }}"
-        a10_protocol: "{{ a10_protocol }}"
-        a10_port: "{{ a10_port }}"
+      a10.acos_axapi.a10_rba_group:
         state: "present"
         user_list:
           - user: "user01" #Enter existing user

@@ -1,14 +1,9 @@
-- name: a10_cgnv6_lsn_health_check_gateway Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_lsn_health_check_gateway Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_lsn_health_check_gateway
-    a10_cgnv6_lsn_health_check_gateway:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
+  - name: a10.acos_axapi.a10_cgnv6_lsn_health_check_gateway
+    a10.acos_axapi.a10_cgnv6_lsn_health_check_gateway:
       state: "present"
-      a10_protocol: "{{ a10_protocol }}"
       ipv4_addr: "192.168.1.26"
       ipv6_addr: "2001:0db8:85a3:0000:0000:8a2e:0370:7334"  

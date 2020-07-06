@@ -1,39 +1,30 @@
 
 
-- name: Create a10_network_mac_address_static example playbook
+- name: Create a10.acos_axapi.a10_network_mac_address_static example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_network_mac_address_static instance
-    a10_network_mac_address_static:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_network_mac_address_static instance
+    a10.acos_axapi.a10_network_mac_address_static:
       mac: NO_EXAMPLE
       vlan: 2
 
-- name: Update a10_network_mac_address_static example playbook
+- name: Update a10.acos_axapi.a10_network_mac_address_static example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_network_mac_address_static instance
-    a10_network_mac_address_static:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_network_mac_address_static instance
+    a10.acos_axapi.a10_network_mac_address_static:
       state: present
       mac: NO_EXAMPLE
       vlan: 2
 
-- name: Delete a10_network_mac_address_static example playbook
+- name: Delete a10.acos_axapi.a10_network_mac_address_static example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_network_mac_address_static instance
-    a10_network_mac_address_static:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_network_mac_address_static instance
+    a10.acos_axapi.a10_network_mac_address_static:
       state: absent
       mac: NO_EXAMPLE
       vlan: 2

@@ -1,14 +1,9 @@
-- name: a10_cgnv6_fixed_nat_inside_ipv4address
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_fixed_nat_inside_ipv4address
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_fixed_nat_inside_ipv4address
-    a10_cgnv6_fixed_nat_inside_ipv4address:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: a10.acos_axapi.a10_cgnv6_fixed_nat_inside_ipv4address
+    a10.acos_axapi.a10_cgnv6_fixed_nat_inside_ipv4address:
       state: "present"
       inside_netmask: "255.0.0.0"
       nat_end_address: "10.10.1.32"

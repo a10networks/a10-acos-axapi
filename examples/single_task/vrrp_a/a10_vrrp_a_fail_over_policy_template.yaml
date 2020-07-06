@@ -1,36 +1,27 @@
 
 
-- name: Create a10_vrrp_a_fail_over_policy_template example playbook
+- name: Create a10.acos_axapi.a10_vrrp_a_fail_over_policy_template example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_vrrp_a_fail_over_policy_template instance
-    a10_vrrp_a_fail_over_policy_template:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_vrrp_a_fail_over_policy_template instance
+    a10.acos_axapi.a10_vrrp_a_fail_over_policy_template:
       name: my_fail-over-policy-template
 
-- name: Update a10_vrrp_a_fail_over_policy_template example playbook
+- name: Update a10.acos_axapi.a10_vrrp_a_fail_over_policy_template example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_vrrp_a_fail_over_policy_template instance
-    a10_vrrp_a_fail_over_policy_template:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_vrrp_a_fail_over_policy_template instance
+    a10.acos_axapi.a10_vrrp_a_fail_over_policy_template:
       state: present
       name: my_fail-over-policy-template
 
-- name: Delete a10_vrrp_a_fail_over_policy_template example playbook
+- name: Delete a10.acos_axapi.a10_vrrp_a_fail_over_policy_template example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_vrrp_a_fail_over_policy_template instance
-    a10_vrrp_a_fail_over_policy_template:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_vrrp_a_fail_over_policy_template instance
+    a10.acos_axapi.a10_vrrp_a_fail_over_policy_template:
       state: absent
       name: my_fail-over-policy-template

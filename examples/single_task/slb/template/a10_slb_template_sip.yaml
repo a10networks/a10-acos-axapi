@@ -1,43 +1,34 @@
 
 
-- name: Create a10_slb_template_sip example playbook
+- name: Create a10.acos_axapi.a10_slb_template_sip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_sip instance
-    a10_slb_template_sip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_sip instance
+    a10.acos_axapi.a10_slb_template_sip:
       name: my_sip
       pstn_gw: pstn
       interval: 5
       timeout: 1
 
-- name: Update a10_slb_template_sip example playbook
+- name: Update a10.acos_axapi.a10_slb_template_sip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_sip instance
-    a10_slb_template_sip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_sip instance
+    a10.acos_axapi.a10_slb_template_sip:
       state: present
       name: my_sip
       pstn_gw: pstn
       interval: 5
       timeout: 1
 
-- name: Delete a10_slb_template_sip example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_sip example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_sip instance
-    a10_slb_template_sip:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_sip instance
+    a10.acos_axapi.a10_slb_template_sip:
       state: absent
       name: my_sip
       pstn_gw: pstn

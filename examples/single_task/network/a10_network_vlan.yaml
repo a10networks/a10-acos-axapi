@@ -1,36 +1,27 @@
 
 
-- name: Create a10_network_vlan example playbook
+- name: Create a10.acos_axapi.a10_network_vlan example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_network_vlan instance
-    a10_network_vlan:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_network_vlan instance
+    a10.acos_axapi.a10_network_vlan:
       vlan_num: 2
 
-- name: Update a10_network_vlan example playbook
+- name: Update a10.acos_axapi.a10_network_vlan example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_network_vlan instance
-    a10_network_vlan:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_network_vlan instance
+    a10.acos_axapi.a10_network_vlan:
       state: present
       vlan_num: 2
 
-- name: Delete a10_network_vlan example playbook
+- name: Delete a10.acos_axapi.a10_network_vlan example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_network_vlan instance
-    a10_network_vlan:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_network_vlan instance
+    a10.acos_axapi.a10_network_vlan:
       state: absent
       vlan_num: 2

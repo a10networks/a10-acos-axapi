@@ -1,14 +1,9 @@
-- name: Delete a10_slb_virtual_server_port example playbook
+- name: Delete a10.acos_axapi.a10_slb_virtual_server_port example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_virtual_server_port instance
-    a10_slb_virtual_server_port:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Delete a10.acos_axapi.a10_slb_virtual_server_port instance
+    a10.acos_axapi.a10_slb_virtual_server_port:
       state: absent
       port_number: 0
       protocol: tcp

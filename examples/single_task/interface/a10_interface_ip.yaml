@@ -1,14 +1,9 @@
 - name: Assign interface IP address
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
   - name: Assign interface IP address
-    a10_interface_ethernet:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+    a10.acos_axapi.a10_interface_ethernet:
       state: "present"
       ip:
         address_list:

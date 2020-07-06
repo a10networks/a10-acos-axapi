@@ -1,33 +1,24 @@
 
 
-- name: Create a10_interface_a10loopb example playbook
+- name: Create a10.acos_axapi.a10_interface_a10loopb example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_interface_a10loopb instance
-    a10_interface_a10loopb:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_interface_a10loopb instance
+    a10.acos_axapi.a10_interface_a10loopb:
 
-- name: Update a10_interface_a10loopb example playbook
+- name: Update a10.acos_axapi.a10_interface_a10loopb example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_interface_a10loopb instance
-    a10_interface_a10loopb:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_interface_a10loopb instance
+    a10.acos_axapi.a10_interface_a10loopb:
       state: present
 
-- name: Delete a10_interface_a10loopb example playbook
+- name: Delete a10.acos_axapi.a10_interface_a10loopb example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_interface_a10loopb instance
-    a10_interface_a10loopb:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_interface_a10loopb instance
+    a10.acos_axapi.a10_interface_a10loopb:
       state: absent

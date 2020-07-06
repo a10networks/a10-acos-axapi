@@ -1,12 +1,7 @@
-- name: a10_cgnv6_logging_tcp_svr_status Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_logging_tcp_svr_status Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: localhost
   tasks:
-  - name: a10_cgnv6_logging_tcp_svr_status
-    a10_cgnv6_logging_tcp_svr_status:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: a10.acos_axapi.a10_cgnv6_logging_tcp_svr_status
+    a10.acos_axapi.a10_cgnv6_logging_tcp_svr_status:
       state: "present"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"

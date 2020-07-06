@@ -1,14 +1,9 @@
-- name: Update a10_slb_template_connection_reuse example playbook
+- name: Update a10.acos_axapi.a10_slb_template_connection_reuse example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_connection_reuse instance
-    a10_slb_template_connection_reuse:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Update a10.acos_axapi.a10_slb_template_connection_reuse instance
+    a10.acos_axapi.a10_slb_template_connection_reuse:
       state: present
       name: my_connection-reuse
       limit_per_server: 0

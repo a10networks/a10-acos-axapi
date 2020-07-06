@@ -1,15 +1,10 @@
-- name: a10_cgnv6_ddos_protection Example Playbook
-  hosts: localhost
+- name: a10.acos_axapi.a10_cgnv6_ddos_protection Example Playbook
+  hosts: "{{desired_inventory_group}}"
   connection: local
   tasks:
-  - name: a10_cgnv6_ddos_protection
-    a10_cgnv6_ddos_protection:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: a10.acos_axapi.a10_cgnv6_ddos_protection
+    a10.acos_axapi.a10_cgnv6_ddos_protection:
       state: "present"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
       logging: 
         logging_toggle: "enable"
       zone: "zone1"

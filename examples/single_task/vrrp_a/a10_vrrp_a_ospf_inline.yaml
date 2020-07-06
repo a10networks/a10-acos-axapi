@@ -1,36 +1,27 @@
 
 
-- name: Create a10_vrrp_a_ospf_inline example playbook
+- name: Create a10.acos_axapi.a10_vrrp_a_ospf_inline example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_vrrp_a_ospf_inline instance
-    a10_vrrp_a_ospf_inline:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_vrrp_a_ospf_inline instance
+    a10.acos_axapi.a10_vrrp_a_ospf_inline:
       vlan: 1
 
-- name: Update a10_vrrp_a_ospf_inline example playbook
+- name: Update a10.acos_axapi.a10_vrrp_a_ospf_inline example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_vrrp_a_ospf_inline instance
-    a10_vrrp_a_ospf_inline:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_vrrp_a_ospf_inline instance
+    a10.acos_axapi.a10_vrrp_a_ospf_inline:
       state: present
       vlan: 1
 
-- name: Delete a10_vrrp_a_ospf_inline example playbook
+- name: Delete a10.acos_axapi.a10_vrrp_a_ospf_inline example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_vrrp_a_ospf_inline instance
-    a10_vrrp_a_ospf_inline:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_vrrp_a_ospf_inline instance
+    a10.acos_axapi.a10_vrrp_a_ospf_inline:
       state: absent
       vlan: 1

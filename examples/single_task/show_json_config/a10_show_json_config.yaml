@@ -1,11 +1,6 @@
-- hosts: all 
+- hosts: "{{desired_inventory_group}}" 
   name: "Print output of show json-config command via clideploy"
   connection: local
   tasks:
   - name: Show json config 
-    a10_show_json_config:
-      a10_host: "{{ a10_host }}" 
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+    a10.acos_axapi.a10_show_json_config:

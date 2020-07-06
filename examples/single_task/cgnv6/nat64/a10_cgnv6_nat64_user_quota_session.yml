@@ -1,12 +1,7 @@
-- name: a10_cgnv6_nat64_user_quota_session example playbook
+- name: a10.acos_axapi.a10_cgnv6_nat64_user_quota_session example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_cgnv6_nat64_user_quota_session
-    a10_cgnv6_nat64_user_quota_session:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Create a10.acos_axapi.a10_cgnv6_nat64_user_quota_session
+    a10.acos_axapi.a10_cgnv6_nat64_user_quota_session:
       partition: "MyPartition"

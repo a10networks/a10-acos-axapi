@@ -1,39 +1,30 @@
 
 
-- name: Create a10_slb_template_policy_forward_policy_action example playbook
+- name: Create a10.acos_axapi.a10_slb_template_policy_forward_policy_action example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_policy_forward_policy_action instance
-    a10_slb_template_policy_forward_policy_action:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Create a10.acos_axapi.a10_slb_template_policy_forward_policy_action instance
+    a10.acos_axapi.a10_slb_template_policy_forward_policy_action:
       name: my_action
       http_status_code: 302
 
-- name: Update a10_slb_template_policy_forward_policy_action example playbook
+- name: Update a10.acos_axapi.a10_slb_template_policy_forward_policy_action example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Update a10_slb_template_policy_forward_policy_action instance
-    a10_slb_template_policy_forward_policy_action:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Update a10.acos_axapi.a10_slb_template_policy_forward_policy_action instance
+    a10.acos_axapi.a10_slb_template_policy_forward_policy_action:
       state: present
       name: my_action
       http_status_code: 302
 
-- name: Delete a10_slb_template_policy_forward_policy_action example playbook
+- name: Delete a10.acos_axapi.a10_slb_template_policy_forward_policy_action example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Delete a10_slb_template_policy_forward_policy_action instance
-    a10_slb_template_policy_forward_policy_action:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
+  - name: Delete a10.acos_axapi.a10_slb_template_policy_forward_policy_action instance
+    a10.acos_axapi.a10_slb_template_policy_forward_policy_action:
       state: absent
       name: my_action
       http_status_code: 302

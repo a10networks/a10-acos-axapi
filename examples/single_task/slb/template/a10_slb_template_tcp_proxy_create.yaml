@@ -1,14 +1,9 @@
-- name: Create a10_slb_template_tcp_proxy example playbook
+- name: Create a10.acos_axapi.a10_slb_template_tcp_proxy example playbook
   connection: local
-  hosts: localhost
+  hosts: "{{desired_inventory_group}}"
   tasks:
-  - name: Create a10_slb_template_tcp_proxy instance
-    a10_slb_template_tcp_proxy:
-      a10_host: "{{ a10_host }}"
-      a10_username: "{{ a10_username }}"
-      a10_password: "{{ a10_password }}"
-      a10_port: "{{ a10_port }}"
-      a10_protocol: "{{ a10_protocol }}"
+  - name: Create a10.acos_axapi.a10_slb_template_tcp_proxy instance
+    a10.acos_axapi.a10_slb_template_tcp_proxy:
       name: default
       ack_aggressiveness: low
       fin_timeout: 1
