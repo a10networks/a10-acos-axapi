@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_system_resource_accounting_template_system_resources
 description:
     - Enter the system resource limits
 short_description: Configures A10 system.resource.accounting.template.system-resources
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -59,10 +59,12 @@ options:
         suboptions:
             l4_session_limit_max:
                 description:
-                - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to 99.99 (up to 2 digits precision))"
+                - "Enter the l4 session limit in % (0.01% to 99.99%) (Enter a number from 0.01 to
+          99.99 (up to 2 digits precision))"
             l4_session_limit_min_guarantee:
                 description:
-                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0 to 99.99)"
+                - "minimum guaranteed value in % (up to 2 digits precision) (Enter a number from 0
+          to 99.99)"
     l7cps_limit_cfg:
         description:
         - "Field l7cps_limit_cfg"
@@ -106,7 +108,8 @@ options:
         suboptions:
             fwcps_limit_max:
                 description:
-                - "Enter the Firewall cps limit (Firewall cps limit (no limits applied by default))"
+                - "Enter the Firewall cps limit (Firewall cps limit (no limits applied by
+          default))"
     ssl_throughput_limit_cfg:
         description:
         - "Field ssl_throughput_limit_cfg"
@@ -117,7 +120,8 @@ options:
                 - "Disable watermark (90% drop, keep existing sessions, drop  new sessions)"
             ssl_throughput_limit_max:
                 description:
-                - "Enter the ssl throughput limit in mbps (SSL Througput limit in Mbit/s (no limits applied by default))"
+                - "Enter the ssl throughput limit in mbps (SSL Througput limit in Mbit/s (no
+          limits applied by default))"
     threshold:
         description:
         - "Enter the threshold as a percentage (Threshold in percentage(default is 100%))"
@@ -129,7 +133,8 @@ options:
         suboptions:
             bw_limit_max:
                 description:
-                - "Enter the bandwidth limit in mbps (Bandwidth limit in Mbit/s (no limits applied by default))"
+                - "Enter the bandwidth limit in mbps (Bandwidth limit in Mbit/s (no limits applied
+          by default))"
             bw_limit_watermark_disable:
                 description:
                 - "Disable watermark (90% drop, keep existing sessions, drop  new sessions)"
@@ -140,7 +145,8 @@ options:
         suboptions:
             concurrent_session_limit_max:
                 description:
-                - "Enter the Concurrent Session limit (cps) (Concurrent-Session cps limit (no limits applied by default))"
+                - "Enter the Concurrent Session limit (cps) (Concurrent-Session cps limit (no
+          limits applied by default))"
 
 
 '''
@@ -155,18 +161,26 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["bw_limit_cfg","concurrent_session_limit_cfg","fwcps_limit_cfg","l4_session_limit_cfg","l4cps_limit_cfg","l7cps_limit_cfg","natcps_limit_cfg","ssl_throughput_limit_cfg","sslcps_limit_cfg","threshold","uuid",]
+AVAILABLE_PROPERTIES = [
+    "bw_limit_cfg",
+    "concurrent_session_limit_cfg",
+    "fwcps_limit_cfg",
+    "l4_session_limit_cfg",
+    "l4cps_limit_cfg",
+    "l7cps_limit_cfg",
+    "natcps_limit_cfg",
+    "ssl_throughput_limit_cfg",
+    "sslcps_limit_cfg",
+    "threshold",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -176,33 +190,98 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        l4_session_limit_cfg=dict(type='dict', l4_session_limit_max=dict(type='str', ), l4_session_limit_min_guarantee=dict(type='str', )),
-        l7cps_limit_cfg=dict(type='dict', l7cps_limit_max=dict(type='int', )),
-        l4cps_limit_cfg=dict(type='dict', l4cps_limit_max=dict(type='int', )),
-        uuid=dict(type='str', ),
-        natcps_limit_cfg=dict(type='dict', natcps_limit_max=dict(type='int', )),
-        sslcps_limit_cfg=dict(type='dict', sslcps_limit_max=dict(type='int', )),
-        fwcps_limit_cfg=dict(type='dict', fwcps_limit_max=dict(type='int', )),
-        ssl_throughput_limit_cfg=dict(type='dict', ssl_throughput_limit_watermark_disable=dict(type='bool', ), ssl_throughput_limit_max=dict(type='int', )),
-        threshold=dict(type='int', ),
-        bw_limit_cfg=dict(type='dict', bw_limit_max=dict(type='int', ), bw_limit_watermark_disable=dict(type='bool', )),
-        concurrent_session_limit_cfg=dict(type='dict', concurrent_session_limit_max=dict(type='int', ))
-    ))
-   
+    rv.update({
+        'l4_session_limit_cfg': {
+            'type': 'dict',
+            'l4_session_limit_max': {
+                'type': 'str',
+            },
+            'l4_session_limit_min_guarantee': {
+                'type': 'str',
+            }
+        },
+        'l7cps_limit_cfg': {
+            'type': 'dict',
+            'l7cps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'l4cps_limit_cfg': {
+            'type': 'dict',
+            'l4cps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'natcps_limit_cfg': {
+            'type': 'dict',
+            'natcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'sslcps_limit_cfg': {
+            'type': 'dict',
+            'sslcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'fwcps_limit_cfg': {
+            'type': 'dict',
+            'fwcps_limit_max': {
+                'type': 'int',
+            }
+        },
+        'ssl_throughput_limit_cfg': {
+            'type': 'dict',
+            'ssl_throughput_limit_watermark_disable': {
+                'type': 'bool',
+            },
+            'ssl_throughput_limit_max': {
+                'type': 'int',
+            }
+        },
+        'threshold': {
+            'type': 'int',
+        },
+        'bw_limit_cfg': {
+            'type': 'dict',
+            'bw_limit_max': {
+                'type': 'int',
+            },
+            'bw_limit_watermark_disable': {
+                'type': 'bool',
+            }
+        },
+        'concurrent_session_limit_cfg': {
+            'type': 'dict',
+            'concurrent_session_limit_max': {
+                'type': 'int',
+            }
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        template_name=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(template_name=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -214,16 +293,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -231,13 +314,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -250,10 +335,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -265,30 +350,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -309,6 +398,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["system-resources"].items():
@@ -319,16 +409,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["system-resources"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["system-resources"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -341,6 +432,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -357,6 +449,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("system-resources", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -369,6 +462,7 @@ def present(module, result, existing_config):
     else:
         result["changed"] = True
         return result
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -385,15 +479,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -414,14 +504,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -429,11 +520,11 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'noop':
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -441,14 +532,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

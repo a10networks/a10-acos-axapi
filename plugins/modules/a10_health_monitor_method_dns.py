@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_health_monitor_method_dns
 description:
     - DNS type
 short_description: Configures A10 health.monitor.method.dns
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -55,11 +55,13 @@ options:
         - Key to identify parent object
     dns_domain_type:
         description:
-        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address; "
+        - "'A'= Used for storing Ipv4 address (default); 'CNAME'= Canonical name for a DNS
+          alias; 'SOA'= Start of authority; 'PTR'= Domain name pointer; 'MX'= Mail
+          exchanger; 'TXT'= Text string; 'AAAA'= Used for storing Ipv6 128-bits address;"
         required: False
     dns_ipv4_recurse:
         description:
-        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit; "
+        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
         required: False
     uuid:
         description:
@@ -80,7 +82,8 @@ options:
         suboptions:
             dns_domain_response:
                 description:
-                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between [0,15]))"
+                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
+          [0,15]))"
     dns_ipv4_expect:
         description:
         - "Field dns_ipv4_expect"
@@ -88,7 +91,8 @@ options:
         suboptions:
             dns_ipv4_response:
                 description:
-                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between [0,15]))"
+                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
+          [0,15]))"
     dns_ipv4_port:
         description:
         - "Specify DNS port, default is 53 (DNS Port(default 53))"
@@ -100,14 +104,15 @@ options:
         suboptions:
             dns_ipv6_response:
                 description:
-                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between [0,15]))"
+                - "Specify response code range (e.g. 0,1-5) (Format is xx,xx-xx (xx between
+          [0,15]))"
     dns_ip_key:
         description:
         - "Reverse DNS lookup (Specify IPv4 or IPv6 address)"
         required: False
     dns_ipv6_recurse:
         description:
-        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit; "
+        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
         required: False
     dns_ipv6_tcp:
         description:
@@ -115,7 +120,7 @@ options:
         required: False
     dns_domain_recurse:
         description:
-        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit; "
+        - "'enabled'= Set the recursion bit; 'disabled'= Clear the recursion bit;"
         required: False
     dns_domain_tcp:
         description:
@@ -155,18 +160,34 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["dns","dns_domain","dns_domain_expect","dns_domain_port","dns_domain_recurse","dns_domain_tcp","dns_domain_type","dns_ip_key","dns_ipv4_addr","dns_ipv4_expect","dns_ipv4_port","dns_ipv4_recurse","dns_ipv4_tcp","dns_ipv6_addr","dns_ipv6_expect","dns_ipv6_port","dns_ipv6_recurse","dns_ipv6_tcp","uuid",]
+AVAILABLE_PROPERTIES = [
+    "dns",
+    "dns_domain",
+    "dns_domain_expect",
+    "dns_domain_port",
+    "dns_domain_recurse",
+    "dns_domain_tcp",
+    "dns_domain_type",
+    "dns_ip_key",
+    "dns_ipv4_addr",
+    "dns_ipv4_expect",
+    "dns_ipv4_port",
+    "dns_ipv4_recurse",
+    "dns_ipv4_tcp",
+    "dns_ipv6_addr",
+    "dns_ipv6_expect",
+    "dns_ipv6_port",
+    "dns_ipv6_recurse",
+    "dns_ipv6_tcp",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -174,43 +195,103 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        dns_domain_type=dict(type='str', choices=['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']),
-        dns_ipv4_recurse=dict(type='str', choices=['enabled', 'disabled']),
-        uuid=dict(type='str', ),
-        dns_ipv6_port=dict(type='int', ),
-        dns_ipv4_addr=dict(type='str', ),
-        dns_domain_expect=dict(type='dict', dns_domain_response=dict(type='str', )),
-        dns_ipv4_expect=dict(type='dict', dns_ipv4_response=dict(type='str', )),
-        dns_ipv4_port=dict(type='int', ),
-        dns_ipv6_expect=dict(type='dict', dns_ipv6_response=dict(type='str', )),
-        dns_ip_key=dict(type='bool', ),
-        dns_ipv6_recurse=dict(type='str', choices=['enabled', 'disabled']),
-        dns_ipv6_tcp=dict(type='bool', ),
-        dns_domain_recurse=dict(type='str', choices=['enabled', 'disabled']),
-        dns_domain_tcp=dict(type='bool', ),
-        dns=dict(type='bool', ),
-        dns_ipv4_tcp=dict(type='bool', ),
-        dns_domain=dict(type='str', ),
-        dns_ipv6_addr=dict(type='str', ),
-        dns_domain_port=dict(type='int', )
-    ))
-   
+    rv.update({
+        'dns_domain_type': {
+            'type': 'str',
+            'choices': ['A', 'CNAME', 'SOA', 'PTR', 'MX', 'TXT', 'AAAA']
+        },
+        'dns_ipv4_recurse': {
+            'type': 'str',
+            'choices': ['enabled', 'disabled']
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'dns_ipv6_port': {
+            'type': 'int',
+        },
+        'dns_ipv4_addr': {
+            'type': 'str',
+        },
+        'dns_domain_expect': {
+            'type': 'dict',
+            'dns_domain_response': {
+                'type': 'str',
+            }
+        },
+        'dns_ipv4_expect': {
+            'type': 'dict',
+            'dns_ipv4_response': {
+                'type': 'str',
+            }
+        },
+        'dns_ipv4_port': {
+            'type': 'int',
+        },
+        'dns_ipv6_expect': {
+            'type': 'dict',
+            'dns_ipv6_response': {
+                'type': 'str',
+            }
+        },
+        'dns_ip_key': {
+            'type': 'bool',
+        },
+        'dns_ipv6_recurse': {
+            'type': 'str',
+            'choices': ['enabled', 'disabled']
+        },
+        'dns_ipv6_tcp': {
+            'type': 'bool',
+        },
+        'dns_domain_recurse': {
+            'type': 'str',
+            'choices': ['enabled', 'disabled']
+        },
+        'dns_domain_tcp': {
+            'type': 'bool',
+        },
+        'dns': {
+            'type': 'bool',
+        },
+        'dns_ipv4_tcp': {
+            'type': 'bool',
+        },
+        'dns_domain': {
+            'type': 'str',
+        },
+        'dns_ipv6_addr': {
+            'type': 'str',
+        },
+        'dns_domain_port': {
+            'type': 'int',
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        monitor_name=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(monitor_name=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -222,16 +303,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -239,13 +324,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -258,10 +345,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -273,30 +360,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -317,6 +408,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns"].items():
@@ -327,16 +419,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["dns"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["dns"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -349,6 +442,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -365,6 +459,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("dns", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -378,6 +473,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -390,6 +486,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -400,6 +497,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -416,15 +514,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -445,14 +539,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -460,14 +555,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -475,14 +570,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

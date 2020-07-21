@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_router_ospf
 description:
     - Open Shortest Path First (OSPF)
 short_description: Configures A10 router.ospf
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -66,7 +66,9 @@ options:
                 - "OSPF area ID as a decimal value"
             di_type:
                 description:
-                - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-flagged'= Selected Virtual IP (VIP); "
+                - "'lw4o6'= LW4O6 Prefix; 'floating-ip'= Floating IP; 'ip-nat'= IP NAT; 'ip-nat-
+          list'= IP NAT list; 'vip'= Only not flagged Virtual IP (VIP); 'vip-only-
+          flagged'= Selected Virtual IP (VIP);"
     distribute_lists:
         description:
         - "Field distribute_lists"
@@ -77,13 +79,17 @@ options:
                 - "OSPF process ID"
             direction:
                 description:
-                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates; "
+                - "'in'= Filter incoming routing updates; 'out'= Filter outgoing routing updates;"
             protocol:
                 description:
-                - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'= Floating IP; 'lw4o6'= LW4O6 Prefix; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT list; 'isis'= ISO IS-IS; 'ospf'= Open Shortest Path First (OSPF); 'rip'= Routing Information Protocol (RIP); 'static'= Static routes; "
+                - "'bgp'= Border Gateway Protocol (BGP); 'connected'= Connected; 'floating-ip'=
+          Floating IP; 'lw4o6'= LW4O6 Prefix; 'ip-nat'= IP NAT; 'ip-nat-list'= IP NAT
+          list; 'isis'= ISO IS-IS; 'ospf'= Open Shortest Path First (OSPF); 'rip'=
+          Routing Information Protocol (RIP); 'static'= Static routes;"
             option:
                 description:
-                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not flagged; "
+                - "'only-flagged'= Selected Virtual IP (VIP); 'only-not-flagged'= Only not
+          flagged;"
             value:
                 description:
                 - "Access-list name"
@@ -93,7 +99,8 @@ options:
         required: False
     auto_cost_reference_bandwidth:
         description:
-        - "Use reference bandwidth method to assign OSPF cost (The reference bandwidth in terms of Mbits per second)"
+        - "Use reference bandwidth method to assign OSPF cost (The reference bandwidth in
+          terms of Mbits per second)"
         required: False
     uuid:
         description:
@@ -150,7 +157,7 @@ options:
         suboptions:
             state:
                 description:
-                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging; "
+                - "'detail'= Log changes in adjacency state; 'disable'= Disable logging;"
     area_list:
         description:
         - "Field area_list"
@@ -176,7 +183,8 @@ options:
                 - "Field stub_cfg"
             shortcut:
                 description:
-                - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting through the area; 'enable'= Enable shortcutting through the area; "
+                - "'default'= Set default shortcutting behavior; 'disable'= Disable shortcutting
+          through the area; 'enable'= Enable shortcutting through the area;"
             auth_cfg:
                 description:
                 - "Field auth_cfg"
@@ -185,7 +193,8 @@ options:
                 - "Field range_list"
             default_cost:
                 description:
-                - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default summary cost)"
+                - "Set the summary-default cost of a NSSA or stub area (Stub's advertised default
+          summary cost)"
             area_ipv4:
                 description:
                 - "OSPF area ID in IP address format"
@@ -325,7 +334,7 @@ options:
                 - "Field vip_floating_list"
             metric_type_ip_nat:
                 description:
-                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics; "
+                - "'1'= Set OSPF External Type 1 metrics; '2'= Set OSPF External Type 2 metrics;"
     user_tag:
         description:
         - "Customized tag"
@@ -380,18 +389,41 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["area_list","auto_cost_reference_bandwidth","bfd_all_interfaces","default_information","default_metric","distance","distribute_internal_list","distribute_lists","ha_standby_extra_cost","host_list","log_adjacency_changes_cfg","max_concurrent_dd","maximum_area","neighbor_list","network_list","ospf_1","overflow","passive_interface","process_id","redistribute","rfc1583_compatible","router_id","summary_address_list","timers","user_tag","uuid",]
+AVAILABLE_PROPERTIES = [
+    "area_list",
+    "auto_cost_reference_bandwidth",
+    "bfd_all_interfaces",
+    "default_information",
+    "default_metric",
+    "distance",
+    "distribute_internal_list",
+    "distribute_lists",
+    "ha_standby_extra_cost",
+    "host_list",
+    "log_adjacency_changes_cfg",
+    "max_concurrent_dd",
+    "maximum_area",
+    "neighbor_list",
+    "network_list",
+    "ospf_1",
+    "overflow",
+    "passive_interface",
+    "process_id",
+    "redistribute",
+    "rfc1583_compatible",
+    "router_id",
+    "summary_address_list",
+    "timers",
+    "user_tag",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -399,46 +431,572 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        distribute_internal_list=dict(type='list', di_cost=dict(type='int', ), di_area_ipv4=dict(type='str', ), di_area_num=dict(type='int', ), di_type=dict(type='str', choices=['lw4o6', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip', 'vip-only-flagged'])),
-        distribute_lists=dict(type='list', ospf_id=dict(type='int', ), direction=dict(type='str', choices=['in', 'out']), protocol=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'lw4o6', 'ip-nat', 'ip-nat-list', 'isis', 'ospf', 'rip', 'static']), option=dict(type='str', choices=['only-flagged', 'only-not-flagged']), value=dict(type='str', )),
-        default_metric=dict(type='int', ),
-        auto_cost_reference_bandwidth=dict(type='int', ),
-        uuid=dict(type='str', ),
-        router_id=dict(type='dict', value=dict(type='str', )),
-        neighbor_list=dict(type='list', priority=dict(type='int', ), cost=dict(type='int', ), poll_interval=dict(type='int', ), address=dict(type='str', )),
-        ospf_1=dict(type='dict', abr_type=dict(type='dict', option=dict(type='str', choices=['cisco', 'ibm', 'shortcut', 'standard']))),
-        host_list=dict(type='list', host_address=dict(type='str', ), area_cfg=dict(type='dict', area_ipv4=dict(type='str', ), cost=dict(type='int', ), area_num=dict(type='int', ))),
-        log_adjacency_changes_cfg=dict(type='dict', state=dict(type='str', choices=['detail', 'disable'])),
-        area_list=dict(type='list', nssa_cfg=dict(type='dict', default_information_originate=dict(type='bool', ), translator_role=dict(type='str', choices=['always', 'candidate', 'never']), metric=dict(type='int', ), nssa=dict(type='bool', ), no_redistribution=dict(type='bool', ), no_summary=dict(type='bool', ), metric_type=dict(type='int', )), uuid=dict(type='str', ), filter_lists=dict(type='list', acl_name=dict(type='str', ), acl_direction=dict(type='str', choices=['in', 'out']), filter_list=dict(type='bool', ), plist_name=dict(type='str', ), plist_direction=dict(type='str', choices=['in', 'out'])), area_num=dict(type='int', required=True, ), virtual_link_list=dict(type='list', dead_interval=dict(type='int', ), message_digest_key=dict(type='int', ), hello_interval=dict(type='int', ), bfd=dict(type='bool', ), transmit_delay=dict(type='int', ), virtual_link_authentication=dict(type='bool', ), virtual_link_ip_addr=dict(type='str', ), virtual_link_auth_type=dict(type='str', choices=['message-digest', 'null']), authentication_key=dict(type='str', ), retransmit_interval=dict(type='int', ), md5=dict(type='str', )), stub_cfg=dict(type='dict', stub=dict(type='bool', ), no_summary=dict(type='bool', )), shortcut=dict(type='str', choices=['default', 'disable', 'enable']), auth_cfg=dict(type='dict', authentication=dict(type='bool', ), message_digest=dict(type='bool', )), range_list=dict(type='list', area_range_prefix=dict(type='str', ), option=dict(type='str', choices=['advertise', 'not-advertise'])), default_cost=dict(type='int', ), area_ipv4=dict(type='str', required=True, )),
-        maximum_area=dict(type='int', ),
-        summary_address_list=dict(type='list', summary_address=dict(type='str', ), not_advertise=dict(type='bool', ), tag=dict(type='int', )),
-        rfc1583_compatible=dict(type='bool', ),
-        max_concurrent_dd=dict(type='int', ),
-        process_id=dict(type='int', required=True, ),
-        passive_interface=dict(type='dict', tunnel_cfg=dict(type='list', tunnel=dict(type='str', ), tunnel_address=dict(type='str', )), loopback_cfg=dict(type='list', loopback_address=dict(type='str', ), loopback=dict(type='str', )), ve_cfg=dict(type='list', ve_address=dict(type='str', ), ve=dict(type='str', )), lif_cfg=dict(type='list', lif=dict(type='str', ), lif_address=dict(type='str', )), trunk_cfg=dict(type='list', trunk_address=dict(type='str', ), trunk=dict(type='str', )), eth_cfg=dict(type='list', ethernet=dict(type='str', ), eth_address=dict(type='str', ))),
-        default_information=dict(type='dict', originate=dict(type='bool', ), uuid=dict(type='str', ), always=dict(type='bool', ), metric=dict(type='int', ), route_map=dict(type='str', ), metric_type=dict(type='int', )),
-        overflow=dict(type='dict', database=dict(type='dict', count=dict(type='int', ), recovery_time=dict(type='int', ), limit=dict(type='str', choices=['hard', 'soft']), db_external=dict(type='int', ))),
-        bfd_all_interfaces=dict(type='bool', ),
-        distance=dict(type='dict', distance_value=dict(type='int', ), distance_ospf=dict(type='dict', distance_external=dict(type='int', ), distance_intra_area=dict(type='int', ), distance_inter_area=dict(type='int', ))),
-        redistribute=dict(type='dict', redist_list=dict(type='list', metric=dict(type='int', ), route_map=dict(type='str', ), ntype=dict(type='str', choices=['bgp', 'connected', 'floating-ip', 'ip-nat-list', 'lw4o6', 'nat-map', 'isis', 'rip', 'static']), metric_type=dict(type='str', choices=['1', '2']), tag=dict(type='int', )), ospf_list=dict(type='list', tag_ospf=dict(type='int', ), process_id=dict(type='int', ), route_map_ospf=dict(type='str', ), metric_ospf=dict(type='int', ), ospf=dict(type='bool', ), metric_type_ospf=dict(type='str', choices=['1', '2'])), uuid=dict(type='str', ), ip_nat_floating_list=dict(type='list', ip_nat_floating_IP_forward=dict(type='str', ), ip_nat_prefix=dict(type='str', )), vip_list=dict(type='list', metric_type_vip=dict(type='str', choices=['1', '2']), tag_vip=dict(type='int', ), route_map_vip=dict(type='str', ), type_vip=dict(type='str', choices=['only-flagged', 'only-not-flagged']), metric_vip=dict(type='int', )), route_map_ip_nat=dict(type='str', ), ip_nat=dict(type='bool', ), metric_ip_nat=dict(type='int', ), tag_ip_nat=dict(type='int', ), vip_floating_list=dict(type='list', vip_address=dict(type='str', ), vip_floating_IP_forward=dict(type='str', )), metric_type_ip_nat=dict(type='str', choices=['1', '2'])),
-        user_tag=dict(type='str', ),
-        network_list=dict(type='list', network_ipv4_cidr=dict(type='str', ), network_ipv4=dict(type='str', ), network_area=dict(type='dict', network_area_num=dict(type='int', ), network_area_ipv4=dict(type='str', ), instance_value=dict(type='int', )), network_ipv4_mask=dict(type='str', )),
-        timers=dict(type='dict', spf=dict(type='dict', exp=dict(type='dict', max_delay=dict(type='int', ), min_delay=dict(type='int', )))),
-        ha_standby_extra_cost=dict(type='list', group=dict(type='int', ), extra_cost=dict(type='int', ))
-    ))
-   
-
+    rv.update({
+        'distribute_internal_list': {
+            'type': 'list',
+            'di_cost': {
+                'type': 'int',
+            },
+            'di_area_ipv4': {
+                'type': 'str',
+            },
+            'di_area_num': {
+                'type': 'int',
+            },
+            'di_type': {
+                'type':
+                'str',
+                'choices': [
+                    'lw4o6', 'floating-ip', 'ip-nat', 'ip-nat-list', 'vip',
+                    'vip-only-flagged'
+                ]
+            }
+        },
+        'distribute_lists': {
+            'type': 'list',
+            'ospf_id': {
+                'type': 'int',
+            },
+            'direction': {
+                'type': 'str',
+                'choices': ['in', 'out']
+            },
+            'protocol': {
+                'type':
+                'str',
+                'choices': [
+                    'bgp', 'connected', 'floating-ip', 'lw4o6', 'ip-nat',
+                    'ip-nat-list', 'isis', 'ospf', 'rip', 'static'
+                ]
+            },
+            'option': {
+                'type': 'str',
+                'choices': ['only-flagged', 'only-not-flagged']
+            },
+            'value': {
+                'type': 'str',
+            }
+        },
+        'default_metric': {
+            'type': 'int',
+        },
+        'auto_cost_reference_bandwidth': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'router_id': {
+            'type': 'dict',
+            'value': {
+                'type': 'str',
+            }
+        },
+        'neighbor_list': {
+            'type': 'list',
+            'priority': {
+                'type': 'int',
+            },
+            'cost': {
+                'type': 'int',
+            },
+            'poll_interval': {
+                'type': 'int',
+            },
+            'address': {
+                'type': 'str',
+            }
+        },
+        'ospf_1': {
+            'type': 'dict',
+            'abr_type': {
+                'type': 'dict',
+                'option': {
+                    'type': 'str',
+                    'choices': ['cisco', 'ibm', 'shortcut', 'standard']
+                }
+            }
+        },
+        'host_list': {
+            'type': 'list',
+            'host_address': {
+                'type': 'str',
+            },
+            'area_cfg': {
+                'type': 'dict',
+                'area_ipv4': {
+                    'type': 'str',
+                },
+                'cost': {
+                    'type': 'int',
+                },
+                'area_num': {
+                    'type': 'int',
+                }
+            }
+        },
+        'log_adjacency_changes_cfg': {
+            'type': 'dict',
+            'state': {
+                'type': 'str',
+                'choices': ['detail', 'disable']
+            }
+        },
+        'area_list': {
+            'type': 'list',
+            'nssa_cfg': {
+                'type': 'dict',
+                'default_information_originate': {
+                    'type': 'bool',
+                },
+                'translator_role': {
+                    'type': 'str',
+                    'choices': ['always', 'candidate', 'never']
+                },
+                'metric': {
+                    'type': 'int',
+                },
+                'nssa': {
+                    'type': 'bool',
+                },
+                'no_redistribution': {
+                    'type': 'bool',
+                },
+                'no_summary': {
+                    'type': 'bool',
+                },
+                'metric_type': {
+                    'type': 'int',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'filter_lists': {
+                'type': 'list',
+                'acl_name': {
+                    'type': 'str',
+                },
+                'acl_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                },
+                'filter_list': {
+                    'type': 'bool',
+                },
+                'plist_name': {
+                    'type': 'str',
+                },
+                'plist_direction': {
+                    'type': 'str',
+                    'choices': ['in', 'out']
+                }
+            },
+            'area_num': {
+                'type': 'int',
+                'required': True,
+            },
+            'virtual_link_list': {
+                'type': 'list',
+                'dead_interval': {
+                    'type': 'int',
+                },
+                'message_digest_key': {
+                    'type': 'int',
+                },
+                'hello_interval': {
+                    'type': 'int',
+                },
+                'bfd': {
+                    'type': 'bool',
+                },
+                'transmit_delay': {
+                    'type': 'int',
+                },
+                'virtual_link_authentication': {
+                    'type': 'bool',
+                },
+                'virtual_link_ip_addr': {
+                    'type': 'str',
+                },
+                'virtual_link_auth_type': {
+                    'type': 'str',
+                    'choices': ['message-digest', 'null']
+                },
+                'authentication_key': {
+                    'type': 'str',
+                },
+                'retransmit_interval': {
+                    'type': 'int',
+                },
+                'md5': {
+                    'type': 'str',
+                }
+            },
+            'stub_cfg': {
+                'type': 'dict',
+                'stub': {
+                    'type': 'bool',
+                },
+                'no_summary': {
+                    'type': 'bool',
+                }
+            },
+            'shortcut': {
+                'type': 'str',
+                'choices': ['default', 'disable', 'enable']
+            },
+            'auth_cfg': {
+                'type': 'dict',
+                'authentication': {
+                    'type': 'bool',
+                },
+                'message_digest': {
+                    'type': 'bool',
+                }
+            },
+            'range_list': {
+                'type': 'list',
+                'area_range_prefix': {
+                    'type': 'str',
+                },
+                'option': {
+                    'type': 'str',
+                    'choices': ['advertise', 'not-advertise']
+                }
+            },
+            'default_cost': {
+                'type': 'int',
+            },
+            'area_ipv4': {
+                'type': 'str',
+                'required': True,
+            }
+        },
+        'maximum_area': {
+            'type': 'int',
+        },
+        'summary_address_list': {
+            'type': 'list',
+            'summary_address': {
+                'type': 'str',
+            },
+            'not_advertise': {
+                'type': 'bool',
+            },
+            'tag': {
+                'type': 'int',
+            }
+        },
+        'rfc1583_compatible': {
+            'type': 'bool',
+        },
+        'max_concurrent_dd': {
+            'type': 'int',
+        },
+        'process_id': {
+            'type': 'int',
+            'required': True,
+        },
+        'passive_interface': {
+            'type': 'dict',
+            'tunnel_cfg': {
+                'type': 'list',
+                'tunnel': {
+                    'type': 'str',
+                },
+                'tunnel_address': {
+                    'type': 'str',
+                }
+            },
+            'loopback_cfg': {
+                'type': 'list',
+                'loopback_address': {
+                    'type': 'str',
+                },
+                'loopback': {
+                    'type': 'str',
+                }
+            },
+            've_cfg': {
+                'type': 'list',
+                've_address': {
+                    'type': 'str',
+                },
+                've': {
+                    'type': 'str',
+                }
+            },
+            'lif_cfg': {
+                'type': 'list',
+                'lif': {
+                    'type': 'str',
+                },
+                'lif_address': {
+                    'type': 'str',
+                }
+            },
+            'trunk_cfg': {
+                'type': 'list',
+                'trunk_address': {
+                    'type': 'str',
+                },
+                'trunk': {
+                    'type': 'str',
+                }
+            },
+            'eth_cfg': {
+                'type': 'list',
+                'ethernet': {
+                    'type': 'str',
+                },
+                'eth_address': {
+                    'type': 'str',
+                }
+            }
+        },
+        'default_information': {
+            'type': 'dict',
+            'originate': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'always': {
+                'type': 'bool',
+            },
+            'metric': {
+                'type': 'int',
+            },
+            'route_map': {
+                'type': 'str',
+            },
+            'metric_type': {
+                'type': 'int',
+            }
+        },
+        'overflow': {
+            'type': 'dict',
+            'database': {
+                'type': 'dict',
+                'count': {
+                    'type': 'int',
+                },
+                'recovery_time': {
+                    'type': 'int',
+                },
+                'limit': {
+                    'type': 'str',
+                    'choices': ['hard', 'soft']
+                },
+                'db_external': {
+                    'type': 'int',
+                }
+            }
+        },
+        'bfd_all_interfaces': {
+            'type': 'bool',
+        },
+        'distance': {
+            'type': 'dict',
+            'distance_value': {
+                'type': 'int',
+            },
+            'distance_ospf': {
+                'type': 'dict',
+                'distance_external': {
+                    'type': 'int',
+                },
+                'distance_intra_area': {
+                    'type': 'int',
+                },
+                'distance_inter_area': {
+                    'type': 'int',
+                }
+            }
+        },
+        'redistribute': {
+            'type': 'dict',
+            'redist_list': {
+                'type': 'list',
+                'metric': {
+                    'type': 'int',
+                },
+                'route_map': {
+                    'type': 'str',
+                },
+                'ntype': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'bgp', 'connected', 'floating-ip', 'ip-nat-list',
+                        'lw4o6', 'nat-map', 'isis', 'rip', 'static'
+                    ]
+                },
+                'metric_type': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                },
+                'tag': {
+                    'type': 'int',
+                }
+            },
+            'ospf_list': {
+                'type': 'list',
+                'tag_ospf': {
+                    'type': 'int',
+                },
+                'process_id': {
+                    'type': 'int',
+                },
+                'route_map_ospf': {
+                    'type': 'str',
+                },
+                'metric_ospf': {
+                    'type': 'int',
+                },
+                'ospf': {
+                    'type': 'bool',
+                },
+                'metric_type_ospf': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'ip_nat_floating_list': {
+                'type': 'list',
+                'ip_nat_floating_IP_forward': {
+                    'type': 'str',
+                },
+                'ip_nat_prefix': {
+                    'type': 'str',
+                }
+            },
+            'vip_list': {
+                'type': 'list',
+                'metric_type_vip': {
+                    'type': 'str',
+                    'choices': ['1', '2']
+                },
+                'tag_vip': {
+                    'type': 'int',
+                },
+                'route_map_vip': {
+                    'type': 'str',
+                },
+                'type_vip': {
+                    'type': 'str',
+                    'choices': ['only-flagged', 'only-not-flagged']
+                },
+                'metric_vip': {
+                    'type': 'int',
+                }
+            },
+            'route_map_ip_nat': {
+                'type': 'str',
+            },
+            'ip_nat': {
+                'type': 'bool',
+            },
+            'metric_ip_nat': {
+                'type': 'int',
+            },
+            'tag_ip_nat': {
+                'type': 'int',
+            },
+            'vip_floating_list': {
+                'type': 'list',
+                'vip_address': {
+                    'type': 'str',
+                },
+                'vip_floating_IP_forward': {
+                    'type': 'str',
+                }
+            },
+            'metric_type_ip_nat': {
+                'type': 'str',
+                'choices': ['1', '2']
+            }
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'network_list': {
+            'type': 'list',
+            'network_ipv4_cidr': {
+                'type': 'str',
+            },
+            'network_ipv4': {
+                'type': 'str',
+            },
+            'network_area': {
+                'type': 'dict',
+                'network_area_num': {
+                    'type': 'int',
+                },
+                'network_area_ipv4': {
+                    'type': 'str',
+                },
+                'instance_value': {
+                    'type': 'int',
+                }
+            },
+            'network_ipv4_mask': {
+                'type': 'str',
+            }
+        },
+        'timers': {
+            'type': 'dict',
+            'spf': {
+                'type': 'dict',
+                'exp': {
+                    'type': 'dict',
+                    'max_delay': {
+                        'type': 'int',
+                    },
+                    'min_delay': {
+                        'type': 'int',
+                    }
+                }
+            }
+        },
+        'ha_standby_extra_cost': {
+            'type': 'list',
+            'group': {
+                'type': 'int',
+            },
+            'extra_cost': {
+                'type': 'int',
+            }
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -450,16 +1008,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -467,13 +1029,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -486,10 +1050,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -501,30 +1065,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -545,6 +1113,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ospf"].items():
@@ -555,16 +1124,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["ospf"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["ospf"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -577,6 +1147,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -593,6 +1164,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("ospf", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -606,6 +1178,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -618,6 +1191,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -628,6 +1202,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -644,15 +1219,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -673,14 +1244,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -688,14 +1260,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -703,14 +1275,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

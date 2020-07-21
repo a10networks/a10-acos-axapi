@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_cgnv6_dns64_virtualserver
 description:
     - Create a DNS64 Virtual Server
 short_description: Configures A10 cgnv6.dns64-virtualserver
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -114,7 +114,7 @@ options:
         suboptions:
             protocol:
                 description:
-                - "'dns-udp'= DNS service over UDP; "
+                - "'dns-udp'= DNS service over UDP;"
             uuid:
                 description:
                 - "uuid of the object"
@@ -150,7 +150,7 @@ options:
                 - "Field acl_id_list"
             action:
                 description:
-                - "'enable'= Enable; 'disable'= Disable; "
+                - "'enable'= Enable; 'disable'= Disable;"
             pool:
                 description:
                 - "Specify NAT pool or pool group"
@@ -168,7 +168,7 @@ options:
         required: False
     enable_disable_action:
         description:
-        - "'enable'= Enable Virtual Server (default); 'disable'= Disable Virtual Server; "
+        - "'enable'= Enable Virtual Server (default); 'disable'= Disable Virtual Server;"
         required: False
     user_tag:
         description:
@@ -212,18 +212,29 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["enable_disable_action","ethernet","ip_address","ipv6_address","name","netmask","oper","policy","port_list","template_policy","use_if_ip","user_tag","uuid","vrid",]
+AVAILABLE_PROPERTIES = [
+    "enable_disable_action",
+    "ethernet",
+    "ip_address",
+    "ipv6_address",
+    "name",
+    "netmask",
+    "oper",
+    "policy",
+    "port_list",
+    "template_policy",
+    "use_if_ip",
+    "user_tag",
+    "uuid",
+    "vrid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -231,34 +242,583 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        oper=dict(type='dict', peak_conn=dict(type='int', ), conn_rate_unit=dict(type='str', choices=['100ms', 'second']), port_list=dict(type='list', oper=dict(type='dict', http_host_hits=dict(type='bool', ), cpu_count=dict(type='int', ), loc_list=dict(type='str', ), http_hits_list=dict(type='list', name=dict(type='str', ), hits_count=dict(type='int', )), http_vport=dict(type='bool', ), state=dict(type='str', choices=['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']), loc_max_depth=dict(type='int', ), level_str=dict(type='str', ), loc_last=dict(type='str', ), http_url_hits=dict(type='bool', ), geo_location=dict(type='str', ), http_vport_cpu_list=dict(type='list', REQ_50u=dict(type='int', ), http2_control_bytes=dict(type='int', ), ws_server_switch=dict(type='int', ), REQ_50m=dict(type='int', ), status_450=dict(type='int', ), http2_reset_received=dict(type='int', ), status_510=dict(type='int', ), ws_handshake_request=dict(type='int', ), http2_header_bytes=dict(type='int', ), status_207=dict(type='int', ), status_206=dict(type='int', ), status_205=dict(type='int', ), status_204=dict(type='int', ), status_203=dict(type='int', ), status_202=dict(type='int', ), status_201=dict(type='int', ), status_200=dict(type='int', ), ws_client_switch=dict(type='int', ), status_2xx=dict(type='int', ), http2_goaway_received=dict(type='int', ), REQ_500u=dict(type='int', ), status_4xx=dict(type='int', ), status_3xx=dict(type='int', ), REQ_200u=dict(type='int', ), stream_closed=dict(type='int', ), REQ_100m=dict(type='int', ), REQ_5m=dict(type='int', ), REQ_100u=dict(type='int', ), REQ_5s=dict(type='int', ), REQ_20m=dict(type='int', ), header_length_long=dict(type='int', ), REQ_20u=dict(type='int', ), REQ_2s=dict(type='int', ), total_http2_bytes=dict(type='int', ), status_411=dict(type='int', ), status_306=dict(type='int', ), status_307=dict(type='int', ), status_304=dict(type='int', ), status_305=dict(type='int', ), status_302=dict(type='int', ), status_303=dict(type='int', ), REQ_2m=dict(type='int', ), status_301=dict(type='int', ), REQ_10u=dict(type='int', ), total_http2_conn=dict(type='int', ), REQ_10m=dict(type='int', ), REQ_200m=dict(type='int', ), peak_http2_conn=dict(type='int', ), status_412=dict(type='int', ), status_413=dict(type='int', ), status_410=dict(type='int', ), http2_reset_sent=dict(type='int', ), status_416=dict(type='int', ), status_417=dict(type='int', ), status_414=dict(type='int', ), status_415=dict(type='int', ), status_418=dict(type='int', ), status_unknown=dict(type='int', ), status_100=dict(type='int', ), status_101=dict(type='int', ), status_102=dict(type='int', ), status_300=dict(type='int', ), status_424=dict(type='int', ), curr_http2_conn=dict(type='int', ), ws_handshake_success=dict(type='int', ), status_504_ax=dict(type='int', ), status_6xx=dict(type='int', ), status_5xx=dict(type='int', ), status_401=dict(type='int', ), status_400=dict(type='int', ), status_403=dict(type='int', ), status_402=dict(type='int', ), status_405=dict(type='int', ), status_404=dict(type='int', ), status_407=dict(type='int', ), status_406=dict(type='int', ), status_409=dict(type='int', ), status_408=dict(type='int', ), http2_goaway_sent=dict(type='int', ), REQ_1m=dict(type='int', ), REQ_1s=dict(type='int', ), status_1xx=dict(type='int', ), http2_data_bytes=dict(type='int', ), status_423=dict(type='int', ), status_422=dict(type='int', ), status_426=dict(type='int', ), status_425=dict(type='int', ), REQ_500m=dict(type='int', ), status_508=dict(type='int', ), status_509=dict(type='int', ), REQ_OVER_5s=dict(type='int', ), status_500=dict(type='int', ), status_501=dict(type='int', ), status_502=dict(type='int', ), status_503=dict(type='int', ), status_504=dict(type='int', ), status_505=dict(type='int', ), status_506=dict(type='int', ), status_507=dict(type='int', ), status_449=dict(type='int', )), real_curr_conn=dict(type='int', ), loc_success=dict(type='int', ), loc_error=dict(type='int', ), group_id=dict(type='int', ), loc_override=dict(type='int', )), protocol=dict(type='str', required=True, choices=['dns-udp']), port_number=dict(type='int', required=True, )), curr_conn_overflow=dict(type='int', ), icmp_rate_over_limit_drop=dict(type='int', ), name=dict(type='str', required=True, ), icmpv6_rate_over_limit_drop=dict(type='int', ), curr_conn_rate=dict(type='int', ), mac=dict(type='str', ), curr_icmp_rate=dict(type='int', ), icmpv6_lockup_time_left=dict(type='int', ), state=dict(type='str', choices=['All Up', 'Functional Up', 'Partial Up', 'Down', 'Disb', 'Unkn']), curr_icmpv6_rate=dict(type='int', ), ip_address=dict(type='str', ), icmp_lockup_time_left=dict(type='int', ), migration_status=dict(type='str', )),
-        use_if_ip=dict(type='bool', ),
-        port_list=dict(type='list', protocol=dict(type='str', required=True, choices=['dns-udp']), uuid=dict(type='str', ), precedence=dict(type='bool', ), auto=dict(type='bool', ), template_policy=dict(type='str', ), service_group=dict(type='str', ), port_number=dict(type='int', required=True, ), acl_name_list=dict(type='list', acl_name=dict(type='str', ), acl_name_src_nat_pool=dict(type='str', ), acl_name_seq_num=dict(type='int', )), sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_conn', 'total_l4_conn', 'total_l7_conn', 'toatal_tcp_conn', 'total_conn', 'total_fwd_bytes', 'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts', 'total_dns_pkts', 'total_mf_dns_pkts', 'es_total_failure_actions', 'compression_bytes_before', 'compression_bytes_after', 'compression_hit', 'compression_miss', 'compression_miss_no_client', 'compression_miss_template_exclusion', 'curr_req', 'total_req', 'total_req_succ', 'peak_conn', 'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time', 'slowest_rsp_time'])), user_tag=dict(type='str', ), template_dns=dict(type='str', ), acl_id_list=dict(type='list', acl_id_seq_num=dict(type='int', ), acl_id=dict(type='int', ), acl_id_src_nat_pool=dict(type='str', )), action=dict(type='str', choices=['enable', 'disable']), pool=dict(type='str', )),
-        name=dict(type='str', required=True, ),
-        template_policy=dict(type='str', ),
-        vrid=dict(type='int', ),
-        enable_disable_action=dict(type='str', choices=['enable', 'disable']),
-        user_tag=dict(type='str', ),
-        ipv6_address=dict(type='str', ),
-        netmask=dict(type='str', ),
-        ip_address=dict(type='str', ),
-        policy=dict(type='bool', ),
-        ethernet=dict(type='str', ),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'oper': {
+            'type': 'dict',
+            'peak_conn': {
+                'type': 'int',
+            },
+            'conn_rate_unit': {
+                'type': 'str',
+                'choices': ['100ms', 'second']
+            },
+            'port_list': {
+                'type': 'list',
+                'oper': {
+                    'type': 'dict',
+                    'http_host_hits': {
+                        'type': 'bool',
+                    },
+                    'cpu_count': {
+                        'type': 'int',
+                    },
+                    'loc_list': {
+                        'type': 'str',
+                    },
+                    'http_hits_list': {
+                        'type': 'list',
+                        'name': {
+                            'type': 'str',
+                        },
+                        'hits_count': {
+                            'type': 'int',
+                        }
+                    },
+                    'http_vport': {
+                        'type': 'bool',
+                    },
+                    'state': {
+                        'type':
+                        'str',
+                        'choices':
+                        ['All Up', 'Functional Up', 'Down', 'Disb', 'Unkn']
+                    },
+                    'loc_max_depth': {
+                        'type': 'int',
+                    },
+                    'level_str': {
+                        'type': 'str',
+                    },
+                    'loc_last': {
+                        'type': 'str',
+                    },
+                    'http_url_hits': {
+                        'type': 'bool',
+                    },
+                    'geo_location': {
+                        'type': 'str',
+                    },
+                    'http_vport_cpu_list': {
+                        'type': 'list',
+                        'REQ_50u': {
+                            'type': 'int',
+                        },
+                        'http2_control_bytes': {
+                            'type': 'int',
+                        },
+                        'ws_server_switch': {
+                            'type': 'int',
+                        },
+                        'REQ_50m': {
+                            'type': 'int',
+                        },
+                        'status_450': {
+                            'type': 'int',
+                        },
+                        'http2_reset_received': {
+                            'type': 'int',
+                        },
+                        'status_510': {
+                            'type': 'int',
+                        },
+                        'ws_handshake_request': {
+                            'type': 'int',
+                        },
+                        'http2_header_bytes': {
+                            'type': 'int',
+                        },
+                        'status_207': {
+                            'type': 'int',
+                        },
+                        'status_206': {
+                            'type': 'int',
+                        },
+                        'status_205': {
+                            'type': 'int',
+                        },
+                        'status_204': {
+                            'type': 'int',
+                        },
+                        'status_203': {
+                            'type': 'int',
+                        },
+                        'status_202': {
+                            'type': 'int',
+                        },
+                        'status_201': {
+                            'type': 'int',
+                        },
+                        'status_200': {
+                            'type': 'int',
+                        },
+                        'ws_client_switch': {
+                            'type': 'int',
+                        },
+                        'status_2xx': {
+                            'type': 'int',
+                        },
+                        'http2_goaway_received': {
+                            'type': 'int',
+                        },
+                        'REQ_500u': {
+                            'type': 'int',
+                        },
+                        'status_4xx': {
+                            'type': 'int',
+                        },
+                        'status_3xx': {
+                            'type': 'int',
+                        },
+                        'REQ_200u': {
+                            'type': 'int',
+                        },
+                        'stream_closed': {
+                            'type': 'int',
+                        },
+                        'REQ_100m': {
+                            'type': 'int',
+                        },
+                        'REQ_5m': {
+                            'type': 'int',
+                        },
+                        'REQ_100u': {
+                            'type': 'int',
+                        },
+                        'REQ_5s': {
+                            'type': 'int',
+                        },
+                        'REQ_20m': {
+                            'type': 'int',
+                        },
+                        'header_length_long': {
+                            'type': 'int',
+                        },
+                        'REQ_20u': {
+                            'type': 'int',
+                        },
+                        'REQ_2s': {
+                            'type': 'int',
+                        },
+                        'total_http2_bytes': {
+                            'type': 'int',
+                        },
+                        'status_411': {
+                            'type': 'int',
+                        },
+                        'status_306': {
+                            'type': 'int',
+                        },
+                        'status_307': {
+                            'type': 'int',
+                        },
+                        'status_304': {
+                            'type': 'int',
+                        },
+                        'status_305': {
+                            'type': 'int',
+                        },
+                        'status_302': {
+                            'type': 'int',
+                        },
+                        'status_303': {
+                            'type': 'int',
+                        },
+                        'REQ_2m': {
+                            'type': 'int',
+                        },
+                        'status_301': {
+                            'type': 'int',
+                        },
+                        'REQ_10u': {
+                            'type': 'int',
+                        },
+                        'total_http2_conn': {
+                            'type': 'int',
+                        },
+                        'REQ_10m': {
+                            'type': 'int',
+                        },
+                        'REQ_200m': {
+                            'type': 'int',
+                        },
+                        'peak_http2_conn': {
+                            'type': 'int',
+                        },
+                        'status_412': {
+                            'type': 'int',
+                        },
+                        'status_413': {
+                            'type': 'int',
+                        },
+                        'status_410': {
+                            'type': 'int',
+                        },
+                        'http2_reset_sent': {
+                            'type': 'int',
+                        },
+                        'status_416': {
+                            'type': 'int',
+                        },
+                        'status_417': {
+                            'type': 'int',
+                        },
+                        'status_414': {
+                            'type': 'int',
+                        },
+                        'status_415': {
+                            'type': 'int',
+                        },
+                        'status_418': {
+                            'type': 'int',
+                        },
+                        'status_unknown': {
+                            'type': 'int',
+                        },
+                        'status_100': {
+                            'type': 'int',
+                        },
+                        'status_101': {
+                            'type': 'int',
+                        },
+                        'status_102': {
+                            'type': 'int',
+                        },
+                        'status_300': {
+                            'type': 'int',
+                        },
+                        'status_424': {
+                            'type': 'int',
+                        },
+                        'curr_http2_conn': {
+                            'type': 'int',
+                        },
+                        'ws_handshake_success': {
+                            'type': 'int',
+                        },
+                        'status_504_ax': {
+                            'type': 'int',
+                        },
+                        'status_6xx': {
+                            'type': 'int',
+                        },
+                        'status_5xx': {
+                            'type': 'int',
+                        },
+                        'status_401': {
+                            'type': 'int',
+                        },
+                        'status_400': {
+                            'type': 'int',
+                        },
+                        'status_403': {
+                            'type': 'int',
+                        },
+                        'status_402': {
+                            'type': 'int',
+                        },
+                        'status_405': {
+                            'type': 'int',
+                        },
+                        'status_404': {
+                            'type': 'int',
+                        },
+                        'status_407': {
+                            'type': 'int',
+                        },
+                        'status_406': {
+                            'type': 'int',
+                        },
+                        'status_409': {
+                            'type': 'int',
+                        },
+                        'status_408': {
+                            'type': 'int',
+                        },
+                        'http2_goaway_sent': {
+                            'type': 'int',
+                        },
+                        'REQ_1m': {
+                            'type': 'int',
+                        },
+                        'REQ_1s': {
+                            'type': 'int',
+                        },
+                        'status_1xx': {
+                            'type': 'int',
+                        },
+                        'http2_data_bytes': {
+                            'type': 'int',
+                        },
+                        'status_423': {
+                            'type': 'int',
+                        },
+                        'status_422': {
+                            'type': 'int',
+                        },
+                        'status_426': {
+                            'type': 'int',
+                        },
+                        'status_425': {
+                            'type': 'int',
+                        },
+                        'REQ_500m': {
+                            'type': 'int',
+                        },
+                        'status_508': {
+                            'type': 'int',
+                        },
+                        'status_509': {
+                            'type': 'int',
+                        },
+                        'REQ_OVER_5s': {
+                            'type': 'int',
+                        },
+                        'status_500': {
+                            'type': 'int',
+                        },
+                        'status_501': {
+                            'type': 'int',
+                        },
+                        'status_502': {
+                            'type': 'int',
+                        },
+                        'status_503': {
+                            'type': 'int',
+                        },
+                        'status_504': {
+                            'type': 'int',
+                        },
+                        'status_505': {
+                            'type': 'int',
+                        },
+                        'status_506': {
+                            'type': 'int',
+                        },
+                        'status_507': {
+                            'type': 'int',
+                        },
+                        'status_449': {
+                            'type': 'int',
+                        }
+                    },
+                    'real_curr_conn': {
+                        'type': 'int',
+                    },
+                    'loc_success': {
+                        'type': 'int',
+                    },
+                    'loc_error': {
+                        'type': 'int',
+                    },
+                    'group_id': {
+                        'type': 'int',
+                    },
+                    'loc_override': {
+                        'type': 'int',
+                    }
+                },
+                'protocol': {
+                    'type': 'str',
+                    'required': True,
+                    'choices': ['dns-udp']
+                },
+                'port_number': {
+                    'type': 'int',
+                    'required': True,
+                }
+            },
+            'curr_conn_overflow': {
+                'type': 'int',
+            },
+            'icmp_rate_over_limit_drop': {
+                'type': 'int',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'icmpv6_rate_over_limit_drop': {
+                'type': 'int',
+            },
+            'curr_conn_rate': {
+                'type': 'int',
+            },
+            'mac': {
+                'type': 'str',
+            },
+            'curr_icmp_rate': {
+                'type': 'int',
+            },
+            'icmpv6_lockup_time_left': {
+                'type': 'int',
+            },
+            'state': {
+                'type':
+                'str',
+                'choices': [
+                    'All Up', 'Functional Up', 'Partial Up', 'Down', 'Disb',
+                    'Unkn'
+                ]
+            },
+            'curr_icmpv6_rate': {
+                'type': 'int',
+            },
+            'ip_address': {
+                'type': 'str',
+            },
+            'icmp_lockup_time_left': {
+                'type': 'int',
+            },
+            'migration_status': {
+                'type': 'str',
+            }
+        },
+        'use_if_ip': {
+            'type': 'bool',
+        },
+        'port_list': {
+            'type': 'list',
+            'protocol': {
+                'type': 'str',
+                'required': True,
+                'choices': ['dns-udp']
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'precedence': {
+                'type': 'bool',
+            },
+            'auto': {
+                'type': 'bool',
+            },
+            'template_policy': {
+                'type': 'str',
+            },
+            'service_group': {
+                'type': 'str',
+            },
+            'port_number': {
+                'type': 'int',
+                'required': True,
+            },
+            'acl_name_list': {
+                'type': 'list',
+                'acl_name': {
+                    'type': 'str',
+                },
+                'acl_name_src_nat_pool': {
+                    'type': 'str',
+                },
+                'acl_name_seq_num': {
+                    'type': 'int',
+                }
+            },
+            'sampling_enable': {
+                'type': 'list',
+                'counters1': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'all', 'curr_conn', 'total_l4_conn', 'total_l7_conn',
+                        'toatal_tcp_conn', 'total_conn', 'total_fwd_bytes',
+                        'total_fwd_pkts', 'total_rev_bytes', 'total_rev_pkts',
+                        'total_dns_pkts', 'total_mf_dns_pkts',
+                        'es_total_failure_actions', 'compression_bytes_before',
+                        'compression_bytes_after', 'compression_hit',
+                        'compression_miss', 'compression_miss_no_client',
+                        'compression_miss_template_exclusion', 'curr_req',
+                        'total_req', 'total_req_succ', 'peak_conn',
+                        'curr_conn_rate', 'last_rsp_time', 'fastest_rsp_time',
+                        'slowest_rsp_time'
+                    ]
+                }
+            },
+            'user_tag': {
+                'type': 'str',
+            },
+            'template_dns': {
+                'type': 'str',
+            },
+            'acl_id_list': {
+                'type': 'list',
+                'acl_id_seq_num': {
+                    'type': 'int',
+                },
+                'acl_id': {
+                    'type': 'int',
+                },
+                'acl_id_src_nat_pool': {
+                    'type': 'str',
+                }
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'pool': {
+                'type': 'str',
+            }
+        },
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'template_policy': {
+            'type': 'str',
+        },
+        'vrid': {
+            'type': 'int',
+        },
+        'enable_disable_action': {
+            'type': 'str',
+            'choices': ['enable', 'disable']
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'ipv6_address': {
+            'type': 'str',
+        },
+        'netmask': {
+            'type': 'str',
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'policy': {
+            'type': 'bool',
+        },
+        'ethernet': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -270,30 +830,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_oper(module):
     if module.params.get("oper"):
         query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
     return module.client.get(oper_url(module))
+
 
 def exists(module):
     try:
@@ -301,13 +866,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -320,10 +887,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -335,30 +902,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -379,6 +950,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns64-virtualserver"].items():
@@ -389,16 +961,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["dns64-virtualserver"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["dns64-virtualserver"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -411,6 +984,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -427,6 +1001,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("dns64-virtualserver", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -440,6 +1015,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -452,6 +1028,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -462,6 +1039,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -478,15 +1056,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -507,14 +1081,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -522,14 +1097,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -539,14 +1114,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

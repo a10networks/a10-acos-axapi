@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_interface_ethernet_ipv6
 description:
     - Global IPv6 configuration subcommands
 short_description: Configures A10 interface.ethernet.ipv6
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -64,7 +64,8 @@ options:
         suboptions:
             address_type:
                 description:
-                - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6 link local address; "
+                - "'anycast'= Configure an IPv6 anycast address; 'link-local'= Configure an IPv6
+          link local address;"
             ipv6_addr:
                 description:
                 - "Set the IPv6 address of an interface"
@@ -191,28 +192,35 @@ options:
         suboptions:
             max_interval:
                 description:
-                - "Set Router Advertisement Max Interval (default= 600) (Max Router Advertisement Interval (seconds))"
+                - "Set Router Advertisement Max Interval (default= 600) (Max Router Advertisement
+          Interval (seconds))"
             default_lifetime:
                 description:
-                - "Set Router Advertisement Default Lifetime (default= 1800) (Default Lifetime (seconds))"
+                - "Set Router Advertisement Default Lifetime (default= 1800) (Default Lifetime
+          (seconds))"
             reachable_time:
                 description:
-                - "Set Router Advertisement Reachable ime (default= 0) (Reachable Time (milliseconds))"
+                - "Set Router Advertisement Reachable ime (default= 0) (Reachable Time
+          (milliseconds))"
             other_config_action:
                 description:
-                - "'enable'= Enable the Other Stateful Configuration flag; 'disable'= Disable the Other Stateful Configuration flag (default); "
+                - "'enable'= Enable the Other Stateful Configuration flag; 'disable'= Disable the
+          Other Stateful Configuration flag (default);"
             floating_ip_default_vrid:
                 description:
                 - "Use a floating IP as the source address for Router advertisements"
             managed_config_action:
                 description:
-                - "'enable'= Enable the Managed Address Configuration flag; 'disable'= Disable the Managed Address Configuration flag (default); "
+                - "'enable'= Enable the Managed Address Configuration flag; 'disable'= Disable the
+          Managed Address Configuration flag (default);"
             min_interval:
                 description:
-                - "Set Router Advertisement Min Interval (default= 200) (Min Router Advertisement Interval (seconds))"
+                - "Set Router Advertisement Min Interval (default= 200) (Min Router Advertisement
+          Interval (seconds))"
             rate_limit:
                 description:
-                - "Rate Limit the processing of incoming Router Solicitations (Max Number of Router Solicitations to process per second)"
+                - "Rate Limit the processing of incoming Router Solicitations (Max Number of
+          Router Solicitations to process per second)"
             adver_mtu_disable:
                 description:
                 - "Disable Router Advertisement MTU Option"
@@ -230,7 +238,8 @@ options:
                 - "Use a floating IP as the source address for Router advertisements"
             action:
                 description:
-                - "'enable'= Enable Router Advertisements on this interface; 'disable'= Disable Router Advertisements on this interface; "
+                - "'enable'= Enable Router Advertisements on this interface; 'disable'= Disable
+          Router Advertisements on this interface;"
             adver_vrid_default:
                 description:
                 - "Default VRRP-A vrid"
@@ -260,18 +269,27 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["access_list_cfg","address_list","inside","ipv6_enable","ospf","outside","rip","router","router_adver","stateful_firewall","ttl_ignore","uuid",]
+AVAILABLE_PROPERTIES = [
+    "access_list_cfg",
+    "address_list",
+    "inside",
+    "ipv6_enable",
+    "ospf",
+    "outside",
+    "rip",
+    "router",
+    "router_adver",
+    "stateful_firewall",
+    "ttl_ignore",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -279,36 +297,331 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        uuid=dict(type='str', ),
-        address_list=dict(type='list', address_type=dict(type='str', choices=['anycast', 'link-local']), ipv6_addr=dict(type='str', )),
-        inside=dict(type='bool', ),
-        ipv6_enable=dict(type='bool', ),
-        rip=dict(type='dict', split_horizon_cfg=dict(type='dict', state=dict(type='str', choices=['poisoned', 'disable', 'enable'])), uuid=dict(type='str', )),
-        outside=dict(type='bool', ),
-        stateful_firewall=dict(type='dict', uuid=dict(type='str', ), class_list=dict(type='str', ), acl_name=dict(type='str', ), inside=dict(type='bool', ), outside=dict(type='bool', ), access_list=dict(type='bool', )),
-        ttl_ignore=dict(type='bool', ),
-        router=dict(type='dict', ripng=dict(type='dict', uuid=dict(type='str', ), rip=dict(type='bool', )), ospf=dict(type='dict', area_list=dict(type='list', area_id_addr=dict(type='str', ), tag=dict(type='str', ), instance_id=dict(type='int', ), area_id_num=dict(type='int', )), uuid=dict(type='str', )), isis=dict(type='dict', tag=dict(type='str', ), uuid=dict(type='str', ))),
-        access_list_cfg=dict(type='dict', inbound=dict(type='bool', ), v6_acl_name=dict(type='str', )),
-        ospf=dict(type='dict', uuid=dict(type='str', ), bfd=dict(type='bool', ), cost_cfg=dict(type='list', cost=dict(type='int', ), instance_id=dict(type='int', )), priority_cfg=dict(type='list', priority=dict(type='int', ), instance_id=dict(type='int', )), hello_interval_cfg=dict(type='list', hello_interval=dict(type='int', ), instance_id=dict(type='int', )), mtu_ignore_cfg=dict(type='list', mtu_ignore=dict(type='bool', ), instance_id=dict(type='int', )), retransmit_interval_cfg=dict(type='list', retransmit_interval=dict(type='int', ), instance_id=dict(type='int', )), disable=dict(type='bool', ), transmit_delay_cfg=dict(type='list', transmit_delay=dict(type='int', ), instance_id=dict(type='int', )), neighbor_cfg=dict(type='list', neighbor_priority=dict(type='int', ), neighbor_poll_interval=dict(type='int', ), neig_inst=dict(type='int', ), neighbor=dict(type='str', ), neighbor_cost=dict(type='int', )), network_list=dict(type='list', broadcast_type=dict(type='str', choices=['broadcast', 'non-broadcast', 'point-to-point', 'point-to-multipoint']), p2mp_nbma=dict(type='bool', ), network_instance_id=dict(type='int', )), dead_interval_cfg=dict(type='list', dead_interval=dict(type='int', ), instance_id=dict(type='int', ))),
-        router_adver=dict(type='dict', max_interval=dict(type='int', ), default_lifetime=dict(type='int', ), reachable_time=dict(type='int', ), other_config_action=dict(type='str', choices=['enable', 'disable']), floating_ip_default_vrid=dict(type='str', ), managed_config_action=dict(type='str', choices=['enable', 'disable']), min_interval=dict(type='int', ), rate_limit=dict(type='int', ), adver_mtu_disable=dict(type='bool', ), prefix_list=dict(type='list', not_autonomous=dict(type='bool', ), not_on_link=dict(type='bool', ), valid_lifetime=dict(type='int', ), prefix=dict(type='str', ), preferred_lifetime=dict(type='int', )), floating_ip=dict(type='str', ), adver_vrid=dict(type='int', ), use_floating_ip_default_vrid=dict(type='bool', ), action=dict(type='str', choices=['enable', 'disable']), adver_vrid_default=dict(type='bool', ), adver_mtu=dict(type='int', ), retransmit_timer=dict(type='int', ), hop_limit=dict(type='int', ), use_floating_ip=dict(type='bool', ))
-    ))
-   
+    rv.update({
+        'uuid': {
+            'type': 'str',
+        },
+        'address_list': {
+            'type': 'list',
+            'address_type': {
+                'type': 'str',
+                'choices': ['anycast', 'link-local']
+            },
+            'ipv6_addr': {
+                'type': 'str',
+            }
+        },
+        'inside': {
+            'type': 'bool',
+        },
+        'ipv6_enable': {
+            'type': 'bool',
+        },
+        'rip': {
+            'type': 'dict',
+            'split_horizon_cfg': {
+                'type': 'dict',
+                'state': {
+                    'type': 'str',
+                    'choices': ['poisoned', 'disable', 'enable']
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'outside': {
+            'type': 'bool',
+        },
+        'stateful_firewall': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'class_list': {
+                'type': 'str',
+            },
+            'acl_name': {
+                'type': 'str',
+            },
+            'inside': {
+                'type': 'bool',
+            },
+            'outside': {
+                'type': 'bool',
+            },
+            'access_list': {
+                'type': 'bool',
+            }
+        },
+        'ttl_ignore': {
+            'type': 'bool',
+        },
+        'router': {
+            'type': 'dict',
+            'ripng': {
+                'type': 'dict',
+                'uuid': {
+                    'type': 'str',
+                },
+                'rip': {
+                    'type': 'bool',
+                }
+            },
+            'ospf': {
+                'type': 'dict',
+                'area_list': {
+                    'type': 'list',
+                    'area_id_addr': {
+                        'type': 'str',
+                    },
+                    'tag': {
+                        'type': 'str',
+                    },
+                    'instance_id': {
+                        'type': 'int',
+                    },
+                    'area_id_num': {
+                        'type': 'int',
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'isis': {
+                'type': 'dict',
+                'tag': {
+                    'type': 'str',
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'access_list_cfg': {
+            'type': 'dict',
+            'inbound': {
+                'type': 'bool',
+            },
+            'v6_acl_name': {
+                'type': 'str',
+            }
+        },
+        'ospf': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            },
+            'bfd': {
+                'type': 'bool',
+            },
+            'cost_cfg': {
+                'type': 'list',
+                'cost': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'priority_cfg': {
+                'type': 'list',
+                'priority': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'hello_interval_cfg': {
+                'type': 'list',
+                'hello_interval': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'mtu_ignore_cfg': {
+                'type': 'list',
+                'mtu_ignore': {
+                    'type': 'bool',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'retransmit_interval_cfg': {
+                'type': 'list',
+                'retransmit_interval': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'disable': {
+                'type': 'bool',
+            },
+            'transmit_delay_cfg': {
+                'type': 'list',
+                'transmit_delay': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            },
+            'neighbor_cfg': {
+                'type': 'list',
+                'neighbor_priority': {
+                    'type': 'int',
+                },
+                'neighbor_poll_interval': {
+                    'type': 'int',
+                },
+                'neig_inst': {
+                    'type': 'int',
+                },
+                'neighbor': {
+                    'type': 'str',
+                },
+                'neighbor_cost': {
+                    'type': 'int',
+                }
+            },
+            'network_list': {
+                'type': 'list',
+                'broadcast_type': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'broadcast', 'non-broadcast', 'point-to-point',
+                        'point-to-multipoint'
+                    ]
+                },
+                'p2mp_nbma': {
+                    'type': 'bool',
+                },
+                'network_instance_id': {
+                    'type': 'int',
+                }
+            },
+            'dead_interval_cfg': {
+                'type': 'list',
+                'dead_interval': {
+                    'type': 'int',
+                },
+                'instance_id': {
+                    'type': 'int',
+                }
+            }
+        },
+        'router_adver': {
+            'type': 'dict',
+            'max_interval': {
+                'type': 'int',
+            },
+            'default_lifetime': {
+                'type': 'int',
+            },
+            'reachable_time': {
+                'type': 'int',
+            },
+            'other_config_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'floating_ip_default_vrid': {
+                'type': 'str',
+            },
+            'managed_config_action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'min_interval': {
+                'type': 'int',
+            },
+            'rate_limit': {
+                'type': 'int',
+            },
+            'adver_mtu_disable': {
+                'type': 'bool',
+            },
+            'prefix_list': {
+                'type': 'list',
+                'not_autonomous': {
+                    'type': 'bool',
+                },
+                'not_on_link': {
+                    'type': 'bool',
+                },
+                'valid_lifetime': {
+                    'type': 'int',
+                },
+                'prefix': {
+                    'type': 'str',
+                },
+                'preferred_lifetime': {
+                    'type': 'int',
+                }
+            },
+            'floating_ip': {
+                'type': 'str',
+            },
+            'adver_vrid': {
+                'type': 'int',
+            },
+            'use_floating_ip_default_vrid': {
+                'type': 'bool',
+            },
+            'action': {
+                'type': 'str',
+                'choices': ['enable', 'disable']
+            },
+            'adver_vrid_default': {
+                'type': 'bool',
+            },
+            'adver_mtu': {
+                'type': 'int',
+            },
+            'retransmit_timer': {
+                'type': 'int',
+            },
+            'hop_limit': {
+                'type': 'int',
+            },
+            'use_floating_ip': {
+                'type': 'bool',
+            }
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        ethernet_ifnum=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(ethernet_ifnum=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -320,16 +633,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -337,13 +654,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -356,10 +675,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -371,30 +690,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -415,6 +738,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["ipv6"].items():
@@ -425,16 +749,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["ipv6"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["ipv6"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -447,6 +772,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -463,6 +789,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("ipv6", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -476,6 +803,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -488,6 +816,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -498,6 +827,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -514,15 +844,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -543,14 +869,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -558,14 +885,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -573,14 +900,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_virtual_server_port_stats_smtp_vport
 description:
     - Statistics for the object port
 short_description: Configures A10 slb.virtual-server.port.stats.smtp-vport
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -81,18 +81,16 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["stats",]
+AVAILABLE_PROPERTIES = [
+    "stats",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -100,27 +98,305 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        stats=dict(type='dict', smtp_vport=dict(type='dict', cmd_local=dict(type='str', ), cmd_noop=dict(type='str', ), reply_100u=dict(type='str', ), reply_100m=dict(type='str', ), code_451=dict(type='str', ), code_450=dict(type='str', ), code_452=dict(type='str', ), code_455=dict(type='str', ), cmd_expn=dict(type='str', ), code_521=dict(type='str', ), reply_2s=dict(type='str', ), data_sz_64k=dict(type='str', ), reply_2m=dict(type='str', ), code_4xx=dict(type='str', ), data_sz_8k=dict(type='str', ), cmd_starttls=dict(type='str', ), code_421=dict(type='str', ), data_sz_16k=dict(type='str', ), code_554=dict(type='str', ), code_555=dict(type='str', ), code_556=dict(type='str', ), code_550=dict(type='str', ), code_551=dict(type='str', ), code_552=dict(type='str', ), code_553=dict(type='str', ), code_252=dict(type='str', ), code_251=dict(type='str', ), code_250=dict(type='str', ), cmd_vrfy=dict(type='str', ), data_sz_256k=dict(type='str', ), total_conn=dict(type='str', ), total_replies=dict(type='str', ), reply_10m=dict(type='str', ), data_sz_32k=dict(type='str', ), code_5xx=dict(type='str', ), reply_10u=dict(type='str', ), data_sz_128k=dict(type='str', ), data_sz_gt_1m=dict(type='str', ), data_sz_2k=dict(type='str', ), reply_200m=dict(type='str', ), data_sz_512k=dict(type='str', ), reply_over_5s=dict(type='str', ), reply_200u=dict(type='str', ), reply_500u=dict(type='str', ), reply_5s=dict(type='str', ), cmd_rset=dict(type='str', ), reply_500m=dict(type='str', ), reply_20u=dict(type='str', ), cmd_rcpt=dict(type='str', ), cmd_mail=dict(type='str', ), cmd_turn=dict(type='str', ), reply_20m=dict(type='str', ), code_200=dict(type='str', ), cmd_unknown=dict(type='str', ), cmd_data=dict(type='str', ), server_bytes=dict(type='str', ), cmd_quit=dict(type='str', ), peak_conn=dict(type='str', ), curr_conn=dict(type='str', ), cmd_etrn=dict(type='str', ), reply_50m=dict(type='str', ), code_214=dict(type='str', ), code_211=dict(type='str', ), code_354=dict(type='str', ), data_sz_4k=dict(type='str', ), reply_50u=dict(type='str', ), code_2xx=dict(type='str', ), code_3xx=dict(type='str', ), code_220=dict(type='str', ), code_221=dict(type='str', ), client_bytes=dict(type='str', ), code_503=dict(type='str', ), code_502=dict(type='str', ), code_501=dict(type='str', ), code_500=dict(type='str', ), code_504=dict(type='str', ), code_unknown=dict(type='str', ), total_commands=dict(type='str', ), data_sz_1m=dict(type='str', ), data_sz_1k=dict(type='str', ), cmd_helo=dict(type='str', ), cmd_ehlo=dict(type='str', ), cmd_help=dict(type='str', ), reply_5m=dict(type='str', ), reply_1s=dict(type='str', ), code_530=dict(type='str', ), reply_1m=dict(type='str', )))
-    ))
-   
+    rv.update({
+        'stats': {
+            'type': 'dict',
+            'smtp_vport': {
+                'type': 'dict',
+                'cmd_local': {
+                    'type': 'str',
+                },
+                'cmd_noop': {
+                    'type': 'str',
+                },
+                'reply_100u': {
+                    'type': 'str',
+                },
+                'reply_100m': {
+                    'type': 'str',
+                },
+                'code_451': {
+                    'type': 'str',
+                },
+                'code_450': {
+                    'type': 'str',
+                },
+                'code_452': {
+                    'type': 'str',
+                },
+                'code_455': {
+                    'type': 'str',
+                },
+                'cmd_expn': {
+                    'type': 'str',
+                },
+                'code_521': {
+                    'type': 'str',
+                },
+                'reply_2s': {
+                    'type': 'str',
+                },
+                'data_sz_64k': {
+                    'type': 'str',
+                },
+                'reply_2m': {
+                    'type': 'str',
+                },
+                'code_4xx': {
+                    'type': 'str',
+                },
+                'data_sz_8k': {
+                    'type': 'str',
+                },
+                'cmd_starttls': {
+                    'type': 'str',
+                },
+                'code_421': {
+                    'type': 'str',
+                },
+                'data_sz_16k': {
+                    'type': 'str',
+                },
+                'code_554': {
+                    'type': 'str',
+                },
+                'code_555': {
+                    'type': 'str',
+                },
+                'code_556': {
+                    'type': 'str',
+                },
+                'code_550': {
+                    'type': 'str',
+                },
+                'code_551': {
+                    'type': 'str',
+                },
+                'code_552': {
+                    'type': 'str',
+                },
+                'code_553': {
+                    'type': 'str',
+                },
+                'code_252': {
+                    'type': 'str',
+                },
+                'code_251': {
+                    'type': 'str',
+                },
+                'code_250': {
+                    'type': 'str',
+                },
+                'cmd_vrfy': {
+                    'type': 'str',
+                },
+                'data_sz_256k': {
+                    'type': 'str',
+                },
+                'total_conn': {
+                    'type': 'str',
+                },
+                'total_replies': {
+                    'type': 'str',
+                },
+                'reply_10m': {
+                    'type': 'str',
+                },
+                'data_sz_32k': {
+                    'type': 'str',
+                },
+                'code_5xx': {
+                    'type': 'str',
+                },
+                'reply_10u': {
+                    'type': 'str',
+                },
+                'data_sz_128k': {
+                    'type': 'str',
+                },
+                'data_sz_gt_1m': {
+                    'type': 'str',
+                },
+                'data_sz_2k': {
+                    'type': 'str',
+                },
+                'reply_200m': {
+                    'type': 'str',
+                },
+                'data_sz_512k': {
+                    'type': 'str',
+                },
+                'reply_over_5s': {
+                    'type': 'str',
+                },
+                'reply_200u': {
+                    'type': 'str',
+                },
+                'reply_500u': {
+                    'type': 'str',
+                },
+                'reply_5s': {
+                    'type': 'str',
+                },
+                'cmd_rset': {
+                    'type': 'str',
+                },
+                'reply_500m': {
+                    'type': 'str',
+                },
+                'reply_20u': {
+                    'type': 'str',
+                },
+                'cmd_rcpt': {
+                    'type': 'str',
+                },
+                'cmd_mail': {
+                    'type': 'str',
+                },
+                'cmd_turn': {
+                    'type': 'str',
+                },
+                'reply_20m': {
+                    'type': 'str',
+                },
+                'code_200': {
+                    'type': 'str',
+                },
+                'cmd_unknown': {
+                    'type': 'str',
+                },
+                'cmd_data': {
+                    'type': 'str',
+                },
+                'server_bytes': {
+                    'type': 'str',
+                },
+                'cmd_quit': {
+                    'type': 'str',
+                },
+                'peak_conn': {
+                    'type': 'str',
+                },
+                'curr_conn': {
+                    'type': 'str',
+                },
+                'cmd_etrn': {
+                    'type': 'str',
+                },
+                'reply_50m': {
+                    'type': 'str',
+                },
+                'code_214': {
+                    'type': 'str',
+                },
+                'code_211': {
+                    'type': 'str',
+                },
+                'code_354': {
+                    'type': 'str',
+                },
+                'data_sz_4k': {
+                    'type': 'str',
+                },
+                'reply_50u': {
+                    'type': 'str',
+                },
+                'code_2xx': {
+                    'type': 'str',
+                },
+                'code_3xx': {
+                    'type': 'str',
+                },
+                'code_220': {
+                    'type': 'str',
+                },
+                'code_221': {
+                    'type': 'str',
+                },
+                'client_bytes': {
+                    'type': 'str',
+                },
+                'code_503': {
+                    'type': 'str',
+                },
+                'code_502': {
+                    'type': 'str',
+                },
+                'code_501': {
+                    'type': 'str',
+                },
+                'code_500': {
+                    'type': 'str',
+                },
+                'code_504': {
+                    'type': 'str',
+                },
+                'code_unknown': {
+                    'type': 'str',
+                },
+                'total_commands': {
+                    'type': 'str',
+                },
+                'data_sz_1m': {
+                    'type': 'str',
+                },
+                'data_sz_1k': {
+                    'type': 'str',
+                },
+                'cmd_helo': {
+                    'type': 'str',
+                },
+                'cmd_ehlo': {
+                    'type': 'str',
+                },
+                'cmd_help': {
+                    'type': 'str',
+                },
+                'reply_5m': {
+                    'type': 'str',
+                },
+                'reply_1s': {
+                    'type': 'str',
+                },
+                'code_530': {
+                    'type': 'str',
+                },
+                'reply_1m': {
+                    'type': 'str',
+                }
+            }
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        protocol=dict(type='str', required=True),
-        port_number=dict(type='str', required=True),
-        virtual_server_name=dict(type='str', required=True),
-    ))
-
+    rv.update(
+        dict(
+            protocol=dict(type='str', required=True),
+            port_number=dict(type='str', required=True),
+            virtual_server_name=dict(type='str', required=True),
+        ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -134,30 +410,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -165,13 +446,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -184,10 +467,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -201,30 +484,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -245,6 +532,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["port"].items():
@@ -255,16 +543,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["port"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["port"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -277,6 +566,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -293,6 +583,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("port", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -306,6 +597,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -318,6 +610,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -328,6 +621,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -344,15 +638,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -373,14 +663,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -388,14 +679,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -405,14 +696,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

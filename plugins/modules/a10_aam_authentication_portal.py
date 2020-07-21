@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_aam_authentication_portal
 description:
     - Authentication portal configuration
 short_description: Configures A10 aam.authentication.portal
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -52,7 +52,7 @@ options:
         required: False
     name:
         description:
-        - "'default-portal'= Default portal configuration; "
+        - "'default-portal'= Default portal configuration;"
         required: True
     logon_fail:
         description:
@@ -99,7 +99,8 @@ options:
                 - "Field old_pwd_cfg"
             username_var:
                 description:
-                - "Specify username variable name in default change password notification page (Default= cp_usr)"
+                - "Specify username variable name in default change password notification page
+          (Default= cp_usr)"
             new_pwd_cfg:
                 description:
                 - "Field new_pwd_cfg"
@@ -111,28 +112,35 @@ options:
                 - "Field cfm_pwd_cfg"
             confirm_password_var:
                 description:
-                - "Specify confirm password variable name in default change password notification page (Default= cp_cfm_pwd)"
+                - "Specify confirm password variable name in default change password notification
+          page (Default= cp_cfm_pwd)"
             new_password_var:
                 description:
-                - "Specify new password variable name in default change password notification page (Default= cp_new_pwd)"
+                - "Specify new password variable name in default change password notification page
+          (Default= cp_new_pwd)"
             change_url:
                 description:
-                - "Specify change password action URL in default change password notification page (Default= /notify_change.fo)"
+                - "Specify change password action URL in default change password notification page
+          (Default= /notify_change.fo)"
             continue_url:
                 description:
-                - "Specify continue action URL in default change password notification page (Default= /continue.fo)"
+                - "Specify continue action URL in default change password notification page
+          (Default= /continue.fo)"
             background:
                 description:
                 - "Field background"
             old_password_var:
                 description:
-                - "Specify old password variable name in default change password notification page (Default= cp_old_pwd)"
+                - "Specify old password variable name in default change password notification page
+          (Default= cp_old_pwd)"
             change_text:
                 description:
-                - "Specify change button text in default change password notification page (Default= Change)"
+                - "Specify change button text in default change password notification page
+          (Default= Change)"
             continue_text:
                 description:
-                - "Specify continue button text in default change password notification page (Default= Continue)"
+                - "Specify continue button text in default change password notification page
+          (Default= Continue)"
             username_cfg:
                 description:
                 - "Field username_cfg"
@@ -187,7 +195,8 @@ options:
                 - "Specify form action URL in default change password page (Default= /change.fo)"
             username_var:
                 description:
-                - "Specify username variable name in default change password page (Default= cp_usr)"
+                - "Specify username variable name in default change password page (Default=
+          cp_usr)"
             new_pwd_cfg:
                 description:
                 - "Field new_pwd_cfg"
@@ -199,7 +208,8 @@ options:
                 - "uuid of the object"
             confirm_password_var:
                 description:
-                - "Specify confirm password variable name in default change password page (Default= cp_cfm_pwd)"
+                - "Specify confirm password variable name in default change password page
+          (Default= cp_cfm_pwd)"
             title_cfg:
                 description:
                 - "Field title_cfg"
@@ -208,7 +218,8 @@ options:
                 - "Field username_cfg"
             new_password_var:
                 description:
-                - "Specify new password variable name in default change password page (Default= cp_new_pwd)"
+                - "Specify new password variable name in default change password page (Default=
+          cp_new_pwd)"
             old_pwd_cfg:
                 description:
                 - "Field old_pwd_cfg"
@@ -217,7 +228,8 @@ options:
                 - "Field background"
             old_password_var:
                 description:
-                - "Specify old password variable name in default change password page (Default= cp_old_pwd)"
+                - "Specify old password variable name in default change password page (Default=
+          cp_old_pwd)"
             cfm_pwd_cfg:
                 description:
                 - "Field cfm_pwd_cfg"
@@ -242,18 +254,23 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["change_password","logo_cfg","logon","logon_fail","name","notify_change_password","user_tag","uuid",]
+AVAILABLE_PROPERTIES = [
+    "change_password",
+    "logo_cfg",
+    "logon",
+    "logon_fail",
+    "name",
+    "notify_change_password",
+    "user_tag",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -261,28 +278,847 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        name=dict(type='str', required=True, choices=['default-portal']),
-        logon_fail=dict(type='dict', fail_msg_cfg=dict(type='dict', fail_font_custom=dict(type='str', ), fail_color=dict(type='bool', ), fail_size=dict(type='int', ), fail_msg=dict(type='bool', ), fail_text=dict(type='str', ), fail_color_value=dict(type='str', ), fail_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), fail_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), fail_font=dict(type='bool', )), background=dict(type='dict', bgfile=dict(type='str', ), bgstyle=dict(type='str', choices=['tile', 'stretch', 'fit']), bgcolor_value=dict(type='str', ), bgcolor_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), title_cfg=dict(type='dict', title_color=dict(type='bool', ), title=dict(type='bool', ), title_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), title_font_custom=dict(type='str', ), title_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), title_color_value=dict(type='str', ), title_size=dict(type='int', ), title_text=dict(type='str', ), title_font=dict(type='bool', )), uuid=dict(type='str', )),
-        logo_cfg=dict(type='dict', logo=dict(type='str', ), width=dict(type='int', ), height=dict(type='int', )),
-        user_tag=dict(type='str', ),
-        notify_change_password=dict(type='dict', old_pwd_cfg=dict(type='dict', old_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), old_color=dict(type='bool', ), old_color_value=dict(type='str', ), old_password=dict(type='bool', ), old_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), old_size=dict(type='int', ), old_text=dict(type='str', ), old_font_custom=dict(type='str', ), old_font=dict(type='bool', )), username_var=dict(type='str', ), new_pwd_cfg=dict(type='dict', new_password=dict(type='bool', ), new_size=dict(type='int', ), new_font=dict(type='bool', ), new_text=dict(type='str', ), new_color=dict(type='bool', ), new_color_value=dict(type='str', ), new_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), new_font_custom=dict(type='str', ), new_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana'])), uuid=dict(type='str', ), cfm_pwd_cfg=dict(type='dict', cfm_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), cfm_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), cfm_color_value=dict(type='str', ), cfm_font_custom=dict(type='str', ), cfm_size=dict(type='int', ), cfm_font=dict(type='bool', ), cfm_text=dict(type='str', ), confirm_password=dict(type='bool', ), cfm_color=dict(type='bool', )), confirm_password_var=dict(type='str', ), new_password_var=dict(type='str', ), change_url=dict(type='str', ), continue_url=dict(type='str', ), background=dict(type='dict', bgfile=dict(type='str', ), bgstyle=dict(type='str', choices=['tile', 'stretch', 'fit']), bgcolor_value=dict(type='str', ), bgcolor_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), old_password_var=dict(type='str', ), change_text=dict(type='str', ), continue_text=dict(type='str', ), username_cfg=dict(type='dict', username=dict(type='bool', ), user_font=dict(type='bool', ), user_text=dict(type='str', ), user_size=dict(type='int', ), user_color_value=dict(type='str', ), user_font_custom=dict(type='str', ), user_color=dict(type='bool', ), user_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), user_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']))),
-        logon=dict(type='dict', action_url=dict(type='str', ), submit_text=dict(type='str', ), passcode_cfg=dict(type='dict', passcode_font_custom=dict(type='str', ), passcode_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), passcode_color=dict(type='bool', ), passcode_text=dict(type='str', ), passcode_color_value=dict(type='str', ), passcode_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), passcode_font=dict(type='bool', ), passcode=dict(type='bool', ), passcode_size=dict(type='int', )), username_cfg=dict(type='dict', username=dict(type='bool', ), user_font=dict(type='bool', ), user_text=dict(type='str', ), user_size=dict(type='int', ), user_color_value=dict(type='str', ), user_font_custom=dict(type='str', ), user_color=dict(type='bool', ), user_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), user_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), username_var=dict(type='str', ), password_var=dict(type='str', ), background=dict(type='dict', bgfile=dict(type='str', ), bgstyle=dict(type='str', choices=['tile', 'stretch', 'fit']), bgcolor_value=dict(type='str', ), bgcolor_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), passcode_var=dict(type='str', ), fail_msg_cfg=dict(type='dict', fail_font_custom=dict(type='str', ), fail_color=dict(type='bool', ), fail_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), fail_size=dict(type='int', ), fail_msg=dict(type='bool', ), fail_text=dict(type='str', ), fail_color_value=dict(type='str', ), fail_font=dict(type='bool', ), fail_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), authz_fail_msg=dict(type='str', )), password_cfg=dict(type='dict', pass_color_value=dict(type='str', ), password=dict(type='bool', ), pass_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), pass_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), pass_font_custom=dict(type='str', ), pass_size=dict(type='int', ), pass_text=dict(type='str', ), pass_font=dict(type='bool', ), pass_color=dict(type='bool', )), enable_passcode=dict(type='bool', ), uuid=dict(type='str', )),
-        change_password=dict(type='dict', action_url=dict(type='str', ), username_var=dict(type='str', ), new_pwd_cfg=dict(type='dict', new_password=dict(type='bool', ), new_size=dict(type='int', ), new_font=dict(type='bool', ), new_text=dict(type='str', ), new_color=dict(type='bool', ), new_color_value=dict(type='str', ), new_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), new_font_custom=dict(type='str', ), new_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana'])), submit_text=dict(type='str', ), uuid=dict(type='str', ), confirm_password_var=dict(type='str', ), title_cfg=dict(type='dict', title_color=dict(type='bool', ), title=dict(type='bool', ), title_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), title_font_custom=dict(type='str', ), title_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), title_color_value=dict(type='str', ), title_size=dict(type='int', ), title_text=dict(type='str', ), title_font=dict(type='bool', )), username_cfg=dict(type='dict', username=dict(type='bool', ), user_font=dict(type='bool', ), user_text=dict(type='str', ), user_size=dict(type='int', ), user_color_value=dict(type='str', ), user_font_custom=dict(type='str', ), user_color=dict(type='bool', ), user_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), user_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), new_password_var=dict(type='str', ), old_pwd_cfg=dict(type='dict', old_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), old_color=dict(type='bool', ), old_color_value=dict(type='str', ), old_password=dict(type='bool', ), old_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), old_size=dict(type='int', ), old_text=dict(type='str', ), old_font_custom=dict(type='str', ), old_font=dict(type='bool', )), background=dict(type='dict', bgfile=dict(type='str', ), bgstyle=dict(type='str', choices=['tile', 'stretch', 'fit']), bgcolor_value=dict(type='str', ), bgcolor_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow'])), old_password_var=dict(type='str', ), cfm_pwd_cfg=dict(type='dict', cfm_color_name=dict(type='str', choices=['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'white', 'yellow']), cfm_face=dict(type='str', choices=['Arial', 'Courier_New', 'Georgia', 'Times_New_Roman', 'Verdana']), cfm_color_value=dict(type='str', ), cfm_font_custom=dict(type='str', ), cfm_size=dict(type='int', ), cfm_font=dict(type='bool', ), cfm_text=dict(type='str', ), confirm_password=dict(type='bool', ), cfm_color=dict(type='bool', )), reset_text=dict(type='str', )),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'name': {
+            'type': 'str',
+            'required': True,
+            'choices': ['default-portal']
+        },
+        'logon_fail': {
+            'type': 'dict',
+            'fail_msg_cfg': {
+                'type': 'dict',
+                'fail_font_custom': {
+                    'type': 'str',
+                },
+                'fail_color': {
+                    'type': 'bool',
+                },
+                'fail_size': {
+                    'type': 'int',
+                },
+                'fail_msg': {
+                    'type': 'bool',
+                },
+                'fail_text': {
+                    'type': 'str',
+                },
+                'fail_color_value': {
+                    'type': 'str',
+                },
+                'fail_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'fail_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'fail_font': {
+                    'type': 'bool',
+                }
+            },
+            'background': {
+                'type': 'dict',
+                'bgfile': {
+                    'type': 'str',
+                },
+                'bgstyle': {
+                    'type': 'str',
+                    'choices': ['tile', 'stretch', 'fit']
+                },
+                'bgcolor_value': {
+                    'type': 'str',
+                },
+                'bgcolor_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'title_cfg': {
+                'type': 'dict',
+                'title_color': {
+                    'type': 'bool',
+                },
+                'title': {
+                    'type': 'bool',
+                },
+                'title_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'title_font_custom': {
+                    'type': 'str',
+                },
+                'title_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'title_color_value': {
+                    'type': 'str',
+                },
+                'title_size': {
+                    'type': 'int',
+                },
+                'title_text': {
+                    'type': 'str',
+                },
+                'title_font': {
+                    'type': 'bool',
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'logo_cfg': {
+            'type': 'dict',
+            'logo': {
+                'type': 'str',
+            },
+            'width': {
+                'type': 'int',
+            },
+            'height': {
+                'type': 'int',
+            }
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'notify_change_password': {
+            'type': 'dict',
+            'old_pwd_cfg': {
+                'type': 'dict',
+                'old_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'old_color': {
+                    'type': 'bool',
+                },
+                'old_color_value': {
+                    'type': 'str',
+                },
+                'old_password': {
+                    'type': 'bool',
+                },
+                'old_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'old_size': {
+                    'type': 'int',
+                },
+                'old_text': {
+                    'type': 'str',
+                },
+                'old_font_custom': {
+                    'type': 'str',
+                },
+                'old_font': {
+                    'type': 'bool',
+                }
+            },
+            'username_var': {
+                'type': 'str',
+            },
+            'new_pwd_cfg': {
+                'type': 'dict',
+                'new_password': {
+                    'type': 'bool',
+                },
+                'new_size': {
+                    'type': 'int',
+                },
+                'new_font': {
+                    'type': 'bool',
+                },
+                'new_text': {
+                    'type': 'str',
+                },
+                'new_color': {
+                    'type': 'bool',
+                },
+                'new_color_value': {
+                    'type': 'str',
+                },
+                'new_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'new_font_custom': {
+                    'type': 'str',
+                },
+                'new_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                }
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'cfm_pwd_cfg': {
+                'type': 'dict',
+                'cfm_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'cfm_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'cfm_color_value': {
+                    'type': 'str',
+                },
+                'cfm_font_custom': {
+                    'type': 'str',
+                },
+                'cfm_size': {
+                    'type': 'int',
+                },
+                'cfm_font': {
+                    'type': 'bool',
+                },
+                'cfm_text': {
+                    'type': 'str',
+                },
+                'confirm_password': {
+                    'type': 'bool',
+                },
+                'cfm_color': {
+                    'type': 'bool',
+                }
+            },
+            'confirm_password_var': {
+                'type': 'str',
+            },
+            'new_password_var': {
+                'type': 'str',
+            },
+            'change_url': {
+                'type': 'str',
+            },
+            'continue_url': {
+                'type': 'str',
+            },
+            'background': {
+                'type': 'dict',
+                'bgfile': {
+                    'type': 'str',
+                },
+                'bgstyle': {
+                    'type': 'str',
+                    'choices': ['tile', 'stretch', 'fit']
+                },
+                'bgcolor_value': {
+                    'type': 'str',
+                },
+                'bgcolor_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'old_password_var': {
+                'type': 'str',
+            },
+            'change_text': {
+                'type': 'str',
+            },
+            'continue_text': {
+                'type': 'str',
+            },
+            'username_cfg': {
+                'type': 'dict',
+                'username': {
+                    'type': 'bool',
+                },
+                'user_font': {
+                    'type': 'bool',
+                },
+                'user_text': {
+                    'type': 'str',
+                },
+                'user_size': {
+                    'type': 'int',
+                },
+                'user_color_value': {
+                    'type': 'str',
+                },
+                'user_font_custom': {
+                    'type': 'str',
+                },
+                'user_color': {
+                    'type': 'bool',
+                },
+                'user_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'user_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            }
+        },
+        'logon': {
+            'type': 'dict',
+            'action_url': {
+                'type': 'str',
+            },
+            'submit_text': {
+                'type': 'str',
+            },
+            'passcode_cfg': {
+                'type': 'dict',
+                'passcode_font_custom': {
+                    'type': 'str',
+                },
+                'passcode_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'passcode_color': {
+                    'type': 'bool',
+                },
+                'passcode_text': {
+                    'type': 'str',
+                },
+                'passcode_color_value': {
+                    'type': 'str',
+                },
+                'passcode_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'passcode_font': {
+                    'type': 'bool',
+                },
+                'passcode': {
+                    'type': 'bool',
+                },
+                'passcode_size': {
+                    'type': 'int',
+                }
+            },
+            'username_cfg': {
+                'type': 'dict',
+                'username': {
+                    'type': 'bool',
+                },
+                'user_font': {
+                    'type': 'bool',
+                },
+                'user_text': {
+                    'type': 'str',
+                },
+                'user_size': {
+                    'type': 'int',
+                },
+                'user_color_value': {
+                    'type': 'str',
+                },
+                'user_font_custom': {
+                    'type': 'str',
+                },
+                'user_color': {
+                    'type': 'bool',
+                },
+                'user_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'user_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'username_var': {
+                'type': 'str',
+            },
+            'password_var': {
+                'type': 'str',
+            },
+            'background': {
+                'type': 'dict',
+                'bgfile': {
+                    'type': 'str',
+                },
+                'bgstyle': {
+                    'type': 'str',
+                    'choices': ['tile', 'stretch', 'fit']
+                },
+                'bgcolor_value': {
+                    'type': 'str',
+                },
+                'bgcolor_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'passcode_var': {
+                'type': 'str',
+            },
+            'fail_msg_cfg': {
+                'type': 'dict',
+                'fail_font_custom': {
+                    'type': 'str',
+                },
+                'fail_color': {
+                    'type': 'bool',
+                },
+                'fail_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'fail_size': {
+                    'type': 'int',
+                },
+                'fail_msg': {
+                    'type': 'bool',
+                },
+                'fail_text': {
+                    'type': 'str',
+                },
+                'fail_color_value': {
+                    'type': 'str',
+                },
+                'fail_font': {
+                    'type': 'bool',
+                },
+                'fail_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'authz_fail_msg': {
+                    'type': 'str',
+                }
+            },
+            'password_cfg': {
+                'type': 'dict',
+                'pass_color_value': {
+                    'type': 'str',
+                },
+                'password': {
+                    'type': 'bool',
+                },
+                'pass_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'pass_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'pass_font_custom': {
+                    'type': 'str',
+                },
+                'pass_size': {
+                    'type': 'int',
+                },
+                'pass_text': {
+                    'type': 'str',
+                },
+                'pass_font': {
+                    'type': 'bool',
+                },
+                'pass_color': {
+                    'type': 'bool',
+                }
+            },
+            'enable_passcode': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'change_password': {
+            'type': 'dict',
+            'action_url': {
+                'type': 'str',
+            },
+            'username_var': {
+                'type': 'str',
+            },
+            'new_pwd_cfg': {
+                'type': 'dict',
+                'new_password': {
+                    'type': 'bool',
+                },
+                'new_size': {
+                    'type': 'int',
+                },
+                'new_font': {
+                    'type': 'bool',
+                },
+                'new_text': {
+                    'type': 'str',
+                },
+                'new_color': {
+                    'type': 'bool',
+                },
+                'new_color_value': {
+                    'type': 'str',
+                },
+                'new_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'new_font_custom': {
+                    'type': 'str',
+                },
+                'new_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                }
+            },
+            'submit_text': {
+                'type': 'str',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'confirm_password_var': {
+                'type': 'str',
+            },
+            'title_cfg': {
+                'type': 'dict',
+                'title_color': {
+                    'type': 'bool',
+                },
+                'title': {
+                    'type': 'bool',
+                },
+                'title_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'title_font_custom': {
+                    'type': 'str',
+                },
+                'title_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'title_color_value': {
+                    'type': 'str',
+                },
+                'title_size': {
+                    'type': 'int',
+                },
+                'title_text': {
+                    'type': 'str',
+                },
+                'title_font': {
+                    'type': 'bool',
+                }
+            },
+            'username_cfg': {
+                'type': 'dict',
+                'username': {
+                    'type': 'bool',
+                },
+                'user_font': {
+                    'type': 'bool',
+                },
+                'user_text': {
+                    'type': 'str',
+                },
+                'user_size': {
+                    'type': 'int',
+                },
+                'user_color_value': {
+                    'type': 'str',
+                },
+                'user_font_custom': {
+                    'type': 'str',
+                },
+                'user_color': {
+                    'type': 'bool',
+                },
+                'user_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'user_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'new_password_var': {
+                'type': 'str',
+            },
+            'old_pwd_cfg': {
+                'type': 'dict',
+                'old_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'old_color': {
+                    'type': 'bool',
+                },
+                'old_color_value': {
+                    'type': 'str',
+                },
+                'old_password': {
+                    'type': 'bool',
+                },
+                'old_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'old_size': {
+                    'type': 'int',
+                },
+                'old_text': {
+                    'type': 'str',
+                },
+                'old_font_custom': {
+                    'type': 'str',
+                },
+                'old_font': {
+                    'type': 'bool',
+                }
+            },
+            'background': {
+                'type': 'dict',
+                'bgfile': {
+                    'type': 'str',
+                },
+                'bgstyle': {
+                    'type': 'str',
+                    'choices': ['tile', 'stretch', 'fit']
+                },
+                'bgcolor_value': {
+                    'type': 'str',
+                },
+                'bgcolor_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                }
+            },
+            'old_password_var': {
+                'type': 'str',
+            },
+            'cfm_pwd_cfg': {
+                'type': 'dict',
+                'cfm_color_name': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+                        'lime', 'maroon', 'navy', 'olive', 'orange', 'purple',
+                        'red', 'silver', 'teal', 'white', 'yellow'
+                    ]
+                },
+                'cfm_face': {
+                    'type':
+                    'str',
+                    'choices': [
+                        'Arial', 'Courier_New', 'Georgia', 'Times_New_Roman',
+                        'Verdana'
+                    ]
+                },
+                'cfm_color_value': {
+                    'type': 'str',
+                },
+                'cfm_font_custom': {
+                    'type': 'str',
+                },
+                'cfm_size': {
+                    'type': 'int',
+                },
+                'cfm_font': {
+                    'type': 'bool',
+                },
+                'cfm_text': {
+                    'type': 'str',
+                },
+                'confirm_password': {
+                    'type': 'bool',
+                },
+                'cfm_color': {
+                    'type': 'bool',
+                }
+            },
+            'reset_text': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -294,16 +1130,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -311,13 +1151,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -330,10 +1172,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -345,30 +1187,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -389,6 +1235,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["portal"].items():
@@ -399,16 +1246,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["portal"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["portal"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -421,6 +1269,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -437,6 +1286,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("portal", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -450,6 +1300,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -462,6 +1313,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -472,6 +1324,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -488,15 +1341,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -517,14 +1366,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -532,14 +1382,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -547,14 +1397,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

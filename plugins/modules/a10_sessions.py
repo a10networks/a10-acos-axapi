@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_sessions
 description:
     - Field sessions
 short_description: Configures A10 sessions
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -203,18 +203,19 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["ext","oper","smp","uuid",]
+AVAILABLE_PROPERTIES = [
+    "ext",
+    "oper",
+    "smp",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -222,24 +223,291 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        oper=dict(type='dict', ext=dict(type='dict', oper=dict(type='dict', session_ext_list=dict(type='list', fail=dict(type='int', ), alloc=dict(type='int', ), ntype=dict(type='str', ), free=dict(type='int', ), cpu_round_robin_fail=dict(type='int', )))), sport_rate_limit_exceed=dict(type='bool', ), app=dict(type='str', ), fw_dest_zone=dict(type='str', ), src_port=dict(type='int', ), fw_dest_vserver=dict(type='str', ), nat_port=dict(type='int', ), fw_src_obj_grp=dict(type='str', ), dst_ipv4_addr=dict(type='str', ), app_sessions=dict(type='int', ), name_str=dict(type='str', ), app_category=dict(type='str', ), fw_src_rserver=dict(type='str', ), smp=dict(type='dict', oper=dict(type='dict', session_smp_list=dict(type='list', alloc=dict(type='int', ), ntype=dict(type='str', ), free=dict(type='int', ), alloc_fail=dict(type='int', )))), application=dict(type='str', ), nat_ipv4_addr=dict(type='str', ), session_list=dict(type='list', 100ms=dict(type='str', ), conn_idx=dict(type='int', ), rate=dict(type='int', ), service_name=dict(type='str', ), duration=dict(type='int', ), limit=dict(type='int', ), reverse_source=dict(type='str', ), reverse_dest=dict(type='str', ), app_type=dict(type='str', ), protocol=dict(type='str', ), rserver_name=dict(type='str', ), extension_fields_list=dict(type='list', ext_field_name=dict(type='str', ), ext_field_val=dict(type='str', )), hash=dict(type='int', ), sip_call_id=dict(type='str', ), app_name=dict(type='str', ), forward_dest=dict(type='str', ), peak_rate=dict(type='int', ), forward_source=dict(type='str', ), age=dict(type='int', ), drop=dict(type='int', ), bytes=dict(type='int', ), flags=dict(type='str', ), category_name=dict(type='str', )), fw_dest_obj_grp=dict(type='str', ), src_ipv6_prefix=dict(type='str', ), total_sessions=dict(type='int', ), session_id=dict(type='str', ), check_inside_user=dict(type='bool', ), sport_rate_limit_curr=dict(type='bool', ), fw_rule=dict(type='str', ), l4_protocol=dict(type='str', choices=['udp', 'tcp', 'icmp', 'icmpv6']), zone_name=dict(type='str', ), fw_dest_rserver=dict(type='str', ), fw_helper_sessions=dict(type='bool', ), fw_ip_type=dict(type='str', choices=['ipv4', 'ipv6']), fw_dest_obj=dict(type='str', ), filter_type=dict(type='str', choices=['ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip', 'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id', 'persist-dst-ip', 'persist-src-ip', 'persist-uie', 'persist-ssl-id', 'radius', 'server', 'virtual-server', 'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch', 'local', 'fw', 'clear-all', 'full-width', 'debug', 'application', 'ipsec', 'diameter', 'zone', 'source-port-rate-limit', 'source-port-rate-limitv4', 'source-port-rate-limitv6']), dst_ipv6_prefix=dict(type='str', ), src_ipv6_addr=dict(type='str', ), dst_ipv6_addr=dict(type='str', ), fw_src_zone=dict(type='str', ), src_ipv4_addr=dict(type='str', ), fw_src_obj=dict(type='str', ), dest_port=dict(type='int', )),
-        ext=dict(type='dict', uuid=dict(type='str', )),
-        uuid=dict(type='str', ),
-        smp=dict(type='dict', uuid=dict(type='str', ))
-    ))
-   
-
+    rv.update({
+        'oper': {
+            'type': 'dict',
+            'ext': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_ext_list': {
+                        'type': 'list',
+                        'fail': {
+                            'type': 'int',
+                        },
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'cpu_round_robin_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'sport_rate_limit_exceed': {
+                'type': 'bool',
+            },
+            'app': {
+                'type': 'str',
+            },
+            'fw_dest_zone': {
+                'type': 'str',
+            },
+            'src_port': {
+                'type': 'int',
+            },
+            'fw_dest_vserver': {
+                'type': 'str',
+            },
+            'nat_port': {
+                'type': 'int',
+            },
+            'fw_src_obj_grp': {
+                'type': 'str',
+            },
+            'dst_ipv4_addr': {
+                'type': 'str',
+            },
+            'app_sessions': {
+                'type': 'int',
+            },
+            'name_str': {
+                'type': 'str',
+            },
+            'app_category': {
+                'type': 'str',
+            },
+            'fw_src_rserver': {
+                'type': 'str',
+            },
+            'smp': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                    'session_smp_list': {
+                        'type': 'list',
+                        'alloc': {
+                            'type': 'int',
+                        },
+                        'ntype': {
+                            'type': 'str',
+                        },
+                        'free': {
+                            'type': 'int',
+                        },
+                        'alloc_fail': {
+                            'type': 'int',
+                        }
+                    }
+                }
+            },
+            'application': {
+                'type': 'str',
+            },
+            'nat_ipv4_addr': {
+                'type': 'str',
+            },
+            'session_list': {
+                'type': 'list',
+                '100ms': {
+                    'type': 'str',
+                },
+                'conn_idx': {
+                    'type': 'int',
+                },
+                'rate': {
+                    'type': 'int',
+                },
+                'service_name': {
+                    'type': 'str',
+                },
+                'duration': {
+                    'type': 'int',
+                },
+                'limit': {
+                    'type': 'int',
+                },
+                'reverse_source': {
+                    'type': 'str',
+                },
+                'reverse_dest': {
+                    'type': 'str',
+                },
+                'app_type': {
+                    'type': 'str',
+                },
+                'protocol': {
+                    'type': 'str',
+                },
+                'rserver_name': {
+                    'type': 'str',
+                },
+                'extension_fields_list': {
+                    'type': 'list',
+                    'ext_field_name': {
+                        'type': 'str',
+                    },
+                    'ext_field_val': {
+                        'type': 'str',
+                    }
+                },
+                'hash': {
+                    'type': 'int',
+                },
+                'sip_call_id': {
+                    'type': 'str',
+                },
+                'app_name': {
+                    'type': 'str',
+                },
+                'forward_dest': {
+                    'type': 'str',
+                },
+                'peak_rate': {
+                    'type': 'int',
+                },
+                'forward_source': {
+                    'type': 'str',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'drop': {
+                    'type': 'int',
+                },
+                'bytes': {
+                    'type': 'int',
+                },
+                'flags': {
+                    'type': 'str',
+                },
+                'category_name': {
+                    'type': 'str',
+                }
+            },
+            'fw_dest_obj_grp': {
+                'type': 'str',
+            },
+            'src_ipv6_prefix': {
+                'type': 'str',
+            },
+            'total_sessions': {
+                'type': 'int',
+            },
+            'session_id': {
+                'type': 'str',
+            },
+            'check_inside_user': {
+                'type': 'bool',
+            },
+            'sport_rate_limit_curr': {
+                'type': 'bool',
+            },
+            'fw_rule': {
+                'type': 'str',
+            },
+            'l4_protocol': {
+                'type': 'str',
+                'choices': ['udp', 'tcp', 'icmp', 'icmpv6']
+            },
+            'zone_name': {
+                'type': 'str',
+            },
+            'fw_dest_rserver': {
+                'type': 'str',
+            },
+            'fw_helper_sessions': {
+                'type': 'bool',
+            },
+            'fw_ip_type': {
+                'type': 'str',
+                'choices': ['ipv4', 'ipv6']
+            },
+            'fw_dest_obj': {
+                'type': 'str',
+            },
+            'filter_type': {
+                'type':
+                'str',
+                'choices': [
+                    'ipv4', 'ipv6', 'nat44', 'nat64', 'persist-ipv6-src-ip',
+                    'persist-ipv6-dst-ip', 'persist-ipv6-ssl-id',
+                    'persist-dst-ip', 'persist-src-ip', 'persist-uie',
+                    'persist-ssl-id', 'radius', 'server', 'virtual-server',
+                    'sip', 'sixrd', 'filter', 'ds-lite', 'dns-id-switch',
+                    'local', 'fw', 'clear-all', 'full-width', 'debug',
+                    'application', 'ipsec', 'diameter', 'zone',
+                    'source-port-rate-limit', 'source-port-rate-limitv4',
+                    'source-port-rate-limitv6'
+                ]
+            },
+            'dst_ipv6_prefix': {
+                'type': 'str',
+            },
+            'src_ipv6_addr': {
+                'type': 'str',
+            },
+            'dst_ipv6_addr': {
+                'type': 'str',
+            },
+            'fw_src_zone': {
+                'type': 'str',
+            },
+            'src_ipv4_addr': {
+                'type': 'str',
+            },
+            'fw_src_obj': {
+                'type': 'str',
+            },
+            'dest_port': {
+                'type': 'int',
+            }
+        },
+        'ext': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'smp': {
+            'type': 'dict',
+            'uuid': {
+                'type': 'str',
+            }
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -250,30 +518,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_oper(module):
     if module.params.get("oper"):
         query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
     return module.client.get(oper_url(module))
+
 
 def exists(module):
     try:
@@ -281,13 +554,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -300,10 +575,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -314,30 +589,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -358,6 +637,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["sessions"].items():
@@ -368,16 +648,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["sessions"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["sessions"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -390,6 +671,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -406,6 +688,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("sessions", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -419,6 +702,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -431,6 +715,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -442,15 +727,11 @@ def absent(module, result, existing_config):
     else:
         return delete(module, result)
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -471,14 +752,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -486,14 +768,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -503,14 +785,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()
