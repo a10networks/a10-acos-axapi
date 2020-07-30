@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: True
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "
@@ -113,6 +119,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        file_content = dict(type='str', ),
         action=dict(type='str', choices=['create', 'import', 'export', 'copy', 'rename', 'check', 'replace', 'delete']),
         dst_file=dict(type='str', ),
         file=dict(type='str', ),
@@ -249,7 +256,10 @@ def report_changes(module, result, existing_config, payload):
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        if module.params["action"] == "import":
+            post_result = module.client.post(new_url(module), payload, file_content=module.params["file_content"], file_name=module.params["file"])
+        else:
+            post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True

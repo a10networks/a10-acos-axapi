@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: True
     oper:
         description:
         - "Field oper"
@@ -108,6 +114,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        file_content = dict(type='str', ),
         oper=dict(type='dict', status=dict(type='int', ), message=dict(type='str', )),
         uuid=dict(type='str', )
     ))
