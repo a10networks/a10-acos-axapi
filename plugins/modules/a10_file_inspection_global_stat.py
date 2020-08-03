@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: False
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -317,6 +323,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        file_content = dict(type='str', ),
         sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'download_bad_blocked', 'download_bad_allowed', 'download_bad_ext_inspect', 'download_suspect_blocked', 'download_suspect_ext_inspect', 'download_suspect_allowed', 'download_good_blocked', 'download_good_allowed', 'download_good_ext_inspect', 'upload_bad_blocked', 'upload_bad_allowed', 'upload_bad_ext_inspect', 'upload_suspect_blocked', 'upload_suspect_ext_inspect', 'upload_suspect_allowed', 'upload_good_blocked', 'upload_good_ext_inspect', 'upload_good_allowed', 'icap_200', 'icap_204', 'icap_500', 'icap_other_status_code', 'icap_connect_fail', 'icap_connection_created', 'icap_connection_established', 'icap_connection_closed', 'icap_connection_rst', 'icap_bytes_sent', 'icap_bytes_received', 'bypass_aflex', 'bypass_large_file', 'bypass_service_disabled', 'bypass_service_down', 'reset_service_down', 'bypass_max_concurrent_files_reached', 'bypass_non_inspection', 'non_supported_file', 'transactions_alloc', 'transactions_free', 'transactions_failure', 'transactions_aborted', 'orig_conn_bytes_received', 'orig_conn_bytes_sent', 'orig_conn_bytes_bypassed', 'bypass_buffered_overlimit', 'total_bandwidth', 'total_suspect_bandwidth', 'total_bad_bandwidth', 'total_good_bandwidth', 'total_file_size_less_1m', 'total_file_size_1_5m', 'total_file_size_5_8m', 'total_file_size_8_32m', 'total_file_size_over_32m', 'suspect_file_size_less_1m', 'suspect_file_size_1_5m', 'suspect_file_size_5_8m', 'suspect_file_size_8_32m', 'suspect_file_size_over_32m', 'good_file_size_less_1m', 'good_file_size_1_5m', 'good_file_size_5_8m', 'good_file_size_8_32m', 'good_file_size_over_32m', 'bad_file_size_less_1m', 'bad_file_size_1_5m', 'bad_file_size_5_8m', 'bad_file_size_8_32m', 'bad_file_size_over_32m'])),
         stats=dict(type='dict', icap_200=dict(type='str', ), bypass_service_down=dict(type='str', ), upload_good_ext_inspect=dict(type='str', ), upload_bad_blocked=dict(type='str', ), bad_file_size_less_1m=dict(type='str', ), suspect_file_size_1_5m=dict(type='str', ), orig_conn_bytes_bypassed=dict(type='str', ), upload_suspect_allowed=dict(type='str', ), suspect_file_size_5_8m=dict(type='str', ), total_file_size_less_1m=dict(type='str', ), upload_bad_ext_inspect=dict(type='str', ), orig_conn_bytes_sent=dict(type='str', ), total_file_size_1_5m=dict(type='str', ), download_suspect_allowed=dict(type='str', ), non_supported_file=dict(type='str', ), icap_204=dict(type='str', ), suspect_file_size_8_32m=dict(type='str', ), total_file_size_5_8m=dict(type='str', ), icap_connect_fail=dict(type='str', ), upload_good_blocked=dict(type='str', ), icap_other_status_code=dict(type='str', ), bypass_aflex=dict(type='str', ), good_file_size_over_32m=dict(type='str', ), total_suspect_bandwidth=dict(type='str', ), orig_conn_bytes_received=dict(type='str', ), download_suspect_ext_inspect=dict(type='str', ), good_file_size_8_32m=dict(type='str', ), reset_service_down=dict(type='str', ), icap_500=dict(type='str', ), bad_file_size_5_8m=dict(type='str', ), upload_suspect_ext_inspect=dict(type='str', ), bypass_large_file=dict(type='str', ), icap_bytes_sent=dict(type='str', ), download_good_allowed=dict(type='str', ), download_bad_blocked=dict(type='str', ), total_bad_bandwidth=dict(type='str', ), bad_file_size_over_32m=dict(type='str', ), download_bad_ext_inspect=dict(type='str', ), transactions_aborted=dict(type='str', ), total_good_bandwidth=dict(type='str', ), bypass_non_inspection=dict(type='str', ), download_good_blocked=dict(type='str', ), total_bandwidth=dict(type='str', ), download_bad_allowed=dict(type='str', ), bypass_buffered_overlimit=dict(type='str', ), download_good_ext_inspect=dict(type='str', ), download_suspect_blocked=dict(type='str', ), upload_suspect_blocked=dict(type='str', ), good_file_size_less_1m=dict(type='str', ), bad_file_size_8_32m=dict(type='str', ), icap_connection_rst=dict(type='str', ), total_file_size_over_32m=dict(type='str', ), good_file_size_1_5m=dict(type='str', ), suspect_file_size_less_1m=dict(type='str', ), icap_bytes_received=dict(type='str', ), icap_connection_established=dict(type='str', ), icap_connection_closed=dict(type='str', ), good_file_size_5_8m=dict(type='str', ), transactions_alloc=dict(type='str', ), upload_bad_allowed=dict(type='str', ), icap_connection_created=dict(type='str', ), bypass_max_concurrent_files_reached=dict(type='str', ), total_file_size_8_32m=dict(type='str', ), transactions_free=dict(type='str', ), bypass_service_disabled=dict(type='str', ), upload_good_allowed=dict(type='str', ), transactions_failure=dict(type='str', ), suspect_file_size_over_32m=dict(type='str', ), bad_file_size_1_5m=dict(type='str', )),
         uuid=dict(type='str', )
@@ -465,7 +472,10 @@ def report_changes(module, result, existing_config, payload):
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        if module.params["action"] == "import":
+            post_result = module.client.post(new_url(module), payload, file_content=module.params["file_content"], file_name=module.params["file"])
+        else:
+            post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True

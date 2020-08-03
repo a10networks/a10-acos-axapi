@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: False
     logging:
         description:
         - "Field logging"
@@ -141,6 +147,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        file_content = dict(type='str', ),
         logging=dict(type='dict', failed_transactions=dict(type='str', choices=['log', 'no-log']), local_logging_disable=dict(type='bool', ), bypass=dict(type='dict', service_down_log=dict(type='str', choices=['log', 'no-log']), filesize_overlimit_log=dict(type='str', choices=['log', 'no-log']), service_disabled_log=dict(type='str', choices=['log', 'no-log']), no_content_disposition_log=dict(type='str', choices=['log', 'no-log']), all_bypass_log=dict(type='str', choices=['log', 'no-log']), old_http_version_log=dict(type='str', choices=['log', 'no-log']), max_concurrent_files_log=dict(type='str', choices=['log', 'no-log']), aflex_disabled_log=dict(type='str', choices=['log', 'no-log']), internal_buffered_overlimit_log=dict(type='str', choices=['log', 'no-log']))),
         classification=dict(type='dict', max_classification_len=dict(type='int', ), classification_disable=dict(type='bool', ), min_classification_len=dict(type='int', )),
         max_concurrent_files=dict(type='int', ),
@@ -279,7 +286,10 @@ def report_changes(module, result, existing_config, payload):
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        if module.params["action"] == "import":
+            post_result = module.client.post(new_url(module), payload, file_content=module.params["file_content"], file_name=module.params["file"])
+        else:
+            post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True

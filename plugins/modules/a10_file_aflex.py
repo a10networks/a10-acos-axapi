@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: False
     oper:
         description:
         - "Field oper"
@@ -129,6 +135,7 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update(dict(
+        file_content = dict(type='str', ),
         oper=dict(type='dict', file_list=dict(type='list', events=dict(type='list', failures=dict(type='int', ), event_type=dict(type='str', ), total_executions=dict(type='int', ), aborts=dict(type='int', )), vport_list=dict(type='list', vserver=dict(type='str', ), port=dict(type='int', )), file=dict(type='str', ), vport=dict(type='str', ), syntax=dict(type='str', ), waf_rule=dict(type='list', waf_rule_name=dict(type='str', ), waf_rule_aborts=dict(type='int', ), waf_rule_total=dict(type='int', ), waf_rule_failures=dict(type='int', )))),
         skip_backup=dict(type='bool', ),
         dst_file=dict(type='str', ),
@@ -282,7 +289,10 @@ def report_changes(module, result, existing_config, payload):
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        if module.params["action"] == "import":
+            post_result = module.client.post(new_url(module), payload, file_content=module.params["file_content"], file_name=module.params["file"])
+        else:
+            post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True
