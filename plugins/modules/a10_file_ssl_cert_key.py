@@ -55,7 +55,7 @@ options:
         - Content of the uploaded file
         note:
         - Use 'lookup' ansible command to provide required data
-        required: True
+        required: False
     dst_file:
         description:
         - "destination file name for copy and rename action"

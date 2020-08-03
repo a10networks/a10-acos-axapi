@@ -7,6 +7,7 @@ authors:
 description: Collection of modules used to configure ACOS devices over AXAPIs
 license:
 - GPL-2.0-or-later
+license_file: LICENSE
 tags: ['acos']
 
 # Collections that this collection requires to be installed for it to be usable. The key of the dict is the

@@ -55,7 +55,7 @@ options:
         - Content of the uploaded file
         note:
         - Use 'lookup' ansible command to provide required data
-        required: True
+        required: False
     pfx_password:
         description:
         - "The password for certificate file (pfx type only)"

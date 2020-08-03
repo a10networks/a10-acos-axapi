@@ -55,7 +55,7 @@ options:
         - Content of the uploaded file
         note:
         - Use 'lookup' ansible command to provide required data
-        required: True
+        required: False
     action:
         description:
         - "'create'= create; 'import'= import; 'export'= export; 'copy'= copy; 'rename'= rename; 'check'= check; 'replace'= replace; 'delete'= delete; "

@@ -55,7 +55,7 @@ options:
         - Content of the uploaded file
         note:
         - Use 'lookup' ansible command to provide required data
-        required: True
+        required: False
     health_check_disable:
         description:
         - "Disable internal service health check"
