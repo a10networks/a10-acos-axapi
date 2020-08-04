@@ -50,6 +50,12 @@ options:
         description:
         - Destination/target partition for object/command
         required: False
+    file_content:
+        description:
+        - Content of the uploaded file
+        note:
+        - Use 'lookup' ansible command to provide required data
+        required: False
     oper:
         description:
         - "Field oper"
@@ -144,6 +150,9 @@ def get_default_argspec():
 def get_argspec():
     rv = get_default_argspec()
     rv.update({
+        'file_content': {
+            'type': 'str',
+        },
         'oper': {
             'type': 'dict',
             'ssl_csr': {
@@ -347,7 +356,14 @@ def report_changes(module, result, existing_config, payload):
 
 def create(module, result, payload):
     try:
-        post_result = module.client.post(new_url(module), payload)
+        if module.params["action"] == "import":
+            post_result = module.client.post(
+                new_url(module),
+                payload,
+                file_content=module.params["file_content"],
+                file_name=module.params["file"])
+        else:
+            post_result = module.client.post(new_url(module), payload)
         if post_result:
             result.update(**post_result)
         result["changed"] = True
