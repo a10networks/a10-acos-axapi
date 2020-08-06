@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_ssl_error
 description:
     - Error
 short_description: Configures A10 slb.ssl-error
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -795,7 +795,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -808,18 +807,17 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper","uuid",]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -827,22 +825,772 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        oper=dict(type='dict', bad_data_returned_by_callback=dict(type='int', ), bad_signature=dict(type='int', ), block_cipher_pad_is_wrong=dict(type='int', ), bad_protocol_version_number=dict(type='int', ), null_ssl_method_passed=dict(type='int', ), tls_client_cert_req_with_anon_cipher=dict(type='int', ), no_certificates_returned=dict(type='int', ), tlsv1_alert_insufficient_security=dict(type='int', ), sslv3_alert_no_certificate=dict(type='int', ), no_private_key_assigned=dict(type='int', ), certificate_verify_failed=dict(type='int', ), krb5_server_tkt_skew=dict(type='int', ), bad_ssl_filetype=dict(type='int', ), ca_dn_length_mismatch=dict(type='int', ), bad_alert_record=dict(type='int', ), connection_type_not_set=dict(type='int', ), dh_public_value_length_is_wrong=dict(type='int', ), bio_not_set=dict(type='int', ), got_a_fin_before_a_ccs=dict(type='int', ), sslv3_alert_decompression_failure=dict(type='int', ), unable_to_load_ssl2_md5_routines=dict(type='int', ), ssl_ctx_has_no_default_ssl_version=dict(type='int', ), krb5_client_mk_req=dict(type='int', ), uninitialized=dict(type='int', ), wrong_cipher_returned=dict(type='int', ), missing_dh_rsa_cert=dict(type='int', ), attempt_to_reuse_sess_in_diff_context=dict(type='int', ), tls_invalid_ecpointformat_list=dict(type='int', ), null_ssl_ctx=dict(type='int', ), bad_decompression=dict(type='int', ), unknown_certificate_type=dict(type='int', ), bad_response_argument=dict(type='int', ), unknown_pkey_type=dict(type='int', ), bad_message_type=dict(type='int', ), sslv3_alert_bad_record_mac=dict(type='int', ), compression_failure=dict(type='int', ), krb5_server_tkt_not_yet_valid=dict(type='int', ), no_certificate_specified=dict(type='int', ), bad_hello_request=dict(type='int', ), read_wrong_packet_type=dict(type='int', ), missing_tmp_dh_key=dict(type='int', ), peer_did_not_return_a_certificate=dict(type='int', ), missing_tmp_rsa_key=dict(type='int', ), invalid_challenge_length=dict(type='int', ), old_session_cipher_not_returned=dict(type='int', ), extra_data_in_message=dict(type='int', ), missing_dsa_signing_cert=dict(type='int', ), packet_length_too_long=dict(type='int', ), tls_peer_did_not_respond_with_cert_list=dict(type='int', ), ssl_session_id_conflict=dict(type='int', ), unsupported_cipher=dict(type='int', ), no_protocols_available=dict(type='int', ), bad_change_cipher_spec=dict(type='int', ), no_compression_specified=dict(type='int', ), bad_digest_length=dict(type='int', ), https_proxy_request=dict(type='int', ), no_required_digest=dict(type='int', ), bad_dh_g_length=dict(type='int', ), length_mismatch=dict(type='int', ), tlsv1_alert_unknown_ca=dict(type='int', ), tlsv1_alert_no_renegotiation=dict(type='int', ), sslv3_alert_unexpected_msg=dict(type='int', ), missing_rsa_encrypting_cert=dict(type='int', ), decryption_failed_or_bad_record_mac=dict(type='int', ), cipher_or_hash_unavailable=dict(type='int', ), wrong_signature_size=dict(type='int', ), unable_to_decode_dh_certs=dict(type='int', ), data_length_too_long=dict(type='int', ), unsupported_ssl_version=dict(type='int', ), invalid_command=dict(type='int', ), wrong_ssl_version=dict(type='int', ), cert_length_mismatch=dict(type='int', ), unable_to_find_public_key_parameters=dict(type='int', ), data_between_ccs_and_finished=dict(type='int', ), ssl_library_has_no_ciphers=dict(type='int', ), sslv3_alert_certificate_unknown=dict(type='int', ), protocol_is_shutdown=dict(type='int', ), no_ciphers_passed=dict(type='int', ), no_certificate_returned=dict(type='int', ), invalid_purpose=dict(type='int', ), bad_write_retry=dict(type='int', ), no_certificate_assigned=dict(type='int', ), serverhello_tlsext=dict(type='int', ), pre_mac_length_too_long=dict(type='int', ), non_sslv2_initial_packet=dict(type='int', ), sslv3_alert_peer_error_no_cert=dict(type='int', ), ssl3_session_id_too_long=dict(type='int', ), parse_tlsext=dict(type='int', ), bad_handshake_length=dict(type='int', ), connection_id_is_different=dict(type='int', ), unknown_alert_type=dict(type='int', ), record_too_small=dict(type='int', ), public_key_not_rsa=dict(type='int', ), sslv3_alert_peer_error_cert=dict(type='int', ), unable_to_load_ssl3_sha1_routines=dict(type='int', ), sslv3_alert_handshake_failure=dict(type='int', ), short_read=dict(type='int', ), krb5_server_bad_ticket=dict(type='int', ), challenge_is_different=dict(type='int', ), tlsv1_alert_decode_error=dict(type='int', ), compressed_length_too_long=dict(type='int', ), missing_rsa_certificate=dict(type='int', ), ca_dn_too_long=dict(type='int', ), required_cipher_missing=dict(type='int', ), bad_ecc_cert=dict(type='int', ), krb5_server_rd_req=dict(type='int', ), bad_mac_decode=dict(type='int', ), no_verify_callback=dict(type='int', ), ssl3_ext_invalid_servername_type=dict(type='int', ), unexpected_record=dict(type='int', ), public_key_is_not_rsa=dict(type='int', ), sslv3_alert_certificate_expired=dict(type='int', ), length_too_short=dict(type='int', ), peer_error_no_cipher=dict(type='int', ), no_shared_cipher=dict(type='int', ), missing_tmp_rsa_pkey=dict(type='int', ), unknown_cipher_type=dict(type='int', ), tlsv1_alert_decrypt_error=dict(type='int', ), unknown_state=dict(type='int', ), bad_dsa_signature=dict(type='int', ), ssl3_session_id_too_short=dict(type='int', ), no_cipher_match=dict(type='int', ), missing_dh_key=dict(type='int', ), ssl_handshake_failure=dict(type='int', ), inappropriate_fallback=dict(type='int', ), bad_checksum=dict(type='int', ), unknown_cipher_returned=dict(type='int', ), no_client_cert_received=dict(type='int', ), encrypted_length_too_long=dict(type='int', ), tlsv1_alert_internal_error=dict(type='int', ), peer_error_no_certificate=dict(type='int', ), multiple_sgc_restarts=dict(type='int', ), no_ciphers_specified=dict(type='int', ), ssl_session_id_callback_failed=dict(type='int', ), no_method_specified=dict(type='int', ), ssl_session_id_is_different=dict(type='int', ), missing_rsa_signing_cert=dict(type='int', ), krb5_client_init=dict(type='int', ), reuse_cert_type_not_zero=dict(type='int', ), unable_to_find_dh_parameters=dict(type='int', ), digest_check_failed=dict(type='int', ), http_request=dict(type='int', ), app_data_in_handshake=dict(type='int', ), unsupported_protocol=dict(type='int', ), no_cipher_list=dict(type='int', ), sslv3_alert_peer_error_unsupp_cert_type=dict(type='int', ), bad_state=dict(type='int', ), unable_to_extract_public_key=dict(type='int', ), peer_error_unsupported_certificate_type=dict(type='int', ), bad_ecdsa_sig=dict(type='int', ), tls_rsa_encrypted_value_length_is_wrong=dict(type='int', ), missing_export_tmp_rsa_key=dict(type='int', ), peer_error=dict(type='int', ), error_in_received_cipher_list=dict(type='int', ), unable_to_load_ssl3_md5_routines=dict(type='int', ), cipher_table_src_error=dict(type='int', ), sslv3_alert_illegal_parameter=dict(type='int', ), tlsv1_alert_protocol_version=dict(type='int', ), problems_mapping_cipher_functions=dict(type='int', ), unsupported_elliptic_curve=dict(type='int', ), bn_lib=dict(type='int', ), ccs_received_early=dict(type='int', ), bad_rsa_encrypt=dict(type='int', ), unsupported_status_type=dict(type='int', ), bad_ecpoint=dict(type='int', ), ssl2_connection_id_too_long=dict(type='int', ), reuse_cipher_list_not_zero=dict(type='int', ), krb5=dict(type='int', ), tried_to_use_unsupported_cipher=dict(type='int', ), krb5_client_cc_principal=dict(type='int', ), missing_export_tmp_dh_key=dict(type='int', ), krb5_client_get_cred=dict(type='int', ), error_generating_tmp_rsa_key=dict(type='int', ), missing_verify_message=dict(type='int', ), wrong_version_number=dict(type='int', ), krb5_server_tkt_expired=dict(type='int', ), x509_lib=dict(type='int', ), tlsv1_alert_access_denied=dict(type='int', ), decryption_failed=dict(type='int', ), tlsv1_alert_export_restriction=dict(type='int', ), library_has_no_ciphers=dict(type='int', ), sslv3_alert_certificate_revoked=dict(type='int', ), unknown_protocol=dict(type='int', ), bad_rsa_modulus_length=dict(type='int', ), bad_authentication_type=dict(type='int', ), path_too_long=dict(type='int', ), missing_dh_dsa_cert=dict(type='int', ), reuse_cert_length_not_zero=dict(type='int', ), bad_length=dict(type='int', ), peer_error_certificate=dict(type='int', ), unsupported_option=dict(type='int', ), unsupported_digest_type=dict(type='int', ), ssl_session_id_context_too_long=dict(type='int', ), no_certificate_set=dict(type='int', ), sslv3_alert_bad_certificate=dict(type='int', ), record_too_large=dict(type='int', ), key_arg_too_long=dict(type='int', ), illegal_padding=dict(type='int', ), sslv3_alert_unspported_cert=dict(type='int', ), cipher_code_wrong_length=dict(type='int', ), no_privatekey=dict(type='int', ), ssl3_ext_invalid_servername=dict(type='int', ), library_bug=dict(type='int', ), compression_library_error=dict(type='int', ), write_bio_not_set=dict(type='int', ), ssl23_doing_session_id_reuse=dict(type='int', ), bad_rsa_signature=dict(type='int', ), session_id_context_uninitialized=dict(type='int', ), signature_for_non_signing_certificate=dict(type='int', ), public_key_encrypt_error=dict(type='int', ), x509_verification_setup_problems=dict(type='int', ), unknown_ssl_version=dict(type='int', ), mast_key_too_long=dict(type='int', ), clienthello_tlsext=dict(type='int', ), tlsv1_alert_decryption_failed=dict(type='int', ), invalid_trust=dict(type='int', ), sslv3_alert_peer_error_no_cipher=dict(type='int', ), unable_to_find_ssl_method=dict(type='int', ), read_bio_not_set=dict(type='int', ), bad_rsa_e_length=dict(type='int', ), unknown_key_exchange_type=dict(type='int', ), invalid_status_response=dict(type='int', ), cookie_mismatch=dict(type='int', ), tlsv1_alert_record_overflow=dict(type='int', ), sslv3_alert_unknown_remote_err_type=dict(type='int', ), bad_packet_length=dict(type='int', ), wrong_message_type=dict(type='int', ), unknown_remote_error_type=dict(type='int', ), krb5_server_init=dict(type='int', ), bad_rsa_decrypt=dict(type='int', ), message_too_long=dict(type='int', ), no_ciphers_available=dict(type='int', ), bad_ssl_session_id_length=dict(type='int', ), no_publickey=dict(type='int', ), excessive_message_size=dict(type='int', ), unexpected_message=dict(type='int', ), record_length_mismatch=dict(type='int', ), ssl_session_id_has_bad_length=dict(type='int', ), bad_dh_p_length=dict(type='int', ), tlsv1_alert_user_cancelled=dict(type='int', ), wrong_signature_length=dict(type='int', ), wrong_number_of_key_bits=dict(type='int', ), scsv_received_when_renegotiating=dict(type='int', ), unsupported_compression_algorithm=dict(type='int', ), bad_dh_pub_key_length=dict(type='int', )),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'oper': {
+            'type': 'dict',
+            'bad_data_returned_by_callback': {
+                'type': 'int',
+            },
+            'bad_signature': {
+                'type': 'int',
+            },
+            'block_cipher_pad_is_wrong': {
+                'type': 'int',
+            },
+            'bad_protocol_version_number': {
+                'type': 'int',
+            },
+            'null_ssl_method_passed': {
+                'type': 'int',
+            },
+            'tls_client_cert_req_with_anon_cipher': {
+                'type': 'int',
+            },
+            'no_certificates_returned': {
+                'type': 'int',
+            },
+            'tlsv1_alert_insufficient_security': {
+                'type': 'int',
+            },
+            'sslv3_alert_no_certificate': {
+                'type': 'int',
+            },
+            'no_private_key_assigned': {
+                'type': 'int',
+            },
+            'certificate_verify_failed': {
+                'type': 'int',
+            },
+            'krb5_server_tkt_skew': {
+                'type': 'int',
+            },
+            'bad_ssl_filetype': {
+                'type': 'int',
+            },
+            'ca_dn_length_mismatch': {
+                'type': 'int',
+            },
+            'bad_alert_record': {
+                'type': 'int',
+            },
+            'connection_type_not_set': {
+                'type': 'int',
+            },
+            'dh_public_value_length_is_wrong': {
+                'type': 'int',
+            },
+            'bio_not_set': {
+                'type': 'int',
+            },
+            'got_a_fin_before_a_ccs': {
+                'type': 'int',
+            },
+            'sslv3_alert_decompression_failure': {
+                'type': 'int',
+            },
+            'unable_to_load_ssl2_md5_routines': {
+                'type': 'int',
+            },
+            'ssl_ctx_has_no_default_ssl_version': {
+                'type': 'int',
+            },
+            'krb5_client_mk_req': {
+                'type': 'int',
+            },
+            'uninitialized': {
+                'type': 'int',
+            },
+            'wrong_cipher_returned': {
+                'type': 'int',
+            },
+            'missing_dh_rsa_cert': {
+                'type': 'int',
+            },
+            'attempt_to_reuse_sess_in_diff_context': {
+                'type': 'int',
+            },
+            'tls_invalid_ecpointformat_list': {
+                'type': 'int',
+            },
+            'null_ssl_ctx': {
+                'type': 'int',
+            },
+            'bad_decompression': {
+                'type': 'int',
+            },
+            'unknown_certificate_type': {
+                'type': 'int',
+            },
+            'bad_response_argument': {
+                'type': 'int',
+            },
+            'unknown_pkey_type': {
+                'type': 'int',
+            },
+            'bad_message_type': {
+                'type': 'int',
+            },
+            'sslv3_alert_bad_record_mac': {
+                'type': 'int',
+            },
+            'compression_failure': {
+                'type': 'int',
+            },
+            'krb5_server_tkt_not_yet_valid': {
+                'type': 'int',
+            },
+            'no_certificate_specified': {
+                'type': 'int',
+            },
+            'bad_hello_request': {
+                'type': 'int',
+            },
+            'read_wrong_packet_type': {
+                'type': 'int',
+            },
+            'missing_tmp_dh_key': {
+                'type': 'int',
+            },
+            'peer_did_not_return_a_certificate': {
+                'type': 'int',
+            },
+            'missing_tmp_rsa_key': {
+                'type': 'int',
+            },
+            'invalid_challenge_length': {
+                'type': 'int',
+            },
+            'old_session_cipher_not_returned': {
+                'type': 'int',
+            },
+            'extra_data_in_message': {
+                'type': 'int',
+            },
+            'missing_dsa_signing_cert': {
+                'type': 'int',
+            },
+            'packet_length_too_long': {
+                'type': 'int',
+            },
+            'tls_peer_did_not_respond_with_cert_list': {
+                'type': 'int',
+            },
+            'ssl_session_id_conflict': {
+                'type': 'int',
+            },
+            'unsupported_cipher': {
+                'type': 'int',
+            },
+            'no_protocols_available': {
+                'type': 'int',
+            },
+            'bad_change_cipher_spec': {
+                'type': 'int',
+            },
+            'no_compression_specified': {
+                'type': 'int',
+            },
+            'bad_digest_length': {
+                'type': 'int',
+            },
+            'https_proxy_request': {
+                'type': 'int',
+            },
+            'no_required_digest': {
+                'type': 'int',
+            },
+            'bad_dh_g_length': {
+                'type': 'int',
+            },
+            'length_mismatch': {
+                'type': 'int',
+            },
+            'tlsv1_alert_unknown_ca': {
+                'type': 'int',
+            },
+            'tlsv1_alert_no_renegotiation': {
+                'type': 'int',
+            },
+            'sslv3_alert_unexpected_msg': {
+                'type': 'int',
+            },
+            'missing_rsa_encrypting_cert': {
+                'type': 'int',
+            },
+            'decryption_failed_or_bad_record_mac': {
+                'type': 'int',
+            },
+            'cipher_or_hash_unavailable': {
+                'type': 'int',
+            },
+            'wrong_signature_size': {
+                'type': 'int',
+            },
+            'unable_to_decode_dh_certs': {
+                'type': 'int',
+            },
+            'data_length_too_long': {
+                'type': 'int',
+            },
+            'unsupported_ssl_version': {
+                'type': 'int',
+            },
+            'invalid_command': {
+                'type': 'int',
+            },
+            'wrong_ssl_version': {
+                'type': 'int',
+            },
+            'cert_length_mismatch': {
+                'type': 'int',
+            },
+            'unable_to_find_public_key_parameters': {
+                'type': 'int',
+            },
+            'data_between_ccs_and_finished': {
+                'type': 'int',
+            },
+            'ssl_library_has_no_ciphers': {
+                'type': 'int',
+            },
+            'sslv3_alert_certificate_unknown': {
+                'type': 'int',
+            },
+            'protocol_is_shutdown': {
+                'type': 'int',
+            },
+            'no_ciphers_passed': {
+                'type': 'int',
+            },
+            'no_certificate_returned': {
+                'type': 'int',
+            },
+            'invalid_purpose': {
+                'type': 'int',
+            },
+            'bad_write_retry': {
+                'type': 'int',
+            },
+            'no_certificate_assigned': {
+                'type': 'int',
+            },
+            'serverhello_tlsext': {
+                'type': 'int',
+            },
+            'pre_mac_length_too_long': {
+                'type': 'int',
+            },
+            'non_sslv2_initial_packet': {
+                'type': 'int',
+            },
+            'sslv3_alert_peer_error_no_cert': {
+                'type': 'int',
+            },
+            'ssl3_session_id_too_long': {
+                'type': 'int',
+            },
+            'parse_tlsext': {
+                'type': 'int',
+            },
+            'bad_handshake_length': {
+                'type': 'int',
+            },
+            'connection_id_is_different': {
+                'type': 'int',
+            },
+            'unknown_alert_type': {
+                'type': 'int',
+            },
+            'record_too_small': {
+                'type': 'int',
+            },
+            'public_key_not_rsa': {
+                'type': 'int',
+            },
+            'sslv3_alert_peer_error_cert': {
+                'type': 'int',
+            },
+            'unable_to_load_ssl3_sha1_routines': {
+                'type': 'int',
+            },
+            'sslv3_alert_handshake_failure': {
+                'type': 'int',
+            },
+            'short_read': {
+                'type': 'int',
+            },
+            'krb5_server_bad_ticket': {
+                'type': 'int',
+            },
+            'challenge_is_different': {
+                'type': 'int',
+            },
+            'tlsv1_alert_decode_error': {
+                'type': 'int',
+            },
+            'compressed_length_too_long': {
+                'type': 'int',
+            },
+            'missing_rsa_certificate': {
+                'type': 'int',
+            },
+            'ca_dn_too_long': {
+                'type': 'int',
+            },
+            'required_cipher_missing': {
+                'type': 'int',
+            },
+            'bad_ecc_cert': {
+                'type': 'int',
+            },
+            'krb5_server_rd_req': {
+                'type': 'int',
+            },
+            'bad_mac_decode': {
+                'type': 'int',
+            },
+            'no_verify_callback': {
+                'type': 'int',
+            },
+            'ssl3_ext_invalid_servername_type': {
+                'type': 'int',
+            },
+            'unexpected_record': {
+                'type': 'int',
+            },
+            'public_key_is_not_rsa': {
+                'type': 'int',
+            },
+            'sslv3_alert_certificate_expired': {
+                'type': 'int',
+            },
+            'length_too_short': {
+                'type': 'int',
+            },
+            'peer_error_no_cipher': {
+                'type': 'int',
+            },
+            'no_shared_cipher': {
+                'type': 'int',
+            },
+            'missing_tmp_rsa_pkey': {
+                'type': 'int',
+            },
+            'unknown_cipher_type': {
+                'type': 'int',
+            },
+            'tlsv1_alert_decrypt_error': {
+                'type': 'int',
+            },
+            'unknown_state': {
+                'type': 'int',
+            },
+            'bad_dsa_signature': {
+                'type': 'int',
+            },
+            'ssl3_session_id_too_short': {
+                'type': 'int',
+            },
+            'no_cipher_match': {
+                'type': 'int',
+            },
+            'missing_dh_key': {
+                'type': 'int',
+            },
+            'ssl_handshake_failure': {
+                'type': 'int',
+            },
+            'inappropriate_fallback': {
+                'type': 'int',
+            },
+            'bad_checksum': {
+                'type': 'int',
+            },
+            'unknown_cipher_returned': {
+                'type': 'int',
+            },
+            'no_client_cert_received': {
+                'type': 'int',
+            },
+            'encrypted_length_too_long': {
+                'type': 'int',
+            },
+            'tlsv1_alert_internal_error': {
+                'type': 'int',
+            },
+            'peer_error_no_certificate': {
+                'type': 'int',
+            },
+            'multiple_sgc_restarts': {
+                'type': 'int',
+            },
+            'no_ciphers_specified': {
+                'type': 'int',
+            },
+            'ssl_session_id_callback_failed': {
+                'type': 'int',
+            },
+            'no_method_specified': {
+                'type': 'int',
+            },
+            'ssl_session_id_is_different': {
+                'type': 'int',
+            },
+            'missing_rsa_signing_cert': {
+                'type': 'int',
+            },
+            'krb5_client_init': {
+                'type': 'int',
+            },
+            'reuse_cert_type_not_zero': {
+                'type': 'int',
+            },
+            'unable_to_find_dh_parameters': {
+                'type': 'int',
+            },
+            'digest_check_failed': {
+                'type': 'int',
+            },
+            'http_request': {
+                'type': 'int',
+            },
+            'app_data_in_handshake': {
+                'type': 'int',
+            },
+            'unsupported_protocol': {
+                'type': 'int',
+            },
+            'no_cipher_list': {
+                'type': 'int',
+            },
+            'sslv3_alert_peer_error_unsupp_cert_type': {
+                'type': 'int',
+            },
+            'bad_state': {
+                'type': 'int',
+            },
+            'unable_to_extract_public_key': {
+                'type': 'int',
+            },
+            'peer_error_unsupported_certificate_type': {
+                'type': 'int',
+            },
+            'bad_ecdsa_sig': {
+                'type': 'int',
+            },
+            'tls_rsa_encrypted_value_length_is_wrong': {
+                'type': 'int',
+            },
+            'missing_export_tmp_rsa_key': {
+                'type': 'int',
+            },
+            'peer_error': {
+                'type': 'int',
+            },
+            'error_in_received_cipher_list': {
+                'type': 'int',
+            },
+            'unable_to_load_ssl3_md5_routines': {
+                'type': 'int',
+            },
+            'cipher_table_src_error': {
+                'type': 'int',
+            },
+            'sslv3_alert_illegal_parameter': {
+                'type': 'int',
+            },
+            'tlsv1_alert_protocol_version': {
+                'type': 'int',
+            },
+            'problems_mapping_cipher_functions': {
+                'type': 'int',
+            },
+            'unsupported_elliptic_curve': {
+                'type': 'int',
+            },
+            'bn_lib': {
+                'type': 'int',
+            },
+            'ccs_received_early': {
+                'type': 'int',
+            },
+            'bad_rsa_encrypt': {
+                'type': 'int',
+            },
+            'unsupported_status_type': {
+                'type': 'int',
+            },
+            'bad_ecpoint': {
+                'type': 'int',
+            },
+            'ssl2_connection_id_too_long': {
+                'type': 'int',
+            },
+            'reuse_cipher_list_not_zero': {
+                'type': 'int',
+            },
+            'krb5': {
+                'type': 'int',
+            },
+            'tried_to_use_unsupported_cipher': {
+                'type': 'int',
+            },
+            'krb5_client_cc_principal': {
+                'type': 'int',
+            },
+            'missing_export_tmp_dh_key': {
+                'type': 'int',
+            },
+            'krb5_client_get_cred': {
+                'type': 'int',
+            },
+            'error_generating_tmp_rsa_key': {
+                'type': 'int',
+            },
+            'missing_verify_message': {
+                'type': 'int',
+            },
+            'wrong_version_number': {
+                'type': 'int',
+            },
+            'krb5_server_tkt_expired': {
+                'type': 'int',
+            },
+            'x509_lib': {
+                'type': 'int',
+            },
+            'tlsv1_alert_access_denied': {
+                'type': 'int',
+            },
+            'decryption_failed': {
+                'type': 'int',
+            },
+            'tlsv1_alert_export_restriction': {
+                'type': 'int',
+            },
+            'library_has_no_ciphers': {
+                'type': 'int',
+            },
+            'sslv3_alert_certificate_revoked': {
+                'type': 'int',
+            },
+            'unknown_protocol': {
+                'type': 'int',
+            },
+            'bad_rsa_modulus_length': {
+                'type': 'int',
+            },
+            'bad_authentication_type': {
+                'type': 'int',
+            },
+            'path_too_long': {
+                'type': 'int',
+            },
+            'missing_dh_dsa_cert': {
+                'type': 'int',
+            },
+            'reuse_cert_length_not_zero': {
+                'type': 'int',
+            },
+            'bad_length': {
+                'type': 'int',
+            },
+            'peer_error_certificate': {
+                'type': 'int',
+            },
+            'unsupported_option': {
+                'type': 'int',
+            },
+            'unsupported_digest_type': {
+                'type': 'int',
+            },
+            'ssl_session_id_context_too_long': {
+                'type': 'int',
+            },
+            'no_certificate_set': {
+                'type': 'int',
+            },
+            'sslv3_alert_bad_certificate': {
+                'type': 'int',
+            },
+            'record_too_large': {
+                'type': 'int',
+            },
+            'key_arg_too_long': {
+                'type': 'int',
+            },
+            'illegal_padding': {
+                'type': 'int',
+            },
+            'sslv3_alert_unspported_cert': {
+                'type': 'int',
+            },
+            'cipher_code_wrong_length': {
+                'type': 'int',
+            },
+            'no_privatekey': {
+                'type': 'int',
+            },
+            'ssl3_ext_invalid_servername': {
+                'type': 'int',
+            },
+            'library_bug': {
+                'type': 'int',
+            },
+            'compression_library_error': {
+                'type': 'int',
+            },
+            'write_bio_not_set': {
+                'type': 'int',
+            },
+            'ssl23_doing_session_id_reuse': {
+                'type': 'int',
+            },
+            'bad_rsa_signature': {
+                'type': 'int',
+            },
+            'session_id_context_uninitialized': {
+                'type': 'int',
+            },
+            'signature_for_non_signing_certificate': {
+                'type': 'int',
+            },
+            'public_key_encrypt_error': {
+                'type': 'int',
+            },
+            'x509_verification_setup_problems': {
+                'type': 'int',
+            },
+            'unknown_ssl_version': {
+                'type': 'int',
+            },
+            'mast_key_too_long': {
+                'type': 'int',
+            },
+            'clienthello_tlsext': {
+                'type': 'int',
+            },
+            'tlsv1_alert_decryption_failed': {
+                'type': 'int',
+            },
+            'invalid_trust': {
+                'type': 'int',
+            },
+            'sslv3_alert_peer_error_no_cipher': {
+                'type': 'int',
+            },
+            'unable_to_find_ssl_method': {
+                'type': 'int',
+            },
+            'read_bio_not_set': {
+                'type': 'int',
+            },
+            'bad_rsa_e_length': {
+                'type': 'int',
+            },
+            'unknown_key_exchange_type': {
+                'type': 'int',
+            },
+            'invalid_status_response': {
+                'type': 'int',
+            },
+            'cookie_mismatch': {
+                'type': 'int',
+            },
+            'tlsv1_alert_record_overflow': {
+                'type': 'int',
+            },
+            'sslv3_alert_unknown_remote_err_type': {
+                'type': 'int',
+            },
+            'bad_packet_length': {
+                'type': 'int',
+            },
+            'wrong_message_type': {
+                'type': 'int',
+            },
+            'unknown_remote_error_type': {
+                'type': 'int',
+            },
+            'krb5_server_init': {
+                'type': 'int',
+            },
+            'bad_rsa_decrypt': {
+                'type': 'int',
+            },
+            'message_too_long': {
+                'type': 'int',
+            },
+            'no_ciphers_available': {
+                'type': 'int',
+            },
+            'bad_ssl_session_id_length': {
+                'type': 'int',
+            },
+            'no_publickey': {
+                'type': 'int',
+            },
+            'excessive_message_size': {
+                'type': 'int',
+            },
+            'unexpected_message': {
+                'type': 'int',
+            },
+            'record_length_mismatch': {
+                'type': 'int',
+            },
+            'ssl_session_id_has_bad_length': {
+                'type': 'int',
+            },
+            'bad_dh_p_length': {
+                'type': 'int',
+            },
+            'tlsv1_alert_user_cancelled': {
+                'type': 'int',
+            },
+            'wrong_signature_length': {
+                'type': 'int',
+            },
+            'wrong_number_of_key_bits': {
+                'type': 'int',
+            },
+            'scsv_received_when_renegotiating': {
+                'type': 'int',
+            },
+            'unsupported_compression_algorithm': {
+                'type': 'int',
+            },
+            'bad_dh_pub_key_length': {
+                'type': 'int',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -853,30 +1601,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_oper(module):
     if module.params.get("oper"):
         query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
     return module.client.get(oper_url(module))
+
 
 def exists(module):
     try:
@@ -884,13 +1637,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -903,10 +1658,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -917,30 +1672,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -961,10 +1720,12 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
+
 
 def create(module, result):
     try:
@@ -977,6 +1738,7 @@ def create(module, result):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config):
     try:
@@ -993,6 +1755,7 @@ def update(module, result, existing_config):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     if module.check_mode:
         return report_changes(module, result, existing_config)
@@ -1000,6 +1763,7 @@ def present(module, result, existing_config):
         return create(module, result)
     else:
         return update(module, result, existing_config)
+
 
 def delete(module, result):
     try:
@@ -1013,6 +1777,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -1024,15 +1789,11 @@ def absent(module, result, existing_config):
     else:
         return delete(module, result)
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1053,14 +1814,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -1068,14 +1830,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -1085,14 +1847,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

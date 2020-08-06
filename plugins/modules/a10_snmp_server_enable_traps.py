@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_snmp_server_enable_traps
 description:
     - Enable SNMP traps
 short_description: Configures A10 snmp.server.enable.traps
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -119,7 +119,8 @@ options:
                 - "uuid of the object"
             total_port_usage_threshold:
                 description:
-                - "Enable LSN trap when NAT total port usage reaches the threshold (default 655350000)"
+                - "Enable LSN trap when NAT total port usage reaches the threshold (default
+          655350000)"
             max_port_threshold:
                 description:
                 - "Maximum threshold"
@@ -394,7 +395,6 @@ options:
                 description:
                 - "uuid of the object"
 
-
 '''
 
 EXAMPLES = """
@@ -407,18 +407,29 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["all","gslb","lldp","lsn","network","routing","slb","slb_change","snmp","ssl","system","uuid","vcs","vrrp_a",]
+AVAILABLE_PROPERTIES = [
+    "all",
+    "gslb",
+    "lldp",
+    "lsn",
+    "network",
+    "routing",
+    "slb",
+    "slb_change",
+    "snmp",
+    "ssl",
+    "system",
+    "uuid",
+    "vcs",
+    "vrrp_a",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -426,34 +437,463 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        lldp=dict(type='bool', ),
-        all=dict(type='bool', ),
-        slb_change=dict(type='dict', all=dict(type='bool', ), resource_usage_warning=dict(type='bool', ), uuid=dict(type='str', ), ssl_cert_change=dict(type='bool', ), ssl_cert_expire=dict(type='bool', ), system_threshold=dict(type='bool', ), server=dict(type='bool', ), vip=dict(type='bool', ), connection_resource_event=dict(type='bool', ), server_port=dict(type='bool', ), vip_port=dict(type='bool', )),
-        uuid=dict(type='str', ),
-        lsn=dict(type='dict', all=dict(type='bool', ), fixed_nat_port_mapping_file_change=dict(type='bool', ), per_ip_port_usage_threshold=dict(type='bool', ), uuid=dict(type='str', ), total_port_usage_threshold=dict(type='bool', ), max_port_threshold=dict(type='int', ), max_ipport_threshold=dict(type='int', ), traffic_exceeded=dict(type='bool', )),
-        vrrp_a=dict(type='dict', active=dict(type='bool', ), standby=dict(type='bool', ), all=dict(type='bool', ), uuid=dict(type='str', )),
-        snmp=dict(type='dict', linkup=dict(type='bool', ), all=dict(type='bool', ), linkdown=dict(type='bool', ), uuid=dict(type='str', )),
-        system=dict(type='dict', all=dict(type='bool', ), data_cpu_high=dict(type='bool', ), uuid=dict(type='str', ), power=dict(type='bool', ), high_disk_use=dict(type='bool', ), high_memory_use=dict(type='bool', ), control_cpu_high=dict(type='bool', ), file_sys_read_only=dict(type='bool', ), low_temp=dict(type='bool', ), high_temp=dict(type='bool', ), sec_disk=dict(type='bool', ), license_management=dict(type='bool', ), start=dict(type='bool', ), fan=dict(type='bool', ), shutdown=dict(type='bool', ), pri_disk=dict(type='bool', ), syslog_severity_one=dict(type='bool', ), tacacs_server_up_down=dict(type='bool', ), smp_resource_event=dict(type='bool', ), restart=dict(type='bool', ), packet_drop=dict(type='bool', )),
-        ssl=dict(type='dict', server_certificate_error=dict(type='bool', ), uuid=dict(type='str', )),
-        vcs=dict(type='dict', state_change=dict(type='bool', ), uuid=dict(type='str', )),
-        routing=dict(type='dict', bgp=dict(type='dict', bgpEstablishedNotification=dict(type='bool', ), uuid=dict(type='str', ), bgpBackwardTransNotification=dict(type='bool', )), isis=dict(type='dict', isisAuthenticationFailure=dict(type='bool', ), uuid=dict(type='str', ), isisProtocolsSupportedMismatch=dict(type='bool', ), isisRejectedAdjacency=dict(type='bool', ), isisMaxAreaAddressesMismatch=dict(type='bool', ), isisCorruptedLSPDetected=dict(type='bool', ), isisOriginatingLSPBufferSizeMismatch=dict(type='bool', ), isisAreaMismatch=dict(type='bool', ), isisLSPTooLargeToPropagate=dict(type='bool', ), isisOwnLSPPurge=dict(type='bool', ), isisSequenceNumberSkip=dict(type='bool', ), isisDatabaseOverload=dict(type='bool', ), isisAttemptToExceedMaxSequence=dict(type='bool', ), isisIDLenMismatch=dict(type='bool', ), isisAuthenticationTypeFailure=dict(type='bool', ), isisVersionSkew=dict(type='bool', ), isisManualAddressDrops=dict(type='bool', ), isisAdjacencyChange=dict(type='bool', )), ospf=dict(type='dict', ospfLsdbOverflow=dict(type='bool', ), uuid=dict(type='str', ), ospfNbrStateChange=dict(type='bool', ), ospfIfStateChange=dict(type='bool', ), ospfVirtNbrStateChange=dict(type='bool', ), ospfLsdbApproachingOverflow=dict(type='bool', ), ospfIfAuthFailure=dict(type='bool', ), ospfVirtIfAuthFailure=dict(type='bool', ), ospfVirtIfConfigError=dict(type='bool', ), ospfVirtIfRxBadPacket=dict(type='bool', ), ospfTxRetransmit=dict(type='bool', ), ospfVirtIfStateChange=dict(type='bool', ), ospfIfConfigError=dict(type='bool', ), ospfMaxAgeLsa=dict(type='bool', ), ospfIfRxBadPacket=dict(type='bool', ), ospfVirtIfTxRetransmit=dict(type='bool', ), ospfOriginateLsa=dict(type='bool', ))),
-        gslb=dict(type='dict', all=dict(type='bool', ), group=dict(type='bool', ), uuid=dict(type='str', ), zone=dict(type='bool', ), site=dict(type='bool', ), service_ip=dict(type='bool', )),
-        slb=dict(type='dict', all=dict(type='bool', ), server_down=dict(type='bool', ), vip_port_connratelimit=dict(type='bool', ), server_selection_failure=dict(type='bool', ), service_group_down=dict(type='bool', ), server_conn_limit=dict(type='bool', ), service_group_member_up=dict(type='bool', ), uuid=dict(type='str', ), server_conn_resume=dict(type='bool', ), service_up=dict(type='bool', ), service_conn_limit=dict(type='bool', ), gateway_up=dict(type='bool', ), service_group_up=dict(type='bool', ), application_buffer_limit=dict(type='bool', ), vip_connratelimit=dict(type='bool', ), vip_connlimit=dict(type='bool', ), service_group_member_down=dict(type='bool', ), service_down=dict(type='bool', ), bw_rate_limit_exceed=dict(type='bool', ), server_disabled=dict(type='bool', ), server_up=dict(type='bool', ), vip_port_connlimit=dict(type='bool', ), vip_port_down=dict(type='bool', ), bw_rate_limit_resume=dict(type='bool', ), gateway_down=dict(type='bool', ), vip_up=dict(type='bool', ), vip_port_up=dict(type='bool', ), vip_down=dict(type='bool', ), service_conn_resume=dict(type='bool', )),
-        network=dict(type='dict', trunk_port_threshold=dict(type='bool', ), uuid=dict(type='str', ))
-    ))
-   
-
+    rv.update({
+        'lldp': {
+            'type': 'bool',
+        },
+        'all': {
+            'type': 'bool',
+        },
+        'slb_change': {
+            'type': 'dict',
+            'all': {
+                'type': 'bool',
+            },
+            'resource_usage_warning': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'ssl_cert_change': {
+                'type': 'bool',
+            },
+            'ssl_cert_expire': {
+                'type': 'bool',
+            },
+            'system_threshold': {
+                'type': 'bool',
+            },
+            'server': {
+                'type': 'bool',
+            },
+            'vip': {
+                'type': 'bool',
+            },
+            'connection_resource_event': {
+                'type': 'bool',
+            },
+            'server_port': {
+                'type': 'bool',
+            },
+            'vip_port': {
+                'type': 'bool',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'lsn': {
+            'type': 'dict',
+            'all': {
+                'type': 'bool',
+            },
+            'fixed_nat_port_mapping_file_change': {
+                'type': 'bool',
+            },
+            'per_ip_port_usage_threshold': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'total_port_usage_threshold': {
+                'type': 'bool',
+            },
+            'max_port_threshold': {
+                'type': 'int',
+            },
+            'max_ipport_threshold': {
+                'type': 'int',
+            },
+            'traffic_exceeded': {
+                'type': 'bool',
+            }
+        },
+        'vrrp_a': {
+            'type': 'dict',
+            'active': {
+                'type': 'bool',
+            },
+            'standby': {
+                'type': 'bool',
+            },
+            'all': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'snmp': {
+            'type': 'dict',
+            'linkup': {
+                'type': 'bool',
+            },
+            'all': {
+                'type': 'bool',
+            },
+            'linkdown': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'system': {
+            'type': 'dict',
+            'all': {
+                'type': 'bool',
+            },
+            'data_cpu_high': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'power': {
+                'type': 'bool',
+            },
+            'high_disk_use': {
+                'type': 'bool',
+            },
+            'high_memory_use': {
+                'type': 'bool',
+            },
+            'control_cpu_high': {
+                'type': 'bool',
+            },
+            'file_sys_read_only': {
+                'type': 'bool',
+            },
+            'low_temp': {
+                'type': 'bool',
+            },
+            'high_temp': {
+                'type': 'bool',
+            },
+            'sec_disk': {
+                'type': 'bool',
+            },
+            'license_management': {
+                'type': 'bool',
+            },
+            'start': {
+                'type': 'bool',
+            },
+            'fan': {
+                'type': 'bool',
+            },
+            'shutdown': {
+                'type': 'bool',
+            },
+            'pri_disk': {
+                'type': 'bool',
+            },
+            'syslog_severity_one': {
+                'type': 'bool',
+            },
+            'tacacs_server_up_down': {
+                'type': 'bool',
+            },
+            'smp_resource_event': {
+                'type': 'bool',
+            },
+            'restart': {
+                'type': 'bool',
+            },
+            'packet_drop': {
+                'type': 'bool',
+            }
+        },
+        'ssl': {
+            'type': 'dict',
+            'server_certificate_error': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'vcs': {
+            'type': 'dict',
+            'state_change': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        },
+        'routing': {
+            'type': 'dict',
+            'bgp': {
+                'type': 'dict',
+                'bgpEstablishedNotification': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'bgpBackwardTransNotification': {
+                    'type': 'bool',
+                }
+            },
+            'isis': {
+                'type': 'dict',
+                'isisAuthenticationFailure': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'isisProtocolsSupportedMismatch': {
+                    'type': 'bool',
+                },
+                'isisRejectedAdjacency': {
+                    'type': 'bool',
+                },
+                'isisMaxAreaAddressesMismatch': {
+                    'type': 'bool',
+                },
+                'isisCorruptedLSPDetected': {
+                    'type': 'bool',
+                },
+                'isisOriginatingLSPBufferSizeMismatch': {
+                    'type': 'bool',
+                },
+                'isisAreaMismatch': {
+                    'type': 'bool',
+                },
+                'isisLSPTooLargeToPropagate': {
+                    'type': 'bool',
+                },
+                'isisOwnLSPPurge': {
+                    'type': 'bool',
+                },
+                'isisSequenceNumberSkip': {
+                    'type': 'bool',
+                },
+                'isisDatabaseOverload': {
+                    'type': 'bool',
+                },
+                'isisAttemptToExceedMaxSequence': {
+                    'type': 'bool',
+                },
+                'isisIDLenMismatch': {
+                    'type': 'bool',
+                },
+                'isisAuthenticationTypeFailure': {
+                    'type': 'bool',
+                },
+                'isisVersionSkew': {
+                    'type': 'bool',
+                },
+                'isisManualAddressDrops': {
+                    'type': 'bool',
+                },
+                'isisAdjacencyChange': {
+                    'type': 'bool',
+                }
+            },
+            'ospf': {
+                'type': 'dict',
+                'ospfLsdbOverflow': {
+                    'type': 'bool',
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'ospfNbrStateChange': {
+                    'type': 'bool',
+                },
+                'ospfIfStateChange': {
+                    'type': 'bool',
+                },
+                'ospfVirtNbrStateChange': {
+                    'type': 'bool',
+                },
+                'ospfLsdbApproachingOverflow': {
+                    'type': 'bool',
+                },
+                'ospfIfAuthFailure': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfAuthFailure': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfConfigError': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfRxBadPacket': {
+                    'type': 'bool',
+                },
+                'ospfTxRetransmit': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfStateChange': {
+                    'type': 'bool',
+                },
+                'ospfIfConfigError': {
+                    'type': 'bool',
+                },
+                'ospfMaxAgeLsa': {
+                    'type': 'bool',
+                },
+                'ospfIfRxBadPacket': {
+                    'type': 'bool',
+                },
+                'ospfVirtIfTxRetransmit': {
+                    'type': 'bool',
+                },
+                'ospfOriginateLsa': {
+                    'type': 'bool',
+                }
+            }
+        },
+        'gslb': {
+            'type': 'dict',
+            'all': {
+                'type': 'bool',
+            },
+            'group': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'zone': {
+                'type': 'bool',
+            },
+            'site': {
+                'type': 'bool',
+            },
+            'service_ip': {
+                'type': 'bool',
+            }
+        },
+        'slb': {
+            'type': 'dict',
+            'all': {
+                'type': 'bool',
+            },
+            'server_down': {
+                'type': 'bool',
+            },
+            'vip_port_connratelimit': {
+                'type': 'bool',
+            },
+            'server_selection_failure': {
+                'type': 'bool',
+            },
+            'service_group_down': {
+                'type': 'bool',
+            },
+            'server_conn_limit': {
+                'type': 'bool',
+            },
+            'service_group_member_up': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            },
+            'server_conn_resume': {
+                'type': 'bool',
+            },
+            'service_up': {
+                'type': 'bool',
+            },
+            'service_conn_limit': {
+                'type': 'bool',
+            },
+            'gateway_up': {
+                'type': 'bool',
+            },
+            'service_group_up': {
+                'type': 'bool',
+            },
+            'application_buffer_limit': {
+                'type': 'bool',
+            },
+            'vip_connratelimit': {
+                'type': 'bool',
+            },
+            'vip_connlimit': {
+                'type': 'bool',
+            },
+            'service_group_member_down': {
+                'type': 'bool',
+            },
+            'service_down': {
+                'type': 'bool',
+            },
+            'bw_rate_limit_exceed': {
+                'type': 'bool',
+            },
+            'server_disabled': {
+                'type': 'bool',
+            },
+            'server_up': {
+                'type': 'bool',
+            },
+            'vip_port_connlimit': {
+                'type': 'bool',
+            },
+            'vip_port_down': {
+                'type': 'bool',
+            },
+            'bw_rate_limit_resume': {
+                'type': 'bool',
+            },
+            'gateway_down': {
+                'type': 'bool',
+            },
+            'vip_up': {
+                'type': 'bool',
+            },
+            'vip_port_up': {
+                'type': 'bool',
+            },
+            'vip_down': {
+                'type': 'bool',
+            },
+            'service_conn_resume': {
+                'type': 'bool',
+            }
+        },
+        'network': {
+            'type': 'dict',
+            'trunk_port_threshold': {
+                'type': 'bool',
+            },
+            'uuid': {
+                'type': 'str',
+            }
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -464,16 +904,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -481,13 +925,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -500,10 +946,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -514,30 +960,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -558,6 +1008,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["traps"].items():
@@ -568,16 +1019,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["traps"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["traps"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -590,6 +1042,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -606,6 +1059,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("traps", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -619,6 +1073,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -631,6 +1086,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -641,6 +1097,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -657,15 +1114,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -686,14 +1139,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -701,14 +1155,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -716,14 +1170,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

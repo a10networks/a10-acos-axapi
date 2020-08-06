@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_spdy_proxy
 description:
     - Configure SPDY Proxy
 short_description: Configures A10 slb.spdy-proxy
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -68,7 +68,61 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'curr_proxy'= Curr Proxy Conns; 'total_proxy'= Total Proxy Conns; 'curr_http_proxy'= Curr HTTP Proxy Conns; 'total_http_proxy'= Total HTTP Proxy Conns; 'total_v2_proxy'= Version 2 Streams; 'total_v3_proxy'= Version 3 Streams; 'curr_stream'= Curr Streams; 'total_stream'= Total Streams; 'total_stream_succ'= Streams(succ); 'client_rst'= client_rst; 'server_rst'= Server RST sent; 'client_goaway'= client_goaway; 'server_goaway'= Server GOAWAY sent; 'tcp_err'= TCP sock error; 'inflate_ctx'= Inflate context; 'deflate_ctx'= Deflate context; 'ping_sent'= PING sent; 'stream_not_found'= STREAM not found; 'client_fin'= Client FIN; 'server_fin'= Server FIN; 'stream_close'= Stream close; 'stream_err'= Stream err; 'session_err'= Session err; 'control_frame'= Control frame received; 'syn_frame'= SYN stream frame received; 'syn_reply_frame'= SYN reply frame received; 'headers_frame'= Headers frame received; 'settings_frame'= Setting frame received; 'window_frame'= Window update frame received; 'ping_frame'= Ping frame received; 'data_frame'= Data frame received; 'data_no_stream'= Data no stream found; 'data_no_stream_no_goaway'= Data no stream and no goaway; 'data_no_stream_goaway_close'= Data no stream and no goaway and close session; 'est_cb_no_tuple'= Est callback no tuple; 'data_cb_no_tuple'= Data callback no tuple; 'ctx_alloc_fail'= Context alloc fail; 'fin_close_session'= FIN close session; 'server_rst_close_stream'= Server RST close stream; 'stream_found'= Stream found; 'close_stream_session_not_found'= Close stream session not found; 'close_stream_stream_not_found'= Close stream stream not found; 'close_stream_already_closed'= Closing closed stream; 'close_stream_session_close'= Stream close session close; 'close_session_already_closed'= Closing closed session; 'max_concurrent_stream_limit'= Max concurrent stream limit; 'stream_alloc_fail'= Stream alloc fail; 'http_conn_alloc_fail'= HTTP connection allocation fail; 'request_header_alloc_fail'= Request/Header allocation fail; 'name_value_total_len_ex'= Name value total length exceeded; 'name_value_zero_len'= Name value zero name length; 'name_value_invalid_http_ver'= Name value invalid http version; 'name_value_connection'= Name value connection; 'name_value_keepalive'= Name value keep alive; 'name_value_proxy_conn'= Name value proxy-connection; 'name_value_trasnfer_encod'= Name value transfer encoding; 'name_value_no_must_have'= Name value no must have; 'decompress_fail'= Decompress fail; 'syn_after_goaway'= SYN after goaway; 'stream_lt_prev'= Stream id less than previous; 'syn_stream_exist_or_even'= Stream already exists; 'syn_unidir'= Unidirectional SYN; 'syn_reply_alr_rcvd'= SYN reply already received; 'client_rst_nostream'= Close RST stream not found; 'window_no_stream'= Window update no stream found; 'invalid_window_size'= Invalid window size; 'unknown_control_frame'= Unknown control frame; 'data_on_closed_stream'= Data on closed stream; 'invalid_frame_size'= Invalid frame size; 'invalid_version'= Invalid version; 'header_after_session_close'= Header after session close; 'compress_ctx_alloc_fail'= Compression context allocation fail; 'header_compress_fail'= Header compress fail; 'http_data_session_close'= HTTP data session close; 'http_data_stream_not_found'= HTTP data stream not found; 'close_stream_not_http_proxy'= Close Stream not http-proxy; 'session_needs_requeue'= Session needs requeue; 'new_stream_session_del'= New Stream after Session delete; 'fin_stream_closed'= HTTP FIN stream already closed; 'http_close_stream_closed'= HTTP close stream already closed; 'http_err_stream_closed'= HTTP error stream already closed; 'http_hdr_stream_close'= HTTP header stream already closed; 'http_data_stream_close'= HTTP data stream already closed; 'session_close'= Session close; "
+                - "'all'= all; 'curr_proxy'= Curr Proxy Conns; 'total_proxy'= Total Proxy Conns;
+          'curr_http_proxy'= Curr HTTP Proxy Conns; 'total_http_proxy'= Total HTTP Proxy
+          Conns; 'total_v2_proxy'= Version 2 Streams; 'total_v3_proxy'= Version 3
+          Streams; 'curr_stream'= Curr Streams; 'total_stream'= Total Streams;
+          'total_stream_succ'= Streams(succ); 'client_rst'= client_rst; 'server_rst'=
+          Server RST sent; 'client_goaway'= client_goaway; 'server_goaway'= Server GOAWAY
+          sent; 'tcp_err'= TCP sock error; 'inflate_ctx'= Inflate context; 'deflate_ctx'=
+          Deflate context; 'ping_sent'= PING sent; 'stream_not_found'= STREAM not found;
+          'client_fin'= Client FIN; 'server_fin'= Server FIN; 'stream_close'= Stream
+          close; 'stream_err'= Stream err; 'session_err'= Session err; 'control_frame'=
+          Control frame received; 'syn_frame'= SYN stream frame received;
+          'syn_reply_frame'= SYN reply frame received; 'headers_frame'= Headers frame
+          received; 'settings_frame'= Setting frame received; 'window_frame'= Window
+          update frame received; 'ping_frame'= Ping frame received; 'data_frame'= Data
+          frame received; 'data_no_stream'= Data no stream found;
+          'data_no_stream_no_goaway'= Data no stream and no goaway;
+          'data_no_stream_goaway_close'= Data no stream and no goaway and close session;
+          'est_cb_no_tuple'= Est callback no tuple; 'data_cb_no_tuple'= Data callback no
+          tuple; 'ctx_alloc_fail'= Context alloc fail; 'fin_close_session'= FIN close
+          session; 'server_rst_close_stream'= Server RST close stream; 'stream_found'=
+          Stream found; 'close_stream_session_not_found'= Close stream session not found;
+          'close_stream_stream_not_found'= Close stream stream not found;
+          'close_stream_already_closed'= Closing closed stream;
+          'close_stream_session_close'= Stream close session close;
+          'close_session_already_closed'= Closing closed session;
+          'max_concurrent_stream_limit'= Max concurrent stream limit;
+          'stream_alloc_fail'= Stream alloc fail; 'http_conn_alloc_fail'= HTTP connection
+          allocation fail; 'request_header_alloc_fail'= Request/Header allocation fail;
+          'name_value_total_len_ex'= Name value total length exceeded;
+          'name_value_zero_len'= Name value zero name length;
+          'name_value_invalid_http_ver'= Name value invalid http version;
+          'name_value_connection'= Name value connection; 'name_value_keepalive'= Name
+          value keep alive; 'name_value_proxy_conn'= Name value proxy-connection;
+          'name_value_trasnfer_encod'= Name value transfer encoding;
+          'name_value_no_must_have'= Name value no must have; 'decompress_fail'=
+          Decompress fail; 'syn_after_goaway'= SYN after goaway; 'stream_lt_prev'= Stream
+          id less than previous; 'syn_stream_exist_or_even'= Stream already exists;
+          'syn_unidir'= Unidirectional SYN; 'syn_reply_alr_rcvd'= SYN reply already
+          received; 'client_rst_nostream'= Close RST stream not found;
+          'window_no_stream'= Window update no stream found; 'invalid_window_size'=
+          Invalid window size; 'unknown_control_frame'= Unknown control frame;
+          'data_on_closed_stream'= Data on closed stream; 'invalid_frame_size'= Invalid
+          frame size; 'invalid_version'= Invalid version; 'header_after_session_close'=
+          Header after session close; 'compress_ctx_alloc_fail'= Compression context
+          allocation fail; 'header_compress_fail'= Header compress fail;
+          'http_data_session_close'= HTTP data session close;
+          'http_data_stream_not_found'= HTTP data stream not found;
+          'close_stream_not_http_proxy'= Close Stream not http-proxy;
+          'session_needs_requeue'= Session needs requeue; 'new_stream_session_del'= New
+          Stream after Session delete; 'fin_stream_closed'= HTTP FIN stream already
+          closed; 'http_close_stream_closed'= HTTP close stream already closed;
+          'http_err_stream_closed'= HTTP error stream already closed;
+          'http_hdr_stream_close'= HTTP header stream already closed;
+          'http_data_stream_close'= HTTP data stream already closed; 'session_close'=
+          Session close;"
     stats:
         description:
         - "Field stats"
@@ -331,7 +385,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -344,18 +397,19 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["oper","sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = [
+    "oper",
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -363,24 +417,597 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        oper=dict(type='dict', l4_cpu_list=dict(type='list', name_value_total_len_ex=dict(type='int', ), data_cb_no_tuple=dict(type='int', ), server_rst=dict(type='int', ), server_fin=dict(type='int', ), total_proxy=dict(type='int', ), curr_http_proxy=dict(type='int', ), total_v2_proxy=dict(type='int', ), window_frame=dict(type='int', ), close_stream_stream_not_found=dict(type='int', ), client_rst=dict(type='int', ), est_cb_no_tuple=dict(type='int', ), stream_alloc_fail=dict(type='int', ), max_concurrent_stream_limit=dict(type='int', ), deflate_ctx=dict(type='int', ), client_goaway=dict(type='int', ), total_v3_proxy=dict(type='int', ), compress_ctx_alloc_fail=dict(type='int', ), server_goaway=dict(type='int', ), syn_after_goaway=dict(type='int', ), invalid_version=dict(type='int', ), total_http_proxy=dict(type='int', ), close_stream_session_close=dict(type='int', ), decompress_fail=dict(type='int', ), ping_frame=dict(type='int', ), ping_sent=dict(type='int', ), invalid_frame_size=dict(type='int', ), http_err_stream_closed=dict(type='int', ), header_after_session_close=dict(type='int', ), http_data_stream_close=dict(type='int', ), control_frame=dict(type='int', ), stream_not_found=dict(type='int', ), fin_stream_closed=dict(type='int', ), stream_close=dict(type='int', ), total_stream=dict(type='int', ), inflate_ctx=dict(type='int', ), session_needs_requeue=dict(type='int', ), data_no_stream=dict(type='int', ), data_no_stream_no_goaway=dict(type='int', ), ctx_alloc_fail=dict(type='int', ), close_stream_session_not_found=dict(type='int', ), stream_found=dict(type='int', ), syn_stream_exist_or_even=dict(type='int', ), close_session_already_closed=dict(type='int', ), headers_frame=dict(type='int', ), syn_reply_alr_rcvd=dict(type='int', ), invalid_window_size=dict(type='int', ), header_compress_fail=dict(type='int', ), tcp_err=dict(type='int', ), curr_proxy=dict(type='int', ), name_value_keepalive=dict(type='int', ), settings_frame=dict(type='int', ), syn_frame=dict(type='int', ), window_no_stream=dict(type='int', ), data_frame=dict(type='int', ), server_rst_close_stream=dict(type='int', ), new_stream_session_del=dict(type='int', ), request_header_alloc_fail=dict(type='int', ), unknown_control_frame=dict(type='int', ), http_data_stream_not_found=dict(type='int', ), http_close_stream_closed=dict(type='int', ), curr_stream=dict(type='int', ), close_stream_already_closed=dict(type='int', ), name_value_zero_len=dict(type='int', ), data_on_closed_stream=dict(type='int', ), name_value_trasnfer_encod=dict(type='int', ), http_conn_alloc_fail=dict(type='int', ), fin_close_session=dict(type='int', ), name_value_no_must_have=dict(type='int', ), name_value_proxy_conn=dict(type='int', ), syn_reply_frame=dict(type='int', ), name_value_invalid_http_ver=dict(type='int', ), session_err=dict(type='int', ), client_rst_nostream=dict(type='int', ), http_hdr_stream_close=dict(type='int', ), name_value_connection=dict(type='int', ), client_fin=dict(type='int', ), data_no_stream_goaway_close=dict(type='int', ), total_stream_succ=dict(type='int', ), syn_unidir=dict(type='int', ), http_data_session_close=dict(type='int', ), stream_lt_prev=dict(type='int', ), close_stream_not_http_proxy=dict(type='int', ), stream_err=dict(type='int', ), session_close=dict(type='int', )), cpu_count=dict(type='int', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'curr_proxy', 'total_proxy', 'curr_http_proxy', 'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy', 'curr_stream', 'total_stream', 'total_stream_succ', 'client_rst', 'server_rst', 'client_goaway', 'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx', 'ping_sent', 'stream_not_found', 'client_fin', 'server_fin', 'stream_close', 'stream_err', 'session_err', 'control_frame', 'syn_frame', 'syn_reply_frame', 'headers_frame', 'settings_frame', 'window_frame', 'ping_frame', 'data_frame', 'data_no_stream', 'data_no_stream_no_goaway', 'data_no_stream_goaway_close', 'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail', 'fin_close_session', 'server_rst_close_stream', 'stream_found', 'close_stream_session_not_found', 'close_stream_stream_not_found', 'close_stream_already_closed', 'close_stream_session_close', 'close_session_already_closed', 'max_concurrent_stream_limit', 'stream_alloc_fail', 'http_conn_alloc_fail', 'request_header_alloc_fail', 'name_value_total_len_ex', 'name_value_zero_len', 'name_value_invalid_http_ver', 'name_value_connection', 'name_value_keepalive', 'name_value_proxy_conn', 'name_value_trasnfer_encod', 'name_value_no_must_have', 'decompress_fail', 'syn_after_goaway', 'stream_lt_prev', 'syn_stream_exist_or_even', 'syn_unidir', 'syn_reply_alr_rcvd', 'client_rst_nostream', 'window_no_stream', 'invalid_window_size', 'unknown_control_frame', 'data_on_closed_stream', 'invalid_frame_size', 'invalid_version', 'header_after_session_close', 'compress_ctx_alloc_fail', 'header_compress_fail', 'http_data_session_close', 'http_data_stream_not_found', 'close_stream_not_http_proxy', 'session_needs_requeue', 'new_stream_session_del', 'fin_stream_closed', 'http_close_stream_closed', 'http_err_stream_closed', 'http_hdr_stream_close', 'http_data_stream_close', 'session_close'])),
-        stats=dict(type='dict', name_value_total_len_ex=dict(type='str', ), data_cb_no_tuple=dict(type='str', ), server_rst=dict(type='str', ), server_fin=dict(type='str', ), total_proxy=dict(type='str', ), curr_http_proxy=dict(type='str', ), total_v2_proxy=dict(type='str', ), window_frame=dict(type='str', ), close_stream_stream_not_found=dict(type='str', ), client_rst=dict(type='str', ), est_cb_no_tuple=dict(type='str', ), stream_alloc_fail=dict(type='str', ), max_concurrent_stream_limit=dict(type='str', ), deflate_ctx=dict(type='str', ), client_goaway=dict(type='str', ), total_v3_proxy=dict(type='str', ), compress_ctx_alloc_fail=dict(type='str', ), server_goaway=dict(type='str', ), syn_after_goaway=dict(type='str', ), invalid_version=dict(type='str', ), total_http_proxy=dict(type='str', ), close_stream_session_close=dict(type='str', ), decompress_fail=dict(type='str', ), ping_frame=dict(type='str', ), ping_sent=dict(type='str', ), invalid_frame_size=dict(type='str', ), http_err_stream_closed=dict(type='str', ), header_after_session_close=dict(type='str', ), http_data_stream_close=dict(type='str', ), control_frame=dict(type='str', ), stream_not_found=dict(type='str', ), fin_stream_closed=dict(type='str', ), stream_close=dict(type='str', ), total_stream=dict(type='str', ), inflate_ctx=dict(type='str', ), session_needs_requeue=dict(type='str', ), data_no_stream=dict(type='str', ), data_no_stream_no_goaway=dict(type='str', ), ctx_alloc_fail=dict(type='str', ), close_stream_session_not_found=dict(type='str', ), stream_found=dict(type='str', ), syn_stream_exist_or_even=dict(type='str', ), close_session_already_closed=dict(type='str', ), headers_frame=dict(type='str', ), syn_reply_alr_rcvd=dict(type='str', ), invalid_window_size=dict(type='str', ), header_compress_fail=dict(type='str', ), tcp_err=dict(type='str', ), curr_proxy=dict(type='str', ), name_value_keepalive=dict(type='str', ), settings_frame=dict(type='str', ), syn_frame=dict(type='str', ), window_no_stream=dict(type='str', ), data_frame=dict(type='str', ), server_rst_close_stream=dict(type='str', ), new_stream_session_del=dict(type='str', ), request_header_alloc_fail=dict(type='str', ), unknown_control_frame=dict(type='str', ), http_data_stream_not_found=dict(type='str', ), http_close_stream_closed=dict(type='str', ), curr_stream=dict(type='str', ), close_stream_already_closed=dict(type='str', ), name_value_zero_len=dict(type='str', ), data_on_closed_stream=dict(type='str', ), name_value_trasnfer_encod=dict(type='str', ), http_conn_alloc_fail=dict(type='str', ), fin_close_session=dict(type='str', ), name_value_no_must_have=dict(type='str', ), name_value_proxy_conn=dict(type='str', ), syn_reply_frame=dict(type='str', ), name_value_invalid_http_ver=dict(type='str', ), session_err=dict(type='str', ), client_rst_nostream=dict(type='str', ), http_hdr_stream_close=dict(type='str', ), name_value_connection=dict(type='str', ), client_fin=dict(type='str', ), data_no_stream_goaway_close=dict(type='str', ), total_stream_succ=dict(type='str', ), syn_unidir=dict(type='str', ), http_data_session_close=dict(type='str', ), stream_lt_prev=dict(type='str', ), close_stream_not_http_proxy=dict(type='str', ), stream_err=dict(type='str', ), session_close=dict(type='str', )),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'oper': {
+            'type': 'dict',
+            'l4_cpu_list': {
+                'type': 'list',
+                'name_value_total_len_ex': {
+                    'type': 'int',
+                },
+                'data_cb_no_tuple': {
+                    'type': 'int',
+                },
+                'server_rst': {
+                    'type': 'int',
+                },
+                'server_fin': {
+                    'type': 'int',
+                },
+                'total_proxy': {
+                    'type': 'int',
+                },
+                'curr_http_proxy': {
+                    'type': 'int',
+                },
+                'total_v2_proxy': {
+                    'type': 'int',
+                },
+                'window_frame': {
+                    'type': 'int',
+                },
+                'close_stream_stream_not_found': {
+                    'type': 'int',
+                },
+                'client_rst': {
+                    'type': 'int',
+                },
+                'est_cb_no_tuple': {
+                    'type': 'int',
+                },
+                'stream_alloc_fail': {
+                    'type': 'int',
+                },
+                'max_concurrent_stream_limit': {
+                    'type': 'int',
+                },
+                'deflate_ctx': {
+                    'type': 'int',
+                },
+                'client_goaway': {
+                    'type': 'int',
+                },
+                'total_v3_proxy': {
+                    'type': 'int',
+                },
+                'compress_ctx_alloc_fail': {
+                    'type': 'int',
+                },
+                'server_goaway': {
+                    'type': 'int',
+                },
+                'syn_after_goaway': {
+                    'type': 'int',
+                },
+                'invalid_version': {
+                    'type': 'int',
+                },
+                'total_http_proxy': {
+                    'type': 'int',
+                },
+                'close_stream_session_close': {
+                    'type': 'int',
+                },
+                'decompress_fail': {
+                    'type': 'int',
+                },
+                'ping_frame': {
+                    'type': 'int',
+                },
+                'ping_sent': {
+                    'type': 'int',
+                },
+                'invalid_frame_size': {
+                    'type': 'int',
+                },
+                'http_err_stream_closed': {
+                    'type': 'int',
+                },
+                'header_after_session_close': {
+                    'type': 'int',
+                },
+                'http_data_stream_close': {
+                    'type': 'int',
+                },
+                'control_frame': {
+                    'type': 'int',
+                },
+                'stream_not_found': {
+                    'type': 'int',
+                },
+                'fin_stream_closed': {
+                    'type': 'int',
+                },
+                'stream_close': {
+                    'type': 'int',
+                },
+                'total_stream': {
+                    'type': 'int',
+                },
+                'inflate_ctx': {
+                    'type': 'int',
+                },
+                'session_needs_requeue': {
+                    'type': 'int',
+                },
+                'data_no_stream': {
+                    'type': 'int',
+                },
+                'data_no_stream_no_goaway': {
+                    'type': 'int',
+                },
+                'ctx_alloc_fail': {
+                    'type': 'int',
+                },
+                'close_stream_session_not_found': {
+                    'type': 'int',
+                },
+                'stream_found': {
+                    'type': 'int',
+                },
+                'syn_stream_exist_or_even': {
+                    'type': 'int',
+                },
+                'close_session_already_closed': {
+                    'type': 'int',
+                },
+                'headers_frame': {
+                    'type': 'int',
+                },
+                'syn_reply_alr_rcvd': {
+                    'type': 'int',
+                },
+                'invalid_window_size': {
+                    'type': 'int',
+                },
+                'header_compress_fail': {
+                    'type': 'int',
+                },
+                'tcp_err': {
+                    'type': 'int',
+                },
+                'curr_proxy': {
+                    'type': 'int',
+                },
+                'name_value_keepalive': {
+                    'type': 'int',
+                },
+                'settings_frame': {
+                    'type': 'int',
+                },
+                'syn_frame': {
+                    'type': 'int',
+                },
+                'window_no_stream': {
+                    'type': 'int',
+                },
+                'data_frame': {
+                    'type': 'int',
+                },
+                'server_rst_close_stream': {
+                    'type': 'int',
+                },
+                'new_stream_session_del': {
+                    'type': 'int',
+                },
+                'request_header_alloc_fail': {
+                    'type': 'int',
+                },
+                'unknown_control_frame': {
+                    'type': 'int',
+                },
+                'http_data_stream_not_found': {
+                    'type': 'int',
+                },
+                'http_close_stream_closed': {
+                    'type': 'int',
+                },
+                'curr_stream': {
+                    'type': 'int',
+                },
+                'close_stream_already_closed': {
+                    'type': 'int',
+                },
+                'name_value_zero_len': {
+                    'type': 'int',
+                },
+                'data_on_closed_stream': {
+                    'type': 'int',
+                },
+                'name_value_trasnfer_encod': {
+                    'type': 'int',
+                },
+                'http_conn_alloc_fail': {
+                    'type': 'int',
+                },
+                'fin_close_session': {
+                    'type': 'int',
+                },
+                'name_value_no_must_have': {
+                    'type': 'int',
+                },
+                'name_value_proxy_conn': {
+                    'type': 'int',
+                },
+                'syn_reply_frame': {
+                    'type': 'int',
+                },
+                'name_value_invalid_http_ver': {
+                    'type': 'int',
+                },
+                'session_err': {
+                    'type': 'int',
+                },
+                'client_rst_nostream': {
+                    'type': 'int',
+                },
+                'http_hdr_stream_close': {
+                    'type': 'int',
+                },
+                'name_value_connection': {
+                    'type': 'int',
+                },
+                'client_fin': {
+                    'type': 'int',
+                },
+                'data_no_stream_goaway_close': {
+                    'type': 'int',
+                },
+                'total_stream_succ': {
+                    'type': 'int',
+                },
+                'syn_unidir': {
+                    'type': 'int',
+                },
+                'http_data_session_close': {
+                    'type': 'int',
+                },
+                'stream_lt_prev': {
+                    'type': 'int',
+                },
+                'close_stream_not_http_proxy': {
+                    'type': 'int',
+                },
+                'stream_err': {
+                    'type': 'int',
+                },
+                'session_close': {
+                    'type': 'int',
+                }
+            },
+            'cpu_count': {
+                'type': 'int',
+            }
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'curr_proxy', 'total_proxy', 'curr_http_proxy',
+                    'total_http_proxy', 'total_v2_proxy', 'total_v3_proxy',
+                    'curr_stream', 'total_stream', 'total_stream_succ',
+                    'client_rst', 'server_rst', 'client_goaway',
+                    'server_goaway', 'tcp_err', 'inflate_ctx', 'deflate_ctx',
+                    'ping_sent', 'stream_not_found', 'client_fin',
+                    'server_fin', 'stream_close', 'stream_err', 'session_err',
+                    'control_frame', 'syn_frame', 'syn_reply_frame',
+                    'headers_frame', 'settings_frame', 'window_frame',
+                    'ping_frame', 'data_frame', 'data_no_stream',
+                    'data_no_stream_no_goaway', 'data_no_stream_goaway_close',
+                    'est_cb_no_tuple', 'data_cb_no_tuple', 'ctx_alloc_fail',
+                    'fin_close_session', 'server_rst_close_stream',
+                    'stream_found', 'close_stream_session_not_found',
+                    'close_stream_stream_not_found',
+                    'close_stream_already_closed',
+                    'close_stream_session_close',
+                    'close_session_already_closed',
+                    'max_concurrent_stream_limit', 'stream_alloc_fail',
+                    'http_conn_alloc_fail', 'request_header_alloc_fail',
+                    'name_value_total_len_ex', 'name_value_zero_len',
+                    'name_value_invalid_http_ver', 'name_value_connection',
+                    'name_value_keepalive', 'name_value_proxy_conn',
+                    'name_value_trasnfer_encod', 'name_value_no_must_have',
+                    'decompress_fail', 'syn_after_goaway', 'stream_lt_prev',
+                    'syn_stream_exist_or_even', 'syn_unidir',
+                    'syn_reply_alr_rcvd', 'client_rst_nostream',
+                    'window_no_stream', 'invalid_window_size',
+                    'unknown_control_frame', 'data_on_closed_stream',
+                    'invalid_frame_size', 'invalid_version',
+                    'header_after_session_close', 'compress_ctx_alloc_fail',
+                    'header_compress_fail', 'http_data_session_close',
+                    'http_data_stream_not_found',
+                    'close_stream_not_http_proxy', 'session_needs_requeue',
+                    'new_stream_session_del', 'fin_stream_closed',
+                    'http_close_stream_closed', 'http_err_stream_closed',
+                    'http_hdr_stream_close', 'http_data_stream_close',
+                    'session_close'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'name_value_total_len_ex': {
+                'type': 'str',
+            },
+            'data_cb_no_tuple': {
+                'type': 'str',
+            },
+            'server_rst': {
+                'type': 'str',
+            },
+            'server_fin': {
+                'type': 'str',
+            },
+            'total_proxy': {
+                'type': 'str',
+            },
+            'curr_http_proxy': {
+                'type': 'str',
+            },
+            'total_v2_proxy': {
+                'type': 'str',
+            },
+            'window_frame': {
+                'type': 'str',
+            },
+            'close_stream_stream_not_found': {
+                'type': 'str',
+            },
+            'client_rst': {
+                'type': 'str',
+            },
+            'est_cb_no_tuple': {
+                'type': 'str',
+            },
+            'stream_alloc_fail': {
+                'type': 'str',
+            },
+            'max_concurrent_stream_limit': {
+                'type': 'str',
+            },
+            'deflate_ctx': {
+                'type': 'str',
+            },
+            'client_goaway': {
+                'type': 'str',
+            },
+            'total_v3_proxy': {
+                'type': 'str',
+            },
+            'compress_ctx_alloc_fail': {
+                'type': 'str',
+            },
+            'server_goaway': {
+                'type': 'str',
+            },
+            'syn_after_goaway': {
+                'type': 'str',
+            },
+            'invalid_version': {
+                'type': 'str',
+            },
+            'total_http_proxy': {
+                'type': 'str',
+            },
+            'close_stream_session_close': {
+                'type': 'str',
+            },
+            'decompress_fail': {
+                'type': 'str',
+            },
+            'ping_frame': {
+                'type': 'str',
+            },
+            'ping_sent': {
+                'type': 'str',
+            },
+            'invalid_frame_size': {
+                'type': 'str',
+            },
+            'http_err_stream_closed': {
+                'type': 'str',
+            },
+            'header_after_session_close': {
+                'type': 'str',
+            },
+            'http_data_stream_close': {
+                'type': 'str',
+            },
+            'control_frame': {
+                'type': 'str',
+            },
+            'stream_not_found': {
+                'type': 'str',
+            },
+            'fin_stream_closed': {
+                'type': 'str',
+            },
+            'stream_close': {
+                'type': 'str',
+            },
+            'total_stream': {
+                'type': 'str',
+            },
+            'inflate_ctx': {
+                'type': 'str',
+            },
+            'session_needs_requeue': {
+                'type': 'str',
+            },
+            'data_no_stream': {
+                'type': 'str',
+            },
+            'data_no_stream_no_goaway': {
+                'type': 'str',
+            },
+            'ctx_alloc_fail': {
+                'type': 'str',
+            },
+            'close_stream_session_not_found': {
+                'type': 'str',
+            },
+            'stream_found': {
+                'type': 'str',
+            },
+            'syn_stream_exist_or_even': {
+                'type': 'str',
+            },
+            'close_session_already_closed': {
+                'type': 'str',
+            },
+            'headers_frame': {
+                'type': 'str',
+            },
+            'syn_reply_alr_rcvd': {
+                'type': 'str',
+            },
+            'invalid_window_size': {
+                'type': 'str',
+            },
+            'header_compress_fail': {
+                'type': 'str',
+            },
+            'tcp_err': {
+                'type': 'str',
+            },
+            'curr_proxy': {
+                'type': 'str',
+            },
+            'name_value_keepalive': {
+                'type': 'str',
+            },
+            'settings_frame': {
+                'type': 'str',
+            },
+            'syn_frame': {
+                'type': 'str',
+            },
+            'window_no_stream': {
+                'type': 'str',
+            },
+            'data_frame': {
+                'type': 'str',
+            },
+            'server_rst_close_stream': {
+                'type': 'str',
+            },
+            'new_stream_session_del': {
+                'type': 'str',
+            },
+            'request_header_alloc_fail': {
+                'type': 'str',
+            },
+            'unknown_control_frame': {
+                'type': 'str',
+            },
+            'http_data_stream_not_found': {
+                'type': 'str',
+            },
+            'http_close_stream_closed': {
+                'type': 'str',
+            },
+            'curr_stream': {
+                'type': 'str',
+            },
+            'close_stream_already_closed': {
+                'type': 'str',
+            },
+            'name_value_zero_len': {
+                'type': 'str',
+            },
+            'data_on_closed_stream': {
+                'type': 'str',
+            },
+            'name_value_trasnfer_encod': {
+                'type': 'str',
+            },
+            'http_conn_alloc_fail': {
+                'type': 'str',
+            },
+            'fin_close_session': {
+                'type': 'str',
+            },
+            'name_value_no_must_have': {
+                'type': 'str',
+            },
+            'name_value_proxy_conn': {
+                'type': 'str',
+            },
+            'syn_reply_frame': {
+                'type': 'str',
+            },
+            'name_value_invalid_http_ver': {
+                'type': 'str',
+            },
+            'session_err': {
+                'type': 'str',
+            },
+            'client_rst_nostream': {
+                'type': 'str',
+            },
+            'http_hdr_stream_close': {
+                'type': 'str',
+            },
+            'name_value_connection': {
+                'type': 'str',
+            },
+            'client_fin': {
+                'type': 'str',
+            },
+            'data_no_stream_goaway_close': {
+                'type': 'str',
+            },
+            'total_stream_succ': {
+                'type': 'str',
+            },
+            'syn_unidir': {
+                'type': 'str',
+            },
+            'http_data_session_close': {
+                'type': 'str',
+            },
+            'stream_lt_prev': {
+                'type': 'str',
+            },
+            'close_stream_not_http_proxy': {
+                'type': 'str',
+            },
+            'stream_err': {
+                'type': 'str',
+            },
+            'session_close': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -391,44 +1018,50 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
+
 
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_oper(module):
     if module.params.get("oper"):
         query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
     return module.client.get(oper_url(module))
+
 
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -436,13 +1069,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -455,10 +1090,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -469,30 +1104,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -513,6 +1152,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["spdy-proxy"].items():
@@ -523,16 +1163,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["spdy-proxy"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["spdy-proxy"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -545,6 +1186,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -561,6 +1203,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("spdy-proxy", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -574,6 +1217,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -586,6 +1230,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -596,6 +1241,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -612,15 +1258,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -641,14 +1283,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -656,14 +1299,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -675,14 +1318,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

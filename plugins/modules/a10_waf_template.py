@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_waf_template
 description:
     - Manage WAF template configuration
 short_description: Configures A10 waf.template
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -64,11 +64,13 @@ options:
         required: False
     max_cookie_len:
         description:
-        - "Max Cookie length allowed in request (default 4096) (Maximum length of cookie allowed (default 4096))"
+        - "Max Cookie length allowed in request (default 4096) (Maximum length of cookie
+          allowed (default 4096))"
         required: False
     deploy_mode:
         description:
-        - "'active'= Deploy WAF in active (blocking) mode; 'passive'= Deploy WAF in passive (log-only) mode; 'learning'= Deploy WAF in learning mode; "
+        - "'active'= Deploy WAF in active (blocking) mode; 'passive'= Deploy WAF in
+          passive (log-only) mode; 'learning'= Deploy WAF in learning mode;"
         required: False
     xml_format_check:
         description:
@@ -80,7 +82,8 @@ options:
         required: False
     max_string:
         description:
-        - "Maximum length of a string in a JSON request body (default 64) (Maximum length of a JSON string (default 64))"
+        - "Maximum length of a string in a JSON request body (default 64) (Maximum length
+          of a JSON string (default 64))"
         required: False
     ccn_mask:
         description:
@@ -104,7 +107,8 @@ options:
         required: False
     http_redirect:
         description:
-        - "Send HTTP redirect response (302 Found) to specifed URL (URL to redirect to when denying request)"
+        - "Send HTTP redirect response (302 Found) to specifed URL (URL to redirect to
+          when denying request)"
         required: False
     bot_check:
         description:
@@ -112,11 +116,13 @@ options:
         required: False
     max_cookies_len:
         description:
-        - "Max Total Cookies length allowed in request (default 4096) (Maximum total length of cookies allowed (default 4096))"
+        - "Max Total Cookies length allowed in request (default 4096) (Maximum total
+          length of cookies allowed (default 4096))"
         required: False
     brute_force_global:
         description:
-        - "Brute-force triggers apply globally instead of per-client (Apply brute-force triggers globally)"
+        - "Brute-force triggers apply globally instead of per-client (Apply brute-force
+          triggers globally)"
         required: False
     url_check:
         description:
@@ -124,7 +130,8 @@ options:
         required: False
     max_parameter_value_len:
         description:
-        - "Max HTML parameter value length in an HTTP request (default 4096) (Maximum HTML parameter value in an HTTP request (default 4096))"
+        - "Max HTML parameter value length in an HTTP request (default 4096) (Maximum HTML
+          parameter value in an HTTP request (default 4096))"
         required: False
     max_entities:
         description:
@@ -136,7 +143,8 @@ options:
         required: False
     max_depth:
         description:
-        - "Maximum recursion depth in a value in a JSON requesnt body (default 16) (Maximum recursion depth in a JSON value (default 16))"
+        - "Maximum recursion depth in a value in a JSON requesnt body (default 16)
+          (Maximum recursion depth in a JSON value (default 16))"
         required: False
     hide_resp_codes_file:
         description:
@@ -152,7 +160,8 @@ options:
         required: False
     deny_password_autocomplete:
         description:
-        - "Check to protect against server-generated form which contain password fields that allow autocomplete"
+        - "Check to protect against server-generated form which contain password fields
+          that allow autocomplete"
         required: False
     name:
         description:
@@ -176,7 +185,8 @@ options:
         required: False
     max_cookie_value_len:
         description:
-        - "Max Cookie Value length allowed in request (default 4096) (Maximum length of cookie value allowed (default 4096))"
+        - "Max Cookie Value length allowed in request (default 4096) (Maximum length of
+          cookie value allowed (default 4096))"
         required: False
     max_cdata_len:
         description:
@@ -184,11 +194,13 @@ options:
         required: False
     max_hdr_value_len:
         description:
-        - "Max header value length allowed in request (default 4096) (Maximum length of header value allowed (default 4096))"
+        - "Max header value length allowed in request (default 4096) (Maximum length of
+          header value allowed (default 4096))"
         required: False
     secret_encrypted:
         description:
-        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The ENCRYPTED secret string)"
+        - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
+          ENCRYPTED secret string)"
         required: False
     cookie_name:
         description:
@@ -627,11 +639,13 @@ options:
                 - "Buffer Overflow - Max Data Parse Failure"
     max_parameter_name_len:
         description:
-        - "Max HTML parameter name length in an HTTP request (default 256) (Maximum HTML parameter name length in an HTTP request (default 256))"
+        - "Max HTML parameter name length in an HTTP request (default 256) (Maximum HTML
+          parameter name length in an HTTP request (default 256))"
         required: False
     deny_non_masked_passwords:
         description:
-        - "Denies forms that have a password field with a textual type, resulting in this field not being masked"
+        - "Denies forms that have a password field with a textual type, resulting in this
+          field not being masked"
         required: False
     challenge_action_javascript:
         description:
@@ -639,7 +653,8 @@ options:
         required: False
     max_hdr_name_len:
         description:
-        - "Max header name length allowed in request (default 63) (Maximum length of header name allowed (default 63))"
+        - "Max header name length allowed in request (default 63) (Maximum length of
+          header name allowed (default 63))"
         required: False
     max_elem_depth:
         description:
@@ -707,11 +722,13 @@ options:
         required: False
     brute_force_challenge_limit:
         description:
-        - "Maximum brute-force events before sending challenge (default 2) (Maximum brute-force events before locking out client (default 2))"
+        - "Maximum brute-force events before sending challenge (default 2) (Maximum brute-
+          force events before locking out client (default 2))"
         required: False
     allowed_http_methods:
         description:
-        - "List of allowed HTTP methods. Default is 'GET POST'. (List of HTTP methods allowed (default 'GET POST'))"
+        - "List of allowed HTTP methods. Default is 'GET POST'. (List of HTTP methods
+          allowed (default 'GET POST'))"
         required: False
     brute_force_resp_codes:
         description:
@@ -731,7 +748,8 @@ options:
         required: False
     max_array_value_count:
         description:
-        - "Maximum number of values in an array in a JSON request body (default 256) (Maximum number of values in a JSON array (default 256))"
+        - "Maximum number of values in an array in a JSON request body (default 256)
+          (Maximum number of values in a JSON array (default 256))"
         required: False
     max_elem:
         description:
@@ -739,11 +757,13 @@ options:
         required: False
     sqlia_check:
         description:
-        - "'reject'= Reject requests with SQLIA patterns; 'sanitize'= Remove bad SQL from request; "
+        - "'reject'= Reject requests with SQLIA patterns; 'sanitize'= Remove bad SQL from
+          request;"
         required: False
     max_object_member_count:
         description:
-        - "Maximum number of members in an object in a JSON request body (default 256) (Maximum number of members in a JSON object (default 256))"
+        - "Maximum number of members in an object in a JSON request body (default 256)
+          (Maximum number of members in a JSON object (default 256))"
         required: False
     http_resp_403:
         description:
@@ -759,7 +779,8 @@ options:
         required: False
     max_cookie_name_len:
         description:
-        - "Max Cookie Name length allowed in request (default 64) ( Maximum length of cookie name allowed (default 64))"
+        - "Max Cookie Name length allowed in request (default 64) ( Maximum length of
+          cookie name allowed (default 64))"
         required: False
     remove_comments:
         description:
@@ -783,7 +804,8 @@ options:
         required: False
     xss_check:
         description:
-        - "'reject'= Reject requests with bad cookies; 'sanitize'= Remove bad cookies from request; "
+        - "'reject'= Reject requests with bad cookies; 'sanitize'= Remove bad cookies from
+          request;"
         required: False
     reset_conn:
         description:
@@ -807,11 +829,13 @@ options:
         required: False
     max_url_len:
         description:
-        - "Max URL length allowed in request (default 1024) (Maximum length of URL allowed (default 1024))"
+        - "Max URL length allowed in request (default 1024) (Maximum length of URL allowed
+          (default 1024))"
         required: False
     max_hdrs_len:
         description:
-        - "Max headers length allowed in request (default 4096) (Maximum length of headers allowed (default 4096))"
+        - "Max headers length allowed in request (default 4096) (Maximum length of headers
+          allowed (default 4096))"
         required: False
     waf_wlist_file:
         description:
@@ -839,7 +863,8 @@ options:
         required: False
     max_post_size:
         description:
-        - "Max content length allowed in POST request (default 20480) (Maximum size allowed content in an HTTP POST request (default 20480))"
+        - "Max content length allowed in POST request (default 20480) (Maximum size
+          allowed content in an HTTP POST request (default 20480))"
         required: False
     decode_hex_chars:
         description:
@@ -847,11 +872,13 @@ options:
         required: False
     max_line_len:
         description:
-        - "Max Line length allowed in request (default 1024) (Maximum length of Request line allowed (default 1024))"
+        - "Max Line length allowed in request (default 1024) (Maximum length of Request
+          line allowed (default 1024))"
         required: False
     max_query_len:
         description:
-        - "Max Query length allowed in request (default 1024) (Maximum length of Request query allowed (default 1024))"
+        - "Max Query length allowed in request (default 1024) (Maximum length of Request
+          query allowed (default 1024))"
         required: False
     sqlia_check_policy_file:
         description:
@@ -859,15 +886,18 @@ options:
         required: False
     deny_non_ssl_passwords:
         description:
-        - "Denies any form that has a password field if the form is not sent over an SSL connection"
+        - "Denies any form that has a password field if the form is not sent over an SSL
+          connection"
         required: False
     max_data_parse:
         description:
-        - "Max data parsed for Web Application Firewall (default 65536) (Maximum data parsed for Web Application Firewall (default 65536))"
+        - "Max data parsed for Web Application Firewall (default 65536) (Maximum data
+          parsed for Web Application Firewall (default 65536))"
         required: False
     max_parameter_total_len:
         description:
-        - "Max HTML parameter total length in an HTTP request (default 4096) (Maximum HTML parameter total length in an HTTP request (default 4096))"
+        - "Max HTML parameter total length in an HTTP request (default 4096) (Maximum HTML
+          parameter total length in an HTTP request (default 4096))"
         required: False
     wsdl_file:
         description:
@@ -926,7 +956,6 @@ options:
         - "Check XML data against SQLIA policy"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -939,18 +968,133 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["allowed_http_methods","bot_check","bot_check_policy_file","brute_force_challenge_limit","brute_force_check","brute_force_global","brute_force_lockout_limit","brute_force_lockout_period","brute_force_resp_codes","brute_force_resp_codes_file","brute_force_resp_headers","brute_force_resp_headers_file","brute_force_resp_string","brute_force_resp_string_file","brute_force_test_period","ccn_mask","challenge_action_cookie","challenge_action_javascript","cookie_encryption_secret","cookie_name","csrf_check","decode_entities","decode_escaped_chars","decode_hex_chars","deny_non_masked_passwords","deny_non_ssl_passwords","deny_password_autocomplete","deploy_mode","disable","filter_resp_hdrs","form_consistency_check","form_deny_non_post","form_deny_non_ssl","form_set_no_cache","hide_resp_codes","hide_resp_codes_file","http_check","http_redirect","http_resp_200","http_resp_403","json_format_check","keep_end","keep_start","lifetime","log_succ_reqs","logging","mask","max_array_value_count","max_attr","max_attr_name_len","max_attr_value_len","max_cdata_len","max_cookie_len","max_cookie_name_len","max_cookie_value_len","max_cookies","max_cookies_len","max_data_parse","max_depth","max_elem","max_elem_child","max_elem_depth","max_elem_name_len","max_entities","max_entity_exp","max_entity_exp_depth","max_hdr_name_len","max_hdr_value_len","max_hdrs","max_hdrs_len","max_line_len","max_namespace","max_namespace_uri_len","max_object_member_count","max_parameter_name_len","max_parameter_total_len","max_parameter_value_len","max_parameters","max_post_size","max_query_len","max_string","max_url_len","name","pcre_mask","redirect_wlist","referer_check","referer_domain_list","referer_domain_list_only","referer_safe_url","remove_comments","remove_selfref","remove_spaces","reset_conn","resp_url_200","resp_url_403","secret_encrypted","session_check","soap_format_check","sqlia_check","sqlia_check_policy_file","ssn_mask","stats","uri_blist_check","uri_wlist_check","url_check","user_tag","uuid","waf_blist_file","waf_wlist_file","wsdl_file","wsdl_resp_val_file","xml_format_check","xml_schema_file","xml_schema_resp_val_file","xml_sqlia_check","xml_xss_check","xss_check","xss_check_policy_file",]
+AVAILABLE_PROPERTIES = [
+    "allowed_http_methods",
+    "bot_check",
+    "bot_check_policy_file",
+    "brute_force_challenge_limit",
+    "brute_force_check",
+    "brute_force_global",
+    "brute_force_lockout_limit",
+    "brute_force_lockout_period",
+    "brute_force_resp_codes",
+    "brute_force_resp_codes_file",
+    "brute_force_resp_headers",
+    "brute_force_resp_headers_file",
+    "brute_force_resp_string",
+    "brute_force_resp_string_file",
+    "brute_force_test_period",
+    "ccn_mask",
+    "challenge_action_cookie",
+    "challenge_action_javascript",
+    "cookie_encryption_secret",
+    "cookie_name",
+    "csrf_check",
+    "decode_entities",
+    "decode_escaped_chars",
+    "decode_hex_chars",
+    "deny_non_masked_passwords",
+    "deny_non_ssl_passwords",
+    "deny_password_autocomplete",
+    "deploy_mode",
+    "disable",
+    "filter_resp_hdrs",
+    "form_consistency_check",
+    "form_deny_non_post",
+    "form_deny_non_ssl",
+    "form_set_no_cache",
+    "hide_resp_codes",
+    "hide_resp_codes_file",
+    "http_check",
+    "http_redirect",
+    "http_resp_200",
+    "http_resp_403",
+    "json_format_check",
+    "keep_end",
+    "keep_start",
+    "lifetime",
+    "log_succ_reqs",
+    "logging",
+    "mask",
+    "max_array_value_count",
+    "max_attr",
+    "max_attr_name_len",
+    "max_attr_value_len",
+    "max_cdata_len",
+    "max_cookie_len",
+    "max_cookie_name_len",
+    "max_cookie_value_len",
+    "max_cookies",
+    "max_cookies_len",
+    "max_data_parse",
+    "max_depth",
+    "max_elem",
+    "max_elem_child",
+    "max_elem_depth",
+    "max_elem_name_len",
+    "max_entities",
+    "max_entity_exp",
+    "max_entity_exp_depth",
+    "max_hdr_name_len",
+    "max_hdr_value_len",
+    "max_hdrs",
+    "max_hdrs_len",
+    "max_line_len",
+    "max_namespace",
+    "max_namespace_uri_len",
+    "max_object_member_count",
+    "max_parameter_name_len",
+    "max_parameter_total_len",
+    "max_parameter_value_len",
+    "max_parameters",
+    "max_post_size",
+    "max_query_len",
+    "max_string",
+    "max_url_len",
+    "name",
+    "pcre_mask",
+    "redirect_wlist",
+    "referer_check",
+    "referer_domain_list",
+    "referer_domain_list_only",
+    "referer_safe_url",
+    "remove_comments",
+    "remove_selfref",
+    "remove_spaces",
+    "reset_conn",
+    "resp_url_200",
+    "resp_url_403",
+    "secret_encrypted",
+    "session_check",
+    "soap_format_check",
+    "sqlia_check",
+    "sqlia_check_policy_file",
+    "ssn_mask",
+    "stats",
+    "uri_blist_check",
+    "uri_wlist_check",
+    "url_check",
+    "user_tag",
+    "uuid",
+    "waf_blist_file",
+    "waf_wlist_file",
+    "wsdl_file",
+    "wsdl_resp_val_file",
+    "xml_format_check",
+    "xml_schema_file",
+    "xml_schema_resp_val_file",
+    "xml_sqlia_check",
+    "xml_xss_check",
+    "xss_check",
+    "xss_check_policy_file",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -958,138 +1102,792 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        log_succ_reqs=dict(type='bool', ),
-        brute_force_resp_headers_file=dict(type='str', ),
-        keep_end=dict(type='int', ),
-        max_cookie_len=dict(type='int', ),
-        deploy_mode=dict(type='str', choices=['active', 'passive', 'learning']),
-        xml_format_check=dict(type='bool', ),
-        brute_force_resp_string=dict(type='bool', ),
-        max_string=dict(type='int', ),
-        ccn_mask=dict(type='bool', ),
-        waf_blist_file=dict(type='str', ),
-        challenge_action_cookie=dict(type='bool', ),
-        uuid=dict(type='str', ),
-        form_set_no_cache=dict(type='bool', ),
-        http_redirect=dict(type='str', ),
-        bot_check=dict(type='bool', ),
-        max_cookies_len=dict(type='int', ),
-        brute_force_global=dict(type='bool', ),
-        url_check=dict(type='bool', ),
-        max_parameter_value_len=dict(type='int', ),
-        max_entities=dict(type='int', ),
-        hide_resp_codes=dict(type='bool', ),
-        max_depth=dict(type='int', ),
-        hide_resp_codes_file=dict(type='str', ),
-        brute_force_resp_codes_file=dict(type='str', ),
-        max_elem_name_len=dict(type='int', ),
-        deny_password_autocomplete=dict(type='bool', ),
-        name=dict(type='str', required=True, ),
-        http_resp_200=dict(type='bool', ),
-        user_tag=dict(type='str', ),
-        keep_start=dict(type='int', ),
-        max_hdrs=dict(type='int', ),
-        max_cookie_value_len=dict(type='int', ),
-        max_cdata_len=dict(type='int', ),
-        max_hdr_value_len=dict(type='int', ),
-        secret_encrypted=dict(type='str', ),
-        cookie_name=dict(type='str', ),
-        max_namespace_uri_len=dict(type='int', ),
-        resp_url_403=dict(type='str', ),
-        csrf_check=dict(type='bool', ),
-        referer_domain_list=dict(type='str', ),
-        max_parameters=dict(type='int', ),
-        brute_force_lockout_period=dict(type='int', ),
-        stats=dict(type='dict', redirect_wlist_fail=dict(type='str', ), cookie_encrypt_limit_exceeded=dict(type='str', ), wsdl_succ=dict(type='str', ), sqlia_chk_url_succ=dict(type='str', ), bot_check_succ=dict(type='str', ), cookie_encrypt_skip_rcache=dict(type='str', ), redirect_wlist_learn=dict(type='str', ), xml_limit_elem_child=dict(type='str', ), buf_ovf_parameter_value_len_fail=dict(type='str', ), ccn_mask_visa=dict(type='str', ), xss_chk_cookie_succ=dict(type='str', ), buf_ovf_cookies_len_fail=dict(type='str', ), req_denied=dict(type='str', ), json_check_failure=dict(type='str', ), xss_chk_post_reject=dict(type='str', ), http_check_succ=dict(type='str', ), form_consistency_succ=dict(type='str', ), xml_limit_cdata_len=dict(type='str', ), xml_check_failure=dict(type='str', ), buf_ovf_hdrs_len_fail=dict(type='str', ), referer_check_succ=dict(type='str', ), sqlia_chk_post_succ=dict(type='str', ), xss_chk_url_sanitize=dict(type='str', ), cookie_encrypt_succ=dict(type='str', ), buf_ovf_parameter_total_len_fail=dict(type='str', ), soap_check_succ=dict(type='str', ), name=dict(type='str', required=True, ), max_cookies_fail=dict(type='str', ), json_limit_array_value_count=dict(type='str', ), uri_wlist_succ=dict(type='str', ), brute_force_success=dict(type='str', ), resp_code_hidden=dict(type='str', ), xml_sqlia_chk_fail=dict(type='str', ), xss_chk_post_succ=dict(type='str', ), pcre_mask=dict(type='str', ), form_consistency_fail=dict(type='str', ), http_check_fail=dict(type='str', ), url_check_succ=dict(type='str', ), sqlia_chk_url_reject=dict(type='str', ), sqlia_chk_url_sanitize=dict(type='str', ), xss_chk_cookie_reject=dict(type='str', ), json_check_succ=dict(type='str', ), max_entities_fail=dict(type='str', ), http_method_check_fail=dict(type='str', ), form_non_ssl_reject=dict(type='str', ), xss_chk_post_sanitize=dict(type='str', ), form_set_no_cache=dict(type='str', ), xml_schema_succ=dict(type='str', ), xml_limit_attr=dict(type='str', ), xml_check_succ=dict(type='str', ), sess_check_none=dict(type='str', ), xml_limit_namespace=dict(type='str', ), wsdl_fail=dict(type='str', ), post_form_check_succ=dict(type='str', ), buf_ovf_query_len_fail=dict(type='str', ), sqlia_chk_post_reject=dict(type='str', ), form_password_autocomplete=dict(type='str', ), permitted=dict(type='str', ), xml_xss_chk_fail=dict(type='str', ), buf_ovf_url_len_fail=dict(type='str', ), buf_ovf_cookie_len_fail=dict(type='str', ), form_csrf_tag_succ=dict(type='str', ), xss_chk_cookie_sanitize=dict(type='str', ), sessions_alloc=dict(type='str', ), xml_limit_entity_exp=dict(type='str', ), ccn_mask_diners=dict(type='str', ), sess_check_succ=dict(type='str', ), json_limit_depth=dict(type='str', ), buf_ovf_cookie_name_len_fail=dict(type='str', ), learn_updates=dict(type='str', ), redirect_wlist_succ=dict(type='str', ), challenge_javascript_sent=dict(type='str', ), req_allowed=dict(type='str', ), json_limit_object_member_count=dict(type='str', ), bot_check_fail=dict(type='str', ), uri_wlist_fail=dict(type='str', ), uri_blist_fail=dict(type='str', ), referer_check_redirect=dict(type='str', ), challenge_cookie_sent=dict(type='str', ), sqlia_chk_post_sanitize=dict(type='str', ), ccn_mask_amex=dict(type='str', ), num_drops=dict(type='str', ), referer_check_fail=dict(type='str', ), post_form_check_sanitize=dict(type='str', ), cookie_decrypt_succ=dict(type='str', ), xss_chk_url_reject=dict(type='str', ), max_parameters_fail=dict(type='str', ), url_check_fail=dict(type='str', ), xml_schema_fail=dict(type='str', ), form_non_post_reject=dict(type='str', ), num_resets=dict(type='str', ), xml_limit_entity_exp_depth=dict(type='str', ), form_non_masked_password=dict(type='str', ), buf_ovf_line_len_fail=dict(type='str', ), ccn_mask_discover=dict(type='str', ), ssn_mask=dict(type='str', ), json_limit_string=dict(type='str', ), resp_hdrs_filtered=dict(type='str', ), called=dict(type='str', ), ccn_mask_mastercard=dict(type='str', ), xml_sqlia_chk_succ=dict(type='str', ), brute_force_fail=dict(type='str', ), max_hdrs_fail=dict(type='str', ), xml_limit_attr_name_len=dict(type='str', ), form_non_ssl_password=dict(type='str', ), too_many_sessions=dict(type='str', ), buf_ovf_hdr_value_len_fail=dict(type='str', ), uri_blist_succ=dict(type='str', ), sess_check_fail=dict(type='str', ), buf_ovf_hdr_name_len_fail=dict(type='str', ), resp_denied=dict(type='str', ), sessions_freed=dict(type='str', ), out_of_sessions=dict(type='str', ), xml_limit_elem=dict(type='str', ), buf_ovf_parameter_name_len_fail=dict(type='str', ), xml_limit_attr_value_len=dict(type='str', ), xml_limit_elem_depth=dict(type='str', ), ccn_mask_jcb=dict(type='str', ), cookie_decrypt_fail=dict(type='str', ), buf_ovf_cookie_value_len_fail=dict(type='str', ), buf_ovf_post_size_fail=dict(type='str', ), total_req=dict(type='str', ), xml_limit_elem_name_len=dict(type='str', ), url_check_learn=dict(type='str', ), http_method_check_succ=dict(type='str', ), xss_chk_url_succ=dict(type='str', ), xml_limit_namespace_uri_len=dict(type='str', ), post_form_check_reject=dict(type='str', ), cookie_encrypt_fail=dict(type='str', ), soap_check_failure=dict(type='str', ), challenge_captcha_sent=dict(type='str', ), form_csrf_tag_fail=dict(type='str', ), xml_xss_chk_succ=dict(type='str', ), buf_ovf_max_data_parse_fail=dict(type='str', )),
-        max_parameter_name_len=dict(type='int', ),
-        deny_non_masked_passwords=dict(type='bool', ),
-        challenge_action_javascript=dict(type='bool', ),
-        max_hdr_name_len=dict(type='int', ),
-        max_elem_depth=dict(type='int', ),
-        form_consistency_check=dict(type='bool', ),
-        redirect_wlist=dict(type='bool', ),
-        xml_xss_check=dict(type='bool', ),
-        referer_check=dict(type='bool', ),
-        wsdl_resp_val_file=dict(type='str', ),
-        brute_force_check=dict(type='bool', ),
-        brute_force_test_period=dict(type='int', ),
-        max_namespace=dict(type='int', ),
-        max_entity_exp=dict(type='int', ),
-        form_deny_non_post=dict(type='bool', ),
-        cookie_encryption_secret=dict(type='str', ),
-        decode_escaped_chars=dict(type='bool', ),
-        json_format_check=dict(type='bool', ),
-        bot_check_policy_file=dict(type='str', ),
-        xml_schema_resp_val_file=dict(type='str', ),
-        brute_force_challenge_limit=dict(type='int', ),
-        allowed_http_methods=dict(type='str', ),
-        brute_force_resp_codes=dict(type='bool', ),
-        remove_selfref=dict(type='bool', ),
-        max_elem_child=dict(type='int', ),
-        max_entity_exp_depth=dict(type='int', ),
-        max_array_value_count=dict(type='int', ),
-        max_elem=dict(type='int', ),
-        sqlia_check=dict(type='str', choices=['reject', 'sanitize']),
-        max_object_member_count=dict(type='int', ),
-        http_resp_403=dict(type='bool', ),
-        http_check=dict(type='bool', ),
-        brute_force_resp_headers=dict(type='bool', ),
-        max_cookie_name_len=dict(type='int', ),
-        remove_comments=dict(type='bool', ),
-        logging=dict(type='str', ),
-        uri_wlist_check=dict(type='bool', ),
-        brute_force_resp_string_file=dict(type='str', ),
-        form_deny_non_ssl=dict(type='bool', ),
-        xss_check=dict(type='str', choices=['reject', 'sanitize']),
-        reset_conn=dict(type='bool', ),
-        referer_safe_url=dict(type='str', ),
-        remove_spaces=dict(type='bool', ),
-        brute_force_lockout_limit=dict(type='int', ),
-        uri_blist_check=dict(type='bool', ),
-        max_url_len=dict(type='int', ),
-        max_hdrs_len=dict(type='int', ),
-        waf_wlist_file=dict(type='str', ),
-        max_attr_name_len=dict(type='int', ),
-        lifetime=dict(type='int', ),
-        max_attr=dict(type='int', ),
-        xss_check_policy_file=dict(type='str', ),
-        resp_url_200=dict(type='str', ),
-        max_post_size=dict(type='int', ),
-        decode_hex_chars=dict(type='bool', ),
-        max_line_len=dict(type='int', ),
-        max_query_len=dict(type='int', ),
-        sqlia_check_policy_file=dict(type='str', ),
-        deny_non_ssl_passwords=dict(type='bool', ),
-        max_data_parse=dict(type='int', ),
-        max_parameter_total_len=dict(type='int', ),
-        wsdl_file=dict(type='str', ),
-        session_check=dict(type='bool', ),
-        disable=dict(type='bool', ),
-        filter_resp_hdrs=dict(type='bool', ),
-        max_cookies=dict(type='int', ),
-        decode_entities=dict(type='bool', ),
-        mask=dict(type='str', ),
-        referer_domain_list_only=dict(type='str', ),
-        max_attr_value_len=dict(type='int', ),
-        pcre_mask=dict(type='str', ),
-        soap_format_check=dict(type='bool', ),
-        xml_schema_file=dict(type='str', ),
-        ssn_mask=dict(type='bool', ),
-        xml_sqlia_check=dict(type='bool', )
-    ))
-   
-
+    rv.update({
+        'log_succ_reqs': {
+            'type': 'bool',
+        },
+        'brute_force_resp_headers_file': {
+            'type': 'str',
+        },
+        'keep_end': {
+            'type': 'int',
+        },
+        'max_cookie_len': {
+            'type': 'int',
+        },
+        'deploy_mode': {
+            'type': 'str',
+            'choices': ['active', 'passive', 'learning']
+        },
+        'xml_format_check': {
+            'type': 'bool',
+        },
+        'brute_force_resp_string': {
+            'type': 'bool',
+        },
+        'max_string': {
+            'type': 'int',
+        },
+        'ccn_mask': {
+            'type': 'bool',
+        },
+        'waf_blist_file': {
+            'type': 'str',
+        },
+        'challenge_action_cookie': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'form_set_no_cache': {
+            'type': 'bool',
+        },
+        'http_redirect': {
+            'type': 'str',
+        },
+        'bot_check': {
+            'type': 'bool',
+        },
+        'max_cookies_len': {
+            'type': 'int',
+        },
+        'brute_force_global': {
+            'type': 'bool',
+        },
+        'url_check': {
+            'type': 'bool',
+        },
+        'max_parameter_value_len': {
+            'type': 'int',
+        },
+        'max_entities': {
+            'type': 'int',
+        },
+        'hide_resp_codes': {
+            'type': 'bool',
+        },
+        'max_depth': {
+            'type': 'int',
+        },
+        'hide_resp_codes_file': {
+            'type': 'str',
+        },
+        'brute_force_resp_codes_file': {
+            'type': 'str',
+        },
+        'max_elem_name_len': {
+            'type': 'int',
+        },
+        'deny_password_autocomplete': {
+            'type': 'bool',
+        },
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'http_resp_200': {
+            'type': 'bool',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'keep_start': {
+            'type': 'int',
+        },
+        'max_hdrs': {
+            'type': 'int',
+        },
+        'max_cookie_value_len': {
+            'type': 'int',
+        },
+        'max_cdata_len': {
+            'type': 'int',
+        },
+        'max_hdr_value_len': {
+            'type': 'int',
+        },
+        'secret_encrypted': {
+            'type': 'str',
+        },
+        'cookie_name': {
+            'type': 'str',
+        },
+        'max_namespace_uri_len': {
+            'type': 'int',
+        },
+        'resp_url_403': {
+            'type': 'str',
+        },
+        'csrf_check': {
+            'type': 'bool',
+        },
+        'referer_domain_list': {
+            'type': 'str',
+        },
+        'max_parameters': {
+            'type': 'int',
+        },
+        'brute_force_lockout_period': {
+            'type': 'int',
+        },
+        'stats': {
+            'type': 'dict',
+            'redirect_wlist_fail': {
+                'type': 'str',
+            },
+            'cookie_encrypt_limit_exceeded': {
+                'type': 'str',
+            },
+            'wsdl_succ': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_succ': {
+                'type': 'str',
+            },
+            'bot_check_succ': {
+                'type': 'str',
+            },
+            'cookie_encrypt_skip_rcache': {
+                'type': 'str',
+            },
+            'redirect_wlist_learn': {
+                'type': 'str',
+            },
+            'xml_limit_elem_child': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_value_len_fail': {
+                'type': 'str',
+            },
+            'ccn_mask_visa': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_succ': {
+                'type': 'str',
+            },
+            'buf_ovf_cookies_len_fail': {
+                'type': 'str',
+            },
+            'req_denied': {
+                'type': 'str',
+            },
+            'json_check_failure': {
+                'type': 'str',
+            },
+            'xss_chk_post_reject': {
+                'type': 'str',
+            },
+            'http_check_succ': {
+                'type': 'str',
+            },
+            'form_consistency_succ': {
+                'type': 'str',
+            },
+            'xml_limit_cdata_len': {
+                'type': 'str',
+            },
+            'xml_check_failure': {
+                'type': 'str',
+            },
+            'buf_ovf_hdrs_len_fail': {
+                'type': 'str',
+            },
+            'referer_check_succ': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_succ': {
+                'type': 'str',
+            },
+            'xss_chk_url_sanitize': {
+                'type': 'str',
+            },
+            'cookie_encrypt_succ': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_total_len_fail': {
+                'type': 'str',
+            },
+            'soap_check_succ': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'max_cookies_fail': {
+                'type': 'str',
+            },
+            'json_limit_array_value_count': {
+                'type': 'str',
+            },
+            'uri_wlist_succ': {
+                'type': 'str',
+            },
+            'brute_force_success': {
+                'type': 'str',
+            },
+            'resp_code_hidden': {
+                'type': 'str',
+            },
+            'xml_sqlia_chk_fail': {
+                'type': 'str',
+            },
+            'xss_chk_post_succ': {
+                'type': 'str',
+            },
+            'pcre_mask': {
+                'type': 'str',
+            },
+            'form_consistency_fail': {
+                'type': 'str',
+            },
+            'http_check_fail': {
+                'type': 'str',
+            },
+            'url_check_succ': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_reject': {
+                'type': 'str',
+            },
+            'sqlia_chk_url_sanitize': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_reject': {
+                'type': 'str',
+            },
+            'json_check_succ': {
+                'type': 'str',
+            },
+            'max_entities_fail': {
+                'type': 'str',
+            },
+            'http_method_check_fail': {
+                'type': 'str',
+            },
+            'form_non_ssl_reject': {
+                'type': 'str',
+            },
+            'xss_chk_post_sanitize': {
+                'type': 'str',
+            },
+            'form_set_no_cache': {
+                'type': 'str',
+            },
+            'xml_schema_succ': {
+                'type': 'str',
+            },
+            'xml_limit_attr': {
+                'type': 'str',
+            },
+            'xml_check_succ': {
+                'type': 'str',
+            },
+            'sess_check_none': {
+                'type': 'str',
+            },
+            'xml_limit_namespace': {
+                'type': 'str',
+            },
+            'wsdl_fail': {
+                'type': 'str',
+            },
+            'post_form_check_succ': {
+                'type': 'str',
+            },
+            'buf_ovf_query_len_fail': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_reject': {
+                'type': 'str',
+            },
+            'form_password_autocomplete': {
+                'type': 'str',
+            },
+            'permitted': {
+                'type': 'str',
+            },
+            'xml_xss_chk_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_url_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_cookie_len_fail': {
+                'type': 'str',
+            },
+            'form_csrf_tag_succ': {
+                'type': 'str',
+            },
+            'xss_chk_cookie_sanitize': {
+                'type': 'str',
+            },
+            'sessions_alloc': {
+                'type': 'str',
+            },
+            'xml_limit_entity_exp': {
+                'type': 'str',
+            },
+            'ccn_mask_diners': {
+                'type': 'str',
+            },
+            'sess_check_succ': {
+                'type': 'str',
+            },
+            'json_limit_depth': {
+                'type': 'str',
+            },
+            'buf_ovf_cookie_name_len_fail': {
+                'type': 'str',
+            },
+            'learn_updates': {
+                'type': 'str',
+            },
+            'redirect_wlist_succ': {
+                'type': 'str',
+            },
+            'challenge_javascript_sent': {
+                'type': 'str',
+            },
+            'req_allowed': {
+                'type': 'str',
+            },
+            'json_limit_object_member_count': {
+                'type': 'str',
+            },
+            'bot_check_fail': {
+                'type': 'str',
+            },
+            'uri_wlist_fail': {
+                'type': 'str',
+            },
+            'uri_blist_fail': {
+                'type': 'str',
+            },
+            'referer_check_redirect': {
+                'type': 'str',
+            },
+            'challenge_cookie_sent': {
+                'type': 'str',
+            },
+            'sqlia_chk_post_sanitize': {
+                'type': 'str',
+            },
+            'ccn_mask_amex': {
+                'type': 'str',
+            },
+            'num_drops': {
+                'type': 'str',
+            },
+            'referer_check_fail': {
+                'type': 'str',
+            },
+            'post_form_check_sanitize': {
+                'type': 'str',
+            },
+            'cookie_decrypt_succ': {
+                'type': 'str',
+            },
+            'xss_chk_url_reject': {
+                'type': 'str',
+            },
+            'max_parameters_fail': {
+                'type': 'str',
+            },
+            'url_check_fail': {
+                'type': 'str',
+            },
+            'xml_schema_fail': {
+                'type': 'str',
+            },
+            'form_non_post_reject': {
+                'type': 'str',
+            },
+            'num_resets': {
+                'type': 'str',
+            },
+            'xml_limit_entity_exp_depth': {
+                'type': 'str',
+            },
+            'form_non_masked_password': {
+                'type': 'str',
+            },
+            'buf_ovf_line_len_fail': {
+                'type': 'str',
+            },
+            'ccn_mask_discover': {
+                'type': 'str',
+            },
+            'ssn_mask': {
+                'type': 'str',
+            },
+            'json_limit_string': {
+                'type': 'str',
+            },
+            'resp_hdrs_filtered': {
+                'type': 'str',
+            },
+            'called': {
+                'type': 'str',
+            },
+            'ccn_mask_mastercard': {
+                'type': 'str',
+            },
+            'xml_sqlia_chk_succ': {
+                'type': 'str',
+            },
+            'brute_force_fail': {
+                'type': 'str',
+            },
+            'max_hdrs_fail': {
+                'type': 'str',
+            },
+            'xml_limit_attr_name_len': {
+                'type': 'str',
+            },
+            'form_non_ssl_password': {
+                'type': 'str',
+            },
+            'too_many_sessions': {
+                'type': 'str',
+            },
+            'buf_ovf_hdr_value_len_fail': {
+                'type': 'str',
+            },
+            'uri_blist_succ': {
+                'type': 'str',
+            },
+            'sess_check_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_hdr_name_len_fail': {
+                'type': 'str',
+            },
+            'resp_denied': {
+                'type': 'str',
+            },
+            'sessions_freed': {
+                'type': 'str',
+            },
+            'out_of_sessions': {
+                'type': 'str',
+            },
+            'xml_limit_elem': {
+                'type': 'str',
+            },
+            'buf_ovf_parameter_name_len_fail': {
+                'type': 'str',
+            },
+            'xml_limit_attr_value_len': {
+                'type': 'str',
+            },
+            'xml_limit_elem_depth': {
+                'type': 'str',
+            },
+            'ccn_mask_jcb': {
+                'type': 'str',
+            },
+            'cookie_decrypt_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_cookie_value_len_fail': {
+                'type': 'str',
+            },
+            'buf_ovf_post_size_fail': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'xml_limit_elem_name_len': {
+                'type': 'str',
+            },
+            'url_check_learn': {
+                'type': 'str',
+            },
+            'http_method_check_succ': {
+                'type': 'str',
+            },
+            'xss_chk_url_succ': {
+                'type': 'str',
+            },
+            'xml_limit_namespace_uri_len': {
+                'type': 'str',
+            },
+            'post_form_check_reject': {
+                'type': 'str',
+            },
+            'cookie_encrypt_fail': {
+                'type': 'str',
+            },
+            'soap_check_failure': {
+                'type': 'str',
+            },
+            'challenge_captcha_sent': {
+                'type': 'str',
+            },
+            'form_csrf_tag_fail': {
+                'type': 'str',
+            },
+            'xml_xss_chk_succ': {
+                'type': 'str',
+            },
+            'buf_ovf_max_data_parse_fail': {
+                'type': 'str',
+            }
+        },
+        'max_parameter_name_len': {
+            'type': 'int',
+        },
+        'deny_non_masked_passwords': {
+            'type': 'bool',
+        },
+        'challenge_action_javascript': {
+            'type': 'bool',
+        },
+        'max_hdr_name_len': {
+            'type': 'int',
+        },
+        'max_elem_depth': {
+            'type': 'int',
+        },
+        'form_consistency_check': {
+            'type': 'bool',
+        },
+        'redirect_wlist': {
+            'type': 'bool',
+        },
+        'xml_xss_check': {
+            'type': 'bool',
+        },
+        'referer_check': {
+            'type': 'bool',
+        },
+        'wsdl_resp_val_file': {
+            'type': 'str',
+        },
+        'brute_force_check': {
+            'type': 'bool',
+        },
+        'brute_force_test_period': {
+            'type': 'int',
+        },
+        'max_namespace': {
+            'type': 'int',
+        },
+        'max_entity_exp': {
+            'type': 'int',
+        },
+        'form_deny_non_post': {
+            'type': 'bool',
+        },
+        'cookie_encryption_secret': {
+            'type': 'str',
+        },
+        'decode_escaped_chars': {
+            'type': 'bool',
+        },
+        'json_format_check': {
+            'type': 'bool',
+        },
+        'bot_check_policy_file': {
+            'type': 'str',
+        },
+        'xml_schema_resp_val_file': {
+            'type': 'str',
+        },
+        'brute_force_challenge_limit': {
+            'type': 'int',
+        },
+        'allowed_http_methods': {
+            'type': 'str',
+        },
+        'brute_force_resp_codes': {
+            'type': 'bool',
+        },
+        'remove_selfref': {
+            'type': 'bool',
+        },
+        'max_elem_child': {
+            'type': 'int',
+        },
+        'max_entity_exp_depth': {
+            'type': 'int',
+        },
+        'max_array_value_count': {
+            'type': 'int',
+        },
+        'max_elem': {
+            'type': 'int',
+        },
+        'sqlia_check': {
+            'type': 'str',
+            'choices': ['reject', 'sanitize']
+        },
+        'max_object_member_count': {
+            'type': 'int',
+        },
+        'http_resp_403': {
+            'type': 'bool',
+        },
+        'http_check': {
+            'type': 'bool',
+        },
+        'brute_force_resp_headers': {
+            'type': 'bool',
+        },
+        'max_cookie_name_len': {
+            'type': 'int',
+        },
+        'remove_comments': {
+            'type': 'bool',
+        },
+        'logging': {
+            'type': 'str',
+        },
+        'uri_wlist_check': {
+            'type': 'bool',
+        },
+        'brute_force_resp_string_file': {
+            'type': 'str',
+        },
+        'form_deny_non_ssl': {
+            'type': 'bool',
+        },
+        'xss_check': {
+            'type': 'str',
+            'choices': ['reject', 'sanitize']
+        },
+        'reset_conn': {
+            'type': 'bool',
+        },
+        'referer_safe_url': {
+            'type': 'str',
+        },
+        'remove_spaces': {
+            'type': 'bool',
+        },
+        'brute_force_lockout_limit': {
+            'type': 'int',
+        },
+        'uri_blist_check': {
+            'type': 'bool',
+        },
+        'max_url_len': {
+            'type': 'int',
+        },
+        'max_hdrs_len': {
+            'type': 'int',
+        },
+        'waf_wlist_file': {
+            'type': 'str',
+        },
+        'max_attr_name_len': {
+            'type': 'int',
+        },
+        'lifetime': {
+            'type': 'int',
+        },
+        'max_attr': {
+            'type': 'int',
+        },
+        'xss_check_policy_file': {
+            'type': 'str',
+        },
+        'resp_url_200': {
+            'type': 'str',
+        },
+        'max_post_size': {
+            'type': 'int',
+        },
+        'decode_hex_chars': {
+            'type': 'bool',
+        },
+        'max_line_len': {
+            'type': 'int',
+        },
+        'max_query_len': {
+            'type': 'int',
+        },
+        'sqlia_check_policy_file': {
+            'type': 'str',
+        },
+        'deny_non_ssl_passwords': {
+            'type': 'bool',
+        },
+        'max_data_parse': {
+            'type': 'int',
+        },
+        'max_parameter_total_len': {
+            'type': 'int',
+        },
+        'wsdl_file': {
+            'type': 'str',
+        },
+        'session_check': {
+            'type': 'bool',
+        },
+        'disable': {
+            'type': 'bool',
+        },
+        'filter_resp_hdrs': {
+            'type': 'bool',
+        },
+        'max_cookies': {
+            'type': 'int',
+        },
+        'decode_entities': {
+            'type': 'bool',
+        },
+        'mask': {
+            'type': 'str',
+        },
+        'referer_domain_list_only': {
+            'type': 'str',
+        },
+        'max_attr_value_len': {
+            'type': 'int',
+        },
+        'pcre_mask': {
+            'type': 'str',
+        },
+        'soap_format_check': {
+            'type': 'bool',
+        },
+        'xml_schema_file': {
+            'type': 'str',
+        },
+        'ssn_mask': {
+            'type': 'bool',
+        },
+        'xml_sqlia_check': {
+            'type': 'bool',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -1101,30 +1899,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -1132,13 +1935,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -1151,10 +1956,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -1166,30 +1971,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -1210,6 +2019,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["template"].items():
@@ -1220,16 +2030,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["template"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["template"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -1242,6 +2053,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -1258,6 +2070,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("template", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -1271,6 +2084,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -1283,6 +2097,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -1293,6 +2108,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -1309,15 +2125,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1338,14 +2150,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -1353,14 +2166,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -1370,14 +2183,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

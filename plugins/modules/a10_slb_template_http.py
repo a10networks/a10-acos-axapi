@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_template_http
 description:
     - HTTP
 short_description: Configures A10 slb.template.http
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -56,7 +56,8 @@ options:
         required: False
     compression_auto_disable_on_high_cpu:
         description:
-        - "Auto-disable software compression on high cpu usage (Disable compression if cpu usage is above threshold. Default is off.)"
+        - "Auto-disable software compression on high cpu usage (Disable compression if cpu
+          usage is above threshold. Default is off.)"
         required: False
     req_hdr_wait_time:
         description:
@@ -115,7 +116,12 @@ options:
         suboptions:
             host_switching_type:
                 description:
-                - "'contains'= Select service group if hostname contains another string; 'ends-with'= Select service group if hostname ends with another string; 'equals'= Select service group if hostname equals another string; 'starts-with'= Select service group if hostname starts with another string; 'regex-match'= Select service group if URL string matches with regular expression; 'host-hits-enable'= Enables Host Hits counters; "
+                - "'contains'= Select service group if hostname contains another string; 'ends-
+          with'= Select service group if hostname ends with another string; 'equals'=
+          Select service group if hostname equals another string; 'starts-with'= Select
+          service group if hostname starts with another string; 'regex-match'= Select
+          service group if URL string matches with regular expression; 'host-hits-
+          enable'= Enables Host Hits counters;"
             host_service_group:
                 description:
                 - "Create a Service Group comprising Servers (Service Group Name)"
@@ -124,7 +130,8 @@ options:
                 - "Hostname String"
     url_hash_last:
         description:
-        - "Use the end part of URL to calculate hash value (URL string length to calculate hash value)"
+        - "Use the end part of URL to calculate hash value (URL string length to calculate
+          hash value)"
         required: False
     client_ip_hdr_replace:
         description:
@@ -145,7 +152,9 @@ options:
         suboptions:
             response_header_insert_type:
                 description:
-                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
+          always'= Always insert the header even when there is a header with the same
+          name;"
             response_header_insert:
                 description:
                 - "Insert a header into HTTP response (Header Content (Format= '[name]=[value]'))"
@@ -214,7 +223,13 @@ options:
                 - "URL String"
             url_switching_type:
                 description:
-                - "'contains'= Select service group if URL string contains another string; 'ends-with'= Select service group if URL string ends with another string; 'equals'= Select service group if URL string equals another string; 'starts-with'= Select service group if URL string starts with another string; 'regex-match'= Select service group if URL string matches with regular expression; 'url-case-insensitive'= Case insensitive URL switching; 'url-hits-enable'= Enables URL Hits; "
+                - "'contains'= Select service group if URL string contains another string; 'ends-
+          with'= Select service group if URL string ends with another string; 'equals'=
+          Select service group if URL string equals another string; 'starts-with'= Select
+          service group if URL string starts with another string; 'regex-match'= Select
+          service group if URL string matches with regular expression; 'url-case-
+          insensitive'= Case insensitive URL switching; 'url-hits-enable'= Enables URL
+          Hits;"
     insert_client_port_header_name:
         description:
         - "HTTP Header Name for inserting Client Port"
@@ -233,10 +248,12 @@ options:
                 - "String will be in the http content"
             response_content_replace:
                 description:
-                - "replace the data from HTTP response content (String in the http content need to be replaced)"
+                - "replace the data from HTTP response content (String in the http content need to
+          be replaced)"
     http_100_cont_wait_for_req_complete:
         description:
-        - "When REQ has Expect 100 and response is not 100, then wait for whole request to be sent"
+        - "When REQ has Expect 100 and response is not 100, then wait for whole request to
+          be sent"
         required: False
     max_concurrent_streams:
         description:
@@ -252,10 +269,13 @@ options:
                 - "Insert a header into HTTP request (Header Content (Format= '[name]=[value]'))"
             request_header_insert_type:
                 description:
-                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-always'= Always insert the header even when there is a header with the same name; "
+                - "'insert-if-not-exist'= Only insert the header when it does not exist; 'insert-
+          always'= Always insert the header even when there is a header with the same
+          name;"
     compression_minimum_content_length:
         description:
-        - "Minimum Content Length (Minimum content length for compression in bytes. Default is 120.)"
+        - "Minimum Content Length (Minimum content length for compression in bytes.
+          Default is 120.)"
         required: False
     compression_level:
         description:
@@ -295,7 +315,8 @@ options:
         required: False
     url_hash_first:
         description:
-        - "Use the begining part of URL to calculate hash value (URL string length to calculate hash value)"
+        - "Use the begining part of URL to calculate hash value (URL string length to
+          calculate hash value)"
         required: False
     compression_keep_accept_encoding_enable:
         description:
@@ -331,7 +352,7 @@ options:
         required: False
     cookie_format:
         description:
-        - "'rfc6265'= Follow rfc6265; "
+        - "'rfc6265'= Follow rfc6265;"
         required: False
     term_11client_hdr_conn_close:
         description:
@@ -347,9 +368,9 @@ options:
                 - "Compression exclude content-type (Compression exclude content type)"
     rd_resp_code:
         description:
-        - "'301'= Moved Permanently; '302'= Found; '303'= See Other; '307'= Temporary Redirect; "
+        - "'301'= Moved Permanently; '302'= Found; '303'= See Other; '307'= Temporary
+          Redirect;"
         required: False
-
 
 '''
 
@@ -363,18 +384,71 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["http_100_cont_wait_for_req_complete","bypass_sg","client_ip_hdr_replace","client_port_hdr_replace","compression_auto_disable_on_high_cpu","compression_content_type","compression_enable","compression_exclude_content_type","compression_exclude_uri","compression_keep_accept_encoding","compression_keep_accept_encoding_enable","compression_level","compression_minimum_content_length","cookie_format","failover_url","host_switching","insert_client_ip","insert_client_ip_header_name","insert_client_port","insert_client_port_header_name","keep_client_alive","log_retry","max_concurrent_streams","name","non_http_bypass","persist_on_401","rd_port","rd_resp_code","rd_secure","rd_simple_loc","redirect","redirect_rewrite","req_hdr_wait_time","req_hdr_wait_time_val","request_header_erase_list","request_header_insert_list","request_line_case_insensitive","request_timeout","response_content_replace_list","response_header_erase_list","response_header_insert_list","retry_on_5xx","retry_on_5xx_per_req","retry_on_5xx_per_req_val","retry_on_5xx_val","strict_transaction_switch","template","term_11client_hdr_conn_close","url_hash_first","url_hash_last","url_hash_offset","url_hash_persist","url_switching","use_server_status","user_tag","uuid",]
+AVAILABLE_PROPERTIES = [
+    "http_100_cont_wait_for_req_complete",
+    "bypass_sg",
+    "client_ip_hdr_replace",
+    "client_port_hdr_replace",
+    "compression_auto_disable_on_high_cpu",
+    "compression_content_type",
+    "compression_enable",
+    "compression_exclude_content_type",
+    "compression_exclude_uri",
+    "compression_keep_accept_encoding",
+    "compression_keep_accept_encoding_enable",
+    "compression_level",
+    "compression_minimum_content_length",
+    "cookie_format",
+    "failover_url",
+    "host_switching",
+    "insert_client_ip",
+    "insert_client_ip_header_name",
+    "insert_client_port",
+    "insert_client_port_header_name",
+    "keep_client_alive",
+    "log_retry",
+    "max_concurrent_streams",
+    "name",
+    "non_http_bypass",
+    "persist_on_401",
+    "rd_port",
+    "rd_resp_code",
+    "rd_secure",
+    "rd_simple_loc",
+    "redirect",
+    "redirect_rewrite",
+    "req_hdr_wait_time",
+    "req_hdr_wait_time_val",
+    "request_header_erase_list",
+    "request_header_insert_list",
+    "request_line_case_insensitive",
+    "request_timeout",
+    "response_content_replace_list",
+    "response_header_erase_list",
+    "response_header_insert_list",
+    "retry_on_5xx",
+    "retry_on_5xx_per_req",
+    "retry_on_5xx_per_req_val",
+    "retry_on_5xx_val",
+    "strict_transaction_switch",
+    "template",
+    "term_11client_hdr_conn_close",
+    "url_hash_first",
+    "url_hash_last",
+    "url_hash_offset",
+    "url_hash_persist",
+    "url_switching",
+    "use_server_status",
+    "user_tag",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -382,76 +456,283 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        keep_client_alive=dict(type='bool', ),
-        compression_auto_disable_on_high_cpu=dict(type='int', ),
-        req_hdr_wait_time=dict(type='bool', ),
-        compression_exclude_uri=dict(type='list', exclude_uri=dict(type='str', )),
-        compression_enable=dict(type='bool', ),
-        compression_keep_accept_encoding=dict(type='bool', ),
-        failover_url=dict(type='str', ),
-        redirect_rewrite=dict(type='dict', redirect_secure_port=dict(type='int', ), redirect_secure=dict(type='bool', ), match_list=dict(type='list', rewrite_to=dict(type='str', ), redirect_match=dict(type='str', ))),
-        request_header_erase_list=dict(type='list', request_header_erase=dict(type='str', )),
-        rd_port=dict(type='int', ),
-        host_switching=dict(type='list', host_switching_type=dict(type='str', choices=['contains', 'ends-with', 'equals', 'starts-with', 'regex-match', 'host-hits-enable']), host_service_group=dict(type='str', ), host_match_string=dict(type='str', )),
-        url_hash_last=dict(type='int', ),
-        client_ip_hdr_replace=dict(type='bool', ),
-        use_server_status=dict(type='bool', ),
-        req_hdr_wait_time_val=dict(type='int', ),
-        response_header_insert_list=dict(type='list', response_header_insert_type=dict(type='str', choices=['insert-if-not-exist', 'insert-always']), response_header_insert=dict(type='str', )),
-        persist_on_401=dict(type='bool', ),
-        redirect=dict(type='bool', ),
-        insert_client_port=dict(type='bool', ),
-        retry_on_5xx_per_req_val=dict(type='int', ),
-        url_hash_offset=dict(type='int', ),
-        rd_simple_loc=dict(type='str', ),
-        log_retry=dict(type='bool', ),
-        non_http_bypass=dict(type='bool', ),
-        retry_on_5xx_per_req=dict(type='bool', ),
-        insert_client_ip=dict(type='bool', ),
-        template=dict(type='dict', logging=dict(type='str', )),
-        request_timeout=dict(type='int', ),
-        url_switching=dict(type='list', url_service_group=dict(type='str', ), url_match_string=dict(type='str', ), url_switching_type=dict(type='str', choices=['contains', 'ends-with', 'equals', 'starts-with', 'regex-match', 'url-case-insensitive', 'url-hits-enable'])),
-        insert_client_port_header_name=dict(type='str', ),
-        strict_transaction_switch=dict(type='bool', ),
-        response_content_replace_list=dict(type='list', response_new_string=dict(type='str', ), response_content_replace=dict(type='str', )),
-        http_100_cont_wait_for_req_complete=dict(type='bool', ),
-        max_concurrent_streams=dict(type='int', ),
-        request_header_insert_list=dict(type='list', request_header_insert=dict(type='str', ), request_header_insert_type=dict(type='str', choices=['insert-if-not-exist', 'insert-always'])),
-        compression_minimum_content_length=dict(type='int', ),
-        compression_level=dict(type='int', ),
-        request_line_case_insensitive=dict(type='bool', ),
-        url_hash_persist=dict(type='bool', ),
-        response_header_erase_list=dict(type='list', response_header_erase=dict(type='str', )),
-        uuid=dict(type='str', ),
-        bypass_sg=dict(type='str', ),
-        name=dict(type='str', required=True, ),
-        retry_on_5xx_val=dict(type='int', ),
-        url_hash_first=dict(type='int', ),
-        compression_keep_accept_encoding_enable=dict(type='bool', ),
-        user_tag=dict(type='str', ),
-        compression_content_type=dict(type='list', content_type=dict(type='str', )),
-        client_port_hdr_replace=dict(type='bool', ),
-        insert_client_ip_header_name=dict(type='str', ),
-        rd_secure=dict(type='bool', ),
-        retry_on_5xx=dict(type='bool', ),
-        cookie_format=dict(type='str', choices=['rfc6265']),
-        term_11client_hdr_conn_close=dict(type='bool', ),
-        compression_exclude_content_type=dict(type='list', exclude_content_type=dict(type='str', )),
-        rd_resp_code=dict(type='str', choices=['301', '302', '303', '307'])
-    ))
-   
-
+    rv.update({
+        'keep_client_alive': {
+            'type': 'bool',
+        },
+        'compression_auto_disable_on_high_cpu': {
+            'type': 'int',
+        },
+        'req_hdr_wait_time': {
+            'type': 'bool',
+        },
+        'compression_exclude_uri': {
+            'type': 'list',
+            'exclude_uri': {
+                'type': 'str',
+            }
+        },
+        'compression_enable': {
+            'type': 'bool',
+        },
+        'compression_keep_accept_encoding': {
+            'type': 'bool',
+        },
+        'failover_url': {
+            'type': 'str',
+        },
+        'redirect_rewrite': {
+            'type': 'dict',
+            'redirect_secure_port': {
+                'type': 'int',
+            },
+            'redirect_secure': {
+                'type': 'bool',
+            },
+            'match_list': {
+                'type': 'list',
+                'rewrite_to': {
+                    'type': 'str',
+                },
+                'redirect_match': {
+                    'type': 'str',
+                }
+            }
+        },
+        'request_header_erase_list': {
+            'type': 'list',
+            'request_header_erase': {
+                'type': 'str',
+            }
+        },
+        'rd_port': {
+            'type': 'int',
+        },
+        'host_switching': {
+            'type': 'list',
+            'host_switching_type': {
+                'type':
+                'str',
+                'choices': [
+                    'contains', 'ends-with', 'equals', 'starts-with',
+                    'regex-match', 'host-hits-enable'
+                ]
+            },
+            'host_service_group': {
+                'type': 'str',
+            },
+            'host_match_string': {
+                'type': 'str',
+            }
+        },
+        'url_hash_last': {
+            'type': 'int',
+        },
+        'client_ip_hdr_replace': {
+            'type': 'bool',
+        },
+        'use_server_status': {
+            'type': 'bool',
+        },
+        'req_hdr_wait_time_val': {
+            'type': 'int',
+        },
+        'response_header_insert_list': {
+            'type': 'list',
+            'response_header_insert_type': {
+                'type': 'str',
+                'choices': ['insert-if-not-exist', 'insert-always']
+            },
+            'response_header_insert': {
+                'type': 'str',
+            }
+        },
+        'persist_on_401': {
+            'type': 'bool',
+        },
+        'redirect': {
+            'type': 'bool',
+        },
+        'insert_client_port': {
+            'type': 'bool',
+        },
+        'retry_on_5xx_per_req_val': {
+            'type': 'int',
+        },
+        'url_hash_offset': {
+            'type': 'int',
+        },
+        'rd_simple_loc': {
+            'type': 'str',
+        },
+        'log_retry': {
+            'type': 'bool',
+        },
+        'non_http_bypass': {
+            'type': 'bool',
+        },
+        'retry_on_5xx_per_req': {
+            'type': 'bool',
+        },
+        'insert_client_ip': {
+            'type': 'bool',
+        },
+        'template': {
+            'type': 'dict',
+            'logging': {
+                'type': 'str',
+            }
+        },
+        'request_timeout': {
+            'type': 'int',
+        },
+        'url_switching': {
+            'type': 'list',
+            'url_service_group': {
+                'type': 'str',
+            },
+            'url_match_string': {
+                'type': 'str',
+            },
+            'url_switching_type': {
+                'type':
+                'str',
+                'choices': [
+                    'contains', 'ends-with', 'equals', 'starts-with',
+                    'regex-match', 'url-case-insensitive', 'url-hits-enable'
+                ]
+            }
+        },
+        'insert_client_port_header_name': {
+            'type': 'str',
+        },
+        'strict_transaction_switch': {
+            'type': 'bool',
+        },
+        'response_content_replace_list': {
+            'type': 'list',
+            'response_new_string': {
+                'type': 'str',
+            },
+            'response_content_replace': {
+                'type': 'str',
+            }
+        },
+        'http_100_cont_wait_for_req_complete': {
+            'type': 'bool',
+        },
+        'max_concurrent_streams': {
+            'type': 'int',
+        },
+        'request_header_insert_list': {
+            'type': 'list',
+            'request_header_insert': {
+                'type': 'str',
+            },
+            'request_header_insert_type': {
+                'type': 'str',
+                'choices': ['insert-if-not-exist', 'insert-always']
+            }
+        },
+        'compression_minimum_content_length': {
+            'type': 'int',
+        },
+        'compression_level': {
+            'type': 'int',
+        },
+        'request_line_case_insensitive': {
+            'type': 'bool',
+        },
+        'url_hash_persist': {
+            'type': 'bool',
+        },
+        'response_header_erase_list': {
+            'type': 'list',
+            'response_header_erase': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'bypass_sg': {
+            'type': 'str',
+        },
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'retry_on_5xx_val': {
+            'type': 'int',
+        },
+        'url_hash_first': {
+            'type': 'int',
+        },
+        'compression_keep_accept_encoding_enable': {
+            'type': 'bool',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'compression_content_type': {
+            'type': 'list',
+            'content_type': {
+                'type': 'str',
+            }
+        },
+        'client_port_hdr_replace': {
+            'type': 'bool',
+        },
+        'insert_client_ip_header_name': {
+            'type': 'str',
+        },
+        'rd_secure': {
+            'type': 'bool',
+        },
+        'retry_on_5xx': {
+            'type': 'bool',
+        },
+        'cookie_format': {
+            'type': 'str',
+            'choices': ['rfc6265']
+        },
+        'term_11client_hdr_conn_close': {
+            'type': 'bool',
+        },
+        'compression_exclude_content_type': {
+            'type': 'list',
+            'exclude_content_type': {
+                'type': 'str',
+            }
+        },
+        'rd_resp_code': {
+            'type': 'str',
+            'choices': ['301', '302', '303', '307']
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -463,16 +744,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -480,13 +765,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -499,10 +786,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -514,30 +801,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -558,6 +849,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["http"].items():
@@ -568,16 +860,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["http"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["http"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -590,6 +883,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -606,6 +900,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("http", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -619,6 +914,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -631,6 +927,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -641,6 +938,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -657,15 +955,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -686,14 +980,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -701,14 +996,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -716,14 +1011,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()
