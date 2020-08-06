@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_import
 description:
     - Get files from remote site
 short_description: Configures A10 import
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -55,7 +55,7 @@ options:
         required: False
     ssl_cert_key:
         description:
-        - "'bulk'= import an archive file; "
+        - "'bulk'= import an archive file;"
         required: False
     class_list_convert:
         description:
@@ -114,7 +114,8 @@ options:
         required: False
     class_list_type:
         description:
-        - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-insensitive'= string-case-insensitive; "
+        - "'ac'= ac; 'ipv4'= ipv4; 'ipv6'= ipv6; 'string'= string; 'string-case-
+          insensitive'= string-case-insensitive;"
         required: False
     pfx_password:
         description:
@@ -289,7 +290,7 @@ options:
         required: False
     certificate_type:
         description:
-        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b; "
+        - "'pem'= pem; 'der'= der; 'pfx'= pfx; 'p7b'= p7b;"
         required: False
     auth_saml_idp:
         description:
@@ -323,7 +324,6 @@ options:
         - "DNSSEC DNSKEY(KSK) file for child zone"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -336,18 +336,61 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["aflex","auth_jwks","auth_portal","auth_portal_image","auth_saml_idp","bw_list","ca_cert","certificate_type","class_list","class_list_convert","class_list_type","cloud_config","cloud_creds","dnssec_dnskey","dnssec_ds","file_inspection_bw_list","geo_location","glm_cert","glm_license","health_external","health_postfile","ip_map_list","local_uri_file","lw_4o6","overwrite","password","pfx_password","policy","remote_file","secured","ssl_cert","ssl_cert_key","ssl_crl","ssl_key","store","store_name","terminal","thales_kmdata","thales_secworld","to_device","usb_license","use_mgmt_port","user_tag","web_category_license","wsdl","xml_schema",]
+AVAILABLE_PROPERTIES = [
+    "aflex",
+    "auth_jwks",
+    "auth_portal",
+    "auth_portal_image",
+    "auth_saml_idp",
+    "bw_list",
+    "ca_cert",
+    "certificate_type",
+    "class_list",
+    "class_list_convert",
+    "class_list_type",
+    "cloud_config",
+    "cloud_creds",
+    "dnssec_dnskey",
+    "dnssec_ds",
+    "file_inspection_bw_list",
+    "geo_location",
+    "glm_cert",
+    "glm_license",
+    "health_external",
+    "health_postfile",
+    "ip_map_list",
+    "local_uri_file",
+    "lw_4o6",
+    "overwrite",
+    "password",
+    "pfx_password",
+    "policy",
+    "remote_file",
+    "secured",
+    "ssl_cert",
+    "ssl_cert_key",
+    "ssl_crl",
+    "ssl_key",
+    "store",
+    "store_name",
+    "terminal",
+    "thales_kmdata",
+    "thales_secworld",
+    "to_device",
+    "usb_license",
+    "use_mgmt_port",
+    "user_tag",
+    "web_category_license",
+    "wsdl",
+    "xml_schema",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -357,64 +400,253 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        geo_location=dict(type='str', ),
-        ssl_cert_key=dict(type='str', choices=['bulk']),
-        class_list_convert=dict(type='str', ),
-        bw_list=dict(type='str', ),
-        usb_license=dict(type='str', ),
-        ip_map_list=dict(type='str', ),
-        health_external=dict(type='dict', description=dict(type='str', ), remote_file=dict(type='str', ), externalfilename=dict(type='str', ), password=dict(type='str', ), use_mgmt_port=dict(type='bool', ), overwrite=dict(type='bool', )),
-        auth_portal=dict(type='str', ),
-        local_uri_file=dict(type='str', ),
-        aflex=dict(type='str', ),
-        overwrite=dict(type='bool', ),
-        class_list_type=dict(type='str', choices=['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']),
-        pfx_password=dict(type='str', ),
-        web_category_license=dict(type='str', ),
-        thales_kmdata=dict(type='str', ),
-        secured=dict(type='bool', ),
-        ssl_crl=dict(type='str', ),
-        terminal=dict(type='bool', ),
-        policy=dict(type='str', ),
-        file_inspection_bw_list=dict(type='str', ),
-        thales_secworld=dict(type='str', ),
-        lw_4o6=dict(type='str', ),
-        auth_portal_image=dict(type='str', ),
-        health_postfile=dict(type='dict', postfilename=dict(type='str', ), password=dict(type='str', ), use_mgmt_port=dict(type='bool', ), remote_file=dict(type='str', ), overwrite=dict(type='bool', )),
-        class_list=dict(type='str', ),
-        glm_license=dict(type='str', ),
-        dnssec_ds=dict(type='str', ),
-        cloud_creds=dict(type='str', ),
-        auth_jwks=dict(type='str', ),
-        wsdl=dict(type='str', ),
-        password=dict(type='str', ),
-        ssl_key=dict(type='str', ),
-        use_mgmt_port=dict(type='bool', ),
-        remote_file=dict(type='str', ),
-        cloud_config=dict(type='str', ),
-        to_device=dict(type='dict', web_category_license=dict(type='str', ), remote_file=dict(type='str', ), glm_license=dict(type='str', ), glm_cert=dict(type='str', ), device=dict(type='int', ), use_mgmt_port=dict(type='bool', ), overwrite=dict(type='bool', )),
-        user_tag=dict(type='str', ),
-        store_name=dict(type='str', ),
-        ca_cert=dict(type='str', ),
-        glm_cert=dict(type='str', ),
-        store=dict(type='dict', create=dict(type='bool', ), name=dict(type='str', ), remote_file=dict(type='str', ), delete=dict(type='bool', )),
-        xml_schema=dict(type='str', ),
-        certificate_type=dict(type='str', choices=['pem', 'der', 'pfx', 'p7b']),
-        auth_saml_idp=dict(type='dict', remote_file=dict(type='str', ), saml_idp_name=dict(type='str', ), verify_xml_signature=dict(type='bool', ), password=dict(type='str', ), use_mgmt_port=dict(type='bool', ), overwrite=dict(type='bool', )),
-        ssl_cert=dict(type='str', ),
-        dnssec_dnskey=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'geo_location': {
+            'type': 'str',
+        },
+        'ssl_cert_key': {
+            'type': 'str',
+            'choices': ['bulk']
+        },
+        'class_list_convert': {
+            'type': 'str',
+        },
+        'bw_list': {
+            'type': 'str',
+        },
+        'usb_license': {
+            'type': 'str',
+        },
+        'ip_map_list': {
+            'type': 'str',
+        },
+        'health_external': {
+            'type': 'dict',
+            'description': {
+                'type': 'str',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'externalfilename': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'overwrite': {
+                'type': 'bool',
+            }
+        },
+        'auth_portal': {
+            'type': 'str',
+        },
+        'local_uri_file': {
+            'type': 'str',
+        },
+        'aflex': {
+            'type': 'str',
+        },
+        'overwrite': {
+            'type': 'bool',
+        },
+        'class_list_type': {
+            'type': 'str',
+            'choices':
+            ['ac', 'ipv4', 'ipv6', 'string', 'string-case-insensitive']
+        },
+        'pfx_password': {
+            'type': 'str',
+        },
+        'web_category_license': {
+            'type': 'str',
+        },
+        'thales_kmdata': {
+            'type': 'str',
+        },
+        'secured': {
+            'type': 'bool',
+        },
+        'ssl_crl': {
+            'type': 'str',
+        },
+        'terminal': {
+            'type': 'bool',
+        },
+        'policy': {
+            'type': 'str',
+        },
+        'file_inspection_bw_list': {
+            'type': 'str',
+        },
+        'thales_secworld': {
+            'type': 'str',
+        },
+        'lw_4o6': {
+            'type': 'str',
+        },
+        'auth_portal_image': {
+            'type': 'str',
+        },
+        'health_postfile': {
+            'type': 'dict',
+            'postfilename': {
+                'type': 'str',
+            },
+            'password': {
+                'type': 'str',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'overwrite': {
+                'type': 'bool',
+            }
+        },
+        'class_list': {
+            'type': 'str',
+        },
+        'glm_license': {
+            'type': 'str',
+        },
+        'dnssec_ds': {
+            'type': 'str',
+        },
+        'cloud_creds': {
+            'type': 'str',
+        },
+        'auth_jwks': {
+            'type': 'str',
+        },
+        'wsdl': {
+            'type': 'str',
+        },
+        'password': {
+            'type': 'str',
+        },
+        'ssl_key': {
+            'type': 'str',
+        },
+        'use_mgmt_port': {
+            'type': 'bool',
+        },
+        'remote_file': {
+            'type': 'str',
+        },
+        'cloud_config': {
+            'type': 'str',
+        },
+        'to_device': {
+            'type': 'dict',
+            'web_category_license': {
+                'type': 'str',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'glm_license': {
+                'type': 'str',
+            },
+            'glm_cert': {
+                'type': 'str',
+            },
+            'device': {
+                'type': 'int',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'overwrite': {
+                'type': 'bool',
+            }
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'store_name': {
+            'type': 'str',
+        },
+        'ca_cert': {
+            'type': 'str',
+        },
+        'glm_cert': {
+            'type': 'str',
+        },
+        'store': {
+            'type': 'dict',
+            'create': {
+                'type': 'bool',
+            },
+            'name': {
+                'type': 'str',
+            },
+            'remote_file': {
+                'type': 'str',
+            },
+            'delete': {
+                'type': 'bool',
+            }
+        },
+        'xml_schema': {
+            'type': 'str',
+        },
+        'certificate_type': {
+            'type': 'str',
+            'choices': ['pem', 'der', 'pfx', 'p7b']
+        },
+        'auth_saml_idp': {
+            'type': 'dict',
+            'remote_file': {
+                'type': 'str',
+            },
+            'saml_idp_name': {
+                'type': 'str',
+            },
+            'verify_xml_signature': {
+                'type': 'bool',
+            },
+            'password': {
+                'type': 'str',
+            },
+            'use_mgmt_port': {
+                'type': 'bool',
+            },
+            'overwrite': {
+                'type': 'bool',
+            }
+        },
+        'ssl_cert': {
+            'type': 'str',
+        },
+        'dnssec_dnskey': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -425,16 +657,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -442,13 +678,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -461,10 +699,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -475,30 +713,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -519,6 +761,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["import"].items():
@@ -529,16 +772,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["import"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["import"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -551,6 +795,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -567,6 +812,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("import", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -580,15 +826,11 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -609,14 +851,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -624,11 +867,11 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'noop':
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -636,14 +879,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_gslb_policy_dns
 description:
     - DNS related policy
 short_description: Configures A10 gslb.policy.dns
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -52,8 +52,7 @@ options:
         required: False
     policy_name:
         description:
-        - Key to identify parent object
-    server_mode_only:
+        - Key to identify parent object    server_mode_only:
         description:
         - "Only run GSLB as DNS server mode"
         required: False
@@ -87,7 +86,8 @@ options:
         required: False
     ttl:
         description:
-        - "Specify the TTL value contained in DNS record (TTL value, unit= second, default is 10)"
+        - "Specify the TTL value contained in DNS record (TTL value, unit= second, default
+          is 10)"
         required: False
     dynamic_preference:
         description:
@@ -123,7 +123,8 @@ options:
         required: False
     hint:
         description:
-        - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'= Append Hint Records in DNS Addition Section; "
+        - "'none'= None; 'answer'= Append Hint Records in DNS Answer Section; 'addition'=
+          Append Hint Records in DNS Addition Section;"
         required: False
     cache:
         description:
@@ -143,7 +144,8 @@ options:
         required: False
     aging_time:
         description:
-        - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time, default 0 means using TTL in DNS record as aging time)"
+        - "Specify aging-time, default is TTL in DNS record, unit= second (Aging time,
+          default 0 means using TTL in DNS record as aging time)"
         required: False
     block_action:
         description:
@@ -160,10 +162,13 @@ options:
         suboptions:
             dns_ipv6_mapping_type:
                 description:
-                - "'addition'= Append Mapped Record in DNS Addition Section; 'answer'= Append Mapped Record in DNS Answer Section; 'exclusive'= Only return AAAA Record; 'replace'= Replace Record with Mapped Record; "
+                - "'addition'= Append Mapped Record in DNS Addition Section; 'answer'= Append
+          Mapped Record in DNS Answer Section; 'exclusive'= Only return AAAA Record;
+          'replace'= Replace Record with Mapped Record;"
             dns_ipv6_option:
                 description:
-                - "'mix'= Return both AAAA Record and A Record; 'smart'= Return AAAA Record by DNS Query Type; 'mapping'= Map A Record to AAAA Record; "
+                - "'mix'= Return both AAAA Record and A Record; 'smart'= Return AAAA Record by DNS
+          Query Type; 'mapping'= Map A Record to AAAA Record;"
     selected_only_value:
         description:
         - "Answer Number"
@@ -178,7 +183,8 @@ options:
         required: False
     action_type:
         description:
-        - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty response; "
+        - "'drop'= Drop query; 'reject'= Send refuse response; 'ignore'= Send empty
+          response;"
         required: False
     server_naptr:
         description:
@@ -238,7 +244,8 @@ options:
         required: False
     logging:
         description:
-        - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS Query and Response; "
+        - "'none'= None; 'query'= DNS Query; 'response'= DNS Response; 'both'= Both DNS
+          Query and Response;"
         required: False
     backup_server:
         description:
@@ -292,7 +299,6 @@ options:
         - "Provide MX Records"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -305,18 +311,70 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["action","action_type","active_only","active_only_fail_safe","aging_time","backup_alias","backup_server","block_action","block_type","block_value","cache","cname_detect","delegation","dns_addition_mx","dns_auto_map","dynamic_preference","dynamic_weight","external_ip","external_soa","geoloc_action","geoloc_alias","geoloc_policy","hint","ip_replace","ipv6","logging","proxy_block_port_range_list","selected_only","selected_only_value","server","server_addition_mx","server_any","server_any_with_metric","server_authoritative","server_auto_ns","server_auto_ptr","server_cname","server_full_list","server_mode_only","server_mx","server_naptr","server_ns","server_ns_list","server_ptr","server_sec","server_srv","server_txt","sticky","sticky_aging_time","sticky_ipv6_mask","sticky_mask","template","ttl","use_server_ttl","uuid",]
+AVAILABLE_PROPERTIES = [
+    "action",
+    "action_type",
+    "active_only",
+    "active_only_fail_safe",
+    "aging_time",
+    "backup_alias",
+    "backup_server",
+    "block_action",
+    "block_type",
+    "block_value",
+    "cache",
+    "cname_detect",
+    "delegation",
+    "dns_addition_mx",
+    "dns_auto_map",
+    "dynamic_preference",
+    "dynamic_weight",
+    "external_ip",
+    "external_soa",
+    "geoloc_action",
+    "geoloc_alias",
+    "geoloc_policy",
+    "hint",
+    "ip_replace",
+    "ipv6",
+    "logging",
+    "proxy_block_port_range_list",
+    "selected_only",
+    "selected_only_value",
+    "server",
+    "server_addition_mx",
+    "server_any",
+    "server_any_with_metric",
+    "server_authoritative",
+    "server_auto_ns",
+    "server_auto_ptr",
+    "server_cname",
+    "server_full_list",
+    "server_mode_only",
+    "server_mx",
+    "server_naptr",
+    "server_ns",
+    "server_ns_list",
+    "server_ptr",
+    "server_sec",
+    "server_srv",
+    "server_txt",
+    "sticky",
+    "sticky_aging_time",
+    "sticky_ipv6_mask",
+    "sticky_mask",
+    "template",
+    "ttl",
+    "use_server_ttl",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -324,79 +382,221 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        server_mode_only=dict(type='bool', ),
-        external_soa=dict(type='bool', ),
-        server_sec=dict(type='bool', ),
-        sticky_ipv6_mask=dict(type='int', ),
-        sticky=dict(type='bool', ),
-        delegation=dict(type='bool', ),
-        active_only_fail_safe=dict(type='bool', ),
-        cname_detect=dict(type='bool', ),
-        ttl=dict(type='int', ),
-        dynamic_preference=dict(type='bool', ),
-        use_server_ttl=dict(type='bool', ),
-        server_ptr=dict(type='bool', ),
-        selected_only=dict(type='bool', ),
-        ip_replace=dict(type='bool', ),
-        dns_addition_mx=dict(type='bool', ),
-        backup_alias=dict(type='bool', ),
-        server_any=dict(type='bool', ),
-        hint=dict(type='str', choices=['none', 'answer', 'addition']),
-        cache=dict(type='bool', ),
-        external_ip=dict(type='bool', ),
-        server_txt=dict(type='bool', ),
-        server_addition_mx=dict(type='bool', ),
-        aging_time=dict(type='int', ),
-        block_action=dict(type='bool', ),
-        template=dict(type='str', ),
-        ipv6=dict(type='list', dns_ipv6_mapping_type=dict(type='str', choices=['addition', 'answer', 'exclusive', 'replace']), dns_ipv6_option=dict(type='str', choices=['mix', 'smart', 'mapping'])),
-        selected_only_value=dict(type='int', ),
-        geoloc_action=dict(type='bool', ),
-        server_ns=dict(type='bool', ),
-        action_type=dict(type='str', choices=['drop', 'reject', 'ignore']),
-        server_naptr=dict(type='bool', ),
-        active_only=dict(type='bool', ),
-        block_value=dict(type='list', block_value=dict(type='int', )),
-        server_srv=dict(type='bool', ),
-        server_auto_ptr=dict(type='bool', ),
-        server_cname=dict(type='bool', ),
-        server_authoritative=dict(type='bool', ),
-        server_full_list=dict(type='bool', ),
-        server_any_with_metric=dict(type='bool', ),
-        dns_auto_map=dict(type='bool', ),
-        block_type=dict(type='str', choices=['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']),
-        sticky_mask=dict(type='str', ),
-        geoloc_alias=dict(type='bool', ),
-        logging=dict(type='str', choices=['none', 'query', 'response', 'both']),
-        backup_server=dict(type='bool', ),
-        sticky_aging_time=dict(type='int', ),
-        geoloc_policy=dict(type='bool', ),
-        uuid=dict(type='str', ),
-        server=dict(type='bool', ),
-        dynamic_weight=dict(type='bool', ),
-        server_ns_list=dict(type='bool', ),
-        server_auto_ns=dict(type='bool', ),
-        action=dict(type='bool', ),
-        proxy_block_port_range_list=dict(type='list', proxy_block_range_from=dict(type='int', ), proxy_block_range_to=dict(type='int', )),
-        server_mx=dict(type='bool', )
-    ))
-   
+    rv.update({
+        'server_mode_only': {
+            'type': 'bool',
+        },
+        'external_soa': {
+            'type': 'bool',
+        },
+        'server_sec': {
+            'type': 'bool',
+        },
+        'sticky_ipv6_mask': {
+            'type': 'int',
+        },
+        'sticky': {
+            'type': 'bool',
+        },
+        'delegation': {
+            'type': 'bool',
+        },
+        'active_only_fail_safe': {
+            'type': 'bool',
+        },
+        'cname_detect': {
+            'type': 'bool',
+        },
+        'ttl': {
+            'type': 'int',
+        },
+        'dynamic_preference': {
+            'type': 'bool',
+        },
+        'use_server_ttl': {
+            'type': 'bool',
+        },
+        'server_ptr': {
+            'type': 'bool',
+        },
+        'selected_only': {
+            'type': 'bool',
+        },
+        'ip_replace': {
+            'type': 'bool',
+        },
+        'dns_addition_mx': {
+            'type': 'bool',
+        },
+        'backup_alias': {
+            'type': 'bool',
+        },
+        'server_any': {
+            'type': 'bool',
+        },
+        'hint': {
+            'type': 'str',
+            'choices': ['none', 'answer', 'addition']
+        },
+        'cache': {
+            'type': 'bool',
+        },
+        'external_ip': {
+            'type': 'bool',
+        },
+        'server_txt': {
+            'type': 'bool',
+        },
+        'server_addition_mx': {
+            'type': 'bool',
+        },
+        'aging_time': {
+            'type': 'int',
+        },
+        'block_action': {
+            'type': 'bool',
+        },
+        'template': {
+            'type': 'str',
+        },
+        'ipv6': {
+            'type': 'list',
+            'dns_ipv6_mapping_type': {
+                'type': 'str',
+                'choices': ['addition', 'answer', 'exclusive', 'replace']
+            },
+            'dns_ipv6_option': {
+                'type': 'str',
+                'choices': ['mix', 'smart', 'mapping']
+            }
+        },
+        'selected_only_value': {
+            'type': 'int',
+        },
+        'geoloc_action': {
+            'type': 'bool',
+        },
+        'server_ns': {
+            'type': 'bool',
+        },
+        'action_type': {
+            'type': 'str',
+            'choices': ['drop', 'reject', 'ignore']
+        },
+        'server_naptr': {
+            'type': 'bool',
+        },
+        'active_only': {
+            'type': 'bool',
+        },
+        'block_value': {
+            'type': 'list',
+            'block_value': {
+                'type': 'int',
+            }
+        },
+        'server_srv': {
+            'type': 'bool',
+        },
+        'server_auto_ptr': {
+            'type': 'bool',
+        },
+        'server_cname': {
+            'type': 'bool',
+        },
+        'server_authoritative': {
+            'type': 'bool',
+        },
+        'server_full_list': {
+            'type': 'bool',
+        },
+        'server_any_with_metric': {
+            'type': 'bool',
+        },
+        'dns_auto_map': {
+            'type': 'bool',
+        },
+        'block_type': {
+            'type':
+            'str',
+            'choices':
+            ['a', 'aaaa', 'ns', 'mx', 'srv', 'cname', 'ptr', 'soa', 'txt']
+        },
+        'sticky_mask': {
+            'type': 'str',
+        },
+        'geoloc_alias': {
+            'type': 'bool',
+        },
+        'logging': {
+            'type': 'str',
+            'choices': ['none', 'query', 'response', 'both']
+        },
+        'backup_server': {
+            'type': 'bool',
+        },
+        'sticky_aging_time': {
+            'type': 'int',
+        },
+        'geoloc_policy': {
+            'type': 'bool',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'server': {
+            'type': 'bool',
+        },
+        'dynamic_weight': {
+            'type': 'bool',
+        },
+        'server_ns_list': {
+            'type': 'bool',
+        },
+        'server_auto_ns': {
+            'type': 'bool',
+        },
+        'action': {
+            'type': 'bool',
+        },
+        'proxy_block_port_range_list': {
+            'type': 'list',
+            'proxy_block_range_from': {
+                'type': 'int',
+            },
+            'proxy_block_range_to': {
+                'type': 'int',
+            }
+        },
+        'server_mx': {
+            'type': 'bool',
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        policy_name=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(policy_name=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -408,16 +608,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -425,13 +629,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -444,10 +650,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -459,30 +665,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -503,6 +713,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["dns"].items():
@@ -513,16 +724,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["dns"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["dns"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -535,6 +747,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -551,6 +764,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("dns", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -564,6 +778,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -576,6 +791,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -586,6 +802,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -602,15 +819,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -631,14 +844,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -646,14 +860,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -661,14 +875,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

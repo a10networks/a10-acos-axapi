@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_template_server
 description:
     - Server template
 short_description: Configures A10 slb.template.server
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -56,7 +56,8 @@ options:
         required: False
     stats_data_action:
         description:
-        - "'stats-data-enable'= Enable statistical data collection for real server; 'stats-data-disable'= Disable statistical data collection for real server; "
+        - "'stats-data-enable'= Enable statistical data collection for real server;
+          'stats-data-disable'= Disable statistical data collection for real server;"
         required: False
     slow_start:
         description:
@@ -84,7 +85,8 @@ options:
         required: False
     resume:
         description:
-        - "Resume accepting new connection after connection number drops below threshold (Connection resume threshold)"
+        - "Resume accepting new connection after connection number drops below threshold
+          (Connection resume threshold)"
         required: False
     max_dynamic_server:
         description:
@@ -92,15 +94,18 @@ options:
         required: False
     rate_interval:
         description:
-        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling interval; "
+        - "'100ms'= Use 100 ms as sampling interval; 'second'= Use 1 second as sampling
+          interval;"
         required: False
     till:
         description:
-        - "Slow start ends when slow start connection limit reaches a number (default 4096) (Slow start ends when connection limit reaches this number)"
+        - "Slow start ends when slow start connection limit reaches a number (default
+          4096) (Slow start ends when connection limit reaches this number)"
         required: False
     add:
         description:
-        - "Slow start connection limit add by a number every interval (Add by this number every interval)"
+        - "Slow start connection limit add by a number every interval (Add by this number
+          every interval)"
         required: False
     min_ttl_ratio:
         description:
@@ -144,11 +149,14 @@ options:
         required: False
     bw_rate_limit_resume:
         description:
-        - "Resume server selection after bandwidth drops below this threshold (in Kbps) (Bandwidth rate limit resume threshold (in Kbps))"
+        - "Resume server selection after bandwidth drops below this threshold (in Kbps)
+          (Bandwidth rate limit resume threshold (in Kbps))"
         required: False
     bw_rate_limit_acct:
         description:
-        - "'to-server-only'= Only account for traffic sent to server; 'from-server-only'= Only account for traffic received from server; 'all'= Account for all traffic sent to and received from server; "
+        - "'to-server-only'= Only account for traffic sent to server; 'from-server-only'=
+          Only account for traffic received from server; 'all'= Account for all traffic
+          sent to and received from server;"
         required: False
     user_tag:
         description:
@@ -156,7 +164,8 @@ options:
         required: False
     times:
         description:
-        - "Slow start connection limit multiply by a number every interval (default 2) (Multiply by this number every interval)"
+        - "Slow start connection limit multiply by a number every interval (default 2)
+          (Multiply by this number every interval)"
         required: False
     log_selection_failure:
         description:
@@ -168,13 +177,13 @@ options:
         required: False
     dns_query_interval:
         description:
-        - "The interval to query DNS server for the hostname (DNS query interval (in minute, default is 10))"
+        - "The interval to query DNS server for the hostname (DNS query interval (in
+          minute, default is 10))"
         required: False
     health_check:
         description:
         - "Health Check Monitor (Health monitor name)"
         required: False
-
 
 '''
 
@@ -188,18 +197,46 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["add","bw_rate_limit","bw_rate_limit_acct","bw_rate_limit_duration","bw_rate_limit_no_logging","bw_rate_limit_resume","conn_limit","conn_limit_no_logging","conn_rate_limit","conn_rate_limit_no_logging","dns_query_interval","dynamic_server_prefix","every","extended_stats","health_check","health_check_disable","initial_slow_start","log_selection_failure","max_dynamic_server","min_ttl_ratio","name","rate_interval","resume","slow_start","spoofing_cache","stats_data_action","till","times","user_tag","uuid","weight",]
+AVAILABLE_PROPERTIES = [
+    "add",
+    "bw_rate_limit",
+    "bw_rate_limit_acct",
+    "bw_rate_limit_duration",
+    "bw_rate_limit_no_logging",
+    "bw_rate_limit_resume",
+    "conn_limit",
+    "conn_limit_no_logging",
+    "conn_rate_limit",
+    "conn_rate_limit_no_logging",
+    "dns_query_interval",
+    "dynamic_server_prefix",
+    "every",
+    "extended_stats",
+    "health_check",
+    "health_check_disable",
+    "initial_slow_start",
+    "log_selection_failure",
+    "max_dynamic_server",
+    "min_ttl_ratio",
+    "name",
+    "rate_interval",
+    "resume",
+    "slow_start",
+    "spoofing_cache",
+    "stats_data_action",
+    "till",
+    "times",
+    "user_tag",
+    "uuid",
+    "weight",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -207,51 +244,128 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        health_check_disable=dict(type='bool', ),
-        stats_data_action=dict(type='str', choices=['stats-data-enable', 'stats-data-disable']),
-        slow_start=dict(type='bool', ),
-        weight=dict(type='int', ),
-        bw_rate_limit=dict(type='int', ),
-        spoofing_cache=dict(type='bool', ),
-        conn_limit=dict(type='int', ),
-        uuid=dict(type='str', ),
-        resume=dict(type='int', ),
-        max_dynamic_server=dict(type='int', ),
-        rate_interval=dict(type='str', choices=['100ms', 'second']),
-        till=dict(type='int', ),
-        add=dict(type='int', ),
-        min_ttl_ratio=dict(type='int', ),
-        bw_rate_limit_no_logging=dict(type='bool', ),
-        dynamic_server_prefix=dict(type='str', ),
-        initial_slow_start=dict(type='int', ),
-        every=dict(type='int', ),
-        conn_limit_no_logging=dict(type='bool', ),
-        extended_stats=dict(type='bool', ),
-        conn_rate_limit_no_logging=dict(type='bool', ),
-        name=dict(type='str', required=True, ),
-        bw_rate_limit_duration=dict(type='int', ),
-        bw_rate_limit_resume=dict(type='int', ),
-        bw_rate_limit_acct=dict(type='str', choices=['to-server-only', 'from-server-only', 'all']),
-        user_tag=dict(type='str', ),
-        times=dict(type='int', ),
-        log_selection_failure=dict(type='bool', ),
-        conn_rate_limit=dict(type='int', ),
-        dns_query_interval=dict(type='int', ),
-        health_check=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'health_check_disable': {
+            'type': 'bool',
+        },
+        'stats_data_action': {
+            'type': 'str',
+            'choices': ['stats-data-enable', 'stats-data-disable']
+        },
+        'slow_start': {
+            'type': 'bool',
+        },
+        'weight': {
+            'type': 'int',
+        },
+        'bw_rate_limit': {
+            'type': 'int',
+        },
+        'spoofing_cache': {
+            'type': 'bool',
+        },
+        'conn_limit': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'resume': {
+            'type': 'int',
+        },
+        'max_dynamic_server': {
+            'type': 'int',
+        },
+        'rate_interval': {
+            'type': 'str',
+            'choices': ['100ms', 'second']
+        },
+        'till': {
+            'type': 'int',
+        },
+        'add': {
+            'type': 'int',
+        },
+        'min_ttl_ratio': {
+            'type': 'int',
+        },
+        'bw_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'dynamic_server_prefix': {
+            'type': 'str',
+        },
+        'initial_slow_start': {
+            'type': 'int',
+        },
+        'every': {
+            'type': 'int',
+        },
+        'conn_limit_no_logging': {
+            'type': 'bool',
+        },
+        'extended_stats': {
+            'type': 'bool',
+        },
+        'conn_rate_limit_no_logging': {
+            'type': 'bool',
+        },
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'bw_rate_limit_duration': {
+            'type': 'int',
+        },
+        'bw_rate_limit_resume': {
+            'type': 'int',
+        },
+        'bw_rate_limit_acct': {
+            'type': 'str',
+            'choices': ['to-server-only', 'from-server-only', 'all']
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'times': {
+            'type': 'int',
+        },
+        'log_selection_failure': {
+            'type': 'bool',
+        },
+        'conn_rate_limit': {
+            'type': 'int',
+        },
+        'dns_query_interval': {
+            'type': 'int',
+        },
+        'health_check': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -263,16 +377,20 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
 
+
 def get_list(module):
     return module.client.get(list_url(module))
+
 
 def exists(module):
     try:
@@ -280,13 +398,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -299,10 +419,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -314,30 +434,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -358,6 +482,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["server"].items():
@@ -368,16 +493,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["server"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["server"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -390,6 +516,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -406,6 +533,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("server", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -419,6 +547,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -431,6 +560,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -441,6 +571,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -457,15 +588,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -486,14 +613,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -501,14 +629,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -516,14 +644,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

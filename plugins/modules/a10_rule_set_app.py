@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_rule_set_app
 description:
     - Application statistics in Rule Set
 short_description: Configures A10 rule.set.app
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -51,8 +51,7 @@ options:
         required: False
     rule_set_name:
         description:
-        - Key to identify parent object
-    stats:
+        - Key to identify parent object    stats:
         description:
         - "Field stats"
         required: False
@@ -1595,7 +1594,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -1608,18 +1606,17 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["stats","uuid",]
+AVAILABLE_PROPERTIES = [
+    "stats",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -1629,24 +1626,1568 @@ def get_default_argspec():
         ansible_password=dict(type='str', required=True, no_log=True),
         state=dict(type='str', default="present", choices=['noop', 'present']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        stats=dict(type='dict', appstat249=dict(type='str', ), appstat248=dict(type='str', ), appstat245=dict(type='str', ), appstat244=dict(type='str', ), appstat247=dict(type='str', ), appstat246=dict(type='str', ), appstat241=dict(type='str', ), appstat240=dict(type='str', ), appstat243=dict(type='str', ), appstat242=dict(type='str', ), appstat489=dict(type='str', ), appstat488=dict(type='str', ), appstat487=dict(type='str', ), appstat486=dict(type='str', ), appstat485=dict(type='str', ), appstat484=dict(type='str', ), appstat483=dict(type='str', ), appstat482=dict(type='str', ), appstat481=dict(type='str', ), appstat480=dict(type='str', ), appstat91=dict(type='str', ), appstat90=dict(type='str', ), appstat93=dict(type='str', ), appstat92=dict(type='str', ), appstat95=dict(type='str', ), appstat94=dict(type='str', ), appstat97=dict(type='str', ), appstat96=dict(type='str', ), appstat99=dict(type='str', ), appstat98=dict(type='str', ), appstat182=dict(type='str', ), appstat183=dict(type='str', ), appstat180=dict(type='str', ), appstat181=dict(type='str', ), appstat186=dict(type='str', ), appstat187=dict(type='str', ), appstat184=dict(type='str', ), appstat185=dict(type='str', ), appstat188=dict(type='str', ), appstat189=dict(type='str', ), appstat348=dict(type='str', ), appstat349=dict(type='str', ), appstat344=dict(type='str', ), appstat345=dict(type='str', ), appstat346=dict(type='str', ), appstat347=dict(type='str', ), appstat340=dict(type='str', ), appstat341=dict(type='str', ), appstat342=dict(type='str', ), appstat343=dict(type='str', ), appstat119=dict(type='str', ), appstat118=dict(type='str', ), appstat111=dict(type='str', ), appstat110=dict(type='str', ), appstat113=dict(type='str', ), appstat112=dict(type='str', ), appstat115=dict(type='str', ), appstat114=dict(type='str', ), appstat117=dict(type='str', ), appstat116=dict(type='str', ), appstat449=dict(type='str', ), appstat448=dict(type='str', ), appstat443=dict(type='str', ), appstat442=dict(type='str', ), appstat441=dict(type='str', ), appstat440=dict(type='str', ), appstat447=dict(type='str', ), appstat446=dict(type='str', ), appstat445=dict(type='str', ), appstat444=dict(type='str', ), appstat298=dict(type='str', ), appstat234=dict(type='str', ), appstat235=dict(type='str', ), appstat236=dict(type='str', ), appstat299=dict(type='str', ), appstat230=dict(type='str', ), appstat231=dict(type='str', ), appstat232=dict(type='str', ), appstat233=dict(type='str', ), appstat238=dict(type='str', ), appstat239=dict(type='str', ), appstat46=dict(type='str', ), appstat47=dict(type='str', ), appstat44=dict(type='str', ), appstat45=dict(type='str', ), appstat42=dict(type='str', ), appstat43=dict(type='str', ), appstat40=dict(type='str', ), appstat41=dict(type='str', ), appstat290=dict(type='str', ), appstat48=dict(type='str', ), appstat49=dict(type='str', ), appstat358=dict(type='str', ), appstat308=dict(type='str', ), appstat309=dict(type='str', ), appstat300=dict(type='str', ), appstat301=dict(type='str', ), appstat302=dict(type='str', ), appstat303=dict(type='str', ), appstat304=dict(type='str', ), appstat305=dict(type='str', ), appstat306=dict(type='str', ), appstat307=dict(type='str', ), appstat155=dict(type='str', ), appstat154=dict(type='str', ), appstat157=dict(type='str', ), appstat156=dict(type='str', ), appstat151=dict(type='str', ), appstat150=dict(type='str', ), appstat153=dict(type='str', ), appstat152=dict(type='str', ), appstat159=dict(type='str', ), appstat158=dict(type='str', ), appstat9=dict(type='str', ), appstat8=dict(type='str', ), appstat405=dict(type='str', ), appstat404=dict(type='str', ), appstat403=dict(type='str', ), appstat402=dict(type='str', ), appstat401=dict(type='str', ), appstat400=dict(type='str', ), appstat1=dict(type='str', ), appstat3=dict(type='str', ), appstat2=dict(type='str', ), appstat5=dict(type='str', ), appstat4=dict(type='str', ), appstat7=dict(type='str', ), appstat6=dict(type='str', ), appstat270=dict(type='str', ), appstat271=dict(type='str', ), appstat272=dict(type='str', ), appstat273=dict(type='str', ), appstat274=dict(type='str', ), appstat275=dict(type='str', ), appstat276=dict(type='str', ), appstat277=dict(type='str', ), appstat278=dict(type='str', ), appstat279=dict(type='str', ), appstat472=dict(type='str', ), appstat473=dict(type='str', ), appstat470=dict(type='str', ), appstat471=dict(type='str', ), appstat476=dict(type='str', ), appstat477=dict(type='str', ), appstat474=dict(type='str', ), appstat475=dict(type='str', ), appstat478=dict(type='str', ), appstat479=dict(type='str', ), appstat82=dict(type='str', ), appstat83=dict(type='str', ), appstat80=dict(type='str', ), appstat81=dict(type='str', ), appstat86=dict(type='str', ), appstat87=dict(type='str', ), appstat84=dict(type='str', ), appstat85=dict(type='str', ), appstat88=dict(type='str', ), appstat89=dict(type='str', ), appstat204=dict(type='str', ), appstat258=dict(type='str', ), appstat259=dict(type='str', ), appstat39=dict(type='str', ), appstat38=dict(type='str', ), appstat37=dict(type='str', ), appstat36=dict(type='str', ), appstat35=dict(type='str', ), appstat34=dict(type='str', ), appstat33=dict(type='str', ), appstat32=dict(type='str', ), appstat31=dict(type='str', ), appstat30=dict(type='str', ), appstat191=dict(type='str', ), appstat190=dict(type='str', ), appstat193=dict(type='str', ), appstat192=dict(type='str', ), appstat195=dict(type='str', ), appstat194=dict(type='str', ), appstat197=dict(type='str', ), appstat196=dict(type='str', ), appstat199=dict(type='str', ), appstat198=dict(type='str', ), appstat251=dict(type='str', ), appstat353=dict(type='str', ), appstat352=dict(type='str', ), appstat351=dict(type='str', ), appstat350=dict(type='str', ), appstat357=dict(type='str', ), appstat356=dict(type='str', ), appstat355=dict(type='str', ), appstat354=dict(type='str', ), appstat292=dict(type='str', ), appstat293=dict(type='str', ), appstat359=dict(type='str', ), appstat291=dict(type='str', ), appstat296=dict(type='str', ), appstat297=dict(type='str', ), appstat294=dict(type='str', ), appstat295=dict(type='str', ), appstat128=dict(type='str', ), appstat129=dict(type='str', ), appstat124=dict(type='str', ), appstat125=dict(type='str', ), appstat126=dict(type='str', ), appstat127=dict(type='str', ), appstat120=dict(type='str', ), appstat121=dict(type='str', ), appstat122=dict(type='str', ), appstat123=dict(type='str', ), appstat438=dict(type='str', ), appstat439=dict(type='str', ), appstat436=dict(type='str', ), appstat437=dict(type='str', ), appstat434=dict(type='str', ), appstat435=dict(type='str', ), appstat432=dict(type='str', ), appstat433=dict(type='str', ), appstat430=dict(type='str', ), appstat431=dict(type='str', ), appstat500=dict(type='str', ), appstat501=dict(type='str', ), appstat380=dict(type='str', ), appstat381=dict(type='str', ), appstat382=dict(type='str', ), appstat228=dict(type='str', ), appstat384=dict(type='str', ), appstat385=dict(type='str', ), appstat386=dict(type='str', ), appstat387=dict(type='str', ), appstat223=dict(type='str', ), appstat222=dict(type='str', ), appstat221=dict(type='str', ), appstat220=dict(type='str', ), appstat227=dict(type='str', ), appstat226=dict(type='str', ), appstat225=dict(type='str', ), appstat224=dict(type='str', ), appstat79=dict(type='str', ), appstat78=dict(type='str', ), appstat73=dict(type='str', ), appstat72=dict(type='str', ), appstat71=dict(type='str', ), appstat70=dict(type='str', ), appstat77=dict(type='str', ), appstat76=dict(type='str', ), appstat75=dict(type='str', ), appstat74=dict(type='str', ), appstat319=dict(type='str', ), appstat318=dict(type='str', ), appstat317=dict(type='str', ), appstat316=dict(type='str', ), appstat315=dict(type='str', ), appstat314=dict(type='str', ), appstat313=dict(type='str', ), appstat312=dict(type='str', ), appstat311=dict(type='str', ), appstat310=dict(type='str', ), appstat407=dict(type='str', ), appstat406=dict(type='str', ), appstat168=dict(type='str', ), appstat169=dict(type='str', ), appstat160=dict(type='str', ), appstat161=dict(type='str', ), appstat162=dict(type='str', ), appstat163=dict(type='str', ), appstat164=dict(type='str', ), appstat165=dict(type='str', ), appstat166=dict(type='str', ), appstat167=dict(type='str', ), appstat368=dict(type='str', ), appstat369=dict(type='str', ), appstat362=dict(type='str', ), appstat363=dict(type='str', ), appstat360=dict(type='str', ), appstat361=dict(type='str', ), appstat366=dict(type='str', ), appstat367=dict(type='str', ), appstat364=dict(type='str', ), appstat365=dict(type='str', ), appstat409=dict(type='str', ), appstat408=dict(type='str', ), appstat267=dict(type='str', ), appstat266=dict(type='str', ), appstat265=dict(type='str', ), appstat264=dict(type='str', ), appstat263=dict(type='str', ), appstat262=dict(type='str', ), appstat261=dict(type='str', ), appstat260=dict(type='str', ), appstat506=dict(type='str', ), appstat507=dict(type='str', ), appstat504=dict(type='str', ), appstat505=dict(type='str', ), appstat502=dict(type='str', ), appstat503=dict(type='str', ), appstat269=dict(type='str', ), appstat268=dict(type='str', ), appstat461=dict(type='str', ), appstat460=dict(type='str', ), appstat463=dict(type='str', ), appstat462=dict(type='str', ), appstat465=dict(type='str', ), appstat464=dict(type='str', ), appstat467=dict(type='str', ), appstat466=dict(type='str', ), appstat469=dict(type='str', ), appstat468=dict(type='str', ), appstat212=dict(type='str', ), appstat213=dict(type='str', ), appstat210=dict(type='str', ), appstat211=dict(type='str', ), appstat216=dict(type='str', ), appstat217=dict(type='str', ), appstat214=dict(type='str', ), appstat215=dict(type='str', ), appstat218=dict(type='str', ), appstat219=dict(type='str', ), appstat20=dict(type='str', ), appstat21=dict(type='str', ), appstat22=dict(type='str', ), appstat23=dict(type='str', ), appstat24=dict(type='str', ), appstat25=dict(type='str', ), appstat26=dict(type='str', ), appstat27=dict(type='str', ), appstat28=dict(type='str', ), appstat29=dict(type='str', ), appstat229=dict(type='str', ), appstat383=dict(type='str', ), appstat326=dict(type='str', ), appstat327=dict(type='str', ), appstat324=dict(type='str', ), appstat325=dict(type='str', ), appstat322=dict(type='str', ), appstat323=dict(type='str', ), appstat320=dict(type='str', ), appstat321=dict(type='str', ), appstat281=dict(type='str', ), appstat280=dict(type='str', ), appstat283=dict(type='str', ), appstat282=dict(type='str', ), appstat285=dict(type='str', ), appstat284=dict(type='str', ), appstat287=dict(type='str', ), appstat329=dict(type='str', ), appstat388=dict(type='str', ), appstat389=dict(type='str', ), appstat250=dict(type='str', ), appstat133=dict(type='str', ), appstat132=dict(type='str', ), appstat131=dict(type='str', ), appstat130=dict(type='str', ), appstat137=dict(type='str', ), appstat136=dict(type='str', ), appstat135=dict(type='str', ), appstat134=dict(type='str', ), appstat139=dict(type='str', ), appstat138=dict(type='str', ), appstat429=dict(type='str', ), appstat428=dict(type='str', ), appstat425=dict(type='str', ), appstat424=dict(type='str', ), appstat427=dict(type='str', ), appstat426=dict(type='str', ), appstat421=dict(type='str', ), appstat420=dict(type='str', ), appstat423=dict(type='str', ), appstat422=dict(type='str', ), appstat508=dict(type='str', ), appstat509=dict(type='str', ), appstat397=dict(type='str', ), appstat396=dict(type='str', ), appstat395=dict(type='str', ), appstat394=dict(type='str', ), appstat393=dict(type='str', ), appstat392=dict(type='str', ), appstat391=dict(type='str', ), appstat390=dict(type='str', ), appstat256=dict(type='str', ), appstat257=dict(type='str', ), appstat254=dict(type='str', ), appstat255=dict(type='str', ), appstat252=dict(type='str', ), appstat253=dict(type='str', ), appstat399=dict(type='str', ), appstat398=dict(type='str', ), appstat498=dict(type='str', ), appstat499=dict(type='str', ), appstat490=dict(type='str', ), appstat491=dict(type='str', ), appstat492=dict(type='str', ), appstat493=dict(type='str', ), appstat494=dict(type='str', ), appstat495=dict(type='str', ), appstat496=dict(type='str', ), appstat497=dict(type='str', ), appstat68=dict(type='str', ), appstat69=dict(type='str', ), appstat64=dict(type='str', ), appstat65=dict(type='str', ), appstat66=dict(type='str', ), appstat67=dict(type='str', ), appstat60=dict(type='str', ), appstat61=dict(type='str', ), appstat62=dict(type='str', ), appstat63=dict(type='str', ), appstat19=dict(type='str', ), appstat18=dict(type='str', ), appstat11=dict(type='str', ), appstat10=dict(type='str', ), appstat13=dict(type='str', ), appstat12=dict(type='str', ), appstat15=dict(type='str', ), appstat14=dict(type='str', ), appstat17=dict(type='str', ), appstat16=dict(type='str', ), appstat179=dict(type='str', ), appstat178=dict(type='str', ), appstat177=dict(type='str', ), appstat176=dict(type='str', ), appstat175=dict(type='str', ), appstat174=dict(type='str', ), appstat173=dict(type='str', ), appstat172=dict(type='str', ), appstat171=dict(type='str', ), appstat170=dict(type='str', ), appstat379=dict(type='str', ), appstat378=dict(type='str', ), appstat371=dict(type='str', ), appstat370=dict(type='str', ), appstat373=dict(type='str', ), appstat372=dict(type='str', ), appstat375=dict(type='str', ), appstat374=dict(type='str', ), appstat377=dict(type='str', ), appstat376=dict(type='str', ), appstat108=dict(type='str', ), appstat109=dict(type='str', ), appstat102=dict(type='str', ), appstat103=dict(type='str', ), appstat100=dict(type='str', ), appstat101=dict(type='str', ), appstat106=dict(type='str', ), appstat107=dict(type='str', ), appstat104=dict(type='str', ), appstat105=dict(type='str', ), appstat289=dict(type='str', ), appstat288=dict(type='str', ), appstat511=dict(type='str', ), appstat510=dict(type='str', ), appstat454=dict(type='str', ), appstat455=dict(type='str', ), appstat456=dict(type='str', ), appstat457=dict(type='str', ), appstat450=dict(type='str', ), appstat451=dict(type='str', ), appstat452=dict(type='str', ), appstat453=dict(type='str', ), appstat458=dict(type='str', ), appstat459=dict(type='str', ), appstat201=dict(type='str', ), appstat200=dict(type='str', ), appstat203=dict(type='str', ), appstat202=dict(type='str', ), appstat205=dict(type='str', ), appstat328=dict(type='str', ), appstat207=dict(type='str', ), appstat206=dict(type='str', ), appstat209=dict(type='str', ), appstat208=dict(type='str', ), appstat286=dict(type='str', ), appstat55=dict(type='str', ), appstat54=dict(type='str', ), appstat57=dict(type='str', ), appstat56=dict(type='str', ), appstat51=dict(type='str', ), appstat50=dict(type='str', ), appstat53=dict(type='str', ), appstat52=dict(type='str', ), appstat59=dict(type='str', ), appstat58=dict(type='str', ), appstat335=dict(type='str', ), appstat334=dict(type='str', ), appstat337=dict(type='str', ), appstat336=dict(type='str', ), appstat331=dict(type='str', ), appstat330=dict(type='str', ), appstat333=dict(type='str', ), appstat332=dict(type='str', ), appstat339=dict(type='str', ), appstat338=dict(type='str', ), appstat146=dict(type='str', ), appstat147=dict(type='str', ), appstat144=dict(type='str', ), appstat145=dict(type='str', ), appstat142=dict(type='str', ), appstat143=dict(type='str', ), appstat140=dict(type='str', ), appstat141=dict(type='str', ), appstat148=dict(type='str', ), appstat149=dict(type='str', ), appstat410=dict(type='str', ), appstat411=dict(type='str', ), appstat412=dict(type='str', ), appstat413=dict(type='str', ), appstat414=dict(type='str', ), appstat415=dict(type='str', ), appstat416=dict(type='str', ), appstat417=dict(type='str', ), appstat418=dict(type='str', ), appstat419=dict(type='str', ), appstat237=dict(type='str', )),
-        uuid=dict(type='str', )
-    ))
-   
+    rv.update({
+        'stats': {
+            'type': 'dict',
+            'appstat249': {
+                'type': 'str',
+            },
+            'appstat248': {
+                'type': 'str',
+            },
+            'appstat245': {
+                'type': 'str',
+            },
+            'appstat244': {
+                'type': 'str',
+            },
+            'appstat247': {
+                'type': 'str',
+            },
+            'appstat246': {
+                'type': 'str',
+            },
+            'appstat241': {
+                'type': 'str',
+            },
+            'appstat240': {
+                'type': 'str',
+            },
+            'appstat243': {
+                'type': 'str',
+            },
+            'appstat242': {
+                'type': 'str',
+            },
+            'appstat489': {
+                'type': 'str',
+            },
+            'appstat488': {
+                'type': 'str',
+            },
+            'appstat487': {
+                'type': 'str',
+            },
+            'appstat486': {
+                'type': 'str',
+            },
+            'appstat485': {
+                'type': 'str',
+            },
+            'appstat484': {
+                'type': 'str',
+            },
+            'appstat483': {
+                'type': 'str',
+            },
+            'appstat482': {
+                'type': 'str',
+            },
+            'appstat481': {
+                'type': 'str',
+            },
+            'appstat480': {
+                'type': 'str',
+            },
+            'appstat91': {
+                'type': 'str',
+            },
+            'appstat90': {
+                'type': 'str',
+            },
+            'appstat93': {
+                'type': 'str',
+            },
+            'appstat92': {
+                'type': 'str',
+            },
+            'appstat95': {
+                'type': 'str',
+            },
+            'appstat94': {
+                'type': 'str',
+            },
+            'appstat97': {
+                'type': 'str',
+            },
+            'appstat96': {
+                'type': 'str',
+            },
+            'appstat99': {
+                'type': 'str',
+            },
+            'appstat98': {
+                'type': 'str',
+            },
+            'appstat182': {
+                'type': 'str',
+            },
+            'appstat183': {
+                'type': 'str',
+            },
+            'appstat180': {
+                'type': 'str',
+            },
+            'appstat181': {
+                'type': 'str',
+            },
+            'appstat186': {
+                'type': 'str',
+            },
+            'appstat187': {
+                'type': 'str',
+            },
+            'appstat184': {
+                'type': 'str',
+            },
+            'appstat185': {
+                'type': 'str',
+            },
+            'appstat188': {
+                'type': 'str',
+            },
+            'appstat189': {
+                'type': 'str',
+            },
+            'appstat348': {
+                'type': 'str',
+            },
+            'appstat349': {
+                'type': 'str',
+            },
+            'appstat344': {
+                'type': 'str',
+            },
+            'appstat345': {
+                'type': 'str',
+            },
+            'appstat346': {
+                'type': 'str',
+            },
+            'appstat347': {
+                'type': 'str',
+            },
+            'appstat340': {
+                'type': 'str',
+            },
+            'appstat341': {
+                'type': 'str',
+            },
+            'appstat342': {
+                'type': 'str',
+            },
+            'appstat343': {
+                'type': 'str',
+            },
+            'appstat119': {
+                'type': 'str',
+            },
+            'appstat118': {
+                'type': 'str',
+            },
+            'appstat111': {
+                'type': 'str',
+            },
+            'appstat110': {
+                'type': 'str',
+            },
+            'appstat113': {
+                'type': 'str',
+            },
+            'appstat112': {
+                'type': 'str',
+            },
+            'appstat115': {
+                'type': 'str',
+            },
+            'appstat114': {
+                'type': 'str',
+            },
+            'appstat117': {
+                'type': 'str',
+            },
+            'appstat116': {
+                'type': 'str',
+            },
+            'appstat449': {
+                'type': 'str',
+            },
+            'appstat448': {
+                'type': 'str',
+            },
+            'appstat443': {
+                'type': 'str',
+            },
+            'appstat442': {
+                'type': 'str',
+            },
+            'appstat441': {
+                'type': 'str',
+            },
+            'appstat440': {
+                'type': 'str',
+            },
+            'appstat447': {
+                'type': 'str',
+            },
+            'appstat446': {
+                'type': 'str',
+            },
+            'appstat445': {
+                'type': 'str',
+            },
+            'appstat444': {
+                'type': 'str',
+            },
+            'appstat298': {
+                'type': 'str',
+            },
+            'appstat234': {
+                'type': 'str',
+            },
+            'appstat235': {
+                'type': 'str',
+            },
+            'appstat236': {
+                'type': 'str',
+            },
+            'appstat299': {
+                'type': 'str',
+            },
+            'appstat230': {
+                'type': 'str',
+            },
+            'appstat231': {
+                'type': 'str',
+            },
+            'appstat232': {
+                'type': 'str',
+            },
+            'appstat233': {
+                'type': 'str',
+            },
+            'appstat238': {
+                'type': 'str',
+            },
+            'appstat239': {
+                'type': 'str',
+            },
+            'appstat46': {
+                'type': 'str',
+            },
+            'appstat47': {
+                'type': 'str',
+            },
+            'appstat44': {
+                'type': 'str',
+            },
+            'appstat45': {
+                'type': 'str',
+            },
+            'appstat42': {
+                'type': 'str',
+            },
+            'appstat43': {
+                'type': 'str',
+            },
+            'appstat40': {
+                'type': 'str',
+            },
+            'appstat41': {
+                'type': 'str',
+            },
+            'appstat290': {
+                'type': 'str',
+            },
+            'appstat48': {
+                'type': 'str',
+            },
+            'appstat49': {
+                'type': 'str',
+            },
+            'appstat358': {
+                'type': 'str',
+            },
+            'appstat308': {
+                'type': 'str',
+            },
+            'appstat309': {
+                'type': 'str',
+            },
+            'appstat300': {
+                'type': 'str',
+            },
+            'appstat301': {
+                'type': 'str',
+            },
+            'appstat302': {
+                'type': 'str',
+            },
+            'appstat303': {
+                'type': 'str',
+            },
+            'appstat304': {
+                'type': 'str',
+            },
+            'appstat305': {
+                'type': 'str',
+            },
+            'appstat306': {
+                'type': 'str',
+            },
+            'appstat307': {
+                'type': 'str',
+            },
+            'appstat155': {
+                'type': 'str',
+            },
+            'appstat154': {
+                'type': 'str',
+            },
+            'appstat157': {
+                'type': 'str',
+            },
+            'appstat156': {
+                'type': 'str',
+            },
+            'appstat151': {
+                'type': 'str',
+            },
+            'appstat150': {
+                'type': 'str',
+            },
+            'appstat153': {
+                'type': 'str',
+            },
+            'appstat152': {
+                'type': 'str',
+            },
+            'appstat159': {
+                'type': 'str',
+            },
+            'appstat158': {
+                'type': 'str',
+            },
+            'appstat9': {
+                'type': 'str',
+            },
+            'appstat8': {
+                'type': 'str',
+            },
+            'appstat405': {
+                'type': 'str',
+            },
+            'appstat404': {
+                'type': 'str',
+            },
+            'appstat403': {
+                'type': 'str',
+            },
+            'appstat402': {
+                'type': 'str',
+            },
+            'appstat401': {
+                'type': 'str',
+            },
+            'appstat400': {
+                'type': 'str',
+            },
+            'appstat1': {
+                'type': 'str',
+            },
+            'appstat3': {
+                'type': 'str',
+            },
+            'appstat2': {
+                'type': 'str',
+            },
+            'appstat5': {
+                'type': 'str',
+            },
+            'appstat4': {
+                'type': 'str',
+            },
+            'appstat7': {
+                'type': 'str',
+            },
+            'appstat6': {
+                'type': 'str',
+            },
+            'appstat270': {
+                'type': 'str',
+            },
+            'appstat271': {
+                'type': 'str',
+            },
+            'appstat272': {
+                'type': 'str',
+            },
+            'appstat273': {
+                'type': 'str',
+            },
+            'appstat274': {
+                'type': 'str',
+            },
+            'appstat275': {
+                'type': 'str',
+            },
+            'appstat276': {
+                'type': 'str',
+            },
+            'appstat277': {
+                'type': 'str',
+            },
+            'appstat278': {
+                'type': 'str',
+            },
+            'appstat279': {
+                'type': 'str',
+            },
+            'appstat472': {
+                'type': 'str',
+            },
+            'appstat473': {
+                'type': 'str',
+            },
+            'appstat470': {
+                'type': 'str',
+            },
+            'appstat471': {
+                'type': 'str',
+            },
+            'appstat476': {
+                'type': 'str',
+            },
+            'appstat477': {
+                'type': 'str',
+            },
+            'appstat474': {
+                'type': 'str',
+            },
+            'appstat475': {
+                'type': 'str',
+            },
+            'appstat478': {
+                'type': 'str',
+            },
+            'appstat479': {
+                'type': 'str',
+            },
+            'appstat82': {
+                'type': 'str',
+            },
+            'appstat83': {
+                'type': 'str',
+            },
+            'appstat80': {
+                'type': 'str',
+            },
+            'appstat81': {
+                'type': 'str',
+            },
+            'appstat86': {
+                'type': 'str',
+            },
+            'appstat87': {
+                'type': 'str',
+            },
+            'appstat84': {
+                'type': 'str',
+            },
+            'appstat85': {
+                'type': 'str',
+            },
+            'appstat88': {
+                'type': 'str',
+            },
+            'appstat89': {
+                'type': 'str',
+            },
+            'appstat204': {
+                'type': 'str',
+            },
+            'appstat258': {
+                'type': 'str',
+            },
+            'appstat259': {
+                'type': 'str',
+            },
+            'appstat39': {
+                'type': 'str',
+            },
+            'appstat38': {
+                'type': 'str',
+            },
+            'appstat37': {
+                'type': 'str',
+            },
+            'appstat36': {
+                'type': 'str',
+            },
+            'appstat35': {
+                'type': 'str',
+            },
+            'appstat34': {
+                'type': 'str',
+            },
+            'appstat33': {
+                'type': 'str',
+            },
+            'appstat32': {
+                'type': 'str',
+            },
+            'appstat31': {
+                'type': 'str',
+            },
+            'appstat30': {
+                'type': 'str',
+            },
+            'appstat191': {
+                'type': 'str',
+            },
+            'appstat190': {
+                'type': 'str',
+            },
+            'appstat193': {
+                'type': 'str',
+            },
+            'appstat192': {
+                'type': 'str',
+            },
+            'appstat195': {
+                'type': 'str',
+            },
+            'appstat194': {
+                'type': 'str',
+            },
+            'appstat197': {
+                'type': 'str',
+            },
+            'appstat196': {
+                'type': 'str',
+            },
+            'appstat199': {
+                'type': 'str',
+            },
+            'appstat198': {
+                'type': 'str',
+            },
+            'appstat251': {
+                'type': 'str',
+            },
+            'appstat353': {
+                'type': 'str',
+            },
+            'appstat352': {
+                'type': 'str',
+            },
+            'appstat351': {
+                'type': 'str',
+            },
+            'appstat350': {
+                'type': 'str',
+            },
+            'appstat357': {
+                'type': 'str',
+            },
+            'appstat356': {
+                'type': 'str',
+            },
+            'appstat355': {
+                'type': 'str',
+            },
+            'appstat354': {
+                'type': 'str',
+            },
+            'appstat292': {
+                'type': 'str',
+            },
+            'appstat293': {
+                'type': 'str',
+            },
+            'appstat359': {
+                'type': 'str',
+            },
+            'appstat291': {
+                'type': 'str',
+            },
+            'appstat296': {
+                'type': 'str',
+            },
+            'appstat297': {
+                'type': 'str',
+            },
+            'appstat294': {
+                'type': 'str',
+            },
+            'appstat295': {
+                'type': 'str',
+            },
+            'appstat128': {
+                'type': 'str',
+            },
+            'appstat129': {
+                'type': 'str',
+            },
+            'appstat124': {
+                'type': 'str',
+            },
+            'appstat125': {
+                'type': 'str',
+            },
+            'appstat126': {
+                'type': 'str',
+            },
+            'appstat127': {
+                'type': 'str',
+            },
+            'appstat120': {
+                'type': 'str',
+            },
+            'appstat121': {
+                'type': 'str',
+            },
+            'appstat122': {
+                'type': 'str',
+            },
+            'appstat123': {
+                'type': 'str',
+            },
+            'appstat438': {
+                'type': 'str',
+            },
+            'appstat439': {
+                'type': 'str',
+            },
+            'appstat436': {
+                'type': 'str',
+            },
+            'appstat437': {
+                'type': 'str',
+            },
+            'appstat434': {
+                'type': 'str',
+            },
+            'appstat435': {
+                'type': 'str',
+            },
+            'appstat432': {
+                'type': 'str',
+            },
+            'appstat433': {
+                'type': 'str',
+            },
+            'appstat430': {
+                'type': 'str',
+            },
+            'appstat431': {
+                'type': 'str',
+            },
+            'appstat500': {
+                'type': 'str',
+            },
+            'appstat501': {
+                'type': 'str',
+            },
+            'appstat380': {
+                'type': 'str',
+            },
+            'appstat381': {
+                'type': 'str',
+            },
+            'appstat382': {
+                'type': 'str',
+            },
+            'appstat228': {
+                'type': 'str',
+            },
+            'appstat384': {
+                'type': 'str',
+            },
+            'appstat385': {
+                'type': 'str',
+            },
+            'appstat386': {
+                'type': 'str',
+            },
+            'appstat387': {
+                'type': 'str',
+            },
+            'appstat223': {
+                'type': 'str',
+            },
+            'appstat222': {
+                'type': 'str',
+            },
+            'appstat221': {
+                'type': 'str',
+            },
+            'appstat220': {
+                'type': 'str',
+            },
+            'appstat227': {
+                'type': 'str',
+            },
+            'appstat226': {
+                'type': 'str',
+            },
+            'appstat225': {
+                'type': 'str',
+            },
+            'appstat224': {
+                'type': 'str',
+            },
+            'appstat79': {
+                'type': 'str',
+            },
+            'appstat78': {
+                'type': 'str',
+            },
+            'appstat73': {
+                'type': 'str',
+            },
+            'appstat72': {
+                'type': 'str',
+            },
+            'appstat71': {
+                'type': 'str',
+            },
+            'appstat70': {
+                'type': 'str',
+            },
+            'appstat77': {
+                'type': 'str',
+            },
+            'appstat76': {
+                'type': 'str',
+            },
+            'appstat75': {
+                'type': 'str',
+            },
+            'appstat74': {
+                'type': 'str',
+            },
+            'appstat319': {
+                'type': 'str',
+            },
+            'appstat318': {
+                'type': 'str',
+            },
+            'appstat317': {
+                'type': 'str',
+            },
+            'appstat316': {
+                'type': 'str',
+            },
+            'appstat315': {
+                'type': 'str',
+            },
+            'appstat314': {
+                'type': 'str',
+            },
+            'appstat313': {
+                'type': 'str',
+            },
+            'appstat312': {
+                'type': 'str',
+            },
+            'appstat311': {
+                'type': 'str',
+            },
+            'appstat310': {
+                'type': 'str',
+            },
+            'appstat407': {
+                'type': 'str',
+            },
+            'appstat406': {
+                'type': 'str',
+            },
+            'appstat168': {
+                'type': 'str',
+            },
+            'appstat169': {
+                'type': 'str',
+            },
+            'appstat160': {
+                'type': 'str',
+            },
+            'appstat161': {
+                'type': 'str',
+            },
+            'appstat162': {
+                'type': 'str',
+            },
+            'appstat163': {
+                'type': 'str',
+            },
+            'appstat164': {
+                'type': 'str',
+            },
+            'appstat165': {
+                'type': 'str',
+            },
+            'appstat166': {
+                'type': 'str',
+            },
+            'appstat167': {
+                'type': 'str',
+            },
+            'appstat368': {
+                'type': 'str',
+            },
+            'appstat369': {
+                'type': 'str',
+            },
+            'appstat362': {
+                'type': 'str',
+            },
+            'appstat363': {
+                'type': 'str',
+            },
+            'appstat360': {
+                'type': 'str',
+            },
+            'appstat361': {
+                'type': 'str',
+            },
+            'appstat366': {
+                'type': 'str',
+            },
+            'appstat367': {
+                'type': 'str',
+            },
+            'appstat364': {
+                'type': 'str',
+            },
+            'appstat365': {
+                'type': 'str',
+            },
+            'appstat409': {
+                'type': 'str',
+            },
+            'appstat408': {
+                'type': 'str',
+            },
+            'appstat267': {
+                'type': 'str',
+            },
+            'appstat266': {
+                'type': 'str',
+            },
+            'appstat265': {
+                'type': 'str',
+            },
+            'appstat264': {
+                'type': 'str',
+            },
+            'appstat263': {
+                'type': 'str',
+            },
+            'appstat262': {
+                'type': 'str',
+            },
+            'appstat261': {
+                'type': 'str',
+            },
+            'appstat260': {
+                'type': 'str',
+            },
+            'appstat506': {
+                'type': 'str',
+            },
+            'appstat507': {
+                'type': 'str',
+            },
+            'appstat504': {
+                'type': 'str',
+            },
+            'appstat505': {
+                'type': 'str',
+            },
+            'appstat502': {
+                'type': 'str',
+            },
+            'appstat503': {
+                'type': 'str',
+            },
+            'appstat269': {
+                'type': 'str',
+            },
+            'appstat268': {
+                'type': 'str',
+            },
+            'appstat461': {
+                'type': 'str',
+            },
+            'appstat460': {
+                'type': 'str',
+            },
+            'appstat463': {
+                'type': 'str',
+            },
+            'appstat462': {
+                'type': 'str',
+            },
+            'appstat465': {
+                'type': 'str',
+            },
+            'appstat464': {
+                'type': 'str',
+            },
+            'appstat467': {
+                'type': 'str',
+            },
+            'appstat466': {
+                'type': 'str',
+            },
+            'appstat469': {
+                'type': 'str',
+            },
+            'appstat468': {
+                'type': 'str',
+            },
+            'appstat212': {
+                'type': 'str',
+            },
+            'appstat213': {
+                'type': 'str',
+            },
+            'appstat210': {
+                'type': 'str',
+            },
+            'appstat211': {
+                'type': 'str',
+            },
+            'appstat216': {
+                'type': 'str',
+            },
+            'appstat217': {
+                'type': 'str',
+            },
+            'appstat214': {
+                'type': 'str',
+            },
+            'appstat215': {
+                'type': 'str',
+            },
+            'appstat218': {
+                'type': 'str',
+            },
+            'appstat219': {
+                'type': 'str',
+            },
+            'appstat20': {
+                'type': 'str',
+            },
+            'appstat21': {
+                'type': 'str',
+            },
+            'appstat22': {
+                'type': 'str',
+            },
+            'appstat23': {
+                'type': 'str',
+            },
+            'appstat24': {
+                'type': 'str',
+            },
+            'appstat25': {
+                'type': 'str',
+            },
+            'appstat26': {
+                'type': 'str',
+            },
+            'appstat27': {
+                'type': 'str',
+            },
+            'appstat28': {
+                'type': 'str',
+            },
+            'appstat29': {
+                'type': 'str',
+            },
+            'appstat229': {
+                'type': 'str',
+            },
+            'appstat383': {
+                'type': 'str',
+            },
+            'appstat326': {
+                'type': 'str',
+            },
+            'appstat327': {
+                'type': 'str',
+            },
+            'appstat324': {
+                'type': 'str',
+            },
+            'appstat325': {
+                'type': 'str',
+            },
+            'appstat322': {
+                'type': 'str',
+            },
+            'appstat323': {
+                'type': 'str',
+            },
+            'appstat320': {
+                'type': 'str',
+            },
+            'appstat321': {
+                'type': 'str',
+            },
+            'appstat281': {
+                'type': 'str',
+            },
+            'appstat280': {
+                'type': 'str',
+            },
+            'appstat283': {
+                'type': 'str',
+            },
+            'appstat282': {
+                'type': 'str',
+            },
+            'appstat285': {
+                'type': 'str',
+            },
+            'appstat284': {
+                'type': 'str',
+            },
+            'appstat287': {
+                'type': 'str',
+            },
+            'appstat329': {
+                'type': 'str',
+            },
+            'appstat388': {
+                'type': 'str',
+            },
+            'appstat389': {
+                'type': 'str',
+            },
+            'appstat250': {
+                'type': 'str',
+            },
+            'appstat133': {
+                'type': 'str',
+            },
+            'appstat132': {
+                'type': 'str',
+            },
+            'appstat131': {
+                'type': 'str',
+            },
+            'appstat130': {
+                'type': 'str',
+            },
+            'appstat137': {
+                'type': 'str',
+            },
+            'appstat136': {
+                'type': 'str',
+            },
+            'appstat135': {
+                'type': 'str',
+            },
+            'appstat134': {
+                'type': 'str',
+            },
+            'appstat139': {
+                'type': 'str',
+            },
+            'appstat138': {
+                'type': 'str',
+            },
+            'appstat429': {
+                'type': 'str',
+            },
+            'appstat428': {
+                'type': 'str',
+            },
+            'appstat425': {
+                'type': 'str',
+            },
+            'appstat424': {
+                'type': 'str',
+            },
+            'appstat427': {
+                'type': 'str',
+            },
+            'appstat426': {
+                'type': 'str',
+            },
+            'appstat421': {
+                'type': 'str',
+            },
+            'appstat420': {
+                'type': 'str',
+            },
+            'appstat423': {
+                'type': 'str',
+            },
+            'appstat422': {
+                'type': 'str',
+            },
+            'appstat508': {
+                'type': 'str',
+            },
+            'appstat509': {
+                'type': 'str',
+            },
+            'appstat397': {
+                'type': 'str',
+            },
+            'appstat396': {
+                'type': 'str',
+            },
+            'appstat395': {
+                'type': 'str',
+            },
+            'appstat394': {
+                'type': 'str',
+            },
+            'appstat393': {
+                'type': 'str',
+            },
+            'appstat392': {
+                'type': 'str',
+            },
+            'appstat391': {
+                'type': 'str',
+            },
+            'appstat390': {
+                'type': 'str',
+            },
+            'appstat256': {
+                'type': 'str',
+            },
+            'appstat257': {
+                'type': 'str',
+            },
+            'appstat254': {
+                'type': 'str',
+            },
+            'appstat255': {
+                'type': 'str',
+            },
+            'appstat252': {
+                'type': 'str',
+            },
+            'appstat253': {
+                'type': 'str',
+            },
+            'appstat399': {
+                'type': 'str',
+            },
+            'appstat398': {
+                'type': 'str',
+            },
+            'appstat498': {
+                'type': 'str',
+            },
+            'appstat499': {
+                'type': 'str',
+            },
+            'appstat490': {
+                'type': 'str',
+            },
+            'appstat491': {
+                'type': 'str',
+            },
+            'appstat492': {
+                'type': 'str',
+            },
+            'appstat493': {
+                'type': 'str',
+            },
+            'appstat494': {
+                'type': 'str',
+            },
+            'appstat495': {
+                'type': 'str',
+            },
+            'appstat496': {
+                'type': 'str',
+            },
+            'appstat497': {
+                'type': 'str',
+            },
+            'appstat68': {
+                'type': 'str',
+            },
+            'appstat69': {
+                'type': 'str',
+            },
+            'appstat64': {
+                'type': 'str',
+            },
+            'appstat65': {
+                'type': 'str',
+            },
+            'appstat66': {
+                'type': 'str',
+            },
+            'appstat67': {
+                'type': 'str',
+            },
+            'appstat60': {
+                'type': 'str',
+            },
+            'appstat61': {
+                'type': 'str',
+            },
+            'appstat62': {
+                'type': 'str',
+            },
+            'appstat63': {
+                'type': 'str',
+            },
+            'appstat19': {
+                'type': 'str',
+            },
+            'appstat18': {
+                'type': 'str',
+            },
+            'appstat11': {
+                'type': 'str',
+            },
+            'appstat10': {
+                'type': 'str',
+            },
+            'appstat13': {
+                'type': 'str',
+            },
+            'appstat12': {
+                'type': 'str',
+            },
+            'appstat15': {
+                'type': 'str',
+            },
+            'appstat14': {
+                'type': 'str',
+            },
+            'appstat17': {
+                'type': 'str',
+            },
+            'appstat16': {
+                'type': 'str',
+            },
+            'appstat179': {
+                'type': 'str',
+            },
+            'appstat178': {
+                'type': 'str',
+            },
+            'appstat177': {
+                'type': 'str',
+            },
+            'appstat176': {
+                'type': 'str',
+            },
+            'appstat175': {
+                'type': 'str',
+            },
+            'appstat174': {
+                'type': 'str',
+            },
+            'appstat173': {
+                'type': 'str',
+            },
+            'appstat172': {
+                'type': 'str',
+            },
+            'appstat171': {
+                'type': 'str',
+            },
+            'appstat170': {
+                'type': 'str',
+            },
+            'appstat379': {
+                'type': 'str',
+            },
+            'appstat378': {
+                'type': 'str',
+            },
+            'appstat371': {
+                'type': 'str',
+            },
+            'appstat370': {
+                'type': 'str',
+            },
+            'appstat373': {
+                'type': 'str',
+            },
+            'appstat372': {
+                'type': 'str',
+            },
+            'appstat375': {
+                'type': 'str',
+            },
+            'appstat374': {
+                'type': 'str',
+            },
+            'appstat377': {
+                'type': 'str',
+            },
+            'appstat376': {
+                'type': 'str',
+            },
+            'appstat108': {
+                'type': 'str',
+            },
+            'appstat109': {
+                'type': 'str',
+            },
+            'appstat102': {
+                'type': 'str',
+            },
+            'appstat103': {
+                'type': 'str',
+            },
+            'appstat100': {
+                'type': 'str',
+            },
+            'appstat101': {
+                'type': 'str',
+            },
+            'appstat106': {
+                'type': 'str',
+            },
+            'appstat107': {
+                'type': 'str',
+            },
+            'appstat104': {
+                'type': 'str',
+            },
+            'appstat105': {
+                'type': 'str',
+            },
+            'appstat289': {
+                'type': 'str',
+            },
+            'appstat288': {
+                'type': 'str',
+            },
+            'appstat511': {
+                'type': 'str',
+            },
+            'appstat510': {
+                'type': 'str',
+            },
+            'appstat454': {
+                'type': 'str',
+            },
+            'appstat455': {
+                'type': 'str',
+            },
+            'appstat456': {
+                'type': 'str',
+            },
+            'appstat457': {
+                'type': 'str',
+            },
+            'appstat450': {
+                'type': 'str',
+            },
+            'appstat451': {
+                'type': 'str',
+            },
+            'appstat452': {
+                'type': 'str',
+            },
+            'appstat453': {
+                'type': 'str',
+            },
+            'appstat458': {
+                'type': 'str',
+            },
+            'appstat459': {
+                'type': 'str',
+            },
+            'appstat201': {
+                'type': 'str',
+            },
+            'appstat200': {
+                'type': 'str',
+            },
+            'appstat203': {
+                'type': 'str',
+            },
+            'appstat202': {
+                'type': 'str',
+            },
+            'appstat205': {
+                'type': 'str',
+            },
+            'appstat328': {
+                'type': 'str',
+            },
+            'appstat207': {
+                'type': 'str',
+            },
+            'appstat206': {
+                'type': 'str',
+            },
+            'appstat209': {
+                'type': 'str',
+            },
+            'appstat208': {
+                'type': 'str',
+            },
+            'appstat286': {
+                'type': 'str',
+            },
+            'appstat55': {
+                'type': 'str',
+            },
+            'appstat54': {
+                'type': 'str',
+            },
+            'appstat57': {
+                'type': 'str',
+            },
+            'appstat56': {
+                'type': 'str',
+            },
+            'appstat51': {
+                'type': 'str',
+            },
+            'appstat50': {
+                'type': 'str',
+            },
+            'appstat53': {
+                'type': 'str',
+            },
+            'appstat52': {
+                'type': 'str',
+            },
+            'appstat59': {
+                'type': 'str',
+            },
+            'appstat58': {
+                'type': 'str',
+            },
+            'appstat335': {
+                'type': 'str',
+            },
+            'appstat334': {
+                'type': 'str',
+            },
+            'appstat337': {
+                'type': 'str',
+            },
+            'appstat336': {
+                'type': 'str',
+            },
+            'appstat331': {
+                'type': 'str',
+            },
+            'appstat330': {
+                'type': 'str',
+            },
+            'appstat333': {
+                'type': 'str',
+            },
+            'appstat332': {
+                'type': 'str',
+            },
+            'appstat339': {
+                'type': 'str',
+            },
+            'appstat338': {
+                'type': 'str',
+            },
+            'appstat146': {
+                'type': 'str',
+            },
+            'appstat147': {
+                'type': 'str',
+            },
+            'appstat144': {
+                'type': 'str',
+            },
+            'appstat145': {
+                'type': 'str',
+            },
+            'appstat142': {
+                'type': 'str',
+            },
+            'appstat143': {
+                'type': 'str',
+            },
+            'appstat140': {
+                'type': 'str',
+            },
+            'appstat141': {
+                'type': 'str',
+            },
+            'appstat148': {
+                'type': 'str',
+            },
+            'appstat149': {
+                'type': 'str',
+            },
+            'appstat410': {
+                'type': 'str',
+            },
+            'appstat411': {
+                'type': 'str',
+            },
+            'appstat412': {
+                'type': 'str',
+            },
+            'appstat413': {
+                'type': 'str',
+            },
+            'appstat414': {
+                'type': 'str',
+            },
+            'appstat415': {
+                'type': 'str',
+            },
+            'appstat416': {
+                'type': 'str',
+            },
+            'appstat417': {
+                'type': 'str',
+            },
+            'appstat418': {
+                'type': 'str',
+            },
+            'appstat419': {
+                'type': 'str',
+            },
+            'appstat237': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        rule_set_name=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(rule_set_name=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -1658,30 +3199,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -1689,13 +3235,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -1708,10 +3256,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -1723,30 +3271,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -1767,10 +3319,12 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config):
     if existing_config:
         result["changed"] = True
     return result
+
 
 def create(module, result):
     try:
@@ -1783,6 +3337,7 @@ def create(module, result):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config):
     try:
@@ -1799,6 +3354,7 @@ def update(module, result, existing_config):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     if module.check_mode:
         return report_changes(module, result, existing_config)
@@ -1807,15 +3363,11 @@ def present(module, result, existing_config):
     else:
         return update(module, result, existing_config)
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -1836,14 +3388,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -1851,11 +3404,11 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'noop':
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -1865,14 +3418,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

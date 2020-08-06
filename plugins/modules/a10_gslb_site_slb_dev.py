@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_gslb_site_slb_dev
 description:
     - Specify a SLB device for the GSLB site
 short_description: Configures A10 gslb.site.slb-dev
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -52,8 +52,7 @@ options:
         required: False
     site_name:
         description:
-        - Key to identify parent object
-    oper:
+        - Key to identify parent object    oper:
         description:
         - "Field oper"
         required: False
@@ -96,7 +95,8 @@ options:
                 - "Field dev_session_util"
     health_check_action:
         description:
-        - "'health-check'= Enable health Check; 'health-check-disable'= Disable health check; "
+        - "'health-check'= Enable health Check; 'health-check-disable'= Disable health
+          check;"
         required: False
     client_ip:
         description:
@@ -162,7 +162,8 @@ options:
         required: False
     auto_detect:
         description:
-        - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service IP and service port; 'disabled'= disable auto-detect; "
+        - "'ip'= Service IP only; 'port'= Service Port only; 'ip-and-port'= Both service
+          IP and service port; 'disabled'= disable auto-detect;"
         required: False
     max_client:
         description:
@@ -170,9 +171,9 @@ options:
         required: False
     admin_preference:
         description:
-        - "Specify administrative preference (Specify admin-preference value,default is 100)"
+        - "Specify administrative preference (Specify admin-preference value,default is
+          100)"
         required: False
-
 
 '''
 
@@ -186,18 +187,33 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["admin_preference","auto_detect","auto_map","client_ip","device_name","gateway_ip_addr","health_check_action","ip_address","max_client","msg_format_acos_2x","oper","proto_aging_fast","proto_aging_time","proto_compatible","rdt_value","user_tag","uuid","vip_server",]
+AVAILABLE_PROPERTIES = [
+    "admin_preference",
+    "auto_detect",
+    "auto_map",
+    "client_ip",
+    "device_name",
+    "gateway_ip_addr",
+    "health_check_action",
+    "ip_address",
+    "max_client",
+    "msg_format_acos_2x",
+    "oper",
+    "proto_aging_fast",
+    "proto_aging_time",
+    "proto_compatible",
+    "rdt_value",
+    "user_tag",
+    "uuid",
+    "vip_server",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -205,42 +221,289 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        oper=dict(type='dict', dev_gw_state=dict(type='str', ), vip_server=dict(type='dict', oper=dict(type='dict', ), vip_server_v4_list=dict(type='list', oper=dict(type='dict', dev_vip_addr=dict(type='str', ), dev_vip_state=dict(type='str', ), dev_vip_port_list=dict(type='list', dev_vip_port_num=dict(type='int', ), dev_vip_port_state=dict(type='str', ))), ipv4=dict(type='str', required=True, )), vip_server_v6_list=dict(type='list', oper=dict(type='dict', dev_vip_addr=dict(type='str', ), dev_vip_state=dict(type='str', ), dev_vip_port_list=dict(type='list', dev_vip_port_num=dict(type='int', ), dev_vip_port_state=dict(type='str', ))), ipv6=dict(type='str', required=True, )), vip_server_name_list=dict(type='list', oper=dict(type='dict', dev_vip_addr=dict(type='str', ), dev_vip_state=dict(type='str', ), dev_vip_port_list=dict(type='list', dev_vip_port_num=dict(type='int', ), dev_vip_port_state=dict(type='str', ))), vip_name=dict(type='str', required=True, ))), dev_name=dict(type='str', ), dev_ip_cnt=dict(type='int', ), dev_attr=dict(type='str', ), dev_ip=dict(type='str', ), device_name=dict(type='str', required=True, ), dev_state=dict(type='str', ), dev_session_num=dict(type='int', ), dev_admin_preference=dict(type='int', ), client_ldns_list=dict(type='list', client_ip=dict(type='str', ), age=dict(type='int', ), rdt_sample1=dict(type='int', ), rdt_sample2=dict(type='int', ), rdt_sample3=dict(type='int', ), rdt_sample4=dict(type='int', ), rdt_sample5=dict(type='int', ), rdt_sample6=dict(type='int', ), rdt_sample7=dict(type='int', ), rdt_sample8=dict(type='int', ), ntype=dict(type='str', )), dev_session_util=dict(type='int', )),
-        health_check_action=dict(type='str', choices=['health-check', 'health-check-disable']),
-        client_ip=dict(type='str', ),
-        uuid=dict(type='str', ),
-        proto_aging_time=dict(type='int', ),
-        device_name=dict(type='str', required=True, ),
-        proto_compatible=dict(type='bool', ),
-        user_tag=dict(type='str', ),
-        auto_map=dict(type='bool', ),
-        msg_format_acos_2x=dict(type='bool', ),
-        rdt_value=dict(type='int', ),
-        gateway_ip_addr=dict(type='str', ),
-        vip_server=dict(type='dict', vip_server_v4_list=dict(type='list', sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'dev_vip_hits'])), ipv4=dict(type='str', required=True, ), uuid=dict(type='str', )), vip_server_v6_list=dict(type='list', sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'dev_vip_hits'])), uuid=dict(type='str', ), ipv6=dict(type='str', required=True, )), vip_server_name_list=dict(type='list', sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'dev_vip_hits'])), vip_name=dict(type='str', required=True, ), uuid=dict(type='str', ))),
-        ip_address=dict(type='str', ),
-        proto_aging_fast=dict(type='bool', ),
-        auto_detect=dict(type='str', choices=['ip', 'port', 'ip-and-port', 'disabled']),
-        max_client=dict(type='int', ),
-        admin_preference=dict(type='int', )
-    ))
-   
+    rv.update({
+        'oper': {
+            'type': 'dict',
+            'dev_gw_state': {
+                'type': 'str',
+            },
+            'vip_server': {
+                'type': 'dict',
+                'oper': {
+                    'type': 'dict',
+                },
+                'vip_server_v4_list': {
+                    'type': 'list',
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    },
+                    'ipv4': {
+                        'type': 'str',
+                        'required': True,
+                    }
+                },
+                'vip_server_v6_list': {
+                    'type': 'list',
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    },
+                    'ipv6': {
+                        'type': 'str',
+                        'required': True,
+                    }
+                },
+                'vip_server_name_list': {
+                    'type': 'list',
+                    'oper': {
+                        'type': 'dict',
+                        'dev_vip_addr': {
+                            'type': 'str',
+                        },
+                        'dev_vip_state': {
+                            'type': 'str',
+                        },
+                        'dev_vip_port_list': {
+                            'type': 'list',
+                            'dev_vip_port_num': {
+                                'type': 'int',
+                            },
+                            'dev_vip_port_state': {
+                                'type': 'str',
+                            }
+                        }
+                    },
+                    'vip_name': {
+                        'type': 'str',
+                        'required': True,
+                    }
+                }
+            },
+            'dev_name': {
+                'type': 'str',
+            },
+            'dev_ip_cnt': {
+                'type': 'int',
+            },
+            'dev_attr': {
+                'type': 'str',
+            },
+            'dev_ip': {
+                'type': 'str',
+            },
+            'device_name': {
+                'type': 'str',
+                'required': True,
+            },
+            'dev_state': {
+                'type': 'str',
+            },
+            'dev_session_num': {
+                'type': 'int',
+            },
+            'dev_admin_preference': {
+                'type': 'int',
+            },
+            'client_ldns_list': {
+                'type': 'list',
+                'client_ip': {
+                    'type': 'str',
+                },
+                'age': {
+                    'type': 'int',
+                },
+                'rdt_sample1': {
+                    'type': 'int',
+                },
+                'rdt_sample2': {
+                    'type': 'int',
+                },
+                'rdt_sample3': {
+                    'type': 'int',
+                },
+                'rdt_sample4': {
+                    'type': 'int',
+                },
+                'rdt_sample5': {
+                    'type': 'int',
+                },
+                'rdt_sample6': {
+                    'type': 'int',
+                },
+                'rdt_sample7': {
+                    'type': 'int',
+                },
+                'rdt_sample8': {
+                    'type': 'int',
+                },
+                'ntype': {
+                    'type': 'str',
+                }
+            },
+            'dev_session_util': {
+                'type': 'int',
+            }
+        },
+        'health_check_action': {
+            'type': 'str',
+            'choices': ['health-check', 'health-check-disable']
+        },
+        'client_ip': {
+            'type': 'str',
+        },
+        'uuid': {
+            'type': 'str',
+        },
+        'proto_aging_time': {
+            'type': 'int',
+        },
+        'device_name': {
+            'type': 'str',
+            'required': True,
+        },
+        'proto_compatible': {
+            'type': 'bool',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'auto_map': {
+            'type': 'bool',
+        },
+        'msg_format_acos_2x': {
+            'type': 'bool',
+        },
+        'rdt_value': {
+            'type': 'int',
+        },
+        'gateway_ip_addr': {
+            'type': 'str',
+        },
+        'vip_server': {
+            'type': 'dict',
+            'vip_server_v4_list': {
+                'type': 'list',
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                },
+                'ipv4': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            },
+            'vip_server_v6_list': {
+                'type': 'list',
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                },
+                'uuid': {
+                    'type': 'str',
+                },
+                'ipv6': {
+                    'type': 'str',
+                    'required': True,
+                }
+            },
+            'vip_server_name_list': {
+                'type': 'list',
+                'sampling_enable': {
+                    'type': 'list',
+                    'counters1': {
+                        'type': 'str',
+                        'choices': ['all', 'dev_vip_hits']
+                    }
+                },
+                'vip_name': {
+                    'type': 'str',
+                    'required': True,
+                },
+                'uuid': {
+                    'type': 'str',
+                }
+            }
+        },
+        'ip_address': {
+            'type': 'str',
+        },
+        'proto_aging_fast': {
+            'type': 'bool',
+        },
+        'auto_detect': {
+            'type': 'str',
+            'choices': ['ip', 'port', 'ip-and-port', 'disabled']
+        },
+        'max_client': {
+            'type': 'int',
+        },
+        'admin_preference': {
+            'type': 'int',
+        }
+    })
     # Parent keys
-    rv.update(dict(
-        site_name=dict(type='str', required=True),
-    ))
-
+    rv.update(dict(site_name=dict(type='str', required=True), ))
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -253,30 +516,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def oper_url(module):
     """Return the URL for operational data of an existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/oper"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_oper(module):
     if module.params.get("oper"):
         query_params = {}
-        for k,v in module.params["oper"].items():
-            query_params[k.replace('_', '-')] = v 
-        return module.client.get(oper_url(module),
-                                 params=query_params)
+        for k, v in module.params["oper"].items():
+            query_params[k.replace('_', '-')] = v
+        return module.client.get(oper_url(module), params=query_params)
     return module.client.get(oper_url(module))
+
 
 def exists(module):
     try:
@@ -284,13 +552,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -303,10 +573,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -319,30 +589,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -363,6 +637,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["slb-dev"].items():
@@ -373,16 +648,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["slb-dev"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["slb-dev"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -395,6 +671,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -411,6 +688,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("slb-dev", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -424,6 +702,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -436,6 +715,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -446,6 +726,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -462,15 +743,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -491,14 +768,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -506,14 +784,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -523,14 +801,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

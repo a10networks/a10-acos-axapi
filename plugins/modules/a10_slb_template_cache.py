@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_slb_template_cache
 description:
     - RAM caching template
 short_description: Configures A10 slb.template.cache
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -162,7 +162,8 @@ options:
         required: False
     age:
         description:
-        - "Specify duration in seconds cached content valid, default is 3600 seconds (seconds that the cached content is valid (default 3600 seconds))"
+        - "Specify duration in seconds cached content valid, default is 3600 seconds
+          (seconds that the cached content is valid (default 3600 seconds))"
         required: False
     disable_insert_via:
         description:
@@ -179,7 +180,8 @@ options:
         suboptions:
             local_uri:
                 description:
-                - "Specify Local URI for caching (Specify URI pattern that the policy should be applied to, maximum 63 charaters)"
+                - "Specify Local URI for caching (Specify URI pattern that the policy should be
+          applied to, maximum 63 charaters)"
     sampling_enable:
         description:
         - "Field sampling_enable"
@@ -187,10 +189,22 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'hits'= Cache hits; 'miss'= Cache misses; 'bytes_served'= Bytes served from cache; 'total_req'= Total requests received; 'caching_req'= Total requests to cache; 'nc_req_header'= nc_req_header; 'nc_res_header'= nc_res_header; 'rv_success'= rv_success; 'rv_failure'= rv_failure; 'ims_request'= ims_request; 'nm_response'= nm_response; 'rsp_type_CL'= rsp_type_CL; 'rsp_type_CE'= rsp_type_CE; 'rsp_type_304'= rsp_type_304; 'rsp_type_other'= rsp_type_other; 'rsp_no_compress'= rsp_no_compress; 'rsp_gzip'= rsp_gzip; 'rsp_deflate'= rsp_deflate; 'rsp_other'= rsp_other; 'nocache_match'= nocache_match; 'match'= match; 'invalidate_match'= invalidate_match; 'content_toobig'= content_toobig; 'content_toosmall'= content_toosmall; 'entry_create_failures'= entry_create_failures; 'mem_size'= mem_size; 'entry_num'= entry_num; 'replaced_entry'= replaced_entry; 'aging_entry'= aging_entry; 'cleaned_entry'= cleaned_entry; "
+                - "'all'= all; 'hits'= Cache hits; 'miss'= Cache misses; 'bytes_served'= Bytes
+          served from cache; 'total_req'= Total requests received; 'caching_req'= Total
+          requests to cache; 'nc_req_header'= nc_req_header; 'nc_res_header'=
+          nc_res_header; 'rv_success'= rv_success; 'rv_failure'= rv_failure;
+          'ims_request'= ims_request; 'nm_response'= nm_response; 'rsp_type_CL'=
+          rsp_type_CL; 'rsp_type_CE'= rsp_type_CE; 'rsp_type_304'= rsp_type_304;
+          'rsp_type_other'= rsp_type_other; 'rsp_no_compress'= rsp_no_compress;
+          'rsp_gzip'= rsp_gzip; 'rsp_deflate'= rsp_deflate; 'rsp_other'= rsp_other;
+          'nocache_match'= nocache_match; 'match'= match; 'invalidate_match'=
+          invalidate_match; 'content_toobig'= content_toobig; 'content_toosmall'=
+          content_toosmall; 'entry_create_failures'= entry_create_failures; 'mem_size'=
+          mem_size; 'entry_num'= entry_num; 'replaced_entry'= replaced_entry;
+          'aging_entry'= aging_entry; 'cleaned_entry'= cleaned_entry;"
     replacement_policy:
         description:
-        - "'LFU'= LFU; "
+        - "'LFU'= LFU;"
         required: False
     disable_insert_age:
         description:
@@ -202,7 +216,8 @@ options:
         required: False
     max_cache_size:
         description:
-        - "Specify maximum cache size in megabytes, default is 80MB (RAM cache size in megabytes (default 80MB))"
+        - "Specify maximum cache size in megabytes, default is 80MB (RAM cache size in
+          megabytes (default 80MB))"
         required: False
     logging:
         description:
@@ -215,16 +230,20 @@ options:
         suboptions:
             cache_action:
                 description:
-                - "'cache'= Specify if certain URIs should be cached; 'nocache'= Specify if certain URIs should not be cached; "
+                - "'cache'= Specify if certain URIs should be cached; 'nocache'= Specify if
+          certain URIs should not be cached;"
             cache_value:
                 description:
-                - "Specify seconds that content should be cached, default is age specified in cache template"
+                - "Specify seconds that content should be cached, default is age specified in
+          cache template"
             uri:
                 description:
-                - "Specify URI for cache policy (Specify URI pattern that the policy should be applied to, maximum 63 charaters)"
+                - "Specify URI for cache policy (Specify URI pattern that the policy should be
+          applied to, maximum 63 charaters)"
             invalidate:
                 description:
-                - "Specify if URI should invalidate cache entries matching pattern (pattern that would match entries to be invalidated (64 chars max))"
+                - "Specify if URI should invalidate cache entries matching pattern (pattern that
+          would match entries to be invalidated (64 chars max))"
     remove_cookies:
         description:
         - "Remove cookies in response and cache"
@@ -242,7 +261,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -255,18 +273,34 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["accept_reload_req","age","default_policy_nocache","disable_insert_age","disable_insert_via","local_uri_policy","logging","max_cache_size","max_content_size","min_content_size","name","remove_cookies","replacement_policy","sampling_enable","stats","uri_policy","user_tag","uuid","verify_host",]
+AVAILABLE_PROPERTIES = [
+    "accept_reload_req",
+    "age",
+    "default_policy_nocache",
+    "disable_insert_age",
+    "disable_insert_via",
+    "local_uri_policy",
+    "logging",
+    "max_cache_size",
+    "max_content_size",
+    "min_content_size",
+    "name",
+    "remove_cookies",
+    "replacement_policy",
+    "sampling_enable",
+    "stats",
+    "uri_policy",
+    "user_tag",
+    "uuid",
+    "verify_host",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -274,39 +308,215 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        stats=dict(type='dict', nm_response=dict(type='str', ), rsp_type_304=dict(type='str', ), rsp_other=dict(type='str', ), content_toosmall=dict(type='str', ), entry_create_failures=dict(type='str', ), nocache_match=dict(type='str', ), content_toobig=dict(type='str', ), replaced_entry=dict(type='str', ), miss=dict(type='str', ), nc_req_header=dict(type='str', ), aging_entry=dict(type='str', ), mem_size=dict(type='str', ), rsp_deflate=dict(type='str', ), invalidate_match=dict(type='str', ), match=dict(type='str', ), cleaned_entry=dict(type='str', ), entry_num=dict(type='str', ), total_req=dict(type='str', ), bytes_served=dict(type='str', ), rv_success=dict(type='str', ), rv_failure=dict(type='str', ), rsp_gzip=dict(type='str', ), hits=dict(type='str', ), rsp_type_other=dict(type='str', ), name=dict(type='str', required=True, ), rsp_type_CE=dict(type='str', ), rsp_type_CL=dict(type='str', ), rsp_no_compress=dict(type='str', ), nc_res_header=dict(type='str', ), caching_req=dict(type='str', ), ims_request=dict(type='str', )),
-        accept_reload_req=dict(type='bool', ),
-        name=dict(type='str', required=True, ),
-        default_policy_nocache=dict(type='bool', ),
-        age=dict(type='int', ),
-        disable_insert_via=dict(type='bool', ),
-        user_tag=dict(type='str', ),
-        local_uri_policy=dict(type='list', local_uri=dict(type='str', )),
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'hits', 'miss', 'bytes_served', 'total_req', 'caching_req', 'nc_req_header', 'nc_res_header', 'rv_success', 'rv_failure', 'ims_request', 'nm_response', 'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304', 'rsp_type_other', 'rsp_no_compress', 'rsp_gzip', 'rsp_deflate', 'rsp_other', 'nocache_match', 'match', 'invalidate_match', 'content_toobig', 'content_toosmall', 'entry_create_failures', 'mem_size', 'entry_num', 'replaced_entry', 'aging_entry', 'cleaned_entry'])),
-        replacement_policy=dict(type='str', choices=['LFU']),
-        disable_insert_age=dict(type='bool', ),
-        max_content_size=dict(type='int', ),
-        max_cache_size=dict(type='int', ),
-        logging=dict(type='str', ),
-        uri_policy=dict(type='list', cache_action=dict(type='str', choices=['cache', 'nocache']), cache_value=dict(type='int', ), uri=dict(type='str', ), invalidate=dict(type='str', )),
-        remove_cookies=dict(type='bool', ),
-        verify_host=dict(type='bool', ),
-        min_content_size=dict(type='int', ),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'stats': {
+            'type': 'dict',
+            'nm_response': {
+                'type': 'str',
+            },
+            'rsp_type_304': {
+                'type': 'str',
+            },
+            'rsp_other': {
+                'type': 'str',
+            },
+            'content_toosmall': {
+                'type': 'str',
+            },
+            'entry_create_failures': {
+                'type': 'str',
+            },
+            'nocache_match': {
+                'type': 'str',
+            },
+            'content_toobig': {
+                'type': 'str',
+            },
+            'replaced_entry': {
+                'type': 'str',
+            },
+            'miss': {
+                'type': 'str',
+            },
+            'nc_req_header': {
+                'type': 'str',
+            },
+            'aging_entry': {
+                'type': 'str',
+            },
+            'mem_size': {
+                'type': 'str',
+            },
+            'rsp_deflate': {
+                'type': 'str',
+            },
+            'invalidate_match': {
+                'type': 'str',
+            },
+            'match': {
+                'type': 'str',
+            },
+            'cleaned_entry': {
+                'type': 'str',
+            },
+            'entry_num': {
+                'type': 'str',
+            },
+            'total_req': {
+                'type': 'str',
+            },
+            'bytes_served': {
+                'type': 'str',
+            },
+            'rv_success': {
+                'type': 'str',
+            },
+            'rv_failure': {
+                'type': 'str',
+            },
+            'rsp_gzip': {
+                'type': 'str',
+            },
+            'hits': {
+                'type': 'str',
+            },
+            'rsp_type_other': {
+                'type': 'str',
+            },
+            'name': {
+                'type': 'str',
+                'required': True,
+            },
+            'rsp_type_CE': {
+                'type': 'str',
+            },
+            'rsp_type_CL': {
+                'type': 'str',
+            },
+            'rsp_no_compress': {
+                'type': 'str',
+            },
+            'nc_res_header': {
+                'type': 'str',
+            },
+            'caching_req': {
+                'type': 'str',
+            },
+            'ims_request': {
+                'type': 'str',
+            }
+        },
+        'accept_reload_req': {
+            'type': 'bool',
+        },
+        'name': {
+            'type': 'str',
+            'required': True,
+        },
+        'default_policy_nocache': {
+            'type': 'bool',
+        },
+        'age': {
+            'type': 'int',
+        },
+        'disable_insert_via': {
+            'type': 'bool',
+        },
+        'user_tag': {
+            'type': 'str',
+        },
+        'local_uri_policy': {
+            'type': 'list',
+            'local_uri': {
+                'type': 'str',
+            }
+        },
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'hits', 'miss', 'bytes_served', 'total_req',
+                    'caching_req', 'nc_req_header', 'nc_res_header',
+                    'rv_success', 'rv_failure', 'ims_request', 'nm_response',
+                    'rsp_type_CL', 'rsp_type_CE', 'rsp_type_304',
+                    'rsp_type_other', 'rsp_no_compress', 'rsp_gzip',
+                    'rsp_deflate', 'rsp_other', 'nocache_match', 'match',
+                    'invalidate_match', 'content_toobig', 'content_toosmall',
+                    'entry_create_failures', 'mem_size', 'entry_num',
+                    'replaced_entry', 'aging_entry', 'cleaned_entry'
+                ]
+            }
+        },
+        'replacement_policy': {
+            'type': 'str',
+            'choices': ['LFU']
+        },
+        'disable_insert_age': {
+            'type': 'bool',
+        },
+        'max_content_size': {
+            'type': 'int',
+        },
+        'max_cache_size': {
+            'type': 'int',
+        },
+        'logging': {
+            'type': 'str',
+        },
+        'uri_policy': {
+            'type': 'list',
+            'cache_action': {
+                'type': 'str',
+                'choices': ['cache', 'nocache']
+            },
+            'cache_value': {
+                'type': 'int',
+            },
+            'uri': {
+                'type': 'str',
+            },
+            'invalidate': {
+                'type': 'str',
+            }
+        },
+        'remove_cookies': {
+            'type': 'bool',
+        },
+        'verify_host': {
+            'type': 'bool',
+        },
+        'min_content_size': {
+            'type': 'int',
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -318,30 +528,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -349,13 +564,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -368,10 +585,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -383,30 +600,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -427,6 +648,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["cache"].items():
@@ -437,16 +659,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["cache"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["cache"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -459,6 +682,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -475,6 +699,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("cache", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -488,6 +713,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -500,6 +726,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -510,6 +737,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -526,15 +754,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -555,14 +779,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -570,14 +795,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -587,14 +812,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()

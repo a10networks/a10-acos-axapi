@@ -2,19 +2,19 @@
 # -*- coding: UTF-8 -*-
 
 # Copyright 2018 A10 Networks
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU General Public License v3.0+
+# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 REQUIRED_NOT_SET = (False, "One of ({}) must be set.")
 REQUIRED_MUTEX = (False, "Only one of ({}) can be set.")
 REQUIRED_VALID = (True, "")
-
 
 DOCUMENTATION = r'''
 module: a10_ipv6_in_ipv4_frag
 description:
     - IPv6-in-IPv4 fragmentation parameters
 short_description: Configures A10 ipv6.in.ipv4.frag
-author: A10 Networks 2018 
+author: A10 Networks 2018
 version_added: 2.4
 options:
     state:
@@ -57,7 +57,32 @@ options:
         suboptions:
             counters1:
                 description:
-                - "'all'= all; 'session-inserted'= Session Inserted; 'session-expired'= Session Expired; 'icmp-rcv'= ICMP Received; 'icmpv6-rcv'= ICMPv6 Received; 'udp-rcv'= UDP Received; 'tcp-rcv'= TCP Received; 'ipip-rcv'= IP-in-IP Received; 'ipv6ip-rcv'= IPv6-in-IP Received; 'other-rcv'= Other Received; 'icmp-dropped'= ICMP Dropped; 'icmpv6-dropped'= ICMPv6 Dropped; 'udp-dropped'= UDP Dropped; 'tcp-dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'= IPv6-in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'= Overlapping Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'= Fragment Too Small Drop; 'first-tcp-too-small'= First TCP Fragment Too Small Drop; 'first-l4-too-small'= First L4 Fragment Too Small Drop; 'total-sessions-exceeded'= Total Sessions Exceeded Drop; 'no-session-memory'= Out of Session Memory; 'fast-aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'= Fragmentation Fast Aging Unset; 'fragment-queue-success'= Fragment Queue Success; 'unaligned-len'= Payload Length Unaligned; 'exceeded-len'= Payload Length Out of Bounds; 'duplicate-first-frag'= Duplicate First Fragment; 'duplicate-last-frag'= Duplicate Last Fragment; 'total-fragments-exceeded'= Total Queued Fragments Exceeded; 'fragment-queue-failure'= Fragment Queue Failure; 'reassembly-success'= Fragment Reassembly Success; 'max-len-exceeded'= Fragment Max Data Length Exceeded; 'reassembly-failure'= Fragment Reassembly Failure; 'policy-drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment Processing Drop; 'high-cpu-threshold'= High CPU Threshold Reached; 'low-cpu-threshold'= Low CPU Threshold Reached; 'cpu-threshold-drop'= High CPU Drop; 'ipd-entry-drop'= DDoS Protection Drop; 'max-packets-exceeded'= Too Many Packets Per Reassembly Drop; 'session-packets-exceeded'= Session Max Packets Exceeded; 'frag-session-count'= Fragmentation Session Count; 'sctp-rcv'= SCTP Received; 'sctp-dropped'= SCTP Dropped; "
+                - "'all'= all; 'session-inserted'= Session Inserted; 'session-expired'= Session
+          Expired; 'icmp-rcv'= ICMP Received; 'icmpv6-rcv'= ICMPv6 Received; 'udp-rcv'=
+          UDP Received; 'tcp-rcv'= TCP Received; 'ipip-rcv'= IP-in-IP Received; 'ipv6ip-
+          rcv'= IPv6-in-IP Received; 'other-rcv'= Other Received; 'icmp-dropped'= ICMP
+          Dropped; 'icmpv6-dropped'= ICMPv6 Dropped; 'udp-dropped'= UDP Dropped; 'tcp-
+          dropped'= TCP Dropped; 'ipip-dropped'= IP-in-IP Dropped; 'ipv6ip-dropped'= IPv6
+          -in-IP Dropped; 'other-dropped'= Other Dropped; 'overlap-error'= Overlapping
+          Fragment Dropped; 'bad-ip-len'= Bad IP Length; 'too-small'= Fragment Too Small
+          Drop; 'first-tcp-too-small'= First TCP Fragment Too Small Drop; 'first-l4-too-
+          small'= First L4 Fragment Too Small Drop; 'total-sessions-exceeded'= Total
+          Sessions Exceeded Drop; 'no-session-memory'= Out of Session Memory; 'fast-
+          aging-set'= Fragmentation Fast Aging Set; 'fast-aging-unset'= Fragmentation
+          Fast Aging Unset; 'fragment-queue-success'= Fragment Queue Success; 'unaligned-
+          len'= Payload Length Unaligned; 'exceeded-len'= Payload Length Out of Bounds;
+          'duplicate-first-frag'= Duplicate First Fragment; 'duplicate-last-frag'=
+          Duplicate Last Fragment; 'total-fragments-exceeded'= Total Queued Fragments
+          Exceeded; 'fragment-queue-failure'= Fragment Queue Failure; 'reassembly-
+          success'= Fragment Reassembly Success; 'max-len-exceeded'= Fragment Max Data
+          Length Exceeded; 'reassembly-failure'= Fragment Reassembly Failure; 'policy-
+          drop'= MTU Exceeded Policy Drop; 'error-drop'= Fragment Processing Drop; 'high-
+          cpu-threshold'= High CPU Threshold Reached; 'low-cpu-threshold'= Low CPU
+          Threshold Reached; 'cpu-threshold-drop'= High CPU Drop; 'ipd-entry-drop'= DDoS
+          Protection Drop; 'max-packets-exceeded'= Too Many Packets Per Reassembly Drop;
+          'session-packets-exceeded'= Session Max Packets Exceeded; 'frag-session-count'=
+          Fragmentation Session Count; 'sctp-rcv'= SCTP Received; 'sctp-dropped'= SCTP
+          Dropped;"
     stats:
         description:
         - "Field stats"
@@ -203,7 +228,6 @@ options:
         - "uuid of the object"
         required: False
 
-
 '''
 
 EXAMPLES = """
@@ -216,18 +240,18 @@ ANSIBLE_METADATA = {
 }
 
 # Hacky way of having access to object properties for evaluation
-AVAILABLE_PROPERTIES = ["sampling_enable","stats","uuid",]
+AVAILABLE_PROPERTIES = [
+    "sampling_enable",
+    "stats",
+    "uuid",
+]
 
-# our imports go at the top so we fail fast.
-try:
-    from ansible_collections.a10.acos_axapi.plugins.module_utils import errors as a10_ex
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import client_factory, session_factory
-    from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import KW_IN, KW_OUT, translate_blacklist as translateBlacklist
-
-except (ImportError) as ex:
-    module.fail_json(msg="Import Error:{0}".format(ex))
-except (Exception) as ex:
-    module.fail_json(msg="General Exception in Ansible module import:{0}".format(ex))
+from ansible_collections.a10.acos_axapi.plugins.module_utils import \
+    errors as a10_ex
+from ansible_collections.a10.acos_axapi.plugins.module_utils.axapi_http import \
+    client_factory
+from ansible_collections.a10.acos_axapi.plugins.module_utils.kwbl import \
+    KW_OUT, translate_blacklist as translateBlacklist
 
 
 def get_default_argspec():
@@ -235,23 +259,199 @@ def get_default_argspec():
         ansible_host=dict(type='str', required=True),
         ansible_username=dict(type='str', required=True),
         ansible_password=dict(type='str', required=True, no_log=True),
-        state=dict(type='str', default="present", choices=['noop', 'present', 'absent']),
+        state=dict(type='str',
+                   default="present",
+                   choices=['noop', 'present', 'absent']),
         ansible_port=dict(type='int', choices=[80, 443], required=True),
-        a10_partition=dict(type='dict', name=dict(type='str',), shared=dict(type='str',), required=False, ),
-        a10_device_context_id=dict(type='int', choices=[1, 2, 3, 4, 5, 6, 7, 8], required=False, ),
+        a10_partition=dict(
+            type='dict',
+            name=dict(type='str', ),
+            shared=dict(type='str', ),
+            required=False,
+        ),
+        a10_device_context_id=dict(
+            type='int',
+            choices=[1, 2, 3, 4, 5, 6, 7, 8],
+            required=False,
+        ),
         get_type=dict(type='str', choices=["single", "list", "oper", "stats"]),
     )
 
+
 def get_argspec():
     rv = get_default_argspec()
-    rv.update(dict(
-        sampling_enable=dict(type='list', counters1=dict(type='str', choices=['all', 'session-inserted', 'session-expired', 'icmp-rcv', 'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv', 'ipv6ip-rcv', 'other-rcv', 'icmp-dropped', 'icmpv6-dropped', 'udp-dropped', 'tcp-dropped', 'ipip-dropped', 'ipv6ip-dropped', 'other-dropped', 'overlap-error', 'bad-ip-len', 'too-small', 'first-tcp-too-small', 'first-l4-too-small', 'total-sessions-exceeded', 'no-session-memory', 'fast-aging-set', 'fast-aging-unset', 'fragment-queue-success', 'unaligned-len', 'exceeded-len', 'duplicate-first-frag', 'duplicate-last-frag', 'total-fragments-exceeded', 'fragment-queue-failure', 'reassembly-success', 'max-len-exceeded', 'reassembly-failure', 'policy-drop', 'error-drop', 'high-cpu-threshold', 'low-cpu-threshold', 'cpu-threshold-drop', 'ipd-entry-drop', 'max-packets-exceeded', 'session-packets-exceeded', 'frag-session-count', 'sctp-rcv', 'sctp-dropped'])),
-        stats=dict(type='dict', cpu_threshold_drop=dict(type='str', ), tcp_rcv=dict(type='str', ), other_rcv=dict(type='str', ), udp_dropped=dict(type='str', ), bad_ip_len=dict(type='str', ), first_l4_too_small=dict(type='str', ), no_session_memory=dict(type='str', ), unaligned_len=dict(type='str', ), icmp_dropped=dict(type='str', ), udp_rcv=dict(type='str', ), exceeded_len=dict(type='str', ), fragment_queue_success=dict(type='str', ), fragment_queue_failure=dict(type='str', ), tcp_dropped=dict(type='str', ), low_cpu_threshold=dict(type='str', ), ipip_dropped=dict(type='str', ), total_sessions_exceeded=dict(type='str', ), error_drop=dict(type='str', ), icmp_rcv=dict(type='str', ), ipv6ip_rcv=dict(type='str', ), total_fragments_exceeded=dict(type='str', ), icmpv6_rcv=dict(type='str', ), sctp_rcv=dict(type='str', ), policy_drop=dict(type='str', ), overlap_error=dict(type='str', ), session_packets_exceeded=dict(type='str', ), duplicate_first_frag=dict(type='str', ), reassembly_success=dict(type='str', ), sctp_dropped=dict(type='str', ), ipd_entry_drop=dict(type='str', ), too_small=dict(type='str', ), session_expired=dict(type='str', ), session_inserted=dict(type='str', ), max_len_exceeded=dict(type='str', ), max_packets_exceeded=dict(type='str', ), other_dropped=dict(type='str', ), ipv6ip_dropped=dict(type='str', ), first_tcp_too_small=dict(type='str', ), high_cpu_threshold=dict(type='str', ), fast_aging_set=dict(type='str', ), ipip_rcv=dict(type='str', ), icmpv6_dropped=dict(type='str', ), fast_aging_unset=dict(type='str', ), reassembly_failure=dict(type='str', ), duplicate_last_frag=dict(type='str', )),
-        uuid=dict(type='str', )
-    ))
-   
-
+    rv.update({
+        'sampling_enable': {
+            'type': 'list',
+            'counters1': {
+                'type':
+                'str',
+                'choices': [
+                    'all', 'session-inserted', 'session-expired', 'icmp-rcv',
+                    'icmpv6-rcv', 'udp-rcv', 'tcp-rcv', 'ipip-rcv',
+                    'ipv6ip-rcv', 'other-rcv', 'icmp-dropped',
+                    'icmpv6-dropped', 'udp-dropped', 'tcp-dropped',
+                    'ipip-dropped', 'ipv6ip-dropped', 'other-dropped',
+                    'overlap-error', 'bad-ip-len', 'too-small',
+                    'first-tcp-too-small', 'first-l4-too-small',
+                    'total-sessions-exceeded', 'no-session-memory',
+                    'fast-aging-set', 'fast-aging-unset',
+                    'fragment-queue-success', 'unaligned-len', 'exceeded-len',
+                    'duplicate-first-frag', 'duplicate-last-frag',
+                    'total-fragments-exceeded', 'fragment-queue-failure',
+                    'reassembly-success', 'max-len-exceeded',
+                    'reassembly-failure', 'policy-drop', 'error-drop',
+                    'high-cpu-threshold', 'low-cpu-threshold',
+                    'cpu-threshold-drop', 'ipd-entry-drop',
+                    'max-packets-exceeded', 'session-packets-exceeded',
+                    'frag-session-count', 'sctp-rcv', 'sctp-dropped'
+                ]
+            }
+        },
+        'stats': {
+            'type': 'dict',
+            'cpu_threshold_drop': {
+                'type': 'str',
+            },
+            'tcp_rcv': {
+                'type': 'str',
+            },
+            'other_rcv': {
+                'type': 'str',
+            },
+            'udp_dropped': {
+                'type': 'str',
+            },
+            'bad_ip_len': {
+                'type': 'str',
+            },
+            'first_l4_too_small': {
+                'type': 'str',
+            },
+            'no_session_memory': {
+                'type': 'str',
+            },
+            'unaligned_len': {
+                'type': 'str',
+            },
+            'icmp_dropped': {
+                'type': 'str',
+            },
+            'udp_rcv': {
+                'type': 'str',
+            },
+            'exceeded_len': {
+                'type': 'str',
+            },
+            'fragment_queue_success': {
+                'type': 'str',
+            },
+            'fragment_queue_failure': {
+                'type': 'str',
+            },
+            'tcp_dropped': {
+                'type': 'str',
+            },
+            'low_cpu_threshold': {
+                'type': 'str',
+            },
+            'ipip_dropped': {
+                'type': 'str',
+            },
+            'total_sessions_exceeded': {
+                'type': 'str',
+            },
+            'error_drop': {
+                'type': 'str',
+            },
+            'icmp_rcv': {
+                'type': 'str',
+            },
+            'ipv6ip_rcv': {
+                'type': 'str',
+            },
+            'total_fragments_exceeded': {
+                'type': 'str',
+            },
+            'icmpv6_rcv': {
+                'type': 'str',
+            },
+            'sctp_rcv': {
+                'type': 'str',
+            },
+            'policy_drop': {
+                'type': 'str',
+            },
+            'overlap_error': {
+                'type': 'str',
+            },
+            'session_packets_exceeded': {
+                'type': 'str',
+            },
+            'duplicate_first_frag': {
+                'type': 'str',
+            },
+            'reassembly_success': {
+                'type': 'str',
+            },
+            'sctp_dropped': {
+                'type': 'str',
+            },
+            'ipd_entry_drop': {
+                'type': 'str',
+            },
+            'too_small': {
+                'type': 'str',
+            },
+            'session_expired': {
+                'type': 'str',
+            },
+            'session_inserted': {
+                'type': 'str',
+            },
+            'max_len_exceeded': {
+                'type': 'str',
+            },
+            'max_packets_exceeded': {
+                'type': 'str',
+            },
+            'other_dropped': {
+                'type': 'str',
+            },
+            'ipv6ip_dropped': {
+                'type': 'str',
+            },
+            'first_tcp_too_small': {
+                'type': 'str',
+            },
+            'high_cpu_threshold': {
+                'type': 'str',
+            },
+            'fast_aging_set': {
+                'type': 'str',
+            },
+            'ipip_rcv': {
+                'type': 'str',
+            },
+            'icmpv6_dropped': {
+                'type': 'str',
+            },
+            'fast_aging_unset': {
+                'type': 'str',
+            },
+            'reassembly_failure': {
+                'type': 'str',
+            },
+            'duplicate_last_frag': {
+                'type': 'str',
+            }
+        },
+        'uuid': {
+            'type': 'str',
+        }
+    })
     return rv
+
 
 def existing_url(module):
     """Return the URL for an existing resource"""
@@ -262,30 +462,35 @@ def existing_url(module):
 
     return url_base.format(**f_dict)
 
+
 def stats_url(module):
     """Return the URL for statistical data of and existing resource"""
     partial_url = existing_url(module)
     return partial_url + "/stats"
+
 
 def list_url(module):
     """Return the URL for a list of resources"""
     ret = existing_url(module)
     return ret[0:ret.rfind('/')]
 
+
 def get(module):
     return module.client.get(existing_url(module))
+
 
 def get_list(module):
     return module.client.get(list_url(module))
 
+
 def get_stats(module):
     if module.params.get("stats"):
         query_params = {}
-        for k,v in module.params["stats"].items():
+        for k, v in module.params["stats"].items():
             query_params[k.replace('_', '-')] = v
-        return module.client.get(stats_url(module),
-                                 params=query_params)
+        return module.client.get(stats_url(module), params=query_params)
     return module.client.get(stats_url(module))
+
 
 def exists(module):
     try:
@@ -293,13 +498,15 @@ def exists(module):
     except a10_ex.NotFound:
         return None
 
+
 def _to_axapi(key):
     return translateBlacklist(key, KW_OUT).replace("_", "-")
+
 
 def _build_dict_from_param(param):
     rv = {}
 
-    for k,v in param.items():
+    for k, v in param.items():
         hk = _to_axapi(k)
         if isinstance(v, dict):
             v_dict = _build_dict_from_param(v)
@@ -312,10 +519,10 @@ def _build_dict_from_param(param):
 
     return rv
 
+
 def build_envelope(title, data):
-    return {
-        title: data
-    }
+    return {title: data}
+
 
 def new_url(module):
     """Return the URL for creating a resource"""
@@ -326,30 +533,34 @@ def new_url(module):
 
     return url_base.format(**f_dict)
 
+
 def validate(params):
     # Ensure that params contains all the keys.
     requires_one_of = sorted([])
-    present_keys = sorted([x for x in requires_one_of if x in params and params.get(x) is not None])
-    
+    present_keys = sorted([
+        x for x in requires_one_of if x in params and params.get(x) is not None
+    ])
+
     errors = []
     marg = []
-    
+
     if not len(requires_one_of):
         return REQUIRED_VALID
 
     if len(present_keys) == 0:
-        rc,msg = REQUIRED_NOT_SET
+        rc, msg = REQUIRED_NOT_SET
         marg = requires_one_of
     elif requires_one_of == present_keys:
-        rc,msg = REQUIRED_MUTEX
+        rc, msg = REQUIRED_MUTEX
         marg = present_keys
     else:
-        rc,msg = REQUIRED_VALID
-    
+        rc, msg = REQUIRED_VALID
+
     if not rc:
         errors.append(msg.format(", ".join(marg)))
-    
-    return rc,errors
+
+    return rc, errors
+
 
 def build_json(title, module):
     rv = {}
@@ -370,6 +581,7 @@ def build_json(title, module):
 
     return build_envelope(title, rv)
 
+
 def report_changes(module, result, existing_config, payload):
     if existing_config:
         for k, v in payload["frag"].items():
@@ -380,16 +592,17 @@ def report_changes(module, result, existing_config, payload):
                     if v.lower() == "false":
                         v = 0
             elif k not in payload:
-               break
+                break
             else:
                 if existing_config["frag"][k] != v:
-                    if result["changed"] != True:
+                    if result["changed"] is not True:
                         result["changed"] = True
                     existing_config["frag"][k] = v
             result.update(**existing_config)
     else:
         result.update(**payload)
     return result
+
 
 def create(module, result, payload):
     try:
@@ -402,6 +615,7 @@ def create(module, result, payload):
     except Exception as gex:
         raise gex
     return result
+
 
 def update(module, result, existing_config, payload):
     try:
@@ -418,6 +632,7 @@ def update(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def present(module, result, existing_config):
     payload = build_json("frag", module)
     changed_config = report_changes(module, result, existing_config, payload)
@@ -431,6 +646,7 @@ def present(module, result, existing_config):
         result["changed"] = True
         return result
 
+
 def delete(module, result):
     try:
         module.client.delete(existing_url(module))
@@ -443,6 +659,7 @@ def delete(module, result):
         raise gex
     return result
 
+
 def absent(module, result, existing_config):
     if module.check_mode:
         if existing_config:
@@ -453,6 +670,7 @@ def absent(module, result, existing_config):
             return result
     else:
         return delete(module, result)
+
 
 def replace(module, result, existing_config, payload):
     try:
@@ -469,15 +687,11 @@ def replace(module, result, existing_config, payload):
         raise gex
     return result
 
+
 def run_command(module):
     run_errors = []
 
-    result = dict(
-        changed=False,
-        original_message="",
-        message="",
-        result={}
-    )
+    result = dict(changed=False, original_message="", message="", result={})
 
     state = module.params["state"]
     ansible_host = module.params["ansible_host"]
@@ -498,14 +712,15 @@ def run_command(module):
         valid, validation_errors = validate(module.params)
         for ve in validation_errors:
             run_errors.append(ve)
-    
+
     if not valid:
         err_msg = "\n".join(run_errors)
         result["messages"] = "Validation failure: " + str(run_errors)
         module.fail_json(msg=err_msg, **result)
 
-    module.client = client_factory(ansible_host, ansible_port, protocol, ansible_username, ansible_password)
-    
+    module.client = client_factory(ansible_host, ansible_port, protocol,
+                                   ansible_username, ansible_password)
+
     if a10_partition:
         module.client.activate_partition(a10_partition)
 
@@ -513,14 +728,14 @@ def run_command(module):
         module.client.change_context(a10_device_context_id)
 
     existing_config = exists(module)
-    
+
     if state == 'present':
         result = present(module, result, existing_config)
 
-    elif state == 'absent':
+    if state == 'absent':
         result = absent(module, result, existing_config)
-    
-    elif state == 'noop':
+
+    if state == 'noop':
         if module.params.get("get_type") == "single":
             result["result"] = get(module)
         elif module.params.get("get_type") == "list":
@@ -530,14 +745,16 @@ def run_command(module):
     module.client.session.close()
     return result
 
+
 def main():
-    module = AnsibleModule(argument_spec=get_argspec(), supports_check_mode=True)
+    module = AnsibleModule(argument_spec=get_argspec(),
+                           supports_check_mode=True)
     result = run_command(module)
     module.exit_json(**result)
 
+
 # standard ansible module imports
-from ansible.module_utils.basic import *
-from ansible.module_utils.urls import *
+from ansible.module_utils.basic import AnsibleModule
 
 if __name__ == '__main__':
     main()
