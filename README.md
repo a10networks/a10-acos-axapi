@@ -25,7 +25,7 @@ We only support Ansible version >=2.9
 This code is now being generated using the SDK generator at https://github.com/a10networks/sdkgenerator
 
 ## Installation
-a10-acos-axapi is collection of custom ansible modules crated by a10Networks. It can be installed using following ways . It is assumed that ansible is already installed and configured.
+a10-acos-axapi is collection of custom ansible modules crated by a10Networks. It can be installed using following ways, it is assumed that ansible is already installed and configured.
 
 ### 1. Install from galaxy hub
 
@@ -109,7 +109,7 @@ action_plugins  = <collection-dir-path>/a10/acos_axapi/plugins/action
 
 ## Collection module usage options
 
-### Any one of the following option can be used for writing playbooks for Collection modules:
+### Any of the following options can be used for writing playbooks for Collection modules:
 ### Option 1 (Ansbile >=2.8):  Use the 'collections' keyword
 
 ```yaml
