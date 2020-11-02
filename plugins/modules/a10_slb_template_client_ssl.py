@@ -131,6 +131,9 @@ options:
             forward_proxy_trusted_ca:
                 description:
                 - "Forward proxy trusted CA file (CA file name)"
+            fp_trusted_ca_shared:
+                description:
+                - "Trusted CA Certificate Partition Shared"
     template_cipher_shared:
         description:
         - "Cipher Template Name"
@@ -138,6 +141,14 @@ options:
     forward_proxy_ca_cert:
         description:
         - "CA Certificate for forward proxy (SSL forward proxy CA Certificate Name)"
+        required: False
+    fp_ca_shared:
+        description:
+        - "CA Certificate Partition Shared"
+        required: False
+    fp_ca_key_shared:
+        description:
+        - "CA Private Key Partition Shared"
         required: False
     ssl_false_start_disable:
         description:
@@ -291,6 +302,9 @@ options:
             client_certificate_Request_CA:
                 description:
                 - "Send CA lists in certificate request (CA Certificate Name)"
+            client_cert_req_ca_shared:
+                description:
+                - "CA Certificate Partition Shared"
     user_tag:
         description:
         - "Customized tag"
@@ -372,6 +386,10 @@ options:
     fp_alt_key:
         description:
         - "CA Private Key for forward proxy alternate signing (Key name)"
+        required: False
+    fp_alt_shared:
+        description:
+        - "Alternate CA Certificate and Private Key Partition Shared"
         required: False
     server_name_auto_map:
         description:
@@ -467,7 +485,7 @@ options:
         - "Set this NAT pool as higher precedence than other source NAT like configued
           under template policy"
         required: False
-    cert_str:
+    cert:
         description:
         - "Certificate Name"
         required: False
@@ -877,6 +895,10 @@ options:
         description:
         - "Do NOT use this option manually. (This is an A10 reserved keyword.) (The
           ENCRYPTED password string)"
+        required: False
+    key_alt_partition_shared:
+        description:
+        - "Key Partition Shared"
         required: False
     fp_cert_ext_aia_ca_issuers:
         description:
@@ -1350,6 +1372,10 @@ options:
         description:
         - "Specify the second certificate (Certificate Name)"
         required: False
+    cert_alt_partition_shared:
+        description:
+        - "Certificate Partition Shared"
+        required: False
     forward_proxy_cert_cache_limit:
         description:
         - "Certificate cache size limit, default is 524288 (set to 0 for unlimited size)"
@@ -1412,7 +1438,11 @@ options:
         description:
         - "Specify update period, in days"
         required: False
-    key_str:
+    forward_proxy_require_sni_cert_matched:
+        description:
+        - "'no-match-action-inspect': Inspected if not matched; 'no-match-action-drop': Dropped if not matched; "
+        required: False
+    key:
         description:
         - "Key Name"
         required: False
@@ -1592,9 +1622,10 @@ AVAILABLE_PROPERTIES = [
     "cache_persistence_list_name",
     "case_insensitive",
     "cert_alternate",
+    "cert_alt_partition_shared",
     "cert_revoke_action",
     "cert_shared_str",
-    "cert_str",
+    "cert",
     "cert_unknown_action",
     "certificate_issuer_contains_list",
     "certificate_issuer_ends_with_list",
@@ -1658,6 +1689,7 @@ AVAILABLE_PROPERTIES = [
     "forward_proxy_no_shared_cipher_action",
     "forward_proxy_no_sni_action",
     "forward_proxy_ocsp_disable",
+    "forward_proxy_require_sni_cert_matched",
     "forward_proxy_selfsign_redir",
     "forward_proxy_ssl_version",
     "forward_proxy_trusted_ca_lists",
@@ -1666,6 +1698,9 @@ AVAILABLE_PROPERTIES = [
     "fp_alt_encrypted",
     "fp_alt_key",
     "fp_alt_passphrase",
+    "fp_alt_shared",
+    "fp_ca_shared",
+    "fp_ca_key_shared",
     "fp_cert_ext_aia_ca_issuers",
     "fp_cert_ext_aia_ocsp",
     "fp_cert_ext_crldp",
@@ -1681,6 +1716,7 @@ AVAILABLE_PROPERTIES = [
     "inspect_certificate_subject_cl_name",
     "inspect_list_name",
     "key_alt_encrypted",
+    "key_alt_partition_shared",
     "key_alt_passphrase",
     "key_alternate",
     "key_encrypted",
@@ -1688,7 +1724,7 @@ AVAILABLE_PROPERTIES = [
     "key_shared_encrypted",
     "key_shared_passphrase",
     "key_shared_str",
-    "key_str",
+    "key",
     "ldap_base_dn_from_cert",
     "ldap_search_filter",
     "local_logging",
@@ -1860,6 +1896,9 @@ def get_argspec():
             'type': 'list',
             'forward_proxy_trusted_ca': {
                 'type': 'str',
+            },
+            'fp_trusted_ca_shared': {
+                'type': 'bool',
             }
         },
         'template_cipher_shared': {
@@ -1867,6 +1906,12 @@ def get_argspec():
         },
         'forward_proxy_ca_cert': {
             'type': 'str',
+        },
+        'fp_ca_shared': {
+            'type': 'bool',
+        },
+        'fp_ca_key_shared': {
+            'type': 'bool',
         },
         'ssl_false_start_disable': {
             'type': 'bool',
@@ -1981,6 +2026,9 @@ def get_argspec():
             'type': 'list',
             'client_certificate_Request_CA': {
                 'type': 'str',
+            },
+            'client_cert_req_ca_shared': {
+                'type': 'bool',
             }
         },
         'user_tag': {
@@ -2042,6 +2090,9 @@ def get_argspec():
         },
         'fp_alt_key': {
             'type': 'str',
+        },
+        'fp_alt_shared': {
+            'type': 'bool',
         },
         'server_name_auto_map': {
             'type': 'bool',
@@ -2113,7 +2164,7 @@ def get_argspec():
         'fp_cert_fetch_autonat_precedence': {
             'type': 'bool',
         },
-        'cert_str': {
+        'cert': {
             'type': 'str',
         },
         'cert_shared_str': {
@@ -2477,6 +2528,9 @@ def get_argspec():
         },
         'key_alt_encrypted': {
             'type': 'str',
+        },
+        'key_alt_partition_shared': {
+            'type': 'bool',
         },
         'fp_cert_ext_aia_ca_issuers': {
             'type': 'str',
@@ -2905,6 +2959,9 @@ def get_argspec():
         'cert_alternate': {
             'type': 'str',
         },
+        'cert_alt_partition_shared': {
+            'type': 'bool',
+        },
         'forward_proxy_cert_cache_limit': {
             'type': 'int',
         },
@@ -2951,7 +3008,11 @@ def get_argspec():
         'ocspst_sg_days': {
             'type': 'int',
         },
-        'key_str': {
+        'forward_proxy_require_sni_cert_matched': {
+            'type': 'str',
+            'choices': ['no-match-action-inspect', 'no-match-action-drop']
+        },
+        'key': {
             'type': 'str',
         },
         'inspect_list_name': {
